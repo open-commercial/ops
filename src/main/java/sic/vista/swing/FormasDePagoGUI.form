@@ -32,7 +32,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="panel1" alignment="0" max="32767" attributes="0"/>
-                  <Component id="sp_FormasDePago" alignment="0" pref="538" max="32767" attributes="0"/>
+                  <Component id="sp_FormasDePago" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="btn_Agregar" linkSize="1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
@@ -48,11 +48,11 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="sp_FormasDePago" pref="134" max="32767" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="sp_FormasDePago" pref="213" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="panel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btn_Agregar" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btn_Eliminar" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -77,14 +77,15 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="lbl_Nombre" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbl_AfectaCaja" alignment="1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="lbl_AfectaCaja" max="32767" attributes="0"/>
+                      <Component id="lbl_Nombre" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="txt_Nombre" alignment="0" pref="405" max="32767" attributes="0"/>
-                      <Component id="chk_AfectaCaja" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="txt_Nombre" max="32767" attributes="0"/>
+                      <Component id="chk_AfectaCaja" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -93,6 +94,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="txt_Nombre" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="lbl_Nombre" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -102,6 +104,7 @@
                       <Component id="lbl_AfectaCaja" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="chk_AfectaCaja" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -109,6 +112,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="lbl_Nombre">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="Nombre:"/>
           </Properties>
         </Component>
@@ -116,6 +120,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lbl_AfectaCaja">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="Afecta la Caja:"/>
           </Properties>
         </Component>
@@ -136,12 +141,13 @@
         <Component class="javax.swing.JTable" name="tbl_FormasDePago">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="4" rowCount="4">
-                <Column editable="true" title="Title 1" type="java.lang.Object"/>
-                <Column editable="true" title="Title 2" type="java.lang.Object"/>
-                <Column editable="true" title="Title 3" type="java.lang.Object"/>
-                <Column editable="true" title="Title 4" type="java.lang.Object"/>
-              </Table>
+              <Table columnCount="0" rowCount="0"/>
+            </Property>
+            <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+              <TableColumnModel selectionModel="0"/>
+            </Property>
+            <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+              <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
             </Property>
           </Properties>
         </Component>

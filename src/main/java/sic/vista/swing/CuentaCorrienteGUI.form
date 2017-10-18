@@ -171,7 +171,7 @@
                   <Component id="btn_VerPagos" linkSize="4" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="222" max="32767" attributes="0"/>
               </Group>
-              <Component id="spMovimientos" alignment="0" max="32767" attributes="0"/>
+              <Component id="sp_Resultados" alignment="0" max="32767" attributes="0"/>
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   <Component id="lbl_saldoInicial" min="-2" max="-2" attributes="0"/>
@@ -197,7 +197,7 @@
                       <Component id="lbl_saldoInicial" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="spMovimientos" pref="391" max="32767" attributes="0"/>
+                  <Component id="sp_Resultados" pref="391" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lbl_saldoFinal" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -217,7 +217,7 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Container class="javax.swing.JScrollPane" name="spMovimientos">
+        <Container class="javax.swing.JScrollPane" name="sp_Resultados">
           <AuxValues>
             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
           </AuxValues>

@@ -57,7 +57,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     public CuentaCorrienteGUI(Cliente cliente) {
         this.initComponents();
         this.cliente = cliente;
-        spMovimientos.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
+        sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
             int va = scrollBar.getVisibleAmount() + 50;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
@@ -96,6 +96,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         btnVerDetalle.setEnabled(status);
         btnAutorizarNota.setEnabled(status);
         tbl_Resultados.requestFocus();
+        sp_Resultados.setEnabled(status);
         btn_Eliminar.setEnabled(status);
         btn_VerPagos.setEnabled(status);
     }
@@ -224,7 +225,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         movimientosTotal.clear();
         movimientosParcial.clear();
         Point p = new Point(0, 0);
-        spMovimientos.getViewport().setViewPosition(p);
+        sp_Resultados.getViewport().setViewPosition(p);
     }
     
     private void refrescarVista(boolean refrescar) {
@@ -270,7 +271,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         pb_Filtro = new javax.swing.JProgressBar();
         lblResultados = new javax.swing.JLabel();
         pnlResultados = new javax.swing.JPanel();
-        spMovimientos = new javax.swing.JScrollPane();
+        sp_Resultados = new javax.swing.JScrollPane();
         tbl_Resultados = new javax.swing.JTable();
         btnCrearNotaCredito = new javax.swing.JButton();
         btnVerDetalle = new javax.swing.JButton();
@@ -382,7 +383,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             }
         ));
         tbl_Resultados.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        spMovimientos.setViewportView(tbl_Resultados);
+        sp_Resultados.setViewportView(tbl_Resultados);
 
         btnCrearNotaCredito.setForeground(java.awt.Color.blue);
         btnCrearNotaCredito.setText("Nueva Nota Credito");
@@ -464,7 +465,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 .addGap(0, 0, 0)
                 .addComponent(btn_VerPagos)
                 .addGap(0, 222, Short.MAX_VALUE))
-            .addComponent(spMovimientos)
+            .addComponent(sp_Resultados)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlResultadosLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(lbl_saldoInicial)
@@ -489,7 +490,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     .addComponent(ftf_saldoInicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_saldoInicial))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spMovimientos, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_saldoFinal)
@@ -796,7 +797,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     private javax.swing.JProgressBar pb_Filtro;
     private javax.swing.JPanel pnlResultados;
     private javax.swing.JPanel pnl_cabecera;
-    private javax.swing.JScrollPane spMovimientos;
+    private javax.swing.JScrollPane sp_Resultados;
     private javax.swing.JTable tbl_Resultados;
     // End of variables declaration//GEN-END:variables
 

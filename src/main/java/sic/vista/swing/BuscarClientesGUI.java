@@ -62,7 +62,7 @@ public class BuscarClientesGUI extends JDialog {
                 timer.schedule(task, 450);
             }
         });
-        sp_Resultado.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
+        sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
             int va = scrollBar.getVisibleAmount() + 50;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
@@ -92,6 +92,8 @@ public class BuscarClientesGUI extends JDialog {
         btnBuscar.setEnabled(status);
         tbl_Resultados.setEnabled(status);
         btnAceptar.setEnabled(status);
+        tbl_Resultados.setEnabled(status);
+        sp_Resultados.setEnabled(status);
         txtCriteriaBusqueda.requestFocus();
     }
     
@@ -181,7 +183,7 @@ public class BuscarClientesGUI extends JDialog {
         clientesTotal.clear();
         clientesParcial.clear();
         Point p = new Point(0, 0);
-        sp_Resultado.getViewport().setViewPosition(p);
+        sp_Resultados.getViewport().setViewPosition(p);
     }
     
     private void limpiarJTable() {
@@ -221,7 +223,7 @@ public class BuscarClientesGUI extends JDialog {
         txtCriteriaBusqueda = new javax.swing.JTextField();
         btnBuscar = new javax.swing.JButton();
         btnAceptar = new javax.swing.JButton();
-        sp_Resultado = new javax.swing.JScrollPane();
+        sp_Resultados = new javax.swing.JScrollPane();
         tbl_Resultados = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -277,7 +279,7 @@ public class BuscarClientesGUI extends JDialog {
                 tbl_ResultadosKeyPressed(evt);
             }
         });
-        sp_Resultado.setViewportView(tbl_Resultados);
+        sp_Resultados.setViewportView(tbl_Resultados);
 
         javax.swing.GroupLayout panelFondoLayout = new javax.swing.GroupLayout(panelFondo);
         panelFondo.setLayout(panelFondoLayout);
@@ -286,7 +288,7 @@ public class BuscarClientesGUI extends JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFondoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(sp_Resultado, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 797, Short.MAX_VALUE)
+                    .addComponent(sp_Resultados, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 797, Short.MAX_VALUE)
                     .addGroup(panelFondoLayout.createSequentialGroup()
                         .addComponent(txtCriteriaBusqueda)
                         .addGap(55, 55, 55))
@@ -305,7 +307,7 @@ public class BuscarClientesGUI extends JDialog {
                     .addComponent(txtCriteriaBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Resultado, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnAceptar)
                 .addContainerGap())
@@ -367,7 +369,7 @@ public class BuscarClientesGUI extends JDialog {
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JPanel panelFondo;
-    private javax.swing.JScrollPane sp_Resultado;
+    private javax.swing.JScrollPane sp_Resultados;
     private javax.swing.JTable tbl_Resultados;
     private javax.swing.JTextField txtCriteriaBusqueda;
     // End of variables declaration//GEN-END:variables

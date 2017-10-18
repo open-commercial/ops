@@ -180,6 +180,8 @@ public class PedidosGUI extends JInternalFrame {
         btnImprimirPedido.setEnabled(status);
         tbl_RenglonesPedido.setEnabled(status);
         tbl_Pedidos.setEnabled(status);
+        sp_RenglonesPedido.setEnabled(status);
+        sp_Pedidos.setEnabled(status);
         tbl_Pedidos.requestFocus();
     }
     
@@ -431,7 +433,7 @@ public class PedidosGUI extends JInternalFrame {
         pb_Filtro = new javax.swing.JProgressBar();
         lbl_cantResultados = new javax.swing.JLabel();
         panel_resultados = new javax.swing.JPanel();
-        sp_RenglonesDelPedido = new javax.swing.JScrollPane();
+        sp_RenglonesPedido = new javax.swing.JScrollPane();
         tbl_RenglonesPedido = new javax.swing.JTable();
         sp_Pedidos = new javax.swing.JScrollPane();
         tbl_Pedidos = new javax.swing.JTable();
@@ -604,17 +606,17 @@ public class PedidosGUI extends JInternalFrame {
 
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
-        sp_RenglonesDelPedido.setViewportView(tbl_RenglonesPedido);
+        sp_RenglonesPedido.setViewportView(tbl_RenglonesPedido);
 
         tbl_Pedidos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
         tbl_Pedidos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -689,7 +691,7 @@ public class PedidosGUI extends JInternalFrame {
         panel_resultadosLayout.setHorizontalGroup(
             panel_resultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(sp_Pedidos, javax.swing.GroupLayout.DEFAULT_SIZE, 930, Short.MAX_VALUE)
-            .addComponent(sp_RenglonesDelPedido)
+            .addComponent(sp_RenglonesPedido)
             .addGroup(panel_resultadosLayout.createSequentialGroup()
                 .addComponent(btnNuevoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
@@ -709,7 +711,7 @@ public class PedidosGUI extends JInternalFrame {
             .addGroup(panel_resultadosLayout.createSequentialGroup()
                 .addComponent(sp_Pedidos, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_RenglonesDelPedido, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+                .addComponent(sp_RenglonesPedido, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel_resultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNuevoPedido)
@@ -986,7 +988,7 @@ public class PedidosGUI extends JInternalFrame {
     private javax.swing.JPanel panel_resultados;
     private javax.swing.JProgressBar pb_Filtro;
     private javax.swing.JScrollPane sp_Pedidos;
-    private javax.swing.JScrollPane sp_RenglonesDelPedido;
+    private javax.swing.JScrollPane sp_RenglonesPedido;
     private javax.swing.JTable tbl_Pedidos;
     private javax.swing.JTable tbl_RenglonesPedido;
     private javax.swing.JFormattedTextField txt_NumeroPedido;

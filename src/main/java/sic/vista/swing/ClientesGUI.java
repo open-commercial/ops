@@ -257,6 +257,7 @@ public class ClientesGUI extends JInternalFrame {
         btn_Modificar.setEnabled(status);
         btn_setPredeterminado.setEnabled(status);
         tbl_Resultados.setEnabled(status);
+        sp_Resultados.setEnabled(status);
         tbl_Resultados.requestFocus();
     }
     
@@ -474,7 +475,7 @@ public class ClientesGUI extends JInternalFrame {
 
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
         tbl_Resultados.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);

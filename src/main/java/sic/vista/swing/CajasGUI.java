@@ -47,7 +47,7 @@ public class CajasGUI extends JInternalFrame {
 
     public CajasGUI() {
         this.initComponents();        
-        sp_TablaCajas.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
+        sp_Cajas.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
             int va = scrollBar.getVisibleAmount() + 50;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
@@ -194,6 +194,7 @@ public class CajasGUI extends JInternalFrame {
         }
         btn_buscar.setEnabled(status);        
         tbl_Cajas.setEnabled(status);
+        sp_Cajas.setEnabled(status);
         btn_AbrirCaja.setEnabled(status);
         btn_eliminarCaja.setEnabled(status);
         btn_verDetalle.setEnabled(status);
@@ -224,7 +225,7 @@ public class CajasGUI extends JInternalFrame {
         cajasTotal.clear();
         cajasParcial.clear();
         Point p = new Point(0, 0);
-        sp_TablaCajas.getViewport().setViewPosition(p);
+        sp_Cajas.getViewport().setViewPosition(p);
         modeloTablaCajas = new ModeloTabla();
         tbl_Cajas.setModel(modeloTablaCajas);
         this.setColumnasCaja();
@@ -274,7 +275,7 @@ public class CajasGUI extends JInternalFrame {
         pb_barra = new javax.swing.JProgressBar();
         lbl_cantidadMostrar = new javax.swing.JLabel();
         pnl_Cajas = new javax.swing.JPanel();
-        sp_TablaCajas = new javax.swing.JScrollPane();
+        sp_Cajas = new javax.swing.JScrollPane();
         tbl_Cajas = new javax.swing.JTable();
         btn_AbrirCaja = new javax.swing.JButton();
         btn_verDetalle = new javax.swing.JButton();
@@ -413,7 +414,7 @@ public class CajasGUI extends JInternalFrame {
             }
         ));
         tbl_Cajas.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        sp_TablaCajas.setViewportView(tbl_Cajas);
+        sp_Cajas.setViewportView(tbl_Cajas);
 
         btn_AbrirCaja.setForeground(java.awt.Color.blue);
         btn_AbrirCaja.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AbrirCaja_16x16.png"))); // NOI18N
@@ -473,7 +474,7 @@ public class CajasGUI extends JInternalFrame {
                         .addComponent(lbl_TotalCierre)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ftxt_TotalCierre, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))))
-            .addComponent(sp_TablaCajas, javax.swing.GroupLayout.DEFAULT_SIZE, 709, Short.MAX_VALUE)
+            .addComponent(sp_Cajas, javax.swing.GroupLayout.DEFAULT_SIZE, 709, Short.MAX_VALUE)
         );
 
         pnl_CajasLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_AbrirCaja, btn_eliminarCaja, btn_verDetalle});
@@ -485,7 +486,7 @@ public class CajasGUI extends JInternalFrame {
         pnl_CajasLayout.setVerticalGroup(
             pnl_CajasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_CajasLayout.createSequentialGroup()
-                .addComponent(sp_TablaCajas, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                .addComponent(sp_Cajas, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_CajasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(pnl_CajasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -650,7 +651,7 @@ public class CajasGUI extends JInternalFrame {
     private javax.swing.JProgressBar pb_barra;
     private javax.swing.JPanel pnl_Cajas;
     private javax.swing.JPanel pnl_Filtros;
-    private javax.swing.JScrollPane sp_TablaCajas;
+    private javax.swing.JScrollPane sp_Cajas;
     private javax.swing.JTable tbl_Cajas;
     // End of variables declaration//GEN-END:variables
 

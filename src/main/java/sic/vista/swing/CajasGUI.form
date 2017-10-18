@@ -227,13 +227,13 @@
                       </Group>
                   </Group>
               </Group>
-              <Component id="sp_TablaCajas" pref="709" max="32767" attributes="0"/>
+              <Component id="sp_Cajas" pref="709" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="sp_TablaCajas" pref="204" max="32767" attributes="0"/>
+                  <Component id="sp_Cajas" pref="204" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -258,7 +258,7 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Container class="javax.swing.JScrollPane" name="sp_TablaCajas">
+        <Container class="javax.swing.JScrollPane" name="sp_Cajas">
           <AuxValues>
             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
           </AuxValues>

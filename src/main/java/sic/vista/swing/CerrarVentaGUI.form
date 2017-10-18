@@ -79,58 +79,56 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="chk_FormaDePago2" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="chk_FormaDePago1" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="chk_FormaDePago3" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="cmb_FormaDePago3" alignment="0" pref="250" max="32767" attributes="0"/>
-                                  <Component id="cmb_FormaDePago2" max="32767" attributes="0"/>
-                                  <Component id="cmb_FormaDePago1" alignment="0" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="txt_MontoPago3" max="32767" attributes="1"/>
-                                  <Component id="txt_MontoPago1" max="32767" attributes="1"/>
-                                  <Component id="txt_MontoPago2" max="32767" attributes="1"/>
-                              </Group>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Group type="102" alignment="1" attributes="0">
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="chk_FormaDePago2" alignment="0" max="32767" attributes="0"/>
+                              <Component id="chk_FormaDePago1" alignment="0" max="32767" attributes="0"/>
+                              <Component id="chk_FormaDePago3" max="32767" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="lbl_Cambio" min="-2" pref="150" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="lbl_Devolucion" min="-2" pref="259" max="-2" attributes="1"/>
-                                  <Component id="lbl_Total1" min="-2" pref="259" max="-2" attributes="1"/>
-                                  <Component id="lbl_Total" min="-2" pref="259" max="-2" attributes="1"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="lbl_TotalAPagar" alignment="1" pref="130" max="32767" attributes="0"/>
-                                  <Component id="txt_AbonaCon" alignment="1" max="32767" attributes="1"/>
-                                  <Component id="lbl_Vuelto" alignment="1" max="32767" attributes="0"/>
-                              </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="cmb_FormaDePago3" alignment="0" pref="250" max="32767" attributes="0"/>
+                              <Component id="cmb_FormaDePago2" max="32767" attributes="0"/>
+                              <Component id="cmb_FormaDePago1" alignment="0" max="32767" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="lbl_Transporte" pref="150" max="32767" attributes="0"/>
-                                  <Component id="lbl_Vendor" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="cmb_Transporte" max="32767" attributes="0"/>
-                                  <Component id="lbl_Vendedor" max="32767" attributes="0"/>
-                              </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="txt_MontoPago3" max="32767" attributes="1"/>
+                              <Component id="txt_MontoPago1" max="32767" attributes="1"/>
+                              <Component id="txt_MontoPago2" max="32767" attributes="1"/>
                           </Group>
-                          <Component id="separador1" alignment="0" max="32767" attributes="0"/>
-                          <Component id="separador2" alignment="0" max="32767" attributes="0"/>
-                          <Component id="separador3" alignment="0" max="32767" attributes="0"/>
                       </Group>
-                      <Component id="lbl_Dividido" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="lbl_Cambio" min="-2" pref="150" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="lbl_Devolucion" min="-2" pref="259" max="-2" attributes="1"/>
+                              <Component id="lbl_Total1" min="-2" pref="259" max="-2" attributes="1"/>
+                              <Component id="lbl_Total" min="-2" pref="259" max="-2" attributes="1"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="lbl_TotalAPagar" alignment="1" pref="130" max="32767" attributes="0"/>
+                              <Component id="txt_AbonaCon" alignment="1" max="32767" attributes="1"/>
+                              <Component id="lbl_Vuelto" alignment="1" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="lbl_Transporte" max="32767" attributes="0"/>
+                              <Component id="lbl_Vendor" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="lbl_Vendedor" max="32767" attributes="0"/>
+                              <Component id="cmb_Transporte" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Component id="separador1" alignment="0" max="32767" attributes="0"/>
+                      <Component id="separador2" alignment="0" max="32767" attributes="0"/>
+                      <Component id="separador3" alignment="0" max="32767" attributes="0"/>
+                      <Component id="lbl_Dividido" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -141,8 +139,8 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lbl_Vendor" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbl_Vendedor" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbl_Vendedor" linkSize="9" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbl_Vendor" linkSize="9" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -207,7 +205,6 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="25" green="9c" red="1d" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="XXXXXXXXXXXXXXXXXXXXXX"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lbl_Transporte">

@@ -277,6 +277,7 @@ public class ProductosGUI extends JInternalFrame {
         btn_Eliminar.setEnabled(status);
         btn_ReporteListaPrecios.setEnabled(status);
         tbl_Resultados.setEnabled(status);
+        sp_Resultados.setEnabled(status);
         tbl_Resultados.requestFocus();
     }
 
@@ -592,13 +593,10 @@ public class ProductosGUI extends JInternalFrame {
 
         tbl_Resultados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
         tbl_Resultados.setToolTipText("Mantener presionado Ctrl ó Shift para seleccionar varios productos");

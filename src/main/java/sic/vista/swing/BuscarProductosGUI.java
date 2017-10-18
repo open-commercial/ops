@@ -84,7 +84,7 @@ public class BuscarProductosGUI extends JDialog {
                 timer.schedule(task, 450);
             }
         });
-        sp_Resultado.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
+        sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
             int va = scrollBar.getVisibleAmount() + 50;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
@@ -161,6 +161,8 @@ public class BuscarProductosGUI extends JDialog {
         txtCantidad.setEnabled(status);
         txtPorcentajeDescuento.setEnabled(status);
         btnAceptar.setEnabled(status);
+        tbl_Resultados.setEnabled(status);
+        sp_Resultados.setEnabled(status);
         txtCriteriaBusqueda.requestFocus();
     }
     
@@ -266,7 +268,7 @@ public class BuscarProductosGUI extends JDialog {
         productosTotal.clear();
         productosParcial.clear();
         Point p = new Point(0, 0);
-        sp_Resultado.getViewport().setViewPosition(p);
+        sp_Resultados.getViewport().setViewPosition(p);
     }
     
     private void limpiarJTable() {
@@ -338,7 +340,7 @@ public class BuscarProductosGUI extends JDialog {
         panelFondo = new javax.swing.JPanel();
         txtCriteriaBusqueda = new javax.swing.JTextField();
         btnBuscar = new javax.swing.JButton();
-        sp_Resultado = new javax.swing.JScrollPane();
+        sp_Resultados = new javax.swing.JScrollPane();
         tbl_Resultados = new javax.swing.JTable();
         btnAceptar = new javax.swing.JButton();
         txt_UnidadMedida = new javax.swing.JTextField();
@@ -405,7 +407,7 @@ public class BuscarProductosGUI extends JDialog {
                 tbl_ResultadosKeyReleased(evt);
             }
         });
-        sp_Resultado.setViewportView(tbl_Resultados);
+        sp_Resultados.setViewportView(tbl_Resultados);
 
         btnAceptar.setForeground(java.awt.Color.blue);
         btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/22x22_FlechaGO.png"))); // NOI18N
@@ -471,7 +473,7 @@ public class BuscarProductosGUI extends JDialog {
             .addGroup(panelFondoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sp_Resultado)
+                    .addComponent(sp_Resultados)
                     .addGroup(panelFondoLayout.createSequentialGroup()
                         .addComponent(txtCriteriaBusqueda)
                         .addGap(0, 0, 0)
@@ -500,7 +502,7 @@ public class BuscarProductosGUI extends JDialog {
                     .addComponent(btnBuscar)
                     .addComponent(txtCriteriaBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Resultado, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelFondoLayout.createSequentialGroup()
@@ -628,7 +630,7 @@ public class BuscarProductosGUI extends JDialog {
     private javax.swing.JLabel lbl_Cantidad;
     private javax.swing.JLabel lbl_Descuento;
     private javax.swing.JPanel panelFondo;
-    private javax.swing.JScrollPane sp_Resultado;
+    private javax.swing.JScrollPane sp_Resultados;
     private javax.swing.JTextArea ta_ObservacionesProducto;
     private javax.swing.JTable tbl_Resultados;
     private javax.swing.JFormattedTextField txtCantidad;
