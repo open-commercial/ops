@@ -1,7 +1,6 @@
 package sic.vista.swing;
 
 import java.awt.Desktop;
-import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +22,7 @@ import sic.modelo.EmpresaActiva;
 import sic.modelo.NotaDebito;
 import sic.modelo.Pago;
 import sic.modelo.RenglonNotaDebito;
+import sic.modelo.TipoDeComprobante;
 import sic.modelo.UsuarioActivo;
 import sic.util.FormatterNumero;
 
@@ -32,6 +32,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private final long idCliente;
     private final long idPago;
     private boolean notaDebitoCreada;    
+    private boolean noGravaGastos;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleNotaDebitoGUI(long idCliente, long idPago) {
@@ -67,7 +68,12 @@ public class DetalleNotaDebitoGUI extends JDialog {
     }
     
     private void cargarDetalleComprobante() {
-        double iva = (Double.parseDouble(txtMontoRenglon2.getText()) * 0.21);
+        double iva;
+        if (noGravaGastos) {
+            iva = 0.0;
+        } else {
+            iva = (Double.parseDouble(txtMontoRenglon2.getText()) * 0.21);
+        }
         lblIvaNetoRenglon2.setText("$" + iva);
         lblImporteRenglon2.setText("$" + (Double.parseDouble(txtMontoRenglon2.getText()) + iva));
         txtSubTotalBruto.setValue(Double.parseDouble(txtMontoRenglon2.getText()));
@@ -500,7 +506,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
         try {
             notaDebito.setRenglonesNotaDebito(Arrays.asList(RestClient.getRestTemplate().getForObject("/notas/renglon/debito/pago/" + pago.getId_Pago()
                     + "?monto=" + (Double) txtSubTotalBruto.getValue()
-                    + "&ivaPorcentaje=21", RenglonNotaDebito[].class)));
+                    + "&ivaPorcentaje=" + ((noGravaGastos)?"0":"21"), RenglonNotaDebito[].class)));
             notaDebito.setSubTotalBruto((Double) txtSubTotalBruto.getValue());
             notaDebito.setTotal((Double) txtTotal.getValue());
             notaDebito.setUsuario(UsuarioActivo.getInstance().getUsuario());
@@ -557,6 +563,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
         try {
             cliente = RestClient.getRestTemplate().getForObject("/clientes/" + idCliente, Cliente.class);
             pago = RestClient.getRestTemplate().getForObject("/pagos/" + idPago, Pago.class);
+            noGravaGastos = (pago.getFactura() != null && pago.getFactura().getTipoComprobante() == TipoDeComprobante.FACTURA_X)
+                    || pago.getNotaDebito() != null && pago.getNotaDebito().getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_X;
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -564,6 +572,9 @@ public class DetalleNotaDebitoGUI extends JDialog {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        if (noGravaGastos) {
+            lblIVA21.setText("0%");
         }
         this.cargarDetalleCliente();
         this.cargarDetallePago();        
