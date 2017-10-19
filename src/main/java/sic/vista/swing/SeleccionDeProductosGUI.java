@@ -2,12 +2,14 @@ package sic.vista.swing;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -31,22 +33,27 @@ public class SeleccionDeProductosGUI extends JDialog {
     private FacturaVenta fv;
     private final HashMap<Long, Double> idsRenglonesYCantidades = new HashMap<>();
     private boolean modificarStock;
-    private TipoMovimiento tipoMovimiento;
+    private TipoMovimiento tipoMovimiento;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public SeleccionDeProductosGUI(long idFactura) {
-        super();
+    public SeleccionDeProductosGUI(long idFactura) {        
         this.initComponents();
+        this.setIcon();
         this.setColumnas();
         this.recuperarFactura(idFactura);
     }
     
-    public SeleccionDeProductosGUI(long idFactura, TipoMovimiento tipoMovimiento) {
-        super();
+    public SeleccionDeProductosGUI(long idFactura, TipoMovimiento tipoMovimiento) {        
         this.initComponents();
+        this.setIcon();
         this.setColumnas();
         this.tipoMovimiento = tipoMovimiento;
         this.recuperarFactura(idFactura);
+    }
+    
+    private void setIcon() {
+        ImageIcon iconoVentana = new ImageIcon(PuntoDeVentaGUI.class.getResource("/sic/icons/SIC_24_square.png"));
+        this.setIconImage(iconoVentana.getImage());
     }
     
     private class ColoresProductosTablaRenderer extends DefaultTableCellRenderer {
@@ -247,7 +254,7 @@ public class SeleccionDeProductosGUI extends JDialog {
                         .addComponent(btnContinuar))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblInstrucciones)
-                        .addGap(0, 263, Short.MAX_VALUE))
+                        .addGap(0, 366, Short.MAX_VALUE))
                     .addComponent(spResultados))
                 .addContainerGap())
         );

@@ -1,6 +1,7 @@
 package sic.vista.swing;
 
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -34,15 +36,20 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private HashMap<Long,Double> idsRenglonesYCantidades = new HashMap<>();
     private List<RenglonNotaCredito> renglones;
     private double subTotalBruto;
-    private boolean notaCreada;
+    private boolean notaCreada;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     
     public DetalleNotaCreditoGUI(HashMap<Long,Double> idsRenglonesYCantidades, long idFacturaVenta, boolean modificarStock) {
         this.initComponents();
+        this.setIcon();
         this.idsRenglonesYCantidades = idsRenglonesYCantidades;
         this.modificarStock = modificarStock;
-        notaCreada = false;
+        this.notaCreada = false;
         this.recuperarFactura(idFacturaVenta);
+    }
+    
+    public boolean isNotaCreada() {
+        return notaCreada;
     }
     
     private void recuperarFactura(long idFactura) {
@@ -219,6 +226,11 @@ public class DetalleNotaCreditoGUI extends JDialog {
         tblResultados.setModel(modeloTablaRenglones);
     }
     
+    private void setIcon() {
+        ImageIcon iconoVentana = new ImageIcon(PuntoDeVentaGUI.class.getResource("/sic/icons/SIC_24_square.png"));
+        this.setIconImage(iconoVentana.getImage());
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -337,7 +349,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
 
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
         spResultados.setViewportView(tblResultados);
@@ -346,17 +358,11 @@ public class DetalleNotaCreditoGUI extends JDialog {
         panelDetalle.setLayout(panelDetalleLayout);
         panelDetalleLayout.setHorizontalGroup(
             panelDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelDetalleLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(spResultados)
-                .addContainerGap())
+            .addComponent(spResultados)
         );
         panelDetalleLayout.setVerticalGroup(
             panelDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelDetalleLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(spResultados)
-                .addContainerGap())
+            .addComponent(spResultados)
         );
 
         panelMotivo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -686,10 +692,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
                     "Error", JOptionPane.ERROR_MESSAGE);
         } 
     }//GEN-LAST:event_btnGuardarActionPerformed
-
-    public boolean isNotaCreada() {
-        return notaCreada;
-    }
+      
     private void txt_Decuento_porcentajeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_Decuento_porcentajeFocusGained
         SwingUtilities.invokeLater(() -> {
             txt_Decuento_porcentaje.selectAll();

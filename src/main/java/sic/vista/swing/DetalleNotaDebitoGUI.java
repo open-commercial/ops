@@ -1,6 +1,7 @@
 package sic.vista.swing;
 
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +9,7 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.ResourceBundle;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -29,14 +31,24 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private Pago pago;
     private final long idCliente;
     private final long idPago;
-    private boolean notaDebitoCreada;
+    private boolean notaDebitoCreada;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleNotaDebitoGUI(long idCliente, long idPago) {
-        this.notaDebitoCreada = false;
         this.initComponents();
+        this.setIcon();
+        this.notaDebitoCreada = false;
         this.idCliente = idCliente;
         this.idPago = idPago;
+    }
+    
+    public boolean isNotaDebitoCreada() {
+        return notaDebitoCreada;
+    }
+    
+    private void setIcon() {
+        ImageIcon iconoVentana = new ImageIcon(PuntoDeVentaGUI.class.getResource("/sic/icons/SIC_24_square.png"));
+        this.setIconImage(iconoVentana.getImage());
     }
     
     private void cargarDetalleCliente() {
@@ -465,8 +477,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
                 .addContainerGap()
                 .addComponent(panelCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelDetalle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panelMotivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -529,10 +541,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
         }
         
     }//GEN-LAST:event_btnGuardarActionPerformed
-
-    public boolean isNotaDebitoCreada() {
-        return notaDebitoCreada;
-    }
+    
     private void txtMontoRenglon2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMontoRenglon2FocusGained
         SwingUtilities.invokeLater(() -> {
             txtMontoRenglon2.selectAll();
@@ -544,7 +553,6 @@ public class DetalleNotaDebitoGUI extends JDialog {
     }//GEN-LAST:event_txtMontoRenglon2FocusLost
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        this.setLocationRelativeTo(null);
         this.setTitle("Nueva Nota de Debito");
         try {
             cliente = RestClient.getRestTemplate().getForObject("/clientes/" + idCliente, Cliente.class);

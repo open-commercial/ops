@@ -596,8 +596,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_pago_con_nota_debito"),
                             "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(
-                            cliente.getId_Cliente(), renglonCC.getIdMovimiento());
+                    DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(cliente.getId_Cliente(), renglonCC.getIdMovimiento());
+                    detalleNotaDebitoGUI.setLocationRelativeTo(this);
                     detalleNotaDebitoGUI.setVisible(true);
                     refrescarVista(detalleNotaDebitoGUI.isNotaDebitoCreada());
                 }

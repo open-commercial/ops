@@ -909,10 +909,10 @@ public class PuntoDeVentaGUI extends JDialog {
 
         tbl_Resultado.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
         tbl_Resultado.setNextFocusableComponent(txt_Decuento_porcentaje);
