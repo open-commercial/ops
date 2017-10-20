@@ -1540,16 +1540,17 @@ public class PuntoDeVentaGUI extends JDialog {
                             })
                             .forEachOrdered(r -> productosFaltantes.add(r));
                    if (productosFaltantes.isEmpty()) {
-                       CerrarVentaGUI gui_CerrarVenta = new CerrarVentaGUI(this, true);
-                       gui_CerrarVenta.setVisible(true);
-                       if (gui_CerrarVenta.isExito()) {
+                       CerrarVentaGUI cerrarVentaGUI = new CerrarVentaGUI(this, true);
+                       cerrarVentaGUI.setLocationRelativeTo(this);
+                       cerrarVentaGUI.setVisible(true);
+                       if (cerrarVentaGUI.isExito()) {
                            this.limpiarYRecargarComponentes();
                        }
                    } else {
-                       ProductosFaltantesGUI gui_ProductosFaltantes = new ProductosFaltantesGUI(productosFaltantes);
-                       gui_ProductosFaltantes.setModal(true);
-                       gui_ProductosFaltantes.setLocationRelativeTo(this);
-                       gui_ProductosFaltantes.setVisible(true);
+                       ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(productosFaltantes);
+                       productosFaltantesGUI.setModal(true);
+                       productosFaltantesGUI.setLocationRelativeTo(this);
+                       productosFaltantesGUI.setVisible(true);
                    }
                 } else {
                     //Es null cuando, se genera un pedido desde el punto de venta entrando por el menu sistemas.

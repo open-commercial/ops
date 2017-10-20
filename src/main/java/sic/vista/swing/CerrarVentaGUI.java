@@ -42,8 +42,7 @@ public class CerrarVentaGUI extends JDialog {
     public CerrarVentaGUI(JDialog parent, boolean modal) {
         super(parent, modal);
         this.initComponents();
-        this.setIcon();
-        this.setLocationRelativeTo(null);
+        this.setIcon();        
         this.gui_puntoDeVenta = (PuntoDeVentaGUI) parent;
         //listeners
         cmb_FormaDePago3.addKeyListener(keyHandler);
@@ -65,8 +64,7 @@ public class CerrarVentaGUI extends JDialog {
         if (Desktop.isDesktopSupported()) {
             try {
                 byte[] reporte = RestClient.getRestTemplate()
-                        .getForObject("/facturas/" + factura.getId_Factura() + "/reporte",
-                                byte[].class);
+                        .getForObject("/facturas/" + factura.getId_Factura() + "/reporte", byte[].class);
                 File f = new File(System.getProperty("user.home") + "/" + nombreReporte + ".pdf");
                 Files.write(f.toPath(), reporte);
                 Desktop.getDesktop().open(f);
@@ -98,14 +96,14 @@ public class CerrarVentaGUI extends JDialog {
             List<FormaDePago> formasDePago = Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/formas-de-pago/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                             FormaDePago[].class));
-            formasDePago.stream().map((f) -> {
-                cmb_FormaDePago1.addItem(f);
-                return f;
-            }).map((f) -> {
-                cmb_FormaDePago2.addItem(f);
-                return f;
-            }).forEach((f) -> {
-                cmb_FormaDePago3.addItem(f);
+            formasDePago.stream().map(fdp -> {
+                cmb_FormaDePago1.addItem(fdp);
+                return fdp;
+            }).map(fdp -> {
+                cmb_FormaDePago2.addItem(fdp);
+                return fdp;
+            }).forEach(fdp -> {
+                cmb_FormaDePago3.addItem(fdp);
             });
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -123,7 +121,7 @@ public class CerrarVentaGUI extends JDialog {
             List<Transportista> transportes = Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/transportistas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                             Transportista[].class));
-            transportes.stream().forEach((t) -> {
+            transportes.stream().forEach(t -> {
                 cmb_Transporte.addItem(t);
             });
         } catch (RestClientResponseException ex) {
@@ -153,16 +151,16 @@ public class CerrarVentaGUI extends JDialog {
     }
 
     private void setEstadoFormasDePago() {
-        try {
-            chk_FormaDePago1.setSelected(true);
+        try {            
             FormaDePago formaDePagoPredeterminada = RestClient.getRestTemplate()
                     .getForObject("/formas-de-pago/predeterminada/empresas/"
-                            + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                            FormaDePago.class);
+                            + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), FormaDePago.class);            
             cmb_FormaDePago1.setSelectedItem(formaDePagoPredeterminada);
-            cmb_FormaDePago2.setEnabled(false);
-            txt_MontoPago2.setEnabled(false);
+            cmb_FormaDePago1.setEnabled(false);
+            txt_MontoPago1.setEnabled(false);           
             cmb_FormaDePago2.setSelectedItem(formaDePagoPredeterminada);
+            txt_MontoPago2.setEnabled(false);            
+            cmb_FormaDePago2.setEnabled(false);            
             cmb_FormaDePago3.setSelectedItem(formaDePagoPredeterminada);
             cmb_FormaDePago3.setEnabled(false);
             txt_MontoPago3.setEnabled(false);
