@@ -34,7 +34,7 @@
                   <Component id="panelGeneral" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnGuardar" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -47,7 +47,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="panelGeneral" min="-2" max="-2" attributes="1"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
+              <Component id="btnGuardar" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -69,15 +69,15 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                      <Component id="lbl_FormaDePago" alignment="0" max="32767" attributes="1"/>
-                      <Component id="lbl_Monto" alignment="0" max="32767" attributes="1"/>
-                      <Component id="lbl_Nota" alignment="0" max="32767" attributes="1"/>
+                      <Component id="lblFormaDePago" alignment="0" max="32767" attributes="1"/>
+                      <Component id="lblMonto" alignment="0" max="32767" attributes="1"/>
+                      <Component id="lblObservaciones" alignment="0" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="cmb_FormaDePago" alignment="0" pref="269" max="32767" attributes="0"/>
-                      <Component id="txt_Monto" alignment="0" max="32767" attributes="2"/>
-                      <Component id="txt_Nota" alignment="0" max="32767" attributes="2"/>
+                      <Component id="cmbFormaDePago" alignment="0" pref="269" max="32767" attributes="0"/>
+                      <Component id="txtMonto" alignment="0" max="32767" attributes="2"/>
+                      <Component id="txtObservaciones" alignment="0" max="32767" attributes="2"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -88,18 +88,18 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="cmb_FormaDePago" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbl_FormaDePago" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="cmbFormaDePago" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblFormaDePago" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="txt_Monto" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbl_Monto" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtMonto" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblMonto" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lbl_Nota" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txt_Nota" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblObservaciones" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtObservaciones" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -107,7 +107,7 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="lbl_FormaDePago">
+        <Component class="javax.swing.JLabel" name="lblFormaDePago">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
@@ -116,7 +116,7 @@
             <Property name="text" type="java.lang.String" value="* Forma de Pago:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txt_Monto">
+        <Component class="javax.swing.JFormattedTextField" name="txtMonto">
           <Properties>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
               <Format format="#,##0.##" subtype="-1" type="0"/>
@@ -125,21 +125,21 @@
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
           <Events>
-            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txt_MontoFocusGained"/>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtMontoFocusGained"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JLabel" name="lbl_Monto">
+        <Component class="javax.swing.JLabel" name="lblMonto">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="* Monto"/>
+            <Property name="text" type="java.lang.String" value="* Monto:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txt_Nota">
+        <Component class="javax.swing.JTextField" name="txtObservaciones">
         </Component>
-        <Component class="javax.swing.JComboBox" name="cmb_FormaDePago">
+        <Component class="javax.swing.JComboBox" name="cmbFormaDePago">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>
@@ -149,15 +149,15 @@
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;FormaDePago&gt;"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JLabel" name="lbl_Nota">
+        <Component class="javax.swing.JLabel" name="lblObservaciones">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Nota"/>
+            <Property name="text" type="java.lang.String" value="Observaciones:"/>
           </Properties>
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JButton" name="btn_Guardar">
+    <Component class="javax.swing.JButton" name="btnGuardar">
       <Properties>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
@@ -168,7 +168,7 @@
         <Property name="text" type="java.lang.String" value="Guardar"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_GuardarActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGuardarActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

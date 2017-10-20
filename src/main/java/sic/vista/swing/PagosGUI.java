@@ -28,7 +28,7 @@ public class PagosGUI extends JDialog {
     private final Factura facturaRelacionada; 
     private final NotaDebito notaDebitoRelacionada;
     private boolean actualizar;
-    private final FormatterFechaHora formateador = new FormatterFechaHora(FormatterFechaHora.FORMATO_FECHA_HISPANO);
+    private final FormatterFechaHora formateador = new FormatterFechaHora(FormatterFechaHora.FORMATO_FECHA_HISPANO);    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public PagosGUI(Factura factura) {
@@ -54,6 +54,10 @@ public class PagosGUI extends JDialog {
         this.setColumnas();
     }
 
+    public boolean isPagosCreados() {
+        return actualizar;
+    }
+    
     private void setIcon() {
         ImageIcon iconoVentana = new ImageIcon(PagosGUI.class.getResource("/sic/icons/Stamp_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
@@ -63,12 +67,10 @@ public class PagosGUI extends JDialog {
         try {
             if (facturaRelacionada != null) {
                 pagos = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                        .getForObject("/pagos/facturas/" + facturaRelacionada.getId_Factura(),
-                                Pago[].class)));
+                        .getForObject("/pagos/facturas/" + facturaRelacionada.getId_Factura(), Pago[].class)));
             } else if (notaDebitoRelacionada != null) {
                 pagos = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                        .getForObject("/pagos/notas/" + notaDebitoRelacionada.getIdNota(),
-                                Pago[].class)));
+                        .getForObject("/pagos/notas/" + notaDebitoRelacionada.getIdNota(), Pago[].class)));
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -81,24 +83,23 @@ public class PagosGUI extends JDialog {
     }
 
     private void setColumnas() {
-        //sorting
-        tbl_Resultados.setAutoCreateRowSorter(true);
-
         //nombres de columnas
-        String[] encabezados = new String[4];
-        encabezados[0] = "Fecha";        
-        encabezados[1] = "Forma de Pago";
-        encabezados[2] = "Monto";
-        encabezados[3] = "Nota";
+        String[] encabezados = new String[5];
+        encabezados[0] = "Nº Pago";
+        encabezados[1] = "Fecha";
+        encabezados[2] = "Forma de Pago";
+        encabezados[3] = "Monto";
+        encabezados[4] = "Observaciones";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaResultados);
 
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
-        tipos[0] = Date.class;        
-        tipos[1] = String.class;
-        tipos[2] = Double.class;
-        tipos[3] = String.class;
+        tipos[0] = Integer.class;
+        tipos[1] = Date.class;
+        tipos[2] = String.class;
+        tipos[3] = Double.class;
+        tipos[4] = String.class;
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
@@ -106,23 +107,26 @@ public class PagosGUI extends JDialog {
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(Double.class, new RenderTabla());
 
-        //size de columnas        
-        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(150);             
-        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(150);
-        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(90); 
-        tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(385); 
+        //size de columnas
+        tbl_Resultados.getColumnModel().getColumn(0).setMinWidth(80);
+        tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(80);
+        tbl_Resultados.getColumnModel().getColumn(1).setMinWidth(120);
+        tbl_Resultados.getColumnModel().getColumn(1).setMaxWidth(120);        
+        tbl_Resultados.getColumnModel().getColumn(3).setMinWidth(120);
+        tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(120);        
     }
 
     private void cargarResultadosAlTable() {
         this.limpiarJTable();
-        pagos.stream().map((p) -> {
-            Object[] fila = new Object[4];
-            fila[0] = p.getFecha();            
-            fila[1] = p.getFormaDePago().getNombre();
-            fila[2] = p.getMonto();
-            fila[3] = p.getNota();
+        pagos.stream().map(p -> {
+            Object[] fila = new Object[5];
+            fila[0] = p.getNroPago();
+            fila[1] = p.getFecha();
+            fila[2] = p.getFormaDePago().getNombre();
+            fila[3] = p.getMonto();
+            fila[4] = p.getNota();
             return fila;
-        }).forEach((fila) -> {
+        }).forEach(fila -> {
             modeloTablaResultados.addRow(fila);
         });
         tbl_Resultados.getColumnModel().getColumn(0).setCellRenderer(new FormatoFechasEnTablasRenderer());
@@ -138,8 +142,7 @@ public class PagosGUI extends JDialog {
     private void eliminarPago() {
         if (tbl_Resultados.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-            int respuesta = JOptionPane.showConfirmDialog(this,
-                    "¿Esta seguro que desea eliminar el pago seleccionado?",
+            int respuesta = JOptionPane.showConfirmDialog(this, "¿Esta seguro que desea eliminar el pago seleccionado?",
                     "Eliminar", JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
                 try {
@@ -156,31 +159,25 @@ public class PagosGUI extends JDialog {
                 pagos.remove(indexFilaSeleccionada);
                 this.getPagos();
                 this.actualizarSaldos();
-                cargarResultadosAlTable();
+                this.cargarResultadosAlTable();
             }
         }
     }
-
     
     private void actualizarSaldos() {
         try {
             if (facturaRelacionada != null) {
                 txt_TotalAdeudado.setValue(facturaRelacionada.getTotal());
                 txt_TotalPagado.setValue(RestClient.getRestTemplate()
-                        .getForObject("/pagos/facturas/" + facturaRelacionada.getId_Factura() + "/total-pagado",
-                                double.class));
+                        .getForObject("/pagos/facturas/" + facturaRelacionada.getId_Factura() + "/total-pagado", double.class));
                 txt_SaldoAPagar.setValue(RestClient.getRestTemplate()
-                        .getForObject("/pagos/facturas/" + facturaRelacionada.getId_Factura() + "/saldo",
-                                double.class));
+                        .getForObject("/pagos/facturas/" + facturaRelacionada.getId_Factura() + "/saldo", double.class));
             } else if (notaDebitoRelacionada != null) {
                 txt_TotalAdeudado.setValue(notaDebitoRelacionada.getTotal());
-
                 txt_TotalPagado.setValue(RestClient.getRestTemplate()
-                        .getForObject("/pagos/notas/" + notaDebitoRelacionada.getIdNota() + "/total-pagado",
-                                double.class));
+                        .getForObject("/pagos/notas/" + notaDebitoRelacionada.getIdNota() + "/total-pagado", double.class));
                 txt_SaldoAPagar.setValue(RestClient.getRestTemplate()
-                        .getForObject("/pagos/notas/" + notaDebitoRelacionada.getIdNota() + "/saldo",
-                                double.class));
+                        .getForObject("/pagos/notas/" + notaDebitoRelacionada.getIdNota() + "/saldo", double.class));
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -325,7 +322,7 @@ public class PagosGUI extends JDialog {
                                 .addComponent(btn_Nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, 0)
                                 .addComponent(btn_Eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 90, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -337,7 +334,7 @@ public class PagosGUI extends JDialog {
                 .addContainerGap()
                 .addComponent(lbl_AvisoPagado)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Resultado, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
+                .addComponent(sp_Resultado, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_Nuevo)
@@ -375,10 +372,6 @@ public class PagosGUI extends JDialog {
             this.cargarResultadosAlTable();
         }
     }//GEN-LAST:event_btn_NuevoActionPerformed
-
-    public boolean isPagosCreados() {
-        return actualizar;
-    }
     
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         String tituloVentana;
