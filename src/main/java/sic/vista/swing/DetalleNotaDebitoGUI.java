@@ -68,12 +68,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
     }
     
     private void cargarDetalleComprobante() {
-        double iva;
-        if (noGravaGastos) {
-            iva = 0.0;
-        } else {
-            iva = (Double.parseDouble(txtMontoRenglon2.getText()) * 0.21);
-        }
+        double iva = 0;
+        if (noGravaGastos == false) iva = (Double.parseDouble(txtMontoRenglon2.getText()) * 0.21);
         lblIvaNetoRenglon2.setText("$" + iva);
         lblImporteRenglon2.setText("$" + (Double.parseDouble(txtMontoRenglon2.getText()) + iva));
         txtSubTotalBruto.setValue(Double.parseDouble(txtMontoRenglon2.getText()));
