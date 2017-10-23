@@ -26,13 +26,13 @@ public enum TipoDeComprobante {
     
     NOTA_CREDITO_X("Nota de Credito X"), 
     
-    NOTA_CREDITO_P("Nota de Credito P"),
+    NOTA_CREDITO_PRESUPUESTO("Nota de Credito P"),
     
     NOTA_DEBITO_A("Nota de Debito A"),
     
     NOTA_DEBITO_B("Nota de Debito B"),
     
-    NOTA_DEBITO_P("Nota de Debito P"),
+    NOTA_DEBITO_PRESUPUESTO("Nota de Debito P"),
     
     NOTA_DEBITO_X("Nota de Debito X");
     
