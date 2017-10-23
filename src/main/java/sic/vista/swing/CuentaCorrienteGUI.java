@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -32,6 +33,7 @@ import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.CuentaCorriente;
 import sic.modelo.Factura;
+import sic.modelo.Movimiento;
 import sic.modelo.Nota;
 import sic.modelo.NotaDebito;
 import sic.modelo.PaginaRespuestaRest;
@@ -382,7 +384,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
 
             }
         ));
-        tbl_Resultados.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tbl_Resultados.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         sp_Resultados.setViewportView(tbl_Resultados);
 
         btnCrearNotaCredito.setForeground(java.awt.Color.blue);
@@ -561,7 +563,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnCrearNotaCreditoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearNotaCreditoActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1) {
+        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
             if (renglonCC.getTipoMovimiento() == TipoMovimiento.VENTA) {
@@ -587,7 +589,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     }//GEN-LAST:event_btnCrearNotaCreditoActionPerformed
 
     private void btnCrearNotaDebitoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearNotaDebitoActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1) {
+        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
             if (renglonCC.getTipoMovimiento() == TipoMovimiento.PAGO) {
@@ -610,7 +612,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     }//GEN-LAST:event_btnCrearNotaDebitoActionPerformed
 
     private void btnVerDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerDetalleActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1) {
+        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
             try {
@@ -705,30 +707,71 @@ public class CuentaCorrienteGUI extends JInternalFrame {
 
     private void btn_VerPagosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VerPagosActionPerformed
         try {
-            if (tbl_Resultados.getSelectedRow() != -1) {
-                boolean refrescar = false;
+            if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
                 if (tbl_Resultados.getSelectedRowCount() == 1) {
+                                    boolean refrescar = false;
                     int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
                     RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
-                    if (renglonCC.getTipoMovimiento() == TipoMovimiento.VENTA) {
-                        PagosGUI gui_Pagos = new PagosGUI(RestClient.getRestTemplate().getForObject("/facturas/" + renglonCC.getIdMovimiento(), Factura.class));
-                        gui_Pagos.setModal(true);
-                        gui_Pagos.setLocationRelativeTo(this);
-                        gui_Pagos.setVisible(true);
-                        refrescar = gui_Pagos.isPagosCreados();
-                    } else if (renglonCC.getTipoMovimiento() == TipoMovimiento.DEBITO) {
-                        PagosGUI gui_Pagos = new PagosGUI(RestClient.getRestTemplate().getForObject("/notas/" + renglonCC.getIdMovimiento(), NotaDebito.class));
-                        gui_Pagos.setModal(true);
-                        gui_Pagos.setLocationRelativeTo(this);
-                        gui_Pagos.setVisible(true);
-                        refrescar = gui_Pagos.isPagosCreados();
+                    if (null == renglonCC.getTipoMovimiento()) {
+                        JOptionPane.showInternalMessageDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    } else switch (renglonCC.getTipoMovimiento()) {
+                        case VENTA:
+                            {
+                                PagosGUI gui_Pagos = new PagosGUI(RestClient.getRestTemplate().getForObject("/facturas/" + renglonCC.getIdMovimiento(), Factura.class));
+                                gui_Pagos.setModal(true);
+                                gui_Pagos.setLocationRelativeTo(this);
+                                gui_Pagos.setVisible(true);
+                                refrescar = gui_Pagos.isPagosCreados();
+                                break;
+                            }
+                        case DEBITO:
+                            {
+                                PagosGUI gui_Pagos = new PagosGUI(RestClient.getRestTemplate().getForObject("/notas/" + renglonCC.getIdMovimiento(), NotaDebito.class));
+                                gui_Pagos.setModal(true);
+                                gui_Pagos.setLocationRelativeTo(this);
+                                gui_Pagos.setVisible(true);
+                                refrescar = gui_Pagos.isPagosCreados();
+                                break;
+                            }
+                        default:
+                            JOptionPane.showInternalMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                            break;
+                    }
+                    refrescarVista(refrescar);
+                }
+                if (tbl_Resultados.getSelectedRowCount() > 1) {
+                    int[] indicesTabla = Utilidades.getSelectedRowsModelIndices(tbl_Resultados);
+                    long[] idsFacturas = new long[indicesTabla.length];
+                    boolean todosMovimientosDeVenta = true;
+                    for (int i = 0; i < indicesTabla.length; i++) {
+                        if(movimientosTotal.get(indicesTabla[i]).getTipoMovimiento() != TipoMovimiento.VENTA) {
+                            todosMovimientosDeVenta = false;
+                            break;
+                        }
+                        idsFacturas[i] = movimientosTotal.get(indicesTabla[i]).getIdMovimiento();
+                    }
+                    if (todosMovimientosDeVenta) {
+                        String uri = "/facturas/validaciones-pago-multiple?"
+                                + "idFactura=" + Arrays.toString(idsFacturas).substring(1, Arrays.toString(idsFacturas).length() - 1)
+                                + "&movimiento=" + Movimiento.VENTA;
+                        boolean esValido = RestClient.getRestTemplate().getForObject(uri, boolean.class);
+                        if (esValido) {
+                            PagoMultiplesFacturasGUI gui_PagoMultiples = new PagoMultiplesFacturasGUI(this, idsFacturas, Movimiento.VENTA);
+                            gui_PagoMultiples.setModal(true);
+                            gui_PagoMultiples.setLocationRelativeTo(this);
+                            gui_PagoMultiples.setVisible(true);
+                            refrescarVista(gui_PagoMultiples.isPagosCreados());
+                        }
                     } else {
                         JOptionPane.showInternalMessageDialog(this,
                                 ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
                                 "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
-                refrescarVista(refrescar);
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -741,7 +784,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_VerPagosActionPerformed
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1) {
+        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
             if (tbl_Resultados.getSelectedRowCount() == 1) {
                 int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
                         .getString("mensaje_eliminar_movimientos"),

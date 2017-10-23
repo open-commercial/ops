@@ -31,13 +31,15 @@ public class PagoMultiplesFacturasGUI extends JDialog {
     private final Movimiento movimiento;
     private final ModeloTabla modeloTablaFacturas = new ModeloTabla();
     private double montoTotal = 0.0;
+    private boolean pagosCreados;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public PagoMultiplesFacturasGUI(JInternalFrame parent, List<Factura> facturas, Movimiento movimiento) {                
+    public PagoMultiplesFacturasGUI(JInternalFrame parent, long[] idsFacturas, Movimiento movimiento) {                
         this.setIcon();        
         this.movimiento = movimiento;                 
-        this.facturas = this.ordenarFacturasPorFechaAsc(facturas);
-        this.initComponents();        
+        this.facturas = this.obtenerFacturasYsPorFechaAsc(idsFacturas);
+        pagosCreados = false;
+        this.initComponents();   
     }
 
     private void setIcon() {
@@ -65,8 +67,8 @@ public class PagoMultiplesFacturasGUI extends JDialog {
         tbl_InformacionFacturas.getTableHeader().setReorderingAllowed(false);
         tbl_InformacionFacturas.getTableHeader().setResizingAllowed(true);
         tbl_InformacionFacturas.setDefaultRenderer(Double.class, new RenderTabla());
-        tbl_InformacionFacturas.getColumnModel().getColumn(0).setPreferredWidth(120);
-        tbl_InformacionFacturas.getColumnModel().getColumn(1).setPreferredWidth(40);
+        tbl_InformacionFacturas.getColumnModel().getColumn(0).setPreferredWidth(100);
+        tbl_InformacionFacturas.getColumnModel().getColumn(1).setPreferredWidth(100);
         tbl_InformacionFacturas.getColumnModel().getColumn(2).setPreferredWidth(120);
         tbl_InformacionFacturas.getColumnModel().getColumn(3).setPreferredWidth(120);
         tbl_InformacionFacturas.getColumnModel().getColumn(4).setPreferredWidth(120);
@@ -107,13 +109,11 @@ public class PagoMultiplesFacturasGUI extends JDialog {
         });
     }
     
-    private List<Factura> ordenarFacturasPorFechaAsc(List<Factura> facturas) {
-        Comparator comparador = new Comparator<Factura>() {
-            @Override
-            public int compare(Factura f1, Factura f2) {
-                return f1.getFecha().compareTo(f2.getFecha());
-            }
-        };        
+    private List<Factura> obtenerFacturasYsPorFechaAsc(long idsFacturas[]) {
+        for(int i = 0; i < idsFacturas.length; i++) {
+            facturas.add(RestClient.getRestTemplate().getForObject("/facturas/" + idsFacturas[i], Factura.class));
+        }
+        Comparator comparador = (Comparator<Factura>) (Factura f1, Factura f2) -> f1.getFecha().compareTo(f2.getFecha());        
         facturas.sort(comparador);
         return facturas;
     }
@@ -303,6 +303,7 @@ public class PagoMultiplesFacturasGUI extends JDialog {
                         + "&idFormaDePago=" + ((FormaDePago) cmb_FormaDePago.getSelectedItem()).getId_FormaDePago()
                         + "&nota=" + ftxt_Nota.getText(),
                         null);
+                pagosCreados = true;
                 this.dispose();
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -315,6 +316,10 @@ public class PagoMultiplesFacturasGUI extends JDialog {
         }
     }//GEN-LAST:event_lbl_AceptarActionPerformed
 
+    public boolean isPagosCreados() {
+        return this.pagosCreados;
+    }
+    
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {            
             tbl_InformacionFacturas.setModel(modeloTablaFacturas);
