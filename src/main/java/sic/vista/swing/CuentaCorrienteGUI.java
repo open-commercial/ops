@@ -707,7 +707,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
 
     private void btn_VerPagosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VerPagosActionPerformed
         try {
-            if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
+            if (tbl_Resultados.getSelectedRow() != -1) {
                 if (tbl_Resultados.getSelectedRowCount() == 1) {
                                     boolean refrescar = false;
                     int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
@@ -785,36 +785,34 @@ public class CuentaCorrienteGUI extends JInternalFrame {
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
-            if (tbl_Resultados.getSelectedRowCount() == 1) {
-                int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
-                        .getString("mensaje_eliminar_movimientos"),
-                        "Eliminar", JOptionPane.YES_NO_OPTION);
-                if (respuesta == JOptionPane.YES_OPTION) {
-                    int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                    RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
-                    boolean refrescar = false;
-                    try {
-                        if (renglonCC.getTipoMovimiento() == TipoMovimiento.VENTA) {
-                            RestClient.getRestTemplate().delete("/facturas?idFactura=" + renglonCC.getIdMovimiento());
-                            refrescar = true;
-                        }
-                        if (renglonCC.getTipoMovimiento() == TipoMovimiento.PAGO) {
-                            RestClient.getRestTemplate().delete("/pagos/" + renglonCC.getIdMovimiento());
-                            refrescar = true;
-                        }
-                        if (renglonCC.getTipoMovimiento() == TipoMovimiento.CREDITO || renglonCC.getTipoMovimiento() == TipoMovimiento.DEBITO) {
-                            RestClient.getRestTemplate().delete("/notas?idsNota=" + renglonCC.getIdMovimiento());
-                            refrescar = true;
-                        }
-                        refrescarVista(refrescar);
-                    } catch (RestClientResponseException ex) {
-                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    } catch (ResourceAccessException ex) {
-                        LOGGER.error(ex.getMessage());
-                        JOptionPane.showMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
+            int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
+                    .getString("mensaje_eliminar_movimientos"),
+                    "Eliminar", JOptionPane.YES_NO_OPTION);
+            if (respuesta == JOptionPane.YES_OPTION) {
+                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+                RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
+                boolean refrescar = false;
+                try {
+                    if (renglonCC.getTipoMovimiento() == TipoMovimiento.VENTA) {
+                        RestClient.getRestTemplate().delete("/facturas?idFactura=" + renglonCC.getIdMovimiento());
+                        refrescar = true;
                     }
+                    if (renglonCC.getTipoMovimiento() == TipoMovimiento.PAGO) {
+                        RestClient.getRestTemplate().delete("/pagos/" + renglonCC.getIdMovimiento());
+                        refrescar = true;
+                    }
+                    if (renglonCC.getTipoMovimiento() == TipoMovimiento.CREDITO || renglonCC.getTipoMovimiento() == TipoMovimiento.DEBITO) {
+                        RestClient.getRestTemplate().delete("/notas?idsNota=" + renglonCC.getIdMovimiento());
+                        refrescar = true;
+                    }
+                    refrescarVista(refrescar);
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
