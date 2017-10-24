@@ -728,6 +728,7 @@ public class FacturasCompraGUI extends JInternalFrame {
                 gui_Pagos.setModal(true);
                 gui_Pagos.setLocationRelativeTo(this);
                 gui_Pagos.setVisible(true);
+                this.limpiarJTable();
                 this.buscar();
             }
             if (tbl_Resultados.getSelectedRowCount() > 1) {
@@ -746,6 +747,7 @@ public class FacturasCompraGUI extends JInternalFrame {
                         gui_pagoMultiplesFacturas.setModal(true);
                         gui_pagoMultiplesFacturas.setLocationRelativeTo(this);
                         gui_pagoMultiplesFacturas.setVisible(true);
+                        this.limpiarJTable();
                         this.buscar();
                     }
                 } catch (RestClientResponseException ex) {
