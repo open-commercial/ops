@@ -2,7 +2,6 @@ package sic.vista.swing;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -207,6 +206,7 @@ public class SeleccionDeProductosGUI extends JDialog {
         spResultados = new javax.swing.JScrollPane();
         tblResultados = new javax.swing.JTable();
         chkModificarStock = new javax.swing.JCheckBox();
+        chkSeleccionarPorElTotal = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -236,10 +236,22 @@ public class SeleccionDeProductosGUI extends JDialog {
         ));
         tblResultados.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblResultados.getTableHeader().setReorderingAllowed(false);
+        tblResultados.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                tblResultadosPropertyChange(evt);
+            }
+        });
         spResultados.setViewportView(tblResultados);
 
         chkModificarStock.setSelected(true);
         chkModificarStock.setText("Modificar Stock");
+
+        chkSeleccionarPorElTotal.setText("Seleccionar por el Total");
+        chkSeleccionarPorElTotal.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chkSeleccionarPorElTotalItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -250,6 +262,8 @@ public class SeleccionDeProductosGUI extends JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(chkModificarStock)
+                        .addGap(0, 0, 0)
+                        .addComponent(chkSeleccionarPorElTotal)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnContinuar))
                     .addGroup(layout.createSequentialGroup()
@@ -268,7 +282,8 @@ public class SeleccionDeProductosGUI extends JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnContinuar)
-                    .addComponent(chkModificarStock))
+                    .addComponent(chkModificarStock)
+                    .addComponent(chkSeleccionarPorElTotal))
                 .addContainerGap())
         );
 
@@ -293,9 +308,26 @@ public class SeleccionDeProductosGUI extends JDialog {
         }
     }//GEN-LAST:event_btnContinuarActionPerformed
 
+    private void chkSeleccionarPorElTotalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkSeleccionarPorElTotalItemStateChanged
+        int i = 0;
+        if (chkSeleccionarPorElTotal.isSelected()) {
+            for (RenglonFactura r : fv.getRenglones()) {
+                tblResultados.setValueAt(r.getCantidad(), i, 6);
+                i++;
+            }
+        }
+    }//GEN-LAST:event_chkSeleccionarPorElTotalItemStateChanged
+
+    private void tblResultadosPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tblResultadosPropertyChange
+        if ("tableCellEditor".equals(evt.getPropertyName())) {
+            chkSeleccionarPorElTotal.setSelected(false);
+        }
+    }//GEN-LAST:event_tblResultadosPropertyChange
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnContinuar;
     private javax.swing.JCheckBox chkModificarStock;
+    private javax.swing.JCheckBox chkSeleccionarPorElTotal;
     private javax.swing.JLabel lblInstrucciones;
     private javax.swing.JScrollPane spResultados;
     private javax.swing.JTable tblResultados;
