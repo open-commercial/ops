@@ -27,10 +27,8 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
-import sic.modelo.Factura;
 import sic.modelo.FacturaVenta;
 import sic.modelo.Usuario;
-import sic.modelo.Movimiento;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
@@ -305,7 +303,6 @@ public class FacturasVentaGUI extends JInternalFrame {
         btn_Nueva.setEnabled(status);
         btn_Eliminar.setEnabled(status);
         btn_VerDetalle.setEnabled(status);
-        btn_VerPagos.setEnabled(status);
         btn_Autorizar.setEnabled(status);
         tbl_Resultados.setEnabled(status);
         sp_Resultados.setEnabled(status);
@@ -513,7 +510,6 @@ public class FacturasVentaGUI extends JInternalFrame {
         txt_ResultGananciaTotal = new javax.swing.JFormattedTextField();
         txt_ResultTotalIVAVenta = new javax.swing.JFormattedTextField();
         btn_Nueva = new javax.swing.JButton();
-        btn_VerPagos = new javax.swing.JButton();
         btn_Autorizar = new javax.swing.JButton();
         panelFiltros = new javax.swing.JPanel();
         subPanelFiltros1 = new javax.swing.JPanel();
@@ -656,15 +652,6 @@ public class FacturasVentaGUI extends JInternalFrame {
             }
         });
 
-        btn_VerPagos.setForeground(java.awt.Color.blue);
-        btn_VerPagos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/StampArrow_16x16.png"))); // NOI18N
-        btn_VerPagos.setText("Pagos");
-        btn_VerPagos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_VerPagosActionPerformed(evt);
-            }
-        });
-
         btn_Autorizar.setForeground(java.awt.Color.blue);
         btn_Autorizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Certificate_16x16.png"))); // NOI18N
         btn_Autorizar.setText("Autorizar");
@@ -679,43 +666,36 @@ public class FacturasVentaGUI extends JInternalFrame {
         panelResultadosLayout.setHorizontalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelResultadosLayout.createSequentialGroup()
-                        .addComponent(btn_Nueva, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_Eliminar)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_VerPagos))
-                    .addGroup(panelResultadosLayout.createSequentialGroup()
-                        .addComponent(btn_Autorizar)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_VerDetalle)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_Nueva, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(btn_Eliminar)
+                .addGap(0, 0, 0)
+                .addComponent(btn_Autorizar)
+                .addGap(0, 0, 0)
+                .addComponent(btn_VerDetalle)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(panelNumeros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(sp_Resultados)
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Autorizar, btn_Eliminar, btn_Nueva, btn_VerDetalle, btn_VerPagos});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Autorizar, btn_Eliminar, btn_Nueva, btn_VerDetalle});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
                 .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
                 .addGap(7, 7, 7)
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(panelNumeros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panelResultadosLayout.createSequentialGroup()
+                    .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btn_Eliminar)
+                        .addComponent(btn_Nueva)
                         .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btn_Autorizar)
-                            .addComponent(btn_VerDetalle))
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btn_Eliminar)
-                            .addComponent(btn_Nueva)
-                            .addComponent(btn_VerPagos)))))
+                            .addComponent(btn_VerDetalle)))))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Eliminar, btn_Nueva, btn_VerDetalle, btn_VerPagos});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Eliminar, btn_Nueva, btn_VerDetalle});
 
         panelFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
 
@@ -1148,52 +1128,6 @@ public class FacturasVentaGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_chk_EstadoFacturaItemStateChanged
 
-    private void btn_VerPagosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VerPagosActionPerformed
-        try {
-            if (tbl_Resultados.getSelectedRow() != -1) {
-                if (tbl_Resultados.getSelectedRowCount() == 1) {
-                    int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                    PagosGUI gui_Pagos = new PagosGUI(facturasTotal.get(indexFilaSeleccionada));
-                    gui_Pagos.setModal(true);
-                    gui_Pagos.setLocationRelativeTo(this);
-                    gui_Pagos.setVisible(true);
-                    this.resetScroll();
-                    this.limpiarJTable();
-                    this.buscar();
-                }
-                if (tbl_Resultados.getSelectedRowCount() > 1) {
-                    int[] indicesTabla = Utilidades.getSelectedRowsModelIndices(tbl_Resultados);
-                    long[] idsFacturas = new long[indicesTabla.length];
-                    List<Factura> facturasVenta = new ArrayList<>();
-                    for (int i = 0; i < indicesTabla.length; i++) {
-                        facturasVenta.add(this.facturasTotal.get(indicesTabla[i]));
-                        idsFacturas[i] = this.facturasTotal.get(indicesTabla[i]).getId_Factura();
-                    }
-                    String uri = "/facturas/validaciones-pago-multiple?"
-                            + "idFactura=" + Arrays.toString(idsFacturas).substring(1, Arrays.toString(idsFacturas).length() - 1)
-                            + "&movimiento=" + Movimiento.VENTA;
-                    boolean esValido = RestClient.getRestTemplate().getForObject(uri, boolean.class);
-                    if (esValido) {
-                        PagoMultiplesFacturasGUI gui_PagoMultiples = new PagoMultiplesFacturasGUI(this, facturasVenta, Movimiento.VENTA);
-                        gui_PagoMultiples.setModal(true);
-                        gui_PagoMultiples.setLocationRelativeTo(this);
-                        gui_PagoMultiples.setVisible(true);
-                        this.resetScroll();
-                        this.limpiarJTable();
-                        this.buscar();
-                    }
-                }
-            }
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_btn_VerPagosActionPerformed
-
     private void chk_VendedorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_VendedorItemStateChanged
         this.cargarUsuarios();
     }//GEN-LAST:event_chk_VendedorItemStateChanged
@@ -1229,7 +1163,6 @@ public class FacturasVentaGUI extends JInternalFrame {
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_Nueva;
     private javax.swing.JButton btn_VerDetalle;
-    private javax.swing.JButton btn_VerPagos;
     private javax.swing.JCheckBox chk_Cliente;
     private javax.swing.JCheckBox chk_EstadoFactura;
     private javax.swing.JCheckBox chk_Fecha;

@@ -733,18 +733,16 @@ public class FacturasCompraGUI extends JInternalFrame {
             if (tbl_Resultados.getSelectedRowCount() > 1) {
                 int[] indicesTabla = Utilidades.getSelectedRowsModelIndices(tbl_Resultados);
                 long[] idsFacturas = new long[indicesTabla.length];
-                List<Factura> facturasCompra = new ArrayList<>();
                 for (int i = 0; i < indicesTabla.length; i++) {
-                    facturasCompra.add(this.facturasTotal.get(indicesTabla[i]));
                     idsFacturas[i] = this.facturasTotal.get(indicesTabla[i]).getId_Factura();
                 }
                 try {
                     String uri = "/facturas/validaciones-pago-multiple?"
-                                + "idFactura=" + Arrays.toString(idsFacturas).substring(1, Arrays.toString(idsFacturas).length() -1 )
-                                + "&movimiento=" + Movimiento.COMPRA;
+                               + "idFactura=" + Arrays.toString(idsFacturas).substring(1, Arrays.toString(idsFacturas).length() - 1)
+                               + "&movimiento=" + Movimiento.COMPRA;
                     boolean esValido = RestClient.getRestTemplate().getForObject(uri, boolean.class);
                     if (esValido) {
-                        PagoMultiplesFacturasGUI gui_pagoMultiplesFacturas = new PagoMultiplesFacturasGUI(this, facturasCompra, Movimiento.COMPRA);
+                        PagoMultiplesFacturasGUI gui_pagoMultiplesFacturas = new PagoMultiplesFacturasGUI(this, idsFacturas, Movimiento.COMPRA);
                         gui_pagoMultiplesFacturas.setModal(true);
                         gui_pagoMultiplesFacturas.setLocationRelativeTo(this);
                         gui_pagoMultiplesFacturas.setVisible(true);
