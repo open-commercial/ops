@@ -83,7 +83,7 @@
                   <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="lbl_Nota" linkSize="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblObservaciones" linkSize="1" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="ftxt_Nota" linkSize="3" min="-2" pref="225" max="-2" attributes="0"/>
                       </Group>
@@ -118,7 +118,7 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lbl_Nota" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblObservaciones" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="ftxt_Nota" linkSize="4" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
@@ -166,10 +166,10 @@
             <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="ftxt_MontoFocusGained"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JLabel" name="lbl_Nota">
+        <Component class="javax.swing.JLabel" name="lblObservaciones">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Nota:"/>
+            <Property name="text" type="java.lang.String" value="Observaciones:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="ftxt_Nota">

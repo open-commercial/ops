@@ -127,7 +127,7 @@ public class PagoMultiplesFacturasGUI extends JDialog {
         lbl_Monto = new javax.swing.JLabel();
         cmb_FormaDePago = new javax.swing.JComboBox<>();
         ftxt_Monto = new javax.swing.JFormattedTextField();
-        lbl_Nota = new javax.swing.JLabel();
+        lblObservaciones = new javax.swing.JLabel();
         ftxt_Nota = new javax.swing.JTextField();
         pnl_Botones = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -160,8 +160,8 @@ public class PagoMultiplesFacturasGUI extends JDialog {
             }
         });
 
-        lbl_Nota.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Nota.setText("Nota:");
+        lblObservaciones.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblObservaciones.setText("Observaciones:");
 
         javax.swing.GroupLayout pnl_ParametrosLayout = new javax.swing.GroupLayout(pnl_Parametros);
         pnl_Parametros.setLayout(pnl_ParametrosLayout);
@@ -171,7 +171,7 @@ public class PagoMultiplesFacturasGUI extends JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(pnl_ParametrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnl_ParametrosLayout.createSequentialGroup()
-                        .addComponent(lbl_Nota)
+                        .addComponent(lblObservaciones)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ftxt_Nota, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnl_ParametrosLayout.createSequentialGroup()
@@ -185,7 +185,7 @@ public class PagoMultiplesFacturasGUI extends JDialog {
                 .addContainerGap())
         );
 
-        pnl_ParametrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lbl_FormaDePago, lbl_Monto, lbl_Nota});
+        pnl_ParametrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblObservaciones, lbl_FormaDePago, lbl_Monto});
 
         pnl_ParametrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cmb_FormaDePago, ftxt_Monto, ftxt_Nota});
 
@@ -202,12 +202,12 @@ public class PagoMultiplesFacturasGUI extends JDialog {
                     .addComponent(ftxt_Monto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_ParametrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_Nota)
+                    .addComponent(lblObservaciones)
                     .addComponent(ftxt_Nota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pnl_ParametrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lbl_FormaDePago, lbl_Monto, lbl_Nota});
+        pnl_ParametrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblObservaciones, lbl_FormaDePago, lbl_Monto});
 
         pnl_ParametrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmb_FormaDePago, ftxt_Monto, ftxt_Nota});
 
@@ -353,10 +353,10 @@ public class PagoMultiplesFacturasGUI extends JDialog {
     private javax.swing.JFormattedTextField ftxt_Monto;
     private javax.swing.JTextField ftxt_Nota;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblObservaciones;
     private javax.swing.JButton lbl_Aceptar;
     private javax.swing.JLabel lbl_FormaDePago;
     private javax.swing.JLabel lbl_Monto;
-    private javax.swing.JLabel lbl_Nota;
     private javax.swing.JLabel lbl_leyenda;
     private javax.swing.JPanel pnl_Botones;
     private javax.swing.JPanel pnl_Parametros;
