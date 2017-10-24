@@ -35,7 +35,9 @@ import sic.modelo.Factura;
 import sic.modelo.Nota;
 import sic.modelo.NotaDebito;
 import sic.modelo.PaginaRespuestaRest;
+import sic.modelo.Pago;
 import sic.modelo.RenglonCuentaCorriente;
+import sic.modelo.TipoDeComprobante;
 import sic.util.ColoresNumerosTablaRenderer;
 import sic.util.FormatterNumero;
 import sic.util.RenderTabla;
@@ -565,18 +567,25 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
             if (renglonCC.getTipoMovimiento() == TipoMovimiento.VENTA) {
-                SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(renglonCC.getIdMovimiento(), TipoMovimiento.CREDITO);
-                seleccionDeProductosGUI.setModal(true);
-                seleccionDeProductosGUI.setLocationRelativeTo(this);
-                seleccionDeProductosGUI.setVisible(true);
-                if (!seleccionDeProductosGUI.getRenglonesConCantidadNueva().isEmpty()) {
-                    DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(
-                            seleccionDeProductosGUI.getRenglonesConCantidadNueva(),
-                            seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock());
-                    detalleNotaCredito.setModal(true);
-                    detalleNotaCredito.setLocationRelativeTo(this);
-                    detalleNotaCredito.setVisible(true);
-                    refrescarVista(detalleNotaCredito.isNotaCreada());
+                Factura fv = RestClient.getRestTemplate().getForObject("/facturas/" + renglonCC.getIdMovimiento(), Factura.class);
+                if (fv.getTipoComprobante() != TipoDeComprobante.FACTURA_Y) {
+                    SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(renglonCC.getIdMovimiento(), TipoMovimiento.CREDITO);
+                    seleccionDeProductosGUI.setModal(true);
+                    seleccionDeProductosGUI.setLocationRelativeTo(this);
+                    seleccionDeProductosGUI.setVisible(true);
+                    if (!seleccionDeProductosGUI.getRenglonesConCantidadNueva().isEmpty()) {
+                        DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(
+                                seleccionDeProductosGUI.getRenglonesConCantidadNueva(),
+                                seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock());
+                        detalleNotaCredito.setModal(true);
+                        detalleNotaCredito.setLocationRelativeTo(this);
+                        detalleNotaCredito.setVisible(true);
+                        refrescarVista(detalleNotaCredito.isNotaCreada());
+                    }
+                } else {
+                    JOptionPane.showInternalMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
                 JOptionPane.showInternalMessageDialog(this,
@@ -591,15 +600,22 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
             if (renglonCC.getTipoMovimiento() == TipoMovimiento.PAGO) {
-                if (RestClient.getRestTemplate().getForObject("/notas/debito/" + renglonCC.getIdMovimiento(), NotaDebito.class) != null) {
-                    JOptionPane.showInternalMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_pago_con_nota_debito"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                Pago pago = RestClient.getRestTemplate().getForObject("/pagos/" + renglonCC.getIdMovimiento(), Pago.class);
+                if (pago.getFactura() != null && pago.getFactura().getTipoComprobante() != TipoDeComprobante.FACTURA_Y) {
+                    if (RestClient.getRestTemplate().getForObject("/notas/debito/" + renglonCC.getIdMovimiento(), NotaDebito.class) != null) {
+                        JOptionPane.showInternalMessageDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_pago_con_nota_debito"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(cliente.getId_Cliente(), renglonCC.getIdMovimiento());
+                        detalleNotaDebitoGUI.setLocationRelativeTo(this);
+                        detalleNotaDebitoGUI.setVisible(true);
+                        refrescarVista(detalleNotaDebitoGUI.isNotaDebitoCreada());
+                    }
                 } else {
-                    DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(cliente.getId_Cliente(), renglonCC.getIdMovimiento());
-                    detalleNotaDebitoGUI.setLocationRelativeTo(this);
-                    detalleNotaDebitoGUI.setVisible(true);
-                    refrescarVista(detalleNotaDebitoGUI.isNotaDebitoCreada());
+                    JOptionPane.showInternalMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
                 JOptionPane.showInternalMessageDialog(this,

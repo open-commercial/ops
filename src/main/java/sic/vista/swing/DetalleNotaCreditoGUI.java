@@ -1,7 +1,6 @@
 package sic.vista.swing;
 
 import java.awt.Desktop;
-import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
