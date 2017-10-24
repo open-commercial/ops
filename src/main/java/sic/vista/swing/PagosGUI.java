@@ -160,6 +160,7 @@ public class PagosGUI extends JDialog {
                 this.getPagos();
                 this.actualizarSaldos();
                 this.cargarResultadosAlTable();
+                actualizar = true;
             }
         }
     }
