@@ -378,17 +378,17 @@ public class PagosGUI extends JDialog {
         String tituloVentana;
         if (facturaRelacionada != null) {
             if (facturaRelacionada.getNumSerie() == 0 && facturaRelacionada.getNumFactura() == 0) {
-                tituloVentana = "Pagos de la Factura Nº: (sin numero) con Fecha: " + formateador.format(facturaRelacionada.getFecha());
+                tituloVentana = "Pagos de " + facturaRelacionada.getTipoComprobante() + " (sin numero) con Fecha: " + formateador.format(facturaRelacionada.getFecha());
             } else {
-                tituloVentana = "Pagos de la Factura Nº: " + facturaRelacionada.getNumSerie() + " - " + facturaRelacionada.getNumFactura()
+                tituloVentana = "Pagos de " + facturaRelacionada.getTipoComprobante() + " Nro: " + facturaRelacionada.getNumSerie() + " - " + facturaRelacionada.getNumFactura()
                         + " con Fecha: " + formateador.format(facturaRelacionada.getFecha());
             }
             this.setTitle(tituloVentana);
         } else if (notaDebitoRelacionada != null) {
             if (notaDebitoRelacionada.getSerie() == 0 && notaDebitoRelacionada.getNroNota() == 0) {
-                tituloVentana = "Pagos de la Nota de Debito Nº: (sin numero) con Fecha: " + formateador.format(notaDebitoRelacionada.getFecha());
+                tituloVentana = "Pagos de " + notaDebitoRelacionada.getTipoComprobante() + " (sin numero) con Fecha: " + formateador.format(notaDebitoRelacionada.getFecha());
             } else {
-                tituloVentana = "Pagos de la Nota de Debito Nº: " + notaDebitoRelacionada.getSerie() + " - " + notaDebitoRelacionada.getNroNota()
+                tituloVentana = "Pagos de " + notaDebitoRelacionada.getTipoComprobante() + " Nro: " + notaDebitoRelacionada.getSerie() + " - " + notaDebitoRelacionada.getNroNota()
                         + " con Fecha: " + formateador.format(notaDebitoRelacionada.getFecha());
             }
             this.setTitle(tituloVentana);
