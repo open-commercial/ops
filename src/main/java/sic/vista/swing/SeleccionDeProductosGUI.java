@@ -23,6 +23,7 @@ import sic.RestClient;
 import sic.modelo.FacturaVenta;
 import sic.modelo.RenglonFactura;
 import sic.modelo.TipoMovimiento;
+import sic.util.FormatterFechaHora;
 import sic.util.FormatterNumero;
 import sic.util.RenderTabla;
 
@@ -292,8 +293,9 @@ public class SeleccionDeProductosGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cargarRenglonesAlTable();
-        this.setTitle("Factura Venta: " + fv.getNumSerie() + " - " + fv.getNumFactura() 
-                + " del Cliente: " + fv.getCliente().getRazonSocial());
+        this.setTitle(fv.getTipoComprobante() + " Nro: " + fv.getNumSerie() + " - " + fv.getNumFactura() 
+                + " del Cliente: " + fv.getCliente().getRazonSocial() 
+                + " con Fecha: " + (new FormatterFechaHora(FormatterFechaHora.FORMATO_FECHA_HISPANO)).format(fv.getFecha()));
     }//GEN-LAST:event_formWindowOpened
 
     private void btnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuarActionPerformed
