@@ -2,7 +2,6 @@ package sic.vista.swing;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -24,6 +23,7 @@ import sic.RestClient;
 import sic.modelo.FacturaVenta;
 import sic.modelo.RenglonFactura;
 import sic.modelo.TipoMovimiento;
+import sic.util.FormatterFechaHora;
 import sic.util.FormatterNumero;
 import sic.util.RenderTabla;
 
@@ -49,6 +49,18 @@ public class SeleccionDeProductosGUI extends JDialog {
         this.setColumnas();
         this.tipoMovimiento = tipoMovimiento;
         this.recuperarFactura(idFactura);
+    }
+    
+    public HashMap<Long, Double> getRenglonesConCantidadNueva() {
+        return idsRenglonesYCantidades;
+    }
+    
+    public long getIdFactura() {
+        return fv.getId_Factura();
+    }
+    
+    public boolean modificarStock() {
+        return modificarStock;
     }
     
     private void setIcon() {
@@ -148,18 +160,6 @@ public class SeleccionDeProductosGUI extends JDialog {
         }
     }
     
-    public HashMap<Long, Double> getRenglonesConCantidadNueva() {
-        return idsRenglonesYCantidades;
-    }
-    
-    public long getIdFactura() {
-        return fv.getId_Factura();
-    }
-    
-    public boolean modificarStock() {
-        return modificarStock;
-    }
-
     private void cargarRenglonesAlTable() {
         fv.getRenglones().stream().map(r -> {
             Object[] fila = new Object[7];
@@ -185,8 +185,7 @@ public class SeleccionDeProductosGUI extends JDialog {
                         .getForObject("/facturas/" + fv.getId_Factura() + "/renglones", RenglonFactura[].class))));
             } else if (tipoMovimiento == TipoMovimiento.CREDITO) {
                 fv.setRenglones(new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                        .getForObject("/facturas/" + fv.getId_Factura() 
-                                + "/renglones/notas/credito", RenglonFactura[].class))));
+                        .getForObject("/facturas/" + fv.getId_Factura() + "/renglones/notas/credito", RenglonFactura[].class))));
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -207,6 +206,7 @@ public class SeleccionDeProductosGUI extends JDialog {
         spResultados = new javax.swing.JScrollPane();
         tblResultados = new javax.swing.JTable();
         chkModificarStock = new javax.swing.JCheckBox();
+        chkSeleccionarTodo = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -236,10 +236,22 @@ public class SeleccionDeProductosGUI extends JDialog {
         ));
         tblResultados.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblResultados.getTableHeader().setReorderingAllowed(false);
+        tblResultados.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                tblResultadosPropertyChange(evt);
+            }
+        });
         spResultados.setViewportView(tblResultados);
 
         chkModificarStock.setSelected(true);
         chkModificarStock.setText("Modificar Stock");
+
+        chkSeleccionarTodo.setText("Seleccionar Todo");
+        chkSeleccionarTodo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chkSeleccionarTodoItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -250,6 +262,8 @@ public class SeleccionDeProductosGUI extends JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(chkModificarStock)
+                        .addGap(0, 0, 0)
+                        .addComponent(chkSeleccionarTodo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnContinuar))
                     .addGroup(layout.createSequentialGroup()
@@ -268,7 +282,8 @@ public class SeleccionDeProductosGUI extends JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnContinuar)
-                    .addComponent(chkModificarStock))
+                    .addComponent(chkModificarStock)
+                    .addComponent(chkSeleccionarTodo))
                 .addContainerGap())
         );
 
@@ -277,8 +292,9 @@ public class SeleccionDeProductosGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cargarRenglonesAlTable();
-        this.setTitle("Factura Venta: " + fv.getNumSerie() + " - " + fv.getNumFactura() 
-                + " del Cliente: " + fv.getCliente().getRazonSocial());
+        this.setTitle(fv.getTipoComprobante() + " Nro: " + fv.getNumSerie() + " - " + fv.getNumFactura() 
+                + " del Cliente: " + fv.getCliente().getRazonSocial() 
+                + " con Fecha: " + (new FormatterFechaHora(FormatterFechaHora.FORMATO_FECHA_HISPANO)).format(fv.getFecha()));
     }//GEN-LAST:event_formWindowOpened
 
     private void btnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuarActionPerformed
@@ -293,9 +309,26 @@ public class SeleccionDeProductosGUI extends JDialog {
         }
     }//GEN-LAST:event_btnContinuarActionPerformed
 
+    private void chkSeleccionarTodoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkSeleccionarTodoItemStateChanged
+        int i = 0;
+        if (chkSeleccionarTodo.isSelected()) {
+            for (RenglonFactura r : fv.getRenglones()) {
+                tblResultados.setValueAt(r.getCantidad(), i, 6);
+                i++;
+            }
+        }
+    }//GEN-LAST:event_chkSeleccionarTodoItemStateChanged
+
+    private void tblResultadosPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tblResultadosPropertyChange
+        if ("tableCellEditor".equals(evt.getPropertyName())) {
+            chkSeleccionarTodo.setSelected(false);
+        }
+    }//GEN-LAST:event_tblResultadosPropertyChange
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnContinuar;
     private javax.swing.JCheckBox chkModificarStock;
+    private javax.swing.JCheckBox chkSeleccionarTodo;
     private javax.swing.JLabel lblInstrucciones;
     private javax.swing.JScrollPane spResultados;
     private javax.swing.JTable tblResultados;
