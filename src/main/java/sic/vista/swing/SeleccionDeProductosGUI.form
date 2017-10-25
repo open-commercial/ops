@@ -32,7 +32,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="chkModificarStock" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                      <Component id="chkSeleccionarPorElTotal" min="-2" max="-2" attributes="0"/>
+                      <Component id="chkSeleccionarTodo" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="btnContinuar" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -57,7 +57,7 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btnContinuar" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="chkModificarStock" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="chkSeleccionarPorElTotal" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="chkSeleccionarTodo" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -118,12 +118,12 @@
         <Property name="text" type="java.lang.String" value="Modificar Stock"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="chkSeleccionarPorElTotal">
+    <Component class="javax.swing.JCheckBox" name="chkSeleccionarTodo">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Seleccionar por el Total"/>
+        <Property name="text" type="java.lang.String" value="Seleccionar Todo"/>
       </Properties>
       <Events>
-        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkSeleccionarPorElTotalItemStateChanged"/>
+        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkSeleccionarTodoItemStateChanged"/>
       </Events>
     </Component>
   </SubComponents>

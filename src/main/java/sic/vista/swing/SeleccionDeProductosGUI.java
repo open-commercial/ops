@@ -51,6 +51,18 @@ public class SeleccionDeProductosGUI extends JDialog {
         this.recuperarFactura(idFactura);
     }
     
+    public HashMap<Long, Double> getRenglonesConCantidadNueva() {
+        return idsRenglonesYCantidades;
+    }
+    
+    public long getIdFactura() {
+        return fv.getId_Factura();
+    }
+    
+    public boolean modificarStock() {
+        return modificarStock;
+    }
+    
     private void setIcon() {
         ImageIcon iconoVentana = new ImageIcon(PuntoDeVentaGUI.class.getResource("/sic/icons/SIC_24_square.png"));
         this.setIconImage(iconoVentana.getImage());
@@ -148,18 +160,6 @@ public class SeleccionDeProductosGUI extends JDialog {
         }
     }
     
-    public HashMap<Long, Double> getRenglonesConCantidadNueva() {
-        return idsRenglonesYCantidades;
-    }
-    
-    public long getIdFactura() {
-        return fv.getId_Factura();
-    }
-    
-    public boolean modificarStock() {
-        return modificarStock;
-    }
-
     private void cargarRenglonesAlTable() {
         fv.getRenglones().stream().map(r -> {
             Object[] fila = new Object[7];
@@ -185,8 +185,7 @@ public class SeleccionDeProductosGUI extends JDialog {
                         .getForObject("/facturas/" + fv.getId_Factura() + "/renglones", RenglonFactura[].class))));
             } else if (tipoMovimiento == TipoMovimiento.CREDITO) {
                 fv.setRenglones(new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                        .getForObject("/facturas/" + fv.getId_Factura() 
-                                + "/renglones/notas/credito", RenglonFactura[].class))));
+                        .getForObject("/facturas/" + fv.getId_Factura() + "/renglones/notas/credito", RenglonFactura[].class))));
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -207,7 +206,7 @@ public class SeleccionDeProductosGUI extends JDialog {
         spResultados = new javax.swing.JScrollPane();
         tblResultados = new javax.swing.JTable();
         chkModificarStock = new javax.swing.JCheckBox();
-        chkSeleccionarPorElTotal = new javax.swing.JCheckBox();
+        chkSeleccionarTodo = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -247,10 +246,10 @@ public class SeleccionDeProductosGUI extends JDialog {
         chkModificarStock.setSelected(true);
         chkModificarStock.setText("Modificar Stock");
 
-        chkSeleccionarPorElTotal.setText("Seleccionar por el Total");
-        chkSeleccionarPorElTotal.addItemListener(new java.awt.event.ItemListener() {
+        chkSeleccionarTodo.setText("Seleccionar Todo");
+        chkSeleccionarTodo.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                chkSeleccionarPorElTotalItemStateChanged(evt);
+                chkSeleccionarTodoItemStateChanged(evt);
             }
         });
 
@@ -264,7 +263,7 @@ public class SeleccionDeProductosGUI extends JDialog {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(chkModificarStock)
                         .addGap(0, 0, 0)
-                        .addComponent(chkSeleccionarPorElTotal)
+                        .addComponent(chkSeleccionarTodo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnContinuar))
                     .addGroup(layout.createSequentialGroup()
@@ -284,7 +283,7 @@ public class SeleccionDeProductosGUI extends JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnContinuar)
                     .addComponent(chkModificarStock)
-                    .addComponent(chkSeleccionarPorElTotal))
+                    .addComponent(chkSeleccionarTodo))
                 .addContainerGap())
         );
 
@@ -310,26 +309,26 @@ public class SeleccionDeProductosGUI extends JDialog {
         }
     }//GEN-LAST:event_btnContinuarActionPerformed
 
-    private void chkSeleccionarPorElTotalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkSeleccionarPorElTotalItemStateChanged
+    private void chkSeleccionarTodoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkSeleccionarTodoItemStateChanged
         int i = 0;
-        if (chkSeleccionarPorElTotal.isSelected()) {
+        if (chkSeleccionarTodo.isSelected()) {
             for (RenglonFactura r : fv.getRenglones()) {
                 tblResultados.setValueAt(r.getCantidad(), i, 6);
                 i++;
             }
         }
-    }//GEN-LAST:event_chkSeleccionarPorElTotalItemStateChanged
+    }//GEN-LAST:event_chkSeleccionarTodoItemStateChanged
 
     private void tblResultadosPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tblResultadosPropertyChange
         if ("tableCellEditor".equals(evt.getPropertyName())) {
-            chkSeleccionarPorElTotal.setSelected(false);
+            chkSeleccionarTodo.setSelected(false);
         }
     }//GEN-LAST:event_tblResultadosPropertyChange
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnContinuar;
     private javax.swing.JCheckBox chkModificarStock;
-    private javax.swing.JCheckBox chkSeleccionarPorElTotal;
+    private javax.swing.JCheckBox chkSeleccionarTodo;
     private javax.swing.JLabel lblInstrucciones;
     private javax.swing.JScrollPane spResultados;
     private javax.swing.JTable tblResultados;
