@@ -50,7 +50,6 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     private final ModeloTabla modeloTablaResultados = new ModeloTabla();
     private static int NUMERO_PAGINA = 0;
     private static final int TAMANIO_PAGINA = 100;
-    private static int totalElementosBusqueda;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private List<RenglonCuentaCorriente> movimientosTotal = new ArrayList<>();
     private List<RenglonCuentaCorriente> movimientosParcial = new ArrayList<>();
@@ -106,7 +105,6 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                             new ParameterizedTypeReference<PaginaRespuestaRest<RenglonCuentaCorriente>>() {
                     })
                     .getBody();
-                totalElementosBusqueda = response.getTotalElements();
                 return response.getContent();
             }
             
@@ -820,8 +818,6 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     private javax.swing.JButton btnCrearNotaDebito;
     private javax.swing.JButton btnVerDetalle;
     private javax.swing.JButton btn_Eliminar;
-    private javax.swing.JButton btn_Refresh;
-    private javax.swing.JButton btn_Refresh1;
     private javax.swing.JButton btn_Refresh3;
     private javax.swing.JButton btn_VerPagos;
     private javax.swing.JFormattedTextField ftf_saldoFinal;
