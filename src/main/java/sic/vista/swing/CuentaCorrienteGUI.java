@@ -11,8 +11,6 @@ import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -71,15 +69,6 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 }
             }
         });
-        ftf_saldoInicial.addPropertyChangeListener("value", (PropertyChangeEvent e) -> {
-            if (Utilidades.truncarDecimal((Double) ftf_saldoInicial.getValue(), 2) < 0) {
-                ftf_saldoInicial.setBackground(Color.PINK);
-            } else if (Utilidades.truncarDecimal((Double) ftf_saldoInicial.getValue(), 2) > 0) {
-                ftf_saldoInicial.setBackground(Color.GREEN);
-            } else {
-                ftf_saldoInicial.setBackground(Color.WHITE);
-            }
-        });
         ftf_saldoFinal.addPropertyChangeListener("value", (PropertyChangeEvent e) -> {
             if (Utilidades.truncarDecimal((Double) ftf_saldoFinal.getValue(), 2) < 0) {
                 ftf_saldoFinal.setBackground(Color.PINK);
@@ -92,9 +81,6 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     }
     
     private void cambiarEstadoEnabledComponentes(boolean status) {
-        dcFechaDesde.setEnabled(status);        
-        dcFechaHasta.setEnabled(status);
-        btnBuscar.setEnabled(status);
         btnCrearNotaCredito.setEnabled(status);
         btnCrearNotaDebito.setEnabled(status);
         btnVerDetalle.setEnabled(status);
@@ -114,9 +100,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             protected List<RenglonCuentaCorriente> doInBackground() throws Exception {
                 PaginaRespuestaRest<RenglonCuentaCorriente> response = RestClient.getRestTemplate()
                     .exchange("/cuentas-corrientes/" + cuentaCorriente.getIdCuentaCorriente() + "/renglones"
-                            + "?desde=" + dcFechaDesde.getDate().getTime()
-                            + "&hasta=" + dcFechaHasta.getDate().getTime()
-                            + "&pagina=" + NUMERO_PAGINA
+                            + "?pagina=" + NUMERO_PAGINA
                             + "&tamanio=" + TAMANIO_PAGINA,
                             HttpMethod.GET, null,
                             new ParameterizedTypeReference<PaginaRespuestaRest<RenglonCuentaCorriente>>() {
@@ -131,8 +115,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 pb_Filtro.setIndeterminate(false);
                 try {
                     movimientosParcial = get();
-                    movimientosTotal.addAll(movimientosParcial);
-                    lblResultados.setText(totalElementosBusqueda + " movimientos encontrados");                   
+                    movimientosTotal.addAll(movimientosParcial);           
                     cargarSaldoAlInicioYAlFinal();
                     cargarResultadosAlTable();                                        
                 } catch (InterruptedException ex) {
@@ -242,14 +225,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
 
     private void cargarSaldoAlInicioYAlFinal() {
         try {
-            ftf_saldoInicial.setValue(RestClient.getRestTemplate()
-                    .getForObject("/cuentas-corrientes/clientes/" + cliente.getId_Cliente()
-                            + "/saldo?hasta=" + dcFechaDesde.getDate().getTime() + "&limiteDerecho=false",
-                            double.class));
-            ftf_saldoInicial.setText(FormatterNumero.formatConRedondeo((Number) ftf_saldoInicial.getValue()));
             ftf_saldoFinal.setValue(RestClient.getRestTemplate()
-                    .getForObject("/cuentas-corrientes/clientes/" + cliente.getId_Cliente()
-                            + "/saldo?hasta=" + dcFechaHasta.getDate().getTime(),
+                    .getForObject("/cuentas-corrientes/clientes/" + cliente.getId_Cliente() + "/saldo",
                             double.class));
             ftf_saldoFinal.setText(FormatterNumero.formatConRedondeo((Number) ftf_saldoFinal.getValue()));
         } catch (RestClientResponseException ex) {
@@ -261,19 +238,21 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    private void cargarDetalleCliente() {
+        txtNombreCliente.setText(cliente.getRazonSocial());
+        txtDomicilioCliente.setText(cliente.getDireccion() 
+                + " " + cliente.getLocalidad().getNombre() 
+                + " " + cliente.getLocalidad().getProvincia().getNombre() 
+                + " " + cliente.getLocalidad().getProvincia().getPais());
+        txtIDFiscalCliente.setText(cliente.getIdFiscal());
+        txtCondicionIVACliente.setText(cliente.getCondicionIVA().getNombre());
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        pnl_cabecera = new javax.swing.JPanel();
-        dcFechaDesde = new com.toedter.calendar.JDateChooser();
-        lbl_Desde = new javax.swing.JLabel();
-        lbl_Hasta = new javax.swing.JLabel();
-        dcFechaHasta = new com.toedter.calendar.JDateChooser();
-        btnBuscar = new javax.swing.JButton();
-        pb_Filtro = new javax.swing.JProgressBar();
-        lblResultados = new javax.swing.JLabel();
         pnlResultados = new javax.swing.JPanel();
         sp_Resultados = new javax.swing.JScrollPane();
         tbl_Resultados = new javax.swing.JTable();
@@ -282,11 +261,19 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         btnAutorizarNota = new javax.swing.JButton();
         lbl_saldoFinal = new javax.swing.JLabel();
         ftf_saldoFinal = new javax.swing.JFormattedTextField();
-        lbl_saldoInicial = new javax.swing.JLabel();
-        ftf_saldoInicial = new javax.swing.JFormattedTextField();
         btnCrearNotaDebito = new javax.swing.JButton();
         btn_VerPagos = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
+        txtCondicionIVACliente = new javax.swing.JTextField();
+        lblCondicionIVACliente = new javax.swing.JLabel();
+        txtIDFiscalCliente = new javax.swing.JTextField();
+        lblIDFiscalCliente = new javax.swing.JLabel();
+        pb_Filtro = new javax.swing.JProgressBar();
+        lblDomicilioCliente = new javax.swing.JLabel();
+        lblNombreCliente = new javax.swing.JLabel();
+        txtNombreCliente = new javax.swing.JTextField();
+        txtDomicilioCliente = new javax.swing.JTextField();
+        btn_Refresh3 = new javax.swing.JButton();
 
         setClosable(true);
         setMaximizable(true);
@@ -310,73 +297,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             }
         });
 
-        pnl_cabecera.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
-
-        dcFechaDesde.setDateFormatString("dd/MM/yyyy");
-
-        lbl_Desde.setText("Desde:");
-
-        lbl_Hasta.setText("Hasta:");
-
-        dcFechaHasta.setDateFormatString("dd/MM/yyyy");
-
-        btnBuscar.setForeground(java.awt.Color.blue);
-        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
-        btnBuscar.setText("Buscar");
-        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarActionPerformed(evt);
-            }
-        });
-
-        lblResultados.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-
-        javax.swing.GroupLayout pnl_cabeceraLayout = new javax.swing.GroupLayout(pnl_cabecera);
-        pnl_cabecera.setLayout(pnl_cabeceraLayout);
-        pnl_cabeceraLayout.setHorizontalGroup(
-            pnl_cabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnl_cabeceraLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnl_cabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnl_cabeceraLayout.createSequentialGroup()
-                        .addComponent(lbl_Desde)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dcFechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_Hasta)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dcFechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(pnl_cabeceraLayout.createSequentialGroup()
-                        .addComponent(btnBuscar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pb_Filtro, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-
-        pnl_cabeceraLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {dcFechaDesde, dcFechaHasta});
-
-        pnl_cabeceraLayout.setVerticalGroup(
-            pnl_cabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnl_cabeceraLayout.createSequentialGroup()
-                .addGroup(pnl_cabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Desde)
-                    .addComponent(dcFechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Hasta)
-                    .addComponent(dcFechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnl_cabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btnBuscar)
-                    .addComponent(lblResultados, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pb_Filtro, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(6, 6, 6))
-        );
-
-        pnl_cabeceraLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {dcFechaDesde, dcFechaHasta});
-
-        pnlResultados.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados"));
+        pnlResultados.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         tbl_Resultados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -414,21 +335,13 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             }
         });
 
-        lbl_saldoFinal.setText("Saldo al Final:");
+        lbl_saldoFinal.setText("Saldo:");
 
         ftf_saldoFinal.setEditable(false);
         ftf_saldoFinal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
         ftf_saldoFinal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         ftf_saldoFinal.setFocusable(false);
         ftf_saldoFinal.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-
-        lbl_saldoInicial.setText("Saldo al Inicio:");
-
-        ftf_saldoInicial.setEditable(false);
-        ftf_saldoInicial.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
-        ftf_saldoInicial.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        ftf_saldoInicial.setFocusable(false);
-        ftf_saldoInicial.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
 
         btnCrearNotaDebito.setForeground(java.awt.Color.blue);
         btnCrearNotaDebito.setText("Nueva Nota Debito");
@@ -461,28 +374,27 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         pnlResultadosLayout.setHorizontalGroup(
             pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlResultadosLayout.createSequentialGroup()
-                .addComponent(btnCrearNotaCredito)
-                .addGap(0, 0, 0)
-                .addComponent(btnCrearNotaDebito)
-                .addGap(0, 0, 0)
-                .addComponent(btn_Eliminar)
-                .addGap(0, 0, 0)
-                .addComponent(btn_VerPagos)
-                .addGap(0, 222, Short.MAX_VALUE))
-            .addComponent(sp_Resultados)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlResultadosLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(lbl_saldoInicial)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ftf_saldoInicial, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlResultadosLayout.createSequentialGroup()
-                .addComponent(btnAutorizarNota)
-                .addGap(0, 0, 0)
-                .addComponent(btnVerDetalle)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbl_saldoFinal)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ftf_saldoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(ftf_saldoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(pnlResultadosLayout.createSequentialGroup()
+                .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlResultadosLayout.createSequentialGroup()
+                        .addComponent(btnCrearNotaCredito)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnCrearNotaDebito)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_Eliminar)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_VerPagos))
+                    .addGroup(pnlResultadosLayout.createSequentialGroup()
+                        .addComponent(btnAutorizarNota)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnVerDetalle)))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(sp_Resultados, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
         pnlResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAutorizarNota, btnCrearNotaCredito, btnCrearNotaDebito, btnVerDetalle, btn_Eliminar, btn_VerPagos});
@@ -490,15 +402,14 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         pnlResultadosLayout.setVerticalGroup(
             pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlResultadosLayout.createSequentialGroup()
-                .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ftf_saldoInicial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_saldoInicial))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap()
                 .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_saldoFinal)
-                    .addComponent(ftf_saldoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ftf_saldoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAutorizarNota, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnVerDetalle))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -511,20 +422,91 @@ public class CuentaCorrienteGUI extends JInternalFrame {
 
         pnlResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAutorizarNota, btnCrearNotaCredito, btnCrearNotaDebito, btnVerDetalle, btn_Eliminar, btn_VerPagos});
 
+        txtCondicionIVACliente.setEditable(false);
+        txtCondicionIVACliente.setFocusable(false);
+
+        lblCondicionIVACliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblCondicionIVACliente.setText("Condición IVA:");
+
+        txtIDFiscalCliente.setEditable(false);
+        txtIDFiscalCliente.setFocusable(false);
+
+        lblIDFiscalCliente.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblIDFiscalCliente.setText("ID Fiscal:");
+
+        lblDomicilioCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblDomicilioCliente.setText("Domicilio:");
+
+        lblNombreCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblNombreCliente.setText("Nombre:");
+
+        txtNombreCliente.setEditable(false);
+        txtNombreCliente.setFocusable(false);
+
+        txtDomicilioCliente.setEditable(false);
+        txtDomicilioCliente.setFocusable(false);
+
+        btn_Refresh3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Refresh_16x16.png"))); // NOI18N
+        btn_Refresh3.setFocusable(false);
+        btn_Refresh3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_Refresh3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(pnl_cabecera, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(pb_Filtro, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btn_Refresh3))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblNombreCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblDomicilioCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblCondicionIVACliente))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(txtCondicionIVACliente)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblIDFiscalCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtIDFiscalCliente))
+                            .addComponent(txtDomicilioCliente)
+                            .addComponent(txtNombreCliente, javax.swing.GroupLayout.Alignment.TRAILING))))
+                .addContainerGap())
+            .addComponent(pnlResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(pnl_cabecera, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblNombreCliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtDomicilioCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDomicilioCliente))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtCondicionIVACliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtIDFiscalCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblIDFiscalCliente))
+                    .addComponent(lblCondicionIVACliente))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pb_Filtro, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_Refresh3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(pnlResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -533,12 +515,9 @@ public class CuentaCorrienteGUI extends JInternalFrame {
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         this.setTitle("Cuenta Corriente del Cliente: " + cliente.getRazonSocial());
+        this.cargarDetalleCliente();
         this.setColumnas();
-        this.setSize(sizeInternalFrame);
-        LocalDateTime hasta = LocalDateTime.now();
-        LocalDateTime desde = hasta.minusDays(30);
-        dcFechaDesde.setDate(Date.from(desde.atZone(ZoneId.systemDefault()).toInstant()));
-        dcFechaHasta.setDate(new Date());        
+        this.setSize(sizeInternalFrame);    
         try {
             cuentaCorriente = RestClient.getRestTemplate()
                     .getForObject("/cuentas-corrientes/cliente/" + cliente.getId_Cliente(), CuentaCorriente.class);
@@ -552,6 +531,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         }        
         try {
             this.setMaximum(true);
+            refrescarVista(true);
         } catch (PropertyVetoException ex) {
             String mensaje = "Se produjo un error al intentar maximizar la ventana.";
             LOGGER.error(mensaje + " - " + ex.getMessage());
@@ -559,10 +539,6 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             this.dispose();
         }
     }//GEN-LAST:event_formInternalFrameOpened
-
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        refrescarVista(true);
-    }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnCrearNotaCreditoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearNotaCreditoActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
@@ -834,28 +810,34 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btn_EliminarActionPerformed
 
+    private void btn_Refresh3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_Refresh3ActionPerformed
+        refrescarVista(true);
+    }//GEN-LAST:event_btn_Refresh3ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAutorizarNota;
-    private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCrearNotaCredito;
     private javax.swing.JButton btnCrearNotaDebito;
     private javax.swing.JButton btnVerDetalle;
     private javax.swing.JButton btn_Eliminar;
+    private javax.swing.JButton btn_Refresh;
+    private javax.swing.JButton btn_Refresh1;
+    private javax.swing.JButton btn_Refresh3;
     private javax.swing.JButton btn_VerPagos;
-    private com.toedter.calendar.JDateChooser dcFechaDesde;
-    private com.toedter.calendar.JDateChooser dcFechaHasta;
     private javax.swing.JFormattedTextField ftf_saldoFinal;
-    private javax.swing.JFormattedTextField ftf_saldoInicial;
-    private javax.swing.JLabel lblResultados;
-    private javax.swing.JLabel lbl_Desde;
-    private javax.swing.JLabel lbl_Hasta;
+    private javax.swing.JLabel lblCondicionIVACliente;
+    private javax.swing.JLabel lblDomicilioCliente;
+    private javax.swing.JLabel lblIDFiscalCliente;
+    private javax.swing.JLabel lblNombreCliente;
     private javax.swing.JLabel lbl_saldoFinal;
-    private javax.swing.JLabel lbl_saldoInicial;
     private javax.swing.JProgressBar pb_Filtro;
     private javax.swing.JPanel pnlResultados;
-    private javax.swing.JPanel pnl_cabecera;
     private javax.swing.JScrollPane sp_Resultados;
     private javax.swing.JTable tbl_Resultados;
+    private javax.swing.JTextField txtCondicionIVACliente;
+    private javax.swing.JTextField txtDomicilioCliente;
+    private javax.swing.JTextField txtIDFiscalCliente;
+    private javax.swing.JTextField txtNombreCliente;
     // End of variables declaration//GEN-END:variables
 
 }
