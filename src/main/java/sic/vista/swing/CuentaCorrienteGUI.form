@@ -33,9 +33,7 @@
           <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="839" max="32767" attributes="0"/>
-                      <Component id="pb_Filtro" min="-2" pref="100" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="btnRefresh" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
@@ -87,11 +85,8 @@
                   <Component id="txtIDFiscalCliente" alignment="2" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="2" attributes="0">
-                  <Component id="pb_Filtro" alignment="2" min="-2" pref="23" max="-2" attributes="0"/>
-                  <Component id="btnRefresh" alignment="2" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="btnRefresh" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="pnlResultados" max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -146,7 +141,7 @@
                       <Component id="lbl_saldoFinal" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="sp_Resultados" pref="313" max="32767" attributes="0"/>
+                  <Component id="sp_Resultados" pref="319" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnAutorizarNota" linkSize="7" alignment="3" min="-2" pref="17" max="-2" attributes="0"/>
@@ -307,8 +302,6 @@
         <Property name="horizontalAlignment" type="int" value="4"/>
         <Property name="text" type="java.lang.String" value="ID Fiscal:"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JProgressBar" name="pb_Filtro">
     </Component>
     <Component class="javax.swing.JLabel" name="lblDomicilioCliente">
       <Properties>
