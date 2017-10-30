@@ -16,11 +16,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
-import javax.swing.SwingWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -49,7 +47,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     private CuentaCorriente cuentaCorriente;
     private final ModeloTabla modeloTablaResultados = new ModeloTabla();
     private static int NUMERO_PAGINA = 0;
-    private static final int TAMANIO_PAGINA = 100;
+    private static final int TAMANIO_PAGINA = 50;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private List<RenglonCuentaCorriente> movimientosTotal = new ArrayList<>();
     private List<RenglonCuentaCorriente> movimientosParcial = new ArrayList<>();
@@ -93,12 +91,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
 
     private void buscar() {
         cambiarEstadoEnabledComponentes(false);
-        pb_Filtro.setIndeterminate(true);
-        SwingWorker<List<RenglonCuentaCorriente>, Void> worker = new SwingWorker<List<RenglonCuentaCorriente>, Void>() {
-            
-            @Override
-            protected List<RenglonCuentaCorriente> doInBackground() throws Exception {
-                PaginaRespuestaRest<RenglonCuentaCorriente> response = RestClient.getRestTemplate()
+        try {
+            PaginaRespuestaRest<RenglonCuentaCorriente> response = RestClient.getRestTemplate()
                     .exchange("/cuentas-corrientes/" + cuentaCorriente.getIdCuentaCorriente() + "/renglones"
                             + "?pagina=" + NUMERO_PAGINA
                             + "&tamanio=" + TAMANIO_PAGINA,
@@ -106,39 +100,19 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                             new ParameterizedTypeReference<PaginaRespuestaRest<RenglonCuentaCorriente>>() {
                     })
                     .getBody();
-                return response.getContent();
-            }
-            
-            @Override
-            protected void done() {
-                pb_Filtro.setIndeterminate(false);
-                try {
-                    movimientosParcial = get();
-                    movimientosTotal.addAll(movimientosParcial);           
-                    cargarSaldoAlInicioYAlFinal();
-                    cargarResultadosAlTable();                                        
-                } catch (InterruptedException ex) {
-                    String msjError = "La tarea que se estaba realizando fue interrumpida. Intente nuevamente.";
-                    LOGGER.error(msjError + " - " + ex.getMessage());
-                    JOptionPane.showInternalMessageDialog(getParent(), msjError, "Error", JOptionPane.ERROR_MESSAGE);                    
-                } catch (ExecutionException ex) {
-                    if (ex.getCause() instanceof RestClientResponseException) {
-                        JOptionPane.showMessageDialog(getParent(), ex.getCause().getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    } else if (ex.getCause() instanceof ResourceAccessException) {
-                        LOGGER.error(ex.getMessage());
-                        JOptionPane.showMessageDialog(getParent(),
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        String msjError = "Se produjo un error en la ejecución de la tarea solicitada. Intente nuevamente.";
-                        LOGGER.error(msjError + " - " + ex.getMessage());
-                        JOptionPane.showInternalMessageDialog(getParent(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
-                    }                    
-                }
-                cambiarEstadoEnabledComponentes(true);
-            }
-        };                
-        worker.execute();
+            movimientosParcial = response.getContent();
+            movimientosTotal.addAll(movimientosParcial);
+            cargarSaldoAlInicioYAlFinal();
+            cargarResultadosAlTable();
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        cambiarEstadoEnabledComponentes(true);
     }
 
     private void cargarResultadosAlTable() {
@@ -148,7 +122,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             renglonTabla[1] = r.getComprobante();
             renglonTabla[2] = r.getFechaVencimiento();
             renglonTabla[3] = r.getCAE() == 0 ? "" : r.getCAE();
-            renglonTabla[4] = r.getDescripcion();
+            renglonTabla[4] = r.getDescripcion(); //+ " pagina " + NUMERO_PAGINA;
             renglonTabla[5] = r.getMonto();
             renglonTabla[6] = r.getSaldo();
             return renglonTabla;
