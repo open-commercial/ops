@@ -122,7 +122,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             renglonTabla[1] = r.getComprobante();
             renglonTabla[2] = r.getFechaVencimiento();
             renglonTabla[3] = r.getCAE() == 0 ? "" : r.getCAE();
-            renglonTabla[4] = r.getDescripcion(); //+ " pagina " + NUMERO_PAGINA;
+            renglonTabla[4] = r.getDescripcion();
             renglonTabla[5] = r.getMonto();
             renglonTabla[6] = r.getSaldo();
             return renglonTabla;
