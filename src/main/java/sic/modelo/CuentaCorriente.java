@@ -14,18 +14,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CuentaCorriente implements Serializable {
 
-    private Long idCuentaCorriente;
-    
-    private boolean eliminada;
-    
+    private Long idCuentaCorriente;    
+    private boolean eliminada;    
     private Date fechaApertura;
-
     private Cliente cliente;
-
     private Empresa empresa;
-
     private double saldo;
-
-    private List<RenglonCuentaCorriente> renglones;
-    
+    private List<RenglonCuentaCorriente> renglones;    
 }
