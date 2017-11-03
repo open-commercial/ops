@@ -486,7 +486,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         this.setSize(sizeInternalFrame);    
         try {
             cuentaCorriente = RestClient.getRestTemplate()
-                    .getForObject("/cuentas-corrientes/cliente/" + cliente.getId_Cliente(), CuentaCorriente.class);
+                    .getForObject("/cuentas-corrientes/clientes/" + cliente.getId_Cliente(), CuentaCorriente.class);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
