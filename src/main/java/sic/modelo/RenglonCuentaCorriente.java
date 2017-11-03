@@ -14,31 +14,18 @@ import lombok.NoArgsConstructor;
 public class RenglonCuentaCorriente implements Serializable {
     
     private Long idRenglonCuentaCorriente;
-
     private Long idMovimiento;
-
     private TipoMovimiento tipoMovimiento;
-
-    private String comprobante;
-    
-    private String descripcion;
-    
+    private String comprobante;    
+    private String descripcion;    
     private boolean eliminado;
-
     private Date fecha;
-
-    private Date fechaVencimiento;
-   
+    private Date fechaVencimiento;   
     private double monto;
-
-    private Factura factura;
- 
+    private CuentaCorriente cuentaCorriente;
+    private Factura factura; 
     private Pago pago;
-
-    private Nota nota;
-    
+    private Nota nota;    
     private long CAE;   
-
-    private double saldo;
-    
+    private double saldo;    
 }
