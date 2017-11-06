@@ -9,11 +9,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
-import javax.swing.SwingWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -40,7 +38,7 @@ public class ClientesGUI extends JInternalFrame {
     private final Dimension sizeInternalFrame =  new Dimension(880, 600);
     private static int totalElementosBusqueda;
     private static int NUMERO_PAGINA = 0;
-    private static final int TAMANIO_PAGINA = 100;
+    private static final int TAMANIO_PAGINA = 50;
 
     public ClientesGUI() {
         this.initComponents();        
@@ -262,70 +260,45 @@ public class ClientesGUI extends JInternalFrame {
     }
     
     private void buscar() {
-        cambiarEstadoEnabledComponentes(false);
-        pb_Filtro.setIndeterminate(true);
-        SwingWorker<List<Cliente>, Void> worker = new SwingWorker<List<Cliente>, Void>() {
-            
-            @Override
-            protected List<Cliente> doInBackground() throws Exception {
-                String criteriaBusqueda = "/clientes/busqueda/criteria?";
-                if (chkCriteria.isSelected()) {
-                    criteriaBusqueda += "razonSocial=" + txtCriteria.getText().trim() + "&";
-                    criteriaBusqueda += "nombreFantasia=" + txtCriteria.getText().trim() + "&";
-                    criteriaBusqueda += "idFiscal=" + txtCriteria.getText().trim() + "&";
-                }
-                if (chk_Ubicacion.isSelected()) {
-                    if (!((Pais) cmb_Pais.getSelectedItem()).getNombre().equals("Todos")) {
-                        criteriaBusqueda += "idPais=" + String.valueOf(((Pais) cmb_Pais.getSelectedItem()).getId_Pais()) + "&";
-                    }
-                    if (!((Provincia) (cmb_Provincia.getSelectedItem())).getNombre().equals("Todas")) {
-                        criteriaBusqueda += "idProvincia=" + String.valueOf(((Provincia) (cmb_Provincia.getSelectedItem())).getId_Provincia()) + "&";
-                    }
-                    if (!((Localidad) cmb_Localidad.getSelectedItem()).getNombre().equals("Todas")) {
-                        criteriaBusqueda += "idLocalidad=" + String.valueOf((((Localidad) cmb_Localidad.getSelectedItem()).getId_Localidad())) + "&";
-                    }
-                }
-                criteriaBusqueda += "idEmpresa=" + String.valueOf(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
-                criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
-                PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
-                        .exchange(criteriaBusqueda, HttpMethod.GET, null,
-                                new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {
-                        })
-                        .getBody();
-                totalElementosBusqueda = response.getTotalElements();
-                return response.getContent();
+        this.cambiarEstadoEnabledComponentes(false);
+        String criteriaBusqueda = "/clientes/busqueda/criteria?";
+        if (chkCriteria.isSelected()) {
+            criteriaBusqueda += "razonSocial=" + txtCriteria.getText().trim() + "&";
+            criteriaBusqueda += "nombreFantasia=" + txtCriteria.getText().trim() + "&";
+            criteriaBusqueda += "idFiscal=" + txtCriteria.getText().trim() + "&";
+        }
+        if (chk_Ubicacion.isSelected()) {
+            if (!((Pais) cmb_Pais.getSelectedItem()).getNombre().equals("Todos")) {
+                criteriaBusqueda += "idPais=" + String.valueOf(((Pais) cmb_Pais.getSelectedItem()).getId_Pais()) + "&";
             }
-            
-            @Override
-            protected void done() {
-                pb_Filtro.setIndeterminate(false);
-                try {
-                    clientesParcial = get();
-                    clientesTotal.addAll(clientesParcial);
-                    cargarResultadosAlTable();
-                    
-                } catch (InterruptedException ex) {
-                    String msjError = "La tarea que se estaba realizando fue interrumpida. Intente nuevamente.";
-                    LOGGER.error(msjError + " - " + ex.getMessage());
-                    JOptionPane.showInternalMessageDialog(getParent(), msjError, "Error", JOptionPane.ERROR_MESSAGE);                    
-                } catch (ExecutionException ex) {
-                    if (ex.getCause() instanceof RestClientResponseException) {
-                        JOptionPane.showMessageDialog(getParent(), ex.getCause().getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    } else if (ex.getCause() instanceof ResourceAccessException) {
-                        LOGGER.error(ex.getMessage());
-                        JOptionPane.showMessageDialog(getParent(),
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        String msjError = "Se produjo un error en la ejecución de la tarea solicitada. Intente nuevamente.";
-                        LOGGER.error(msjError + " - " + ex.getMessage());
-                        JOptionPane.showInternalMessageDialog(getParent(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-                cambiarEstadoEnabledComponentes(true);
+            if (!((Provincia) (cmb_Provincia.getSelectedItem())).getNombre().equals("Todas")) {
+                criteriaBusqueda += "idProvincia=" + String.valueOf(((Provincia) (cmb_Provincia.getSelectedItem())).getId_Provincia()) + "&";
             }
-        };
-        worker.execute();
+            if (!((Localidad) cmb_Localidad.getSelectedItem()).getNombre().equals("Todas")) {
+                criteriaBusqueda += "idLocalidad=" + String.valueOf((((Localidad) cmb_Localidad.getSelectedItem()).getId_Localidad())) + "&";
+            }
+        }
+        criteriaBusqueda += "idEmpresa=" + String.valueOf(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
+        try {
+            PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
+                    .exchange(criteriaBusqueda, HttpMethod.GET, null,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {
+                    })
+                    .getBody();
+            totalElementosBusqueda = response.getTotalElements();
+            clientesParcial = response.getContent();
+            clientesTotal.addAll(clientesParcial);
+            this.cargarResultadosAlTable();
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        this.cambiarEstadoEnabledComponentes(true);
     }
 
     @SuppressWarnings("unchecked")
@@ -341,7 +314,6 @@ public class ClientesGUI extends JInternalFrame {
         cmb_Localidad = new javax.swing.JComboBox();
         btn_Buscar = new javax.swing.JButton();
         lbl_cantResultados = new javax.swing.JLabel();
-        pb_Filtro = new javax.swing.JProgressBar();
         panelResultados = new javax.swing.JPanel();
         sp_Resultados = new javax.swing.JScrollPane();
         tbl_Resultados = new javax.swing.JTable();
@@ -417,7 +389,7 @@ public class ClientesGUI extends JInternalFrame {
             }
         });
 
-        lbl_cantResultados.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_cantResultados.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
         javax.swing.GroupLayout panelFiltrosLayout = new javax.swing.GroupLayout(panelFiltros);
         panelFiltros.setLayout(panelFiltrosLayout);
@@ -436,15 +408,12 @@ public class ClientesGUI extends JInternalFrame {
                                 .addComponent(cmb_Localidad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(cmb_Provincia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(cmb_Pais, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtCriteria, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(txtCriteria, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
                         .addComponent(btn_Buscar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pb_Filtro, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 428, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelFiltrosLayout.setVerticalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -462,9 +431,8 @@ public class ClientesGUI extends JInternalFrame {
                 .addComponent(cmb_Localidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btn_Buscar)
                     .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pb_Filtro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btn_Buscar))
                 .addContainerGap())
         );
 
@@ -788,7 +756,6 @@ public class ClientesGUI extends JInternalFrame {
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;
     private javax.swing.JPanel panelResultados;
-    private javax.swing.JProgressBar pb_Filtro;
     private javax.swing.JScrollPane sp_Resultados;
     private javax.swing.JTable tbl_Resultados;
     private javax.swing.JTextField txtCriteria;

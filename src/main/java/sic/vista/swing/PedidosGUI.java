@@ -15,11 +15,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
-import javax.swing.SwingWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -47,7 +45,7 @@ public class PedidosGUI extends JInternalFrame {
     private final Dimension sizeInternalFrame =  new Dimension(880, 600);
     private static int totalElementosBusqueda;
     private static int NUMERO_PAGINA = 0;
-    private static final int TAMANIO_PAGINA = 100;
+    private static final int TAMANIO_PAGINA = 50;
 
     public PedidosGUI() {
         this.initComponents();
@@ -64,65 +62,41 @@ public class PedidosGUI extends JInternalFrame {
     }
 
     private void buscar() {
-        this.cambiarEstadoEnabled(false);
-        pb_Filtro.setIndeterminate(true);
-        SwingWorker<List<Pedido>, Void> worker = new SwingWorker<List<Pedido>, Void>() {
-            
-            @Override
-            protected List<Pedido> doInBackground() throws Exception {
-                String criteria = "/pedidos/busqueda/criteria?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
-                if (chk_Fecha.isSelected()) {
-                    criteria += "&desde=" + dc_FechaDesde.getDate().getTime();
-                    criteria += "&hasta=" + dc_FechaHasta.getDate().getTime();
-                }
-                if (chk_NumeroPedido.isSelected()) {
-                    criteria += "&nroPedido=" + Long.valueOf(txt_NumeroPedido.getText());
-                }
-                if (chk_Cliente.isSelected()) {
-                    criteria += "&idCliente=" + ((Cliente) cmb_Cliente.getSelectedItem()).getId_Cliente();
-                }
-                if (chk_Vendedor.isSelected()) {
-                    criteria += "&idUsuario=" + ((Usuario) cmb_Vendedor.getSelectedItem()).getId_Usuario();
-                }
-                criteria += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
-                PaginaRespuestaRest<Pedido> response = RestClient.getRestTemplate()
-                        .exchange(criteria, HttpMethod.GET, null,
-                                new ParameterizedTypeReference<PaginaRespuestaRest<Pedido>>() {
-                        })
-                        .getBody();
-                totalElementosBusqueda = response.getTotalElements();
-                return response.getContent();
-            }
-
-            @Override
-            protected void done() {
-                pb_Filtro.setIndeterminate(false);
-                try {
-                    pedidosParcial = get();
-                    pedidosTotal.addAll(pedidosParcial);
-                    cargarResultadosAlTable();                    
-                } catch (InterruptedException ex) {
-                    String msjError = "La tarea que se estaba realizando fue interrumpida. Intente nuevamente.";
-                    LOGGER.error(msjError + " - " + ex.getMessage());
-                    JOptionPane.showInternalMessageDialog(getParent(), msjError, "Error", JOptionPane.ERROR_MESSAGE);                    
-                } catch (ExecutionException ex) {
-                    if (ex.getCause() instanceof RestClientResponseException) {
-                        JOptionPane.showMessageDialog(getParent(), ex.getCause().getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    } else if (ex.getCause() instanceof ResourceAccessException) {
-                        LOGGER.error(ex.getMessage());
-                        JOptionPane.showMessageDialog(getParent(),
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        String msjError = "Se produjo un error en la ejecución de la tarea solicitada. Intente nuevamente.";
-                        LOGGER.error(msjError + " - " + ex.getMessage());
-                        JOptionPane.showInternalMessageDialog(getParent(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
-                    }                    
-                }
-                cambiarEstadoEnabled(true);
-            }
-        };
-        worker.execute();
+        this.cambiarEstadoEnabledComponentes(false);
+        String criteria = "/pedidos/busqueda/criteria?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
+        if (chk_Fecha.isSelected()) {
+            criteria += "&desde=" + dc_FechaDesde.getDate().getTime();
+            criteria += "&hasta=" + dc_FechaHasta.getDate().getTime();
+        }
+        if (chk_NumeroPedido.isSelected()) {
+            criteria += "&nroPedido=" + Long.valueOf(txt_NumeroPedido.getText());
+        }
+        if (chk_Cliente.isSelected()) {
+            criteria += "&idCliente=" + ((Cliente) cmb_Cliente.getSelectedItem()).getId_Cliente();
+        }
+        if (chk_Vendedor.isSelected()) {
+            criteria += "&idUsuario=" + ((Usuario) cmb_Vendedor.getSelectedItem()).getId_Usuario();
+        }
+        criteria += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
+        try {
+            PaginaRespuestaRest<Pedido> response = RestClient.getRestTemplate()
+                    .exchange(criteria, HttpMethod.GET, null,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<Pedido>>() {
+                    })
+                    .getBody();
+            totalElementosBusqueda = response.getTotalElements();        
+            pedidosParcial = response.getContent();
+            pedidosTotal.addAll(pedidosParcial);
+            this.cargarResultadosAlTable();
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        this.cambiarEstadoEnabledComponentes(true);
     }
 
     private void verFacturasVenta() {
@@ -144,7 +118,7 @@ public class PedidosGUI extends JInternalFrame {
         }
     }
 
-    private void cambiarEstadoEnabled(boolean status) {
+    private void cambiarEstadoEnabledComponentes(boolean status) {
         chk_Fecha.setEnabled(status);
         if (status == true && chk_Fecha.isSelected() == true) {            
             dc_FechaDesde.setEnabled(true);
@@ -430,7 +404,6 @@ public class PedidosGUI extends JInternalFrame {
         chk_Vendedor = new javax.swing.JCheckBox();
         btn_Buscar = new javax.swing.JButton();
         txt_NumeroPedido = new javax.swing.JFormattedTextField();
-        pb_Filtro = new javax.swing.JProgressBar();
         lbl_cantResultados = new javax.swing.JLabel();
         panel_resultados = new javax.swing.JPanel();
         sp_RenglonesPedido = new javax.swing.JScrollPane();
@@ -529,7 +502,7 @@ public class PedidosGUI extends JInternalFrame {
             }
         });
 
-        lbl_cantResultados.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_cantResultados.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
         javax.swing.GroupLayout panel_FiltrosLayout = new javax.swing.GroupLayout(panel_Filtros);
         panel_Filtros.setLayout(panel_FiltrosLayout);
@@ -560,9 +533,7 @@ public class PedidosGUI extends JInternalFrame {
                     .addGroup(panel_FiltrosLayout.createSequentialGroup()
                         .addComponent(btn_Buscar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pb_Filtro, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panel_FiltrosLayout.setVerticalGroup(
@@ -589,15 +560,12 @@ public class PedidosGUI extends JInternalFrame {
                     .addComponent(cmb_Vendedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(pb_Filtro, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_Buscar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panel_FiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmb_Cliente, cmb_Vendedor, txt_NumeroPedido});
-
-        panel_FiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Buscar, pb_Filtro});
 
         panel_resultados.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados"));
 
@@ -986,7 +954,6 @@ public class PedidosGUI extends JInternalFrame {
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panel_Filtros;
     private javax.swing.JPanel panel_resultados;
-    private javax.swing.JProgressBar pb_Filtro;
     private javax.swing.JScrollPane sp_Pedidos;
     private javax.swing.JScrollPane sp_RenglonesPedido;
     private javax.swing.JTable tbl_Pedidos;

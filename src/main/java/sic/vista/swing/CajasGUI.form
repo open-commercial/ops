@@ -65,6 +65,11 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
+                          <Component id="btn_buscar" linkSize="3" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="lbl_cantidadMostrar" max="32767" attributes="0"/>
+                      </Group>
+                      <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="chk_Usuario" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="chk_Fecha" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -82,16 +87,10 @@
                               </Group>
                               <Component id="cmb_Usuarios" max="32767" attributes="0"/>
                           </Group>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <Component id="btn_buscar" linkSize="3" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="lbl_cantidadMostrar" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="pb_barra" min="-2" pref="100" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -114,7 +113,6 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="btn_buscar" linkSize="14" max="-2" attributes="0"/>
                       <Component id="lbl_cantidadMostrar" linkSize="14" max="-2" attributes="0"/>
-                      <Component id="pb_barra" linkSize="14" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -186,11 +184,9 @@
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Usuario&gt;"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JProgressBar" name="pb_barra">
-        </Component>
         <Component class="javax.swing.JLabel" name="lbl_cantidadMostrar">
           <Properties>
-            <Property name="horizontalAlignment" type="int" value="0"/>
+            <Property name="horizontalAlignment" type="int" value="4"/>
           </Properties>
         </Component>
       </SubComponents>

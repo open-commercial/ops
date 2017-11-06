@@ -4,16 +4,15 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
-import javax.swing.SwingWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -22,7 +21,6 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.EmpresaActiva;
-import sic.modelo.Factura;
 import sic.modelo.FacturaCompra;
 import sic.modelo.Movimiento;
 import sic.modelo.PaginaRespuestaRest;
@@ -38,7 +36,7 @@ public class FacturasCompraGUI extends JInternalFrame {
     private List<FacturaCompra> facturasParcial =  new ArrayList<>();
     private static int totalElementosBusqueda;
     private static int NUMERO_PAGINA = 0;
-    private static final int TAMANIO_PAGINA = 100;
+    private static final int TAMANIO_PAGINA = 50;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame =  new Dimension(880, 600);
 
@@ -56,8 +54,7 @@ public class FacturasCompraGUI extends JInternalFrame {
         });
     }
 
-    private void setColumnas() {
-        
+    private void setColumnas() {        
         //nombres de columnas
         String[] encabezados = new String[14];
         encabezados[0] = "Fecha Factura";
@@ -103,9 +100,9 @@ public class FacturasCompraGUI extends JInternalFrame {
         //Tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(80);
-        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(130);
-        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(300);
         tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(80);
         tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(120);
@@ -117,7 +114,7 @@ public class FacturasCompraGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(13).setPreferredWidth(120);
     }
 
-    private void cambiarEstadoEnabled(boolean status) {
+    private void cambiarEstadoEnabledComponentes(boolean status) {
         chk_Fecha.setEnabled(status);
         if (status == true && chk_Fecha.isSelected() == true) {
             dc_FechaDesde.setEnabled(true);
@@ -158,77 +155,58 @@ public class FacturasCompraGUI extends JInternalFrame {
     }
     
     private void buscar() {
-        pb_Filtro.setIndeterminate(true);
-        this.cambiarEstadoEnabled(false);
-        SwingWorker<List<FacturaCompra>, Void> worker = new SwingWorker<List<FacturaCompra>, Void>() {
-
-            @Override
-            protected List<FacturaCompra> doInBackground() throws Exception {
-                String criteriaCalculos = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
-                if (chk_Fecha.isSelected()) {
-                    criteriaCalculos += "&desde=" + dc_FechaDesde.getDate().getTime();
-                    criteriaCalculos += "&hasta=" + dc_FechaHasta.getDate().getTime();
-                }
-                if (chk_Proveedor.isSelected()) {
-                    criteriaCalculos += "&idProveedor=" + ((Proveedor) cmb_Proveedor.getSelectedItem()).getId_Proveedor();
-                }
-                if (chk_NumFactura.isSelected()) {
-                    txt_SerieFactura.commitEdit();
-                    txt_NroFactura.commitEdit();
-                    criteriaCalculos += "&nroSerie=" + Integer.valueOf(txt_SerieFactura.getValue().toString())
-                            + "&nroFactura=" + Integer.valueOf(txt_NroFactura.getValue().toString());
-                }
-                if (chk_estadoFactura.isSelected() && rb_soloImpagas.isSelected()) {
-                    criteriaCalculos += "&soloImpagas=true";
-                }
-                if (chk_estadoFactura.isSelected() && rb_soloPagadas.isSelected()) {
-                    criteriaCalculos += "&soloPagas=true";
-                }
-                calcularResultados(criteriaCalculos);
-                String criteriaBusqueda = "/facturas/compra/busqueda/criteria?" + criteriaCalculos;
-                criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
-                PaginaRespuestaRest<FacturaCompra> response = RestClient.getRestTemplate()
-                        .exchange(criteriaBusqueda, HttpMethod.GET, null,
-                                new ParameterizedTypeReference<PaginaRespuestaRest<FacturaCompra>>() {
-                        })
-                        .getBody();
-                totalElementosBusqueda = response.getTotalElements();
-                return response.getContent();
+        this.cambiarEstadoEnabledComponentes(false);
+        String criteria = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
+        if (chk_Fecha.isSelected()) {
+            criteria += "&desde=" + dc_FechaDesde.getDate().getTime();
+            criteria += "&hasta=" + dc_FechaHasta.getDate().getTime();
+        }
+        if (chk_Proveedor.isSelected()) {
+            criteria += "&idProveedor=" + ((Proveedor) cmb_Proveedor.getSelectedItem()).getId_Proveedor();
+        }
+        if (chk_NumFactura.isSelected()) {
+            try {
+                txt_SerieFactura.commitEdit();
+                txt_NroFactura.commitEdit();
+            } catch (ParseException ex) {
+                LOGGER.error(ex.getMessage());
             }
-
-            @Override
-            protected void done() {
-                pb_Filtro.setIndeterminate(false);
-                try {
-                    facturasParcial = get();
-                    facturasTotal.addAll(facturasParcial);
-                    cargarResultadosAlTable();
-                } catch (InterruptedException ex) {
-                    String msjError = "La tarea que se estaba realizando fue interrumpida. Intente nuevamente.";
-                    LOGGER.error(msjError + " - " + ex.getMessage());
-                    JOptionPane.showInternalMessageDialog(getParent(), msjError, "Error", JOptionPane.ERROR_MESSAGE);                    
-                } catch (ExecutionException ex) {
-                    if (ex.getCause() instanceof RestClientResponseException) {
-                        JOptionPane.showMessageDialog(getParent(), ex.getCause().getMessage(), "Error", JOptionPane.ERROR_MESSAGE);                        
-                    } else if (ex.getCause() instanceof ResourceAccessException) {
-                        LOGGER.error(ex.getMessage());
-                        JOptionPane.showMessageDialog(getParent(),
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                                "Error", JOptionPane.ERROR_MESSAGE);                        
-                    } else {
-                        String msjError = "Se produjo un error en la ejecución de la tarea solicitada. Intente nuevamente.";
-                        LOGGER.error(msjError + " - " + ex.getMessage());
-                        JOptionPane.showInternalMessageDialog(getParent(), msjError, "Error", JOptionPane.ERROR_MESSAGE);                        
-                    }
-                }
-                cambiarEstadoEnabled(true);
-            }
-        };
-        worker.execute();
+            criteria += "&nroSerie=" + Integer.valueOf(txt_SerieFactura.getValue().toString())
+                    + "&nroFactura=" + Integer.valueOf(txt_NroFactura.getValue().toString());
+        }
+        if (chk_estadoFactura.isSelected() && rb_soloImpagas.isSelected()) {
+            criteria += "&soloImpagas=true";
+        }
+        if (chk_estadoFactura.isSelected() && rb_soloPagadas.isSelected()) {
+            criteria += "&soloPagas=true";
+        }       
+        String criteriaBusqueda = "/facturas/compra/busqueda/criteria?" + criteria;
+        criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
+        try {
+            txt_ResultGastoTotal.setValue(RestClient.getRestTemplate().getForObject("/facturas/total-facturado-compra/criteria?" + criteria, Double.class));
+            txt_ResultTotalIVACompra.setValue(RestClient.getRestTemplate().getForObject("/facturas/total-iva-compra/criteria?" +  criteria, Double.class));
+            PaginaRespuestaRest<FacturaCompra> response = RestClient.getRestTemplate()
+                    .exchange(criteriaBusqueda, HttpMethod.GET, null,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<FacturaCompra>>() {
+                    })
+                    .getBody();
+            totalElementosBusqueda = response.getTotalElements();
+            facturasParcial = response.getContent();
+            facturasTotal.addAll(facturasParcial);
+            this.cargarResultadosAlTable();
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        this.cambiarEstadoEnabledComponentes(true);
     }
 
     private void cargarResultadosAlTable() {
-        facturasParcial.stream().map((factura) -> {
+        facturasParcial.stream().map(factura -> {
             Object[] fila = new Object[14];
             fila[0] = factura.getFecha();
             fila[1] = factura.getTipoComprobante();
@@ -245,26 +223,12 @@ public class FacturasCompraGUI extends JInternalFrame {
             fila[12] = factura.getIva_105_neto();
             fila[13] = factura.getIva_21_neto();
             return fila;
-        }).forEach((fila) -> {
+        }).forEach(fila -> {
             modeloTablaFacturas.addRow(fila);
         });
         tbl_Resultados.setModel(modeloTablaFacturas);
         String mensaje = totalElementosBusqueda + " facturas encontradas";
         lbl_CantRegistrosEncontrados.setText(mensaje);
-    }
-
-    private void calcularResultados(String criteria) {
-        try {
-            txt_ResultGastoTotal.setValue(RestClient.getRestTemplate().getForObject("/facturas/total-facturado-compra/criteria?" + criteria, Double.class));
-            txt_ResultTotalIVACompra.setValue(RestClient.getRestTemplate().getForObject("/facturas/total-facturado-compra/criteria?" +  criteria, Double.class));
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
     }
 
     private void limpiarJTable() {
@@ -324,7 +288,6 @@ public class FacturasCompraGUI extends JInternalFrame {
         lbl_CantRegistrosEncontrados = new javax.swing.JLabel();
         rb_soloImpagas = new javax.swing.JRadioButton();
         rb_soloPagadas = new javax.swing.JRadioButton();
-        pb_Filtro = new javax.swing.JProgressBar();
         panelResultados = new javax.swing.JPanel();
         sp_Resultados = new javax.swing.JScrollPane();
         tbl_Resultados = new javax.swing.JTable();
@@ -435,7 +398,7 @@ public class FacturasCompraGUI extends JInternalFrame {
             }
         });
 
-        lbl_CantRegistrosEncontrados.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_CantRegistrosEncontrados.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
         rb_soloImpagas.setText("Solo Impagas");
         rb_soloImpagas.setEnabled(false);
@@ -464,9 +427,7 @@ public class FacturasCompraGUI extends JInternalFrame {
                         .addGap(0, 6, Short.MAX_VALUE)
                         .addComponent(btn_Buscar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_CantRegistrosEncontrados, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pb_Filtro, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lbl_CantRegistrosEncontrados, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
                         .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(chk_Proveedor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -527,7 +488,6 @@ public class FacturasCompraGUI extends JInternalFrame {
                 .addComponent(rb_soloPagadas)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(pb_Filtro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_CantRegistrosEncontrados, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_Buscar))
                 .addContainerGap())
@@ -864,7 +824,6 @@ public class FacturasCompraGUI extends JInternalFrame {
     private javax.swing.JLabel lbl_TotalIVACompra;
     private javax.swing.JPanel panelFiltros;
     private javax.swing.JPanel panelResultados;
-    private javax.swing.JProgressBar pb_Filtro;
     private javax.swing.JRadioButton rb_soloImpagas;
     private javax.swing.JRadioButton rb_soloPagadas;
     private javax.swing.JScrollPane sp_Resultados;

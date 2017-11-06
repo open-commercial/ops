@@ -13,11 +13,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
-import javax.swing.SwingWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -44,7 +42,7 @@ public class FacturasVentaGUI extends JInternalFrame {
     private final Dimension sizeInternalFrame = new Dimension(880, 600);
     private static int totalElementosBusqueda;
     private static int NUMERO_PAGINA = 0;
-    private static final int TAMANIO_PAGINA = 100;
+    private static final int TAMANIO_PAGINA = 50;
 
     public FacturasVentaGUI() {
         this.initComponents();
@@ -165,7 +163,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(90);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(130);
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(190);
+        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(280);
         tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(190);
         tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(190);
         tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(80);
@@ -184,63 +182,36 @@ public class FacturasVentaGUI extends JInternalFrame {
 
     private void calcularResultados(String uriCriteria) {
         txt_ResultTotalFacturado.setValue(RestClient.getRestTemplate()
-                .getForObject("/facturas/total-facturado-venta/criteria?" + uriCriteria,
-                        double.class));
+                .getForObject("/facturas/total-facturado-venta/criteria?" + uriCriteria, double.class));
         txt_ResultGananciaTotal.setValue(RestClient.getRestTemplate()
-                .getForObject("/facturas/ganancia-total/criteria?" + uriCriteria,
-                        double.class));
+                .getForObject("/facturas/ganancia-total/criteria?" + uriCriteria, double.class));
         txt_ResultTotalIVAVenta.setValue(RestClient.getRestTemplate()
-                .getForObject("/facturas/total-iva-venta/criteria?" + uriCriteria,
-                        double.class));        
+                .getForObject("/facturas/total-iva-venta/criteria?" + uriCriteria, double.class));        
     }
 
     private void buscar() {
-        cambiarEstadoEnabledComponentes(false);
-        pb_Filtro.setIndeterminate(true);
-        SwingWorker<List<FacturaVenta>, Void> worker = new SwingWorker<List<FacturaVenta>, Void>() {
-
-            @Override
-            protected List<FacturaVenta> doInBackground() throws Exception {
-                String uriCriteria = getUriCriteria();
-                PaginaRespuestaRest<FacturaVenta> response = RestClient.getRestTemplate()
-                        .exchange("/facturas/venta/busqueda/criteria?" + uriCriteria, HttpMethod.GET, null,
-                                new ParameterizedTypeReference<PaginaRespuestaRest<FacturaVenta>>() {
-                        })
-                        .getBody();                
-                totalElementosBusqueda = response.getTotalElements();
-                return response.getContent();
-            }
-
-            @Override
-            protected void done() {
-                pb_Filtro.setIndeterminate(false);
-                try {
-                    facturasParcial = get();
-                    facturasTotal.addAll(facturasParcial);
-                    calcularResultados(getUriCriteria());
-                    cargarResultadosAlTable();                    
-                } catch (InterruptedException ex) {
-                    String msjError = "La tarea que se estaba realizando fue interrumpida. Intente nuevamente.";
-                    LOGGER.error(msjError + " - " + ex.getMessage());
-                    JOptionPane.showInternalMessageDialog(getParent(), msjError, "Error", JOptionPane.ERROR_MESSAGE);                    
-                } catch (ExecutionException ex) {
-                    if (ex.getCause() instanceof RestClientResponseException) {
-                        JOptionPane.showMessageDialog(getParent(), ex.getCause().getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    } else if (ex.getCause() instanceof ResourceAccessException) {
-                        LOGGER.error(ex.getMessage());
-                        JOptionPane.showMessageDialog(getParent(),
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        String msjError = "Se produjo un error en la ejecución de la tarea solicitada. Intente nuevamente.";
-                        LOGGER.error(msjError + " - " + ex.getMessage());
-                        JOptionPane.showInternalMessageDialog(getParent(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
-                    }                    
-                }
-                cambiarEstadoEnabledComponentes(true);
-            }
-        };
-        worker.execute();
+        this.cambiarEstadoEnabledComponentes(false);
+        String uriCriteria = getUriCriteria();
+        try {
+            PaginaRespuestaRest<FacturaVenta> response = RestClient.getRestTemplate()
+                    .exchange("/facturas/venta/busqueda/criteria?" + uriCriteria, HttpMethod.GET, null,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<FacturaVenta>>() {
+                    })
+                    .getBody();
+            totalElementosBusqueda = response.getTotalElements();
+            facturasParcial = response.getContent();
+            facturasTotal.addAll(facturasParcial);
+            this.calcularResultados(getUriCriteria());
+            this.cargarResultadosAlTable();
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        this.cambiarEstadoEnabledComponentes(true);
     }
 
     private void cambiarEstadoEnabledComponentes(boolean status) {
@@ -537,7 +508,6 @@ public class FacturasVentaGUI extends JInternalFrame {
         rb_soloImpagas = new javax.swing.JRadioButton();
         rb_soloPagadas = new javax.swing.JRadioButton();
         btn_Buscar = new javax.swing.JButton();
-        pb_Filtro = new javax.swing.JProgressBar();
         lbl_cantResultados = new javax.swing.JLabel();
 
         setClosable(true);
@@ -687,12 +657,13 @@ public class FacturasVentaGUI extends JInternalFrame {
                 .addGap(7, 7, 7)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(panelNumeros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btn_Eliminar)
-                        .addComponent(btn_Nueva)
+                    .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btn_Autorizar)
-                            .addComponent(btn_VerDetalle)))))
+                            .addComponent(btn_VerDetalle))
+                        .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn_Eliminar)
+                            .addComponent(btn_Nueva)))))
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Eliminar, btn_Nueva, btn_VerDetalle});
@@ -925,26 +896,25 @@ public class FacturasVentaGUI extends JInternalFrame {
             }
         });
 
-        lbl_cantResultados.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_cantResultados.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
         javax.swing.GroupLayout panelFiltrosLayout = new javax.swing.GroupLayout(panelFiltros);
         panelFiltros.setLayout(panelFiltrosLayout);
         panelFiltrosLayout.setHorizontalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFiltrosLayout.createSequentialGroup()
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(panelFiltrosLayout.createSequentialGroup()
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelFiltrosLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(btn_Buscar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pb_Filtro, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(subPanelFiltros1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(subPanelFiltros2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         panelFiltrosLayout.setVerticalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -955,12 +925,9 @@ public class FacturasVentaGUI extends JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btn_Buscar)
-                    .addComponent(pb_Filtro, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
                     .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Buscar, pb_Filtro});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1186,7 +1153,6 @@ public class FacturasVentaGUI extends JInternalFrame {
     private javax.swing.JPanel panelFiltros;
     private javax.swing.JPanel panelNumeros;
     private javax.swing.JPanel panelResultados;
-    private javax.swing.JProgressBar pb_Filtro;
     private javax.swing.JRadioButton rb_soloImpagas;
     private javax.swing.JRadioButton rb_soloPagadas;
     private javax.swing.JLabel separador;

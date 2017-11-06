@@ -90,20 +90,19 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     }
 
     private void buscar() {
-        cambiarEstadoEnabledComponentes(false);
+        this.cambiarEstadoEnabledComponentes(false);
         try {
             PaginaRespuestaRest<RenglonCuentaCorriente> response = RestClient.getRestTemplate()
                     .exchange("/cuentas-corrientes/" + cuentaCorriente.getIdCuentaCorriente() + "/renglones"
-                            + "?pagina=" + NUMERO_PAGINA
-                            + "&tamanio=" + TAMANIO_PAGINA,
+                            + "?pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA,
                             HttpMethod.GET, null,
                             new ParameterizedTypeReference<PaginaRespuestaRest<RenglonCuentaCorriente>>() {
                     })
                     .getBody();
             movimientosParcial = response.getContent();
             movimientosTotal.addAll(movimientosParcial);
-            cargarSaldoAlInicioYAlFinal();
-            cargarResultadosAlTable();
+            this.cargarSaldoAlInicioYAlFinal();
+            this.cargarResultadosAlTable();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -112,7 +111,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-        cambiarEstadoEnabledComponentes(true);
+        this.cambiarEstadoEnabledComponentes(true);
     }
 
     private void cargarResultadosAlTable() {

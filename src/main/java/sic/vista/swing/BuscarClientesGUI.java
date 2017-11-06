@@ -33,7 +33,7 @@ public class BuscarClientesGUI extends JDialog {
     private Cliente clienteSeleccionado;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int NUMERO_PAGINA = 0;
-    private static final int TAMANIO_PAGINA = 100;
+    private static final int TAMANIO_PAGINA = 50;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public BuscarClientesGUI(JDialog parent, boolean modal) {

@@ -9,11 +9,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
-import javax.swing.SwingWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -42,8 +40,8 @@ public class CajasGUI extends JInternalFrame {
     private List<Caja> cajasParcial = new ArrayList<>();
     private static int totalElementosBusqueda;
     private static int NUMERO_PAGINA = 0;
-    private static final int TAMANIO_PAGINA = 100;
-    private final Dimension sizeInternalFrame =  new Dimension(880, 600);
+    private static final int TAMANIO_PAGINA = 50;
+    private final Dimension sizeInternalFrame = new Dimension(880, 600);
 
     public CajasGUI() {
         this.initComponents();        
@@ -107,77 +105,51 @@ public class CajasGUI extends JInternalFrame {
     }
 
     private void buscar() {
-        cambiarEstadoEnabled(false);
-        pb_barra.setIndeterminate(true);
-        SwingWorker<List<Caja>, Void> worker = new SwingWorker<List<Caja>, Void>() {
-
-            @Override
-            protected List<Caja> doInBackground() throws Exception {
-                String criteriaBusqueda = "/cajas/busqueda/criteria?";
-                if (chk_Fecha.isSelected()) {
-                    criteriaBusqueda += "desde=" + dc_FechaDesde.getDate().getTime()
-                            + "&hasta=" + dc_FechaHasta.getDate().getTime();
-                }
-                if (chk_Usuario.isSelected()) {
-                    criteriaBusqueda += "&idUsuario=" + ((Usuario) cmb_Usuarios.getSelectedItem()).getId_Usuario();
-                }
-                criteriaBusqueda += "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
-                criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
-                PaginaRespuestaRest<Caja> response = RestClient.getRestTemplate()
-                        .exchange(criteriaBusqueda, HttpMethod.GET, null,
-                                new ParameterizedTypeReference<PaginaRespuestaRest<Caja>>() {
-                        })
-                        .getBody();
-                totalElementosBusqueda = response.getTotalElements();
-                return response.getContent();
+        this.cambiarEstadoEnabledComponentes(false);
+        String criteriaBusqueda = "/cajas/busqueda/criteria?";
+        if (chk_Fecha.isSelected()) {
+            criteriaBusqueda += "desde=" + dc_FechaDesde.getDate().getTime() + "&hasta=" + dc_FechaHasta.getDate().getTime();
+        }
+        if (chk_Usuario.isSelected()) {
+            criteriaBusqueda += "&idUsuario=" + ((Usuario) cmb_Usuarios.getSelectedItem()).getId_Usuario();
+        }
+        criteriaBusqueda += "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
+        criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
+        try {
+            PaginaRespuestaRest<Caja> response = RestClient.getRestTemplate()
+                    .exchange(criteriaBusqueda, HttpMethod.GET, null,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<Caja>>() {
+                    })
+                    .getBody();
+            totalElementosBusqueda = response.getTotalElements();
+            cajasParcial = response.getContent();
+            cajasTotal.addAll(cajasParcial);
+            this.cargarResultadosAlTable();
+            criteriaBusqueda = "";
+            if (chk_Fecha.isSelected()) {
+                criteriaBusqueda += "desde=" + dc_FechaDesde.getDate().getTime() + "&hasta=" + dc_FechaHasta.getDate().getTime();
             }
-
-            @Override
-            protected void done() {
-                pb_barra.setIndeterminate(false);
-                try {
-                    cajasParcial = get();
-                    cajasTotal.addAll(cajasParcial);                    
-                    cargarResultadosAlTable(); 
-                    String uriFiltros = "";
-                    if (chk_Fecha.isSelected()) {
-                        uriFiltros += "desde=" + dc_FechaDesde.getDate().getTime()
-                                + "&hasta=" + dc_FechaHasta.getDate().getTime();
-                    }
-                    if (chk_Usuario.isSelected()) {
-                        uriFiltros += "&idUsuario=" + ((Usuario) cmb_Usuarios.getSelectedItem()).getId_Usuario();
-                    }
-                    ftxt_TotalFinal.setValue(RestClient.getRestTemplate()
-                        .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() 
-                                       + "/saldo-final?" + uriFiltros, Double.class));
-                    ftxt_TotalCierre.setValue(RestClient.getRestTemplate()
-                        .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() 
-                                       + "/saldo-real?" + uriFiltros, Double.class));
-                } catch (InterruptedException ex) {
-                    String msjError = "La tarea que se estaba realizando fue interrumpida. Intente nuevamente.";
-                    LOGGER.error(msjError + " - " + ex.getMessage());
-                    JOptionPane.showInternalMessageDialog(getParent(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ExecutionException ex) {
-                    if (ex.getCause() instanceof RestClientResponseException) {
-                        JOptionPane.showMessageDialog(getParent(), ex.getCause().getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    } else if (ex.getCause() instanceof ResourceAccessException) {
-                        LOGGER.error(ex.getMessage());
-                        JOptionPane.showMessageDialog(getParent(),
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        String msjError = "Se produjo un error en la ejecución de la tarea solicitada. Intente nuevamente.";
-                        LOGGER.error(msjError + " - " + ex.getMessage());
-                        JOptionPane.showInternalMessageDialog(getParent(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-                cambiarEstadoEnabled(true);
+            if (chk_Usuario.isSelected()) {
+                criteriaBusqueda += "&idUsuario=" + ((Usuario) cmb_Usuarios.getSelectedItem()).getId_Usuario();
             }
-        };
-        worker.execute();    
+            ftxt_TotalFinal.setValue(RestClient.getRestTemplate()
+                    .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                            + "/saldo-final?" + criteriaBusqueda, Double.class));
+            ftxt_TotalCierre.setValue(RestClient.getRestTemplate()
+                    .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                            + "/saldo-real?" + criteriaBusqueda, Double.class));
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        this.cambiarEstadoEnabledComponentes(true);    
     }
     
-    private void cambiarEstadoEnabled(boolean status) {
+    private void cambiarEstadoEnabledComponentes(boolean status) {
         chk_Fecha.setEnabled(status);
         if (status == true && chk_Fecha.isSelected() == true) {
             dc_FechaDesde.setEnabled(true);
@@ -272,7 +244,6 @@ public class CajasGUI extends JInternalFrame {
         btn_buscar = new javax.swing.JButton();
         chk_Usuario = new javax.swing.JCheckBox();
         cmb_Usuarios = new javax.swing.JComboBox<>();
-        pb_barra = new javax.swing.JProgressBar();
         lbl_cantidadMostrar = new javax.swing.JLabel();
         pnl_Cajas = new javax.swing.JPanel();
         sp_Cajas = new javax.swing.JScrollPane();
@@ -345,7 +316,7 @@ public class CajasGUI extends JInternalFrame {
             }
         });
 
-        lbl_cantidadMostrar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_cantidadMostrar.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
         javax.swing.GroupLayout pnl_FiltrosLayout = new javax.swing.GroupLayout(pnl_Filtros);
         pnl_Filtros.setLayout(pnl_FiltrosLayout);
@@ -354,6 +325,10 @@ public class CajasGUI extends JInternalFrame {
             .addGroup(pnl_FiltrosLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnl_FiltrosLayout.createSequentialGroup()
+                        .addComponent(btn_buscar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbl_cantidadMostrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(pnl_FiltrosLayout.createSequentialGroup()
                         .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(chk_Usuario)
@@ -368,14 +343,9 @@ public class CajasGUI extends JInternalFrame {
                                 .addComponent(lbl_Hasta)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(cmb_Usuarios, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(pnl_FiltrosLayout.createSequentialGroup()
-                        .addComponent(btn_buscar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_cantidadMostrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pb_barra, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(cmb_Usuarios, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_buscar, chk_Fecha, chk_Usuario});
@@ -396,12 +366,11 @@ public class CajasGUI extends JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btn_buscar)
-                    .addComponent(lbl_cantidadMostrar)
-                    .addComponent(pb_barra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lbl_cantidadMostrar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_buscar, lbl_cantidadMostrar, pb_barra});
+        pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_buscar, lbl_cantidadMostrar});
 
         pnl_Cajas.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados"));
 
@@ -648,7 +617,6 @@ public class CajasGUI extends JInternalFrame {
     private javax.swing.JLabel lbl_TotalCierre;
     private javax.swing.JLabel lbl_TotalFinal;
     private javax.swing.JLabel lbl_cantidadMostrar;
-    private javax.swing.JProgressBar pb_barra;
     private javax.swing.JPanel pnl_Cajas;
     private javax.swing.JPanel pnl_Filtros;
     private javax.swing.JScrollPane sp_Cajas;

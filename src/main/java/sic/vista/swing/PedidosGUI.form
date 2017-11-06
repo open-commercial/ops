@@ -90,8 +90,6 @@
                           <Component id="btn_Buscar" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="lbl_cantResultados" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="pb_Filtro" min="-2" pref="100" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -126,9 +124,8 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="pb_Filtro" linkSize="13" alignment="2" min="-2" pref="23" max="-2" attributes="0"/>
                       <Component id="lbl_cantResultados" alignment="2" min="-2" pref="22" max="-2" attributes="0"/>
-                      <Component id="btn_Buscar" linkSize="13" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btn_Buscar" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -236,11 +233,9 @@
             <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_NumeroPedidoKeyTyped"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JProgressBar" name="pb_Filtro">
-        </Component>
         <Component class="javax.swing.JLabel" name="lbl_cantResultados">
           <Properties>
-            <Property name="horizontalAlignment" type="int" value="0"/>
+            <Property name="horizontalAlignment" type="int" value="4"/>
           </Properties>
         </Component>
       </SubComponents>

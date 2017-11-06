@@ -44,7 +44,7 @@ public class BuscarProductosGUI extends JDialog {
     private final Movimiento tipoMovimiento;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int NUMERO_PAGINA = 0;
-    private static final int TAMANIO_PAGINA = 100;
+    private static final int TAMANIO_PAGINA = 50;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     
     public BuscarProductosGUI(JDialog parent, boolean modal, List<RenglonFactura> renglones,

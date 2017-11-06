@@ -67,10 +67,8 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="0" pref="6" max="32767" attributes="0"/>
                           <Component id="btn_Buscar" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="lbl_CantRegistrosEncontrados" min="-2" pref="323" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="pb_Filtro" min="-2" pref="100" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="lbl_CantRegistrosEncontrados" min="-2" pref="429" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
@@ -106,7 +104,7 @@
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -142,7 +140,6 @@
                   <Component id="rb_soloPagadas" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="pb_Filtro" alignment="2" max="32767" attributes="0"/>
                       <Component id="lbl_CantRegistrosEncontrados" alignment="2" min="-2" pref="25" max="-2" attributes="0"/>
                       <Component id="btn_Buscar" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -265,7 +262,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lbl_CantRegistrosEncontrados">
           <Properties>
-            <Property name="horizontalAlignment" type="int" value="0"/>
+            <Property name="horizontalAlignment" type="int" value="4"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JRadioButton" name="rb_soloImpagas">
@@ -285,8 +282,6 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rb_soloPagadasActionPerformed"/>
           </Events>
-        </Component>
-        <Component class="javax.swing.JProgressBar" name="pb_Filtro">
         </Component>
       </SubComponents>
     </Container>

@@ -13,11 +13,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
-import javax.swing.SwingWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -42,7 +40,7 @@ public class ProductosGUI extends JInternalFrame {
     private final Dimension sizeInternalFrame = new Dimension(880, 600);
     private static int totalElementosBusqueda;
     private static int NUMERO_PAGINA = 0;
-    private static final int TAMANIO_PAGINA = 100;
+    private static final int TAMANIO_PAGINA = 50;
 
     public ProductosGUI() {
         this.initComponents();        
@@ -282,75 +280,51 @@ public class ProductosGUI extends JInternalFrame {
     }
 
     private void buscar() {
-        cambiarEstadoEnabledComponentes(false);
-        pb_Filtro.setIndeterminate(true);
-        SwingWorker<List<Producto>, Void> worker = new SwingWorker<List<Producto>, Void>() {
-
-            @Override
-            protected List<Producto> doInBackground() throws Exception {
-                long idEmpresa = EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
-                String criteriaBusqueda = "/productos/busqueda/criteria?idEmpresa=" + idEmpresa;
-                String criteriaCosto = "/productos/valor-stock/criteria?idEmpresa=" + idEmpresa;
-                if (chk_Codigo.isSelected()) {
-                    criteriaBusqueda += "&codigo=" + txt_Codigo.getText().trim();
-                    criteriaCosto += "&codigo=" + txt_Codigo.getText().trim();
-                }
-                if (chk_Descripcion.isSelected()) {
-                    criteriaBusqueda += "&descripcion=" + txt_Descripcion.getText().trim();
-                    criteriaCosto += "&descripcion=" + txt_Descripcion.getText().trim();
-                }
-                if (chk_Rubro.isSelected()) {
-                    criteriaBusqueda += "&idRubro=" + ((Rubro) cmb_Rubro.getSelectedItem()).getId_Rubro();
-                    criteriaCosto += "&idRubro=" + ((Rubro) cmb_Rubro.getSelectedItem()).getId_Rubro();
-                }
-                if (chk_Proveedor.isSelected()) {
-                    criteriaBusqueda += "&idProveedor=" + ((Proveedor) cmb_Proveedor.getSelectedItem()).getId_Proveedor();
-                    criteriaCosto += "&idProveedor=" + ((Proveedor) cmb_Proveedor.getSelectedItem()).getId_Proveedor();
-                }
-                if (chk_Disponibilidad.isSelected()) {
-                    criteriaBusqueda += "&soloFantantes=" + rb_Faltantes.isSelected();
-                    criteriaCosto += "&soloFantantes=" + rb_Faltantes.isSelected();
-                }
-                criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
-                PaginaRespuestaRest<Producto> response = RestClient.getRestTemplate()
-                        .exchange(criteriaBusqueda, HttpMethod.GET, null,
-                                new ParameterizedTypeReference<PaginaRespuestaRest<Producto>>() {
-                        })
-                        .getBody();
-                txt_ValorStock.setValue(RestClient.getRestTemplate().getForObject(criteriaCosto, Double.class));
-                totalElementosBusqueda = response.getTotalElements();
-                return response.getContent();
-            }
-
-            @Override
-            protected void done() {
-                pb_Filtro.setIndeterminate(false);
-                try {
-                    productosParcial = get();
-                    productosTotal.addAll(productosParcial);                    
-                    cargarResultadosAlTable();                    
-                } catch (InterruptedException ex) {
-                    String msjError = "La tarea que se estaba realizando fue interrumpida. Intente nuevamente.";
-                    LOGGER.error(msjError + " - " + ex.getMessage());
-                    JOptionPane.showInternalMessageDialog(getParent(), msjError, "Error", JOptionPane.ERROR_MESSAGE);                    
-                } catch (ExecutionException ex) {
-                    if (ex.getCause() instanceof RestClientResponseException) {
-                        JOptionPane.showMessageDialog(getParent(), ex.getCause().getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    } else if (ex.getCause() instanceof ResourceAccessException) {
-                        LOGGER.error(ex.getMessage());
-                        JOptionPane.showMessageDialog(getParent(),
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        String msjError = "Se produjo un error en la ejecución de la tarea solicitada. Intente nuevamente.";
-                        LOGGER.error(msjError + " - " + ex.getMessage());
-                        JOptionPane.showInternalMessageDialog(getParent(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
-                    }                    
-                }
-                cambiarEstadoEnabledComponentes(true);
-            }
-        };
-        worker.execute();
+        this.cambiarEstadoEnabledComponentes(false);
+        long idEmpresa = EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
+        String criteriaBusqueda = "/productos/busqueda/criteria?idEmpresa=" + idEmpresa;
+        String criteriaCosto = "/productos/valor-stock/criteria?idEmpresa=" + idEmpresa;
+        if (chk_Codigo.isSelected()) {
+            criteriaBusqueda += "&codigo=" + txt_Codigo.getText().trim();
+            criteriaCosto += "&codigo=" + txt_Codigo.getText().trim();
+        }
+        if (chk_Descripcion.isSelected()) {
+            criteriaBusqueda += "&descripcion=" + txt_Descripcion.getText().trim();
+            criteriaCosto += "&descripcion=" + txt_Descripcion.getText().trim();
+        }
+        if (chk_Rubro.isSelected()) {
+            criteriaBusqueda += "&idRubro=" + ((Rubro) cmb_Rubro.getSelectedItem()).getId_Rubro();
+            criteriaCosto += "&idRubro=" + ((Rubro) cmb_Rubro.getSelectedItem()).getId_Rubro();
+        }
+        if (chk_Proveedor.isSelected()) {
+            criteriaBusqueda += "&idProveedor=" + ((Proveedor) cmb_Proveedor.getSelectedItem()).getId_Proveedor();
+            criteriaCosto += "&idProveedor=" + ((Proveedor) cmb_Proveedor.getSelectedItem()).getId_Proveedor();
+        }
+        if (chk_Disponibilidad.isSelected()) {
+            criteriaBusqueda += "&soloFantantes=" + rb_Faltantes.isSelected();
+            criteriaCosto += "&soloFantantes=" + rb_Faltantes.isSelected();
+        }
+        criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
+        try {
+            PaginaRespuestaRest<Producto> response = RestClient.getRestTemplate()
+                    .exchange(criteriaBusqueda, HttpMethod.GET, null,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<Producto>>() {
+                    })
+                    .getBody();
+            txt_ValorStock.setValue(RestClient.getRestTemplate().getForObject(criteriaCosto, Double.class));
+            totalElementosBusqueda = response.getTotalElements();
+            productosParcial = response.getContent();
+            productosTotal.addAll(productosParcial);
+            this.cargarResultadosAlTable();
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        this.cambiarEstadoEnabledComponentes(true);            
     }
 
     private List<Producto> getSeleccionMultipleDeProductos(int[] indices) {
@@ -428,7 +402,6 @@ public class ProductosGUI extends JInternalFrame {
         chk_Disponibilidad = new javax.swing.JCheckBox();
         rb_Todos = new javax.swing.JRadioButton();
         rb_Faltantes = new javax.swing.JRadioButton();
-        pb_Filtro = new javax.swing.JProgressBar();
         panelResultados = new javax.swing.JPanel();
         sp_Resultados = new javax.swing.JScrollPane();
         tbl_Resultados = new javax.swing.JTable();
@@ -509,7 +482,7 @@ public class ProductosGUI extends JInternalFrame {
 
         cmb_Rubro.setEnabled(false);
 
-        lbl_cantResultados.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_cantResultados.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
         chk_Disponibilidad.setText("Disponibilidad:");
         chk_Disponibilidad.addItemListener(new java.awt.event.ItemListener() {
@@ -555,9 +528,7 @@ public class ProductosGUI extends JInternalFrame {
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
                         .addComponent(btn_Buscar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pb_Filtro, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panelFiltrosLayout.setVerticalGroup(
@@ -584,8 +555,7 @@ public class ProductosGUI extends JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btn_Buscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pb_Filtro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -857,7 +827,6 @@ public class ProductosGUI extends JInternalFrame {
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;
     private javax.swing.JPanel panelResultados;
-    private javax.swing.JProgressBar pb_Filtro;
     private javax.swing.JRadioButton rb_Faltantes;
     private javax.swing.JRadioButton rb_Todos;
     private javax.swing.JScrollPane sp_Resultados;

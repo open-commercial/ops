@@ -95,8 +95,6 @@
                           <Component id="btn_Buscar" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="lbl_cantResultados" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="pb_Filtro" min="-2" pref="100" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -132,7 +130,6 @@
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="btn_Buscar" alignment="2" max="32767" attributes="0"/>
                       <Component id="lbl_cantResultados" alignment="2" max="32767" attributes="0"/>
-                      <Component id="pb_Filtro" alignment="2" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -217,7 +214,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lbl_cantResultados">
           <Properties>
-            <Property name="horizontalAlignment" type="int" value="0"/>
+            <Property name="horizontalAlignment" type="int" value="4"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="chk_Disponibilidad">
@@ -245,8 +242,6 @@
             <Property name="text" type="java.lang.String" value="Faltantes"/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JProgressBar" name="pb_Filtro">
         </Component>
       </SubComponents>
     </Container>
