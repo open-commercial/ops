@@ -32,7 +32,6 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private final long idCliente;
     private final long idPago;
     private boolean notaDebitoCreada;    
-    private boolean noGravaGastos;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleNotaDebitoGUI(long idCliente, long idPago) {
@@ -68,8 +67,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
     }
     
     private void cargarDetalleComprobante() {
-        double iva = 0;
-        if (noGravaGastos == false) iva = (Double.parseDouble(txtMontoRenglon2.getText()) * 0.21);
+        double iva = Double.parseDouble(txtMontoRenglon2.getText()) * 0.21;
         lblIvaNetoRenglon2.setText("$" + iva);
         lblImporteRenglon2.setText("$" + (Double.parseDouble(txtMontoRenglon2.getText()) + iva));
         txtSubTotalBruto.setValue(Double.parseDouble(txtMontoRenglon2.getText()));
@@ -502,7 +500,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
         try {
             notaDebito.setRenglonesNotaDebito(Arrays.asList(RestClient.getRestTemplate().getForObject("/notas/renglon/debito/pago/" + pago.getId_Pago()
                     + "?monto=" + (Double) txtSubTotalBruto.getValue()
-                    + "&ivaPorcentaje=" + ((noGravaGastos)?"0":"21"), RenglonNotaDebito[].class)));
+                    + "&ivaPorcentaje=21", RenglonNotaDebito[].class)));
             notaDebito.setSubTotalBruto((Double) txtSubTotalBruto.getValue());
             notaDebito.setTotal((Double) txtTotal.getValue());
             notaDebito.setUsuario(UsuarioActivo.getInstance().getUsuario());
@@ -559,8 +557,6 @@ public class DetalleNotaDebitoGUI extends JDialog {
         try {
             cliente = RestClient.getRestTemplate().getForObject("/clientes/" + idCliente, Cliente.class);
             pago = RestClient.getRestTemplate().getForObject("/pagos/" + idPago, Pago.class);
-            noGravaGastos = (pago.getFactura() != null && pago.getFactura().getTipoComprobante() == TipoDeComprobante.FACTURA_X)
-                    || pago.getNotaDebito() != null && pago.getNotaDebito().getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_X;
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -568,9 +564,6 @@ public class DetalleNotaDebitoGUI extends JDialog {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        if (noGravaGastos) {
-            lblIVA21.setText("0%");
         }
         this.cargarDetalleCliente();
         this.cargarDetallePago();        
