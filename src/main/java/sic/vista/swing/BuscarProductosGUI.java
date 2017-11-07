@@ -65,7 +65,8 @@ public class BuscarProductosGUI extends JDialog {
         txt_UnidadMedida.addKeyListener(keyHandler);
         txtPorcentajeDescuento.addKeyListener(keyHandler);
         btnAceptar.addKeyListener(keyHandler);        
-        Timer timer = new Timer(false);
+        // desactivado momentaneamente
+        /*Timer timer = new Timer(false);
         txtCriteriaBusqueda.addKeyListener(new KeyAdapter() {
             private TimerTask task;
             @Override
@@ -83,7 +84,7 @@ public class BuscarProductosGUI extends JDialog {
                 };
                 timer.schedule(task, 450);
             }
-        });
+        });*/
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
             int va = scrollBar.getVisibleAmount() + 50;
@@ -124,7 +125,6 @@ public class BuscarProductosGUI extends JDialog {
                 this.resetScroll();
                 this.limpiarJTable();
             } else {
-                this.cambiarEstadoEnabledComponentes(false);
                 String uri = "descripcion=" + txtCriteriaBusqueda.getText().trim()
                         + "&codigo=" + txtCriteriaBusqueda.getText().trim()
                         + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
@@ -139,12 +139,10 @@ public class BuscarProductosGUI extends JDialog {
                 prodSeleccionado = null;
                 txt_UnidadMedida.setText("");
                 this.restarCantidadesSegunProductosYaCargados();
-                this.cargarResultadosAlTable();                
-                this.cambiarEstadoEnabledComponentes(true);
+                this.cargarResultadosAlTable();
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            this.cambiarEstadoEnabledComponentes(true);
         } catch (ResourceAccessException ex) {
             LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this,
@@ -152,18 +150,6 @@ public class BuscarProductosGUI extends JDialog {
                     "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();
         }
-    }
-
-    private void cambiarEstadoEnabledComponentes(boolean status) {
-        txtCriteriaBusqueda.setEnabled(status);
-        btnBuscar.setEnabled(status);
-        tbl_Resultados.setEnabled(status);
-        txtCantidad.setEnabled(status);
-        txtPorcentajeDescuento.setEnabled(status);
-        btnAceptar.setEnabled(status);
-        tbl_Resultados.setEnabled(status);
-        sp_Resultados.setEnabled(status);
-        txtCriteriaBusqueda.requestFocus();
     }
     
     private void aceptarProducto() {
@@ -363,6 +349,11 @@ public class BuscarProductosGUI extends JDialog {
         });
 
         txtCriteriaBusqueda.setFont(new java.awt.Font("DejaVu Sans", 0, 17)); // NOI18N
+        txtCriteriaBusqueda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCriteriaBusquedaActionPerformed(evt);
+            }
+        });
         txtCriteriaBusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtCriteriaBusquedaKeyTyped(evt);
@@ -622,6 +613,12 @@ public class BuscarProductosGUI extends JDialog {
             tbl_Resultados.setRowSelectionInterval(0, 0);
         }
     }//GEN-LAST:event_tbl_ResultadosFocusGained
+
+    private void txtCriteriaBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCriteriaBusquedaActionPerformed
+        this.resetScroll();
+        this.limpiarJTable();
+        this.buscar();
+    }//GEN-LAST:event_txtCriteriaBusquedaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;

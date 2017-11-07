@@ -43,7 +43,8 @@ public class BuscarClientesGUI extends JDialog {
         this.setColumnas();        
         txtCriteriaBusqueda.addKeyListener(keyHandler);
         tbl_Resultados.addKeyListener(keyHandler);
-        Timer timer = new Timer(false);
+        // desactivado momentaneamente
+        /*Timer timer = new Timer(false);
         txtCriteriaBusqueda.addKeyListener(new KeyAdapter() {
             private TimerTask task;
             @Override
@@ -61,7 +62,7 @@ public class BuscarClientesGUI extends JDialog {
                 };
                 timer.schedule(task, 450);
             }
-        });
+        });*/
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
             int va = scrollBar.getVisibleAmount() + 50;
@@ -85,17 +86,7 @@ public class BuscarClientesGUI extends JDialog {
     private void setIcon() {
         ImageIcon iconoVentana = new ImageIcon(BuscarClientesGUI.class.getResource("/sic/icons/Client_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
-    }
-
-    private void cambiarEstadoEnabledComponentes(boolean status) {
-        txtCriteriaBusqueda.setEnabled(status);
-        btnBuscar.setEnabled(status);
-        tbl_Resultados.setEnabled(status);
-        btnAceptar.setEnabled(status);
-        tbl_Resultados.setEnabled(status);
-        sp_Resultados.setEnabled(status);
-        txtCriteriaBusqueda.requestFocus();
-    }
+    }    
     
     private void buscar() {
         try {
@@ -103,7 +94,6 @@ public class BuscarClientesGUI extends JDialog {
                 this.resetScroll();
                 this.limpiarJTable();
             } else {
-                this.cambiarEstadoEnabledComponentes(false);
                 String uri = "/clientes/busqueda/criteria?"
                         + "&razonSocial=" + txtCriteriaBusqueda.getText().trim()
                         + "&nombreFantasia=" + txtCriteriaBusqueda.getText().trim()
@@ -119,11 +109,9 @@ public class BuscarClientesGUI extends JDialog {
                 clientesTotal.addAll(clientesParcial);
                 clienteSeleccionado = null;
                 this.cargarResultadosAlTable();
-                this.cambiarEstadoEnabledComponentes(true);
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            this.cambiarEstadoEnabledComponentes(true);
         } catch (ResourceAccessException ex) {
             LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this,
@@ -235,6 +223,11 @@ public class BuscarClientesGUI extends JDialog {
         });
 
         txtCriteriaBusqueda.setFont(new java.awt.Font("DejaVu Sans", 0, 17)); // NOI18N
+        txtCriteriaBusqueda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCriteriaBusquedaActionPerformed(evt);
+            }
+        });
         txtCriteriaBusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtCriteriaBusquedaKeyTyped(evt);
@@ -365,6 +358,13 @@ public class BuscarClientesGUI extends JDialog {
             tbl_Resultados.setRowSelectionInterval(0, 0);
         }
     }//GEN-LAST:event_tbl_ResultadosFocusGained
+
+    private void txtCriteriaBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCriteriaBusquedaActionPerformed
+        this.resetScroll();
+        this.limpiarJTable();
+        this.buscar();
+    }//GEN-LAST:event_txtCriteriaBusquedaActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnBuscar;
