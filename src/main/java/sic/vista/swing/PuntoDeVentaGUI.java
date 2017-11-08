@@ -590,6 +590,8 @@ public class PuntoDeVentaGUI extends JDialog {
                 cmb_TipoComprobante.setSelectedItem(TipoDeComprobante.PEDIDO);
                 cmb_TipoComprobante.setEnabled(false);
                 txt_CodigoProducto.requestFocus();
+            } else {
+                cmb_TipoComprobante.removeItem(TipoDeComprobante.PEDIDO);
             }
         }
     }

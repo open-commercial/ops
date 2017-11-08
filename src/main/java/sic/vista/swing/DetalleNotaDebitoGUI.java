@@ -22,7 +22,6 @@ import sic.modelo.EmpresaActiva;
 import sic.modelo.NotaDebito;
 import sic.modelo.Pago;
 import sic.modelo.RenglonNotaDebito;
-import sic.modelo.TipoDeComprobante;
 import sic.modelo.UsuarioActivo;
 import sic.util.FormatterNumero;
 
@@ -67,13 +66,14 @@ public class DetalleNotaDebitoGUI extends JDialog {
     }
     
     private void cargarDetalleComprobante() {
-        double iva = Double.parseDouble(txtMontoRenglon2.getText()) * 0.21;
-        lblIvaNetoRenglon2.setText("$" + iva);
-        lblImporteRenglon2.setText("$" + (Double.parseDouble(txtMontoRenglon2.getText()) + iva));
+        txtMontoRenglon2.setValue(Double.parseDouble(txtMontoRenglon2.getText()));
+        double iva = (Double) txtMontoRenglon2.getValue() * 0.21;
+        lblIvaNetoRenglon2.setText("$" + FormatterNumero.formatConRedondeo(iva));
+        lblImporteRenglon2.setText("$" + FormatterNumero.formatConRedondeo((Double.parseDouble(txtMontoRenglon2.getText()) + iva)));
         txtSubTotalBruto.setValue(Double.parseDouble(txtMontoRenglon2.getText()));
         txtIVA21Neto.setValue(iva);
         txtNoGravado.setValue(pago.getMonto());
-        txtTotal.setValue(pago.getMonto() + Double.parseDouble(txtMontoRenglon2.getText()) + iva); 
+        txtTotal.setValue(pago.getMonto() + ((Double) txtMontoRenglon2.getValue()) + iva); 
     }
     
     @SuppressWarnings("unchecked")
