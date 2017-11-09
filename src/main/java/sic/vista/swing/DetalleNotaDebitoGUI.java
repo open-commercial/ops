@@ -502,7 +502,10 @@ public class DetalleNotaDebitoGUI extends JDialog {
                     + "?monto=" + (Double) txtSubTotalBruto.getValue()
                     + "&ivaPorcentaje=21", RenglonNotaDebito[].class)));
             notaDebito.setSubTotalBruto((Double) txtSubTotalBruto.getValue());
-            notaDebito.setTotal((Double) txtTotal.getValue());
+            notaDebito.setTotal(RestClient.getRestTemplate().getForObject("/notas/debito/total"
+                    + "?subTotalBruto=" + (Double) txtSubTotalBruto.getValue()
+                    + "&iva21Neto=" + notaDebito.getIva21Neto()
+                    + "&montoNoGravado=" + notaDebito.getMontoNoGravado(), double.class));
             notaDebito.setUsuario(UsuarioActivo.getInstance().getUsuario());
             notaDebito = RestClient.getRestTemplate().postForObject("/notas/debito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                     + "/cliente/" + cliente.getId_Cliente()
