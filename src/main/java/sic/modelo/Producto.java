@@ -1,13 +1,12 @@
 package sic.modelo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = {"descripcion", "empresa"})
+@EqualsAndHashCode(of = {"descripcion", "nombreEmpresa"})
 public class Producto implements Serializable {
 
     private long id_Producto;
@@ -16,7 +15,7 @@ public class Producto implements Serializable {
     private double cantidad;
     private double cantMinima;
     private double ventaMinima;
-    private Medida medida;
+    private String nombreMedida;
     private double precioCosto;
     private double ganancia_porcentaje;
     private double ganancia_neto;
@@ -26,20 +25,15 @@ public class Producto implements Serializable {
     private double impuestoInterno_porcentaje;
     private double impuestoInterno_neto;
     private double precioLista;    
-    private Rubro rubro;
+    private String nombreRubro;
     private boolean ilimitado;    
     private Date fechaUltimaModificacion;    
     private String estanteria;    
     private String estante;    
-    private Proveedor proveedor;    
+    private String razonSocialProveedor;    
     private String nota;    
     private Date fechaAlta;    
     private Date fechaVencimiento;   
-    private Empresa empresa;
+    private String nombreEmpresa;
     private boolean eliminado;
-
-    @Override
-    public String toString() {
-        return descripcion;
-    }
 }
