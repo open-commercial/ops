@@ -580,17 +580,18 @@ public class PuntoDeVentaGUI extends JDialog {
         for (int i = 0; tiposDeComprobante.length > i; i++) {
             cmb_TipoComprobante.addItem(tiposDeComprobante[i]);
         }
+        cmb_TipoComprobante.addItem(TipoDeComprobante.PEDIDO);
         if (this.pedido != null) {
             if (this.pedido.getId_Pedido() == 0) {
-                cmb_TipoComprobante.addItem(TipoDeComprobante.PEDIDO);
                 cmb_TipoComprobante.setSelectedItem(TipoDeComprobante.PEDIDO);
                 cmb_TipoComprobante.setEnabled(false);
                 txt_CodigoProducto.requestFocus();
             } else if (this.modificandoPedido() == true) {
-                cmb_TipoComprobante.addItem(TipoDeComprobante.PEDIDO);
                 cmb_TipoComprobante.setSelectedItem(TipoDeComprobante.PEDIDO);
                 cmb_TipoComprobante.setEnabled(false);
                 txt_CodigoProducto.requestFocus();
+            } else {
+                cmb_TipoComprobante.removeItem(TipoDeComprobante.PEDIDO);
             }
         }
     }

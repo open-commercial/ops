@@ -22,7 +22,6 @@ import sic.modelo.EmpresaActiva;
 import sic.modelo.NotaDebito;
 import sic.modelo.Pago;
 import sic.modelo.RenglonNotaDebito;
-import sic.modelo.TipoDeComprobante;
 import sic.modelo.UsuarioActivo;
 import sic.util.FormatterNumero;
 
@@ -32,7 +31,6 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private final long idCliente;
     private final long idPago;
     private boolean notaDebitoCreada;    
-    private boolean noGravaGastos;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleNotaDebitoGUI(long idCliente, long idPago) {
@@ -68,14 +66,14 @@ public class DetalleNotaDebitoGUI extends JDialog {
     }
     
     private void cargarDetalleComprobante() {
-        double iva = 0;
-        if (noGravaGastos == false) iva = (Double.parseDouble(txtMontoRenglon2.getText()) * 0.21);
-        lblIvaNetoRenglon2.setText("$" + iva);
-        lblImporteRenglon2.setText("$" + (Double.parseDouble(txtMontoRenglon2.getText()) + iva));
+        txtMontoRenglon2.setValue(Double.parseDouble(txtMontoRenglon2.getText()));
+        double iva = (Double) txtMontoRenglon2.getValue() * 0.21;
+        lblIvaNetoRenglon2.setText("$" + FormatterNumero.formatConRedondeo(iva));
+        lblImporteRenglon2.setText("$" + FormatterNumero.formatConRedondeo((Double.parseDouble(txtMontoRenglon2.getText()) + iva)));
         txtSubTotalBruto.setValue(Double.parseDouble(txtMontoRenglon2.getText()));
         txtIVA21Neto.setValue(iva);
         txtNoGravado.setValue(pago.getMonto());
-        txtTotal.setValue(pago.getMonto() + Double.parseDouble(txtMontoRenglon2.getText()) + iva); 
+        txtTotal.setValue(pago.getMonto() + ((Double) txtMontoRenglon2.getValue()) + iva); 
     }
     
     @SuppressWarnings("unchecked")
@@ -502,9 +500,12 @@ public class DetalleNotaDebitoGUI extends JDialog {
         try {
             notaDebito.setRenglonesNotaDebito(Arrays.asList(RestClient.getRestTemplate().getForObject("/notas/renglon/debito/pago/" + pago.getId_Pago()
                     + "?monto=" + (Double) txtSubTotalBruto.getValue()
-                    + "&ivaPorcentaje=" + ((noGravaGastos)?"0":"21"), RenglonNotaDebito[].class)));
+                    + "&ivaPorcentaje=21", RenglonNotaDebito[].class)));
             notaDebito.setSubTotalBruto((Double) txtSubTotalBruto.getValue());
-            notaDebito.setTotal((Double) txtTotal.getValue());
+            notaDebito.setTotal(RestClient.getRestTemplate().getForObject("/notas/debito/total"
+                    + "?subTotalBruto=" + (Double) txtSubTotalBruto.getValue()
+                    + "&iva21Neto=" + notaDebito.getIva21Neto()
+                    + "&montoNoGravado=" + notaDebito.getMontoNoGravado(), double.class));
             notaDebito.setUsuario(UsuarioActivo.getInstance().getUsuario());
             notaDebito = RestClient.getRestTemplate().postForObject("/notas/debito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                     + "/cliente/" + cliente.getId_Cliente()
@@ -559,8 +560,6 @@ public class DetalleNotaDebitoGUI extends JDialog {
         try {
             cliente = RestClient.getRestTemplate().getForObject("/clientes/" + idCliente, Cliente.class);
             pago = RestClient.getRestTemplate().getForObject("/pagos/" + idPago, Pago.class);
-            noGravaGastos = (pago.getFactura() != null && pago.getFactura().getTipoComprobante() == TipoDeComprobante.FACTURA_X)
-                    || pago.getNotaDebito() != null && pago.getNotaDebito().getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_X;
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -568,9 +567,6 @@ public class DetalleNotaDebitoGUI extends JDialog {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        if (noGravaGastos) {
-            lblIVA21.setText("0%");
         }
         this.cargarDetalleCliente();
         this.cargarDetallePago();        
