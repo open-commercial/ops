@@ -216,7 +216,10 @@ public class PuntoDeVentaGUI extends JDialog {
     private void cargarCliente(Cliente cliente) {
         this.cliente = cliente;
         txt_NombreCliente.setText(cliente.getRazonSocial());
-        txt_DomicilioCliente.setText(cliente.getDireccion());
+        txt_DomicilioCliente.setText(cliente.getDireccion() 
+                + " " + cliente.getLocalidad().getNombre() 
+                + " " + cliente.getLocalidad().getProvincia().getNombre() 
+                + " " + cliente.getLocalidad().getProvincia().getPais());
         txt_CondicionIVACliente.setText(cliente.getCondicionIVA().toString());
         txt_IDFiscalCliente.setText(cliente.getIdFiscal());
     }
@@ -1531,59 +1534,64 @@ public class PuntoDeVentaGUI extends JDialog {
             JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                     .getString("mensaje_factura_sin_renglones"), "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            this.calcularResultados();
-            try {
-               if (!cmb_TipoComprobante.getSelectedItem().equals(TipoDeComprobante.PEDIDO)) {
-                   List<RenglonFactura> productosFaltantes = new ArrayList();
-                   renglones.stream()
-                            .filter(r -> {
-                               String uri = "/productos/" + r.getId_ProductoItem() + "/stock/disponibilidad?cantidad=" + r.getCantidad();
-                               return (!RestClient.getRestTemplate().getForObject(uri, boolean.class));
-                            })
-                            .forEachOrdered(r -> productosFaltantes.add(r));
-                   if (productosFaltantes.isEmpty()) {
-                       CerrarVentaGUI cerrarVentaGUI = new CerrarVentaGUI(this, true);
-                       cerrarVentaGUI.setLocationRelativeTo(this);
-                       cerrarVentaGUI.setVisible(true);
-                       if (cerrarVentaGUI.isExito()) {
-                           this.limpiarYRecargarComponentes();
-                       }
-                   } else {
-                       ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(productosFaltantes);
-                       productosFaltantesGUI.setModal(true);
-                       productosFaltantesGUI.setLocationRelativeTo(this);
-                       productosFaltantesGUI.setVisible(true);
-                   }
-                } else {
-                    //Es null cuando, se genera un pedido desde el punto de venta entrando por el menu sistemas.
-                    //El Id es 0 cuando, se genera un pedido desde el punto de venta entrando por el botón nuevo de administrar pedidos.
-                    if (pedido == null || pedido.getId_Pedido() == 0) {
-                        this.construirPedido();
-                   }
-                   PaginaRespuestaRest<Pedido> response = RestClient.getRestTemplate()
-                           .exchange("/pedidos/busqueda/criteria?"
-                                   + "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                                   + "&nroPedido=" + pedido.getNroPedido(), HttpMethod.GET, null,
-                                   new ParameterizedTypeReference<PaginaRespuestaRest<Pedido>>() {
-                           }).getBody();
-                   List<Pedido> pedidos = response.getContent();
-                    if (pedidos.isEmpty()) {
-                        Pedido p = RestClient.getRestTemplate().postForObject("/pedidos", pedido, Pedido.class);
-                        this.lanzarReportePedido(p);
-                        this.limpiarYRecargarComponentes();
-                    } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificarPedido == true) {
-                        this.actualizarPedido(pedido);
-                        JOptionPane.showMessageDialog(this, "El pedido se actualizó correctamente.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
-                        this.dispose();
+            if (Double.parseDouble(txt_Decuento_porcentaje.getValue().toString()) > 100) {
+                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                        .getString("mensaje_factura_descuento_mayor_cien"), "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                this.calcularResultados();
+                try {
+                    if (!cmb_TipoComprobante.getSelectedItem().equals(TipoDeComprobante.PEDIDO)) {
+                        List<RenglonFactura> productosFaltantes = new ArrayList();
+                        renglones.stream()
+                                .filter(r -> {
+                                    String uri = "/productos/" + r.getId_ProductoItem() + "/stock/disponibilidad?cantidad=" + r.getCantidad();
+                                    return (!RestClient.getRestTemplate().getForObject(uri, boolean.class));
+                                })
+                                .forEachOrdered(r -> productosFaltantes.add(r));
+                        if (productosFaltantes.isEmpty()) {
+                            CerrarVentaGUI cerrarVentaGUI = new CerrarVentaGUI(this, true);
+                            cerrarVentaGUI.setLocationRelativeTo(this);
+                            cerrarVentaGUI.setVisible(true);
+                            if (cerrarVentaGUI.isExito()) {
+                                this.limpiarYRecargarComponentes();
+                            }
+                        } else {
+                            ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(productosFaltantes);
+                            productosFaltantesGUI.setModal(true);
+                            productosFaltantesGUI.setLocationRelativeTo(this);
+                            productosFaltantesGUI.setVisible(true);
+                        }
+                    } else {
+                        //Es null cuando, se genera un pedido desde el punto de venta entrando por el menu sistemas.
+                        //El Id es 0 cuando, se genera un pedido desde el punto de venta entrando por el botón nuevo de administrar pedidos.
+                        if (pedido == null || pedido.getId_Pedido() == 0) {
+                            this.construirPedido();
+                        }
+                        PaginaRespuestaRest<Pedido> response = RestClient.getRestTemplate()
+                                .exchange("/pedidos/busqueda/criteria?"
+                                        + "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                                        + "&nroPedido=" + pedido.getNroPedido(), HttpMethod.GET, null,
+                                        new ParameterizedTypeReference<PaginaRespuestaRest<Pedido>>() {
+                                }).getBody();
+                        List<Pedido> pedidos = response.getContent();
+                        if (pedidos.isEmpty()) {
+                            Pedido p = RestClient.getRestTemplate().postForObject("/pedidos", pedido, Pedido.class);
+                            this.lanzarReportePedido(p);
+                            this.limpiarYRecargarComponentes();
+                        } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificarPedido == true) {
+                            this.actualizarPedido(pedido);
+                            JOptionPane.showMessageDialog(this, "El pedido se actualizó correctamente.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                            this.dispose();
+                        }
                     }
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btn_ContinuarActionPerformed

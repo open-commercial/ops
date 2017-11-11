@@ -445,6 +445,9 @@ public class BuscarProductosGUI extends JDialog {
             }
         });
         txtPorcentajeDescuento.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPorcentajeDescuentoKeyTyped(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtPorcentajeDescuentoKeyReleased(evt);
             }
@@ -619,6 +622,12 @@ public class BuscarProductosGUI extends JDialog {
         this.limpiarJTable();
         this.buscar();
     }//GEN-LAST:event_txtCriteriaBusquedaActionPerformed
+
+    private void txtPorcentajeDescuentoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPorcentajeDescuentoKeyTyped
+        if (evt.getKeyChar() == KeyEvent.VK_MINUS) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtPorcentajeDescuentoKeyTyped
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
