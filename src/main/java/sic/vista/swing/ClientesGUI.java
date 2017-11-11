@@ -617,8 +617,8 @@ public class ClientesGUI extends JInternalFrame {
         gui_DetalleCliente.setVisible(true);
         this.cargarComboBoxPaises();
         this.resetScroll();
-        this.buscar();
         this.limpiarJTable();
+        this.buscar();
     }//GEN-LAST:event_btn_NuevoActionPerformed
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
@@ -632,8 +632,8 @@ public class ClientesGUI extends JInternalFrame {
                 try {
                     RestClient.getRestTemplate().delete("/clientes/" + clientesTotal.get(indexFilaSeleccionada).getId_Cliente());
                     this.resetScroll();
-                    this.buscar();
                     this.limpiarJTable();
+                    this.buscar();
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (ResourceAccessException ex) {
@@ -654,8 +654,8 @@ public class ClientesGUI extends JInternalFrame {
             gui_DetalleCliente.setLocationRelativeTo(this);
             gui_DetalleCliente.setVisible(true);
             this.resetScroll();
-            this.buscar();
             this.limpiarJTable();
+            this.buscar();
             this.cargarComboBoxPaises();
         }
     }//GEN-LAST:event_btn_ModificarActionPerformed
