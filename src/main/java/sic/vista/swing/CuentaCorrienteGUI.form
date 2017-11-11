@@ -257,7 +257,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/sic/icons/StampArrow_16x16.png"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Pagos"/>
+            <Property name="text" type="java.lang.String" value="Ver Pagos"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_VerPagosActionPerformed"/>
