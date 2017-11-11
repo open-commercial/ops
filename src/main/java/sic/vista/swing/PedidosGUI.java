@@ -772,8 +772,8 @@ public class PedidosGUI extends JInternalFrame {
                 gui_puntoDeVenta.setLocationRelativeTo(this);
                 gui_puntoDeVenta.setVisible(true);
                 this.resetScroll();
-                this.buscar();
                 this.limpiarJTables();
+                this.buscar();
             } else {
                 JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
                         "Error", JOptionPane.ERROR_MESSAGE);
@@ -803,8 +803,8 @@ public class PedidosGUI extends JInternalFrame {
                     gui_puntoDeVenta.setLocationRelativeTo(this);
                     gui_puntoDeVenta.setVisible(true);
                     this.resetScroll();
-                    this.buscar();
                     this.limpiarJTables();
+                    this.buscar();
                 } else {                    
                     JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
                             "Error", JOptionPane.ERROR_MESSAGE);
@@ -876,8 +876,8 @@ public class PedidosGUI extends JInternalFrame {
                     gui_puntoDeVenta.setLocationRelativeTo(this);
                     gui_puntoDeVenta.setVisible(true);
                     this.resetScroll();
-                    this.buscar();
                     this.limpiarJTables();
+                    this.buscar();
                 } else {
                     JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
                             "Error", JOptionPane.ERROR_MESSAGE);
@@ -911,8 +911,8 @@ public class PedidosGUI extends JInternalFrame {
                     if (respuesta == JOptionPane.YES_OPTION) {
                         RestClient.getRestTemplate().delete("/pedidos/" + pedido.getId_Pedido());                        
                         this.resetScroll();
-                        this.buscar();
                         this.limpiarJTables();
+                        this.buscar();
                     }
                 } else {
                     JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
