@@ -351,6 +351,7 @@ public class PuntoDeVentaGUI extends JDialog {
     }
 
     private void limpiarYRecargarComponentes() {        
+        this.pedido = null;
         dc_fechaVencimiento.setDate(new Date());
         renglones = new ArrayList<>();
         modeloTablaResultados = new ModeloTabla();
