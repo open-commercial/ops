@@ -35,6 +35,9 @@ public class DetalleProductoGUI extends JDialog {
     private double pvp;
     private double IVANeto;
     private double precioDeLista;    
+    private List<Medida> medidas;
+    private List<Rubro> rubros;
+    private List<Proveedor> proveedores;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleProductoGUI() {
@@ -667,13 +670,13 @@ public class DetalleProductoGUI extends JDialog {
         txt_Codigo.setText(productoModificar.getCodigo());
         txt_Descripcion.setText(productoModificar.getDescripcion());
         txt_Nota.setText(productoModificar.getNota());
-        cmb_Medida.setSelectedItem(productoModificar.getMedida());
+        cmb_Medida.setSelectedItem(productoModificar.getNombreMedida());
         chk_Ilimitado.setSelected(productoModificar.isIlimitado());
         txt_Cantidad.setValue(productoModificar.getCantidad());
         txt_CantMinima.setValue(productoModificar.getCantMinima());
         txt_VentaMinima.setValue(productoModificar.getVentaMinima());
-        cmb_Rubro.setSelectedItem(productoModificar.getRubro());
-        cmb_Proveedor.setSelectedItem(productoModificar.getProveedor());
+        cmb_Rubro.setSelectedItem(productoModificar.getNombreRubro());
+        cmb_Proveedor.setSelectedItem(productoModificar.getRazonSocialProveedor());
         FormatterFechaHora formateador = new FormatterFechaHora(FormatterFechaHora.FORMATO_FECHAHORA_LETRAS);
         lbl_FechaUltimaModificacion.setText(formateador.format(productoModificar.getFechaUltimaModificacion()));
         lbl_FechaAlta.setText(formateador.format(productoModificar.getFechaAlta()));
@@ -710,12 +713,10 @@ public class DetalleProductoGUI extends JDialog {
     private void cargarMedidas() {
         cmb_Medida.removeAllItems();
         try {
-            List<Medida> medidas = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
+            medidas = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                 .getForObject("/medidas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                 Medida[].class)));
-            medidas.stream().forEach((m) -> {
-                cmb_Medida.addItem(m);
-            });
+            medidas.stream().forEach(m -> cmb_Medida.addItem(m.getNombre()));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -729,12 +730,10 @@ public class DetalleProductoGUI extends JDialog {
     private void cargarRubros() {
         cmb_Rubro.removeAllItems();
         try {
-            List<Rubro> rubros = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
+            rubros = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                 .getForObject("/rubros/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                 Rubro[].class)));
-            rubros.stream().forEach((r) -> {
-                cmb_Rubro.addItem(r);
-            });
+            rubros.stream().forEach(r -> cmb_Rubro.addItem(r.getNombre()));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -748,12 +747,10 @@ public class DetalleProductoGUI extends JDialog {
     private void cargarProveedores() {
         cmb_Proveedor.removeAllItems();
         try {
-            List<Proveedor> proveedores = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
+            proveedores = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                 .getForObject("/proveedores/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                 Proveedor[].class)));
-            proveedores.stream().forEach((p) -> {
-                cmb_Proveedor.addItem(p);
-            });
+            proveedores.stream().forEach(p -> cmb_Proveedor.addItem(p.getRazonSocial()));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -864,8 +861,20 @@ public class DetalleProductoGUI extends JDialog {
     }
     
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
+        long idMedida = 0;
+        long idRubro = 0;
+        long idProveedor = 0;
+        for (Medida m : medidas) {
+            if (m.getNombre().equals(cmb_Medida.getSelectedItem())) idMedida = m.getId_Medida();
+        }                
+        for (Rubro r : rubros) {
+            if (r.getNombre().equals(cmb_Rubro.getSelectedItem())) idRubro = r.getId_Rubro();
+        }                
+        for (Proveedor p : proveedores) {
+            if (p.getRazonSocial().equals(cmb_Proveedor.getSelectedItem())) idProveedor = p.getId_Proveedor();
+        }
         try {
-            if (operacion == TipoDeOperacion.ALTA) {
+            if (operacion == TipoDeOperacion.ALTA) {                
                 Producto producto = new Producto();
                 producto.setCodigo(txt_Codigo.getText());
                 producto.setDescripcion(txt_Descripcion.getText().trim());
@@ -885,12 +894,10 @@ public class DetalleProductoGUI extends JDialog {
                 producto.setEstante(txt_Estante.getText().trim());
                 producto.setNota(txt_Nota.getText().trim());
                 producto.setFechaAlta(new Date());
-                producto.setFechaVencimiento(dc_Vencimiento.getDate());
-                producto.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
-                producto.setMedida((Medida) cmb_Medida.getSelectedItem());
-                producto.setRubro((Rubro) cmb_Rubro.getSelectedItem());
-                producto.setProveedor((Proveedor) cmb_Proveedor.getSelectedItem());
-                RestClient.getRestTemplate().postForObject("/productos", producto, Producto.class);
+                producto.setFechaVencimiento(dc_Vencimiento.getDate());                
+                RestClient.getRestTemplate().postForObject("/productos?idMedida=" + idMedida + "&idRubro=" + idRubro
+                        + "&idProveedor=" + idProveedor + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                        producto, Producto.class);
                 LOGGER.warn("El producto " + producto + " se guardó correctamente");
                 int respuesta = JOptionPane.showConfirmDialog(this,
                         "El producto se guardó correctamente.\n¿Desea dar de alta otro producto?",
@@ -922,11 +929,9 @@ public class DetalleProductoGUI extends JDialog {
                 productoModificar.setEstante(txt_Estante.getText().trim());
                 productoModificar.setNota(txt_Nota.getText().trim());
                 productoModificar.setFechaVencimiento(dc_Vencimiento.getDate());
-                productoModificar.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
-                productoModificar.setMedida((Medida) cmb_Medida.getSelectedItem());
-                productoModificar.setRubro((Rubro) cmb_Rubro.getSelectedItem());
-                productoModificar.setProveedor((Proveedor) cmb_Proveedor.getSelectedItem());
-                RestClient.getRestTemplate().put("/productos", productoModificar);
+                RestClient.getRestTemplate().put("/productos?idMedida=" + idMedida + "&idRubro=" + idRubro
+                        + "&idProveedor=" + idProveedor + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                        productoModificar);                
                 LOGGER.warn("El producto " + productoModificar + " se modificó correctamente");
                 JOptionPane.showMessageDialog(this, "El producto se modificó correctamente.",
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);

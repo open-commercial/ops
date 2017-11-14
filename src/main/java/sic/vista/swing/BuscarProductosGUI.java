@@ -224,7 +224,7 @@ public class BuscarProductosGUI extends JDialog {
         int fila = tbl_Resultados.getSelectedRow();
         if (fila != -1) {
             prodSeleccionado = productosTotal.get(fila);
-            txt_UnidadMedida.setText(prodSeleccionado.getMedida().getNombre());
+            txt_UnidadMedida.setText(prodSeleccionado.getNombreMedida());
             ta_ObservacionesProducto.setText(prodSeleccionado.getNota());
             this.actualizarEstadoSeleccion();
         }
@@ -237,7 +237,7 @@ public class BuscarProductosGUI extends JDialog {
             fila[1] = p.getDescripcion();
             fila[2] = p.getCantidad();
             fila[3] = p.getVentaMinima();
-            fila[4] = p.getMedida();
+            fila[4] = p.getNombreMedida();
             double precio = (tipoMovimiento == Movimiento.VENTA) ? p.getPrecioLista()
                     : (tipoMovimiento == Movimiento.PEDIDO) ? p.getPrecioLista()
                     : (tipoMovimiento == Movimiento.COMPRA) ? p.getPrecioCosto() : 0.0;

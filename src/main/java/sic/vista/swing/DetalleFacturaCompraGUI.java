@@ -469,25 +469,26 @@ public class DetalleFacturaCompraGUI extends JDialog {
         }
     }
 
-    private void recargarRenglonesSegunTipoDeFactura() {        
+    private void recargarRenglonesSegunTipoDeFactura() {
         List<RenglonFactura> resguardoRenglones = renglones;
         renglones = new ArrayList<>();
         modeloTablaRenglones = new ModeloTabla();
         this.setColumnas();
         try {
-            for (RenglonFactura renglon : resguardoRenglones) {
+            resguardoRenglones.stream().map(rf -> {
                 Producto producto = RestClient.getRestTemplate()
-                        .getForObject("/productos/" + renglon.getId_ProductoItem(),
-                        Producto.class);
+                        .getForObject("/productos/" + rf.getId_ProductoItem(), Producto.class);
                 RenglonFactura nuevoRenglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
                         + "idProducto=" + producto.getId_Producto()
                         + "&tipoDeComprobante=" + tipoDeComprobante.name()
                         + "&movimiento=" + Movimiento.COMPRA
-                        + "&cantidad=" + renglon.getCantidad()
-                        + "&descuentoPorcentaje=" + renglon.getDescuento_porcentaje(),                        
+                        + "&cantidad=" + rf.getCantidad()
+                        + "&descuentoPorcentaje=" + rf.getDescuento_porcentaje(),                        
                         RenglonFactura.class);
+                return nuevoRenglon;
+            }).forEachOrdered(nuevoRenglon -> {
                 this.agregarRenglon(nuevoRenglon);
-            }
+            });
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
