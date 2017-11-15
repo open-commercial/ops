@@ -2,8 +2,6 @@ package sic.vista.swing;
 
 import java.awt.Dimension;
 import java.beans.PropertyVetoException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
@@ -15,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.Empresa;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.UsuarioActivo;
 import sic.util.Utilidades;
@@ -38,31 +35,20 @@ public class PrincipalGUI extends JFrame {
         this.setIconImage(iconoVentana.getImage());
     }
     
-    private void llamarGUI_SeleccionEmpresa() {
-        List<Empresa> empresas = Arrays.asList(RestClient.getRestTemplate().getForObject("/empresas", Empresa[].class));
-        if (empresas.isEmpty() || empresas.size() > 1) {
-            SeleccionEmpresaGUI gui_seleccionEmpresa = new SeleccionEmpresaGUI(this, empresas);
-            gui_seleccionEmpresa.setLocationRelativeTo(this);
-            gui_seleccionEmpresa.setVisible(true);
-            gui_seleccionEmpresa.dispose();
-        } else {
-            EmpresaActiva.getInstance().setEmpresa(empresas.get(0));
-        }
-        Empresa empresa = EmpresaActiva.getInstance().getEmpresa();
-        if (empresa == null) {
-            lbl_EmpresaActiva.setText("Empresa: (sin empresa)");
-        } else {
-            lbl_EmpresaActiva.setText("Empresa: " + empresa.getNombre());
-        }     
+    private void llamarSeleccionEmpresaGUI() {
+        SeleccionEmpresaGUI seleccionEmpresaGUI = new SeleccionEmpresaGUI();
+        seleccionEmpresaGUI.setModal(true);
+        seleccionEmpresaGUI.setVisible(true);
+        this.setTitle("S.I.C. Ops "
+                + ResourceBundle.getBundle("Mensajes").getString("version")
+                + " - Empresa: " + EmpresaActiva.getInstance().getEmpresa().getNombre()
+                + " - Usuario: " + UsuarioActivo.getInstance().getUsuario().getNombre());
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lbl_EmpresaActiva = new javax.swing.JLabel();
-        lbl_UsuarioActivo = new javax.swing.JLabel();
-        lbl_Separador = new javax.swing.JLabel();
         dp_Escritorio = new javax.swing.JDesktopPane();
         mb_BarraMenues = new javax.swing.JMenuBar();
         mnu_Sistema = new javax.swing.JMenu();
@@ -99,19 +85,6 @@ public class PrincipalGUI extends JFrame {
                 formWindowOpened(evt);
             }
         });
-
-        lbl_EmpresaActiva.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-        lbl_EmpresaActiva.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Empresa_16x16.png"))); // NOI18N
-        lbl_EmpresaActiva.setText("Empresa: (sin empresa)");
-        lbl_EmpresaActiva.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        lbl_UsuarioActivo.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-        lbl_UsuarioActivo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Group_16x16.png"))); // NOI18N
-        lbl_UsuarioActivo.setText("Usuario: (sin usuario)");
-        lbl_UsuarioActivo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        lbl_Separador.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-        lbl_Separador.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         dp_Escritorio.setBackground(new java.awt.Color(204, 204, 204));
         dp_Escritorio.setToolTipText("");
@@ -286,22 +259,11 @@ public class PrincipalGUI extends JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(lbl_UsuarioActivo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_EmpresaActiva)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_Separador, javax.swing.GroupLayout.DEFAULT_SIZE, 505, Short.MAX_VALUE))
             .addComponent(dp_Escritorio, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(dp_Escritorio, javax.swing.GroupLayout.DEFAULT_SIZE, 597, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_UsuarioActivo)
-                    .addComponent(lbl_Separador, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_EmpresaActiva)))
+            .addComponent(dp_Escritorio, javax.swing.GroupLayout.DEFAULT_SIZE, 618, Short.MAX_VALUE)
         );
 
         pack();
@@ -332,12 +294,11 @@ public class PrincipalGUI extends JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void mnuItm_EmpresasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_EmpresasActionPerformed
-        EmpresasGUI gui_Empresas = new EmpresasGUI();
-        gui_Empresas.setModal(true);
-        gui_Empresas.setLocationRelativeTo(this);
-        gui_Empresas.setVisible(true);
+        EmpresasGUI empresasGUI = new EmpresasGUI();
+        empresasGUI.setModal(true);
+        empresasGUI.setVisible(true);
         Utilidades.cerrarTodasVentanas(dp_Escritorio);
-        this.llamarGUI_SeleccionEmpresa();
+        this.llamarSeleccionEmpresaGUI();
     }//GEN-LAST:event_mnuItm_EmpresasActionPerformed
 
     private void mnuItm_CambiarUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_CambiarUserActionPerformed
@@ -361,11 +322,9 @@ public class PrincipalGUI extends JFrame {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.setLocationRelativeTo(null);
         this.setSize(sizeFrame);
-        this.setIcon();        
-        this.setExtendedState(MAXIMIZED_BOTH);        
-        this.setTitle("S.I.C. Sistema de Información Comercial " + ResourceBundle.getBundle("Mensajes").getString("version"));
-        lbl_UsuarioActivo.setText("Usuario: " + UsuarioActivo.getInstance().getUsuario().getNombre());       
-        this.llamarGUI_SeleccionEmpresa();        
+        this.setIcon();
+        this.setExtendedState(MAXIMIZED_BOTH);
+        this.llamarSeleccionEmpresaGUI();
     }//GEN-LAST:event_formWindowOpened
 
     private void mnuItm_UsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_UsuariosActionPerformed
@@ -482,11 +441,7 @@ public class PrincipalGUI extends JFrame {
 
     private void mnuItm_CambiarEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_CambiarEmpresaActionPerformed
         Utilidades.cerrarTodasVentanas(dp_Escritorio);
-        List<Empresa> empresas = Arrays.asList(RestClient.getRestTemplate().getForObject("/empresas", Empresa[].class));
-        SeleccionEmpresaGUI gui_seleccionEmpresa = new SeleccionEmpresaGUI(this, empresas);
-        gui_seleccionEmpresa.setLocationRelativeTo(this);
-        gui_seleccionEmpresa.setVisible(true);
-        gui_seleccionEmpresa.dispose();
+        this.llamarSeleccionEmpresaGUI();
     }//GEN-LAST:event_mnuItm_CambiarEmpresaActionPerformed
 
     private void mnuItm_FormasDePagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_FormasDePagoActionPerformed
@@ -579,9 +534,6 @@ public class PrincipalGUI extends JFrame {
     private javax.swing.JPopupMenu.Separator Separador2;
     private javax.swing.JDesktopPane dp_Escritorio;
     private javax.swing.JPopupMenu.Separator jSeparator1;
-    private javax.swing.JLabel lbl_EmpresaActiva;
-    private javax.swing.JLabel lbl_Separador;
-    private javax.swing.JLabel lbl_UsuarioActivo;
     private javax.swing.JMenuBar mb_BarraMenues;
     private javax.swing.JMenuItem mnuItm_CambiarEmpresa;
     private javax.swing.JMenuItem mnuItm_CambiarUser;

@@ -24,7 +24,11 @@ public class EmpresasGUI extends JDialog {
 
     public EmpresasGUI() {
         this.initComponents();
-        ImageIcon iconoVentana = new ImageIcon(EmpresasGUI.class.getResource("/sic/icons/Empresa_16x16.png"));
+        this.setIcon();
+    }
+    
+    private void setIcon() {
+        ImageIcon iconoVentana = new ImageIcon(SeleccionEmpresaGUI.class.getResource("/sic/icons/Empresa_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
     }
 
@@ -32,7 +36,7 @@ public class EmpresasGUI extends JDialog {
         modeloListEmpresas.removeAllElements();                
         try {
             empresas = Arrays.asList(RestClient.getRestTemplate().getForObject("/empresas", Empresa[].class));
-            empresas.stream().forEach((e) -> {
+            empresas.stream().forEach(e -> {
                 modeloListEmpresas.addElement(e);
             });
         } catch (RestClientResponseException ex) {
@@ -191,7 +195,13 @@ public class EmpresasGUI extends JDialog {
                     "Eliminar", JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
                 try {
-                    RestClient.getRestTemplate().delete("/empresas/" + empresaSeleccionada.getId_Empresa());                    
+                    RestClient.getRestTemplate().delete("/empresas/" + empresaSeleccionada.getId_Empresa());
+                    LOGGER.warn("Empresa " + empresaSeleccionada.getNombre() + " eliminada.");   
+                    if (empresaSeleccionada.equals(EmpresaActiva.getInstance().getEmpresa())) {
+                        EmpresaActiva.getInstance().setEmpresa(null);
+                    }
+                    this.cargarListEmpresas();
+                    empresaSeleccionada = null;
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (ResourceAccessException ex) {
@@ -199,20 +209,14 @@ public class EmpresasGUI extends JDialog {
                     JOptionPane.showMessageDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                             "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                LOGGER.warn("Empresa " + empresaSeleccionada.getNombre() + " eliminada.");
-                //actualiza la empresa en caso de que sea la seleccionada
-                if (empresaSeleccionada.equals(EmpresaActiva.getInstance().getEmpresa())) {                    
-                    EmpresaActiva.getInstance().setEmpresa(null);
-                }
-                this.cargarListEmpresas();
-                empresaSeleccionada = null;
+                }               
             }
         }
     }//GEN-LAST:event_btn_EliminarEmpresaActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        this.cargarListEmpresas();
+        this.cargarListEmpresas();        
+        this.setLocationRelativeTo(null);
     }//GEN-LAST:event_formWindowOpened
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

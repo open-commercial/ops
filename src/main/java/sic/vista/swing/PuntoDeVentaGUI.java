@@ -167,13 +167,6 @@ public class PuntoDeVentaGUI extends JDialog {
         this.setIconImage(iconoVentana.getImage());
     }
     
-    private void llamarGUI_SeleccionEmpresa(List<Empresa> empresas) {
-        SeleccionEmpresaGUI gui_SeleccionEmpresa = new SeleccionEmpresaGUI(this, empresas);
-        gui_SeleccionEmpresa.setLocationRelativeTo(this);
-        gui_SeleccionEmpresa.setVisible(true);
-        gui_SeleccionEmpresa.dispose();
-    }
-
     private void cargarEstadoDeLosChkEnTabla(JTable tbl_Resultado, EstadoRenglon[] estadosDeLosRenglones) {
         for (int i = 0; i < tbl_Resultado.getRowCount(); i++) {
             if ((boolean) tbl_Resultado.getValueAt(i, 0)) {
@@ -1445,15 +1438,18 @@ public class PuntoDeVentaGUI extends JDialog {
             if (!UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
                 List<Empresa> empresas = Arrays.asList(RestClient.getRestTemplate().getForObject("/empresas", Empresa[].class));
                 if (empresas.isEmpty() || empresas.size() > 1) {
-                    this.llamarGUI_SeleccionEmpresa(empresas);
+                    SeleccionEmpresaGUI seleccionEmpresaGUI = new SeleccionEmpresaGUI();
+                    seleccionEmpresaGUI.setLocationRelativeTo(this);
+                    seleccionEmpresaGUI.setModal(true);
+                    seleccionEmpresaGUI.setVisible(true);
                 } else {
                     EmpresaActiva.getInstance().setEmpresa(empresas.get(0));
                 }
-            } 
-            empresa = EmpresaActiva.getInstance().getEmpresa();
+            }
             this.setTitle("S.I.C. Punto de Venta "
                     + ResourceBundle.getBundle("Mensajes").getString("version")
-                    + " - " + empresa.getNombre());
+                    + " - Empresa: " + EmpresaActiva.getInstance().getEmpresa().getNombre() 
+                    + " - Usuario: " + UsuarioActivo.getInstance().getUsuario().getNombre());
             ConfiguracionDelSistema cds = RestClient.getRestTemplate()
                     .getForObject("/configuraciones-del-sistema/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                             ConfiguracionDelSistema.class);

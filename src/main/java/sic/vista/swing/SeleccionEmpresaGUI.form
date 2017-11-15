@@ -35,7 +35,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="lbl_Icon" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="cmb_Empresas" pref="348" max="32767" attributes="1"/>
+                      <Component id="cmb_Empresas" max="32767" attributes="1"/>
                   </Group>
                   <Component id="lbl_Leyenda" alignment="0" min="-2" max="-2" attributes="1"/>
                   <Component id="btn_Aceptar" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -65,7 +65,7 @@
     <Component class="javax.swing.JLabel" name="lbl_Leyenda">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="DejaVu Sans" size="15" style="0"/>
+          <Font name="Dialog" size="15" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Seleccione la Empresa con la que desea trabajar:"/>
       </Properties>

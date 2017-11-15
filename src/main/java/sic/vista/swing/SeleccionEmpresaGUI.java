@@ -1,10 +1,16 @@
 package sic.vista.swing;
 
-import java.awt.Window;
+import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientResponseException;
+import sic.RestClient;
 import sic.modelo.Empresa;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Rol;
@@ -12,20 +18,12 @@ import sic.modelo.UsuarioActivo;
 
 public class SeleccionEmpresaGUI extends JDialog {
 
-    private Empresa empresaSeleccionada;
     private List<Empresa> empresas;
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public SeleccionEmpresaGUI(Window parent, List<Empresa> empresas) {
-        super(parent);
-        this.setIU();
-        this.setModal(true);
-        this.empresas = empresas;
-    }
-
-    private void setIU() {
+    public SeleccionEmpresaGUI() {
         this.initComponents();
-        this.setIcon();
-        this.setLocationRelativeTo(null);
+        this.setIcon();        
     }
 
     private void setIcon() {
@@ -33,16 +31,10 @@ public class SeleccionEmpresaGUI extends JDialog {
         this.setIconImage(iconoVentana.getImage());
     }
 
-    private void cargarComboBoxEmpresas() {
-        if (empresas.isEmpty() && UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
-            EmpresasGUI gui_Empresas = new EmpresasGUI();
-            gui_Empresas.setModal(true);
-            gui_Empresas.setLocationRelativeTo(this);
-            gui_Empresas.setVisible(true);
-        }
+    private void cargarComboBoxEmpresas() {        
         cmb_Empresas.removeAllItems();
-        empresas.stream().forEach((e) -> {
-            cmb_Empresas.addItem(e);
+        empresas.stream().forEach(e -> {
+            cmb_Empresas.addItem(e.getNombre());
         });
     }
 
@@ -67,7 +59,7 @@ public class SeleccionEmpresaGUI extends JDialog {
             }
         });
 
-        lbl_Leyenda.setFont(new java.awt.Font("DejaVu Sans", 0, 15)); // NOI18N
+        lbl_Leyenda.setFont(new java.awt.Font("Dialog", 1, 15)); // NOI18N
         lbl_Leyenda.setText("Seleccione la Empresa con la que desea trabajar:");
 
         cmb_Empresas.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -97,7 +89,7 @@ public class SeleccionEmpresaGUI extends JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lbl_Icon)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmb_Empresas, 0, 348, Short.MAX_VALUE))
+                        .addComponent(cmb_Empresas, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(lbl_Leyenda)
                     .addComponent(btn_Aceptar, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
@@ -124,28 +116,54 @@ public class SeleccionEmpresaGUI extends JDialog {
     }//GEN-LAST:event_formWindowClosing
 
     private void btn_AceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AceptarActionPerformed
-        empresaSeleccionada = (Empresa) cmb_Empresas.getSelectedItem();
-        if (empresaSeleccionada == null) {
+        if (cmb_Empresas.getSelectedItem() == null) {
             JOptionPane.showMessageDialog(this,
                     "Debe seleccionar una Empresa para poder continuar!\nEn "
                     + "caso de que no encuentre ninguna, comuníquese con un "
                     + "Administrador del sistema",
                     "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            EmpresaActiva.getInstance().setEmpresa(empresaSeleccionada);
+            empresas.stream()
+                    .filter(e -> (e.getNombre().equals(cmb_Empresas.getSelectedItem())))
+                    .forEachOrdered(e -> {
+                EmpresaActiva.getInstance().setEmpresa(e);
+            });
             this.dispose();
         }
     }//GEN-LAST:event_btn_AceptarActionPerformed
 
     private void cmb_EmpresasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmb_EmpresasKeyPressed
-        //ENTER
         if (evt.getKeyCode() == 10) {
             btn_AceptarActionPerformed(null);
         }
     }//GEN-LAST:event_cmb_EmpresasKeyPressed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        this.cargarComboBoxEmpresas();
+        try {
+            this.setLocationRelativeTo(null);
+            empresas = Arrays.asList(RestClient.getRestTemplate().getForObject("/empresas", Empresa[].class));
+            if (empresas.isEmpty() || empresas.size() > 1) {
+                if (empresas.isEmpty() && UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
+                    EmpresasGUI empresasGUI = new EmpresasGUI();
+                    empresasGUI.setModal(true);
+                    empresasGUI.setLocationRelativeTo(this);
+                    empresasGUI.setVisible(true);
+                }
+                empresas = Arrays.asList(RestClient.getRestTemplate().getForObject("/empresas", Empresa[].class));
+                this.cargarComboBoxEmpresas();    
+            } else {
+                EmpresaActiva.getInstance().setEmpresa(empresas.get(0));
+                this.dispose();
+            }          
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }        
     }//GEN-LAST:event_formWindowOpened
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Aceptar;
