@@ -277,12 +277,10 @@ public class PuntoDeVentaGUI extends JDialog {
                     agregado = true;
                 }
             }
-
             //si no encuentra el producto entre los renglones, carga un nuevo renglon        
             if (agregado == false) {
                 renglones.add(renglon);
             }
-
             //para que baje solo el scroll vertical
             Point p = new Point(0, tbl_Resultado.getHeight());
             sp_Resultado.getViewport().setViewPosition(p);
@@ -729,7 +727,7 @@ public class PuntoDeVentaGUI extends JDialog {
 
     public List<RenglonPedido> convertirRenglonesFacturaARenglonesPedido(List<RenglonFactura> renglonesDeFactura) {
         List<RenglonPedido> renglonesPedido = new ArrayList();
-        renglonesDeFactura.stream().forEach((r) -> {
+        renglonesDeFactura.stream().forEach(r -> {
             renglonesPedido.add(this.convertirRenglonFacturaARenglonPedido(r));
         });
         return renglonesPedido;

@@ -65,16 +65,18 @@ public class ProductosFaltantesGUI extends JDialog {
 
     private void cargarResultadosAlTable() {
         this.limpiarJTables();
-        for (RenglonFactura renglonFaltante : renglonesFaltantes) {
+        renglonesFaltantes.stream().map(renglonFaltante -> {
             Object[] fila = new Object[4];
             fila[0] = renglonFaltante.getCodigoItem();
             fila[1] = renglonFaltante.getDescripcionItem();
             fila[2] = renglonFaltante.getCantidad();
             fila[3] = RestClient.getRestTemplate()
-                      .getForObject("/productos/" + renglonFaltante.getId_ProductoItem(), Producto.class)
-                      .getCantidad();
+                    .getForObject("/productos/" + renglonFaltante.getId_ProductoItem(), Producto.class)
+                    .getCantidad();
+            return fila;
+        }).forEachOrdered(fila -> {
             modeloTablaFaltantes.addRow(fila);
-        }
+        });
         tbl_Faltantes.setModel(modeloTablaFaltantes);
     }
 

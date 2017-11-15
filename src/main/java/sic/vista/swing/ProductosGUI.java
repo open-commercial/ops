@@ -41,6 +41,8 @@ public class ProductosGUI extends JInternalFrame {
     private static int totalElementosBusqueda;
     private static int NUMERO_PAGINA = 0;
     private static final int TAMANIO_PAGINA = 50;
+    private List<Rubro> rubros;
+    private List<Proveedor> proveedores;
 
     public ProductosGUI() {
         this.initComponents();        
@@ -58,16 +60,13 @@ public class ProductosGUI extends JInternalFrame {
 
     private void cargarRubros() {
         try {
-            List<Rubro> rubros = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
+            rubros = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/rubros/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                             Rubro[].class)));
             cmb_Rubro.removeAllItems();
-            rubros.stream().forEach((r) -> {
-                cmb_Rubro.addItem(r);
+            rubros.stream().forEach(r -> {
+                cmb_Rubro.addItem(r.getNombre());
             });
-            if (cmb_Rubro.getSelectedItem() != null && rubros.contains((Rubro) cmb_Rubro.getSelectedItem())) {
-                cmb_Rubro.setSelectedItem(cmb_Rubro.getSelectedItem());
-            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -80,16 +79,13 @@ public class ProductosGUI extends JInternalFrame {
 
     private void cargarProveedores() {
         try {
-            List<Proveedor> proveedores = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
+            proveedores = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/proveedores/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                             Proveedor[].class)));
             cmb_Proveedor.removeAllItems();
-            proveedores.stream().forEach((p) -> {
-                cmb_Proveedor.addItem(p);
+            proveedores.stream().forEach(p -> {
+                cmb_Proveedor.addItem(p.getRazonSocial());
             });
-            if (cmb_Proveedor.getSelectedItem() != null && proveedores.contains((Proveedor) cmb_Proveedor.getSelectedItem())) {
-                cmb_Proveedor.setSelectedItem(cmb_Proveedor.getSelectedItem());
-            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -198,7 +194,7 @@ public class ProductosGUI extends JInternalFrame {
             fila[3] = producto.getCantMinima();
             fila[4] = producto.getVentaMinima();
             fila[5] = producto.isIlimitado();
-            fila[6] = producto.getMedida().getNombre();
+            fila[6] = producto.getNombreMedida();
             fila[7] = producto.getPrecioCosto();
             fila[8] = producto.getGanancia_porcentaje();
             fila[9] = producto.getGanancia_neto();
@@ -206,11 +202,11 @@ public class ProductosGUI extends JInternalFrame {
             fila[11] = producto.getIva_porcentaje();
             fila[12] = producto.getIva_neto();
             fila[13] = producto.getPrecioLista();
-            fila[14] = producto.getRubro().getNombre();
+            fila[14] = producto.getNombreRubro();
             fila[15] = producto.getFechaUltimaModificacion();
             fila[16] = producto.getEstanteria();
             fila[17] = producto.getEstante();
-            fila[18] = producto.getProveedor().getRazonSocial();
+            fila[18] = producto.getRazonSocialProveedor();
             fila[19] = producto.getFechaAlta();
             fila[20] = producto.getFechaVencimiento();
             fila[21] = producto.getNota();
@@ -279,6 +275,22 @@ public class ProductosGUI extends JInternalFrame {
         tbl_Resultados.requestFocus();
     }
 
+    private long getIdRubroSeleccionado() {
+        long idRubro = 0;
+        for (Rubro r : rubros) {
+            if (r.getNombre().equals(cmb_Rubro.getSelectedItem())) idRubro = r.getId_Rubro();
+        }
+        return idRubro;
+    }
+    
+    private long getIdProveedorSeleccionado() {
+        long idProveedor = 0;
+        for (Proveedor p : proveedores) {
+            if (p.getRazonSocial().equals(cmb_Proveedor.getSelectedItem())) idProveedor = p.getId_Proveedor();
+        }
+        return idProveedor;
+    }
+    
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
         long idEmpresa = EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
@@ -293,12 +305,12 @@ public class ProductosGUI extends JInternalFrame {
             criteriaCosto += "&descripcion=" + txt_Descripcion.getText().trim();
         }
         if (chk_Rubro.isSelected()) {
-            criteriaBusqueda += "&idRubro=" + ((Rubro) cmb_Rubro.getSelectedItem()).getId_Rubro();
-            criteriaCosto += "&idRubro=" + ((Rubro) cmb_Rubro.getSelectedItem()).getId_Rubro();
+            criteriaBusqueda += "&idRubro=" + this.getIdRubroSeleccionado();
+            criteriaCosto += "&idRubro=" + this.getIdRubroSeleccionado();
         }
         if (chk_Proveedor.isSelected()) {
-            criteriaBusqueda += "&idProveedor=" + ((Proveedor) cmb_Proveedor.getSelectedItem()).getId_Proveedor();
-            criteriaCosto += "&idProveedor=" + ((Proveedor) cmb_Proveedor.getSelectedItem()).getId_Proveedor();
+            criteriaBusqueda += "&idProveedor=" + this.getIdProveedorSeleccionado();
+            criteriaCosto += "&idProveedor=" + this.getIdProveedorSeleccionado();
         }
         if (chk_Disponibilidad.isSelected()) {
             criteriaBusqueda += "&soloFantantes=" + rb_Faltantes.isSelected();
@@ -348,17 +360,16 @@ public class ProductosGUI extends JInternalFrame {
                         uriReporteListaProductosCriteria += "&descripcion=" + txt_Descripcion.getText().trim();
                     }
                     if (chk_Rubro.isSelected()) {
-                        uriReporteListaProductosCriteria += "&idRubro=" + ((Rubro) cmb_Rubro.getSelectedItem()).getId_Rubro();
+                        uriReporteListaProductosCriteria += "&idRubro=" + this.getIdRubroSeleccionado();
                     }
                     if (chk_Proveedor.isSelected()) {
-                        uriReporteListaProductosCriteria += "&idProveedor=" + ((Proveedor) cmb_Proveedor.getSelectedItem()).getId_Proveedor();
+                        uriReporteListaProductosCriteria += "&idProveedor=" + this.getIdProveedorSeleccionado();
                     }
                     if (chk_Disponibilidad.isSelected()) {
                         uriReporteListaProductosCriteria += "&soloFantantes=" + rb_Faltantes.isSelected();
                     }
                     byte[] reporte = RestClient.getRestTemplate()
-                            .getForObject(uriReporteListaProductosCriteria,
-                                    byte[].class);
+                            .getForObject(uriReporteListaProductosCriteria, byte[].class);
                     File f = new File(System.getProperty("user.home") + "/ListaPrecios.pdf");
                     Files.write(f.toPath(), reporte);
                     Desktop.getDesktop().open(f);
