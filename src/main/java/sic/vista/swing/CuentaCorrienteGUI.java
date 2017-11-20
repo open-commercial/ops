@@ -661,23 +661,22 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                         JOptionPane.showInternalMessageDialog(this,
                                 ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
                                 "Error", JOptionPane.ERROR_MESSAGE);
-                    } else switch (renglonCC.getTipoMovimiento()) {
-                        case VENTA:
-                            {
-                                PagosGUI gui_Pagos = new PagosGUI(RestClient.getRestTemplate().getForObject("/facturas/" + renglonCC.getIdMovimiento(), Factura.class));
-                                gui_Pagos.setModal(true);
-                                gui_Pagos.setLocationRelativeTo(this);
-                                gui_Pagos.setVisible(true);
-                                refrescar = gui_Pagos.isPagosCreados();
+                    } else
+                        switch (renglonCC.getTipoMovimiento()) {
+                            case VENTA: {
+                                JInternalFrame gui = new PagosGUI(RestClient.getRestTemplate().getForObject("/facturas/" + renglonCC.getIdMovimiento(), Factura.class));
+                                gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                                        getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+                                getDesktopPane().add(gui);
+                                gui.setVisible(true);
                                 break;
                             }
-                        case DEBITO:
-                            {
-                                PagosGUI gui_Pagos = new PagosGUI(RestClient.getRestTemplate().getForObject("/notas/" + renglonCC.getIdMovimiento(), NotaDebito.class));
-                                gui_Pagos.setModal(true);
-                                gui_Pagos.setLocationRelativeTo(this);
-                                gui_Pagos.setVisible(true);
-                                refrescar = gui_Pagos.isPagosCreados();
+                            case DEBITO: {
+                                JInternalFrame gui = new PagosGUI(RestClient.getRestTemplate().getForObject("/notas/" + renglonCC.getIdMovimiento(), NotaDebito.class));
+                                gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                                        getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+                                getDesktopPane().add(gui);
+                                gui.setVisible(true);
                                 break;
                             }
                         default:

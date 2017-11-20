@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,7 @@ import sic.RestClient;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.FormaDePago;
 
-public class FormasDePagoGUI extends JDialog {
+public class FormasDePagoGUI extends JInternalFrame {
 
     private ModeloTabla modeloTablaResultados = new ModeloTabla();
     private List<FormaDePago> formasDePago;
@@ -25,12 +24,6 @@ public class FormasDePagoGUI extends JDialog {
 
     public FormasDePagoGUI() {
         this.initComponents();
-        this.setIcon();
-    }
-
-    private void setIcon() {
-        ImageIcon iconoVentana = new ImageIcon(FormasDePagoGUI.class.getResource("/sic/icons/Wallet_16x16.png"));
-        this.setIconImage(iconoVentana.getImage());
     }
 
     private void setColumnas() {
@@ -181,12 +174,24 @@ public class FormasDePagoGUI extends JDialog {
         btn_Eliminar = new javax.swing.JButton();
         btn_SetPredeterminado = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setClosable(true);
         setTitle("Administrar Formas de Pago");
-        setResizable(false);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                formWindowOpened(evt);
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Wallet_16x16.png"))); // NOI18N
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -318,9 +323,9 @@ public class FormasDePagoGUI extends JDialog {
         this.setPredeterminado();
     }//GEN-LAST:event_btn_SetPredeterminadoActionPerformed
 
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+    private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         try {
-            this.setSize(sizeInternalFrame);            
+            this.setSize(sizeInternalFrame);
             this.setColumnas();
             this.getFormasDePagos();
             this.cargarResultadosAlTable();
@@ -333,7 +338,8 @@ public class FormasDePagoGUI extends JDialog {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_formWindowOpened
+    }//GEN-LAST:event_formInternalFrameOpened
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Agregar;
     private javax.swing.JButton btn_Eliminar;

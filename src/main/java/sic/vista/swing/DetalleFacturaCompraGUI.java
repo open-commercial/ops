@@ -10,8 +10,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +27,7 @@ import sic.modelo.TipoDeComprobante;
 import sic.modelo.Transportista;
 import sic.util.RenderTabla;
 
-public class DetalleFacturaCompraGUI extends JDialog {
+public class DetalleFacturaCompraGUI extends JInternalFrame {
 
     private ModeloTabla modeloTablaRenglones = new ModeloTabla();
     private List<RenglonFactura> renglones = new ArrayList<>();
@@ -39,8 +38,7 @@ public class DetalleFacturaCompraGUI extends JDialog {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleFacturaCompraGUI() {
-        this.initComponents();
-        this.setIcon();        
+        this.initComponents();     
         facturaParaMostrar = new FacturaCompra();
         operacionAlta = true;
         this.prepararComponentes();
@@ -48,8 +46,7 @@ public class DetalleFacturaCompraGUI extends JDialog {
     }
 
     public DetalleFacturaCompraGUI(FacturaCompra facturaCompra) {
-        this.initComponents();
-        this.setIcon();                
+        this.initComponents();              
         this.prepararComponentes();        
         operacionAlta = false;
         facturaParaMostrar = facturaCompra;
@@ -81,10 +78,10 @@ public class DetalleFacturaCompraGUI extends JDialog {
         lbl_Transporte.setText("Transporte:");
     }
 
-    private void setIcon() {
-        ImageIcon iconoVentana = new ImageIcon(DetalleFacturaCompraGUI.class.getResource("/sic/icons/SIC_24_square.png"));
-        this.setIconImage(iconoVentana.getImage());
-    }
+//    private void setIcon() {
+//        ImageIcon iconoVentana = new ImageIcon(DetalleFacturaCompraGUI.class.getResource("/sic/icons/SIC_24_square.png"));
+//        this.setIconImage(iconoVentana.getImage());
+//    }
 
     private void prepararComponentes() {
         txt_SerieFactura.setValue(new Long("0"));
@@ -607,10 +604,26 @@ public class DetalleFacturaCompraGUI extends JDialog {
         txt_NumeroFactura = new javax.swing.JFormattedTextField();
         lbl_separador = new javax.swing.JLabel();
 
+        setClosable(true);
+        setMaximizable(true);
+        setResizable(true);
         setTitle("Nueva Factura de Compra");
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                formWindowOpened(evt);
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/SIC_24_square.png"))); // NOI18N
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -1106,7 +1119,7 @@ public class DetalleFacturaCompraGUI extends JDialog {
 
     private void btn_BuscarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarProductoActionPerformed
         BuscarProductosGUI gui_buscarProducto = new BuscarProductosGUI(
-                this, true, renglones, 
+                true, renglones, 
                 (TipoDeComprobante)cmb_TipoFactura.getSelectedItem(),
                 Movimiento.COMPRA);
         gui_buscarProducto.setVisible(true);
@@ -1152,7 +1165,15 @@ public class DetalleFacturaCompraGUI extends JDialog {
         }
     }//GEN-LAST:event_cmb_TipoFacturaItemStateChanged
 
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+    private void txt_Recargo_PorcentajeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_Recargo_PorcentajeFocusLost
+        this.calcularResultados();
+    }//GEN-LAST:event_txt_Recargo_PorcentajeFocusLost
+
+    private void txt_Recargo_PorcentajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_Recargo_PorcentajeActionPerformed
+        this.calcularResultados();
+    }//GEN-LAST:event_txt_Recargo_PorcentajeActionPerformed
+
+    private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         this.cargarProveedores();
         this.cargarTransportistas();
         this.cargarTiposDeFacturaDisponibles();
@@ -1161,15 +1182,7 @@ public class DetalleFacturaCompraGUI extends JDialog {
         if (operacionAlta == false) {
             this.cargarFactura();
         }
-    }//GEN-LAST:event_formWindowOpened
-
-    private void txt_Recargo_PorcentajeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_Recargo_PorcentajeFocusLost
-        this.calcularResultados();
-    }//GEN-LAST:event_txt_Recargo_PorcentajeFocusLost
-
-    private void txt_Recargo_PorcentajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_Recargo_PorcentajeActionPerformed
-        this.calcularResultados();
-    }//GEN-LAST:event_txt_Recargo_PorcentajeActionPerformed
+    }//GEN-LAST:event_formInternalFrameOpened
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_BuscarProducto;

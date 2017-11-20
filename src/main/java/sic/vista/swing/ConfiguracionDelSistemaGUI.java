@@ -4,9 +4,8 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,7 @@ import sic.modelo.EmpresaActiva;
 import sic.util.FiltroCertificados;
 import sic.util.Utilidades;
 
-public class ConfiguracionDelSistemaGUI extends JDialog {
+public class ConfiguracionDelSistemaGUI extends JInternalFrame {
 
     private ConfiguracionDelSistema cdsModificar;  
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -36,12 +35,12 @@ public class ConfiguracionDelSistemaGUI extends JDialog {
         txt_PuntoDeVentaNro.setEnabled(estado);
         txt_PuntoDeVentaNro.setEnabled(estado);
     }
-        
-    private void setIcon() {
-        ImageIcon iconoVentana = new ImageIcon(ConfiguracionDelSistemaGUI.class
-                .getResource("/sic/icons/Gears_16x16.png"));
-        this.setIconImage(iconoVentana.getImage());
-    }
+//        
+//    private void setIcon() {
+//        ImageIcon iconoVentana = new ImageIcon(ConfiguracionDelSistemaGUI.class
+//                .getResource("/sic/icons/Gears_16x16.png"));
+//        this.setIconImage(iconoVentana.getImage());
+//    }
 
     private void cargarConfiguracionParaModificar() {
         chk_PreImpresas.setSelected(cdsModificar.isUsarFacturaVentaPreImpresa());
@@ -103,13 +102,24 @@ public class ConfiguracionDelSistemaGUI extends JDialog {
         lbl_Leyenda = new javax.swing.JLabel();
         btn_Guardar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setClosable(true);
         setTitle("Configuración del Sistema");
-        setIconImage(null);
-        setResizable(false);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                formWindowOpened(evt);
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Gears_16x16.png"))); // NOI18N
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -307,23 +317,6 @@ public class ConfiguracionDelSistemaGUI extends JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        this.setIcon();
-        try {
-            cdsModificar = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                    ConfiguracionDelSistema.class);
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        this.cargarConfiguracionParaModificar();
-    }//GEN-LAST:event_formWindowOpened
-
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
         try {
             RestClient.getRestTemplate().put("/configuraciones-del-sistema", this.getConfiguracionDelSistema());
@@ -377,6 +370,22 @@ public class ConfiguracionDelSistemaGUI extends JDialog {
             evt.consume();
         }
     }//GEN-LAST:event_txt_PuntoDeVentaNroKeyTyped
+
+    private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
+        try {
+            cdsModificar = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
+                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                    ConfiguracionDelSistema.class);
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        this.cargarConfiguracionParaModificar();
+    }//GEN-LAST:event_formInternalFrameOpened
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_BuscarCertificado;

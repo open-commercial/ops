@@ -768,8 +768,6 @@ public class PedidosGUI extends JInternalFrame {
                 Pedido pedido = new Pedido();
                 pedido.setObservaciones("Los precios se encuentran sujetos a modificaciones.");
                 gui_puntoDeVenta.setPedido(pedido);
-                gui_puntoDeVenta.setModal(true);
-                gui_puntoDeVenta.setLocationRelativeTo(this);
                 gui_puntoDeVenta.setVisible(true);
                 this.resetScroll();
                 this.limpiarJTables();
@@ -799,8 +797,6 @@ public class PedidosGUI extends JInternalFrame {
                 } else if (this.existeClienteDisponible()) {
                     PuntoDeVentaGUI gui_puntoDeVenta = new PuntoDeVentaGUI();
                     gui_puntoDeVenta.setPedido(pedido);
-                    gui_puntoDeVenta.setModal(true);
-                    gui_puntoDeVenta.setLocationRelativeTo(this);
                     gui_puntoDeVenta.setVisible(true);
                     this.resetScroll();
                     this.limpiarJTables();
@@ -872,8 +868,6 @@ public class PedidosGUI extends JInternalFrame {
                     PuntoDeVentaGUI gui_puntoDeVenta = new PuntoDeVentaGUI();
                     gui_puntoDeVenta.setPedido(pedido);
                     gui_puntoDeVenta.setModificarPedido(true);
-                    gui_puntoDeVenta.setModal(true);
-                    gui_puntoDeVenta.setLocationRelativeTo(this);
                     gui_puntoDeVenta.setVisible(true);
                     this.resetScroll();
                     this.limpiarJTables();

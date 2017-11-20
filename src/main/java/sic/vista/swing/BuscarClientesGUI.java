@@ -7,8 +7,6 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -36,8 +34,8 @@ public class BuscarClientesGUI extends JDialog {
     private static final int TAMANIO_PAGINA = 50;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public BuscarClientesGUI(JDialog parent, boolean modal) {
-        super(parent, modal);
+    public BuscarClientesGUI(boolean modal) {
+        super.setModal(modal);
         this.initComponents();
         this.setIcon();        
         this.setColumnas();        
@@ -350,6 +348,7 @@ public class BuscarClientesGUI extends JDialog {
         this.setLocationRelativeTo(this.getParent());
         this.setTitle("Buscar Cliente");
         this.setColumnas();
+        this.setLocationRelativeTo(null);
     }//GEN-LAST:event_formWindowOpened
 
     private void tbl_ResultadosFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbl_ResultadosFocusGained

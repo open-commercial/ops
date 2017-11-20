@@ -55,9 +55,11 @@ public class LoginGUI extends JFrame {
                 new PrincipalGUI().setVisible(true);
                 this.dispose();
             } else {
-                PuntoDeVentaGUI gui_puntoDeVenta = new PuntoDeVentaGUI();
-                gui_puntoDeVenta.setModal(true);
-                gui_puntoDeVenta.setVisible(true);
+//                PuntoDeVentaGUI gui_puntoDeVenta = new PuntoDeVentaGUI();
+//                gui_puntoDeVenta.setVisible(true);
+                PuntoDeVentaContainerGUI pdvc = new PuntoDeVentaContainerGUI();
+                pdvc.setModal(true);
+                pdvc.setVisible(true);
                 this.limpiarCredenciales();
                 txt_Usuario.requestFocus();
             }

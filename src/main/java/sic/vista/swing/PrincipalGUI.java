@@ -328,10 +328,24 @@ public class PrincipalGUI extends JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private void mnuItm_UsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_UsuariosActionPerformed
-        UsuariosGUI gui_Usuarios = new UsuariosGUI();
-        gui_Usuarios.setModal(true);
-        gui_Usuarios.setLocationRelativeTo(this);
-        gui_Usuarios.setVisible(true);
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), UsuariosGUI.class);
+        if (gui == null) {
+            gui = new UsuariosGUI();
+            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+            getDesktopPane().add(gui);
+            gui.setVisible(true);
+        } else {
+            //selecciona y trae al frente el internalframe
+            try {
+                gui.setSelected(true);
+
+            } catch (PropertyVetoException ex) {
+                String msjError = "No se pudo seleccionar la ventana requerida.";
+                LOGGER.error(msjError + " - " + ex.getMessage());
+                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_mnuItm_UsuariosActionPerformed
 
     private void mnuItm_ProveedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_ProveedoresActionPerformed
@@ -445,17 +459,46 @@ public class PrincipalGUI extends JFrame {
     }//GEN-LAST:event_mnuItm_CambiarEmpresaActionPerformed
 
     private void mnuItm_FormasDePagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_FormasDePagoActionPerformed
-        FormasDePagoGUI gui_FormasDePago = new FormasDePagoGUI();
-        gui_FormasDePago.setModal(true);
-        gui_FormasDePago.setLocationRelativeTo(this);
-        gui_FormasDePago.setVisible(true);
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), FormasDePagoGUI.class);
+        if (gui == null) {
+            gui = new FormasDePagoGUI();
+            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+            getDesktopPane().add(gui);
+            gui.setVisible(true);
+        } else {
+            //selecciona y trae al frente el internalframe
+            try {
+                gui.setSelected(true);
+
+            } catch (PropertyVetoException ex) {
+                String msjError = "No se pudo seleccionar la ventana requerida.";
+                LOGGER.error(msjError + " - " + ex.getMessage());
+                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_mnuItm_FormasDePagoActionPerformed
 
     private void mnuItm_IrTPVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_IrTPVActionPerformed
-        PuntoDeVentaGUI gui_puntoDeVenta = new PuntoDeVentaGUI();
-        gui_puntoDeVenta.setModal(true);
-        gui_puntoDeVenta.setLocationRelativeTo(this);
-        gui_puntoDeVenta.setVisible(true);
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), PuntoDeVentaGUI.class);
+        if (gui == null) {
+            PuntoDeVentaGUI gui_puntoDeVenta = new PuntoDeVentaGUI();
+            gui_puntoDeVenta.setLocation(getDesktopPane().getWidth() / 2 - gui_puntoDeVenta.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - gui_puntoDeVenta.getHeight() / 2);
+            getDesktopPane().add(gui_puntoDeVenta);
+            gui_puntoDeVenta.setVisible(true);
+            gui_puntoDeVenta.setMaximizable(true);
+            gui_puntoDeVenta.setClosable(true);
+        } else {
+            //selecciona y trae al frente el internalframe
+            try {
+                gui.setSelected(true);
+            } catch (PropertyVetoException ex) {
+                String msjError = "No se pudo seleccionar la ventana requerida.";
+                LOGGER.error(msjError + " - " + ex.getMessage());
+                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_mnuItm_IrTPVActionPerformed
 
     private void mnuItm_FacturasVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_FacturasVentaActionPerformed
@@ -480,11 +523,24 @@ public class PrincipalGUI extends JFrame {
     }//GEN-LAST:event_mnuItm_FacturasVentaActionPerformed
 
     private void mnuItm_ConfiguracionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_ConfiguracionActionPerformed
-        ConfiguracionDelSistemaGUI gui_ConfiguracionDelSistema = new ConfiguracionDelSistemaGUI();
-        gui_ConfiguracionDelSistema.setModal(true);
-        gui_ConfiguracionDelSistema.setLocationRelativeTo(this);
-        gui_ConfiguracionDelSistema.setVisible(true);
-        Utilidades.cerrarTodasVentanas(dp_Escritorio);
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), ConfiguracionDelSistemaGUI.class);
+        if (gui == null) {
+            gui = new ConfiguracionDelSistemaGUI();
+            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+            getDesktopPane().add(gui);
+            gui.setVisible(true);
+        } else {
+            //selecciona y trae al frente el internalframe
+            try {
+                gui.setSelected(true);
+
+            } catch (PropertyVetoException ex) {
+                String msjError = "No se pudo seleccionar la ventana requerida.";
+                LOGGER.error(msjError + " - " + ex.getMessage());
+                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_mnuItm_ConfiguracionActionPerformed
 
     private void mnuItm_PedidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_PedidosActionPerformed

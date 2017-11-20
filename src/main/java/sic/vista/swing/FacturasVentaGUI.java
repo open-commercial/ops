@@ -1054,14 +1054,27 @@ public class FacturasVentaGUI extends JInternalFrame {
 
     private void btn_NuevaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevaActionPerformed
         if (this.existeClienteDisponible()) {
-            PuntoDeVentaGUI gui_puntoDeVenta = new PuntoDeVentaGUI();
-            gui_puntoDeVenta.setModal(true);
-            gui_puntoDeVenta.setLocationRelativeTo(this);
-            gui_puntoDeVenta.setVisible(true);
+            JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), PuntoDeVentaGUI.class);
+            if (gui == null) {
+                PuntoDeVentaGUI gui_puntoDeVenta = new PuntoDeVentaGUI();
+                gui_puntoDeVenta.setLocation(getDesktopPane().getWidth() / 2 - gui_puntoDeVenta.getWidth() / 2,
+                        getDesktopPane().getHeight() / 2 - gui_puntoDeVenta.getHeight() / 2);
+                getDesktopPane().add(gui_puntoDeVenta);
+                gui_puntoDeVenta.setVisible(true);
+            } else {
+                //selecciona y trae al frente el internalframe
+                try {
+                    gui.setSelected(true);
+                } catch (PropertyVetoException ex) {
+                    String msjError = "No se pudo seleccionar la ventana requerida.";
+                    LOGGER.error(msjError + " - " + ex.getMessage());
+                    JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
             this.cargarClientes();
             this.resetScroll();
             this.limpiarJTable();
-            this.buscar(); 
+            this.buscar();
         } else {
             JOptionPane.showInternalMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),

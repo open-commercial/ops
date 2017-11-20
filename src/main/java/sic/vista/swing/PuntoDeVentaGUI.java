@@ -1,9 +1,11 @@
 package sic.vista.swing;
 
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
-import javax.swing.JDialog;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
@@ -45,7 +47,7 @@ import sic.modelo.Transportista;
 import sic.util.RenderTabla;
 import sic.util.Utilidades;
 
-public class PuntoDeVentaGUI extends JDialog {
+public class PuntoDeVentaGUI extends JInternalFrame {
 
     private Empresa empresa;
     private TipoDeComprobante tipoDeComprobante;
@@ -54,6 +56,7 @@ public class PuntoDeVentaGUI extends JDialog {
     private ModeloTabla modeloTablaResultados = new ModeloTabla();
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    private final Dimension sizeInternalFrame = new Dimension(880, 600);
     private Pedido pedido;
     private boolean modificarPedido;
     private int cantidadMaximaRenglones = 0;
@@ -64,7 +67,6 @@ public class PuntoDeVentaGUI extends JDialog {
 
     public PuntoDeVentaGUI() {
         this.initComponents();        
-        this.setIcon();
         ImageIcon iconoNoMarcado = new ImageIcon(getClass().getResource("/sic/icons/chkNoMarcado_16x16.png"));
         this.tbtn_marcarDesmarcar.setIcon(iconoNoMarcado);        
         dc_fechaVencimiento.setDate(new Date());
@@ -160,11 +162,6 @@ public class PuntoDeVentaGUI extends JDialog {
 
     public boolean modificandoPedido() {
         return this.modificarPedido;
-    }
-
-    private void setIcon() {
-        ImageIcon iconoVentana = new ImageIcon(PuntoDeVentaGUI.class.getResource("/sic/icons/SIC_24_square.png"));
-        this.setIconImage(iconoVentana.getImage());
     }
     
     private void cargarEstadoDeLosChkEnTabla(JTable tbl_Resultado, EstadoRenglon[] estadosDeLosRenglones) {
@@ -362,7 +359,7 @@ public class PuntoDeVentaGUI extends JDialog {
         if (cantidadMaximaRenglones > renglones.size()) {            
             Movimiento movimiento = this.tipoDeComprobante.equals(TipoDeComprobante.PEDIDO) ? Movimiento.PEDIDO : Movimiento.VENTA;
             // revisar esto, es necesario para el movimiento como String y a su vez el movimiento?
-            BuscarProductosGUI GUI_buscarProductos = new BuscarProductosGUI(this, true, renglones, this.tipoDeComprobante, movimiento);
+            BuscarProductosGUI GUI_buscarProductos = new BuscarProductosGUI(true, renglones, this.tipoDeComprobante, movimiento);
             GUI_buscarProductos.setVisible(true);
             if (GUI_buscarProductos.debeCargarRenglon()) {
                 boolean renglonCargado = false;
@@ -823,14 +820,23 @@ public class PuntoDeVentaGUI extends JDialog {
         lblSeparadorIzquierdo = new javax.swing.JLabel();
         lblSeparadorDerecho = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("S.I.C. Punto de Venta");
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                formWindowOpened(evt);
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/SIC_16_square.png"))); // NOI18N
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
             }
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -1410,7 +1416,7 @@ public class PuntoDeVentaGUI extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_BuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarClienteActionPerformed
-        BuscarClientesGUI gui_buscarClientes = new BuscarClientesGUI(this, true);
+        BuscarClientesGUI gui_buscarClientes = new BuscarClientesGUI(true);
         gui_buscarClientes.setVisible(true);
         if (gui_buscarClientes.getClienteSeleccionado() != null) {
             this.cargarCliente(gui_buscarClientes.getClienteSeleccionado());
@@ -1428,59 +1434,6 @@ public class PuntoDeVentaGUI extends JDialog {
             this.cargarTiposDeComprobantesDisponibles();
         }
     }//GEN-LAST:event_btn_NuevoClienteActionPerformed
-
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        this.setLocationRelativeTo(null);
-        this.setColumnas();  
-        try {                                  
-            if (!UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
-                List<Empresa> empresas = Arrays.asList(RestClient.getRestTemplate().getForObject("/empresas", Empresa[].class));
-                if (empresas.isEmpty() || empresas.size() > 1) {
-                    SeleccionEmpresaGUI seleccionEmpresaGUI = new SeleccionEmpresaGUI();
-                    seleccionEmpresaGUI.setLocationRelativeTo(this);
-                    seleccionEmpresaGUI.setModal(true);
-                    seleccionEmpresaGUI.setVisible(true);
-                } else {
-                    EmpresaActiva.getInstance().setEmpresa(empresas.get(0));
-                }
-            }
-            this.setTitle("S.I.C. Punto de Venta "
-                    + ResourceBundle.getBundle("Mensajes").getString("version")
-                    + " - Empresa: " + EmpresaActiva.getInstance().getEmpresa().getNombre() 
-                    + " - Usuario: " + UsuarioActivo.getInstance().getUsuario().getNombre());
-            ConfiguracionDelSistema cds = RestClient.getRestTemplate()
-                    .getForObject("/configuraciones-del-sistema/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                            ConfiguracionDelSistema.class);
-            cantidadMaximaRenglones = cds.getCantidadMaximaDeRenglonesEnFactura();
-            //verifica que exista un Cliente predeterminado, una Forma de Pago y un Transportista
-            if (this.existeClientePredeterminado() && this.existeFormaDePagoPredeterminada() && this.existeTransportistaCargado()) {
-            this.cargarTiposDeComprobantesDisponibles();
-            } else {
-                this.dispose();
-            }
-            if (this.pedido != null && this.pedido.getId_Pedido() != 0) {
-                this.cargarPedidoParaFacturar();
-                btn_NuevoCliente.setEnabled(false);
-                btn_BuscarCliente.setEnabled(false);
-                this.calcularResultados();
-                if (this.tipoDeComprobante.equals(TipoDeComprobante.PEDIDO)) {
-                    txta_Observaciones.setText(this.pedido.getObservaciones());
-                }
-            }
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            this.dispose();
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_formWindowOpened
-
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        this.dispose();
-    }//GEN-LAST:event_formWindowClosing
 
     private void cmb_TipoComprobanteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_TipoComprobanteItemStateChanged
         //para evitar que pase null cuando esta recargando el comboBox
@@ -1504,7 +1457,7 @@ public class PuntoDeVentaGUI extends JDialog {
     }//GEN-LAST:event_txt_CodigoProductoActionPerformed
 
     private void btn_AddCommentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AddCommentActionPerformed
-        ObservacionesGUI GUI_Observaciones = new ObservacionesGUI(this, true, txta_Observaciones.getText());
+        ObservacionesGUI GUI_Observaciones = new ObservacionesGUI(true, txta_Observaciones.getText());
         GUI_Observaciones.setVisible(true);
         txta_Observaciones.setText(GUI_Observaciones.getTxta_Observaciones().getText());
     }//GEN-LAST:event_btn_AddCommentActionPerformed
@@ -1681,6 +1634,57 @@ public class PuntoDeVentaGUI extends JDialog {
             evt.consume();
         }
     }//GEN-LAST:event_txt_Recargo_porcentajeKeyTyped
+
+    private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
+        this.setSize(sizeInternalFrame);
+        this.setColumnas();
+        try {
+            if (!UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
+                List<Empresa> empresas = Arrays.asList(RestClient.getRestTemplate().getForObject("/empresas", Empresa[].class));
+                if (empresas.isEmpty() || empresas.size() > 1) {
+                    SeleccionEmpresaGUI seleccionEmpresaGUI = new SeleccionEmpresaGUI();
+                    seleccionEmpresaGUI.setLocationRelativeTo(this);
+                    seleccionEmpresaGUI.setModal(true);
+                    seleccionEmpresaGUI.setVisible(true);
+                } else {
+                    EmpresaActiva.getInstance().setEmpresa(empresas.get(0));
+                }
+            }
+            this.setTitle("Punto de Venta");
+            ConfiguracionDelSistema cds = RestClient.getRestTemplate()
+                    .getForObject("/configuraciones-del-sistema/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                            ConfiguracionDelSistema.class);
+            cantidadMaximaRenglones = cds.getCantidadMaximaDeRenglonesEnFactura();
+            //verifica que exista un Cliente predeterminado, una Forma de Pago y un Transportista
+            if (this.existeClientePredeterminado() && this.existeFormaDePagoPredeterminada() && this.existeTransportistaCargado()) {
+                this.cargarTiposDeComprobantesDisponibles();
+                this.setMaximum(true);
+            } else {
+                this.dispose();
+            }
+            if (this.pedido != null && this.pedido.getId_Pedido() != 0) {
+                this.cargarPedidoParaFacturar();
+                btn_NuevoCliente.setEnabled(false);
+                btn_BuscarCliente.setEnabled(false);
+                this.calcularResultados();
+                if (this.tipoDeComprobante.equals(TipoDeComprobante.PEDIDO)) {
+                    txta_Observaciones.setText(this.pedido.getObservaciones());
+                }
+            }
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (PropertyVetoException ex) {
+            String mensaje = "Se produjo un error al intentar maximizar la ventana.";
+            LOGGER.error(mensaje + " - " + ex.getMessage());
+            JOptionPane.showInternalMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_formInternalFrameOpened
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_AddComment;

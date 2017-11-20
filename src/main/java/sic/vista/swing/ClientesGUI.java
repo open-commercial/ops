@@ -561,14 +561,18 @@ public class ClientesGUI extends JInternalFrame {
 
     private void chk_UbicacionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UbicacionItemStateChanged
         if (chk_Ubicacion.isSelected() == true) {
+            this.cargarComboBoxPaises();
             cmb_Pais.setEnabled(true);
             cmb_Provincia.setEnabled(true);
             cmb_Localidad.setEnabled(true);
             cmb_Pais.requestFocus();
         } else {
+            cmb_Pais.removeAllItems();
             cmb_Pais.setEnabled(false);
+            cmb_Provincia.removeAllItems();
             cmb_Provincia.setEnabled(false);
             cmb_Localidad.setEnabled(false);
+            cmb_Localidad.removeAllItems();
         }
     }//GEN-LAST:event_chk_UbicacionItemStateChanged
 
@@ -615,7 +619,6 @@ public class ClientesGUI extends JInternalFrame {
         gui_DetalleCliente.setModal(true);
         gui_DetalleCliente.setLocationRelativeTo(this);
         gui_DetalleCliente.setVisible(true);
-        this.cargarComboBoxPaises();
         this.resetScroll();
         this.limpiarJTable();
         this.buscar();
@@ -656,14 +659,12 @@ public class ClientesGUI extends JInternalFrame {
             this.resetScroll();
             this.limpiarJTable();
             this.buscar();
-            this.cargarComboBoxPaises();
         }
     }//GEN-LAST:event_btn_ModificarActionPerformed
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         try {
             this.setSize(sizeInternalFrame);
-            this.cargarComboBoxPaises();
             this.setColumnas();
             this.setMaximum(true);
             RestClient.getRestTemplate().getForObject("/clientes/predeterminado/empresas/"

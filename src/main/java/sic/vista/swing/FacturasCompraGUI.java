@@ -627,26 +627,53 @@ public class FacturasCompraGUI extends JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoActionPerformed
-            DetalleFacturaCompraGUI gui_DetalleFacturaCompra = new DetalleFacturaCompraGUI();
-            if (this.existeProveedorDisponible()) {
-                gui_DetalleFacturaCompra.setModal(true);
-                gui_DetalleFacturaCompra.setLocationRelativeTo(this);
-                gui_DetalleFacturaCompra.setVisible(true);
-                this.limpiarJTable();
-                this.buscar();
+        if (this.existeProveedorDisponible()) {
+            JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), DetalleFacturaCompraGUI.class);
+            if (gui == null) {
+                gui = new DetalleFacturaCompraGUI();
+                gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                        getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+                getDesktopPane().add(gui);
+                gui.setVisible(true);
             } else {
-                String mensaje = ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_proveedor");
-                JOptionPane.showInternalMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+                //selecciona y trae al frente el internalframe
+                try {
+                    gui.setSelected(true);
+
+                } catch (PropertyVetoException ex) {
+                    String msjError = "No se pudo seleccionar la ventana requerida.";
+                    LOGGER.error(msjError + " - " + ex.getMessage());
+                    JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
+        } else {
+            String mensaje = ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_proveedor");
+            JOptionPane.showInternalMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+        }
 }//GEN-LAST:event_btn_NuevoActionPerformed
 
     private void btn_VerDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VerDetalleActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
-            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-            DetalleFacturaCompraGUI gui_DetalleFacturaCompra = new DetalleFacturaCompraGUI(facturasTotal.get(indexFilaSeleccionada));
-            gui_DetalleFacturaCompra.setModal(true);
-            gui_DetalleFacturaCompra.setLocationRelativeTo(this);
-            gui_DetalleFacturaCompra.setVisible(true);
+
+            JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), DetalleFacturaCompraGUI.class);
+            if (gui == null) {
+                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+                gui = new DetalleFacturaCompraGUI(facturasTotal.get(indexFilaSeleccionada));
+                gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                        getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+                getDesktopPane().add(gui);
+                gui.setVisible(true);
+            } else {
+                //selecciona y trae al frente el internalframe
+                try {
+                    gui.setSelected(true);
+
+                } catch (PropertyVetoException ex) {
+                    String msjError = "No se pudo seleccionar la ventana requerida.";
+                    LOGGER.error(msjError + " - " + ex.getMessage());
+                    JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         }
 }//GEN-LAST:event_btn_VerDetalleActionPerformed
 
@@ -684,12 +711,25 @@ public class FacturasCompraGUI extends JInternalFrame {
         if (tbl_Resultados.getSelectedRow() != -1) {
             if (tbl_Resultados.getSelectedRowCount() == 1) {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                PagosGUI gui_Pagos = new PagosGUI(facturasTotal.get(indexFilaSeleccionada));
-                gui_Pagos.setModal(true);
-                gui_Pagos.setLocationRelativeTo(this);
-                gui_Pagos.setVisible(true);
-                this.limpiarJTable();
-                this.buscar();
+
+                JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), PagosGUI.class);
+                if (gui == null) {
+                    gui = new PagosGUI(facturasTotal.get(indexFilaSeleccionada));
+                    gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                            getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+                    getDesktopPane().add(gui);
+                    gui.setVisible(true);
+                } else {
+                    //selecciona y trae al frente el internalframe
+                    try {
+                        gui.setSelected(true);
+
+                    } catch (PropertyVetoException ex) {
+                        String msjError = "No se pudo seleccionar la ventana requerida.";
+                        LOGGER.error(msjError + " - " + ex.getMessage());
+                        JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
             }
             if (tbl_Resultados.getSelectedRowCount() > 1) {
                 int[] indicesTabla = Utilidades.getSelectedRowsModelIndices(tbl_Resultados);

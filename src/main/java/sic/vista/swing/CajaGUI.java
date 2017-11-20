@@ -320,10 +320,24 @@ public class CajaGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-        DetalleFacturaCompraGUI gui_DetalleFacturaCompra = new DetalleFacturaCompraGUI((FacturaCompra)facturaCompra);
-        gui_DetalleFacturaCompra.setModal(true);
-        gui_DetalleFacturaCompra.setLocationRelativeTo(this);
-        gui_DetalleFacturaCompra.setVisible(true);
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), DetalleFacturaCompraGUI.class);
+        if (gui == null) {
+            gui = new DetalleFacturaCompraGUI((FacturaCompra)facturaCompra);
+            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+            getDesktopPane().add(gui);
+            gui.setVisible(true);
+        } else {
+            //selecciona y trae al frente el internalframe
+            try {
+                gui.setSelected(true);
+
+            } catch (PropertyVetoException ex) {
+                String msjError = "No se pudo seleccionar la ventana requerida.";
+                LOGGER.error(msjError + " - " + ex.getMessage());
+                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     private List<Pago> getPagosPorFormaDePago(long idFormaDePago) {

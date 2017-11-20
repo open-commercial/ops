@@ -8,8 +8,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -47,10 +45,10 @@ public class BuscarProductosGUI extends JDialog {
     private static final int TAMANIO_PAGINA = 50;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     
-    public BuscarProductosGUI(JDialog parent, boolean modal, List<RenglonFactura> renglones,
+    public BuscarProductosGUI(boolean modal, List<RenglonFactura> renglones,
             TipoDeComprobante tipoDeComprobante, Movimiento movimiento) {
         
-        super(parent, modal);
+        super.setModal(modal);
         this.initComponents();
         this.setIcon();
         this.renglones = renglones;
@@ -588,6 +586,7 @@ public class BuscarProductosGUI extends JDialog {
         this.setLocationRelativeTo(this.getParent());
         this.setTitle("Buscar Producto");
         this.prepararComponentes();
+        this.setLocationRelativeTo(null);
     }//GEN-LAST:event_formWindowOpened
 
     private void txtCantidadFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCantidadFocusGained
