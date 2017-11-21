@@ -1,5 +1,6 @@
 package sic.vista.swing;
 
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.KeyAdapter;
@@ -33,9 +34,9 @@ public class BuscarClientesGUI extends JDialog {
     private int NUMERO_PAGINA = 0;
     private static final int TAMANIO_PAGINA = 50;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    private final Dimension sizeDialog = new Dimension(1000, 600);
 
-    public BuscarClientesGUI(boolean modal) {
-        super.setModal(modal);
+    public BuscarClientesGUI() {
         this.initComponents();
         this.setIcon();        
         this.setColumnas();        
@@ -344,8 +345,7 @@ public class BuscarClientesGUI extends JDialog {
     }//GEN-LAST:event_txtCriteriaBusquedaKeyTyped
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        this.setSize(this.getParent().getWidth() - 100, this.getParent().getHeight() - 200);
-        this.setLocationRelativeTo(this.getParent());
+        this.setSize(sizeDialog);
         this.setTitle("Buscar Cliente");
         this.setColumnas();
         this.setLocationRelativeTo(null);

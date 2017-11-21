@@ -1056,11 +1056,13 @@ public class FacturasVentaGUI extends JInternalFrame {
         if (this.existeClienteDisponible()) {
             JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), PuntoDeVentaGUI.class);
             if (gui == null) {
-                PuntoDeVentaGUI gui_puntoDeVenta = new PuntoDeVentaGUI();
-                gui_puntoDeVenta.setLocation(getDesktopPane().getWidth() / 2 - gui_puntoDeVenta.getWidth() / 2,
-                        getDesktopPane().getHeight() / 2 - gui_puntoDeVenta.getHeight() / 2);
-                getDesktopPane().add(gui_puntoDeVenta);
-                gui_puntoDeVenta.setVisible(true);
+                PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
+                puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
+                        getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
+                getDesktopPane().add(puntoDeVentaGUI);
+                puntoDeVentaGUI.setMaximizable(true);
+                puntoDeVentaGUI.setClosable(true);
+                puntoDeVentaGUI.setVisible(true);
             } else {
                 //selecciona y trae al frente el internalframe
                 try {

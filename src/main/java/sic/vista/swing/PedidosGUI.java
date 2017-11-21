@@ -764,11 +764,16 @@ public class PedidosGUI extends JInternalFrame {
     private void btnNuevoPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoPedidoActionPerformed
         try {
             if (this.existeClienteDisponible()) {
-                PuntoDeVentaGUI gui_puntoDeVenta = new PuntoDeVentaGUI();
                 Pedido pedido = new Pedido();
                 pedido.setObservaciones("Los precios se encuentran sujetos a modificaciones.");
-                gui_puntoDeVenta.setPedido(pedido);
-                gui_puntoDeVenta.setVisible(true);
+                PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
+                puntoDeVentaGUI.setPedido(pedido);
+                puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
+                        getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
+                getDesktopPane().add(puntoDeVentaGUI);
+                puntoDeVentaGUI.setMaximizable(true);
+                puntoDeVentaGUI.setClosable(true);
+                puntoDeVentaGUI.setVisible(true);               
                 this.resetScroll();
                 this.limpiarJTables();
                 this.buscar();

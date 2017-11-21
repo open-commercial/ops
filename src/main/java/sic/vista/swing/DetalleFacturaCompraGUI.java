@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
@@ -77,11 +78,6 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         lbl_Fecha.setText("Fecha Factura:");
         lbl_Transporte.setText("Transporte:");
     }
-
-//    private void setIcon() {
-//        ImageIcon iconoVentana = new ImageIcon(DetalleFacturaCompraGUI.class.getResource("/sic/icons/SIC_24_square.png"));
-//        this.setIconImage(iconoVentana.getImage());
-//    }
 
     private void prepararComponentes() {
         txt_SerieFactura.setValue(new Long("0"));
@@ -608,7 +604,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         setMaximizable(true);
         setResizable(true);
         setTitle("Nueva Factura de Compra");
-        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/SIC_24_square.png"))); // NOI18N
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/SIC_16_square.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameOpened(evt);
@@ -1118,10 +1114,8 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_NuevoProductoActionPerformed
 
     private void btn_BuscarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarProductoActionPerformed
-        BuscarProductosGUI gui_buscarProducto = new BuscarProductosGUI(
-                true, renglones, 
-                (TipoDeComprobante)cmb_TipoFactura.getSelectedItem(),
-                Movimiento.COMPRA);
+        BuscarProductosGUI gui_buscarProducto = new BuscarProductosGUI(renglones,
+                (TipoDeComprobante)cmb_TipoFactura.getSelectedItem(), Movimiento.COMPRA);
         gui_buscarProducto.setVisible(true);
         this.cargarRenglonFactura(gui_buscarProducto);
     }//GEN-LAST:event_btn_BuscarProductoActionPerformed

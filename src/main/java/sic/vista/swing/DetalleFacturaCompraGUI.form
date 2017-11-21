@@ -7,7 +7,7 @@
     <Property name="resizable" type="boolean" value="true"/>
     <Property name="title" type="java.lang.String" value="Nueva Factura de Compra"/>
     <Property name="frameIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-      <Image iconType="3" name="/sic/icons/SIC_24_square.png"/>
+      <Image iconType="3" name="/sic/icons/SIC_16_square.png"/>
     </Property>
   </Properties>
   <SyntheticProperties>

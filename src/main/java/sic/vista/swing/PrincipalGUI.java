@@ -20,10 +20,11 @@ import sic.util.Utilidades;
 public class PrincipalGUI extends JFrame {
     
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private final Dimension sizeFrame = new Dimension(1000, 700);
+    private final Dimension sizeFrame = new Dimension(1200, 700);
     
     public PrincipalGUI() {
         this.initComponents();
+        this.setIcon();
     }
 
     public JDesktopPane getDesktopPane() {
@@ -322,7 +323,6 @@ public class PrincipalGUI extends JFrame {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.setLocationRelativeTo(null);
         this.setSize(sizeFrame);
-        this.setIcon();
         this.setExtendedState(MAXIMIZED_BOTH);
         this.llamarSeleccionEmpresaGUI();
     }//GEN-LAST:event_formWindowOpened
@@ -482,15 +482,14 @@ public class PrincipalGUI extends JFrame {
     private void mnuItm_IrTPVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_IrTPVActionPerformed
         JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), PuntoDeVentaGUI.class);
         if (gui == null) {
-            PuntoDeVentaGUI gui_puntoDeVenta = new PuntoDeVentaGUI();
-            gui_puntoDeVenta.setLocation(getDesktopPane().getWidth() / 2 - gui_puntoDeVenta.getWidth() / 2,
-                    getDesktopPane().getHeight() / 2 - gui_puntoDeVenta.getHeight() / 2);
-            getDesktopPane().add(gui_puntoDeVenta);
-            gui_puntoDeVenta.setVisible(true);
-            gui_puntoDeVenta.setMaximizable(true);
-            gui_puntoDeVenta.setClosable(true);
+            PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
+            puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
+            getDesktopPane().add(puntoDeVentaGUI);
+            puntoDeVentaGUI.setMaximizable(true);
+            puntoDeVentaGUI.setClosable(true);
+            puntoDeVentaGUI.setVisible(true);
         } else {
-            //selecciona y trae al frente el internalframe
             try {
                 gui.setSelected(true);
             } catch (PropertyVetoException ex) {

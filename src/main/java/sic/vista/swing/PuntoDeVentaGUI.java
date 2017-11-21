@@ -41,7 +41,6 @@ import sic.modelo.FormaDePago;
 import sic.modelo.Movimiento;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
-import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.Transportista;
 import sic.util.RenderTabla;
@@ -56,7 +55,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private ModeloTabla modeloTablaResultados = new ModeloTabla();
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private final Dimension sizeInternalFrame = new Dimension(880, 600);
+    private final Dimension sizeInternalFrame = new Dimension(1200, 700);
     private Pedido pedido;
     private boolean modificarPedido;
     private int cantidadMaximaRenglones = 0;
@@ -356,19 +355,20 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }
 
     private void buscarProductoConVentanaAuxiliar() {
-        if (cantidadMaximaRenglones > renglones.size()) {            
+        if (cantidadMaximaRenglones > renglones.size()) {
             Movimiento movimiento = this.tipoDeComprobante.equals(TipoDeComprobante.PEDIDO) ? Movimiento.PEDIDO : Movimiento.VENTA;
             // revisar esto, es necesario para el movimiento como String y a su vez el movimiento?
-            BuscarProductosGUI GUI_buscarProductos = new BuscarProductosGUI(true, renglones, this.tipoDeComprobante, movimiento);
-            GUI_buscarProductos.setVisible(true);
-            if (GUI_buscarProductos.debeCargarRenglon()) {
+            BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglones, this.tipoDeComprobante, movimiento);
+            buscarProductosGUI.setModal(true);
+            buscarProductosGUI.setVisible(true);
+            if (buscarProductosGUI.debeCargarRenglon()) {
                 boolean renglonCargado = false;
                 for (RenglonFactura renglon : renglones) {
-                    if (renglon.getId_ProductoItem() == GUI_buscarProductos.getRenglon().getId_ProductoItem()) {
+                    if (renglon.getId_ProductoItem() == buscarProductosGUI.getRenglon().getId_ProductoItem()) {
                         renglonCargado = true;
                     }
                 }
-                this.agregarRenglon(GUI_buscarProductos.getRenglon());
+                this.agregarRenglon(buscarProductosGUI.getRenglon());
                 /*Si la tabla no contiene renglones, despues de agregar el renglon
                  a la coleccion, carga el arreglo con los estados con un solo elemento, 
                  cuyo valor es "Desmarcado" para evitar un nulo.*/
@@ -820,6 +820,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         lblSeparadorIzquierdo = new javax.swing.JLabel();
         lblSeparadorDerecho = new javax.swing.JLabel();
 
+        setResizable(true);
         setTitle("S.I.C. Punto de Venta");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/SIC_16_square.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
@@ -1416,10 +1417,11 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_BuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarClienteActionPerformed
-        BuscarClientesGUI gui_buscarClientes = new BuscarClientesGUI(true);
-        gui_buscarClientes.setVisible(true);
-        if (gui_buscarClientes.getClienteSeleccionado() != null) {
-            this.cargarCliente(gui_buscarClientes.getClienteSeleccionado());
+        BuscarClientesGUI buscarClientesGUI = new BuscarClientesGUI();
+        buscarClientesGUI.setModal(true);
+        buscarClientesGUI.setVisible(true);
+        if (buscarClientesGUI.getClienteSeleccionado() != null) {
+            this.cargarCliente(buscarClientesGUI.getClienteSeleccionado());
             this.cargarTiposDeComprobantesDisponibles();
         }
     }//GEN-LAST:event_btn_BuscarClienteActionPerformed
@@ -1639,23 +1641,11 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         this.setSize(sizeInternalFrame);
         this.setColumnas();
         try {
-            if (!UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
-                List<Empresa> empresas = Arrays.asList(RestClient.getRestTemplate().getForObject("/empresas", Empresa[].class));
-                if (empresas.isEmpty() || empresas.size() > 1) {
-                    SeleccionEmpresaGUI seleccionEmpresaGUI = new SeleccionEmpresaGUI();
-                    seleccionEmpresaGUI.setLocationRelativeTo(this);
-                    seleccionEmpresaGUI.setModal(true);
-                    seleccionEmpresaGUI.setVisible(true);
-                } else {
-                    EmpresaActiva.getInstance().setEmpresa(empresas.get(0));
-                }
-            }
             this.setTitle("Punto de Venta");
             ConfiguracionDelSistema cds = RestClient.getRestTemplate()
                     .getForObject("/configuraciones-del-sistema/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                             ConfiguracionDelSistema.class);
             cantidadMaximaRenglones = cds.getCantidadMaximaDeRenglonesEnFactura();
-            //verifica que exista un Cliente predeterminado, una Forma de Pago y un Transportista
             if (this.existeClientePredeterminado() && this.existeFormaDePagoPredeterminada() && this.existeTransportistaCargado()) {
                 this.cargarTiposDeComprobantesDisponibles();
                 this.setMaximum(true);
