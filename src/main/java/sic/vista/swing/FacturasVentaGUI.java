@@ -1073,10 +1073,6 @@ public class FacturasVentaGUI extends JInternalFrame {
                     JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
-            this.cargarClientes();
-            this.resetScroll();
-            this.limpiarJTable();
-            this.buscar();
         } else {
             JOptionPane.showInternalMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),

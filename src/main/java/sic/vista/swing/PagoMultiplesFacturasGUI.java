@@ -6,8 +6,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -25,7 +23,7 @@ import sic.modelo.Movimiento;
 import sic.modelo.TipoDeComprobante;
 import sic.util.RenderTabla;
 
-public class PagoMultiplesFacturasGUI extends JDialog {
+public class PagoMultiplesFacturasGUI extends JInternalFrame {
 
     private List<Factura> facturas = new ArrayList<>();
     private final Movimiento movimiento;
@@ -34,19 +32,13 @@ public class PagoMultiplesFacturasGUI extends JDialog {
     private boolean pagosCreados;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public PagoMultiplesFacturasGUI(JInternalFrame parent, long[] idsFacturas, Movimiento movimiento) {                
-        this.setIcon();        
+    public PagoMultiplesFacturasGUI(JInternalFrame parent, long[] idsFacturas, Movimiento movimiento) {                   
         this.movimiento = movimiento;                 
         this.facturas = this.obtenerFacturasYsPorFechaAsc(idsFacturas);
         pagosCreados = false;
         this.initComponents();   
     }
-
-    private void setIcon() {
-        ImageIcon iconoVentana = new ImageIcon(PagoMultiplesFacturasGUI.class.getResource("/sic/icons/Stamp_16x16.png"));
-        this.setIconImage(iconoVentana.getImage());
-    }
-    
+ 
     private void setColumnasTabla() {
         tbl_InformacionFacturas.setAutoCreateRowSorter(true);
         String[] encabezados = new String[5];
@@ -135,10 +127,23 @@ public class PagoMultiplesFacturasGUI extends JDialog {
         lbl_leyenda = new javax.swing.JLabel();
         lbl_Aceptar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                formWindowOpened(evt);
+        setClosable(true);
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Stamp_16x16.png"))); // NOI18N
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -319,9 +324,15 @@ public class PagoMultiplesFacturasGUI extends JDialog {
     public boolean isPagosCreados() {
         return this.pagosCreados;
     }
-    
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        try {            
+
+    private void ftxt_MontoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftxt_MontoFocusGained
+        SwingUtilities.invokeLater(() -> {
+            ftxt_Monto.selectAll();
+        });
+    }//GEN-LAST:event_ftxt_MontoFocusGained
+
+    private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
+        try {
             tbl_InformacionFacturas.setModel(modeloTablaFacturas);
             if (movimiento == Movimiento.VENTA) {
                 this.setTitle("Pago Multiple - Cliente: " + ((FacturaVenta) facturas.get(0)).getCliente().getRazonSocial());
@@ -330,23 +341,17 @@ public class PagoMultiplesFacturasGUI extends JDialog {
                 this.setTitle("Pago Multiple - Proveedor: " + ((FacturaCompra) facturas.get(0)).getProveedor().getRazonSocial());
             }
             this.setColumnasTabla();
-            this.cargarFormasDePago();            
+            this.cargarFormasDePago();
             this.cargarFacturas();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
             LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this,
-                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                "Error", JOptionPane.ERROR_MESSAGE);
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_formWindowOpened
-
-    private void ftxt_MontoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftxt_MontoFocusGained
-        SwingUtilities.invokeLater(() -> {
-            ftxt_Monto.selectAll();
-        });
-    }//GEN-LAST:event_ftxt_MontoFocusGained
+    }//GEN-LAST:event_formInternalFrameOpened
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<FormaDePago> cmb_FormaDePago;

@@ -764,19 +764,28 @@ public class PedidosGUI extends JInternalFrame {
     private void btnNuevoPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoPedidoActionPerformed
         try {
             if (this.existeClienteDisponible()) {
-                Pedido pedido = new Pedido();
-                pedido.setObservaciones("Los precios se encuentran sujetos a modificaciones.");
-                PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
-                puntoDeVentaGUI.setPedido(pedido);
-                puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
-                        getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
-                getDesktopPane().add(puntoDeVentaGUI);
-                puntoDeVentaGUI.setMaximizable(true);
-                puntoDeVentaGUI.setClosable(true);
-                puntoDeVentaGUI.setVisible(true);               
-                this.resetScroll();
-                this.limpiarJTables();
-                this.buscar();
+                JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), PuntoDeVentaGUI.class);
+                if (gui == null) {
+                    Pedido pedido = new Pedido();
+                    pedido.setObservaciones("Los precios se encuentran sujetos a modificaciones.");
+                    PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
+                    puntoDeVentaGUI.setPedido(pedido);
+                    puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
+                            getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
+                    getDesktopPane().add(puntoDeVentaGUI);
+                    puntoDeVentaGUI.setMaximizable(true);
+                    puntoDeVentaGUI.setClosable(true);
+                    puntoDeVentaGUI.setVisible(true);
+                } else {
+                    //selecciona y trae al frente el internalframe
+                    try {
+                        gui.setSelected(true);
+                    } catch (PropertyVetoException ex) {
+                        String msjError = "No se pudo seleccionar la ventana requerida.";
+                        LOGGER.error(msjError + " - " + ex.getMessage());
+                        JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }         
             } else {
                 JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
                         "Error", JOptionPane.ERROR_MESSAGE);
@@ -800,13 +809,27 @@ public class PedidosGUI extends JInternalFrame {
                     JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                             .getString("mensaje_pedido_facturado"), "Error", JOptionPane.ERROR_MESSAGE);
                 } else if (this.existeClienteDisponible()) {
-                    PuntoDeVentaGUI gui_puntoDeVenta = new PuntoDeVentaGUI();
-                    gui_puntoDeVenta.setPedido(pedido);
-                    gui_puntoDeVenta.setVisible(true);
-                    this.resetScroll();
-                    this.limpiarJTables();
-                    this.buscar();
-                } else {                    
+                    JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), PuntoDeVentaGUI.class);
+                    if (gui == null) {
+                        PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
+                        puntoDeVentaGUI.setPedido(pedido);
+                        puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
+                                getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
+                        getDesktopPane().add(puntoDeVentaGUI);
+                        puntoDeVentaGUI.setMaximizable(true);
+                        puntoDeVentaGUI.setClosable(true);
+                        puntoDeVentaGUI.setVisible(true);
+                    } else {
+                        //selecciona y trae al frente el internalframe
+                        try {
+                            gui.setSelected(true);
+                        } catch (PropertyVetoException ex) {
+                            String msjError = "No se pudo seleccionar la ventana requerida.";
+                            LOGGER.error(msjError + " - " + ex.getMessage());
+                            JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                } else {
                     JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -870,13 +893,27 @@ public class PedidosGUI extends JInternalFrame {
                     JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                             .getString("mensaje_pedido_procesado"), "Error", JOptionPane.ERROR_MESSAGE);
                 } else if (this.existeClienteDisponible()) {
-                    PuntoDeVentaGUI gui_puntoDeVenta = new PuntoDeVentaGUI();
-                    gui_puntoDeVenta.setPedido(pedido);
-                    gui_puntoDeVenta.setModificarPedido(true);
-                    gui_puntoDeVenta.setVisible(true);
-                    this.resetScroll();
-                    this.limpiarJTables();
-                    this.buscar();
+                    JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), PuntoDeVentaGUI.class);
+                    if (gui == null) {
+                        PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
+                        puntoDeVentaGUI.setPedido(pedido);
+                        puntoDeVentaGUI.setModificarPedido(true);
+                        puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
+                                getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
+                        getDesktopPane().add(puntoDeVentaGUI);
+                        puntoDeVentaGUI.setMaximizable(true);
+                        puntoDeVentaGUI.setClosable(true);
+                        puntoDeVentaGUI.setVisible(true);
+                    } else {
+                        //selecciona y trae al frente el internalframe
+                        try {
+                            gui.setSelected(true);
+                        } catch (PropertyVetoException ex) {
+                            String msjError = "No se pudo seleccionar la ventana requerida.";
+                            LOGGER.error(msjError + " - " + ex.getMessage());
+                            JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
                 } else {
                     JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
                             "Error", JOptionPane.ERROR_MESSAGE);

@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -576,11 +575,9 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         if (this.pedido != null) {
             if (this.pedido.getId_Pedido() == 0) {
                 cmb_TipoComprobante.setSelectedItem(TipoDeComprobante.PEDIDO);
-                cmb_TipoComprobante.setEnabled(false);
                 txt_CodigoProducto.requestFocus();
             } else if (this.modificandoPedido() == true) {
                 cmb_TipoComprobante.setSelectedItem(TipoDeComprobante.PEDIDO);
-                cmb_TipoComprobante.setEnabled(false);
                 txt_CodigoProducto.requestFocus();
             } else {
                 cmb_TipoComprobante.removeItem(TipoDeComprobante.PEDIDO);
@@ -1648,7 +1645,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             cantidadMaximaRenglones = cds.getCantidadMaximaDeRenglonesEnFactura();
             if (this.existeClientePredeterminado() && this.existeFormaDePagoPredeterminada() && this.existeTransportistaCargado()) {
                 this.cargarTiposDeComprobantesDisponibles();
-                this.setMaximum(true);
             } else {
                 this.dispose();
             }
@@ -1669,10 +1665,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (PropertyVetoException ex) {
-            String mensaje = "Se produjo un error al intentar maximizar la ventana.";
-            LOGGER.error(mensaje + " - " + ex.getMessage());
-            JOptionPane.showInternalMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_formInternalFrameOpened
 

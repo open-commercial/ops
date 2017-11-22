@@ -181,7 +181,7 @@ public class CerrarVentaGUI extends JDialog {
         facturaVenta = this.agregarPagosAFactura(facturaVenta);
         try {
             String uri = "/facturas/venta?idPedido=";
-            if (gui_puntoDeVenta.getPedido() != null) {
+            if (gui_puntoDeVenta.getPedido() != null && gui_puntoDeVenta.getPedido().getId_Pedido() != 0) {
                 uri += gui_puntoDeVenta.getPedido().getId_Pedido();
             }
             if (dividir) {

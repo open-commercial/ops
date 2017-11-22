@@ -743,12 +743,11 @@ public class FacturasCompraGUI extends JInternalFrame {
                                + "&movimiento=" + Movimiento.COMPRA;
                     boolean esValido = RestClient.getRestTemplate().getForObject(uri, boolean.class);
                     if (esValido) {
-                        PagoMultiplesFacturasGUI gui_pagoMultiplesFacturas = new PagoMultiplesFacturasGUI(this, idsFacturas, Movimiento.COMPRA);
-                        gui_pagoMultiplesFacturas.setModal(true);
-                        gui_pagoMultiplesFacturas.setLocationRelativeTo(this);
-                        gui_pagoMultiplesFacturas.setVisible(true);
-                        this.limpiarJTable();
-                        this.buscar();
+                        JInternalFrame gui = new PagoMultiplesFacturasGUI(this, idsFacturas, Movimiento.COMPRA);
+                        gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                                getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+                        getDesktopPane().add(gui);
+                        gui.setVisible(true);
                     }
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

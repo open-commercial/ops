@@ -704,11 +704,11 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                                 + "&movimiento=" + Movimiento.VENTA;
                         boolean esValido = RestClient.getRestTemplate().getForObject(uri, boolean.class);
                         if (esValido) {
-                            PagoMultiplesFacturasGUI gui_PagoMultiples = new PagoMultiplesFacturasGUI(this, idsFacturas, Movimiento.VENTA);
-                            gui_PagoMultiples.setModal(true);
-                            gui_PagoMultiples.setLocationRelativeTo(this);
-                            gui_PagoMultiples.setVisible(true);
-                            this.refrescarVista(gui_PagoMultiples.isPagosCreados());
+                            JInternalFrame gui = new PagoMultiplesFacturasGUI(this, idsFacturas, Movimiento.VENTA);
+                            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+                            getDesktopPane().add(gui);
+                            gui.setVisible(true);
                         }
                     } else {
                         JOptionPane.showInternalMessageDialog(this,
