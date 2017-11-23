@@ -584,7 +584,6 @@ public class BuscarProductosGUI extends JDialog {
         this.setSize(sizeDialog);
         this.setTitle("Buscar Producto");
         this.prepararComponentes();
-        this.setLocationRelativeTo(null);
     }//GEN-LAST:event_formWindowOpened
 
     private void txtCantidadFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCantidadFocusGained

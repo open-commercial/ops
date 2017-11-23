@@ -54,7 +54,7 @@ public class FacturasCompraGUI extends JInternalFrame {
         });
     }
 
-    private void setColumnas() {        
+    private void setColumnas() {
         //nombres de columnas
         String[] encabezados = new String[14];
         encabezados[0] = "Fecha Factura";
@@ -73,7 +73,6 @@ public class FacturasCompraGUI extends JInternalFrame {
         encabezados[13] = "IVA 21% neto";
         modeloTablaFacturas.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaFacturas);
-
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaFacturas.getColumnCount()];
         tipos[0] = Date.class;
@@ -93,13 +92,11 @@ public class FacturasCompraGUI extends JInternalFrame {
         modeloTablaFacturas.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
-
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(Double.class, new RenderTabla());
-
         //Tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(80);
+        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(130);
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(300);
@@ -535,7 +532,7 @@ public class FacturasCompraGUI extends JInternalFrame {
 
         btn_VerPagos.setForeground(java.awt.Color.blue);
         btn_VerPagos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/StampArrow_16x16.png"))); // NOI18N
-        btn_VerPagos.setText("Pagos");
+        btn_VerPagos.setText("Ver Pagos");
         btn_VerPagos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_VerPagosActionPerformed(evt);
@@ -560,18 +557,15 @@ public class FacturasCompraGUI extends JInternalFrame {
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
                 .addComponent(btn_Nuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_Eliminar)
+                .addGap(0, 0, 0)
+                .addComponent(btn_VerDetalle)
+                .addGap(0, 0, 0)
+                .addComponent(btn_VerPagos)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelResultadosLayout.createSequentialGroup()
-                        .addComponent(btn_Eliminar)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_VerDetalle)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_VerPagos)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lbl_TotalIVACompra))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
-                        .addGap(455, 455, 455)
-                        .addComponent(lbl_TotalFacturado)))
+                    .addComponent(lbl_TotalFacturado, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbl_TotalIVACompra, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txt_ResultGastoTotal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -580,8 +574,6 @@ public class FacturasCompraGUI extends JInternalFrame {
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Eliminar, btn_Nuevo, btn_VerDetalle, btn_VerPagos});
-
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lbl_TotalFacturado, lbl_TotalIVACompra});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -625,141 +617,6 @@ public class FacturasCompraGUI extends JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btn_NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoActionPerformed
-        if (this.existeProveedorDisponible()) {
-            JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), DetalleFacturaCompraGUI.class);
-            if (gui == null) {
-                gui = new DetalleFacturaCompraGUI();
-                gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                        getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-                getDesktopPane().add(gui);
-                gui.setVisible(true);
-            } else {
-                //selecciona y trae al frente el internalframe
-                try {
-                    gui.setSelected(true);
-
-                } catch (PropertyVetoException ex) {
-                    String msjError = "No se pudo seleccionar la ventana requerida.";
-                    LOGGER.error(msjError + " - " + ex.getMessage());
-                    JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        } else {
-            String mensaje = ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_proveedor");
-            JOptionPane.showInternalMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
-        }
-}//GEN-LAST:event_btn_NuevoActionPerformed
-
-    private void btn_VerDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VerDetalleActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
-
-            JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), DetalleFacturaCompraGUI.class);
-            if (gui == null) {
-                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                gui = new DetalleFacturaCompraGUI(facturasTotal.get(indexFilaSeleccionada));
-                gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                        getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-                getDesktopPane().add(gui);
-                gui.setVisible(true);
-            } else {
-                //selecciona y trae al frente el internalframe
-                try {
-                    gui.setSelected(true);
-
-                } catch (PropertyVetoException ex) {
-                    String msjError = "No se pudo seleccionar la ventana requerida.";
-                    LOGGER.error(msjError + " - " + ex.getMessage());
-                    JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }
-}//GEN-LAST:event_btn_VerDetalleActionPerformed
-
-    private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1) {
-            int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle
-                    .getBundle("Mensajes").getString("mensaje_eliminar_multiples_facturas"),
-                    "Eliminar", JOptionPane.YES_NO_OPTION);
-            if (respuesta == JOptionPane.YES_OPTION) {
-                int[] indexFilasSeleccionadas = Utilidades.getSelectedRowsModelIndices(tbl_Resultados);
-                long [] idsFacturas = new long[indexFilasSeleccionadas.length];
-                int i = 0;
-                for (int indice : indexFilasSeleccionadas) {
-                    idsFacturas[i] = facturasTotal.get(indice).getId_Factura();
-                    i++;
-                }
-                try {
-                    RestClient.getRestTemplate().delete("/facturas?idFactura="
-                            + Arrays.toString(idsFacturas).substring(1, Arrays.toString(idsFacturas).length() - 1));
-                    this.limpiarJTable();
-                    this.buscar();
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }
-}//GEN-LAST:event_btn_EliminarActionPerformed
-
-    private void btn_VerPagosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VerPagosActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1) {
-            if (tbl_Resultados.getSelectedRowCount() == 1) {
-                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-
-                JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), PagosGUI.class);
-                if (gui == null) {
-                    gui = new PagosGUI(facturasTotal.get(indexFilaSeleccionada));
-                    gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                            getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-                    getDesktopPane().add(gui);
-                    gui.setVisible(true);
-                } else {
-                    //selecciona y trae al frente el internalframe
-                    try {
-                        gui.setSelected(true);
-
-                    } catch (PropertyVetoException ex) {
-                        String msjError = "No se pudo seleccionar la ventana requerida.";
-                        LOGGER.error(msjError + " - " + ex.getMessage());
-                        JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            }
-            if (tbl_Resultados.getSelectedRowCount() > 1) {
-                int[] indicesTabla = Utilidades.getSelectedRowsModelIndices(tbl_Resultados);
-                long[] idsFacturas = new long[indicesTabla.length];
-                for (int i = 0; i < indicesTabla.length; i++) {
-                    idsFacturas[i] = this.facturasTotal.get(indicesTabla[i]).getId_Factura();
-                }
-                try {
-                    String uri = "/facturas/validaciones-pago-multiple?"
-                               + "idFactura=" + Arrays.toString(idsFacturas).substring(1, Arrays.toString(idsFacturas).length() - 1)
-                               + "&movimiento=" + Movimiento.COMPRA;
-                    boolean esValido = RestClient.getRestTemplate().getForObject(uri, boolean.class);
-                    if (esValido) {
-                        JInternalFrame gui = new PagoMultiplesFacturasGUI(this, idsFacturas, Movimiento.COMPRA);
-                        gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                                getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-                        getDesktopPane().add(gui);
-                        gui.setVisible(true);
-                    }
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }
-}//GEN-LAST:event_btn_VerPagosActionPerformed
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         this.setSize(sizeInternalFrame);
@@ -841,6 +698,111 @@ public class FacturasCompraGUI extends JInternalFrame {
     private void txt_NroFacturaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_NroFacturaKeyTyped
         Utilidades.controlarEntradaSoloNumerico(evt);
     }//GEN-LAST:event_txt_NroFacturaKeyTyped
+
+    private void btn_VerPagosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VerPagosActionPerformed
+        if (tbl_Resultados.getSelectedRow() != -1) {
+            if (tbl_Resultados.getSelectedRowCount() == 1) {
+                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+                JInternalFrame gui = new PagosGUI(facturasTotal.get(indexFilaSeleccionada));
+                gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                        getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+                getDesktopPane().add(gui);
+                gui.setVisible(true);
+            }
+            if (tbl_Resultados.getSelectedRowCount() > 1) {
+                int[] indicesTabla = Utilidades.getSelectedRowsModelIndices(tbl_Resultados);
+                long[] idsFacturas = new long[indicesTabla.length];
+                for (int i = 0; i < indicesTabla.length; i++) {
+                    idsFacturas[i] = this.facturasTotal.get(indicesTabla[i]).getId_Factura();
+                }
+                try {
+                    String uri = "/facturas/validaciones-pago-multiple?"
+                    + "idFactura=" + Arrays.toString(idsFacturas).substring(1, Arrays.toString(idsFacturas).length() - 1)
+                    + "&movimiento=" + Movimiento.COMPRA;
+                    boolean esValido = RestClient.getRestTemplate().getForObject(uri, boolean.class);
+                    if (esValido) {
+                        JInternalFrame gui = new PagoMultiplesFacturasGUI(idsFacturas, Movimiento.COMPRA);
+                        gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                            getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+                        getDesktopPane().add(gui);
+                        gui.setVisible(true);
+                    }
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }//GEN-LAST:event_btn_VerPagosActionPerformed
+
+    private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
+        if (tbl_Resultados.getSelectedRow() != -1) {
+            int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle
+                .getBundle("Mensajes").getString("mensaje_eliminar_multiples_facturas"),
+                "Eliminar", JOptionPane.YES_NO_OPTION);
+            if (respuesta == JOptionPane.YES_OPTION) {
+                int[] indexFilasSeleccionadas = Utilidades.getSelectedRowsModelIndices(tbl_Resultados);
+                long [] idsFacturas = new long[indexFilasSeleccionadas.length];
+                int i = 0;
+                for (int indice : indexFilasSeleccionadas) {
+                    idsFacturas[i] = facturasTotal.get(indice).getId_Factura();
+                    i++;
+                }
+                try {
+                    RestClient.getRestTemplate().delete("/facturas?idFactura="
+                        + Arrays.toString(idsFacturas).substring(1, Arrays.toString(idsFacturas).length() - 1));
+                    this.limpiarJTable();
+                    this.buscar();
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }//GEN-LAST:event_btn_EliminarActionPerformed
+
+    private void btn_VerDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VerDetalleActionPerformed
+        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
+            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+            JInternalFrame gui = new DetalleFacturaCompraGUI(facturasTotal.get(indexFilaSeleccionada));
+            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+            getDesktopPane().add(gui);
+            gui.setVisible(true);
+        }
+    }//GEN-LAST:event_btn_VerDetalleActionPerformed
+
+    private void btn_NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoActionPerformed
+        if (this.existeProveedorDisponible()) {
+            JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), DetalleFacturaCompraGUI.class);
+            if (gui == null) {
+                gui = new DetalleFacturaCompraGUI();
+                gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+                getDesktopPane().add(gui);
+                gui.setVisible(true);
+            } else {
+                try {
+                    gui.setSelected(true);
+                } catch (PropertyVetoException ex) {
+                    String msjError = "No se pudo seleccionar la ventana requerida.";
+                    LOGGER.error(msjError + " - " + ex.getMessage());
+                    JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else {
+            String mensaje = ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_proveedor");
+            JOptionPane.showInternalMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btn_NuevoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Buscar;

@@ -215,8 +215,7 @@ public class EmpresasGUI extends JDialog {
     }//GEN-LAST:event_btn_EliminarEmpresaActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        this.cargarListEmpresas();        
-        this.setLocationRelativeTo(null);
+        this.cargarListEmpresas();
     }//GEN-LAST:event_formWindowOpened
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

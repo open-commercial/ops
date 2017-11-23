@@ -4,13 +4,13 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyVetoException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
@@ -1177,6 +1177,14 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         this.setTitle("Factura Compra");
         if (operacionAlta == false) {
             this.cargarFactura();
+        }
+        try {
+            this.setMaximum(true);    
+        } catch (PropertyVetoException ex) {
+            String msjError = "Se produjo un error al intentar maximizar la ventana.";
+            LOGGER.error(msjError + " - " + ex.getMessage());
+            JOptionPane.showInternalMessageDialog(this, msjError, "Error", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
         }
     }//GEN-LAST:event_formInternalFrameOpened
 

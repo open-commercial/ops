@@ -310,8 +310,7 @@ public class CajaGUI extends JInternalFrame {
     private void verDetalleFacturaCompra(Factura facturaCompra) {
         try {
             facturaCompra.setPagos(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/pagos/facturas/" + facturaCompra.getId_Factura(),
-                            Pago[].class)));
+                    .getForObject("/pagos/facturas/" + facturaCompra.getId_Factura(), Pago[].class)));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -319,25 +318,12 @@ public class CajaGUI extends JInternalFrame {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), DetalleFacturaCompraGUI.class);
-        if (gui == null) {
-            gui = new DetalleFacturaCompraGUI((FacturaCompra)facturaCompra);
-            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-            getDesktopPane().add(gui);
-            gui.setVisible(true);
-        } else {
-            //selecciona y trae al frente el internalframe
-            try {
-                gui.setSelected(true);
-
-            } catch (PropertyVetoException ex) {
-                String msjError = "No se pudo seleccionar la ventana requerida.";
-                LOGGER.error(msjError + " - " + ex.getMessage());
-                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
+        }       
+        JInternalFrame gui = new DetalleFacturaCompraGUI((FacturaCompra) facturaCompra);
+        gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+        getDesktopPane().add(gui);
+        gui.setVisible(true);        
     }
 
     private List<Pago> getPagosPorFormaDePago(long idFormaDePago) {

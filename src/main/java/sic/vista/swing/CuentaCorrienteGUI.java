@@ -654,7 +654,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         try {
             if (tbl_Resultados.getSelectedRow() != -1) {
                 if (tbl_Resultados.getSelectedRowCount() == 1) {
-                                    boolean refrescar = false;
+                    boolean refrescar = false;
                     int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
                     RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
                     if (null == renglonCC.getTipoMovimiento()) {
@@ -704,7 +704,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                                 + "&movimiento=" + Movimiento.VENTA;
                         boolean esValido = RestClient.getRestTemplate().getForObject(uri, boolean.class);
                         if (esValido) {
-                            JInternalFrame gui = new PagoMultiplesFacturasGUI(this, idsFacturas, Movimiento.VENTA);
+                            JInternalFrame gui = new PagoMultiplesFacturasGUI(idsFacturas, Movimiento.VENTA);
                             gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
                                     getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
                             getDesktopPane().add(gui);

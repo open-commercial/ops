@@ -348,7 +348,6 @@ public class BuscarClientesGUI extends JDialog {
         this.setSize(sizeDialog);
         this.setTitle("Buscar Cliente");
         this.setColumnas();
-        this.setLocationRelativeTo(null);
     }//GEN-LAST:event_formWindowOpened
 
     private void tbl_ResultadosFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbl_ResultadosFocusGained

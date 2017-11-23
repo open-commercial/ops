@@ -32,7 +32,7 @@ public class PagoMultiplesFacturasGUI extends JInternalFrame {
     private boolean pagosCreados;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public PagoMultiplesFacturasGUI(JInternalFrame parent, long[] idsFacturas, Movimiento movimiento) {                   
+    public PagoMultiplesFacturasGUI(long[] idsFacturas, Movimiento movimiento) {                   
         this.movimiento = movimiento;                 
         this.facturas = this.obtenerFacturasYsPorFechaAsc(idsFacturas);
         pagosCreados = false;

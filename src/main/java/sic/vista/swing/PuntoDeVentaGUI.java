@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -359,6 +360,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             // revisar esto, es necesario para el movimiento como String y a su vez el movimiento?
             BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglones, this.tipoDeComprobante, movimiento);
             buscarProductosGUI.setModal(true);
+            buscarProductosGUI.setLocationRelativeTo(this);
             buscarProductosGUI.setVisible(true);
             if (buscarProductosGUI.debeCargarRenglon()) {
                 boolean renglonCargado = false;
@@ -1417,6 +1419,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private void btn_BuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarClienteActionPerformed
         BuscarClientesGUI buscarClientesGUI = new BuscarClientesGUI();
         buscarClientesGUI.setModal(true);
+        buscarClientesGUI.setLocationRelativeTo(this);
         buscarClientesGUI.setVisible(true);
         if (buscarClientesGUI.getClienteSeleccionado() != null) {
             this.cargarCliente(buscarClientesGUI.getClienteSeleccionado());
@@ -1636,9 +1639,10 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_txt_Recargo_porcentajeKeyTyped
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
-        this.setSize(sizeInternalFrame);
-        this.setColumnas();
         try {
+            this.setSize(sizeInternalFrame);
+            this.setColumnas();
+            this.setMaximum(true);
             this.setTitle("Punto de Venta");
             ConfiguracionDelSistema cds = RestClient.getRestTemplate()
                     .getForObject("/configuraciones-del-sistema/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
@@ -1658,6 +1662,11 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                     txta_Observaciones.setText(this.pedido.getObservaciones());
                 }
             }
+        } catch (PropertyVetoException ex) {
+            String msjError = "Se produjo un error al intentar maximizar la ventana.";
+            LOGGER.error(msjError + " - " + ex.getMessage());
+            JOptionPane.showInternalMessageDialog(this, msjError, "Error", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();

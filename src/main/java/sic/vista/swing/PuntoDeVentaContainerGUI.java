@@ -29,6 +29,7 @@ public class PuntoDeVentaContainerGUI extends JFrame {
     private void llamarSeleccionEmpresaGUI() {
         SeleccionEmpresaGUI seleccionEmpresaGUI = new SeleccionEmpresaGUI();
         seleccionEmpresaGUI.setModal(true);
+        seleccionEmpresaGUI.setLocationRelativeTo(this);
         seleccionEmpresaGUI.setVisible(true);
     }
 

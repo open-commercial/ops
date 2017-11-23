@@ -39,6 +39,7 @@ public class PrincipalGUI extends JFrame {
     private void llamarSeleccionEmpresaGUI() {
         SeleccionEmpresaGUI seleccionEmpresaGUI = new SeleccionEmpresaGUI();
         seleccionEmpresaGUI.setModal(true);
+        seleccionEmpresaGUI.setLocationRelativeTo(this);
         seleccionEmpresaGUI.setVisible(true);
         this.setTitle("S.I.C. Ops "
                 + ResourceBundle.getBundle("Mensajes").getString("version")
@@ -297,6 +298,7 @@ public class PrincipalGUI extends JFrame {
     private void mnuItm_EmpresasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_EmpresasActionPerformed
         EmpresasGUI empresasGUI = new EmpresasGUI();
         empresasGUI.setModal(true);
+        empresasGUI.setLocationRelativeTo(this);
         empresasGUI.setVisible(true);
         Utilidades.cerrarTodasVentanas(dp_Escritorio);
         this.llamarSeleccionEmpresaGUI();
@@ -336,10 +338,8 @@ public class PrincipalGUI extends JFrame {
             getDesktopPane().add(gui);
             gui.setVisible(true);
         } else {
-            //selecciona y trae al frente el internalframe
             try {
                 gui.setSelected(true);
-
             } catch (PropertyVetoException ex) {
                 String msjError = "No se pudo seleccionar la ventana requerida.";
                 LOGGER.error(msjError + " - " + ex.getMessage());
@@ -357,10 +357,8 @@ public class PrincipalGUI extends JFrame {
             getDesktopPane().add(gui);
             gui.setVisible(true);
         } else {
-            //selecciona y trae al frente el internalframe
             try {
                 gui.setSelected(true);
-
             } catch (PropertyVetoException ex) {
                 String msjError = "No se pudo seleccionar la ventana requerida.";
                 LOGGER.error(msjError + " - " + ex.getMessage());
@@ -378,10 +376,8 @@ public class PrincipalGUI extends JFrame {
             getDesktopPane().add(gui);
             gui.setVisible(true);
         } else {
-            //selecciona y trae al frente el internalframe
             try {
                 gui.setSelected(true);
-
             } catch (PropertyVetoException ex) {
                 String msjError = "No se pudo seleccionar la ventana requerida.";
                 LOGGER.error(msjError + " - " + ex.getMessage());
@@ -399,10 +395,8 @@ public class PrincipalGUI extends JFrame {
             getDesktopPane().add(gui);
             gui.setVisible(true);
         } else {
-            //selecciona y trae al frente el internalframe
             try {
                 gui.setSelected(true);
-
             } catch (PropertyVetoException ex) {
                 String msjError = "No se pudo seleccionar la ventana requerida.";
                 LOGGER.error(msjError + " - " + ex.getMessage());
@@ -420,10 +414,8 @@ public class PrincipalGUI extends JFrame {
             getDesktopPane().add(productos);
             productos.setVisible(true);
         } else {
-            //selecciona y trae al frente el internalframe
             try {
                 gui.setSelected(true);
-
             } catch (PropertyVetoException ex) {
                 String msjError = "No se pudo seleccionar la ventana requerida.";
                 LOGGER.error(msjError + " - " + ex.getMessage());
@@ -441,10 +433,8 @@ public class PrincipalGUI extends JFrame {
             getDesktopPane().add(gui);
             gui.setVisible(true);
         } else {
-            //selecciona y trae al frente el internalframe
             try {
                 gui.setSelected(true);
-
             } catch (PropertyVetoException ex) {
                 String msjError = "No se pudo seleccionar la ventana requerida.";
                 LOGGER.error(msjError + " - " + ex.getMessage());
@@ -467,10 +457,8 @@ public class PrincipalGUI extends JFrame {
             getDesktopPane().add(gui);
             gui.setVisible(true);
         } else {
-            //selecciona y trae al frente el internalframe
             try {
                 gui.setSelected(true);
-
             } catch (PropertyVetoException ex) {
                 String msjError = "No se pudo seleccionar la ventana requerida.";
                 LOGGER.error(msjError + " - " + ex.getMessage());
@@ -509,10 +497,8 @@ public class PrincipalGUI extends JFrame {
             getDesktopPane().add(gui);
             gui.setVisible(true);
         } else {
-            //selecciona y trae al frente el internalframe
             try {
                 gui.setSelected(true);
-
             } catch (PropertyVetoException ex) {
                 String msjError = "No se pudo seleccionar la ventana requerida.";
                 LOGGER.error(msjError + " - " + ex.getMessage());
@@ -530,10 +516,8 @@ public class PrincipalGUI extends JFrame {
             getDesktopPane().add(gui);
             gui.setVisible(true);
         } else {
-            //selecciona y trae al frente el internalframe
             try {
                 gui.setSelected(true);
-
             } catch (PropertyVetoException ex) {
                 String msjError = "No se pudo seleccionar la ventana requerida.";
                 LOGGER.error(msjError + " - " + ex.getMessage());
@@ -551,10 +535,8 @@ public class PrincipalGUI extends JFrame {
             getDesktopPane().add(gui);
             gui.setVisible(true);
         } else {
-            //selecciona y trae al frente el internalframe
             try {
                 gui.setSelected(true);
-
             } catch (PropertyVetoException ex) {
                 String msjError = "No se pudo seleccionar la ventana requerida.";
                 LOGGER.error(msjError + " - " + ex.getMessage());
@@ -572,10 +554,8 @@ public class PrincipalGUI extends JFrame {
             getDesktopPane().add(gui);
             gui.setVisible(true);
         } else {
-            //selecciona y trae al frente el internalframe
             try {
                 gui.setSelected(true);
-
             } catch (PropertyVetoException ex) {
                 String msjError = "No se pudo seleccionar la ventana requerida.";
                 LOGGER.error(msjError + " - " + ex.getMessage());
