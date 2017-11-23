@@ -579,6 +579,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             } else if (this.modificandoPedido() == true) {
                 cmb_TipoComprobante.setSelectedItem(TipoDeComprobante.PEDIDO);
                 txt_CodigoProducto.requestFocus();
+                cmb_TipoComprobante.setEnabled(false);
             } else {
                 cmb_TipoComprobante.removeItem(TipoDeComprobante.PEDIDO);
             }

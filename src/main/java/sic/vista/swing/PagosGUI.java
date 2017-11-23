@@ -357,11 +357,17 @@ public class PagosGUI extends JInternalFrame {
             gui_DetallePago.setModal(true);
             gui_DetallePago.setLocationRelativeTo(this);
             gui_DetallePago.setVisible(true);
+            this.getPagos();
+            this.actualizarSaldos();
+            this.cargarResultadosAlTable();
         } else if (notaDebitoRelacionada != null) {
             DetallePagoGUI gui_DetallePago = new DetallePagoGUI(notaDebitoRelacionada);
             gui_DetallePago.setModal(true);
             gui_DetallePago.setLocationRelativeTo(this);
             gui_DetallePago.setVisible(true);
+            this.getPagos();
+            this.actualizarSaldos();
+            this.cargarResultadosAlTable();
         }
     }//GEN-LAST:event_btn_NuevoActionPerformed
 

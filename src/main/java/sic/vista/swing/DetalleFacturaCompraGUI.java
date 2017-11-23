@@ -1116,6 +1116,8 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     private void btn_BuscarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarProductoActionPerformed
         BuscarProductosGUI gui_buscarProducto = new BuscarProductosGUI(renglones,
                 (TipoDeComprobante)cmb_TipoFactura.getSelectedItem(), Movimiento.COMPRA);
+        gui_buscarProducto.setModal(true);
+        gui_buscarProducto.setLocationRelativeTo(this);
         gui_buscarProducto.setVisible(true);
         this.cargarRenglonFactura(gui_buscarProducto);
     }//GEN-LAST:event_btn_BuscarProductoActionPerformed
