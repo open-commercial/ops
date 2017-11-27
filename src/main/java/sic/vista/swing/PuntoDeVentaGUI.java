@@ -29,7 +29,6 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.ConfiguracionDelSistema;
-import sic.modelo.Empresa;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Pedido;
 import sic.modelo.RenglonFactura;
@@ -48,7 +47,6 @@ import sic.util.Utilidades;
 
 public class PuntoDeVentaGUI extends JInternalFrame {
 
-    private Empresa empresa;
     private TipoDeComprobante tipoDeComprobante;
     private Cliente cliente;
     private List<RenglonFactura> renglones = new ArrayList<>();
@@ -87,7 +85,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     
     public void cargarPedidoParaFacturar() {
         try {
-            this.empresa = pedido.getEmpresa();
             this.cargarCliente(pedido.getCliente());
             this.cargarTiposDeComprobantesDisponibles();            
             this.tipoDeComprobante = (TipoDeComprobante) cmb_TipoComprobante.getSelectedItem();
@@ -635,7 +632,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             pedido = new Pedido();
             pedido.setCliente(cliente);
             pedido.setEliminado(false);
-            pedido.setEmpresa(empresa);
+            pedido.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
             pedido.setFacturas(null);            
             pedido.setFechaVencimiento(dc_fechaVencimiento.getDate());
             pedido.setObservaciones(txta_Observaciones.getText());

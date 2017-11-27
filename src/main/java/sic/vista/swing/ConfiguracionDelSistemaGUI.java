@@ -35,12 +35,6 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
         txt_PuntoDeVentaNro.setEnabled(estado);
         txt_PuntoDeVentaNro.setEnabled(estado);
     }
-//        
-//    private void setIcon() {
-//        ImageIcon iconoVentana = new ImageIcon(ConfiguracionDelSistemaGUI.class
-//                .getResource("/sic/icons/Gears_16x16.png"));
-//        this.setIconImage(iconoVentana.getImage());
-//    }
 
     private void cargarConfiguracionParaModificar() {
         chk_PreImpresas.setSelected(cdsModificar.isUsarFacturaVentaPreImpresa());
@@ -374,17 +368,18 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         try {
             cdsModificar = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                    ConfiguracionDelSistema.class);
+                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), ConfiguracionDelSistema.class);
+            this.cargarConfiguracionParaModificar();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
         } catch (ResourceAccessException ex) {
             LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        this.cargarConfiguracionParaModificar();
+            this.dispose();
+        }        
     }//GEN-LAST:event_formInternalFrameOpened
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
