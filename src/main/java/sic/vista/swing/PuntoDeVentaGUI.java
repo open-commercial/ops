@@ -12,7 +12,9 @@ import java.nio.file.Files;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
@@ -130,7 +132,12 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     public FacturaVenta construirFactura() {
         FacturaVenta factura = new FacturaVenta();        
         factura.setTipoComprobante(this.tipoDeComprobante);
-        factura.setFechaVencimiento(this.dc_fechaVencimiento.getDate());        
+        Calendar cal = new GregorianCalendar();
+        cal.setTime(this.dc_fechaVencimiento.getDate());
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        factura.setFechaVencimiento(cal.getTime());
         factura.setRenglones(this.getRenglones());
         factura.setObservaciones(this.txta_Observaciones.getText().trim());
         factura.setEmpresa(EmpresaActiva.getInstance().getEmpresa());        
