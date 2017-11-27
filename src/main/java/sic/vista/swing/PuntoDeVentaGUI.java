@@ -136,7 +136,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         cal.setTime(this.dc_fechaVencimiento.getDate());
         cal.set(Calendar.HOUR_OF_DAY, 23);
         cal.set(Calendar.MINUTE, 59);
-        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.SECOND, 58);
         factura.setFechaVencimiento(cal.getTime());
         factura.setRenglones(this.getRenglones());
         factura.setObservaciones(this.txta_Observaciones.getText().trim());
