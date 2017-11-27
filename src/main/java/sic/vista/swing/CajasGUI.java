@@ -211,25 +211,6 @@ public class CajasGUI extends JInternalFrame {
         this.limpiarResultados();
         this.buscar();        
     }
-    
-    private void verDetalle(Caja caja) {
-        JInternalFrame iFrameCaja = Utilidades.estaEnDesktop(getDesktopPane(), CajaGUI.class);
-        if (iFrameCaja != null) {
-            iFrameCaja.dispose();
-        }
-        iFrameCaja = new CajaGUI(caja);
-        iFrameCaja.setLocation(getDesktopPane().getWidth() / 2 - iFrameCaja.getWidth() / 2,
-                getDesktopPane().getHeight() / 2 - iFrameCaja.getHeight() / 2);
-        getDesktopPane().add(iFrameCaja);
-        iFrameCaja.setVisible(true);
-        try {
-            iFrameCaja.setSelected(true);
-        } catch (PropertyVetoException ex) {
-            String msjError = "No se pudo seleccionar la ventana requerida.";
-            LOGGER.error(msjError + " - " + ex.getMessage());
-            JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -517,10 +498,15 @@ public class CajasGUI extends JInternalFrame {
     
     private void btn_verDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_verDetalleActionPerformed
         if (tbl_Cajas.getSelectedRow() != -1) {
-            int indiceDelModel = Utilidades.getSelectedRowModelIndice(tbl_Cajas);
+            int indice = Utilidades.getSelectedRowModelIndice(tbl_Cajas);
             try {
-              this.verDetalle(RestClient.getRestTemplate()
-                        .getForObject("/cajas/ " + this.cajasTotal.get(indiceDelModel).getId_Caja(), Caja.class));
+                Caja caja = RestClient.getRestTemplate()
+                        .getForObject("/cajas/ " + this.cajasTotal.get(indice).getId_Caja(), Caja.class);
+                JInternalFrame iFrameCaja = new CajaGUI(caja);
+                iFrameCaja.setLocation(getDesktopPane().getWidth() / 2 - iFrameCaja.getWidth() / 2,
+                        getDesktopPane().getHeight() / 2 - iFrameCaja.getHeight() / 2);
+                getDesktopPane().add(iFrameCaja);
+                iFrameCaja.setVisible(true);            
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             } catch (ResourceAccessException ex) {

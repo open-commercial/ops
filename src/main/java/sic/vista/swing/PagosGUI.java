@@ -5,8 +5,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,46 +20,33 @@ import sic.util.FormatterFechaHora;
 import sic.util.RenderTabla;
 import sic.util.Utilidades;
 
-public class PagosGUI extends JDialog {
+public class PagosGUI extends JInternalFrame {
 
     private List<Pago> pagos;
     private ModeloTabla modeloTablaResultados = new ModeloTabla();    
     private final Factura facturaRelacionada; 
     private final NotaDebito notaDebitoRelacionada;
-    private boolean actualizar;
     private final FormatterFechaHora formateador = new FormatterFechaHora(FormatterFechaHora.FORMATO_FECHA_HISPANO);    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public PagosGUI(Factura factura) {
-        this.initComponents();
-        this.setIcon();        
+        this.initComponents();       
         txt_TotalAdeudado.setValue(0.00);
         txt_TotalPagado.setValue(0.00);
         txt_SaldoAPagar.setValue(0.00);
         facturaRelacionada = factura;  
         notaDebitoRelacionada = null;
-        actualizar = false;
         this.setColumnas();
     }
     
     public PagosGUI(NotaDebito notaDebito) {
-        this.initComponents();
-        this.setIcon();        
+        this.initComponents();       
         txt_TotalAdeudado.setValue(0.00);
         txt_TotalPagado.setValue(0.00);
         txt_SaldoAPagar.setValue(0.00);
         facturaRelacionada = null;
         this.notaDebitoRelacionada = notaDebito;
         this.setColumnas();
-    }
-
-    public boolean isPagosCreados() {
-        return actualizar;
-    }
-    
-    private void setIcon() {
-        ImageIcon iconoVentana = new ImageIcon(PagosGUI.class.getResource("/sic/icons/Stamp_16x16.png"));
-        this.setIconImage(iconoVentana.getImage());
     }
 
     private void getPagos() {
@@ -160,7 +146,6 @@ public class PagosGUI extends JDialog {
                 this.getPagos();
                 this.actualizarSaldos();
                 this.cargarResultadosAlTable();
-                actualizar = true;
             }
         }
     }
@@ -207,11 +192,24 @@ public class PagosGUI extends JDialog {
         btn_Nuevo = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setClosable(true);
         setTitle("Pagos");
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                formWindowOpened(evt);
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Stamp_16x16.png"))); // NOI18N
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -359,22 +357,21 @@ public class PagosGUI extends JDialog {
             gui_DetallePago.setModal(true);
             gui_DetallePago.setLocationRelativeTo(this);
             gui_DetallePago.setVisible(true);
-            actualizar = gui_DetallePago.isPagoCreado();
+            this.getPagos();
+            this.actualizarSaldos();
+            this.cargarResultadosAlTable();
         } else if (notaDebitoRelacionada != null) {
             DetallePagoGUI gui_DetallePago = new DetallePagoGUI(notaDebitoRelacionada);
             gui_DetallePago.setModal(true);
             gui_DetallePago.setLocationRelativeTo(this);
             gui_DetallePago.setVisible(true);
-            actualizar = gui_DetallePago.isPagoCreado();
-        }
-        if (actualizar) {
             this.getPagos();
             this.actualizarSaldos();
             this.cargarResultadosAlTable();
         }
     }//GEN-LAST:event_btn_NuevoActionPerformed
-    
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+
+    private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         String tituloVentana;
         if (facturaRelacionada != null) {
             if (facturaRelacionada.getNumSerie() == 0 && facturaRelacionada.getNumFactura() == 0) {
@@ -396,7 +393,8 @@ public class PagosGUI extends JDialog {
         this.getPagos();
         this.actualizarSaldos();
         this.cargarResultadosAlTable();
-    }//GEN-LAST:event_formWindowOpened
+    }//GEN-LAST:event_formInternalFrameOpened
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_Nuevo;

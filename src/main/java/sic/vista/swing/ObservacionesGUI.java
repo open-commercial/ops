@@ -5,10 +5,9 @@ import javax.swing.JTextArea;
 
 public class ObservacionesGUI extends JDialog {
 
-    public ObservacionesGUI(JDialog parent, boolean modal, String texto) {
-        super(parent, modal);
+    public ObservacionesGUI(boolean modal, String texto) {
+        super.setModal(modal);
         this.initComponents();
-        this.setLocationRelativeTo(parent);
         this.txta_Observaciones.setText(texto);
     }
 

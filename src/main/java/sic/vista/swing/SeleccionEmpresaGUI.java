@@ -140,7 +140,6 @@ public class SeleccionEmpresaGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {
-            this.setLocationRelativeTo(null);
             empresas = Arrays.asList(RestClient.getRestTemplate().getForObject("/empresas", Empresa[].class));
             if (empresas.isEmpty() || empresas.size() > 1) {
                 if (empresas.isEmpty() && UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {

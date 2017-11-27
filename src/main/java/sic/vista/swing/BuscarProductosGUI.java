@@ -1,5 +1,6 @@
 package sic.vista.swing;
 
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.KeyAdapter;
@@ -8,8 +9,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -46,11 +45,9 @@ public class BuscarProductosGUI extends JDialog {
     private int NUMERO_PAGINA = 0;
     private static final int TAMANIO_PAGINA = 50;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    private final Dimension sizeDialog = new Dimension(1000, 600);
     
-    public BuscarProductosGUI(JDialog parent, boolean modal, List<RenglonFactura> renglones,
-            TipoDeComprobante tipoDeComprobante, Movimiento movimiento) {
-        
-        super(parent, modal);
+    public BuscarProductosGUI(List<RenglonFactura> renglones, TipoDeComprobante tipoDeComprobante, Movimiento movimiento) {
         this.initComponents();
         this.setIcon();
         this.renglones = renglones;
@@ -584,8 +581,7 @@ public class BuscarProductosGUI extends JDialog {
     }//GEN-LAST:event_txtCriteriaBusquedaKeyTyped
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        this.setSize(this.getParent().getWidth() - 100, this.getParent().getHeight() - 200);
-        this.setLocationRelativeTo(this.getParent());
+        this.setSize(sizeDialog);
         this.setTitle("Buscar Producto");
         this.prepararComponentes();
     }//GEN-LAST:event_formWindowOpened

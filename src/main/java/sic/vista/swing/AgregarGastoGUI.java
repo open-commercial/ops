@@ -32,7 +32,7 @@ public class AgregarGastoGUI extends JDialog {
     }
 
     private void setIcon() {
-        ImageIcon iconoVentana = new ImageIcon(PuntoDeVentaGUI.class.getResource("/sic/icons/CoinsAdd_16x16.png"));
+        ImageIcon iconoVentana = new ImageIcon(AgregarGastoGUI.class.getResource("/sic/icons/CoinsAdd_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
     }
     

@@ -654,30 +654,29 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         try {
             if (tbl_Resultados.getSelectedRow() != -1) {
                 if (tbl_Resultados.getSelectedRowCount() == 1) {
-                                    boolean refrescar = false;
+                    boolean refrescar = false;
                     int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
                     RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
                     if (null == renglonCC.getTipoMovimiento()) {
                         JOptionPane.showInternalMessageDialog(this,
                                 ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
                                 "Error", JOptionPane.ERROR_MESSAGE);
-                    } else switch (renglonCC.getTipoMovimiento()) {
-                        case VENTA:
-                            {
-                                PagosGUI gui_Pagos = new PagosGUI(RestClient.getRestTemplate().getForObject("/facturas/" + renglonCC.getIdMovimiento(), Factura.class));
-                                gui_Pagos.setModal(true);
-                                gui_Pagos.setLocationRelativeTo(this);
-                                gui_Pagos.setVisible(true);
-                                refrescar = gui_Pagos.isPagosCreados();
+                    } else
+                        switch (renglonCC.getTipoMovimiento()) {
+                            case VENTA: {
+                                JInternalFrame gui = new PagosGUI(RestClient.getRestTemplate().getForObject("/facturas/" + renglonCC.getIdMovimiento(), Factura.class));
+                                gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                                        getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+                                getDesktopPane().add(gui);
+                                gui.setVisible(true);
                                 break;
                             }
-                        case DEBITO:
-                            {
-                                PagosGUI gui_Pagos = new PagosGUI(RestClient.getRestTemplate().getForObject("/notas/" + renglonCC.getIdMovimiento(), NotaDebito.class));
-                                gui_Pagos.setModal(true);
-                                gui_Pagos.setLocationRelativeTo(this);
-                                gui_Pagos.setVisible(true);
-                                refrescar = gui_Pagos.isPagosCreados();
+                            case DEBITO: {
+                                JInternalFrame gui = new PagosGUI(RestClient.getRestTemplate().getForObject("/notas/" + renglonCC.getIdMovimiento(), NotaDebito.class));
+                                gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                                        getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+                                getDesktopPane().add(gui);
+                                gui.setVisible(true);
                                 break;
                             }
                         default:
@@ -705,11 +704,11 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                                 + "&movimiento=" + Movimiento.VENTA;
                         boolean esValido = RestClient.getRestTemplate().getForObject(uri, boolean.class);
                         if (esValido) {
-                            PagoMultiplesFacturasGUI gui_PagoMultiples = new PagoMultiplesFacturasGUI(this, idsFacturas, Movimiento.VENTA);
-                            gui_PagoMultiples.setModal(true);
-                            gui_PagoMultiples.setLocationRelativeTo(this);
-                            gui_PagoMultiples.setVisible(true);
-                            this.refrescarVista(gui_PagoMultiples.isPagosCreados());
+                            JInternalFrame gui = new PagoMultiplesFacturasGUI(idsFacturas, Movimiento.VENTA);
+                            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+                            getDesktopPane().add(gui);
+                            gui.setVisible(true);
                         }
                     } else {
                         JOptionPane.showInternalMessageDialog(this,

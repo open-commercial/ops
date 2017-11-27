@@ -555,13 +555,17 @@ public class ProveedoresGUI extends JInternalFrame {
     private void chk_UbicacionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UbicacionItemStateChanged
         //Pregunta el estado actual del checkBox
         if (chk_Ubicacion.isSelected() == true) {
+            this.cargarComboBoxPaises();
             cmb_Pais.setEnabled(true);
             cmb_Provincia.setEnabled(true);
             cmb_Localidad.setEnabled(true);
             cmb_Pais.requestFocus();
         } else {
+            cmb_Pais.removeAllItems();
             cmb_Pais.setEnabled(false);
+            cmb_Provincia.removeAllItems();
             cmb_Provincia.setEnabled(false);
+            cmb_Localidad.removeAllItems();
             cmb_Localidad.setEnabled(false);
         }
     }//GEN-LAST:event_chk_UbicacionItemStateChanged
@@ -612,7 +616,6 @@ public class ProveedoresGUI extends JInternalFrame {
         gui_DetalleProveedor.setModal(true);
         gui_DetalleProveedor.setLocationRelativeTo(this);
         gui_DetalleProveedor.setVisible(true);
-        this.cargarComboBoxPaises();
     }//GEN-LAST:event_btn_NuevoActionPerformed
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
@@ -646,7 +649,6 @@ public class ProveedoresGUI extends JInternalFrame {
             gui_DetalleProveedor.setLocationRelativeTo(this);
             gui_DetalleProveedor.setVisible(true);
             this.buscar();
-            this.cargarComboBoxPaises();
         }
     }//GEN-LAST:event_btn_ModificarActionPerformed
 
@@ -685,7 +687,6 @@ public class ProveedoresGUI extends JInternalFrame {
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         this.setSize(sizeInternalFrame);        
         btn_Seleccionar.setVisible(false);
-        this.cargarComboBoxPaises();
         this.setColumnas();
         try {            
             this.setMaximum(true);

@@ -16,12 +16,16 @@ import sic.modelo.Rol;
 import sic.modelo.Usuario;
 import sic.modelo.UsuarioActivo;
 
-public class LoginGUI extends JFrame {    
+public class LoginGUI extends JFrame {
     
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     
     public LoginGUI() {
         this.initComponents();                
+        this.setIcon();
+    }
+    
+    private void setIcon() {
         ImageIcon iconoVentana = new ImageIcon(LoginGUI.class.getResource("/sic/icons/SIC_24_square.png"));        
         this.setIconImage(iconoVentana.getImage());
     }
@@ -52,26 +56,18 @@ public class LoginGUI extends JFrame {
     private void ingresar() {
         if (UsuarioActivo.getInstance().getUsuario() != null) {
             if (UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
+                this.setVisible(false);
                 new PrincipalGUI().setVisible(true);
                 this.dispose();
             } else {
-                PuntoDeVentaGUI gui_puntoDeVenta = new PuntoDeVentaGUI();
-                gui_puntoDeVenta.setModal(true);
-                gui_puntoDeVenta.setVisible(true);
-                this.limpiarCredenciales();
-                txt_Usuario.requestFocus();
+                this.setVisible(false);
+                new PuntoDeVentaContainerGUI().setVisible(true);
+                this.dispose();
             }
         }
     }
 
-    private void limpiarCredenciales() {        
-        UsuarioActivo.getInstance().setUsuario(null);
-        this.txt_Usuario.setText("");
-        this.txt_Contrasenia.setText("");
-    }
-
     private void capturaTeclaEnter(KeyEvent evt) {
-        //tecla ENTER
         if (evt.getKeyCode() == 10) {
             btn_IngresarActionPerformed(null);
         }

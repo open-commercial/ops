@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
@@ -39,8 +40,8 @@ public class CerrarVentaGUI extends JDialog {
     private boolean dividir = false;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public CerrarVentaGUI(JDialog parent, boolean modal) {
-        super(parent, modal);
+    public CerrarVentaGUI(JInternalFrame parent, boolean modal) {
+        super.setModal(modal);
         this.initComponents();
         this.setIcon();        
         this.gui_puntoDeVenta = (PuntoDeVentaGUI) parent;
@@ -180,7 +181,7 @@ public class CerrarVentaGUI extends JDialog {
         facturaVenta = this.agregarPagosAFactura(facturaVenta);
         try {
             String uri = "/facturas/venta?idPedido=";
-            if (gui_puntoDeVenta.getPedido() != null) {
+            if (gui_puntoDeVenta.getPedido() != null && gui_puntoDeVenta.getPedido().getId_Pedido() != 0) {
                 uri += gui_puntoDeVenta.getPedido().getId_Pedido();
             }
             if (dividir) {
