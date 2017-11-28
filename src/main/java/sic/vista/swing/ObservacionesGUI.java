@@ -1,18 +1,24 @@
 package sic.vista.swing;
 
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JTextArea;
 
 public class ObservacionesGUI extends JDialog {
 
-    public ObservacionesGUI(boolean modal, String texto) {
-        super.setModal(modal);
+    public ObservacionesGUI(String texto) {
         this.initComponents();
+        this.setIcon();
         this.txta_Observaciones.setText(texto);
     }
 
     public JTextArea getTxta_Observaciones() {
         return txta_Observaciones;
+    }
+
+    private void setIcon() {
+        ImageIcon iconoVentana = new ImageIcon(BuscarProductosGUI.class.getResource("/sic/icons/Product_16x16.png"));
+        this.setIconImage(iconoVentana.getImage());
     }    
     
     @SuppressWarnings("unchecked")
