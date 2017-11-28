@@ -46,10 +46,18 @@ public class CerrarVentaGUI extends JDialog {
         this.setIcon();        
         this.gui_puntoDeVenta = (PuntoDeVentaGUI) parent;
         //listeners
+        chk_FormaDePago1.addKeyListener(keyHandler);
+        chk_FormaDePago2.addKeyListener(keyHandler);
+        chk_FormaDePago3.addKeyListener(keyHandler);
+        cmb_FormaDePago1.addKeyListener(keyHandler);
+        cmb_FormaDePago2.addKeyListener(keyHandler);
         cmb_FormaDePago3.addKeyListener(keyHandler);
-        cmb_Transporte.addKeyListener(keyHandler);
         txt_MontoPago1.addKeyListener(keyHandler);
+        txt_MontoPago2.addKeyListener(keyHandler);
+        txt_MontoPago3.addKeyListener(keyHandler);
+        cmb_Transporte.addKeyListener(keyHandler);
         btn_Finalizar.addKeyListener(keyHandler);
+        txt_AbonaCon.addKeyListener(keyHandler);
     }
 
     public boolean isExito() {

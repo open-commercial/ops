@@ -1464,9 +1464,11 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_txt_CodigoProductoActionPerformed
 
     private void btn_AddCommentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AddCommentActionPerformed
-        ObservacionesGUI GUI_Observaciones = new ObservacionesGUI(true, txta_Observaciones.getText());
-        GUI_Observaciones.setVisible(true);
-        txta_Observaciones.setText(GUI_Observaciones.getTxta_Observaciones().getText());
+        ObservacionesGUI observacionesGUI = new ObservacionesGUI(txta_Observaciones.getText());
+        observacionesGUI.setModal(true);
+        observacionesGUI.setLocationRelativeTo(this);
+        observacionesGUI.setVisible(true);
+        txta_Observaciones.setText(observacionesGUI.getTxta_Observaciones().getText());
     }//GEN-LAST:event_btn_AddCommentActionPerformed
 
     private void txt_Decuento_porcentajeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_Decuento_porcentajeFocusLost
