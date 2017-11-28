@@ -139,10 +139,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         cal.set(Calendar.SECOND, 58);
         factura.setFechaVencimiento(cal.getTime());
         factura.setRenglones(this.getRenglones());
-        factura.setObservaciones(this.txta_Observaciones.getText().trim());
-        factura.setEmpresa(EmpresaActiva.getInstance().getEmpresa());        
-        factura.setCliente(this.cliente);
-        factura.setUsuario(UsuarioActivo.getInstance().getUsuario());        
+        factura.setObservaciones(this.txta_Observaciones.getText().trim());      
         factura.setSubTotal(Double.parseDouble(txt_Subtotal.getValue().toString()));
         factura.setDescuento_porcentaje(Double.parseDouble(txt_Decuento_porcentaje.getValue().toString()));
         factura.setDescuento_neto(Double.parseDouble(txt_Decuento_neto.getValue().toString()));
@@ -153,6 +150,10 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         factura.setIva_21_neto(iva_21_netoFactura);
         factura.setTotal(Double.parseDouble(txt_Total.getValue().toString()));                                             
         return factura;
+    }
+    
+    public long getIdCliente() {
+        return this.cliente.getId_Cliente();
     }
 
     public ModeloTabla getModeloTabla() {

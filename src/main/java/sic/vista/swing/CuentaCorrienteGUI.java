@@ -516,7 +516,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 if (!seleccionDeProductosGUI.getRenglonesConCantidadNueva().isEmpty()) {
                     DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(
                             seleccionDeProductosGUI.getRenglonesConCantidadNueva(),
-                            seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock());
+                            seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock(),
+                            this.cliente.getId_Cliente());
                     detalleNotaCredito.setModal(true);
                     detalleNotaCredito.setLocationRelativeTo(this);
                     detalleNotaCredito.setVisible(true);

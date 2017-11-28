@@ -184,7 +184,6 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         facturaCompra.setNumSerie(Long.parseLong(txt_SerieFactura.getValue().toString()));
         facturaCompra.setNumFactura(Long.parseLong(txt_NumeroFactura.getValue().toString()));
         facturaCompra.setFechaVencimiento(dc_FechaVencimiento.getDate());
-        facturaCompra.setTransportista((Transportista) cmb_Transportista.getSelectedItem());
         facturaCompra.setRenglones(new ArrayList<>(renglones));
         facturaCompra.setSubTotal(Double.parseDouble(txt_SubTotal.getValue().toString()));
         facturaCompra.setRecargo_porcentaje(0);
@@ -199,11 +198,12 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         facturaCompra.setTotal(Double.parseDouble(txt_Total.getValue().toString()));
         facturaCompra.setObservaciones(txta_Observaciones.getText().trim());
         facturaCompra.setPagada(false);
-        facturaCompra.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
         facturaCompra.setEliminada(false);
-        facturaCompra.setProveedor((Proveedor) cmb_Proveedor.getSelectedItem());
         try {
-            RestClient.getRestTemplate().postForObject("/facturas/compra", facturaCompra, FacturaCompra[].class);
+            RestClient.getRestTemplate().postForObject("/facturas/compra"
+                    + "?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + "&idProveedor=" + ((Proveedor) cmb_Proveedor.getSelectedItem()).getId_Proveedor()
+                    + "&idTransportista=" + ((Transportista) cmb_Transportista.getSelectedItem()).getId_Transportista(), facturaCompra, FacturaCompra[].class);
             return true;
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -396,7 +396,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
             txt_SerieFactura.setText(String.valueOf(facturaParaMostrar.getNumSerie()));
             txt_NumeroFactura.setText(String.valueOf(facturaParaMostrar.getNumFactura()));
         }
-        cmb_Proveedor.setSelectedItem(facturaParaMostrar.getProveedor());
+        cmb_Proveedor.setSelectedItem(facturaParaMostrar.getRazonSocialProveedor());
         cmb_TipoFactura.removeAllItems();
         try {
             cmb_TipoFactura.addItem(RestClient.getRestTemplate()
@@ -410,7 +410,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-        cmb_Transportista.setSelectedItem(facturaParaMostrar.getTransportista());
+        cmb_Transportista.setSelectedItem(facturaParaMostrar.getNombreTransportista());
         dc_FechaFactura.setDate(facturaParaMostrar.getFecha());
         dc_FechaVencimiento.setDate(facturaParaMostrar.getFechaVencimiento());
         txta_Observaciones.setText(facturaParaMostrar.getObservaciones());

@@ -34,7 +34,7 @@ public abstract class Factura implements Serializable {
     private long numFactura;
     private Date fechaVencimiento;
     private Pedido pedido;    
-    private Transportista transportista;        
+    private String nombreTransportista;     
     private List<RenglonFactura> renglones;
     private List<Pago> pagos;
     private double subTotal;
@@ -49,7 +49,7 @@ public abstract class Factura implements Serializable {
     private double total;    
     private String observaciones;
     private boolean pagada;    
-    private Empresa empresa;
+    private String nombreEmpresa;
     private boolean eliminada;   
     private long CAE;
     private Date vencimientoCAE;
