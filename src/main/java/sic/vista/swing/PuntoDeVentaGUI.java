@@ -1681,6 +1681,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
         }
     }//GEN-LAST:event_formInternalFrameOpened
 
