@@ -33,7 +33,6 @@ import sic.modelo.Movimiento;
 import sic.modelo.Nota;
 import sic.modelo.NotaDebito;
 import sic.modelo.PaginaRespuestaRest;
-import sic.modelo.Pago;
 import sic.modelo.RenglonCuentaCorriente;
 import sic.util.ColoresNumerosTablaRenderer;
 import sic.util.FormatterNumero;
@@ -536,8 +535,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
             if (renglonCC.getTipoMovimiento() == TipoMovimiento.PAGO) {
-                Pago pago = RestClient.getRestTemplate().getForObject("/pagos/" + renglonCC.getIdMovimiento(), Pago.class);
-                if (pago.getFactura() != null) {
+                Factura f = RestClient.getRestTemplate().getForObject("/facturas/pagos/" + renglonCC.getIdMovimiento(), Factura.class);
+                if (f != null) {
                     if (RestClient.getRestTemplate().getForObject("/notas/debito/" + renglonCC.getIdMovimiento(), NotaDebito.class) != null) {
                         JOptionPane.showInternalMessageDialog(this,
                                 ResourceBundle.getBundle("Mensajes").getString("mensaje_pago_con_nota_debito"),

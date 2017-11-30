@@ -37,10 +37,12 @@ public class CerrarVentaGUI extends JDialog {
     private final PuntoDeVentaGUI gui_puntoDeVenta;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int[] indicesParaDividir = null;
+    private final long[] idsFormasDePago;
     private boolean dividir = false;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public CerrarVentaGUI(JInternalFrame parent, boolean modal) {
+        this.idsFormasDePago = new long[3];
         super.setModal(modal);
         this.initComponents();
         this.setIcon();        
@@ -191,6 +193,7 @@ public class CerrarVentaGUI extends JDialog {
                     + "&idCliente=" + gui_puntoDeVenta.getIdCliente()
                     + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                     + "&idTransportista=" + ((Transportista) cmb_Transporte.getSelectedItem()).getId_Transportista()
+                    + "&idsFormaDePago=" + Arrays.toString(idsFormasDePago).substring(1, Arrays.toString(idsFormasDePago).length() - 1)
                     + "&idPedido=";
             if (gui_puntoDeVenta.getPedido() != null && gui_puntoDeVenta.getPedido().getId_Pedido() != 0) {
                 uri += gui_puntoDeVenta.getPedido().getId_Pedido();
@@ -238,29 +241,23 @@ public class CerrarVentaGUI extends JDialog {
         List<Pago> pagos = new ArrayList<>();
         if (chk_FormaDePago1.isSelected() && chk_FormaDePago1.isEnabled()) {
             Pago pago1 = new Pago();
-            pago1.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
-            pago1.setFormaDePago((FormaDePago) cmb_FormaDePago1.getSelectedItem());
             pago1.setMonto(Double.parseDouble(txt_MontoPago1.getValue().toString()));            
             pago1.setNota("");
-            pago1.setFactura(facturaVenta);
+            idsFormasDePago[0] = ((FormaDePago) cmb_FormaDePago1.getSelectedItem()).getId_FormaDePago();
             pagos.add(pago1);
         }
         if (chk_FormaDePago2.isSelected() && chk_FormaDePago2.isEnabled()) {
             Pago pago2 = new Pago();
-            pago2.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
-            pago2.setFormaDePago((FormaDePago) cmb_FormaDePago2.getSelectedItem());
             pago2.setMonto(Double.parseDouble(txt_MontoPago2.getValue().toString()));            
             pago2.setNota("");
-            pago2.setFactura(facturaVenta);
+            idsFormasDePago[1] = ((FormaDePago) cmb_FormaDePago2.getSelectedItem()).getId_FormaDePago();
             pagos.add(pago2);
         }
         if (chk_FormaDePago3.isSelected() && chk_FormaDePago3.isEnabled()) {
             Pago pago3 = new Pago();
-            pago3.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
-            pago3.setFormaDePago((FormaDePago) cmb_FormaDePago3.getSelectedItem());
             pago3.setMonto(Double.parseDouble(txt_MontoPago3.getValue().toString()));            
             pago3.setNota("");
-            pago3.setFactura(facturaVenta);
+            idsFormasDePago[2] = ((FormaDePago) cmb_FormaDePago3.getSelectedItem()).getId_FormaDePago();
             pagos.add(pago3);
         }
         facturaVenta.setPagos(pagos);
