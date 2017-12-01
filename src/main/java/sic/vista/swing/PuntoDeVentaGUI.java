@@ -87,7 +87,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     
     public void cargarPedidoParaFacturar() {
         try {
-            this.cargarCliente(pedido.getCliente());
+            this.cargarCliente(RestClient.getRestTemplate()
+                    .getForObject("/clientes/pedidos/" + pedido.getId_Pedido(), Cliente.class));
             this.cargarTiposDeComprobantesDisponibles();            
             this.tipoDeComprobante = (TipoDeComprobante) cmb_TipoComprobante.getSelectedItem();
             this.renglones = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
@@ -638,13 +639,10 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private void construirPedido() {
         try {
             pedido = new Pedido();
-            pedido.setCliente(cliente);
             pedido.setEliminado(false);
-            pedido.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
             pedido.setFacturas(null);            
             pedido.setFechaVencimiento(dc_fechaVencimiento.getDate());
             pedido.setObservaciones(txta_Observaciones.getText());
-            pedido.setUsuario(UsuarioActivo.getInstance().getUsuario());
             double[] importes = new double[renglones.size()];
             int indice = 0;
             for (RenglonFactura renglon : renglones) {
@@ -1532,7 +1530,10 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                                 }).getBody();
                         List<Pedido> pedidos = response.getContent();
                         if (pedidos.isEmpty()) {
-                            Pedido p = RestClient.getRestTemplate().postForObject("/pedidos", pedido, Pedido.class);
+                            Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?idEmpresa="
+                                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                                    + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
+                                    + "&idCliente=" + cliente.getId_Cliente(), pedido, Pedido.class);
                             this.lanzarReportePedido(p);
                             this.limpiarYRecargarComponentes();
                         } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificarPedido == true) {

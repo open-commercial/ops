@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = {"nroPedido", "empresa"})
+@EqualsAndHashCode(of = {"nroPedido", "nombreEmpresa"})
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id_Pedido", scope = Pedido.class)
 public class Pedido implements Serializable {
     
@@ -17,11 +17,11 @@ public class Pedido implements Serializable {
     private long nroPedido;    
     private Date fecha;    
     private Date fechaVencimiento;    
-    private String observaciones;    
-    private Empresa empresa;
+    private String observaciones;  
+    private String nombreEmpresa;
     private boolean eliminado;    
-    private Cliente cliente;    
-    private Usuario usuario;
+    private String razonSocialCliente;  
+    private String nombreUsuario;
     private List<Factura> facturas;        
     private List<RenglonPedido> renglones;
     private double totalEstimado;
