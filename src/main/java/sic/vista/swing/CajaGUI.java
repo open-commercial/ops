@@ -70,7 +70,7 @@ public class CajaGUI extends JInternalFrame {
             this.concepto = this.tipoMovimientoCaja + " por: " + f.getTipoComprobante() + " " + ((f instanceof FacturaVenta) ? "Venta " : "Compra ")
                     + f.getNumSerie() + "-" + f.getNumFactura();
             this.fecha = pago.getFecha();
-            this.monto = (f instanceof FacturaCompra)? - pago.getMonto(): pago.getMonto();
+            this.monto = (f instanceof FacturaCompra) ? - pago.getMonto(): pago.getMonto();
         }
 
         public Movimiento(Gasto gasto) {

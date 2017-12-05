@@ -40,7 +40,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private boolean notaCreada;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     
-    public DetalleNotaCreditoGUI(HashMap<Long,Double> idsRenglonesYCantidades, long idFacturaVenta, boolean modificarStock, long idCliente) {
+    public DetalleNotaCreditoGUI(HashMap<Long,Double> idsRenglonesYCantidades, long idFacturaVenta,
+            boolean modificarStock, long idCliente) {
         this.initComponents();
         this.setIcon();
         this.idsRenglonesYCantidades = idsRenglonesYCantidades;

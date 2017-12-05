@@ -203,7 +203,8 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
             RestClient.getRestTemplate().postForObject("/facturas/compra"
                     + "?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                     + "&idProveedor=" + ((Proveedor) cmb_Proveedor.getSelectedItem()).getId_Proveedor()
-                    + "&idTransportista=" + ((Transportista) cmb_Transportista.getSelectedItem()).getId_Transportista(), facturaCompra, FacturaCompra[].class);
+                    + "&idTransportista=" + ((Transportista) cmb_Transportista.getSelectedItem()).getId_Transportista(),
+                    facturaCompra, FacturaCompra[].class);
             return true;
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
