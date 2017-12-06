@@ -459,85 +459,73 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
     private void calcularResultados() {
         double subTotal = 0;
-        double descuento_porcentaje;
-        double descuento_neto = 0;
-        double recargo_porcentaje;
-        double recargo_neto;     
+        double descuentoPorcentaje;
+        double descuentoNeto;
+        double recargoPorcentaje;
+        double recargoNeto;
         double total;
         this.validarComponentesDeResultados();
-        //SubTotal  
         double[] cantidades = new double[renglones.size()];
         double[] ivaPorcentajeRenglones = new double[renglones.size()];
-        double[] ivaNetoRenglones = new double[renglones.size()]; 
+        double[] ivaNetoRenglones = new double[renglones.size()];
         int indice = 0;
         for (RenglonFactura renglon : renglones) {
             subTotal += renglon.getImporte();
             cantidades[indice] = renglon.getCantidad();
             ivaPorcentajeRenglones[indice] = renglon.getIva_porcentaje();
-            ivaNetoRenglones[indice] = renglon.getIva_neto();            
+            ivaNetoRenglones[indice] = renglon.getIva_neto();
             indice++;
         }
-        try {
-            txt_Subtotal.setValue(subTotal);
-            //Descuento
-            descuento_porcentaje = Double.parseDouble(txt_Descuento_porcentaje.getValue().toString());
-            descuento_neto = (subTotal * descuento_porcentaje) / 100;
-            txt_Descuento_neto.setValue(descuento_neto);            
-            //Regargo
-            recargo_porcentaje = Double.parseDouble(txt_Recargo_porcentaje.getValue().toString());
-            recargo_neto = (subTotal * recargo_porcentaje) / 100;
-            txt_Recargo_neto.setValue(recargo_neto);            
-            //iva 10,5% neto - IVA 21% neto
-            iva_105_netoFactura = 0;
-            iva_21_netoFactura = 0;
-            indice = cantidades.length;
-            if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.FACTURA_A || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
-                for (int i = 0; i < indice; i++) {
-                    if (ivaPorcentajeRenglones[i] == 10.5) {
-                        iva_105_netoFactura += cantidades[i] * (ivaNetoRenglones[i]
-                                - (ivaNetoRenglones[i] * (descuento_porcentaje / 100))
-                                + (ivaNetoRenglones[i] * (recargo_porcentaje / 100)));
-                    } else if (ivaPorcentajeRenglones[i] == 21) {
-                        iva_21_netoFactura += cantidades[i] * (ivaNetoRenglones[i]
-                                - (ivaNetoRenglones[i] * (descuento_porcentaje / 100))
-                                + (ivaNetoRenglones[i] * (recargo_porcentaje / 100)));
-                    }
-                }
-            } else {
-                for (int i = 0; i < indice; i++) {
-                    if (ivaPorcentajeRenglones[i] == 10.5) {
-                    iva_105_netoFactura += cantidades[i] * ivaNetoRenglones[i];} else if (ivaPorcentajeRenglones[i] == 21){
-                    iva_21_netoFactura += cantidades[i] * ivaNetoRenglones[i];}
+        txt_Subtotal.setValue(subTotal);
+        descuentoPorcentaje = Double.parseDouble(txt_Descuento_porcentaje.getValue().toString());
+        descuentoNeto = (subTotal * descuentoPorcentaje) / 100;
+        txt_Descuento_neto.setValue(descuentoNeto);
+        recargoPorcentaje = Double.parseDouble(txt_Recargo_porcentaje.getValue().toString());
+        recargoNeto = (subTotal * recargoPorcentaje) / 100;
+        txt_Recargo_neto.setValue(recargoNeto);
+        iva_105_netoFactura = 0;
+        iva_21_netoFactura = 0;
+        indice = cantidades.length;
+        if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.FACTURA_A || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
+            for (int i = 0; i < indice; i++) {
+                if (ivaPorcentajeRenglones[i] == 10.5) {
+                    iva_105_netoFactura += cantidades[i] * (ivaNetoRenglones[i]
+                            - (ivaNetoRenglones[i] * (descuentoPorcentaje / 100))
+                            + (ivaNetoRenglones[i] * (recargoPorcentaje / 100)));
+                } else if (ivaPorcentajeRenglones[i] == 21) {
+                    iva_21_netoFactura += cantidades[i] * (ivaNetoRenglones[i]
+                            - (ivaNetoRenglones[i] * (descuentoPorcentaje / 100))
+                            + (ivaNetoRenglones[i] * (recargoPorcentaje / 100)));
                 }
             }
-            if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
-                txt_IVA105_neto.setValue(0);
-                txt_IVA21_neto.setValue(0);
-            } else {
-                txt_IVA105_neto.setValue(iva_105_netoFactura);
-                txt_IVA21_neto.setValue(iva_21_netoFactura);
+        } else {
+            for (int i = 0; i < indice; i++) {
+                if (ivaPorcentajeRenglones[i] == 10.5) {
+                    iva_105_netoFactura += cantidades[i] * ivaNetoRenglones[i];
+                } else if (ivaPorcentajeRenglones[i] == 21) {
+                    iva_21_netoFactura += cantidades[i] * ivaNetoRenglones[i];
+                }
             }
-            //subtotal bruto
-            subTotalBruto = subTotal + recargo_neto - descuento_neto;
-            if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
-                subTotalBruto = subTotalBruto - (iva_105_netoFactura + iva_21_netoFactura);
-            }
-            total = subTotalBruto + iva_105_netoFactura + iva_21_netoFactura;
-            txt_Total.setValue(total);           
-            if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
-                txt_SubTotalBruto.setValue(total);
-            } else {
-                txt_SubTotalBruto.setValue(subTotalBruto);
-            }
-            this.totalComprobante = total;
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
         }
+        if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
+            txt_IVA105_neto.setValue(0);
+            txt_IVA21_neto.setValue(0);
+        } else {
+            txt_IVA105_neto.setValue(iva_105_netoFactura);
+            txt_IVA21_neto.setValue(iva_21_netoFactura);
+        }
+        subTotalBruto = subTotal + recargoNeto - descuentoNeto;
+        if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
+            subTotalBruto = subTotalBruto - (iva_105_netoFactura + iva_21_netoFactura);
+        }
+        total = subTotalBruto + iva_105_netoFactura + iva_21_netoFactura;
+        txt_Total.setValue(total);
+        if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
+            txt_SubTotalBruto.setValue(total);
+        } else {
+            txt_SubTotalBruto.setValue(subTotalBruto);
+        }
+        this.totalComprobante = total;
     }
 
     private void cargarTiposDeComprobantesDisponibles() {
@@ -1636,9 +1624,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             cantidadMaximaRenglones = cds.getCantidadMaximaDeRenglonesEnFactura();
             if (this.existeClientePredeterminado() && this.existeFormaDePagoPredeterminada() && this.existeTransportistaCargado()) {
                 Cliente clientePredeterminado = RestClient.getRestTemplate()
-                        .getForObject("/clientes/predeterminado/empresas/"
-                                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                                Cliente.class);
+                        .getForObject("/clientes/predeterminado/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                            Cliente.class);
                 this.cargarCliente(clientePredeterminado);
                 this.cargarTiposDeComprobantesDisponibles();
             } else {
