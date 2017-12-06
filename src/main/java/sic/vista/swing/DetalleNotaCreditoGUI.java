@@ -682,13 +682,18 @@ public class DetalleNotaCreditoGUI extends JDialog {
                     + "?modificarStock=" + modificarStock,
                      notaCredito, NotaCredito.class);
             if (nc != null) {
-                if (Desktop.isDesktopSupported()) {
+                int reply = JOptionPane.showConfirmDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                        "Aviso", JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION) {
+                    if (Desktop.isDesktopSupported()) {
                         byte[] reporte = RestClient.getRestTemplate()
-                            .getForObject("/notas/" + nc.getIdNota() + "/reporte",
-                                    byte[].class);
-                    File f = new File(System.getProperty("user.home") + "/NotaCredito.pdf");
-                    Files.write(f.toPath(), reporte);
-                    Desktop.getDesktop().open(f);
+                                .getForObject("/notas/" + nc.getIdNota() + "/reporte",
+                                        byte[].class);
+                        File f = new File(System.getProperty("user.home") + "/NotaCredito.pdf");
+                        Files.write(f.toPath(), reporte);
+                        Desktop.getDesktop().open(f);
+                    }
                 }
             } else {
                 JOptionPane.showMessageDialog(this,

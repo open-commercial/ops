@@ -202,26 +202,39 @@ public class CerrarVentaGUI extends JDialog {
                 String indices = "&indices=" + Arrays.toString(indicesParaDividir).substring(1, Arrays.toString(indicesParaDividir).length() - 1);
                 List<Factura> facturasDivididas = Arrays.asList(RestClient.getRestTemplate()
                         .postForObject(uri + indices, facturaVenta, Factura[].class));
-                int indice = facturasDivididas.size();
+                int reply = JOptionPane.showConfirmDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                                    "Aviso", JOptionPane.YES_NO_OPTION);
+                            if (reply == JOptionPane.YES_OPTION) {
+                                int indice = facturasDivididas.size();
                 for (int i = 0; i < indice; i++) {
                     facturasDivididas.get(i).setRenglones(Arrays.asList(RestClient.getRestTemplate()
                             .getForObject("/facturas/" + facturasDivididas.get(i).getId_Factura() + "/renglones",
                                     RenglonFactura[].class)));
-                    if (facturasDivididas.size() == 2 && !facturasDivididas.get(i).getRenglones().isEmpty()) {
-                        if (i == 0) {
-                            this.lanzarReporteFactura(facturasDivididas.get(i), "ComprobanteX");
-                        } else {
+                        if (facturasDivididas.size() == 2 && !facturasDivididas.get(i).getRenglones().isEmpty()) {
+                            if (i == 0) {
+                                this.lanzarReporteFactura(facturasDivididas.get(i), "ComprobanteX");
+                            } else {
+                                this.lanzarReporteFactura(facturasDivididas.get(i), "Factura");
+                            }
+                            exito = true;
+                        } else if (facturasDivididas.size() == 1 && !facturasDivididas.get(i).getRenglones().isEmpty()) {
                             this.lanzarReporteFactura(facturasDivididas.get(i), "Factura");
                         }
-                        exito = true;
-                    } else if (facturasDivididas.size() == 1 && !facturasDivididas.get(i).getRenglones().isEmpty()) {
-                        this.lanzarReporteFactura(facturasDivididas.get(i), "Factura");
                     }
                 }
             } else {
-                this.lanzarReporteFactura(Arrays.asList(RestClient.getRestTemplate()
-                        .postForObject(uri, facturaVenta, FacturaVenta[].class)).get(0), "Factura");
-                exito = true;
+                Factura f = Arrays.asList(RestClient.getRestTemplate()
+                        .postForObject(uri, facturaVenta, FacturaVenta[].class)).get(0);
+                if (facturaVenta != null) {
+                    int reply = JOptionPane.showConfirmDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                            "Aviso", JOptionPane.YES_NO_OPTION);
+                    if (reply == JOptionPane.YES_OPTION) {
+                        this.lanzarReporteFactura(f, "Factura");
+                    }
+                    exito = true;
+                }
             }
             if (gui_puntoDeVenta.getPedido() != null) {
                 gui_puntoDeVenta.dispose();

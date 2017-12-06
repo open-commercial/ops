@@ -604,27 +604,31 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }
 
     private void construirPedido() {
-        try {
             pedido = new Pedido();
             pedido.setEliminado(false);
             pedido.setFacturas(null);            
             pedido.setFechaVencimiento(dc_fechaVencimiento.getDate());
             pedido.setObservaciones(txta_Observaciones.getText());
-            double[] importes = new double[renglones.size()];
-            int indice = 0;
-            for (RenglonFactura renglon : renglones) {
-                importes[indice] = renglon.getImporte();
-                indice++;
-            }
-            pedido.setTotalEstimado(RestClient.getRestTemplate().getForObject("/facturas/subtotal?"
-                    + "importe=" + Arrays.toString(importes).substring(1, Arrays.toString(importes).length() - 1),
-                    double.class));
+            double subTotalEstimado = 0;
+            subTotalEstimado = renglones.stream().map(renglon -> renglon.getImporte()).reduce(subTotalEstimado, (accumulator, _item) -> accumulator + _item);
+            pedido.setTotalEstimado(subTotalEstimado);
             pedido.setEstado(EstadoPedido.ABIERTO);
             List<RenglonPedido> renglonesPedido = new ArrayList<>();
             renglones.stream().forEach(r -> {
                 renglonesPedido.add(this.convertirRenglonFacturaARenglonPedido(r));
             });
             pedido.setRenglones(renglonesPedido);
+    }
+
+    public RenglonPedido convertirRenglonFacturaARenglonPedido(RenglonFactura renglonFactura) {
+        RenglonPedido nuevoRenglon = new RenglonPedido();
+        nuevoRenglon.setCantidad(renglonFactura.getCantidad());
+        nuevoRenglon.setDescuento_porcentaje(renglonFactura.getDescuento_porcentaje());
+        nuevoRenglon.setDescuento_neto(renglonFactura.getDescuento_neto());
+        try{
+        Producto producto = RestClient.getRestTemplate()
+                .getForObject("/productos/" + renglonFactura.getId_ProductoItem(), Producto.class);
+        nuevoRenglon.setProducto(producto);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -633,16 +637,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    public RenglonPedido convertirRenglonFacturaARenglonPedido(RenglonFactura renglonFactura) {
-        RenglonPedido nuevoRenglon = new RenglonPedido();
-        nuevoRenglon.setCantidad(renglonFactura.getCantidad());
-        nuevoRenglon.setDescuento_porcentaje(renglonFactura.getDescuento_porcentaje());
-        nuevoRenglon.setDescuento_neto(renglonFactura.getDescuento_neto());
-        Producto producto = RestClient.getRestTemplate()
-                .getForObject("/productos/" + renglonFactura.getId_ProductoItem(), Producto.class);
-        nuevoRenglon.setProducto(producto);
         nuevoRenglon.setSubTotal(renglonFactura.getImporte());
         return nuevoRenglon;
     }
@@ -1500,7 +1494,12 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                                     + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                                     + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                                     + "&idCliente=" + cliente.getId_Cliente(), pedido, Pedido.class);
-                            this.lanzarReportePedido(p);
+                            int reply = JOptionPane.showConfirmDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                                    "Aviso", JOptionPane.YES_NO_OPTION);
+                            if (reply == JOptionPane.YES_OPTION) {
+                                this.lanzarReportePedido(p);
+                            }
                             this.limpiarYRecargarComponentes();
                         } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificarPedido == true) {
                             this.actualizarPedido(pedido);
