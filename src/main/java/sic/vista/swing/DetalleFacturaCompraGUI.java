@@ -320,6 +320,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
             subTotalBruto = subTotalBruto - (iva105netoFactura + iva21netoFactura);
         }
+        txt_SubTotal_Neto.setValue(subTotalBruto);
         total = subTotalBruto + iva105netoFactura + iva21netoFactura;
         txt_Total.setValue(total);
     }
