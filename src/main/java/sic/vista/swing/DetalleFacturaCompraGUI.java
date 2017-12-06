@@ -257,7 +257,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     }
 
     private void calcularResultados() {
-        double subTotal;
+        double subTotal = 0;
         double descuento_porcentaje;
         double descuento_neto;
         double recargo_porcentaje;
@@ -268,73 +268,63 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         double total;
         this.validarComponentesDeResultados();
         //subtotal        
-        double[] importes = new double[renglones.size()];
-        double[] cantidades = new double[renglones.size()];
+         double[] cantidades = new double[renglones.size()];
         double[] ivaPorcentajeRenglones = new double[renglones.size()];
-        double[] ivaNetoRenglones = new double[renglones.size()];
+        double[] ivaNetoRenglones = new double[renglones.size()]; 
         int indice = 0;
         for (RenglonFactura renglon : renglones) {
-            importes[indice] = renglon.getImporte();
+            subTotal += renglon.getImporte();
             cantidades[indice] = renglon.getCantidad();
             ivaPorcentajeRenglones[indice] = renglon.getIva_porcentaje();
             ivaNetoRenglones[indice] = renglon.getIva_neto();            
             indice++;
         }
         try {
-            subTotal = RestClient.getRestTemplate()
-                    .getForObject("/facturas/subtotal?importe=" + Arrays.toString(importes).substring(1, Arrays.toString(importes).length() - 1),
-                    double.class); 
             txt_SubTotal.setValue(subTotal);
-            //descuento
+            //Descuento
             descuento_porcentaje = Double.parseDouble(txt_Descuento_Porcentaje.getValue().toString());
-            descuento_neto = RestClient.getRestTemplate().getForObject("/facturas/descuento-neto?subTotal=" + subTotal
-                           + "&descuentoPorcentaje=" + descuento_porcentaje,
-                           double.class);
-            txt_Descuento_Neto.setValue(descuento_neto);
-            //recargo
+            descuento_neto = (subTotal * descuento_porcentaje) / 100;
+            txt_Descuento_Neto.setValue(descuento_neto);            
+            //Regargo
             recargo_porcentaje = Double.parseDouble(txt_Recargo_Porcentaje.getValue().toString());
-            recargo_neto = RestClient.getRestTemplate().getForObject("/facturas/recargo-neto?"
-                + "subTotal=" + subTotal
-                + "&recargoPorcentaje=" + recargo_porcentaje, double.class);
-            txt_Recargo_Neto.setValue(recargo_neto);
-            //IVA 10,5% neto
-            iva105_netoFactura = RestClient.getRestTemplate().getForObject("/facturas/iva-neto?" 
-                    + "tipoDeComprobante=" + this.tipoDeComprobante.name()
-                    + "&cantidades=" + Arrays.toString(cantidades).substring(1, Arrays.toString(cantidades).length() - 1)
-                    + "&ivaPorcentajeRenglones=" + Arrays.toString(ivaPorcentajeRenglones).substring(1, Arrays.toString(ivaPorcentajeRenglones).length() - 1)
-                    + "&ivaNetoRenglones=" + Arrays.toString(ivaNetoRenglones).substring(1, Arrays.toString(ivaNetoRenglones).length() - 1)
-                    + "&ivaPorcentaje=10.5"
-                    + "&descuentoPorcentaje=" + descuento_porcentaje
-                    + "&recargoPorcentaje=" + recargo_porcentaje,
-                    double.class);
-            txt_IVA_105.setValue(iva105_netoFactura);
-            //IVA 21% neto
-            iva21_netoFactura = RestClient.getRestTemplate().getForObject("/facturas/iva-neto?" 
-                    + "tipoDeComprobante=" + this.tipoDeComprobante.name()
-                    + "&cantidades=" + Arrays.toString(cantidades).substring(1, Arrays.toString(cantidades).length() - 1)
-                    + "&ivaPorcentajeRenglones=" + Arrays.toString(ivaPorcentajeRenglones).substring(1, Arrays.toString(ivaPorcentajeRenglones).length() - 1)
-                    + "&ivaNetoRenglones=" + Arrays.toString(ivaNetoRenglones).substring(1, Arrays.toString(ivaNetoRenglones).length() - 1)
-                    + "&ivaPorcentaje=21"
-                    + "&descuentoPorcentaje=" + descuento_porcentaje
-                    + "&recargoPorcentaje=" + recargo_porcentaje,
-                    double.class);
-            txt_IVA_21.setValue(iva21_netoFactura);            
+            recargo_neto = (subTotal * recargo_porcentaje) / 100;
+            txt_Recargo_Neto.setValue(recargo_neto);            
+            //iva 10,5% neto - IVA 21% neto
+            iva105_netoFactura = 0;
+            iva21_netoFactura = 0;
+            indice = cantidades.length;
+            if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.FACTURA_A || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
+                for (int i = 0; i < indice; i++) {
+                    if (ivaPorcentajeRenglones[i] == 10.5) {
+                        iva105_netoFactura += cantidades[i] * (ivaNetoRenglones[i]
+                                - (ivaNetoRenglones[i] * (descuento_porcentaje / 100))
+                                + (ivaNetoRenglones[i] * (recargo_porcentaje / 100)));
+                    } else if (ivaPorcentajeRenglones[i] == 21) {
+                        iva21_netoFactura += cantidades[i] * (ivaNetoRenglones[i]
+                                - (ivaNetoRenglones[i] * (descuento_porcentaje / 100))
+                                + (ivaNetoRenglones[i] * (recargo_porcentaje / 100)));
+                    }
+                }
+            } else {
+                for (int i = 0; i < indice; i++) {
+                    if (ivaPorcentajeRenglones[i] == 10.5) {
+                    iva105_netoFactura += cantidades[i] * ivaNetoRenglones[i];} else if (ivaPorcentajeRenglones[i] == 21){
+                    iva21_netoFactura += cantidades[i] * ivaNetoRenglones[i];}
+                }
+            }
+            if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
+                txt_IVA_105.setValue(0);
+                txt_IVA_21.setValue(0);
+            } else {
+                txt_IVA_105.setValue(iva105_netoFactura);
+                txt_IVA_21.setValue(iva21_netoFactura);
+            }
             //subtotal bruto
-            subTotalBruto = RestClient.getRestTemplate().getForObject("/facturas/subtotal-bruto?"
-                    + "tipoDeComprobante=" + tipoDeComprobante.name()
-                    + "&subTotal=" + subTotal
-                    + "&recargoNeto=" + recargo_neto
-                    + "&descuentoNeto=" + descuento_neto                    
-                    + "&iva105Neto=" + iva105_netoFactura
-                    + "&iva21Neto=" + iva21_netoFactura,
-                    double.class);
-            txt_SubTotal_Neto.setValue(subTotalBruto);            
-            //total
-            total = RestClient.getRestTemplate().getForObject("/facturas/total?"
-                    + "subTotalBruto=" + subTotalBruto                    
-                    + "&iva105Neto=" + iva105_netoFactura
-                    + "&iva21Neto=" + iva21_netoFactura,                    
-                    double.class);
+            subTotalBruto = subTotal + recargo_neto - descuento_neto;
+            if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
+                subTotalBruto = subTotalBruto - (iva105_netoFactura + iva21_netoFactura);
+            }
+            total = subTotalBruto + iva105_netoFactura + iva21_netoFactura;
             txt_Total.setValue(total);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -400,9 +390,10 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         cmb_Proveedor.setSelectedItem(facturaParaMostrar.getRazonSocialProveedor());
         cmb_TipoFactura.removeAllItems();
         try {
-            cmb_TipoFactura.addItem(RestClient.getRestTemplate()
-                    .getForObject("/facturas/" + facturaParaMostrar.getId_Factura() + "/tipo",
-                    TipoDeComprobante.class));
+            cmb_TipoFactura.addItem(facturaParaMostrar.getTipoComprobante());
+//            cmb_TipoFactura.addItem(RestClient.getRestTemplate()
+//                    .getForObject("/facturas/" + facturaParaMostrar.getId_Factura() + "/tipo",
+//                    TipoDeComprobante.class));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
