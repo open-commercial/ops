@@ -379,8 +379,8 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         }
         cmb_TipoFactura.removeAllItems();
         cmb_TipoFactura.addItem(facturaParaMostrar.getTipoComprobante());
-        cmb_Proveedor.setSelectedItem(facturaParaMostrar.getRazonSocialProveedor());        
-        cmb_Transportista.setSelectedItem(facturaParaMostrar.getNombreTransportista());
+        cmb_Proveedor.addItem(facturaParaMostrar.getRazonSocialProveedor());        
+        cmb_Transportista.addItem(facturaParaMostrar.getNombreTransportista());
         dc_FechaFactura.setDate(facturaParaMostrar.getFecha());
         dc_FechaVencimiento.setDate(facturaParaMostrar.getFechaVencimiento());
         txta_Observaciones.setText(facturaParaMostrar.getObservaciones());
@@ -1118,14 +1118,14 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
 
     private void cmb_ProveedorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_ProveedorItemStateChanged
         //para evitar que pase null cuando esta recargando el comboBox
-        if (cmb_Proveedor.getSelectedItem() != null) {
+        if (cmb_Proveedor.getSelectedItem() != null && operacionAlta) {
             this.cargarTiposDeFacturaDisponibles();
         }
     }//GEN-LAST:event_cmb_ProveedorItemStateChanged
 
     private void cmb_TipoFacturaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_TipoFacturaItemStateChanged
         //para evitar que pase null cuando esta recargando el comboBox
-        if (cmb_TipoFactura.getSelectedItem() != null) {
+        if (cmb_TipoFactura.getSelectedItem() != null && operacionAlta) {
             this.tipoDeComprobante = (TipoDeComprobante)cmb_TipoFactura.getSelectedItem();
             this.recargarRenglonesSegunTipoDeFactura();
         }
@@ -1140,13 +1140,14 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     }//GEN-LAST:event_txt_Recargo_PorcentajeActionPerformed
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
-        this.cargarProveedores();
-        this.cargarTransportistas();
-        this.cargarTiposDeFacturaDisponibles();
         this.setColumnas();
         this.setTitle("Factura Compra");
         if (operacionAlta == false) {
             this.cargarFactura();
+        } else {
+            this.cargarProveedores();
+            this.cargarTransportistas();
+            this.cargarTiposDeFacturaDisponibles();
         }
         try {
             this.setMaximum(true);    
