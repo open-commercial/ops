@@ -149,6 +149,7 @@ public class FacturasCompraGUI extends JInternalFrame {
         btn_Eliminar.setEnabled(status);
         btn_VerDetalle.setEnabled(status);
         btn_VerPagos.setEnabled(status);
+        tbl_Resultados.requestFocus();
     }
     
     private void buscar() {
