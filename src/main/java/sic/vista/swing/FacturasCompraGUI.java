@@ -149,6 +149,7 @@ public class FacturasCompraGUI extends JInternalFrame {
         btn_Eliminar.setEnabled(status);
         btn_VerDetalle.setEnabled(status);
         btn_VerPagos.setEnabled(status);
+        tbl_Resultados.requestFocus();
     }
     
     private void buscar() {
@@ -209,8 +210,8 @@ public class FacturasCompraGUI extends JInternalFrame {
             fila[1] = factura.getTipoComprobante();
             fila[2] = factura.getNumSerie() + " - " + factura.getNumFactura();
             fila[3] = factura.getFechaVencimiento();
-            fila[4] = factura.getProveedor().getRazonSocial();
-            fila[5] = factura.getTransportista().getNombre();
+            fila[4] = factura.getRazonSocialProveedor();
+            fila[5] = factura.getNombreTransportista();
             fila[6] = factura.isPagada();
             fila[7] = factura.getTotal();
             fila[8] = factura.getSubTotal();

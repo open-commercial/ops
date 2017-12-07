@@ -288,9 +288,9 @@ public class FacturasVentaGUI extends JInternalFrame {
             fila[2] = factura.getTipoComprobante();
             fila[3] = factura.getNumSerie() + " - " + factura.getNumFactura();
             fila[4] = factura.getFechaVencimiento();
-            fila[5] = factura.getCliente().getRazonSocial();
-            fila[6] = factura.getUsuario().getNombre();
-            fila[7] = factura.getTransportista().getNombre();
+            fila[5] = factura.getRazonSocialCliente();
+            fila[6] = factura.getNombreUsuario();
+            fila[7] = factura.getNombreTransportista();
             fila[8] = factura.isPagada();
             fila[9] = factura.getTotal();
             fila[10] = factura.getSubTotal();

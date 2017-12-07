@@ -170,6 +170,7 @@ public class CajasGUI extends JInternalFrame {
         btn_AbrirCaja.setEnabled(status);
         btn_eliminarCaja.setEnabled(status);
         btn_verDetalle.setEnabled(status);
+        tbl_Cajas.requestFocus();
     }
 
     private void cargarResultadosAlTable() {

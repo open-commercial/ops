@@ -66,10 +66,11 @@ public class CajaGUI extends JInternalFrame {
         public Movimiento(Pago pago) {
             this.idMovimiento = pago.getId_Pago();
             this.tipoMovimientoCaja = TipoMovimiento.PAGO;
-            this.concepto = this.tipoMovimientoCaja + " por: " + pago.getFactura().getTipoComprobante() + " " + ((pago.getFactura() instanceof FacturaVenta) ? "Venta " : "Compra ")
-                    + pago.getFactura().getNumSerie() + "-" + pago.getFactura().getNumFactura();
+            Factura f = RestClient.getRestTemplate().getForObject("/facturas/pagos/" + pago.getId_Pago(), Factura.class);
+            this.concepto = this.tipoMovimientoCaja + " por: " + f.getTipoComprobante() + " " + ((f instanceof FacturaVenta) ? "Venta " : "Compra ")
+                    + f.getNumSerie() + "-" + f.getNumFactura();
             this.fecha = pago.getFecha();
-            this.monto = (pago.getFactura() instanceof FacturaCompra)? - pago.getMonto(): pago.getMonto();
+            this.monto = (f instanceof FacturaCompra) ? - pago.getMonto(): pago.getMonto();
         }
 
         public Movimiento(Gasto gasto) {
@@ -626,12 +627,12 @@ public class CajaGUI extends JInternalFrame {
             TipoMovimiento tipoMovimientoCaja = this.movimientos.get(Utilidades.getSelectedRowModelIndice(tbl_Movimientos)).getTipoMovimientoCaja();
             try {
                 if (tipoMovimientoCaja.equals(TipoMovimiento.PAGO)) {
-                    Pago pago = RestClient.getRestTemplate().getForObject("/pagos/" + id, Pago.class);
-                    if (pago.getFactura() instanceof FacturaVenta) {
-                        this.lanzarReporteFacturaVenta(pago.getFactura());
+                    Factura f = RestClient.getRestTemplate().getForObject("/facturas/pagos/" + id, Factura.class);
+                    if (f instanceof FacturaVenta) {
+                        this.lanzarReporteFacturaVenta(f);
                     }
-                    if (pago.getFactura() instanceof FacturaCompra) {
-                        this.verDetalleFacturaCompra(pago.getFactura());
+                    if (f instanceof FacturaCompra) {
+                        this.verDetalleFacturaCompra(f);
                     }
                 }
                 if (tipoMovimientoCaja.equals(TipoMovimiento.GASTO)) {

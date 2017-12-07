@@ -335,10 +335,10 @@ public class PagoMultiplesFacturasGUI extends JInternalFrame {
         try {
             tbl_InformacionFacturas.setModel(modeloTablaFacturas);
             if (movimiento == Movimiento.VENTA) {
-                this.setTitle("Pago Multiple - Cliente: " + ((FacturaVenta) facturas.get(0)).getCliente().getRazonSocial());
+                this.setTitle("Pago Multiple - Cliente: " + ((FacturaVenta) facturas.get(0)).getRazonSocialCliente());
             }
             if (movimiento == Movimiento.COMPRA) {
-                this.setTitle("Pago Multiple - Proveedor: " + ((FacturaCompra) facturas.get(0)).getProveedor().getRazonSocial());
+                this.setTitle("Pago Multiple - Proveedor: " + ((FacturaCompra) facturas.get(0)).getRazonSocialProveedor());
             }
             this.setColumnasTabla();
             this.cargarFormasDePago();

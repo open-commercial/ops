@@ -108,7 +108,7 @@ public class PagosGUI extends JInternalFrame {
             Object[] fila = new Object[5];
             fila[0] = p.getNroPago();
             fila[1] = p.getFecha();
-            fila[2] = p.getFormaDePago().getNombre();
+            fila[2] = p.getNombreFormaDePago();
             fila[3] = p.getMonto();
             fila[4] = p.getNota();
             return fila;
