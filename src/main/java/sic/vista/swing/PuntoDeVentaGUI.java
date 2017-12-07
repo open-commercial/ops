@@ -604,20 +604,22 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }
 
     private void construirPedido() {
-            pedido = new Pedido();
-            pedido.setEliminado(false);
-            pedido.setFacturas(null);            
-            pedido.setFechaVencimiento(dc_fechaVencimiento.getDate());
-            pedido.setObservaciones(txta_Observaciones.getText());
-            double subTotalEstimado = 0;
-            subTotalEstimado = renglones.stream().map(renglon -> renglon.getImporte()).reduce(subTotalEstimado, (accumulator, _item) -> accumulator + _item);
-            pedido.setTotalEstimado(subTotalEstimado);
-            pedido.setEstado(EstadoPedido.ABIERTO);
-            List<RenglonPedido> renglonesPedido = new ArrayList<>();
-            renglones.stream().forEach(r -> {
-                renglonesPedido.add(this.convertirRenglonFacturaARenglonPedido(r));
-            });
-            pedido.setRenglones(renglonesPedido);
+        pedido = new Pedido();
+        pedido.setEliminado(false);
+        pedido.setFacturas(null);
+        pedido.setFechaVencimiento(dc_fechaVencimiento.getDate());
+        pedido.setObservaciones(txta_Observaciones.getText());
+        double subTotalEstimado = 0;
+        subTotalEstimado = renglones.stream()
+                .map(renglon -> renglon.getImporte())
+                .reduce(subTotalEstimado, (accumulator, item) -> accumulator + item);
+        pedido.setTotalEstimado(subTotalEstimado);
+        pedido.setEstado(EstadoPedido.ABIERTO);
+        List<RenglonPedido> renglonesPedido = new ArrayList<>();
+        renglones.stream().forEach(r -> {
+            renglonesPedido.add(this.convertirRenglonFacturaARenglonPedido(r));
+        });
+        pedido.setRenglones(renglonesPedido);
     }
 
     public RenglonPedido convertirRenglonFacturaARenglonPedido(RenglonFactura renglonFactura) {
@@ -625,10 +627,10 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         nuevoRenglon.setCantidad(renglonFactura.getCantidad());
         nuevoRenglon.setDescuento_porcentaje(renglonFactura.getDescuento_porcentaje());
         nuevoRenglon.setDescuento_neto(renglonFactura.getDescuento_neto());
-        try{
-        Producto producto = RestClient.getRestTemplate()
-                .getForObject("/productos/" + renglonFactura.getId_ProductoItem(), Producto.class);
-        nuevoRenglon.setProducto(producto);
+        try {
+            Producto producto = RestClient.getRestTemplate()
+                    .getForObject("/productos/" + renglonFactura.getId_ProductoItem(), Producto.class);
+            nuevoRenglon.setProducto(producto);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {

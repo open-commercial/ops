@@ -203,14 +203,14 @@ public class CerrarVentaGUI extends JDialog {
                 List<Factura> facturasDivididas = Arrays.asList(RestClient.getRestTemplate()
                         .postForObject(uri + indices, facturaVenta, Factura[].class));
                 int reply = JOptionPane.showConfirmDialog(this,
-                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
-                                    "Aviso", JOptionPane.YES_NO_OPTION);
-                            if (reply == JOptionPane.YES_OPTION) {
-                                int indice = facturasDivididas.size();
-                for (int i = 0; i < indice; i++) {
-                    facturasDivididas.get(i).setRenglones(Arrays.asList(RestClient.getRestTemplate()
-                            .getForObject("/facturas/" + facturasDivididas.get(i).getId_Factura() + "/renglones",
-                                    RenglonFactura[].class)));
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                        "Aviso", JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION) {
+                    int indice = facturasDivididas.size();
+                    for (int i = 0; i < indice; i++) {
+                        facturasDivididas.get(i).setRenglones(Arrays.asList(RestClient.getRestTemplate()
+                                .getForObject("/facturas/" + facturasDivididas.get(i).getId_Factura() + "/renglones",
+                                        RenglonFactura[].class)));
                         if (facturasDivididas.size() == 2 && !facturasDivididas.get(i).getRenglones().isEmpty()) {
                             if (i == 0) {
                                 this.lanzarReporteFactura(facturasDivididas.get(i), "ComprobanteX");
@@ -224,8 +224,7 @@ public class CerrarVentaGUI extends JDialog {
                     }
                 }
             } else {
-                Factura f = Arrays.asList(RestClient.getRestTemplate()
-                        .postForObject(uri, facturaVenta, FacturaVenta[].class)).get(0);
+                Factura f = Arrays.asList(RestClient.getRestTemplate().postForObject(uri, facturaVenta, FacturaVenta[].class)).get(0);
                 if (facturaVenta != null) {
                     int reply = JOptionPane.showConfirmDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
