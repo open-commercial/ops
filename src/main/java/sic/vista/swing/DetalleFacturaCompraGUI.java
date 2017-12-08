@@ -37,6 +37,10 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     private final boolean operacionAlta;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    private double totalComprobante;    
+    private double iva105netoFactura;
+    private double iva21netoFactura;
+    private double subTotalBruto;
 
     public DetalleFacturaCompraGUI() {
         this.initComponents();     
@@ -192,10 +196,10 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         facturaCompra.setDescuento_neto(Double.parseDouble(txt_Descuento_Neto.getValue().toString()));
         facturaCompra.setRecargo_porcentaje(Double.parseDouble(txt_Recargo_Porcentaje.getValue().toString()));
         facturaCompra.setRecargo_neto(Double.parseDouble(txt_Recargo_Neto.getValue().toString()));
-        facturaCompra.setSubTotal_bruto(Double.parseDouble(txt_SubTotal_Neto.getValue().toString()));
-        facturaCompra.setIva_105_neto(Double.parseDouble(txt_IVA_105.getValue().toString()));
-        facturaCompra.setIva_21_neto(Double.parseDouble(txt_IVA_21.getValue().toString()));
-        facturaCompra.setTotal(Double.parseDouble(txt_Total.getValue().toString()));
+        facturaCompra.setSubTotal_bruto(subTotalBruto);
+        facturaCompra.setIva_105_neto(iva105netoFactura);
+        facturaCompra.setIva_21_neto(iva21netoFactura);
+        facturaCompra.setTotal(totalComprobante);
         facturaCompra.setObservaciones(txta_Observaciones.getText().trim());
         facturaCompra.setPagada(false);
         facturaCompra.setEliminada(false);
@@ -262,10 +266,6 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         double descuentoNeto;
         double recargoPorcentaje;
         double recargoNeto;
-        double subTotalBruto;
-        double iva105netoFactura;
-        double iva21netoFactura;
-        double total;
         this.validarComponentesDeResultados();
         double[] cantidades = new double[renglones.size()];
         double[] ivaPorcentajeRenglones = new double[renglones.size()];
@@ -320,9 +320,13 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
             subTotalBruto = subTotalBruto - (iva105netoFactura + iva21netoFactura);
         }
-        txt_SubTotal_Neto.setValue(subTotalBruto);
-        total = subTotalBruto + iva105netoFactura + iva21netoFactura;
-        txt_Total.setValue(total);
+        totalComprobante = subTotalBruto + iva105netoFactura + iva21netoFactura;
+        if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
+            txt_SubTotal_Neto.setValue(totalComprobante);
+        } else {
+            txt_SubTotal_Neto.setValue(subTotalBruto);
+        }
+        txt_Total.setValue(totalComprobante);
     }
 
     private void setColumnas() {
