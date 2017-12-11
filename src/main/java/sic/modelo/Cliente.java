@@ -27,6 +27,7 @@ public class Cliente implements Serializable {
     private boolean eliminado;
     private boolean predeterminado;
     private Double saldoCuentaCorriente;
+    private Date fechaUltimoMovimiento;
 
     @Override
     public String toString() {
