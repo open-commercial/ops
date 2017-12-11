@@ -54,7 +54,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
                 if (facturasTotal.size() >= TAMANIO_PAGINA) {
                     NUMERO_PAGINA += 1;
-                    buscar();
+                    buscar(false);
                 }
             }
         });
@@ -66,7 +66,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         txt_NumeroPedido.setText(String.valueOf(nroPedido));
         this.resetScroll();
         this.limpiarJTable();
-        this.buscar(); 
+        this.buscar(true); 
     }
 
     private String getUriCriteria() {
@@ -191,7 +191,7 @@ public class FacturasVentaGUI extends JInternalFrame {
                 .getForObject("/facturas/total-iva-venta/criteria?" + uriCriteria, double.class));        
     }
 
-    private void buscar() {
+    private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
         String uriCriteria = getUriCriteria();
         try {
@@ -203,7 +203,9 @@ public class FacturasVentaGUI extends JInternalFrame {
             totalElementosBusqueda = response.getTotalElements();
             facturasParcial = response.getContent();
             facturasTotal.addAll(facturasParcial);
-            this.calcularResultados(getUriCriteria());
+            if (calcularResultados) {
+                this.calcularResultados(getUriCriteria());
+            }
             this.cargarResultadosAlTable();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -983,7 +985,7 @@ public class FacturasVentaGUI extends JInternalFrame {
     private void btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarActionPerformed
         this.resetScroll();
         this.limpiarJTable();
-        this.buscar();
+        this.buscar(true);
 }//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void btn_VerDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VerDetalleActionPerformed
@@ -1010,7 +1012,7 @@ public class FacturasVentaGUI extends JInternalFrame {
                             + Arrays.toString(idsFacturas).substring(1, Arrays.toString(idsFacturas).length() - 1));
                     this.resetScroll();
                     this.limpiarJTable();
-                    this.buscar();
+                    this.buscar(true);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (ResourceAccessException ex) {
@@ -1135,7 +1137,7 @@ public class FacturasVentaGUI extends JInternalFrame {
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);
                 this.resetScroll();
                 this.limpiarJTable();
-                this.buscar();
+                this.buscar(false);
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             } catch (ResourceAccessException ex) {
