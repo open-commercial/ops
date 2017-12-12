@@ -668,16 +668,15 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         try {
             pedido = RestClient.getRestTemplate().getForObject("/pedidos/" + pedido.getId_Pedido(), Pedido.class);
             pedido.setRenglones(this.convertirRenglonesFacturaARenglonesPedido(this.renglones));
-            double[] importes = new double[renglones.size()];
-            int indice = 0;
+            double subTotal = 0;
             for (RenglonFactura renglon : renglones) {
-                importes[indice] = renglon.getImporte();
-                indice++;
+                subTotal += renglon.getImporte();
             }
-            pedido.setTotalEstimado(RestClient.getRestTemplate().getForObject("/facturas/subtotal?"
-                    + "importe=" + Arrays.toString(importes).substring(1, Arrays.toString(importes).length() - 1),
-                    double.class));
-            RestClient.getRestTemplate().put("/pedidos", pedido);
+            pedido.setTotalEstimado(subTotal);
+            RestClient.getRestTemplate().put("/pedidos?idEmpresa="
+                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
+                    + "&idCliente=" + cliente.getId_Cliente(), pedido);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
