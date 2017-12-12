@@ -665,26 +665,17 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }
 
     private void actualizarPedido(Pedido pedido) {
-        try {
-            pedido = RestClient.getRestTemplate().getForObject("/pedidos/" + pedido.getId_Pedido(), Pedido.class);
-            pedido.setRenglones(this.convertirRenglonesFacturaARenglonesPedido(this.renglones));
-            double subTotal = 0;
-            for (RenglonFactura renglon : renglones) {
-                subTotal += renglon.getImporte();
-            }
-            pedido.setTotalEstimado(subTotal);
-            RestClient.getRestTemplate().put("/pedidos?idEmpresa="
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                    + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                    + "&idCliente=" + cliente.getId_Cliente(), pedido);
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        pedido = RestClient.getRestTemplate().getForObject("/pedidos/" + pedido.getId_Pedido(), Pedido.class);
+        pedido.setRenglones(this.convertirRenglonesFacturaARenglonesPedido(this.renglones));
+        double subTotal = 0;
+        subTotal = renglones.stream()
+                .map(r -> r.getImporte())
+                .reduce(subTotal, (accumulator, item) -> accumulator + item);
+        pedido.setTotalEstimado(subTotal);
+        RestClient.getRestTemplate().put("/pedidos?idEmpresa="
+                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
+                + "&idCliente=" + cliente.getId_Cliente(), pedido);
     }
 
     public List<RenglonPedido> convertirRenglonesFacturaARenglonesPedido(List<RenglonFactura> renglonesDeFactura) {
