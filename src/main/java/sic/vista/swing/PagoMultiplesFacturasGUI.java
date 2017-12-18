@@ -2,6 +2,7 @@ package sic.vista.swing;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -105,8 +106,13 @@ public class PagoMultiplesFacturasGUI extends JInternalFrame {
         for(int i = 0; i < idsFacturas.length; i++) {
             facturas.add(RestClient.getRestTemplate().getForObject("/facturas/" + idsFacturas[i], Factura.class));
         }
-        Comparator comparador = (Comparator<Factura>) (Factura f1, Factura f2) -> f1.getFecha().compareTo(f2.getFecha());        
-        facturas.sort(comparador);
+        Collections.sort(facturas, (Factura f1, Factura f2) -> {
+            if (f1.getTipoComprobante() == f2.getTipoComprobante()) {
+                return f1.getFecha().compareTo(f2.getFecha());
+            } else {
+                return f2.getTipoComprobante().compareTo(f1.getTipoComprobante());
+            }
+        });
         return facturas;
     }
     
