@@ -152,31 +152,37 @@ public class BuscarProductosGUI extends JDialog {
     private void aceptarProducto() {
         this.actualizarEstadoSeleccion();
         if (prodSeleccionado != null) {
-            try {
-                renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
-                        + "idProducto=" + prodSeleccionado.getId_Producto()
-                        + "&tipoDeComprobante=" + this.tipoComprobante.name()
-                        + "&movimiento=" + tipoMovimiento
-                        + "&cantidad=" + txtCantidad.getValue().toString()
-                        + "&descuentoPorcentaje=" + txtPorcentajeDescuento.getValue().toString(),
-                        RenglonFactura.class);                
-                boolean existeStock = RestClient.getRestTemplate().getForObject("/productos/"
-                        + prodSeleccionado.getId_Producto()
-                        + "/stock/disponibilidad?cantidad=" + this.sumarCantidadesSegunProductosYaCargados(),
-                        boolean.class);
-                if (existeStock || tipoMovimiento == Movimiento.PEDIDO || tipoMovimiento == Movimiento.COMPRA) {
-                    debeCargarRenglon = true;
-                    this.dispose();
-                } else if (!existeStock) {
-                    JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_producto_sin_stock_suficiente"),
+            if ((long)txtCantidad.getValue() >= prodSeleccionado.getCantMinima()) {
+                try {
+                    renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
+                            + "idProducto=" + prodSeleccionado.getId_Producto()
+                            + "&tipoDeComprobante=" + this.tipoComprobante.name()
+                            + "&movimiento=" + tipoMovimiento
+                            + "&cantidad=" + txtCantidad.getValue().toString()
+                            + "&descuentoPorcentaje=" + txtPorcentajeDescuento.getValue().toString(),
+                            RenglonFactura.class);
+                    boolean existeStock = RestClient.getRestTemplate().getForObject("/productos/"
+                            + prodSeleccionado.getId_Producto()
+                            + "/stock/disponibilidad?cantidad=" + this.sumarCantidadesSegunProductosYaCargados(),
+                            boolean.class);
+                    if (existeStock || tipoMovimiento == Movimiento.PEDIDO || tipoMovimiento == Movimiento.COMPRA) {
+                        debeCargarRenglon = true;
+                        this.dispose();
+                    } else if (!existeStock) {
+                        JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_producto_sin_stock_suficiente"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+            } else {
+                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                        .getString("mensaje_producto_cantidad_menor_a_minima"),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
