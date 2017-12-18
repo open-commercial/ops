@@ -152,7 +152,7 @@ public class BuscarProductosGUI extends JDialog {
     private void aceptarProducto() {
         this.actualizarEstadoSeleccion();
         if (prodSeleccionado != null) {
-            if ((long)txtCantidad.getValue() >= prodSeleccionado.getCantMinima()) {
+            if ((long)txtCantidad.getValue() >= prodSeleccionado.getVentaMinima()) {
                 try {
                     renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
                             + "idProducto=" + prodSeleccionado.getId_Producto()
