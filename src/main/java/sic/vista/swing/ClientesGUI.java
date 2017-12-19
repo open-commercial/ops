@@ -131,7 +131,7 @@ public class ClientesGUI extends JInternalFrame {
         encabezados[2] = "Razon Social";
         encabezados[3] = "Nombre Fantasia";
         encabezados[4] = "Saldo C/C";
-        encabezados[5] = "Ultimo Movimiento";
+        encabezados[5] = "Ultimo Movimiento C/C";
         encabezados[6] = "Viajante";
         encabezados[7] = "Direccion";
         encabezados[8] = "Condicion IVA";
@@ -176,7 +176,7 @@ public class ClientesGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(110);
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(120);
+        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(150);
         tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(250);
