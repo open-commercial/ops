@@ -2,7 +2,7 @@ package sic.vista.swing;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -34,11 +34,15 @@ public class PagoMultiplesFacturasGUI extends JInternalFrame {
 
     public PagoMultiplesFacturasGUI(long[] idsFacturas, Movimiento movimiento) {                   
         this.movimiento = movimiento;                 
-        this.facturas = this.obtenerFacturasYsPorFechaAsc(idsFacturas);
+        this.facturas = this.getFacturasOrdenadasPorFechaAscAndTipoDeComprobante(idsFacturas);
         pagosCreados = false;
         this.initComponents();   
     }
  
+    public boolean isPagosCreados() {
+        return this.pagosCreados;
+    }
+    
     private void setColumnasTabla() {
         tbl_InformacionFacturas.setAutoCreateRowSorter(true);
         String[] encabezados = new String[5];
@@ -101,12 +105,17 @@ public class PagoMultiplesFacturasGUI extends JInternalFrame {
         });
     }
     
-    private List<Factura> obtenerFacturasYsPorFechaAsc(long idsFacturas[]) {
-        for(int i = 0; i < idsFacturas.length; i++) {
+    private List<Factura> getFacturasOrdenadasPorFechaAscAndTipoDeComprobante(long idsFacturas[]) {
+        for (int i = 0; i < idsFacturas.length; i++) {
             facturas.add(RestClient.getRestTemplate().getForObject("/facturas/" + idsFacturas[i], Factura.class));
         }
-        Comparator comparador = (Comparator<Factura>) (Factura f1, Factura f2) -> f1.getFecha().compareTo(f2.getFecha());        
-        facturas.sort(comparador);
+        Collections.sort(facturas, (Factura f1, Factura f2) -> {
+            if (f1.getTipoComprobante() == f2.getTipoComprobante()) {
+                return f1.getFecha().compareTo(f2.getFecha());
+            } else {
+                return f2.getTipoComprobante().compareTo(f1.getTipoComprobante());
+            }
+        });
         return facturas;
     }
     
@@ -320,10 +329,6 @@ public class PagoMultiplesFacturasGUI extends JInternalFrame {
             }
         }
     }//GEN-LAST:event_lbl_AceptarActionPerformed
-
-    public boolean isPagosCreados() {
-        return this.pagosCreados;
-    }
 
     private void ftxt_MontoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftxt_MontoFocusGained
         SwingUtilities.invokeLater(() -> {
