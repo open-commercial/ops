@@ -17,7 +17,7 @@ public class ObservacionesGUI extends JDialog {
     }
 
     private void setIcon() {
-        ImageIcon iconoVentana = new ImageIcon(BuscarProductosGUI.class.getResource("/sic/icons/Product_16x16.png"));
+        ImageIcon iconoVentana = new ImageIcon(PuntoDeVentaGUI.class.getResource("/sic/icons/SIC_24_square.png"));
         this.setIconImage(iconoVentana.getImage());
     }    
     

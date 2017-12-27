@@ -68,14 +68,15 @@ public class DetallePagoGUI extends JDialog {
             Pago pago = new Pago();
             pago.setMonto(Double.parseDouble(txtMonto.getValue().toString()));
             pago.setNota(txtObservaciones.getText().trim());
-            pago.setFormaDePago((FormaDePago) cmbFormaDePago.getSelectedItem());
             if (facturaRelacionada != null) {
-                pago.setEmpresa(facturaRelacionada.getEmpresa());
-                RestClient.getRestTemplate().postForObject("/pagos/facturas/" + facturaRelacionada.getId_Factura(),
+                RestClient.getRestTemplate().postForObject("/pagos/facturas/" + facturaRelacionada.getId_Factura()
+                        + "?idFormaDePago=" + ((FormaDePago) cmbFormaDePago.getSelectedItem()).getId_FormaDePago()
+                        + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                         pago, Pago.class);
             } else if (notaDebitoRelacionada != null) {
-                pago.setEmpresa(notaDebitoRelacionada.getEmpresa());
-                RestClient.getRestTemplate().postForObject("/pagos/notas/" + notaDebitoRelacionada.getIdNota(),
+                RestClient.getRestTemplate().postForObject("/pagos/notas/" + notaDebitoRelacionada.getIdNota()
+                        + "?idFormaDePago=" + ((FormaDePago) cmbFormaDePago.getSelectedItem()).getId_FormaDePago()
+                        + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                         pago, Pago.class);
             }
             pagoCreado = true;

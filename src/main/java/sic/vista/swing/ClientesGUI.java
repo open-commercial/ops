@@ -125,23 +125,24 @@ public class ClientesGUI extends JInternalFrame {
         // tbl_Resultados.setAutoCreateRowSorter(true);
 
         //nombres de columnas
-        String[] encabezados = new String[16];
+        String[] encabezados = new String[17];
         encabezados[0] = "Predeterminado";
         encabezados[1] = "ID Fiscal";
         encabezados[2] = "Razon Social";
         encabezados[3] = "Nombre Fantasia";
         encabezados[4] = "Saldo C/C";
-        encabezados[5] = "Viajante";
-        encabezados[6] = "Direccion";
-        encabezados[7] = "Condicion IVA";
-        encabezados[8] = "Tel. Primario";
-        encabezados[9] = "Tel. Secundario";
-        encabezados[10] = "Contacto";
-        encabezados[11] = "Email";
-        encabezados[12] = "Fecha Alta";
-        encabezados[13] = "Localidad";
-        encabezados[14] = "Provincia";
-        encabezados[15] = "Pais";
+        encabezados[5] = "Ultimo Movimiento C/C";
+        encabezados[6] = "Viajante";
+        encabezados[7] = "Direccion";
+        encabezados[8] = "Condicion IVA";
+        encabezados[9] = "Tel. Primario";
+        encabezados[10] = "Tel. Secundario";
+        encabezados[11] = "Contacto";
+        encabezados[12] = "Email";
+        encabezados[13] = "Fecha Alta";
+        encabezados[14] = "Localidad";
+        encabezados[15] = "Provincia";
+        encabezados[16] = "Pais";
         modeloTablaDeResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaDeResultados);
 
@@ -152,17 +153,18 @@ public class ClientesGUI extends JInternalFrame {
         tipos[2] = String.class;
         tipos[3] = String.class;
         tipos[4] = Double.class;
-        tipos[5] = String.class;
+        tipos[5] = Date.class;
         tipos[6] = String.class;
         tipos[7] = String.class;
         tipos[8] = String.class;
         tipos[9] = String.class;
         tipos[10] = String.class;
         tipos[11] = String.class;
-        tipos[12] = Date.class;
-        tipos[13] = String.class;
+        tipos[12] = String.class;
+        tipos[13] = Date.class;
         tipos[14] = String.class;
         tipos[15] = String.class;
+        tipos[16] = String.class;
         modeloTablaDeResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
@@ -174,17 +176,18 @@ public class ClientesGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(110);
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(250);
+        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(150);
         tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(150);
-        tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(250);
+        tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(150);
         tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(11).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(12).setPreferredWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(13).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(11).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(12).setPreferredWidth(250);
+        tbl_Resultados.getColumnModel().getColumn(13).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(14).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(15).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(16).setPreferredWidth(200);
         
         //Render Columna C/C
         tbl_Resultados.getColumnModel().getColumn(4).setCellRenderer(new ColoresNumerosTablaRenderer());
@@ -192,23 +195,24 @@ public class ClientesGUI extends JInternalFrame {
 
     private void cargarResultadosAlTable() {        
         clientesParcial.stream().map(cliente -> {
-            Object[] fila = new Object[16];
+            Object[] fila = new Object[17];
             fila[0] = cliente.isPredeterminado();
             fila[1] = cliente.getIdFiscal();
             fila[2] = cliente.getRazonSocial();
             fila[3] = cliente.getNombreFantasia(); 
             fila[4] = cliente.getSaldoCuentaCorriente();
-            if (cliente.getViajante() != null) fila[5] = cliente.getViajante().getNombre();            
-            fila[6] = cliente.getDireccion();
-            fila[7] = cliente.getCondicionIVA().getNombre();
-            fila[8] = cliente.getTelPrimario();
-            fila[9] = cliente.getTelSecundario();            
-            fila[10] = cliente.getContacto();
-            fila[11] = cliente.getEmail();
-            fila[12] = cliente.getFechaAlta();
-            fila[13] = cliente.getLocalidad().getNombre();
-            fila[14] = cliente.getLocalidad().getProvincia().getNombre();
-            fila[15] = cliente.getLocalidad().getProvincia().getPais().getNombre();
+            fila[5] = cliente.getFechaUltimoMovimiento();
+            if (cliente.getViajante() != null) fila[6] = cliente.getViajante().getNombre();            
+            fila[7] = cliente.getDireccion();
+            fila[8] = cliente.getCondicionIVA().getNombre();
+            fila[9] = cliente.getTelPrimario();
+            fila[10] = cliente.getTelSecundario();            
+            fila[11] = cliente.getContacto();
+            fila[12] = cliente.getEmail();
+            fila[13] = cliente.getFechaAlta();
+            fila[14] = cliente.getLocalidad().getNombre();
+            fila[15] = cliente.getLocalidad().getProvincia().getNombre();
+            fila[16] = cliente.getLocalidad().getProvincia().getPais().getNombre();
             return fila;
         }).forEach(fila -> {
             modeloTablaDeResultados.addRow(fila);

@@ -69,11 +69,15 @@ public class DetalleNotaDebitoGUI extends JDialog {
     }
     
     private void cargarDetalleComprobante() {
-        txtMontoRenglon2.setValue(Double.parseDouble(txtMontoRenglon2.getText()));
+        if (txtMontoRenglon2.getValue() == null) {
+            txtMontoRenglon2.setValue(Double.parseDouble(txtMontoRenglon2.getText()));
+        } else {
+            txtMontoRenglon2.setValue(Double.parseDouble(txtMontoRenglon2.getValue().toString()));
+        }
         double iva = (Double) txtMontoRenglon2.getValue() * 0.21;
         lblIvaNetoRenglon2.setText("$" + FormatterNumero.formatConRedondeo(iva));
-        lblImporteRenglon2.setText("$" + FormatterNumero.formatConRedondeo((Double.parseDouble(txtMontoRenglon2.getText()) + iva)));
-        txtSubTotalBruto.setValue(Double.parseDouble(txtMontoRenglon2.getText()));
+        lblImporteRenglon2.setText("$" + FormatterNumero.formatConRedondeo((Double.parseDouble(txtMontoRenglon2.getValue().toString()) + iva)));
+        txtSubTotalBruto.setValue(Double.parseDouble(txtMontoRenglon2.getValue().toString()));
         txtIVA21Neto.setValue(iva);
         txtNoGravado.setValue(pago.getMonto());
         txtTotal.setValue(pago.getMonto() + ((Double) txtMontoRenglon2.getValue()) + iva); 
@@ -516,24 +520,29 @@ public class DetalleNotaDebitoGUI extends JDialog {
                     + "/pago/" + pago.getId_Pago(), notaDebito, NotaDebito.class);
             if (notaDebito != null) {
                 notaDebitoCreada = true;
-                if (Desktop.isDesktopSupported()) {
-                    try {
-                        byte[] reporte = RestClient.getRestTemplate()
-                                .getForObject("/notas/" + notaDebito.getIdNota() + "/reporte",
-                                        byte[].class);
-                        File f = new File(System.getProperty("user.home") + "/NotaDebito.pdf");
-                        Files.write(f.toPath(), reporte);
-                        Desktop.getDesktop().open(f);
-                    } catch (IOException ex) {
-                        LOGGER.error(ex.getMessage());
+                int reply = JOptionPane.showConfirmDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                        "Aviso", JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION) {
+                    if (Desktop.isDesktopSupported()) {
+                        try {
+                            byte[] reporte = RestClient.getRestTemplate()
+                                    .getForObject("/notas/" + notaDebito.getIdNota() + "/reporte",
+                                            byte[].class);
+                            File f = new File(System.getProperty("user.home") + "/NotaDebito.pdf");
+                            Files.write(f.toPath(), reporte);
+                            Desktop.getDesktop().open(f);
+                        } catch (IOException ex) {
+                            LOGGER.error(ex.getMessage());
+                            JOptionPane.showMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
                         JOptionPane.showMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
                                 "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                } else {
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
                 this.dispose();
             }

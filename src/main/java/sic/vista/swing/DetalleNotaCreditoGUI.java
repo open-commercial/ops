@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.FacturaVenta;
 import sic.modelo.NotaCredito;
@@ -32,19 +33,22 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private final ModeloTabla modeloTablaRenglones = new ModeloTabla();
     private final boolean modificarStock;
     private FacturaVenta fv;
+    private Cliente cliente;
     private HashMap<Long,Double> idsRenglonesYCantidades = new HashMap<>();
     private List<RenglonNotaCredito> renglones;
     private double subTotalBruto;
     private boolean notaCreada;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     
-    public DetalleNotaCreditoGUI(HashMap<Long,Double> idsRenglonesYCantidades, long idFacturaVenta, boolean modificarStock) {
+    public DetalleNotaCreditoGUI(HashMap<Long,Double> idsRenglonesYCantidades, long idFacturaVenta,
+            boolean modificarStock, long idCliente) {
         this.initComponents();
         this.setIcon();
         this.idsRenglonesYCantidades = idsRenglonesYCantidades;
         this.modificarStock = modificarStock;
         this.notaCreada = false;
         this.recuperarFactura(idFacturaVenta);
+        this.recuperarCliente(idCliente);
     }
     
     public boolean isNotaCreada() {
@@ -54,6 +58,19 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private void recuperarFactura(long idFactura) {
         try {
             fv = RestClient.getRestTemplate().getForObject("/facturas/" + idFactura, FacturaVenta.class);            
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void recuperarCliente(long idCliente) {
+        try {
+            cliente = RestClient.getRestTemplate().getForObject("/clientes/" + idCliente, Cliente.class);            
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -147,13 +164,13 @@ public class DetalleNotaCreditoGUI extends JDialog {
     }
 
     private void cargarDetalleCliente() {
-        txtNombreCliente.setText(fv.getCliente().getRazonSocial());
-        txtDomicilioCliente.setText(fv.getCliente().getDireccion()
-                + " " + fv.getCliente().getLocalidad().getNombre()
-                + " " + fv.getCliente().getLocalidad().getProvincia().getNombre()
-                + " " + fv.getCliente().getLocalidad().getProvincia().getPais());
-        txtIDFiscalCliente.setText(fv.getCliente().getIdFiscal());
-        txtCondicionIVACliente.setText(fv.getCliente().getCondicionIVA().getNombre());
+        txtNombreCliente.setText(fv.getRazonSocialCliente());
+        txtDomicilioCliente.setText(cliente.getDireccion()
+                + " " + cliente.getLocalidad().getNombre()
+                + " " + cliente.getLocalidad().getProvincia().getNombre()
+                + " " + cliente.getLocalidad().getProvincia().getPais());
+        txtIDFiscalCliente.setText(cliente.getIdFiscal());
+        txtCondicionIVACliente.setText(cliente.getCondicionIVA().getNombre());
     }
     
     private void setColumnas() {
@@ -659,19 +676,24 @@ public class DetalleNotaCreditoGUI extends JDialog {
         notaCredito.setRenglonesNotaCredito(renglones);
         try {
             NotaCredito nc = RestClient.getRestTemplate().postForObject("/notas/credito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                    + "/cliente/" + fv.getCliente().getId_Cliente()
+                    + "/cliente/" + cliente.getId_Cliente()
                     + "/usuario/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                     + "/factura/" + fv.getId_Factura()
                     + "?modificarStock=" + modificarStock,
                      notaCredito, NotaCredito.class);
             if (nc != null) {
-                if (Desktop.isDesktopSupported()) {
+                int reply = JOptionPane.showConfirmDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                        "Aviso", JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION) {
+                    if (Desktop.isDesktopSupported()) {
                         byte[] reporte = RestClient.getRestTemplate()
-                            .getForObject("/notas/" + nc.getIdNota() + "/reporte",
-                                    byte[].class);
-                    File f = new File(System.getProperty("user.home") + "/NotaCredito.pdf");
-                    Files.write(f.toPath(), reporte);
-                    Desktop.getDesktop().open(f);
+                                .getForObject("/notas/" + nc.getIdNota() + "/reporte",
+                                        byte[].class);
+                        File f = new File(System.getProperty("user.home") + "/NotaCredito.pdf");
+                        Files.write(f.toPath(), reporte);
+                        Desktop.getDesktop().open(f);
+                    }
                 }
             } else {
                 JOptionPane.showMessageDialog(this,

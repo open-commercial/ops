@@ -73,7 +73,9 @@
                   <Component id="btn_Autorizar" linkSize="2" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="btn_VerDetalle" linkSize="2" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                  <Component id="btn_VerPagos" linkSize="2" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Component id="panelNumeros" min="-2" max="-2" attributes="0"/>
               </Group>
               <Component id="sp_Resultados" max="32767" attributes="0"/>
@@ -87,14 +89,11 @@
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="panelNumeros" min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                              <Component id="btn_Autorizar" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btn_VerDetalle" linkSize="3" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="btn_Eliminar" linkSize="3" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btn_Nueva" linkSize="3" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="btn_Nueva" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_Eliminar" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_Autorizar" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_VerDetalle" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_VerPagos" linkSize="3" alignment="0" min="-2" pref="18" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -265,6 +264,20 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_AutorizarActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btn_VerPagos">
+          <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/sic/icons/StampArrow_16x16.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Ver Pagos"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_VerPagosActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

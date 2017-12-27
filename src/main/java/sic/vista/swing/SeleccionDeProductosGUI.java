@@ -293,7 +293,7 @@ public class SeleccionDeProductosGUI extends JDialog {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cargarRenglonesAlTable();
         this.setTitle(fv.getTipoComprobante() + " Nro: " + fv.getNumSerie() + " - " + fv.getNumFactura() 
-                + " del Cliente: " + fv.getCliente().getRazonSocial() 
+                + " del Cliente: " + fv.getRazonSocialCliente() 
                 + " con Fecha: " + (new FormatterFechaHora(FormatterFechaHora.FORMATO_FECHA_HISPANO)).format(fv.getFecha()));
     }//GEN-LAST:event_formWindowOpened
 
