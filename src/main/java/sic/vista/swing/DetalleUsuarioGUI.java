@@ -44,7 +44,7 @@ public class DetalleUsuarioGUI extends JDialog {
         txtNombre.setText(usuarioModificar.getNombre());
         txtApellido.setText(usuarioModificar.getApellido());
         txtEmail.setText(usuarioModificar.getEmail());
-        txt_Usuario.setText(usuarioModificar.getUsername());
+        txt_Username.setText(usuarioModificar.getUsername());
         chkHabilitado.setSelected(usuarioModificar.isHabilitado());
         List<Rol> roles = usuarioModificar.getRoles();
         for (Rol rol : roles) {
@@ -69,8 +69,8 @@ public class DetalleUsuarioGUI extends JDialog {
 
         btn_Guardar = new javax.swing.JButton();
         panelPrincipal = new javax.swing.JPanel();
-        lbl_Usuario = new javax.swing.JLabel();
-        txt_Usuario = new javax.swing.JTextField();
+        lbl_Username = new javax.swing.JLabel();
+        txt_Username = new javax.swing.JTextField();
         lbl_Contrasenia = new javax.swing.JLabel();
         txt_Contrasenia = new javax.swing.JPasswordField();
         lbl_RepetirContrasenia = new javax.swing.JLabel();
@@ -108,9 +108,9 @@ public class DetalleUsuarioGUI extends JDialog {
 
         panelPrincipal.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        lbl_Usuario.setForeground(java.awt.Color.red);
-        lbl_Usuario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Usuario.setText("* Usuario:");
+        lbl_Username.setForeground(java.awt.Color.red);
+        lbl_Username.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbl_Username.setText("* Usuario:");
 
         lbl_Contrasenia.setForeground(java.awt.Color.red);
         lbl_Contrasenia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -161,9 +161,9 @@ public class DetalleUsuarioGUI extends JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chk_Viajante)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chk_Vendedor)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chk_Cliente)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chk_Vendedor)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -198,14 +198,14 @@ public class DetalleUsuarioGUI extends JDialog {
                             .addComponent(lblNombre, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblApellido, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblEmail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lbl_Usuario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbl_Username, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lbl_RepetirContrasenia, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lbl_Contrasenia, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtApellido, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(txtNombre)
-                            .addComponent(txt_Usuario, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txt_Username, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(txtEmail)
                             .addComponent(chkHabilitado, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txt_RepetirContrasenia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -229,8 +229,8 @@ public class DetalleUsuarioGUI extends JDialog {
                     .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Usuario)
-                    .addComponent(txt_Usuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lbl_Username)
+                    .addComponent(txt_Username, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_Contrasenia)
@@ -279,8 +279,12 @@ public class DetalleUsuarioGUI extends JDialog {
             if (operacion == TipoDeOperacion.ALTA) {
                 if (new String(txt_Contrasenia.getPassword()).equals(new String(txt_RepetirContrasenia.getPassword()))) {
                     Usuario usuario = new Usuario();
-                    usuario.setNombre(txt_Usuario.getText().trim());
+                    usuario.setNombre(txtNombre.getText().trim());
+                    usuario.setApellido(txtApellido.getText().trim());
+                    usuario.setEmail(txtEmail.getText().trim());
+                    usuario.setUsername(txt_Username.getText().trim());
                     usuario.setPassword(new String(txt_Contrasenia.getPassword()));
+                    usuario.setHabilitado(chkHabilitado.isSelected());
                     List<Rol> roles = new ArrayList<>();
                     if (chk_Administrador.isSelected()) {
                         roles.add(Rol.ADMINISTRADOR);
@@ -290,6 +294,9 @@ public class DetalleUsuarioGUI extends JDialog {
                     }
                     if (chk_Viajante.isSelected()) {
                         roles.add(Rol.VIAJANTE);
+                    }
+                    if (chk_Viajante.isSelected()) {
+                        roles.add(Rol.CLIENTE);
                     }
                     usuario.setRoles(roles);
                     RestClient.getRestTemplate().postForObject("/usuarios", usuario, Usuario.class);                 
@@ -306,7 +313,7 @@ public class DetalleUsuarioGUI extends JDialog {
                 if (new String(txt_Contrasenia.getPassword()).equals(new String(txt_RepetirContrasenia.getPassword()))) {
                     Usuario usuarioModificado = new Usuario();
                     usuarioModificado.setId_Usuario(usuarioModificar.getId_Usuario());
-                    usuarioModificado.setNombre(txt_Usuario.getText().trim());
+                    usuarioModificado.setNombre(txt_Username.getText().trim());
                     usuarioModificado.setPassword(new String(txt_Contrasenia.getPassword()));
                     if (UsuarioActivo.getInstance().getUsuario().getNombre().equals(usuarioModificar.getNombre())) {
                         usuarioModificado.setToken(usuarioModificar.getToken());
@@ -364,7 +371,7 @@ public class DetalleUsuarioGUI extends JDialog {
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lbl_Contrasenia;
     private javax.swing.JLabel lbl_RepetirContrasenia;
-    private javax.swing.JLabel lbl_Usuario;
+    private javax.swing.JLabel lbl_Username;
     private javax.swing.JPanel panelPrincipal;
     private javax.swing.JPanel panelRoles;
     private javax.swing.JTextField txtApellido;
@@ -372,6 +379,6 @@ public class DetalleUsuarioGUI extends JDialog {
     private javax.swing.JTextField txtNombre;
     private javax.swing.JPasswordField txt_Contrasenia;
     private javax.swing.JPasswordField txt_RepetirContrasenia;
-    private javax.swing.JTextField txt_Usuario;
+    private javax.swing.JTextField txt_Username;
     // End of variables declaration//GEN-END:variables
 }

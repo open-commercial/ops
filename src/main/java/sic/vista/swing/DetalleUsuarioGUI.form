@@ -88,7 +88,7 @@
                               <Component id="lblNombre" alignment="0" max="32767" attributes="0"/>
                               <Component id="lblApellido" alignment="0" max="32767" attributes="0"/>
                               <Component id="lblEmail" alignment="0" max="32767" attributes="0"/>
-                              <Component id="lbl_Usuario" alignment="0" max="32767" attributes="0"/>
+                              <Component id="lbl_Username" alignment="0" max="32767" attributes="0"/>
                               <Component id="lbl_RepetirContrasenia" alignment="0" max="32767" attributes="0"/>
                               <Component id="lbl_Contrasenia" alignment="0" max="32767" attributes="0"/>
                           </Group>
@@ -96,7 +96,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="txtApellido" alignment="1" max="32767" attributes="0"/>
                               <Component id="txtNombre" max="32767" attributes="0"/>
-                              <Component id="txt_Usuario" alignment="1" max="32767" attributes="1"/>
+                              <Component id="txt_Username" alignment="1" max="32767" attributes="1"/>
                               <Component id="txtEmail" max="32767" attributes="0"/>
                               <Component id="chkHabilitado" alignment="1" max="32767" attributes="0"/>
                               <Component id="txt_RepetirContrasenia" max="32767" attributes="1"/>
@@ -128,8 +128,8 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lbl_Usuario" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txt_Usuario" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbl_Username" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txt_Username" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -154,7 +154,7 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="lbl_Usuario">
+        <Component class="javax.swing.JLabel" name="lbl_Username">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
@@ -163,7 +163,7 @@
             <Property name="text" type="java.lang.String" value="* Usuario:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txt_Usuario">
+        <Component class="javax.swing.JTextField" name="txt_Username">
         </Component>
         <Component class="javax.swing.JLabel" name="lbl_Contrasenia">
           <Properties>
@@ -229,9 +229,9 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="chk_Viajante" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="chk_Vendedor" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="chk_Cliente" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="chk_Vendedor" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
