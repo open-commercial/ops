@@ -162,7 +162,7 @@ public class CerrarVentaGUI extends JDialog {
     }
 
     private void setEstadoFormasDePago() {
-        try {            
+        try {
             FormaDePago formaDePagoPredeterminada = RestClient.getRestTemplate()
                     .getForObject("/formas-de-pago/predeterminada/empresas/"
                             + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), FormaDePago.class);            
@@ -202,6 +202,7 @@ public class CerrarVentaGUI extends JDialog {
                 String indices = "&indices=" + Arrays.toString(indicesParaDividir).substring(1, Arrays.toString(indicesParaDividir).length() - 1);
                 List<Factura> facturasDivididas = Arrays.asList(RestClient.getRestTemplate()
                         .postForObject(uri + indices, facturaVenta, Factura[].class));
+                exito = true;
                 int reply = JOptionPane.showConfirmDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
                         "Aviso", JOptionPane.YES_NO_OPTION);
@@ -217,12 +218,11 @@ public class CerrarVentaGUI extends JDialog {
                             } else {
                                 this.lanzarReporteFactura(facturasDivididas.get(i), "Factura");
                             }
-                            exito = true;
                         } else if (facturasDivididas.size() == 1 && !facturasDivididas.get(i).getRenglones().isEmpty()) {
                             this.lanzarReporteFactura(facturasDivididas.get(i), "Factura");
                         }
                     }
-                }
+                }                
             } else {
                 Factura f = Arrays.asList(RestClient.getRestTemplate().postForObject(uri, facturaVenta, FacturaVenta[].class)).get(0);
                 if (facturaVenta != null) {
