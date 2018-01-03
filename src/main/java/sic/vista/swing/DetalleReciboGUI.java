@@ -13,36 +13,23 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.EmpresaActiva;
-import sic.modelo.Factura;
 import sic.modelo.FormaDePago;
-import sic.modelo.NotaDebito;
-import sic.modelo.Pago;
+import sic.modelo.Recibo;
+import sic.modelo.UsuarioActivo;
 
-public class DetallePagoGUI extends JDialog {
-
-    private final Factura facturaRelacionada;
-    private final NotaDebito notaDebitoRelacionada;
-    private boolean pagoCreado;
+public class DetalleReciboGUI extends JDialog {
+    
+    private long idCliente;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public DetallePagoGUI(Factura factura) {
+    public DetalleReciboGUI(long idCliente) {
         this.initComponents();
         this.setIcon();
-        facturaRelacionada = factura;  
-        notaDebitoRelacionada = null;
-        pagoCreado = false;
-    }
-    
-    public DetallePagoGUI(NotaDebito notaDebito) {
-        this.initComponents();
-        this.setIcon();
-        facturaRelacionada = null;     
-        notaDebitoRelacionada = notaDebito;
-        pagoCreado = false;
+        this.idCliente = idCliente;
     }
 
     private void setIcon() {
-        ImageIcon iconoVentana = new ImageIcon(DetallePagoGUI.class.getResource("/sic/icons/Stamp_16x16.png"));
+        ImageIcon iconoVentana = new ImageIcon(DetalleReciboGUI.class.getResource("/sic/icons/Stamp_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
     }
 
@@ -63,23 +50,16 @@ public class DetallePagoGUI extends JDialog {
         }
     }
 
-    private void guardarPago() {
+    private void guardaRecibo() {
         try {
-            Pago pago = new Pago();
-            pago.setMonto(Double.parseDouble(txtMonto.getValue().toString()));
-            pago.setNota(txtObservaciones.getText().trim());
-            if (facturaRelacionada != null) {
-                RestClient.getRestTemplate().postForObject("/pagos/facturas/" + facturaRelacionada.getId_Factura()
-                        + "?idFormaDePago=" + ((FormaDePago) cmbFormaDePago.getSelectedItem()).getId_FormaDePago()
-                        + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                        pago, Pago.class);
-            } else if (notaDebitoRelacionada != null) {
-                RestClient.getRestTemplate().postForObject("/pagos/notas/" + notaDebitoRelacionada.getIdNota()
-                        + "?idFormaDePago=" + ((FormaDePago) cmbFormaDePago.getSelectedItem()).getId_FormaDePago()
-                        + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                        pago, Pago.class);
-            }
-            pagoCreado = true;
+            Recibo recibo = new Recibo();
+            recibo.setMonto(Double.parseDouble(txtMonto.getValue().toString()));
+            recibo.setConcepto(txtObservaciones.getText().trim());
+            RestClient.getRestTemplate().postForObject("/recibos?idCliente=" + idCliente
+                    + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
+                    + "&idFormaDePago=" + ((FormaDePago) cmbFormaDePago.getSelectedItem()).getId_FormaDePago()
+                    + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                    recibo, Recibo.class);
             this.dispose();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -91,10 +71,6 @@ public class DetallePagoGUI extends JDialog {
         }
     }
     
-    public boolean isPagoCreado() {
-        return this.pagoCreado;
-    }
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -109,7 +85,7 @@ public class DetallePagoGUI extends JDialog {
         btnGuardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Nuevo Pago");
+        setTitle("Nuevo Recibo");
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
@@ -210,17 +186,10 @@ public class DetallePagoGUI extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        this.guardarPago();
+        this.guardaRecibo();
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        if (facturaRelacionada != null) {
-            txtMonto.setValue(RestClient.getRestTemplate()
-                    .getForObject("/pagos/facturas/" + facturaRelacionada.getId_Factura() + "/saldo", double.class));
-        } else if (notaDebitoRelacionada != null) {
-            txtMonto.setValue(RestClient.getRestTemplate()
-                    .getForObject("/pagos/notas/" + notaDebitoRelacionada.getIdNota() + "/saldo", double.class));
-        }
         this.cargarFormasDePago();
     }//GEN-LAST:event_formWindowOpened
 
