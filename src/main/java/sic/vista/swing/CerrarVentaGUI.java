@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -25,7 +24,6 @@ import sic.modelo.EmpresaActiva;
 import sic.modelo.Factura;
 import sic.modelo.FacturaVenta;
 import sic.modelo.FormaDePago;
-import sic.modelo.Pago;
 import sic.modelo.RenglonFactura;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.Transportista;
@@ -37,12 +35,15 @@ public class CerrarVentaGUI extends JDialog {
     private final PuntoDeVentaGUI gui_puntoDeVenta;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int[] indicesParaDividir = null;
-    private final long[] idsFormasDePago;
+    private long[] idsFormasDePago = null;
+    private double[] montos = null;
     private boolean dividir = false;
+    private boolean incluirPagos = false;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public CerrarVentaGUI(JInternalFrame parent, boolean modal) {
-        this.idsFormasDePago = new long[3];
+        idsFormasDePago = new long[3];
+        montos = new double[3];
         super.setModal(modal);
         this.initComponents();
         this.setIcon();        
@@ -193,8 +194,11 @@ public class CerrarVentaGUI extends JDialog {
                     + "&idCliente=" + gui_puntoDeVenta.getIdCliente()
                     + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                     + "&idTransportista=" + ((Transportista) cmb_Transporte.getSelectedItem()).getId_Transportista()
-                    + "&idsFormaDePago=" + Arrays.toString(idsFormasDePago).substring(1, Arrays.toString(idsFormasDePago).length() - 1)
                     + "&idPedido=";
+            if (incluirPagos) {
+                uri += "&idsFormaDePago=" + Arrays.toString(idsFormasDePago).substring(1, Arrays.toString(idsFormasDePago).length() - 1)
+                    + "&montos=" + Arrays.toString(montos).substring(1, Arrays.toString(montos).length() - 1);
+            }
             if (gui_puntoDeVenta.getPedido() != null && gui_puntoDeVenta.getPedido().getId_Pedido() != 0) {
                 uri += gui_puntoDeVenta.getPedido().getId_Pedido();
             }
@@ -250,29 +254,21 @@ public class CerrarVentaGUI extends JDialog {
     }
 
     private FacturaVenta agregarPagosAFactura(FacturaVenta facturaVenta) {        
-        List<Pago> pagos = new ArrayList<>();
         if (chk_FormaDePago1.isSelected() && chk_FormaDePago1.isEnabled()) {
-            Pago pago1 = new Pago();
-            pago1.setMonto(Double.parseDouble(txt_MontoPago1.getValue().toString()));            
-            pago1.setNota("");
+            incluirPagos = true;
+            montos[0] = Double.parseDouble(txt_MontoPago1.getValue().toString());
             idsFormasDePago[0] = ((FormaDePago) cmb_FormaDePago1.getSelectedItem()).getId_FormaDePago();
-            pagos.add(pago1);
         }
         if (chk_FormaDePago2.isSelected() && chk_FormaDePago2.isEnabled()) {
-            Pago pago2 = new Pago();
-            pago2.setMonto(Double.parseDouble(txt_MontoPago2.getValue().toString()));            
-            pago2.setNota("");
+            incluirPagos = true;
+            montos[1] = Double.parseDouble(txt_MontoPago2.getValue().toString());
             idsFormasDePago[1] = ((FormaDePago) cmb_FormaDePago2.getSelectedItem()).getId_FormaDePago();
-            pagos.add(pago2);
         }
         if (chk_FormaDePago3.isSelected() && chk_FormaDePago3.isEnabled()) {
-            Pago pago3 = new Pago();
-            pago3.setMonto(Double.parseDouble(txt_MontoPago3.getValue().toString()));            
-            pago3.setNota("");
+            incluirPagos = true;
+            montos[2] = Double.parseDouble(txt_MontoPago3.getValue().toString());
             idsFormasDePago[2] = ((FormaDePago) cmb_FormaDePago3.getSelectedItem()).getId_FormaDePago();
-            pagos.add(pago3);
         }
-        facturaVenta.setPagos(pagos);
         return facturaVenta;
     }
 
