@@ -118,7 +118,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         movimientosParcial.stream().map(r -> {
             Object[] renglonTabla = new Object[7];
             renglonTabla[0] = r.getFecha();
-            renglonTabla[1] = r.getTipoComprobante() + " Nº " + r.getSerie() + " " + r.getNumero();
+            renglonTabla[1] = r.getTipo_comprobante() + " Nº " + r.getSerie() + " " + r.getNumero();
             renglonTabla[2] = r.getFechaVencimiento();
             renglonTabla[3] = r.getCAE() == 0 ? "" : r.getCAE();
             renglonTabla[4] = r.getDescripcion();
@@ -521,9 +521,9 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
-            if (renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_A || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_B 
-                    || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_C || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_X
-                    || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_Y || renglonCC.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
+            if (renglonCC.getTipo_comprobante() == TipoDeComprobante.FACTURA_A || renglonCC.getTipo_comprobante() == TipoDeComprobante.FACTURA_B 
+                    || renglonCC.getTipo_comprobante() == TipoDeComprobante.FACTURA_C || renglonCC.getTipo_comprobante() == TipoDeComprobante.FACTURA_X
+                    || renglonCC.getTipo_comprobante() == TipoDeComprobante.FACTURA_Y || renglonCC.getTipo_comprobante() == TipoDeComprobante.PRESUPUESTO) {
                 SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(renglonCC.getIdMovimiento(), TipoMovimiento.CREDITO);
                 seleccionDeProductosGUI.setModal(true);
                 seleccionDeProductosGUI.setLocationRelativeTo(this);
@@ -550,7 +550,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
-            if (renglonCC.getTipoComprobante() == TipoDeComprobante.RECIBO) {
+            if (renglonCC.getTipo_comprobante() == TipoDeComprobante.RECIBO) {
                 Factura f = RestClient.getRestTemplate().getForObject("/facturas/pagos/" + renglonCC.getIdMovimiento(), Factura.class);
                 if (f != null) {
                     if (RestClient.getRestTemplate().getForObject("/notas/debito/" + renglonCC.getIdMovimiento(), NotaDebito.class) != null) {
@@ -577,12 +577,12 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
             try {
-                if (renglonCC.getTipoComprobante() == null) {
+                if (renglonCC.getTipo_comprobante() == null) {
                     JOptionPane.showInternalMessageDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
                             "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    switch (renglonCC.getTipoComprobante()) {
+                    switch (renglonCC.getTipo_comprobante()) {
                         case NOTA_DEBITO_A:
                         case NOTA_DEBITO_B:
                         case NOTA_DEBITO_PRESUPUESTO:
@@ -655,11 +655,11 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
-            if (renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_A || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B
-                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_PRESUPUESTO || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_X
-                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_Y || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_A
-                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_PRESUPUESTO
-                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_X || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_Y) {
+            if (renglonCC.getTipo_comprobante() == TipoDeComprobante.NOTA_CREDITO_A || renglonCC.getTipo_comprobante() == TipoDeComprobante.NOTA_CREDITO_B
+                    || renglonCC.getTipo_comprobante() == TipoDeComprobante.NOTA_CREDITO_PRESUPUESTO || renglonCC.getTipo_comprobante() == TipoDeComprobante.NOTA_CREDITO_X
+                    || renglonCC.getTipo_comprobante() == TipoDeComprobante.NOTA_CREDITO_Y || renglonCC.getTipo_comprobante() == TipoDeComprobante.NOTA_DEBITO_A
+                    || renglonCC.getTipo_comprobante() == TipoDeComprobante.NOTA_DEBITO_B || renglonCC.getTipo_comprobante() == TipoDeComprobante.NOTA_DEBITO_PRESUPUESTO
+                    || renglonCC.getTipo_comprobante() == TipoDeComprobante.NOTA_DEBITO_X || renglonCC.getTipo_comprobante() == TipoDeComprobante.NOTA_DEBITO_Y) {
                 try {
                     RestClient.getRestTemplate().postForObject("/notas/" + renglonCC.getIdMovimiento() + "/autorizacion",
                             null, Nota.class);
@@ -690,12 +690,12 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     boolean refrescar = false;
                     int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
                     RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
-                    if (null == renglonCC.getTipoComprobante()) {
+                    if (null == renglonCC.getTipo_comprobante()) {
                         JOptionPane.showInternalMessageDialog(this,
                                 ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
                                 "Error", JOptionPane.ERROR_MESSAGE);
                     } else
-                        switch (renglonCC.getTipoComprobante()) {
+                        switch (renglonCC.getTipo_comprobante()) {
                             case FACTURA_A:
                             case FACTURA_B:
                             case FACTURA_C:
@@ -742,9 +742,9 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     long[] idsFacturas = new long[indicesTabla.length];
                     boolean todosMovimientosDeVenta = true;
                     for (int i = 0; i < indicesTabla.length; i++) {
-                        if (movimientosTotal.get(indicesTabla[i]).getTipoComprobante() == TipoDeComprobante.FACTURA_A || movimientosTotal.get(indicesTabla[i]).getTipoComprobante() == TipoDeComprobante.FACTURA_B
-                                || movimientosTotal.get(indicesTabla[i]).getTipoComprobante() == TipoDeComprobante.FACTURA_C || movimientosTotal.get(indicesTabla[i]).getTipoComprobante() == TipoDeComprobante.FACTURA_X
-                                || movimientosTotal.get(indicesTabla[i]).getTipoComprobante() == TipoDeComprobante.FACTURA_Y || movimientosTotal.get(indicesTabla[i]).getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
+                        if (movimientosTotal.get(indicesTabla[i]).getTipo_comprobante() == TipoDeComprobante.FACTURA_A || movimientosTotal.get(indicesTabla[i]).getTipo_comprobante() == TipoDeComprobante.FACTURA_B
+                                || movimientosTotal.get(indicesTabla[i]).getTipo_comprobante() == TipoDeComprobante.FACTURA_C || movimientosTotal.get(indicesTabla[i]).getTipo_comprobante() == TipoDeComprobante.FACTURA_X
+                                || movimientosTotal.get(indicesTabla[i]).getTipo_comprobante() == TipoDeComprobante.FACTURA_Y || movimientosTotal.get(indicesTabla[i]).getTipo_comprobante() == TipoDeComprobante.PRESUPUESTO) {
                             todosMovimientosDeVenta = false;
                             break;
                         }
@@ -789,7 +789,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
                 boolean refrescar = false;
                 try {
-                    switch (renglonCC.getTipoComprobante()) {
+                    switch (renglonCC.getTipo_comprobante()) {
                         case FACTURA_A:
                         case FACTURA_B:
                         case FACTURA_C:

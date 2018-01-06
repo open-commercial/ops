@@ -15,7 +15,7 @@ public class RenglonCuentaCorriente implements Serializable {
     
     private Long idRenglonCuentaCorriente;
     private Long idMovimiento;
-    private TipoDeComprobante tipoComprobante;
+    private TipoDeComprobante tipo_comprobante;
     private long serie;    
     private long numero;
     private String descripcion;    
