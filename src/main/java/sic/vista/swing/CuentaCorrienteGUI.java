@@ -551,19 +551,16 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
             if (renglonCC.getTipo_comprobante() == TipoDeComprobante.RECIBO) {
-                Factura f = RestClient.getRestTemplate().getForObject("/facturas/pagos/" + renglonCC.getIdMovimiento(), Factura.class);
-//                if (f != null) {
-//                    if (RestClient.getRestTemplate().getForObject("/notas/debito/" + renglonCC.getIdMovimiento(), NotaDebito.class) != null) {
-//                        JOptionPane.showInternalMessageDialog(this,
-//                                ResourceBundle.getBundle("Mensajes").getString("mensaje_pago_con_nota_debito"),
-//                                "Error", JOptionPane.ERROR_MESSAGE);
-//                    } else {
-                        DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(cliente.getId_Cliente(), renglonCC.getIdMovimiento());
-                        detalleNotaDebitoGUI.setLocationRelativeTo(this);
-                        detalleNotaDebitoGUI.setVisible(true);
-                        this.refrescarVista(detalleNotaDebitoGUI.isNotaDebitoCreada());
-//                    }
-//                }
+                if (RestClient.getRestTemplate().getForObject("/notas/debito/recibo/" + renglonCC.getIdMovimiento() + "/existe", boolean.class)) {
+                    JOptionPane.showInternalMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_recibo_con_nota_debito"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(cliente.getId_Cliente(), renglonCC.getIdMovimiento());
+                    detalleNotaDebitoGUI.setLocationRelativeTo(this);
+                    detalleNotaDebitoGUI.setVisible(true);
+                    this.refrescarVista(detalleNotaDebitoGUI.isNotaDebitoCreada());
+                }
             } else {
                 JOptionPane.showInternalMessageDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
