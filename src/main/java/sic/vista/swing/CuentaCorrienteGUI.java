@@ -118,7 +118,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         movimientosParcial.stream().map(r -> {
             Object[] renglonTabla = new Object[7];
             renglonTabla[0] = r.getFecha();
-            renglonTabla[1] = r.getTipo_comprobante() + " Nº " + r.getSerie() + " " + r.getNumero();
+            renglonTabla[1] = r.getTipo_comprobante() + " Nº " + r.getSerie() + " - " + r.getNumero();
             renglonTabla[2] = r.getFechaVencimiento();
             renglonTabla[3] = r.getCAE() == 0 ? "" : r.getCAE();
             renglonTabla[4] = r.getDescripcion();
