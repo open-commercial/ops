@@ -19,6 +19,7 @@ import sic.modelo.Recibo;
 import sic.util.FormatoFechasEnTablasRenderer;
 import sic.util.FormatterFechaHora;
 import sic.util.RenderTabla;
+import sic.util.Utilidades;
 
 public class PagosGUI extends JInternalFrame {
 
@@ -186,6 +187,8 @@ public class PagosGUI extends JInternalFrame {
         txt_TotalPagado = new javax.swing.JFormattedTextField();
         txt_SaldoAPagar = new javax.swing.JFormattedTextField();
         lbl_AvisoPagado = new javax.swing.JLabel();
+        btn_nuevoPago = new javax.swing.JButton();
+        btn_Eliminar = new javax.swing.JButton();
 
         setClosable(true);
         setTitle("Pagos");
@@ -282,30 +285,61 @@ public class PagosGUI extends JInternalFrame {
 
         lbl_AvisoPagado.setText("NOTA: Cuando el total pagado cumpla con el valor del comprobante, se marcará automaticamente como pagado.");
 
+        btn_nuevoPago.setForeground(java.awt.Color.blue);
+        btn_nuevoPago.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/StampArrow_16x16.png"))); // NOI18N
+        btn_nuevoPago.setText("Nuevo Pago");
+        btn_nuevoPago.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_nuevoPagoActionPerformed(evt);
+            }
+        });
+
+        btn_Eliminar.setForeground(java.awt.Color.blue);
+        btn_Eliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Cancel_16x16.png"))); // NOI18N
+        btn_Eliminar.setText("Eliminar ");
+        btn_Eliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_EliminarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(panelSaldos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(sp_Resultado)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(btn_nuevoPago)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_Eliminar)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(lbl_AvisoPagado)
-                        .addGap(0, 90, Short.MAX_VALUE)))
+                        .addGap(96, 96, 96)))
                 .addContainerGap())
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Eliminar, btn_nuevoPago});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lbl_AvisoPagado)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Resultado, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
+                .addComponent(sp_Resultado, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btn_nuevoPago, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btn_Eliminar, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelSaldos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
+
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Eliminar, btn_nuevoPago});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -333,8 +367,55 @@ public class PagosGUI extends JInternalFrame {
         this.actualizarSaldos();
         this.cargarResultadosAlTable();
     }//GEN-LAST:event_formInternalFrameOpened
+
+    private void btn_nuevoPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_nuevoPagoActionPerformed
+        if (facturaRelacionada != null) {
+            DetallePagoGUI gui_DetallePago = new DetallePagoGUI(facturaRelacionada);
+            gui_DetallePago.setModal(true);
+            gui_DetallePago.setLocationRelativeTo(this);
+            gui_DetallePago.setVisible(true);
+            this.getPagos();
+            this.actualizarSaldos();
+            this.cargarResultadosAlTable();
+        } else if (notaDebitoRelacionada != null) {
+            DetallePagoGUI gui_DetallePago = new DetallePagoGUI(notaDebitoRelacionada);
+            gui_DetallePago.setModal(true);
+            gui_DetallePago.setLocationRelativeTo(this);
+            gui_DetallePago.setVisible(true);
+            this.getPagos();
+            this.actualizarSaldos();
+            this.cargarResultadosAlTable();
+        }
+    }//GEN-LAST:event_btn_nuevoPagoActionPerformed
+
+    private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
+         if (tbl_Resultados.getSelectedRow() != -1) {
+            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+            int respuesta = JOptionPane.showConfirmDialog(this, "¿Esta seguro que desea eliminar el pago seleccionado?",
+                    "Eliminar", JOptionPane.YES_NO_OPTION);
+            if (respuesta == JOptionPane.YES_OPTION) {
+                try {
+                    RestClient.getRestTemplate().delete("/pagos/" + pagos.get(indexFilaSeleccionada).getId_Pago());
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                LOGGER.warn("El Pago: " + pagos.get(indexFilaSeleccionada).toString() + " se eliminó correctamente.");
+                pagos.remove(indexFilaSeleccionada);
+                this.getPagos();
+                this.actualizarSaldos();
+                this.cargarResultadosAlTable();
+            }
+        }
+    }//GEN-LAST:event_btn_EliminarActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_Eliminar;
+    private javax.swing.JButton btn_nuevoPago;
     private javax.swing.JLabel lbl_AvisoPagado;
     private javax.swing.JLabel lbl_Saldo;
     private javax.swing.JLabel lbl_TA;

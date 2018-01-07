@@ -167,8 +167,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(6).setCellRenderer(new ColoresNumerosTablaRenderer());
         tbl_Resultados.getColumnModel().getColumn(0).setMinWidth(100);
         tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(1).setMinWidth(180);
-        tbl_Resultados.getColumnModel().getColumn(1).setMaxWidth(180);
+        tbl_Resultados.getColumnModel().getColumn(1).setMinWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(1).setMaxWidth(200);
         tbl_Resultados.getColumnModel().getColumn(2).setMinWidth(100);
         tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(100);
         tbl_Resultados.getColumnModel().getColumn(3).setMinWidth(120);
@@ -279,7 +279,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
 
             }
         ));
-        tbl_Resultados.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        tbl_Resultados.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         sp_Resultados.setViewportView(tbl_Resultados);
 
         btnCrearNotaCredito.setForeground(java.awt.Color.blue);
@@ -552,18 +552,18 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
             if (renglonCC.getTipo_comprobante() == TipoDeComprobante.RECIBO) {
                 Factura f = RestClient.getRestTemplate().getForObject("/facturas/pagos/" + renglonCC.getIdMovimiento(), Factura.class);
-                if (f != null) {
-                    if (RestClient.getRestTemplate().getForObject("/notas/debito/" + renglonCC.getIdMovimiento(), NotaDebito.class) != null) {
-                        JOptionPane.showInternalMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_pago_con_nota_debito"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    } else {
+//                if (f != null) {
+//                    if (RestClient.getRestTemplate().getForObject("/notas/debito/" + renglonCC.getIdMovimiento(), NotaDebito.class) != null) {
+//                        JOptionPane.showInternalMessageDialog(this,
+//                                ResourceBundle.getBundle("Mensajes").getString("mensaje_pago_con_nota_debito"),
+//                                "Error", JOptionPane.ERROR_MESSAGE);
+//                    } else {
                         DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(cliente.getId_Cliente(), renglonCC.getIdMovimiento());
                         detalleNotaDebitoGUI.setLocationRelativeTo(this);
                         detalleNotaDebitoGUI.setVisible(true);
                         this.refrescarVista(detalleNotaDebitoGUI.isNotaDebitoCreada());
-                    }
-                }
+//                    }
+//                }
             } else {
                 JOptionPane.showInternalMessageDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
