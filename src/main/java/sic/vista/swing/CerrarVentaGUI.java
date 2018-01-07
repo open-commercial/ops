@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -35,15 +36,12 @@ public class CerrarVentaGUI extends JDialog {
     private final PuntoDeVentaGUI gui_puntoDeVenta;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int[] indicesParaDividir = null;
-    private long[] idsFormasDePago = null;
-    private double[] montos = null;
-    private boolean dividir = false;
-    private boolean incluirPagos = false;
+    private final List<Long> idsFormasDePago = new ArrayList();
+    private final List<Double> montos = new ArrayList<>();
+    private boolean dividir = false;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public CerrarVentaGUI(JInternalFrame parent, boolean modal) {
-        idsFormasDePago = new long[3];
-        montos = new double[3];
         super.setModal(modal);
         this.initComponents();
         this.setIcon();        
@@ -188,16 +186,16 @@ public class CerrarVentaGUI extends JDialog {
 
     private void finalizarVenta() {
         FacturaVenta facturaVenta = gui_puntoDeVenta.construirFactura();
-        facturaVenta = this.agregarPagosAFactura(facturaVenta);
+        this.armarMontosConFormasDePago();
         try {
             String uri = "/facturas/venta?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                     + "&idCliente=" + gui_puntoDeVenta.getIdCliente()
                     + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                     + "&idTransportista=" + ((Transportista) cmb_Transporte.getSelectedItem()).getId_Transportista()
                     + "&idPedido=";
-            if (incluirPagos) {
-                uri += "&idsFormaDePago=" + Arrays.toString(idsFormasDePago).substring(1, Arrays.toString(idsFormasDePago).length() - 1)
-                    + "&montos=" + Arrays.toString(montos).substring(1, Arrays.toString(montos).length() - 1);
+            if (idsFormasDePago.isEmpty() == false) {
+                uri += "&idsFormaDePago=" + Arrays.toString(idsFormasDePago.toArray()).substring(1, Arrays.toString(idsFormasDePago.toArray()).length() - 1)
+                    + "&montos=" + Arrays.toString(montos.toArray()).substring(1, Arrays.toString(montos.toArray()).length() - 1);
             }
             if (gui_puntoDeVenta.getPedido() != null && gui_puntoDeVenta.getPedido().getId_Pedido() != 0) {
                 uri += gui_puntoDeVenta.getPedido().getId_Pedido();
@@ -226,7 +224,7 @@ public class CerrarVentaGUI extends JDialog {
                             this.lanzarReporteFactura(facturasDivididas.get(i), "Factura");
                         }
                     }
-                }                
+                }
             } else {
                 Factura f = Arrays.asList(RestClient.getRestTemplate().postForObject(uri, facturaVenta, FacturaVenta[].class)).get(0);
                 if (facturaVenta != null) {
@@ -253,23 +251,19 @@ public class CerrarVentaGUI extends JDialog {
         }
     }
 
-    private FacturaVenta agregarPagosAFactura(FacturaVenta facturaVenta) {        
-        if (chk_FormaDePago1.isSelected() && chk_FormaDePago1.isEnabled()) {
-            incluirPagos = true;
-            montos[0] = Double.parseDouble(txt_MontoPago1.getValue().toString());
-            idsFormasDePago[0] = ((FormaDePago) cmb_FormaDePago1.getSelectedItem()).getId_FormaDePago();
+    private void armarMontosConFormasDePago() {
+        if (chk_FormaDePago1.isSelected() && chk_FormaDePago1.isEnabled()) {            
+            montos.add(new Double(txt_MontoPago1.getValue().toString()));            
+            idsFormasDePago.add(((FormaDePago) cmb_FormaDePago1.getSelectedItem()).getId_FormaDePago());            
         }
-        if (chk_FormaDePago2.isSelected() && chk_FormaDePago2.isEnabled()) {
-            incluirPagos = true;
-            montos[1] = Double.parseDouble(txt_MontoPago2.getValue().toString());
-            idsFormasDePago[1] = ((FormaDePago) cmb_FormaDePago2.getSelectedItem()).getId_FormaDePago();
+        if (chk_FormaDePago2.isSelected() && chk_FormaDePago2.isEnabled()) {            
+            montos.add(new Double(txt_MontoPago2.getValue().toString()));            
+            idsFormasDePago.add(((FormaDePago) cmb_FormaDePago2.getSelectedItem()).getId_FormaDePago());            
         }
-        if (chk_FormaDePago3.isSelected() && chk_FormaDePago3.isEnabled()) {
-            incluirPagos = true;
-            montos[2] = Double.parseDouble(txt_MontoPago3.getValue().toString());
-            idsFormasDePago[2] = ((FormaDePago) cmb_FormaDePago3.getSelectedItem()).getId_FormaDePago();
+        if (chk_FormaDePago3.isSelected() && chk_FormaDePago3.isEnabled()) {            
+            montos.add(new Double(txt_MontoPago3.getValue().toString()));                        
+            idsFormasDePago.add(((FormaDePago) cmb_FormaDePago3.getSelectedItem()).getId_FormaDePago());
         }
-        return facturaVenta;
     }
 
     /**
