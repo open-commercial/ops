@@ -13,6 +13,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Factura;
+import sic.modelo.FacturaVenta;
 import sic.modelo.NotaDebito;
 import sic.modelo.Pago;
 import sic.modelo.Recibo;
@@ -24,43 +25,30 @@ import sic.util.Utilidades;
 public class PagosGUI extends JInternalFrame {
 
     private List<Pago> pagos;
-    private ModeloTabla modeloTablaResultados = new ModeloTabla();    
-    private final Factura facturaRelacionada; 
-    private final NotaDebito notaDebitoRelacionada;
-    private final Recibo reciboRelacionado;
-    private final FormatterFechaHora formateador = new FormatterFechaHora(FormatterFechaHora.FORMATO_FECHA_HISPANO);    
+    private Factura facturaRelacionada = null;
+    private NotaDebito notaDebitoRelacionada = null;
+    private Recibo reciboRelacionado = null;
+    private boolean mostrarDetalleFactura = false;
+    private final ModeloTabla modeloTablaResultados = new ModeloTabla();
+    private final FormatterFechaHora formateador = new FormatterFechaHora(FormatterFechaHora.FORMATO_FECHA_HISPANO);
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public PagosGUI(Factura factura) {
-        this.initComponents();       
-        txt_TotalAdeudado.setValue(0.00);
-        txt_TotalPagado.setValue(0.00);
-        txt_SaldoAPagar.setValue(0.00);
-        facturaRelacionada = factura;  
-        notaDebitoRelacionada = null;
-        reciboRelacionado = null;
+        this.initComponents();
+        facturaRelacionada = factura;        
         this.setColumnas();
     }
     
     public PagosGUI(NotaDebito notaDebito) {
-        this.initComponents();       
-        txt_TotalAdeudado.setValue(0.00);
-        txt_TotalPagado.setValue(0.00);
-        txt_SaldoAPagar.setValue(0.00);
-        facturaRelacionada = null;
-        this.notaDebitoRelacionada = notaDebito;
-        reciboRelacionado = null;
+        this.initComponents();                       
+        this.notaDebitoRelacionada = notaDebito;        
         this.setColumnas();
     }
     
     public PagosGUI(Recibo recibo) {
-        this.initComponents();       
-        txt_TotalAdeudado.setValue(0.00);
-        txt_TotalPagado.setValue(0.00);
-        txt_SaldoAPagar.setValue(0.00);
-        facturaRelacionada = null;
-        this.notaDebitoRelacionada = null;
+        this.initComponents();                       
         reciboRelacionado = recibo;
+        mostrarDetalleFactura = true;
         this.setColumnas();
     }
 
@@ -88,15 +76,26 @@ public class PagosGUI extends JInternalFrame {
 
     private void setColumnas() {
         //nombres de columnas
-        String[] encabezados = new String[5];
-        encabezados[0] = "Nº Pago";
-        encabezados[1] = "Fecha";
-        encabezados[2] = "Forma de Pago";
-        encabezados[3] = "Monto";
-        encabezados[4] = "Observaciones";
+        String[] encabezados;
+        if (mostrarDetalleFactura == true) {
+            encabezados = new String[7];
+            encabezados[0] = "Nº Pago";
+            encabezados[1] = "Fecha Pago";
+            encabezados[2] = "Forma de Pago";
+            encabezados[3] = "Monto";
+            encabezados[4] = "Observaciones";            
+            encabezados[5] = "Fecha Factura";
+            encabezados[6] = "Comprobante";
+        } else {
+            encabezados = new String[5];
+            encabezados[0] = "Nº Pago";
+            encabezados[1] = "Fecha Pago";
+            encabezados[2] = "Forma de Pago";
+            encabezados[3] = "Monto";
+            encabezados[4] = "Observaciones";
+        }        
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaResultados);
-
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
         tipos[0] = Integer.class;
@@ -104,13 +103,15 @@ public class PagosGUI extends JInternalFrame {
         tipos[2] = String.class;
         tipos[3] = Double.class;
         tipos[4] = String.class;
+        if (mostrarDetalleFactura == true) {
+            tipos[5] = Date.class;
+            tipos[6] = String.class;
+        }
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
-
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(Double.class, new RenderTabla());
-
         //size de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setMinWidth(80);
         tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(80);
@@ -121,27 +122,44 @@ public class PagosGUI extends JInternalFrame {
     }
 
     private void cargarResultadosAlTable() {
-        this.limpiarJTable();
-        pagos.stream().map(p -> {
-            Object[] fila = new Object[5];
-            fila[0] = p.getNroPago();
-            fila[1] = p.getFecha();
-            fila[2] = p.getNombreFormaDePago();
-            fila[3] = p.getMonto();
-            fila[4] = p.getNota();
-            return fila;
-        }).forEach(fila -> {
-            modeloTablaResultados.addRow(fila);
-        });
-        tbl_Resultados.getColumnModel().getColumn(0).setCellRenderer(new FormatoFechasEnTablasRenderer());
-        tbl_Resultados.setModel(modeloTablaResultados);
+        // this.limpiarJTable();
+        try {
+            pagos.stream().map(p -> {
+                Object[] fila;
+                if (mostrarDetalleFactura == true) {
+                    fila = new Object[7];
+                    fila[0] = p.getNroPago();
+                    fila[1] = p.getFecha();
+                    fila[2] = p.getNombreFormaDePago();
+                    fila[3] = p.getMonto();
+                    fila[4] = p.getNota();
+                    Factura f = RestClient.getRestTemplate()
+                            .getForObject("/facturas/pagos/" + p.getId_Pago(), Factura.class);
+                    fila[5] = f.getFecha();
+                    fila[6] = f.getTipoComprobante() + " " + f.getNumSerie() + " " + f.getNumFactura();
+                } else {
+                    fila = new Object[5];
+                    fila[0] = p.getNroPago();
+                    fila[1] = p.getFecha();
+                    fila[2] = p.getNombreFormaDePago();
+                    fila[3] = p.getMonto();
+                    fila[4] = p.getNota();
+                }
+                return fila;
+            }).forEach(fila -> {
+                modeloTablaResultados.addRow(fila);
+            });
+            tbl_Resultados.getColumnModel().getColumn(0).setCellRenderer(new FormatoFechasEnTablasRenderer());
+            tbl_Resultados.setModel(modeloTablaResultados);
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
-
-    private void limpiarJTable() {
-        modeloTablaResultados = new ModeloTabla();
-        tbl_Resultados.setModel(modeloTablaResultados);
-        this.setColumnas();
-    }    
     
     private void actualizarSaldos() {
         try {
@@ -160,7 +178,7 @@ public class PagosGUI extends JInternalFrame {
             } else if (reciboRelacionado != null) {
                 txt_TotalAdeudado.setValue(0);
                 txt_TotalPagado.setValue(reciboRelacionado.getMonto());
-                lbl_Saldo.setText("Saldo sobrante");
+                lbl_Saldo.setText("Saldo Sobrante:");
                 txt_SaldoAPagar.setValue(reciboRelacionado.getSaldoSobrante());
             }
         } catch (RestClientResponseException ex) {
@@ -191,6 +209,7 @@ public class PagosGUI extends JInternalFrame {
         btn_Eliminar = new javax.swing.JButton();
 
         setClosable(true);
+        setResizable(true);
         setTitle("Pagos");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Stamp_16x16.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
@@ -287,7 +306,7 @@ public class PagosGUI extends JInternalFrame {
 
         btn_nuevoPago.setForeground(java.awt.Color.blue);
         btn_nuevoPago.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/StampArrow_16x16.png"))); // NOI18N
-        btn_nuevoPago.setText("Nuevo Pago");
+        btn_nuevoPago.setText("Nuevo");
         btn_nuevoPago.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_nuevoPagoActionPerformed(evt);
@@ -310,16 +329,20 @@ public class PagosGUI extends JInternalFrame {
             .addComponent(panelSaldos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sp_Resultado)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btn_nuevoPago)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_Eliminar)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addComponent(sp_Resultado))
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
                         .addComponent(lbl_AvisoPagado)
-                        .addGap(96, 96, 96)))
+                        .addGap(0, 90, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btn_nuevoPago)
+                .addGap(0, 0, 0)
+                .addComponent(btn_Eliminar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Eliminar, btn_nuevoPago});
@@ -330,7 +353,7 @@ public class PagosGUI extends JInternalFrame {
                 .addContainerGap()
                 .addComponent(lbl_AvisoPagado)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Resultado, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
+                .addComponent(sp_Resultado, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btn_nuevoPago, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -345,23 +368,41 @@ public class PagosGUI extends JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
-        String tituloVentana;
+        txt_TotalAdeudado.setValue(0.00);
+        txt_TotalPagado.setValue(0.00);
+        txt_SaldoAPagar.setValue(0.00);
         if (facturaRelacionada != null) {
             if (facturaRelacionada.getNumSerie() == 0 && facturaRelacionada.getNumFactura() == 0) {
-                tituloVentana = "Pagos de " + facturaRelacionada.getTipoComprobante() + " (sin numero) con Fecha: " + formateador.format(facturaRelacionada.getFecha());
+                this.setTitle("Pagos de " + facturaRelacionada.getTipoComprobante() 
+                        + " (sin numero) con Fecha: " + formateador.format(facturaRelacionada.getFecha()));
             } else {
-                tituloVentana = "Pagos de " + facturaRelacionada.getTipoComprobante() + " Nro: " + facturaRelacionada.getNumSerie() + " - " + facturaRelacionada.getNumFactura()
-                        + " con Fecha: " + formateador.format(facturaRelacionada.getFecha());
+                this.setTitle("Pagos de " + facturaRelacionada.getTipoComprobante()
+                        + " Nro: " + facturaRelacionada.getNumSerie() + " - " + facturaRelacionada.getNumFactura()
+                        + " con Fecha: " + formateador.format(facturaRelacionada.getFecha()));
             }
-            this.setTitle(tituloVentana);
         } else if (notaDebitoRelacionada != null) {
             if (notaDebitoRelacionada.getSerie() == 0 && notaDebitoRelacionada.getNroNota() == 0) {
-                tituloVentana = "Pagos de " + notaDebitoRelacionada.getTipoComprobante() + " (sin numero) con Fecha: " + formateador.format(notaDebitoRelacionada.getFecha());
+                this.setTitle("Pagos de " + notaDebitoRelacionada.getTipoComprobante() 
+                        + " (sin numero) con Fecha: " + formateador.format(notaDebitoRelacionada.getFecha()));
             } else {
-                tituloVentana = "Pagos de " + notaDebitoRelacionada.getTipoComprobante() + " Nro: " + notaDebitoRelacionada.getSerie() + " - " + notaDebitoRelacionada.getNroNota()
-                        + " con Fecha: " + formateador.format(notaDebitoRelacionada.getFecha());
+                this.setTitle("Pagos de " + notaDebitoRelacionada.getTipoComprobante() + 
+                        " Nro: " + notaDebitoRelacionada.getSerie() + " - " + notaDebitoRelacionada.getNroNota()
+                        + " con Fecha: " + formateador.format(notaDebitoRelacionada.getFecha()));
             }
-            this.setTitle(tituloVentana);
+        } else if (reciboRelacionado != null) {
+            this.setTitle("Pagos del Recibo " + reciboRelacionado.getSerie() + " - " + reciboRelacionado.getNroRecibo()
+                    + " con Fecha: " + formateador.format(reciboRelacionado.getFecha()));
+        }
+        if (mostrarDetalleFactura == true) {
+            btn_nuevoPago.setVisible(false);
+            btn_Eliminar.setVisible(false);
+            lbl_AvisoPagado.setVisible(false);
+            lbl_TA.setVisible(false);
+            txt_TotalAdeudado.setVisible(false);
+        }
+        if (facturaRelacionada instanceof FacturaVenta) {
+            btn_nuevoPago.setVisible(false);
+            btn_Eliminar.setVisible(false);
         }
         this.getPagos();
         this.actualizarSaldos();
@@ -369,7 +410,7 @@ public class PagosGUI extends JInternalFrame {
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void btn_nuevoPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_nuevoPagoActionPerformed
-        if (facturaRelacionada != null) {
+        /*if (facturaRelacionada != null) {
             DetallePagoGUI gui_DetallePago = new DetallePagoGUI(facturaRelacionada);
             gui_DetallePago.setModal(true);
             gui_DetallePago.setLocationRelativeTo(this);
@@ -385,11 +426,11 @@ public class PagosGUI extends JInternalFrame {
             this.getPagos();
             this.actualizarSaldos();
             this.cargarResultadosAlTable();
-        }
+        }*/
     }//GEN-LAST:event_btn_nuevoPagoActionPerformed
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
-         if (tbl_Resultados.getSelectedRow() != -1) {
+         /*if (tbl_Resultados.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             int respuesta = JOptionPane.showConfirmDialog(this, "¿Esta seguro que desea eliminar el pago seleccionado?",
                     "Eliminar", JOptionPane.YES_NO_OPTION);
@@ -410,7 +451,7 @@ public class PagosGUI extends JInternalFrame {
                 this.actualizarSaldos();
                 this.cargarResultadosAlTable();
             }
-        }
+        }*/
     }//GEN-LAST:event_btn_EliminarActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
