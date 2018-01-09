@@ -146,14 +146,10 @@ public class CerrarVentaGUI extends JDialog {
 
     private void calcularVuelto() {
         try {
-            txt_AbonaCon.commitEdit();
-            double montoRecibido = Double.parseDouble((txt_AbonaCon.getText()));
+            if (txt_AbonaCon.isEditValid()) txt_AbonaCon.commitEdit();
+            double montoRecibido = Double.valueOf(txt_AbonaCon.getValue().toString());
             double vuelto = montoRecibido - gui_puntoDeVenta.getTotal();
-            if (vuelto >= 0) {
-                lbl_Vuelto.setValue(vuelto);
-            } else {
-                lbl_Vuelto.setValue(0.0);
-            }            
+            lbl_Vuelto.setValue(vuelto >= 0 ? vuelto : 0.0);
         } catch (ParseException ex) {
             String mensaje = "Se produjo un error analizando los campos.";
             LOGGER.error(mensaje + " - " + ex.getMessage());
@@ -348,7 +344,6 @@ public class CerrarVentaGUI extends JDialog {
         });
 
         txt_MontoPago1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
-        txt_MontoPago1.setText("0");
         txt_MontoPago1.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         txt_MontoPago1.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -364,7 +359,6 @@ public class CerrarVentaGUI extends JDialog {
         });
 
         txt_MontoPago2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
-        txt_MontoPago2.setText("0");
         txt_MontoPago2.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         txt_MontoPago2.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -380,7 +374,6 @@ public class CerrarVentaGUI extends JDialog {
         });
 
         txt_MontoPago3.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
-        txt_MontoPago3.setText("0");
         txt_MontoPago3.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         txt_MontoPago3.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -402,7 +395,6 @@ public class CerrarVentaGUI extends JDialog {
         lbl_Total1.setText("Abona con:");
 
         txt_AbonaCon.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
-        txt_AbonaCon.setText("0");
         txt_AbonaCon.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         txt_AbonaCon.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -420,7 +412,6 @@ public class CerrarVentaGUI extends JDialog {
         lbl_Vuelto.setEditable(false);
         lbl_Vuelto.setForeground(new java.awt.Color(29, 156, 37));
         lbl_Vuelto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
-        lbl_Vuelto.setText("0");
         lbl_Vuelto.setFocusable(false);
         lbl_Vuelto.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
 
@@ -460,8 +451,8 @@ public class CerrarVentaGUI extends JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbl_TotalAPagar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                            .addComponent(txt_AbonaCon, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lbl_Vuelto, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addComponent(lbl_Vuelto, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txt_AbonaCon, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(panelLayout.createSequentialGroup()
                         .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lbl_Transporte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -562,10 +553,13 @@ public class CerrarVentaGUI extends JDialog {
         this.setEstadoFormasDePago();
         cmb_Transporte.setSelectedIndex(0);
         lbl_Vendedor.setText(UsuarioActivo.getInstance().getUsuario().getNombre());
+        txt_AbonaCon.setValue(0);
         txt_AbonaCon.requestFocus();
         lbl_TotalAPagar.setValue(gui_puntoDeVenta.getTotal());
         lbl_Vuelto.setValue(0);
         txt_MontoPago1.setValue(gui_puntoDeVenta.getTotal());
+        txt_MontoPago2.setValue(0);
+        txt_MontoPago3.setValue(0);
         indicesParaDividir = new int[gui_puntoDeVenta.getModeloTabla().getRowCount()];
         if ((indicesParaDividir.length > 0) 
                 && (gui_puntoDeVenta.getTipoDeComprobante().equals(TipoDeComprobante.FACTURA_A)
