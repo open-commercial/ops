@@ -14,13 +14,13 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Factura;
 import sic.modelo.FacturaVenta;
+import sic.modelo.Nota;
 import sic.modelo.NotaDebito;
 import sic.modelo.Pago;
 import sic.modelo.Recibo;
 import sic.util.FormatoFechasEnTablasRenderer;
 import sic.util.FormatterFechaHora;
 import sic.util.RenderTabla;
-import sic.util.Utilidades;
 
 public class PagosGUI extends JInternalFrame {
 
@@ -28,7 +28,7 @@ public class PagosGUI extends JInternalFrame {
     private Factura facturaRelacionada = null;
     private NotaDebito notaDebitoRelacionada = null;
     private Recibo reciboRelacionado = null;
-    private boolean mostrarDetalleFactura = false;
+    private boolean mostrarDetalleComprobanteRelacionado = false;
     private final ModeloTabla modeloTablaResultados = new ModeloTabla();
     private final FormatterFechaHora formateador = new FormatterFechaHora(FormatterFechaHora.FORMATO_FECHA_HISPANO);
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -48,7 +48,7 @@ public class PagosGUI extends JInternalFrame {
     public PagosGUI(Recibo recibo) {
         this.initComponents();                       
         reciboRelacionado = recibo;
-        mostrarDetalleFactura = true;
+        mostrarDetalleComprobanteRelacionado = true;
         this.setColumnas();
     }
 
@@ -77,14 +77,14 @@ public class PagosGUI extends JInternalFrame {
     private void setColumnas() {
         //nombres de columnas
         String[] encabezados;
-        if (mostrarDetalleFactura == true) {
+        if (mostrarDetalleComprobanteRelacionado == true) {
             encabezados = new String[7];
             encabezados[0] = "Nº Pago";
             encabezados[1] = "Fecha Pago";
             encabezados[2] = "Forma de Pago";
             encabezados[3] = "Monto";
             encabezados[4] = "Observaciones";            
-            encabezados[5] = "Fecha Factura";
+            encabezados[5] = "Fecha Comprobante";
             encabezados[6] = "Comprobante";
         } else {
             encabezados = new String[5];
@@ -103,7 +103,7 @@ public class PagosGUI extends JInternalFrame {
         tipos[2] = String.class;
         tipos[3] = Double.class;
         tipos[4] = String.class;
-        if (mostrarDetalleFactura == true) {
+        if (mostrarDetalleComprobanteRelacionado == true) {
             tipos[5] = Date.class;
             tipos[6] = String.class;
         }
@@ -122,21 +122,26 @@ public class PagosGUI extends JInternalFrame {
     }
 
     private void cargarResultadosAlTable() {
-        // this.limpiarJTable();
         try {
             pagos.stream().map(p -> {
                 Object[] fila;
-                if (mostrarDetalleFactura == true) {
+                if (mostrarDetalleComprobanteRelacionado == true) {
                     fila = new Object[7];
                     fila[0] = p.getNroPago();
                     fila[1] = p.getFecha();
                     fila[2] = p.getNombreFormaDePago();
                     fila[3] = p.getMonto();
-                    fila[4] = p.getNota();
-                    Factura f = RestClient.getRestTemplate()
-                            .getForObject("/facturas/pagos/" + p.getId_Pago(), Factura.class);
-                    fila[5] = f.getFecha();
-                    fila[6] = f.getTipoComprobante() + " " + f.getNumSerie() + " " + f.getNumFactura();
+                    fila[4] = p.getNota();                    
+                    Factura f = RestClient.getRestTemplate().getForObject("/facturas/pagos/" + p.getId_Pago(), Factura.class);
+                    if (f != null) {
+                        fila[5] = f.getFecha();
+                        fila[6] = f.getTipoComprobante() + " " + f.getNumSerie() + " - " + f.getNumFactura();
+                    }
+                    Nota n = RestClient.getRestTemplate().getForObject("/notas/pagos/" + p.getId_Pago(), Nota.class);
+                    if (n != null) {
+                        fila[5] = n.getFecha();
+                        fila[6] = n.getTipoComprobante() + " " + n.getSerie() + " - " + n.getNroNota();
+                    }
                 } else {
                     fila = new Object[5];
                     fila[0] = p.getNroPago();
@@ -393,14 +398,14 @@ public class PagosGUI extends JInternalFrame {
             this.setTitle("Pagos del Recibo " + reciboRelacionado.getSerie() + " - " + reciboRelacionado.getNroRecibo()
                     + " con Fecha: " + formateador.format(reciboRelacionado.getFecha()));
         }
-        if (mostrarDetalleFactura == true) {
+        if (mostrarDetalleComprobanteRelacionado == true) {
             btn_nuevoPago.setVisible(false);
             btn_Eliminar.setVisible(false);
             lbl_AvisoPagado.setVisible(false);
             lbl_TA.setVisible(false);
             txt_TotalAdeudado.setVisible(false);
         }
-        if (facturaRelacionada instanceof FacturaVenta) {
+        if (facturaRelacionada instanceof FacturaVenta || notaDebitoRelacionada != null) {
             btn_nuevoPago.setVisible(false);
             btn_Eliminar.setVisible(false);
         }
