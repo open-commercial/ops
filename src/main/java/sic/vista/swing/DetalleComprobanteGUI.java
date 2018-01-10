@@ -253,7 +253,7 @@ public class DetalleComprobanteGUI extends JDialog {
         if (idCliente != 0) {
             try {
                 double saldoCC = RestClient.getRestTemplate().getForObject("/cuentas-corrientes/clientes/" + idCliente + "/saldo", double.class);
-                txtMonto.setValue((saldoCC < 0) ? saldoCC : 0.0);
+                txtMonto.setValue((saldoCC < 0) ? -saldoCC : 0.0);
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             } catch (ResourceAccessException ex) {
