@@ -38,6 +38,7 @@ import sic.modelo.Pago;
 import sic.modelo.UsuarioActivo;
 import sic.modelo.EstadoCaja;
 import sic.modelo.Factura;
+import sic.modelo.Recibo;
 import sic.util.ColoresNumerosTablaRenderer;
 import sic.util.FormatoFechasEnTablasRenderer;
 import sic.util.FormatterFechaHora;
@@ -71,6 +72,14 @@ public class CajaGUI extends JInternalFrame {
                     + f.getNumSerie() + "-" + f.getNumFactura();
             this.fecha = pago.getFecha();
             this.monto = (f instanceof FacturaCompra) ? - pago.getMonto(): pago.getMonto();
+        }
+        
+        public Movimiento(Recibo recibo) {
+            this.idMovimiento = recibo.getIdRecibo();
+            this.tipoMovimientoCaja = TipoMovimiento.PAGO;
+            this.concepto = recibo.getConcepto();
+            this.fecha = recibo.getFecha();
+            this.monto = recibo.getMonto();
         }
 
         public Movimiento(Gasto gasto) {
@@ -200,6 +209,7 @@ public class CajaGUI extends JInternalFrame {
         renglonSaldoApertura[3] = caja.getSaldoInicial();
         modeloTablaResumen.addRow(renglonSaldoApertura);
         List<Pago> pagos;
+        List<Recibo> recibos;
         List<Gasto> gastos;
         try {
             for (long idFormaDePago : caja.getTotalesPorFomaDePago().keySet()) {
@@ -212,11 +222,15 @@ public class CajaGUI extends JInternalFrame {
                 fila[3] = caja.getTotalesPorFomaDePago().get(idFormaDePago);
                 modeloTablaResumen.addRow(fila);
                 pagos = this.getPagosPorFormaDePago(idFormaDePago);                
-                pagos.stream().forEach((pago) -> {
+                pagos.stream().forEach(pago -> {
                     movimientos.add(new Movimiento(pago));
                 });
+                recibos = this.getRecibosPorFormaDePago(idFormaDePago);
+                recibos.stream().forEach(recibo -> {
+                    movimientos.add(new Movimiento(recibo));
+                });
                 gastos = this.getGastosPorFormaDePago(idFormaDePago);
-                gastos.stream().forEach((gasto) -> {
+                gastos.stream().forEach(gasto -> {
                     movimientos.add(new Movimiento(gasto));
                 });
                 Collections.sort(movimientos);
@@ -334,6 +348,15 @@ public class CajaGUI extends JInternalFrame {
                 + "&desde=" + caja.getFechaApertura().getTime()
                 + "&hasta=" + this.getFechaHastaCaja(caja);
         return new ArrayList(Arrays.asList(RestClient.getRestTemplate().getForObject(criteriaPagos, Pago[].class)));
+    }
+    
+    private List<Recibo> getRecibosPorFormaDePago(long idFormaDePago) {
+        String criteriaRecibos = "/recibos/busqueda?"
+                + "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                + "&idFormaDePago=" + idFormaDePago
+                + "&desde=" + caja.getFechaApertura().getTime()
+                + "&hasta=" + this.getFechaHastaCaja(caja);
+        return new ArrayList(Arrays.asList(RestClient.getRestTemplate().getForObject(criteriaRecibos, Recibo[].class)));
     }
 
     private List<Gasto> getGastosPorFormaDePago(long idFormaDePago) {
