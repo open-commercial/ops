@@ -6,12 +6,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = {"nroRecibo", "fecha"})
+@EqualsAndHashCode(of = {"nombreEmpresa", "numSerie", "numRecibo", "fecha"})
 public class Recibo implements Serializable {
     
     private Long idRecibo;  
-    private long serie;   
-    private long nroRecibo;    
+    private long numSerie;   
+    private long numRecibo;    
     private boolean eliminado;
     private String concepto;
     private Date fecha;

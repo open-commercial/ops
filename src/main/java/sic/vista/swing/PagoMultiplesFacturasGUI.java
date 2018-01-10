@@ -311,7 +311,7 @@ public class PagoMultiplesFacturasGUI extends JInternalFrame {
                     idsFacturas[indice] = factura.getId_Factura();
                     indice++;
                 }
-                RestClient.getRestTemplate().put("/pagos/pagar-multiples-facturas?"
+                RestClient.getRestTemplate().put("/pagos/multiples-facturas-compras?"
                         + "idFactura=" + Arrays.toString(idsFacturas).substring(1, Arrays.toString(idsFacturas).length() - 1)
                         + "&monto=" + montoDelPago
                         + "&idFormaDePago=" + ((FormaDePago) cmb_FormaDePago.getSelectedItem()).getId_FormaDePago()

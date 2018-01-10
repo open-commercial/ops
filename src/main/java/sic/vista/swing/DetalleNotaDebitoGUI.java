@@ -62,7 +62,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
     }
     
     private void cargarDetalleRecibo() {
-        lblDetallePago.setText("Nº Recibo: " + recibo.getNroRecibo() + " - " + recibo.getConcepto());
+        lblDetallePago.setText("Nº Recibo: " + recibo.getNumSerie() + " - " + recibo.getNumRecibo() + " - " + recibo.getConcepto());
         lblMontoPago.setText("$" + FormatterNumero.formatConRedondeo(recibo.getMonto()));
         lblImportePago.setText("$" + FormatterNumero.formatConRedondeo(recibo.getMonto()));
         txtNoGravado.setValue(recibo.getMonto());

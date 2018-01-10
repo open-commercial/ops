@@ -1,5 +1,9 @@
 package sic.vista.swing;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -13,23 +17,34 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.EmpresaActiva;
+import sic.modelo.FacturaCompra;
 import sic.modelo.FormaDePago;
+import sic.modelo.Pago;
 import sic.modelo.Recibo;
 import sic.modelo.UsuarioActivo;
 
-public class DetalleReciboGUI extends JDialog {
+public class DetalleComprobanteGUI extends JDialog {
     
     private long idCliente;
+    private FacturaCompra facturaCompra;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public DetalleReciboGUI(long idCliente) {
+    public DetalleComprobanteGUI(long idCliente) {
         this.initComponents();
         this.setIcon();
         this.idCliente = idCliente;
+        this.facturaCompra = null;
+    }
+    
+    public DetalleComprobanteGUI(FacturaCompra facturaCompra) {
+        this.initComponents();
+        this.setIcon();
+        this.facturaCompra = facturaCompra;
+        this.idCliente = 0;
     }
 
     private void setIcon() {
-        ImageIcon iconoVentana = new ImageIcon(DetalleReciboGUI.class.getResource("/sic/icons/Stamp_16x16.png"));
+        ImageIcon iconoVentana = new ImageIcon(DetalleComprobanteGUI.class.getResource("/sic/icons/Stamp_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
     }
 
@@ -50,16 +65,32 @@ public class DetalleReciboGUI extends JDialog {
         }
     }
 
-    private void guardaRecibo() {
+    private void guardarComprobante() {
         try {
-            Recibo recibo = new Recibo();
-            recibo.setMonto(Double.parseDouble(txtMonto.getValue().toString()));
-            recibo.setConcepto(txtObservaciones.getText().trim());
-            RestClient.getRestTemplate().postForObject("/recibos?idCliente=" + idCliente
-                    + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                    + "&idFormaDePago=" + ((FormaDePago) cmbFormaDePago.getSelectedItem()).getId_FormaDePago()
-                    + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                    recibo, Recibo.class);
+            if (idCliente != 0) {
+                Recibo recibo = new Recibo();
+                recibo.setMonto(Double.parseDouble(txtMonto.getValue().toString()));
+                recibo.setConcepto(txtObservaciones.getText().trim());
+                recibo = RestClient.getRestTemplate().postForObject("/recibos?idCliente=" + idCliente
+                        + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
+                        + "&idFormaDePago=" + ((FormaDePago) cmbFormaDePago.getSelectedItem()).getId_FormaDePago()
+                        + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                        recibo, Recibo.class);
+                             int reply = JOptionPane.showConfirmDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                        "Aviso", JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION) {
+                    this.lanzarReporteRecibo(recibo);
+                }
+            } else {
+                Pago pago = new Pago();
+                pago.setMonto(Double.parseDouble(txtMonto.getValue().toString()));
+                pago.setNota(txtObservaciones.getText().trim());
+                RestClient.getRestTemplate().postForObject("/pagos/facturas-compra/" + facturaCompra.getId_Factura()
+                        + "?idFormaDePago=" + ((FormaDePago) cmbFormaDePago.getSelectedItem()).getId_FormaDePago()
+                        + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                        pago, Pago.class);
+            }
             this.dispose();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -70,7 +101,35 @@ public class DetalleReciboGUI extends JDialog {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
+    private void lanzarReporteRecibo(Recibo recibo) {
+        if (Desktop.isDesktopSupported()) {
+            try {
+                byte[] reporte = RestClient.getRestTemplate()
+                        .getForObject("/recibos/" + recibo.getIdRecibo()+ "/reporte", byte[].class);
+                File f = new File(System.getProperty("user.home") + "/Recibo.pdf");
+                Files.write(f.toPath(), reporte);
+                Desktop.getDesktop().open(f);
+            } catch (IOException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -81,7 +140,7 @@ public class DetalleReciboGUI extends JDialog {
         lblMonto = new javax.swing.JLabel();
         txtObservaciones = new javax.swing.JTextField();
         cmbFormaDePago = new javax.swing.JComboBox<>();
-        lblObservaciones = new javax.swing.JLabel();
+        lblConcepto = new javax.swing.JLabel();
         btnGuardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -112,8 +171,8 @@ public class DetalleReciboGUI extends JDialog {
         lblMonto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblMonto.setText("* Monto:");
 
-        lblObservaciones.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblObservaciones.setText("Observaciones:");
+        lblConcepto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblConcepto.setText("Concepto:");
 
         javax.swing.GroupLayout panelGeneralLayout = new javax.swing.GroupLayout(panelGeneral);
         panelGeneral.setLayout(panelGeneralLayout);
@@ -124,7 +183,7 @@ public class DetalleReciboGUI extends JDialog {
                 .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(lblFormaDePago, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblMonto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblObservaciones, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblConcepto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(cmbFormaDePago, javax.swing.GroupLayout.Alignment.LEADING, 0, 269, Short.MAX_VALUE)
@@ -145,7 +204,7 @@ public class DetalleReciboGUI extends JDialog {
                     .addComponent(lblMonto))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblObservaciones)
+                    .addComponent(lblConcepto)
                     .addComponent(txtObservaciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -186,11 +245,27 @@ public class DetalleReciboGUI extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        this.guardaRecibo();
+        this.guardarComprobante();
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cargarFormasDePago();
+        if (idCliente != 0) {
+            try {
+                double saldoCC = RestClient.getRestTemplate().getForObject("/cuentas-corrientes/clientes/" + idCliente + "/saldo", double.class);
+                txtMonto.setValue((saldoCC < 0) ? saldoCC : 0.0);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else if (idCliente == 0) {
+            lblConcepto.setText("Observaciones:");
+            this.setTitle("Nuevo Pago");
+        }
     }//GEN-LAST:event_formWindowOpened
 
     private void txtMontoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMontoFocusGained
@@ -202,11 +277,12 @@ public class DetalleReciboGUI extends JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar;
     private javax.swing.JComboBox<FormaDePago> cmbFormaDePago;
+    private javax.swing.JLabel lblConcepto;
     private javax.swing.JLabel lblFormaDePago;
     private javax.swing.JLabel lblMonto;
-    private javax.swing.JLabel lblObservaciones;
     private javax.swing.JPanel panelGeneral;
     private javax.swing.JFormattedTextField txtMonto;
     private javax.swing.JTextField txtObservaciones;
     // End of variables declaration//GEN-END:variables
+
 }

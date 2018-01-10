@@ -13,6 +13,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Factura;
+import sic.modelo.FacturaCompra;
 import sic.modelo.FacturaVenta;
 import sic.modelo.Nota;
 import sic.modelo.NotaDebito;
@@ -21,6 +22,7 @@ import sic.modelo.Recibo;
 import sic.util.FormatoFechasEnTablasRenderer;
 import sic.util.FormatterFechaHora;
 import sic.util.RenderTabla;
+import sic.util.Utilidades;
 
 public class PagosGUI extends JInternalFrame {
 
@@ -395,7 +397,7 @@ public class PagosGUI extends JInternalFrame {
                         + " con Fecha: " + formateador.format(notaDebitoRelacionada.getFecha()));
             }
         } else if (reciboRelacionado != null) {
-            this.setTitle("Pagos del Recibo " + reciboRelacionado.getSerie() + " - " + reciboRelacionado.getNroRecibo()
+            this.setTitle("Pagos del Recibo " + reciboRelacionado.getNumSerie()+ " - " + reciboRelacionado.getNumRecibo()
                     + " con Fecha: " + formateador.format(reciboRelacionado.getFecha()));
         }
         if (mostrarDetalleComprobanteRelacionado == true) {
@@ -415,27 +417,19 @@ public class PagosGUI extends JInternalFrame {
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void btn_nuevoPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_nuevoPagoActionPerformed
-        /*if (facturaRelacionada != null) {
-            DetallePagoGUI gui_DetallePago = new DetallePagoGUI(facturaRelacionada);
-            gui_DetallePago.setModal(true);
-            gui_DetallePago.setLocationRelativeTo(this);
-            gui_DetallePago.setVisible(true);
+        if (facturaRelacionada != null && facturaRelacionada instanceof FacturaCompra) {
+            DetalleComprobanteGUI gui_DetalleComprobanteGUI = new DetalleComprobanteGUI((FacturaCompra) facturaRelacionada);
+            gui_DetalleComprobanteGUI.setModal(true);
+            gui_DetalleComprobanteGUI.setLocationRelativeTo(this);
+            gui_DetalleComprobanteGUI.setVisible(true);
             this.getPagos();
             this.actualizarSaldos();
             this.cargarResultadosAlTable();
-        } else if (notaDebitoRelacionada != null) {
-            DetallePagoGUI gui_DetallePago = new DetallePagoGUI(notaDebitoRelacionada);
-            gui_DetallePago.setModal(true);
-            gui_DetallePago.setLocationRelativeTo(this);
-            gui_DetallePago.setVisible(true);
-            this.getPagos();
-            this.actualizarSaldos();
-            this.cargarResultadosAlTable();
-        }*/
+        }
     }//GEN-LAST:event_btn_nuevoPagoActionPerformed
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
-         /*if (tbl_Resultados.getSelectedRow() != -1) {
+        if (tbl_Resultados.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             int respuesta = JOptionPane.showConfirmDialog(this, "¿Esta seguro que desea eliminar el pago seleccionado?",
                     "Eliminar", JOptionPane.YES_NO_OPTION);
@@ -456,9 +450,9 @@ public class PagosGUI extends JInternalFrame {
                 this.actualizarSaldos();
                 this.cargarResultadosAlTable();
             }
-        }*/
+        }
     }//GEN-LAST:event_btn_EliminarActionPerformed
-    
+   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_nuevoPago;
