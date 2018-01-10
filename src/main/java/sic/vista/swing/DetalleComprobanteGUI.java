@@ -263,6 +263,7 @@ public class DetalleComprobanteGUI extends JDialog {
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else if (idCliente == 0) {
+            txtMonto.setValue(RestClient.getRestTemplate().getForObject("/pagos/facturas/" + facturaCompra.getId_Factura() + "/saldo", double.class));
             lblConcepto.setText("Observaciones:");
             this.setTitle("Nuevo Pago");
         }

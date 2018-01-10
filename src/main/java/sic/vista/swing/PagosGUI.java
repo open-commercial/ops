@@ -125,6 +125,9 @@ public class PagosGUI extends JInternalFrame {
 
     private void cargarResultadosAlTable() {
         try {
+            modeloTablaResultados.setRowCount(0);
+            tbl_Resultados.setModel(modeloTablaResultados);
+            this.setColumnas();
             pagos.stream().map(p -> {
                 Object[] fila;
                 if (mostrarDetalleComprobanteRelacionado == true) {
