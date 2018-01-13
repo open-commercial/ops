@@ -29,15 +29,14 @@ public class PagosGUI extends JInternalFrame {
     private List<Pago> pagos;
     private Factura facturaRelacionada = null;
     private NotaDebito notaDebitoRelacionada = null;
-    private Recibo reciboRelacionado = null;
-    private boolean mostrarDetalleComprobanteRelacionado = false;
+    private Recibo reciboRelacionado = null;    
     private final ModeloTabla modeloTablaResultados = new ModeloTabla();
     private final FormatterFechaHora formateador = new FormatterFechaHora(FormatterFechaHora.FORMATO_FECHA_HISPANO);
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public PagosGUI(Factura factura) {
         this.initComponents();
-        facturaRelacionada = factura;        
+        this.facturaRelacionada = factura;        
         this.setColumnas();
     }
     
@@ -49,8 +48,7 @@ public class PagosGUI extends JInternalFrame {
     
     public PagosGUI(Recibo recibo) {
         this.initComponents();                       
-        reciboRelacionado = recibo;
-        mostrarDetalleComprobanteRelacionado = true;
+        this.reciboRelacionado = recibo;        
         this.setColumnas();
     }
 
@@ -78,24 +76,15 @@ public class PagosGUI extends JInternalFrame {
 
     private void setColumnas() {
         //nombres de columnas
-        String[] encabezados;
-        if (mostrarDetalleComprobanteRelacionado == true) {
-            encabezados = new String[7];
-            encabezados[0] = "Nº Pago";
-            encabezados[1] = "Fecha Pago";
-            encabezados[2] = "Forma de Pago";
-            encabezados[3] = "Monto";
-            encabezados[4] = "Observaciones";            
-            encabezados[5] = "Fecha Comprobante";
-            encabezados[6] = "Comprobante";
-        } else {
-            encabezados = new String[5];
-            encabezados[0] = "Nº Pago";
-            encabezados[1] = "Fecha Pago";
-            encabezados[2] = "Forma de Pago";
-            encabezados[3] = "Monto";
-            encabezados[4] = "Observaciones";
-        }        
+        String[] encabezados;        
+        encabezados = new String[7];
+        encabezados[0] = "Nº Pago";
+        encabezados[1] = "Fecha Pago";
+        encabezados[2] = "Forma de Pago";
+        encabezados[3] = "Monto";
+        encabezados[4] = "Observaciones";
+        encabezados[5] = "Fecha Comprobante";
+        encabezados[6] = "Comprobante";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaResultados);
         //tipo de dato columnas
@@ -104,23 +93,23 @@ public class PagosGUI extends JInternalFrame {
         tipos[1] = Date.class;
         tipos[2] = String.class;
         tipos[3] = Double.class;
-        tipos[4] = String.class;
-        if (mostrarDetalleComprobanteRelacionado == true) {
-            tipos[5] = Date.class;
-            tipos[6] = String.class;
-        }
+        tipos[4] = String.class;        
+        tipos[5] = Date.class;
+        tipos[6] = String.class;        
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(Double.class, new RenderTabla());
         //size de columnas
-        tbl_Resultados.getColumnModel().getColumn(0).setMinWidth(80);
-        tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(80);
-        tbl_Resultados.getColumnModel().getColumn(1).setMinWidth(120);
-        tbl_Resultados.getColumnModel().getColumn(1).setMaxWidth(120);        
-        tbl_Resultados.getColumnModel().getColumn(3).setMinWidth(120);
-        tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(120);        
+        tbl_Resultados.getColumnModel().getColumn(0).setMinWidth(70);
+        tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(70);
+        tbl_Resultados.getColumnModel().getColumn(1).setMinWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(1).setMaxWidth(100);        
+        tbl_Resultados.getColumnModel().getColumn(3).setMinWidth(90);
+        tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(90);        
+        tbl_Resultados.getColumnModel().getColumn(5).setMinWidth(140);
+        tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(140);        
     }
 
     private void cargarResultadosAlTable() {
@@ -129,31 +118,30 @@ public class PagosGUI extends JInternalFrame {
             tbl_Resultados.setModel(modeloTablaResultados);
             this.setColumnas();
             pagos.stream().map(p -> {
-                Object[] fila;
-                if (mostrarDetalleComprobanteRelacionado == true) {
-                    fila = new Object[7];
-                    fila[0] = p.getNroPago();
-                    fila[1] = p.getFecha();
-                    fila[2] = p.getNombreFormaDePago();
-                    fila[3] = p.getMonto();
-                    fila[4] = p.getNota();                    
+                Object[] fila;                
+                fila = new Object[7];
+                fila[0] = p.getNroPago();
+                fila[1] = p.getFecha();
+                fila[2] = p.getNombreFormaDePago();
+                fila[3] = p.getMonto();
+                fila[4] = p.getNota();                
+                if (reciboRelacionado != null) {
                     Factura f = RestClient.getRestTemplate().getForObject("/facturas/pagos/" + p.getId_Pago(), Factura.class);
                     if (f != null) {
                         fila[5] = f.getFecha();
-                        fila[6] = f.getTipoComprobante() + " " + f.getNumSerie() + " - " + f.getNumFactura();
+                        fila[6] = f.getTipoComprobante() + " Nº " + f.getNumSerie() + " - " + f.getNumFactura();
                     }
                     Nota n = RestClient.getRestTemplate().getForObject("/notas/pagos/" + p.getId_Pago(), Nota.class);
                     if (n != null) {
                         fila[5] = n.getFecha();
-                        fila[6] = n.getTipoComprobante() + " " + n.getSerie() + " - " + n.getNroNota();
+                        fila[6] = n.getTipoComprobante() + " Nº " + n.getSerie() + " - " + n.getNroNota();
                     }
                 } else {
-                    fila = new Object[5];
-                    fila[0] = p.getNroPago();
-                    fila[1] = p.getFecha();
-                    fila[2] = p.getNombreFormaDePago();
-                    fila[3] = p.getMonto();
-                    fila[4] = p.getNota();
+                    Recibo r = RestClient.getRestTemplate().getForObject("/recibos/pagos/" + p.getId_Pago(), Recibo.class);
+                    if (r != null) {
+                        fila[5] = r.getFecha();
+                        fila[6] = "Recibo Nº " + r.getNumSerie() + " - " + r.getNumRecibo();
+                    }
                 }
                 return fila;
             }).forEach(fila -> {
@@ -403,16 +391,15 @@ public class PagosGUI extends JInternalFrame {
             this.setTitle("Pagos del Recibo " + reciboRelacionado.getNumSerie()+ " - " + reciboRelacionado.getNumRecibo()
                     + " con Fecha: " + formateador.format(reciboRelacionado.getFecha()));
         }
-        if (mostrarDetalleComprobanteRelacionado == true) {
+        if (facturaRelacionada != null || notaDebitoRelacionada != null) {
+            btn_nuevoPago.setVisible(false);
+            btn_Eliminar.setVisible(false);
+        } else {
             btn_nuevoPago.setVisible(false);
             btn_Eliminar.setVisible(false);
             lbl_AvisoPagado.setVisible(false);
             lbl_TA.setVisible(false);
             txt_TotalAdeudado.setVisible(false);
-        }
-        if (facturaRelacionada instanceof FacturaVenta || notaDebitoRelacionada != null) {
-            btn_nuevoPago.setVisible(false);
-            btn_Eliminar.setVisible(false);
         }
         this.getPagos();
         this.actualizarSaldos();

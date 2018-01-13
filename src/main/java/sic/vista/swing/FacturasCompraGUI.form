@@ -305,7 +305,9 @@
                   <Component id="btn_VerDetalle" linkSize="7" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                   <Component id="btn_VerPagos" linkSize="7" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="89" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                  <Component id="btnCrearRecibo" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="lbl_TotalFacturado" alignment="1" min="-2" max="-2" attributes="1"/>
                       <Component id="lbl_TotalIVACompra" alignment="1" min="-2" max="-2" attributes="1"/>
@@ -340,6 +342,7 @@
                           <Component id="btn_Eliminar" linkSize="8" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btn_VerPagos" linkSize="8" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btn_VerDetalle" linkSize="8" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnCrearRecibo" linkSize="8" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="btn_Nuevo" linkSize="8" alignment="1" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -421,7 +424,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/sic/icons/StampArrow_16x16.png"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Pagos"/>
+            <Property name="text" type="java.lang.String" value="Ver Pagos"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_VerPagosActionPerformed"/>
@@ -454,6 +457,17 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Total Facturado:"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnCrearRecibo">
+          <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Nuevo Recibo"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCrearReciboActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

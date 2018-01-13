@@ -27,7 +27,6 @@ import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Factura;
 import sic.modelo.FacturaVenta;
-import sic.modelo.Movimiento;
 import sic.modelo.Usuario;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
@@ -41,7 +40,7 @@ public class FacturasVentaGUI extends JInternalFrame {
     private List<FacturaVenta> facturasTotal = new ArrayList<>();
     private List<FacturaVenta> facturasParcial = new ArrayList<>();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private final Dimension sizeInternalFrame = new Dimension(880, 600);
+    private final Dimension sizeInternalFrame = new Dimension(970, 600);
     private static int totalElementosBusqueda;
     private static int NUMERO_PAGINA = 0;
     private static final int TAMANIO_PAGINA = 50;
