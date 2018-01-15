@@ -20,6 +20,7 @@ public class Recibo implements Serializable {
     private String nombreFormaDePago;   
     private String nombreEmpresa;
     private String razonSocialCliente;
+    private String razonSocialProveedor;
     private String nombreUsuario;
     
 }

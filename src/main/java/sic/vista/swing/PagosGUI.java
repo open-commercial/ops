@@ -14,7 +14,6 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Factura;
 import sic.modelo.FacturaCompra;
-import sic.modelo.FacturaVenta;
 import sic.modelo.Nota;
 import sic.modelo.NotaDebito;
 import sic.modelo.Pago;

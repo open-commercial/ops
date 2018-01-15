@@ -71,7 +71,7 @@ public class DetalleComprobanteGUI extends JDialog {
                 Recibo recibo = new Recibo();
                 recibo.setMonto(Double.parseDouble(txtMonto.getValue().toString()));
                 recibo.setConcepto(txtObservaciones.getText().trim());
-                recibo = RestClient.getRestTemplate().postForObject("/recibos?idCliente=" + idCliente
+                recibo = RestClient.getRestTemplate().postForObject("/recibos/cliente?idCliente=" + idCliente
                         + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                         + "&idFormaDePago=" + ((FormaDePago) cmbFormaDePago.getSelectedItem()).getId_FormaDePago()
                         + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
