@@ -834,7 +834,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     }//GEN-LAST:event_btnRefreshActionPerformed
 
     private void btnCrearReciboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearReciboActionPerformed
-        DetalleComprobanteGUI detalleComprobante = new DetalleComprobanteGUI(cuentaCorriente.getCliente().getId_Cliente());
+        DetalleReciboGUI detalleComprobante = new DetalleReciboGUI(cuentaCorriente.getCliente().getId_Cliente());
         detalleComprobante.setModal(true);
         detalleComprobante.setLocationRelativeTo(this);
         detalleComprobante.setVisible(true);

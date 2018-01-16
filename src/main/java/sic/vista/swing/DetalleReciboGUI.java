@@ -4,6 +4,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -17,34 +18,31 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.EmpresaActiva;
-import sic.modelo.FacturaCompra;
 import sic.modelo.FormaDePago;
-import sic.modelo.Pago;
+import sic.modelo.Proveedor;
 import sic.modelo.Recibo;
 import sic.modelo.UsuarioActivo;
 
-public class DetalleComprobanteGUI extends JDialog {
+public class DetalleReciboGUI extends JDialog {
     
     private long idCliente;
-    private FacturaCompra facturaCompra;
+    private List<Proveedor> proveedores;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public DetalleComprobanteGUI(long idCliente) {
+    public DetalleReciboGUI(long idCliente) {
         this.initComponents();
         this.setIcon();
         this.idCliente = idCliente;
-        this.facturaCompra = null;
     }
     
-    public DetalleComprobanteGUI(FacturaCompra facturaCompra) {
+    public DetalleReciboGUI() {
         this.initComponents();
         this.setIcon();
-        this.facturaCompra = facturaCompra;
         this.idCliente = 0;
     }
 
     private void setIcon() {
-        ImageIcon iconoVentana = new ImageIcon(DetalleComprobanteGUI.class.getResource("/sic/icons/Stamp_16x16.png"));
+        ImageIcon iconoVentana = new ImageIcon(DetalleReciboGUI.class.getResource("/sic/icons/Stamp_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
     }
 
@@ -64,6 +62,35 @@ public class DetalleComprobanteGUI extends JDialog {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    private void cargarProveedores() {
+        try {
+            proveedores = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
+                    .getForObject("/proveedores/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                            Proveedor[].class)));
+            cmb_Proveedor.removeAllItems();
+            proveedores.stream().forEach(p -> {
+                cmb_Proveedor.addItem(p.getRazonSocial());
+            });
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private long getIdProveedorSeleccionado() {
+        long idProveedor = 0;
+        for (Proveedor p : proveedores) {
+            if (p.getRazonSocial().equals(cmb_Proveedor.getSelectedItem())) {
+                idProveedor = p.getId_Proveedor();
+            }
+        }
+        return idProveedor;
+    }
 
     private void guardarComprobante() {
         try {
@@ -71,25 +98,32 @@ public class DetalleComprobanteGUI extends JDialog {
                 Recibo recibo = new Recibo();
                 recibo.setMonto(Double.parseDouble(txtMonto.getValue().toString()));
                 recibo.setConcepto(txtObservaciones.getText().trim());
-                recibo = RestClient.getRestTemplate().postForObject("/recibos/cliente?idCliente=" + idCliente
+                recibo = RestClient.getRestTemplate().postForObject("/recibos/clientes?idCliente=" + idCliente
                         + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                         + "&idFormaDePago=" + ((FormaDePago) cmbFormaDePago.getSelectedItem()).getId_FormaDePago()
                         + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                         recibo, Recibo.class);
-                             int reply = JOptionPane.showConfirmDialog(this,
+                int reply = JOptionPane.showConfirmDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
                         "Aviso", JOptionPane.YES_NO_OPTION);
                 if (reply == JOptionPane.YES_OPTION) {
                     this.lanzarReporteRecibo(recibo);
                 }
             } else {
-                Pago pago = new Pago();
-                pago.setMonto(Double.parseDouble(txtMonto.getValue().toString()));
-                pago.setNota(txtObservaciones.getText().trim());
-                RestClient.getRestTemplate().postForObject("/pagos/facturas-compra/" + facturaCompra.getId_Factura()
-                        + "?idFormaDePago=" + ((FormaDePago) cmbFormaDePago.getSelectedItem()).getId_FormaDePago()
+                Recibo recibo = new Recibo();
+                recibo.setMonto(Double.parseDouble(txtMonto.getValue().toString()));
+                recibo.setConcepto(txtObservaciones.getText().trim());
+                recibo = RestClient.getRestTemplate().postForObject("/recibos/proveedores?idProveedor=" + this.getIdProveedorSeleccionado()
+                        + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
+                        + "&idFormaDePago=" + ((FormaDePago) cmbFormaDePago.getSelectedItem()).getId_FormaDePago()
                         + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                        pago, Pago.class);
+                        recibo, Recibo.class);
+                int reply = JOptionPane.showConfirmDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                        "Aviso", JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION) {
+                    this.lanzarReporteRecibo(recibo);
+                }
             }
             this.dispose();
         } catch (RestClientResponseException ex) {
@@ -141,6 +175,8 @@ public class DetalleComprobanteGUI extends JDialog {
         txtObservaciones = new javax.swing.JTextField();
         cmbFormaDePago = new javax.swing.JComboBox<>();
         lblConcepto = new javax.swing.JLabel();
+        cmb_Proveedor = new javax.swing.JComboBox();
+        lblProveedor = new javax.swing.JLabel();
         btnGuardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -174,27 +210,41 @@ public class DetalleComprobanteGUI extends JDialog {
         lblConcepto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblConcepto.setText("Concepto:");
 
+        lblProveedor.setForeground(java.awt.Color.red);
+        lblProveedor.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblProveedor.setText("* Proveedor:");
+
         javax.swing.GroupLayout panelGeneralLayout = new javax.swing.GroupLayout(panelGeneral);
         panelGeneral.setLayout(panelGeneralLayout);
         panelGeneralLayout.setHorizontalGroup(
             panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelGeneralLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(lblFormaDePago, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblMonto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblConcepto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(lblFormaDePago, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblMonto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblConcepto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(cmbFormaDePago, javax.swing.GroupLayout.Alignment.LEADING, 0, 269, Short.MAX_VALUE)
-                    .addComponent(txtMonto, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtObservaciones, javax.swing.GroupLayout.Alignment.LEADING))
+                .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cmb_Proveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbFormaDePago, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtMonto, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtObservaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
+
+        panelGeneralLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cmbFormaDePago, cmb_Proveedor, txtMonto, txtObservaciones});
+
         panelGeneralLayout.setVerticalGroup(
             panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelGeneralLayout.createSequentialGroup()
+            .addGroup(panelGeneralLayout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmb_Proveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblProveedor))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(cmbFormaDePago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblFormaDePago))
@@ -206,7 +256,7 @@ public class DetalleComprobanteGUI extends JDialog {
                 .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblConcepto)
                     .addComponent(txtObservaciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(8, Short.MAX_VALUE))
         );
 
         btnGuardar.setForeground(java.awt.Color.blue);
@@ -254,6 +304,8 @@ public class DetalleComprobanteGUI extends JDialog {
             try {
                 double saldoCC = RestClient.getRestTemplate().getForObject("/cuentas-corrientes/clientes/" + idCliente + "/saldo", double.class);
                 txtMonto.setValue((saldoCC < 0) ? -saldoCC : 0.0);
+                this.cmb_Proveedor.setVisible(false);
+                this.lblProveedor.setVisible(false);
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             } catch (ResourceAccessException ex) {
@@ -262,10 +314,8 @@ public class DetalleComprobanteGUI extends JDialog {
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } else if (idCliente == 0) {
-            txtMonto.setValue(RestClient.getRestTemplate().getForObject("/pagos/facturas/" + facturaCompra.getId_Factura() + "/saldo", double.class));
-            lblConcepto.setText("Observaciones:");
-            this.setTitle("Nuevo Pago");
+        } else {
+            this.cargarProveedores();
         }
     }//GEN-LAST:event_formWindowOpened
 
@@ -278,9 +328,11 @@ public class DetalleComprobanteGUI extends JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar;
     private javax.swing.JComboBox<FormaDePago> cmbFormaDePago;
+    private javax.swing.JComboBox cmb_Proveedor;
     private javax.swing.JLabel lblConcepto;
     private javax.swing.JLabel lblFormaDePago;
     private javax.swing.JLabel lblMonto;
+    private javax.swing.JLabel lblProveedor;
     private javax.swing.JPanel panelGeneral;
     private javax.swing.JFormattedTextField txtMonto;
     private javax.swing.JTextField txtObservaciones;

@@ -731,33 +731,6 @@ public class FacturasCompraGUI extends JInternalFrame {
                 getDesktopPane().add(gui);
                 gui.setVisible(true);
             }
-            if (tbl_Resultados.getSelectedRowCount() > 1) {
-                int[] indicesTabla = Utilidades.getSelectedRowsModelIndices(tbl_Resultados);
-                long[] idsFacturas = new long[indicesTabla.length];
-                for (int i = 0; i < indicesTabla.length; i++) {
-                    idsFacturas[i] = this.facturasTotal.get(indicesTabla[i]).getId_Factura();
-                }
-                try {
-                    String uri = "/facturas/validaciones-pago-multiple?"
-                    + "idFactura=" + Arrays.toString(idsFacturas).substring(1, Arrays.toString(idsFacturas).length() - 1)
-                    + "&movimiento=" + Movimiento.COMPRA;
-                    boolean esValido = RestClient.getRestTemplate().getForObject(uri, boolean.class);
-                    if (esValido) {
-                        JInternalFrame gui = new PagoMultiplesFacturasGUI(idsFacturas, Movimiento.COMPRA);
-                        gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                            getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-                        getDesktopPane().add(gui);
-                        gui.setVisible(true);
-                    }
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
         }
     }//GEN-LAST:event_btn_VerPagosActionPerformed
 
@@ -827,7 +800,10 @@ public class FacturasCompraGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_NuevoActionPerformed
 
     private void btnCrearReciboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearReciboActionPerformed
-        
+        DetalleReciboGUI detalleComprobante = new DetalleReciboGUI();
+        detalleComprobante.setModal(true);
+        detalleComprobante.setLocationRelativeTo(this);
+        detalleComprobante.setVisible(true);
     }//GEN-LAST:event_btnCrearReciboActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
