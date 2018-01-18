@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.JInternalFrame;
@@ -109,20 +110,22 @@ public class ProveedoresGUI extends JInternalFrame {
         tbl_Resultados.setAutoCreateRowSorter(true);
 
         //nombres de columnas
-        String[] encabezados = new String[13];
+        String[] encabezados = new String[15];
         encabezados[0] = "Codigo";
         encabezados[1] = "Razon Social";
-        encabezados[2] = "Direccion";
-        encabezados[3] = "Condicion IVA";
-        encabezados[4] = "ID Fiscal";
-        encabezados[5] = "Tel. Primario";
-        encabezados[6] = "Tel. Secundario";
-        encabezados[7] = "Contacto";
-        encabezados[8] = "Email";
-        encabezados[9] = "Web";
-        encabezados[10] = "Localidad";
-        encabezados[11] = "Provincia";
-        encabezados[12] = "Pais";
+        encabezados[2] = "Saldo C/C";
+        encabezados[3] = "Ultimo Movimiento C/C";
+        encabezados[4] = "Direccion";
+        encabezados[5] = "Condicion IVA";
+        encabezados[6] = "ID Fiscal";
+        encabezados[7] = "Tel. Primario";
+        encabezados[8] = "Tel. Secundario";
+        encabezados[9] = "Contacto";
+        encabezados[10] = "Email";
+        encabezados[11] = "Web";
+        encabezados[12] = "Localidad";
+        encabezados[13] = "Provincia";
+        encabezados[14] = "Pais";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaResultados);
 
@@ -130,8 +133,8 @@ public class ProveedoresGUI extends JInternalFrame {
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
         tipos[0] = String.class;
         tipos[1] = String.class;
-        tipos[2] = String.class;
-        tipos[3] = String.class;
+        tipos[2] = Double.class;
+        tipos[3] = Date.class;
         tipos[4] = String.class;
         tipos[5] = String.class;
         tipos[6] = String.class;
@@ -141,6 +144,8 @@ public class ProveedoresGUI extends JInternalFrame {
         tipos[10] = String.class;
         tipos[11] = String.class;
         tipos[12] = String.class;
+        tipos[13] = String.class;
+        tipos[14] = String.class;
         modeloTablaResultados.setClaseColumnas(tipos);
 
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
@@ -149,36 +154,40 @@ public class ProveedoresGUI extends JInternalFrame {
         //Tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(300);
-        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(150);
+        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(110);
+        tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(150);
+        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(250);
+        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(150);
+        tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(11).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(12).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(13).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(14).setPreferredWidth(200);
     }
 
     private void cargarResultadosAlTable() {
         limpiarJTable();
         proveedores.stream().map((proveedor) -> {
-            Object[] fila = new Object[13];
+            Object[] fila = new Object[15];
             fila[0] = proveedor.getCodigo();
             fila[1] = proveedor.getRazonSocial();
-            fila[2] = proveedor.getDireccion();
-            fila[3] = proveedor.getCondicionIVA().getNombre();
-            fila[4] = proveedor.getIdFiscal();
-            fila[5] = proveedor.getTelPrimario();
-            fila[6] = proveedor.getTelSecundario();
-            fila[7] = proveedor.getContacto();
-            fila[8] = proveedor.getEmail();
-            fila[9] = proveedor.getWeb();
-            fila[10] = proveedor.getLocalidad().getNombre();
-            fila[11] = proveedor.getLocalidad().getProvincia().getNombre();
-            fila[12] = proveedor.getLocalidad().getProvincia().getPais().getNombre();
+            fila[2] = proveedor.getSaldoCuentaCorriente();
+            fila[3] = proveedor.getFechaUltimoMovimiento();
+            fila[4] = proveedor.getDireccion();
+            fila[5] = proveedor.getCondicionIVA().getNombre();
+            fila[6] = proveedor.getIdFiscal();
+            fila[7] = proveedor.getTelPrimario();
+            fila[8] = proveedor.getTelSecundario();
+            fila[9] = proveedor.getContacto();
+            fila[10] = proveedor.getEmail();
+            fila[11] = proveedor.getWeb();
+            fila[12] = proveedor.getLocalidad().getNombre();
+            fila[13] = proveedor.getLocalidad().getProvincia().getNombre();
+            fila[14] = proveedor.getLocalidad().getProvincia().getPais().getNombre();
             return fila;
         }).forEach((fila) -> {
             modeloTablaResultados.addRow(fila);
