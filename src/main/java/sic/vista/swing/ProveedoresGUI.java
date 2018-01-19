@@ -304,6 +304,7 @@ public class ProveedoresGUI extends JInternalFrame {
         btn_Nuevo = new javax.swing.JButton();
         btn_Modificar = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
+        btnCuentaCorriente = new javax.swing.JButton();
         btn_Seleccionar = new javax.swing.JButton();
 
         setClosable(true);
@@ -488,34 +489,44 @@ public class ProveedoresGUI extends JInternalFrame {
             }
         });
 
+        btnCuentaCorriente.setForeground(java.awt.Color.blue);
+        btnCuentaCorriente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/CC_16x16.png"))); // NOI18N
+        btnCuentaCorriente.setText("Cuenta Corriente");
+        btnCuentaCorriente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCuentaCorrienteActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 699, Short.MAX_VALUE)
             .addGroup(panelResultadosLayout.createSequentialGroup()
                 .addComponent(btn_Nuevo)
                 .addGap(0, 0, 0)
                 .addComponent(btn_Modificar)
                 .addGap(0, 0, 0)
                 .addComponent(btn_Eliminar)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 0, 0)
+                .addComponent(btnCuentaCorriente)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 1047, Short.MAX_VALUE)
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Eliminar, btn_Modificar, btn_Nuevo});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCuentaCorriente, btn_Eliminar, btn_Modificar, btn_Nuevo});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_Nuevo)
-                    .addComponent(btn_Modificar)
-                    .addComponent(btn_Eliminar)))
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnCuentaCorriente, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btn_Eliminar, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btn_Modificar, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btn_Nuevo, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
-
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Eliminar, btn_Modificar, btn_Nuevo});
 
         btn_Seleccionar.setForeground(java.awt.Color.blue);
         btn_Seleccionar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/ArrowRight_16x16.png"))); // NOI18N
@@ -707,7 +718,31 @@ public class ProveedoresGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_formInternalFrameOpened
 
+    private void btnCuentaCorrienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaCorrienteActionPerformed
+        if (tbl_Resultados.getSelectedRow() != -1) {
+            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+            Proveedor proveedor = RestClient.getRestTemplate()
+                    .getForObject("/proveedores/" + proveedores.get(indexFilaSeleccionada).getId_Proveedor(), Proveedor.class);
+            JInternalFrame gui;
+            if (proveedor != null) {
+                gui = new CuentaCorrienteGUI(proveedor);
+                gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                        getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+                getDesktopPane().add(gui);
+                gui.setVisible(true);
+                try {
+                    gui.setSelected(true);
+                } catch (PropertyVetoException ex) {
+                    String msjError = "No se pudo seleccionar la ventana requerida.";
+                    LOGGER.error(msjError + " - " + ex.getMessage());
+                    JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }//GEN-LAST:event_btnCuentaCorrienteActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCuentaCorriente;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_Modificar;

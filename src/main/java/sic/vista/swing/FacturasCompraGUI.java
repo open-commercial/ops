@@ -22,7 +22,6 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.FacturaCompra;
-import sic.modelo.Movimiento;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Proveedor;
 import sic.modelo.TipoDeOperacion;
@@ -305,7 +304,6 @@ public class FacturasCompraGUI extends JInternalFrame {
         txt_ResultTotalIVACompra = new javax.swing.JFormattedTextField();
         txt_ResultGastoTotal = new javax.swing.JFormattedTextField();
         lbl_TotalFacturado = new javax.swing.JLabel();
-        btnCrearRecibo = new javax.swing.JButton();
 
         setClosable(true);
         setMaximizable(true);
@@ -561,14 +559,6 @@ public class FacturasCompraGUI extends JInternalFrame {
 
         lbl_TotalFacturado.setText("Total Facturado:");
 
-        btnCrearRecibo.setForeground(java.awt.Color.blue);
-        btnCrearRecibo.setText("Nuevo Recibo");
-        btnCrearRecibo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCrearReciboActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
@@ -581,9 +571,7 @@ public class FacturasCompraGUI extends JInternalFrame {
                 .addComponent(btn_VerDetalle)
                 .addGap(0, 0, 0)
                 .addComponent(btn_VerPagos)
-                .addGap(0, 0, 0)
-                .addComponent(btnCrearRecibo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 131, Short.MAX_VALUE)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_TotalFacturado, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lbl_TotalIVACompra, javax.swing.GroupLayout.Alignment.TRAILING))
@@ -613,12 +601,11 @@ public class FacturasCompraGUI extends JInternalFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btn_Eliminar)
                         .addComponent(btn_VerPagos)
-                        .addComponent(btn_VerDetalle)
-                        .addComponent(btnCrearRecibo))
+                        .addComponent(btn_VerDetalle))
                     .addComponent(btn_Nuevo, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearRecibo, btn_Eliminar, btn_Nuevo, btn_VerDetalle, btn_VerPagos});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Eliminar, btn_Nuevo, btn_VerDetalle, btn_VerPagos});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -799,15 +786,7 @@ public class FacturasCompraGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btn_NuevoActionPerformed
 
-    private void btnCrearReciboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearReciboActionPerformed
-        DetalleReciboGUI detalleComprobante = new DetalleReciboGUI();
-        detalleComprobante.setModal(true);
-        detalleComprobante.setLocationRelativeTo(this);
-        detalleComprobante.setVisible(true);
-    }//GEN-LAST:event_btnCrearReciboActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCrearRecibo;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_Nuevo;

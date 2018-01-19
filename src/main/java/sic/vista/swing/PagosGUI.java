@@ -13,7 +13,6 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Factura;
-import sic.modelo.FacturaCompra;
 import sic.modelo.Nota;
 import sic.modelo.NotaDebito;
 import sic.modelo.Pago;
@@ -21,7 +20,6 @@ import sic.modelo.Recibo;
 import sic.util.FormatoFechasEnTablasRenderer;
 import sic.util.FormatterFechaHora;
 import sic.util.RenderTabla;
-import sic.util.Utilidades;
 
 public class PagosGUI extends JInternalFrame {
 
