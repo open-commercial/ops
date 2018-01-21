@@ -19,6 +19,7 @@ import sic.modelo.Localidad;
 import sic.modelo.Pais;
 import sic.modelo.Proveedor;
 import sic.modelo.Provincia;
+import sic.util.ColoresNumerosTablaRenderer;
 import sic.util.Utilidades;
 
 public class ProveedoresGUI extends JInternalFrame {
@@ -167,6 +168,10 @@ public class ProveedoresGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(12).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(13).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(14).setPreferredWidth(200);
+        
+        //Render Columna C/C
+        tbl_Resultados.getColumnModel().getColumn(2).setCellRenderer(new ColoresNumerosTablaRenderer());
+        
     }
 
     private void cargarResultadosAlTable() {
