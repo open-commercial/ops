@@ -113,12 +113,12 @@ public class ProveedoresGUI extends JInternalFrame {
         //nombres de columnas
         String[] encabezados = new String[15];
         encabezados[0] = "Codigo";
-        encabezados[1] = "Razon Social";
-        encabezados[2] = "Saldo C/C";
-        encabezados[3] = "Ultimo Movimiento C/C";
-        encabezados[4] = "Direccion";
-        encabezados[5] = "Condicion IVA";
-        encabezados[6] = "ID Fiscal";
+        encabezados[1] = "ID Fiscal";
+        encabezados[2] = "Razon Social";
+        encabezados[3] = "Saldo C/C";
+        encabezados[4] = "Ultimo Movimiento C/C";
+        encabezados[5] = "Direccion";
+        encabezados[6] = "Condicion IVA";
         encabezados[7] = "Tel. Primario";
         encabezados[8] = "Tel. Secundario";
         encabezados[9] = "Contacto";
@@ -134,9 +134,9 @@ public class ProveedoresGUI extends JInternalFrame {
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
         tipos[0] = String.class;
         tipos[1] = String.class;
-        tipos[2] = Double.class;
-        tipos[3] = Date.class;
-        tipos[4] = String.class;
+        tipos[2] = String.class;
+        tipos[3] = Double.class;
+        tipos[4] = Date.class;
         tipos[5] = String.class;
         tipos[6] = String.class;
         tipos[7] = String.class;
@@ -154,12 +154,12 @@ public class ProveedoresGUI extends JInternalFrame {
 
         //Tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(300);
-        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(110);
-        tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(150);
-        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(150);
+        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(150);
+        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(300);
+        tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(110);
+        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(150);
+        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(250);
+        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(250);
@@ -170,7 +170,7 @@ public class ProveedoresGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(14).setPreferredWidth(200);
         
         //Render Columna C/C
-        tbl_Resultados.getColumnModel().getColumn(2).setCellRenderer(new ColoresNumerosTablaRenderer());
+        tbl_Resultados.getColumnModel().getColumn(3).setCellRenderer(new ColoresNumerosTablaRenderer());
         
     }
 
@@ -179,12 +179,12 @@ public class ProveedoresGUI extends JInternalFrame {
         proveedores.stream().map((proveedor) -> {
             Object[] fila = new Object[15];
             fila[0] = proveedor.getCodigo();
-            fila[1] = proveedor.getRazonSocial();
-            fila[2] = proveedor.getSaldoCuentaCorriente();
-            fila[3] = proveedor.getFechaUltimoMovimiento();
-            fila[4] = proveedor.getDireccion();
-            fila[5] = proveedor.getCondicionIVA().getNombre();
-            fila[6] = proveedor.getIdFiscal();
+            fila[1] = proveedor.getIdFiscal();
+            fila[2] = proveedor.getRazonSocial();
+            fila[3] = proveedor.getSaldoCuentaCorriente();
+            fila[4] = proveedor.getFechaUltimoMovimiento();
+            fila[5] = proveedor.getDireccion();
+            fila[6] = proveedor.getCondicionIVA().getNombre();
             fila[7] = proveedor.getTelPrimario();
             fila[8] = proveedor.getTelSecundario();
             fila[9] = proveedor.getContacto();

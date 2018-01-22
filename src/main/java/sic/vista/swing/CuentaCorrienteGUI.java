@@ -27,7 +27,10 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.CuentaCorriente;
+import sic.modelo.CuentaCorrienteCliente;
+import sic.modelo.CuentaCorrienteProveedor;
 import sic.modelo.Factura;
+import sic.modelo.FacturaCompra;
 import sic.modelo.Nota;
 import sic.modelo.NotaDebito;
 import sic.modelo.PaginaRespuestaRest;
@@ -257,7 +260,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         txtCondicionIVACliente.setText(cliente.getCondicionIVA().getNombre());
         try {
             cuentaCorriente = RestClient.getRestTemplate()
-                    .getForObject("/cuentas-corrientes/clientes/" + cliente.getId_Cliente(), CuentaCorriente.class);
+                    .getForObject("/cuentas-corrientes/clientes/" + cliente.getId_Cliente(), CuentaCorrienteCliente.class);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -279,7 +282,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         txtCondicionIVACliente.setText(proveedor.getCondicionIVA().getNombre());
         try {
             cuentaCorriente = RestClient.getRestTemplate()
-                    .getForObject("/cuentas-corrientes/proveedores/" + proveedor.getId_Proveedor(), CuentaCorriente.class);
+                    .getForObject("/cuentas-corrientes/proveedores/" + proveedor.getId_Proveedor(), CuentaCorrienteProveedor.class);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -637,107 +640,149 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
-            try {
-                if (renglonCC.getTipoComprobante() == null) {
-                    JOptionPane.showInternalMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    switch (renglonCC.getTipoComprobante()) {
-                        case NOTA_DEBITO_A:
-                        case NOTA_DEBITO_B:
-                        case NOTA_DEBITO_PRESUPUESTO:
-                        case NOTA_DEBITO_X:
-                        case NOTA_DEBITO_Y:
-                            if (Desktop.isDesktopSupported()) {
-                                byte[] reporte = RestClient.getRestTemplate()
-                                        .getForObject("/notas/" + renglonCC.getIdMovimiento() + "/reporte", byte[].class);
-                                File f = new File(System.getProperty("user.home") + "/NotaDebito.pdf");
-                                Files.write(f.toPath(), reporte);
-                                Desktop.getDesktop().open(f);
-                            } else {
-                                JOptionPane.showMessageDialog(this,
-                                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
-                                        "Error", JOptionPane.ERROR_MESSAGE);
-                            }
-                            break;
-                        case NOTA_CREDITO_A:
-                        case NOTA_CREDITO_B:
-                        case NOTA_CREDITO_PRESUPUESTO:
-                        case NOTA_CREDITO_X:
-                        case NOTA_CREDITO_Y:
-                            if (Desktop.isDesktopSupported()) {
-                                byte[] reporte = RestClient.getRestTemplate()
-                                        .getForObject("/notas/" + renglonCC.getIdMovimiento() + "/reporte", byte[].class);
-                                File f = new File(System.getProperty("user.home") + "/NotaCredito.pdf");
-                                Files.write(f.toPath(), reporte);
-                                Desktop.getDesktop().open(f);
-                            } else {
-                                JOptionPane.showMessageDialog(this,
-                                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
-                                        "Error", JOptionPane.ERROR_MESSAGE);
-                            }
-                            break;
-                        case FACTURA_A:
-                        case FACTURA_B:
-                        case FACTURA_C:
-                        case FACTURA_X:
-                        case FACTURA_Y:
-                        case PRESUPUESTO:
-                            if (Desktop.isDesktopSupported()) {
-                                byte[] reporte = RestClient.getRestTemplate()
-                                        .getForObject("/facturas/" + renglonCC.getIdMovimiento() + "/reporte", byte[].class);
-                                File f = new File(System.getProperty("user.home") + "/Factura.pdf");
-                                Files.write(f.toPath(), reporte);
-                                Desktop.getDesktop().open(f);
-                            } else {
-                                JOptionPane.showMessageDialog(this,
-                                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
-                                        "Error", JOptionPane.ERROR_MESSAGE);
-                            }
-                            break;
-                        case RECIBO:
-                            if (Desktop.isDesktopSupported()) {
-                                try {
-                                    byte[] reporte = RestClient.getRestTemplate()
-                                            .getForObject("/recibos/" + renglonCC.getIdMovimiento() + "/reporte", byte[].class);
-                                    File f = new File(System.getProperty("user.home") + "/Recibo.pdf");
-                                    Files.write(f.toPath(), reporte);
-                                    Desktop.getDesktop().open(f);
-                                } catch (IOException ex) {
-                                    LOGGER.error(ex.getMessage());
-                                    JOptionPane.showMessageDialog(this,
-                                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
-                                            "Error", JOptionPane.ERROR_MESSAGE);
-                                } catch (RestClientResponseException ex) {
-                                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                                } catch (ResourceAccessException ex) {
-                                    LOGGER.error(ex.getMessage());
-                                    JOptionPane.showMessageDialog(this,
-                                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                                            "Error", JOptionPane.ERROR_MESSAGE);
-                                }
-                            } else {
-                                JOptionPane.showMessageDialog(this,
-                                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
-                                        "Error", JOptionPane.ERROR_MESSAGE);
-                            }
-                            break;
-                        default:
-                            JOptionPane.showInternalMessageDialog(this,
-                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
-                                    "Error", JOptionPane.ERROR_MESSAGE);
-                            break;
-                    }
-                }
-            } catch (IOException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+            if (cuentaCorriente instanceof CuentaCorrienteCliente) {
+                this.verDetalleCliente(renglonCC);
+            } else if (cuentaCorriente instanceof CuentaCorrienteProveedor) {
+                this.verDetalleProveedor(renglonCC);
             }
         }
     }//GEN-LAST:event_btnVerDetalleActionPerformed
+
+    
+    private void verDetalleCliente(RenglonCuentaCorriente renglonCC) {
+        try {
+            if (renglonCC.getTipoComprobante() == null) {
+                JOptionPane.showInternalMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                switch (renglonCC.getTipoComprobante()) {
+                    case NOTA_DEBITO_A:
+                    case NOTA_DEBITO_B:
+                    case NOTA_DEBITO_PRESUPUESTO:
+                    case NOTA_DEBITO_X:
+                    case NOTA_DEBITO_Y:
+                        if (Desktop.isDesktopSupported()) {
+                            byte[] reporte = RestClient.getRestTemplate()
+                                    .getForObject("/notas/" + renglonCC.getIdMovimiento() + "/reporte", byte[].class);
+                            File f = new File(System.getProperty("user.home") + "/NotaDebito.pdf");
+                            Files.write(f.toPath(), reporte);
+                            Desktop.getDesktop().open(f);
+                        } else {
+                            JOptionPane.showMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                        break;
+                    case NOTA_CREDITO_A:
+                    case NOTA_CREDITO_B:
+                    case NOTA_CREDITO_PRESUPUESTO:
+                    case NOTA_CREDITO_X:
+                    case NOTA_CREDITO_Y:
+                        if (Desktop.isDesktopSupported()) {
+                            byte[] reporte = RestClient.getRestTemplate()
+                                    .getForObject("/notas/" + renglonCC.getIdMovimiento() + "/reporte", byte[].class);
+                            File f = new File(System.getProperty("user.home") + "/NotaCredito.pdf");
+                            Files.write(f.toPath(), reporte);
+                            Desktop.getDesktop().open(f);
+                        } else {
+                            JOptionPane.showMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                        break;
+                    case FACTURA_A:
+                    case FACTURA_B:
+                    case FACTURA_C:
+                    case FACTURA_X:
+                    case FACTURA_Y:
+                    case PRESUPUESTO:
+                        if (Desktop.isDesktopSupported()) {
+                            byte[] reporte = RestClient.getRestTemplate()
+                                    .getForObject("/facturas/" + renglonCC.getIdMovimiento() + "/reporte", byte[].class);
+                            File f = new File(System.getProperty("user.home") + "/Factura.pdf");
+                            Files.write(f.toPath(), reporte);
+                            Desktop.getDesktop().open(f);
+                        } else {
+                            JOptionPane.showMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                        break;
+                    case RECIBO:
+                        if (Desktop.isDesktopSupported()) {
+                            try {
+                                byte[] reporte = RestClient.getRestTemplate()
+                                        .getForObject("/recibos/" + renglonCC.getIdMovimiento() + "/reporte", byte[].class);
+                                File f = new File(System.getProperty("user.home") + "/Recibo.pdf");
+                                Files.write(f.toPath(), reporte);
+                                Desktop.getDesktop().open(f);
+                            } catch (IOException ex) {
+                                LOGGER.error(ex.getMessage());
+                                JOptionPane.showMessageDialog(this,
+                                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+                            } catch (RestClientResponseException ex) {
+                                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                            } catch (ResourceAccessException ex) {
+                                LOGGER.error(ex.getMessage());
+                                JOptionPane.showMessageDialog(this,
+                                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                        break;
+                    default:
+                        JOptionPane.showInternalMessageDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
+                }
+            }
+        } catch (IOException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void verDetalleProveedor(RenglonCuentaCorriente renglonCC) {
+        if (renglonCC.getTipoComprobante() == null) {
+            JOptionPane.showInternalMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            switch (renglonCC.getTipoComprobante()) {
+                case FACTURA_A:
+                case FACTURA_B:
+                case FACTURA_C:
+                case FACTURA_X:
+                case FACTURA_Y:
+                    if (Desktop.isDesktopSupported()) {
+                        JInternalFrame gui = new DetalleFacturaCompraGUI(RestClient.getRestTemplate().getForObject("/facturas/" + renglonCC.getIdMovimiento(), FacturaCompra.class));
+                        gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                                getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+                        getDesktopPane().add(gui);
+                        gui.setVisible(true);
+                    } else {
+                        JOptionPane.showMessageDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    break;
+                default:
+                    JOptionPane.showInternalMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    break;
+            }
+        }
+    }
 
     private void btnAutorizarNotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAutorizarNotaActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
