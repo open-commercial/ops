@@ -122,8 +122,9 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         lineaDeFactura[6] = renglon.getImporte();
         modeloTablaRenglones.addRow(lineaDeFactura);
         renglones.add(renglon);
-        this.calcularResultados();
-
+        if (operacionAlta != false) {
+            this.calcularResultados();
+        }
         //para que baje solo el scroll vertical
         Point p = new Point(0, tbl_Renglones.getHeight());
         sp_Renglones.getViewport().setViewPosition(p);
