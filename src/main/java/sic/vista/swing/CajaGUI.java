@@ -198,7 +198,6 @@ public class CajaGUI extends JInternalFrame {
         renglonSaldoApertura[2] = true;
         renglonSaldoApertura[3] = caja.getSaldoInicial();
         modeloTablaResumen.addRow(renglonSaldoApertura);
-        List<Pago> pagos;
         List<Recibo> recibos;
         List<Gasto> gastos;
         try {
@@ -306,25 +305,6 @@ public class CajaGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    private void verDetalleFacturaCompra(Factura facturaCompra) {
-        try {
-            facturaCompra.setPagos(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/pagos/facturas/" + facturaCompra.getId_Factura(), Pago[].class)));
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }       
-        JInternalFrame gui = new DetalleFacturaCompraGUI((FacturaCompra) facturaCompra);
-        gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-        getDesktopPane().add(gui);
-        gui.setVisible(true);        
     }
     
     private List<Recibo> getRecibosPorFormaDePago(long idFormaDePago) {
