@@ -88,17 +88,11 @@ public class DetalleReciboGUI extends JDialog {
                 Recibo recibo = new Recibo();
                 recibo.setMonto(Double.parseDouble(txtMonto.getValue().toString()));
                 recibo.setConcepto(txtObservaciones.getText().trim());
-                recibo = RestClient.getRestTemplate().postForObject("/recibos/proveedores?idProveedor=" + proveedor.getId_Proveedor()
+                RestClient.getRestTemplate().postForObject("/recibos/proveedores?idProveedor=" + proveedor.getId_Proveedor()
                         + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                         + "&idFormaDePago=" + ((FormaDePago) cmbFormaDePago.getSelectedItem()).getId_FormaDePago()
                         + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                         recibo, Recibo.class);
-                int reply = JOptionPane.showConfirmDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
-                        "Aviso", JOptionPane.YES_NO_OPTION);
-                if (reply == JOptionPane.YES_OPTION) {
-                    this.lanzarReporteRecibo(recibo);
-                }
             }
             this.dispose();
         } catch (RestClientResponseException ex) {
