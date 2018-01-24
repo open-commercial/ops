@@ -335,7 +335,7 @@ public class PagosGUI extends JInternalFrame {
                         + " (sin numero) con Fecha: " + formateador.format(facturaRelacionada.getFecha()));
             } else {
                 this.setTitle("Pagos de " + facturaRelacionada.getTipoComprobante()
-                        + " Nro: " + facturaRelacionada.getNumSerie() + " - " + facturaRelacionada.getNumFactura()
+                        + " Nº " + facturaRelacionada.getNumSerie() + " - " + facturaRelacionada.getNumFactura()
                         + " con Fecha: " + formateador.format(facturaRelacionada.getFecha()));
             }
         } else if (notaDebitoRelacionada != null) {
@@ -344,11 +344,11 @@ public class PagosGUI extends JInternalFrame {
                         + " (sin numero) con Fecha: " + formateador.format(notaDebitoRelacionada.getFecha()));
             } else {
                 this.setTitle("Pagos de " + notaDebitoRelacionada.getTipoComprobante() + 
-                        " Nro: " + notaDebitoRelacionada.getSerie() + " - " + notaDebitoRelacionada.getNroNota()
+                        " Nº " + notaDebitoRelacionada.getSerie() + " - " + notaDebitoRelacionada.getNroNota()
                         + " con Fecha: " + formateador.format(notaDebitoRelacionada.getFecha()));
             }
         } else if (reciboRelacionado != null) {
-            this.setTitle("Pagos del Recibo " + reciboRelacionado.getNumSerie()+ " - " + reciboRelacionado.getNumRecibo()
+            this.setTitle("Pagos del Recibo Nº " + reciboRelacionado.getNumSerie()+ " - " + reciboRelacionado.getNumRecibo()
                     + " con Fecha: " + formateador.format(reciboRelacionado.getFecha()));
         }
         if (facturaRelacionada == null || notaDebitoRelacionada == null) {

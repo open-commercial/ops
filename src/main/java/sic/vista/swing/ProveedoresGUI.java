@@ -641,6 +641,7 @@ public class ProveedoresGUI extends JInternalFrame {
         gui_DetalleProveedor.setModal(true);
         gui_DetalleProveedor.setLocationRelativeTo(this);
         gui_DetalleProveedor.setVisible(true);
+        this.buscar();
     }//GEN-LAST:event_btn_NuevoActionPerformed
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
