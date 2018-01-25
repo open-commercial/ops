@@ -30,14 +30,10 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Caja;
 import sic.modelo.EmpresaActiva;
-import sic.modelo.FacturaCompra;
-import sic.modelo.FacturaVenta;
 import sic.modelo.FormaDePago;
 import sic.modelo.Gasto;
-import sic.modelo.Pago;
 import sic.modelo.UsuarioActivo;
 import sic.modelo.EstadoCaja;
-import sic.modelo.Factura;
 import sic.modelo.Recibo;
 import sic.util.ColoresNumerosTablaRenderer;
 import sic.util.FormatoFechasEnTablasRenderer;
@@ -66,8 +62,11 @@ public class CajaGUI extends JInternalFrame {
         
         public Movimiento(Recibo recibo) {
             this.idMovimiento = recibo.getIdRecibo();
-            this.tipoMovimientoCaja = TipoMovimiento.RECIBO;
-            this.concepto = recibo.getConcepto();
+            this.tipoMovimientoCaja = TipoMovimiento.RECIBO; // Recibo Nº serie - numero del cliente/proveedor NOMBRE
+            String razonSocial = ((recibo.getRazonSocialCliente().isEmpty()) ? recibo.getRazonSocialProveedor() : recibo.getRazonSocialCliente());
+            this.concepto = "Recibo Nº " + recibo.getNumSerie() + " - " + recibo.getNumRecibo() 
+                    + " del " + ((recibo.getRazonSocialCliente().isEmpty()) ? "Proveedor: " : "Cliente: ")
+                    + razonSocial;
             this.fecha = recibo.getFecha();
             this.monto = recibo.getMonto();
         }
