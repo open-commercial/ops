@@ -578,7 +578,6 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
-        setTitle("Nueva Factura de Compra");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/SIC_16_square.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
@@ -1145,11 +1144,12 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     }//GEN-LAST:event_txt_Recargo_PorcentajeActionPerformed
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
-        this.setColumnas();
-        this.setTitle("Factura Compra");
+        this.setColumnas();        
         if (operacionAlta == false) {
+            this.setTitle(facturaParaMostrar.getTipoComprobante() + " Nº " + facturaParaMostrar.getNumSerie() + " - " + facturaParaMostrar.getNumFactura());
             this.cargarFactura();
         } else {
+            this.setTitle("Nueva Factura Compra");
             this.cargarProveedores();
             this.cargarTransportistas();
             this.cargarTiposDeFacturaDisponibles();
