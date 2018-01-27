@@ -30,14 +30,11 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Caja;
 import sic.modelo.EmpresaActiva;
-import sic.modelo.FacturaCompra;
-import sic.modelo.FacturaVenta;
 import sic.modelo.FormaDePago;
 import sic.modelo.Gasto;
-import sic.modelo.Pago;
 import sic.modelo.UsuarioActivo;
 import sic.modelo.EstadoCaja;
-import sic.modelo.Factura;
+import sic.modelo.Recibo;
 import sic.util.ColoresNumerosTablaRenderer;
 import sic.util.FormatoFechasEnTablasRenderer;
 import sic.util.FormatterFechaHora;
@@ -62,15 +59,16 @@ public class CajaGUI extends JInternalFrame {
         private String concepto;
         private Date fecha;
         private double monto;
-
-        public Movimiento(Pago pago) {
-            this.idMovimiento = pago.getId_Pago();
-            this.tipoMovimientoCaja = TipoMovimiento.PAGO;
-            Factura f = RestClient.getRestTemplate().getForObject("/facturas/pagos/" + pago.getId_Pago(), Factura.class);
-            this.concepto = this.tipoMovimientoCaja + " por: " + f.getTipoComprobante() + " " + ((f instanceof FacturaVenta) ? "Venta " : "Compra ")
-                    + f.getNumSerie() + "-" + f.getNumFactura();
-            this.fecha = pago.getFecha();
-            this.monto = (f instanceof FacturaCompra) ? - pago.getMonto(): pago.getMonto();
+        
+        public Movimiento(Recibo recibo) {
+            this.idMovimiento = recibo.getIdRecibo();
+            this.tipoMovimientoCaja = TipoMovimiento.RECIBO; // Recibo Nº serie - numero del cliente/proveedor NOMBRE
+            String razonSocial = ((recibo.getRazonSocialCliente().isEmpty()) ? recibo.getRazonSocialProveedor() : recibo.getRazonSocialCliente());
+            this.concepto = "Recibo Nº " + recibo.getNumSerie() + " - " + recibo.getNumRecibo() 
+                    + " del " + ((recibo.getRazonSocialCliente().isEmpty()) ? "Proveedor: " : "Cliente: ")
+                    + razonSocial;
+            this.fecha = recibo.getFecha();
+            this.monto = recibo.getMonto();
         }
 
         public Movimiento(Gasto gasto) {
@@ -199,7 +197,7 @@ public class CajaGUI extends JInternalFrame {
         renglonSaldoApertura[2] = true;
         renglonSaldoApertura[3] = caja.getSaldoInicial();
         modeloTablaResumen.addRow(renglonSaldoApertura);
-        List<Pago> pagos;
+        List<Recibo> recibos;
         List<Gasto> gastos;
         try {
             for (long idFormaDePago : caja.getTotalesPorFomaDePago().keySet()) {
@@ -211,12 +209,12 @@ public class CajaGUI extends JInternalFrame {
                 fila[2] = fdp.isAfectaCaja();
                 fila[3] = caja.getTotalesPorFomaDePago().get(idFormaDePago);
                 modeloTablaResumen.addRow(fila);
-                pagos = this.getPagosPorFormaDePago(idFormaDePago);                
-                pagos.stream().forEach((pago) -> {
-                    movimientos.add(new Movimiento(pago));
+                recibos = this.getRecibosPorFormaDePago(idFormaDePago);
+                recibos.stream().forEach(recibo -> {
+                    movimientos.add(new Movimiento(recibo));
                 });
                 gastos = this.getGastosPorFormaDePago(idFormaDePago);
-                gastos.stream().forEach((gasto) -> {
+                gastos.stream().forEach(gasto -> {
                     movimientos.add(new Movimiento(gasto));
                 });
                 Collections.sort(movimientos);
@@ -279,11 +277,11 @@ public class CajaGUI extends JInternalFrame {
         this.limpiarTablaMovimientos();
     }
 
-    private void lanzarReporteFacturaVenta(Factura facturaVenta) {
+    private void lanzarReporteRecibo(long idRecibo) {
         if (Desktop.isDesktopSupported()) {
             try {
                 byte[] reporte = RestClient.getRestTemplate()
-                        .getForObject("/facturas/" + facturaVenta.getId_Factura() + "/reporte",
+                        .getForObject("/recibos/" + idRecibo + "/reporte", 
                                 byte[].class);
                 File f = new File(System.getProperty("user.home") + "/Factura.pdf");
                 Files.write(f.toPath(), reporte);
@@ -307,33 +305,14 @@ public class CajaGUI extends JInternalFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    private void verDetalleFacturaCompra(Factura facturaCompra) {
-        try {
-            facturaCompra.setPagos(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/pagos/facturas/" + facturaCompra.getId_Factura(), Pago[].class)));
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }       
-        JInternalFrame gui = new DetalleFacturaCompraGUI((FacturaCompra) facturaCompra);
-        gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-        getDesktopPane().add(gui);
-        gui.setVisible(true);        
-    }
-
-    private List<Pago> getPagosPorFormaDePago(long idFormaDePago) {
-        String criteriaPagos = "/pagos/busqueda?"
+    
+    private List<Recibo> getRecibosPorFormaDePago(long idFormaDePago) {
+        String criteriaRecibos = "/recibos/busqueda?"
                 + "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                 + "&idFormaDePago=" + idFormaDePago
                 + "&desde=" + caja.getFechaApertura().getTime()
                 + "&hasta=" + this.getFechaHastaCaja(caja);
-        return new ArrayList(Arrays.asList(RestClient.getRestTemplate().getForObject(criteriaPagos, Pago[].class)));
+        return new ArrayList(Arrays.asList(RestClient.getRestTemplate().getForObject(criteriaRecibos, Recibo[].class)));
     }
 
     private List<Gasto> getGastosPorFormaDePago(long idFormaDePago) {
@@ -626,14 +605,8 @@ public class CajaGUI extends JInternalFrame {
             long id = this.movimientos.get(Utilidades.getSelectedRowModelIndice(tbl_Movimientos)).getIdMovimiento();
             TipoMovimiento tipoMovimientoCaja = this.movimientos.get(Utilidades.getSelectedRowModelIndice(tbl_Movimientos)).getTipoMovimientoCaja();
             try {
-                if (tipoMovimientoCaja.equals(TipoMovimiento.PAGO)) {
-                    Factura f = RestClient.getRestTemplate().getForObject("/facturas/pagos/" + id, Factura.class);
-                    if (f instanceof FacturaVenta) {
-                        this.lanzarReporteFacturaVenta(f);
-                    }
-                    if (f instanceof FacturaCompra) {
-                        this.verDetalleFacturaCompra(f);
-                    }
+                if (tipoMovimientoCaja.equals(TipoMovimiento.RECIBO)) {
+                    this.lanzarReporteRecibo(id);
                 }
                 if (tipoMovimientoCaja.equals(TipoMovimiento.GASTO)) {
                     Gasto gasto = RestClient.getRestTemplate().getForObject("/gastos/" + id, Gasto.class);

@@ -9,8 +9,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class NotaDebito extends Nota implements Serializable {
-    
-    private Long pagoId;
 
     private List<RenglonNotaDebito> renglonesNotaDebito;
     

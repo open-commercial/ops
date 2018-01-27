@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.JInternalFrame;
@@ -18,6 +19,7 @@ import sic.modelo.Localidad;
 import sic.modelo.Pais;
 import sic.modelo.Proveedor;
 import sic.modelo.Provincia;
+import sic.util.ColoresNumerosTablaRenderer;
 import sic.util.Utilidades;
 
 public class ProveedoresGUI extends JInternalFrame {
@@ -107,32 +109,32 @@ public class ProveedoresGUI extends JInternalFrame {
     private void setColumnas() {
         //sorting
         tbl_Resultados.setAutoCreateRowSorter(true);
-
         //nombres de columnas
-        String[] encabezados = new String[13];
+        String[] encabezados = new String[15];
         encabezados[0] = "Codigo";
-        encabezados[1] = "Razon Social";
-        encabezados[2] = "Direccion";
-        encabezados[3] = "Condicion IVA";
-        encabezados[4] = "ID Fiscal";
-        encabezados[5] = "Tel. Primario";
-        encabezados[6] = "Tel. Secundario";
-        encabezados[7] = "Contacto";
-        encabezados[8] = "Email";
-        encabezados[9] = "Web";
-        encabezados[10] = "Localidad";
-        encabezados[11] = "Provincia";
-        encabezados[12] = "Pais";
+        encabezados[1] = "ID Fiscal";
+        encabezados[2] = "Razon Social";
+        encabezados[3] = "Saldo C/C";
+        encabezados[4] = "Ultimo Movimiento C/C";
+        encabezados[5] = "Direccion";
+        encabezados[6] = "Condicion IVA";
+        encabezados[7] = "Tel. Primario";
+        encabezados[8] = "Tel. Secundario";
+        encabezados[9] = "Contacto";
+        encabezados[10] = "Email";
+        encabezados[11] = "Web";
+        encabezados[12] = "Localidad";
+        encabezados[13] = "Provincia";
+        encabezados[14] = "Pais";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaResultados);
-
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
         tipos[0] = String.class;
         tipos[1] = String.class;
         tipos[2] = String.class;
-        tipos[3] = String.class;
-        tipos[4] = String.class;
+        tipos[3] = Double.class;
+        tipos[4] = Date.class;
         tipos[5] = String.class;
         tipos[6] = String.class;
         tipos[7] = String.class;
@@ -141,47 +143,53 @@ public class ProveedoresGUI extends JInternalFrame {
         tipos[10] = String.class;
         tipos[11] = String.class;
         tipos[12] = String.class;
+        tipos[13] = String.class;
+        tipos[14] = String.class;
         modeloTablaResultados.setClaseColumnas(tipos);
-
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
-
         //Tamanios de columnas
-        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(300);
-        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(70);
+        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(300);
+        tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(110);
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(150);
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(310);
         tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(250);
+        tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(11).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(12).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(13).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(14).setPreferredWidth(200);        
+        //Render Columna C/C
+        tbl_Resultados.getColumnModel().getColumn(3).setCellRenderer(new ColoresNumerosTablaRenderer());
     }
 
     private void cargarResultadosAlTable() {
         limpiarJTable();
-        proveedores.stream().map((proveedor) -> {
-            Object[] fila = new Object[13];
-            fila[0] = proveedor.getCodigo();
-            fila[1] = proveedor.getRazonSocial();
-            fila[2] = proveedor.getDireccion();
-            fila[3] = proveedor.getCondicionIVA().getNombre();
-            fila[4] = proveedor.getIdFiscal();
-            fila[5] = proveedor.getTelPrimario();
-            fila[6] = proveedor.getTelSecundario();
-            fila[7] = proveedor.getContacto();
-            fila[8] = proveedor.getEmail();
-            fila[9] = proveedor.getWeb();
-            fila[10] = proveedor.getLocalidad().getNombre();
-            fila[11] = proveedor.getLocalidad().getProvincia().getNombre();
-            fila[12] = proveedor.getLocalidad().getProvincia().getPais().getNombre();
+        proveedores.stream().map(p -> {
+            Object[] fila = new Object[15];
+            fila[0] = p.getCodigo();
+            fila[1] = p.getIdFiscal();
+            fila[2] = p.getRazonSocial();
+            fila[3] = p.getSaldoCuentaCorriente();
+            fila[4] = p.getFechaUltimoMovimiento();
+            fila[5] = p.getDireccion();
+            fila[6] = p.getCondicionIVA().getNombre();
+            fila[7] = p.getTelPrimario();
+            fila[8] = p.getTelSecundario();
+            fila[9] = p.getContacto();
+            fila[10] = p.getEmail();
+            fila[11] = p.getWeb();
+            fila[12] = p.getLocalidad().getNombre();
+            fila[13] = p.getLocalidad().getProvincia().getNombre();
+            fila[14] = p.getLocalidad().getProvincia().getPais().getNombre();
             return fila;
-        }).forEach((fila) -> {
-            modeloTablaResultados.addRow(fila);
+        }).forEach(f -> {
+            modeloTablaResultados.addRow(f);
         });
 
         tbl_Resultados.setModel(modeloTablaResultados);
@@ -295,6 +303,7 @@ public class ProveedoresGUI extends JInternalFrame {
         btn_Nuevo = new javax.swing.JButton();
         btn_Modificar = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
+        btnCuentaCorriente = new javax.swing.JButton();
         btn_Seleccionar = new javax.swing.JButton();
 
         setClosable(true);
@@ -479,34 +488,44 @@ public class ProveedoresGUI extends JInternalFrame {
             }
         });
 
+        btnCuentaCorriente.setForeground(java.awt.Color.blue);
+        btnCuentaCorriente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/CC_16x16.png"))); // NOI18N
+        btnCuentaCorriente.setText("Cuenta Corriente");
+        btnCuentaCorriente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCuentaCorrienteActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 699, Short.MAX_VALUE)
             .addGroup(panelResultadosLayout.createSequentialGroup()
                 .addComponent(btn_Nuevo)
                 .addGap(0, 0, 0)
                 .addComponent(btn_Modificar)
                 .addGap(0, 0, 0)
                 .addComponent(btn_Eliminar)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 0, 0)
+                .addComponent(btnCuentaCorriente)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 1047, Short.MAX_VALUE)
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Eliminar, btn_Modificar, btn_Nuevo});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCuentaCorriente, btn_Eliminar, btn_Modificar, btn_Nuevo});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_Nuevo)
-                    .addComponent(btn_Modificar)
-                    .addComponent(btn_Eliminar)))
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnCuentaCorriente, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btn_Eliminar, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btn_Modificar, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btn_Nuevo, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
-
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Eliminar, btn_Modificar, btn_Nuevo});
 
         btn_Seleccionar.setForeground(java.awt.Color.blue);
         btn_Seleccionar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/ArrowRight_16x16.png"))); // NOI18N
@@ -616,6 +635,7 @@ public class ProveedoresGUI extends JInternalFrame {
         gui_DetalleProveedor.setModal(true);
         gui_DetalleProveedor.setLocationRelativeTo(this);
         gui_DetalleProveedor.setVisible(true);
+        this.buscar();
     }//GEN-LAST:event_btn_NuevoActionPerformed
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
@@ -698,7 +718,31 @@ public class ProveedoresGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_formInternalFrameOpened
 
+    private void btnCuentaCorrienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaCorrienteActionPerformed
+        if (tbl_Resultados.getSelectedRow() != -1) {
+            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+            Proveedor proveedor = RestClient.getRestTemplate()
+                    .getForObject("/proveedores/" + proveedores.get(indexFilaSeleccionada).getId_Proveedor(), Proveedor.class);
+            JInternalFrame gui;
+            if (proveedor != null) {
+                gui = new CuentaCorrienteGUI(proveedor);
+                gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                        getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+                getDesktopPane().add(gui);
+                gui.setVisible(true);
+                try {
+                    gui.setSelected(true);
+                } catch (PropertyVetoException ex) {
+                    String msjError = "No se pudo seleccionar la ventana requerida.";
+                    LOGGER.error(msjError + " - " + ex.getMessage());
+                    JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }//GEN-LAST:event_btnCuentaCorrienteActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCuentaCorriente;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_Modificar;

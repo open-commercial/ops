@@ -22,7 +22,6 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.FacturaCompra;
-import sic.modelo.Movimiento;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Proveedor;
 import sic.modelo.TipoDeOperacion;
@@ -38,7 +37,7 @@ public class FacturasCompraGUI extends JInternalFrame {
     private static int NUMERO_PAGINA = 0;
     private static final int TAMANIO_PAGINA = 50;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private final Dimension sizeInternalFrame =  new Dimension(880, 600);
+    private final Dimension sizeInternalFrame =  new Dimension(970, 600);
 
     public FacturasCompraGUI() {
         this.initComponents();        
@@ -565,13 +564,14 @@ public class FacturasCompraGUI extends JInternalFrame {
         panelResultadosLayout.setHorizontalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(btn_Nuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_Nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
                 .addComponent(btn_Eliminar)
                 .addGap(0, 0, 0)
                 .addComponent(btn_VerDetalle)
                 .addGap(0, 0, 0)
                 .addComponent(btn_VerPagos)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 131, Short.MAX_VALUE)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_TotalFacturado, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lbl_TotalIVACompra, javax.swing.GroupLayout.Alignment.TRAILING))
@@ -717,33 +717,6 @@ public class FacturasCompraGUI extends JInternalFrame {
                         getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
                 getDesktopPane().add(gui);
                 gui.setVisible(true);
-            }
-            if (tbl_Resultados.getSelectedRowCount() > 1) {
-                int[] indicesTabla = Utilidades.getSelectedRowsModelIndices(tbl_Resultados);
-                long[] idsFacturas = new long[indicesTabla.length];
-                for (int i = 0; i < indicesTabla.length; i++) {
-                    idsFacturas[i] = this.facturasTotal.get(indicesTabla[i]).getId_Factura();
-                }
-                try {
-                    String uri = "/facturas/validaciones-pago-multiple?"
-                    + "idFactura=" + Arrays.toString(idsFacturas).substring(1, Arrays.toString(idsFacturas).length() - 1)
-                    + "&movimiento=" + Movimiento.COMPRA;
-                    boolean esValido = RestClient.getRestTemplate().getForObject(uri, boolean.class);
-                    if (esValido) {
-                        JInternalFrame gui = new PagoMultiplesFacturasGUI(idsFacturas, Movimiento.COMPRA);
-                        gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                            getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-                        getDesktopPane().add(gui);
-                        gui.setVisible(true);
-                    }
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-                }
             }
         }
     }//GEN-LAST:event_btn_VerPagosActionPerformed

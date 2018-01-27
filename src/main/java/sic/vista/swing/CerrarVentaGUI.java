@@ -25,7 +25,6 @@ import sic.modelo.EmpresaActiva;
 import sic.modelo.Factura;
 import sic.modelo.FacturaVenta;
 import sic.modelo.FormaDePago;
-import sic.modelo.Pago;
 import sic.modelo.RenglonFactura;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.Transportista;
@@ -37,12 +36,12 @@ public class CerrarVentaGUI extends JDialog {
     private final PuntoDeVentaGUI gui_puntoDeVenta;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int[] indicesParaDividir = null;
-    private final long[] idsFormasDePago;
-    private boolean dividir = false;
+    private final List<Long> idsFormasDePago = new ArrayList();
+    private final List<Double> montos = new ArrayList<>();
+    private boolean dividir = false;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public CerrarVentaGUI(JInternalFrame parent, boolean modal) {
-        this.idsFormasDePago = new long[3];
         super.setModal(modal);
         this.initComponents();
         this.setIcon();        
@@ -147,14 +146,10 @@ public class CerrarVentaGUI extends JDialog {
 
     private void calcularVuelto() {
         try {
-            txt_AbonaCon.commitEdit();
-            double montoRecibido = Double.parseDouble((txt_AbonaCon.getText()));
+            if (txt_AbonaCon.isEditValid()) txt_AbonaCon.commitEdit();
+            double montoRecibido = Double.valueOf(txt_AbonaCon.getValue().toString());
             double vuelto = montoRecibido - gui_puntoDeVenta.getTotal();
-            if (vuelto >= 0) {
-                lbl_Vuelto.setValue(vuelto);
-            } else {
-                lbl_Vuelto.setValue(0.0);
-            }            
+            lbl_Vuelto.setValue(vuelto >= 0 ? vuelto : 0.0);
         } catch (ParseException ex) {
             String mensaje = "Se produjo un error analizando los campos.";
             LOGGER.error(mensaje + " - " + ex.getMessage());
@@ -187,14 +182,17 @@ public class CerrarVentaGUI extends JDialog {
 
     private void finalizarVenta() {
         FacturaVenta facturaVenta = gui_puntoDeVenta.construirFactura();
-        facturaVenta = this.agregarPagosAFactura(facturaVenta);
+        this.armarMontosConFormasDePago();
         try {
             String uri = "/facturas/venta?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                     + "&idCliente=" + gui_puntoDeVenta.getIdCliente()
                     + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                     + "&idTransportista=" + ((Transportista) cmb_Transporte.getSelectedItem()).getId_Transportista()
-                    + "&idsFormaDePago=" + Arrays.toString(idsFormasDePago).substring(1, Arrays.toString(idsFormasDePago).length() - 1)
                     + "&idPedido=";
+            if (idsFormasDePago.isEmpty() == false) {
+                uri += "&idsFormaDePago=" + Arrays.toString(idsFormasDePago.toArray()).substring(1, Arrays.toString(idsFormasDePago.toArray()).length() - 1)
+                    + "&montos=" + Arrays.toString(montos.toArray()).substring(1, Arrays.toString(montos.toArray()).length() - 1);
+            }
             if (gui_puntoDeVenta.getPedido() != null && gui_puntoDeVenta.getPedido().getId_Pedido() != 0) {
                 uri += gui_puntoDeVenta.getPedido().getId_Pedido();
             }
@@ -222,7 +220,7 @@ public class CerrarVentaGUI extends JDialog {
                             this.lanzarReporteFactura(facturasDivididas.get(i), "Factura");
                         }
                     }
-                }                
+                }
             } else {
                 Factura f = Arrays.asList(RestClient.getRestTemplate().postForObject(uri, facturaVenta, FacturaVenta[].class)).get(0);
                 if (facturaVenta != null) {
@@ -249,31 +247,19 @@ public class CerrarVentaGUI extends JDialog {
         }
     }
 
-    private FacturaVenta agregarPagosAFactura(FacturaVenta facturaVenta) {        
-        List<Pago> pagos = new ArrayList<>();
-        if (chk_FormaDePago1.isSelected() && chk_FormaDePago1.isEnabled()) {
-            Pago pago1 = new Pago();
-            pago1.setMonto(Double.parseDouble(txt_MontoPago1.getValue().toString()));            
-            pago1.setNota("");
-            idsFormasDePago[0] = ((FormaDePago) cmb_FormaDePago1.getSelectedItem()).getId_FormaDePago();
-            pagos.add(pago1);
+    private void armarMontosConFormasDePago() {
+        if (chk_FormaDePago1.isSelected() && chk_FormaDePago1.isEnabled()) {            
+            montos.add(new Double(txt_MontoPago1.getValue().toString()));            
+            idsFormasDePago.add(((FormaDePago) cmb_FormaDePago1.getSelectedItem()).getId_FormaDePago());            
         }
-        if (chk_FormaDePago2.isSelected() && chk_FormaDePago2.isEnabled()) {
-            Pago pago2 = new Pago();
-            pago2.setMonto(Double.parseDouble(txt_MontoPago2.getValue().toString()));            
-            pago2.setNota("");
-            idsFormasDePago[1] = ((FormaDePago) cmb_FormaDePago2.getSelectedItem()).getId_FormaDePago();
-            pagos.add(pago2);
+        if (chk_FormaDePago2.isSelected() && chk_FormaDePago2.isEnabled()) {            
+            montos.add(new Double(txt_MontoPago2.getValue().toString()));            
+            idsFormasDePago.add(((FormaDePago) cmb_FormaDePago2.getSelectedItem()).getId_FormaDePago());            
         }
-        if (chk_FormaDePago3.isSelected() && chk_FormaDePago3.isEnabled()) {
-            Pago pago3 = new Pago();
-            pago3.setMonto(Double.parseDouble(txt_MontoPago3.getValue().toString()));            
-            pago3.setNota("");
-            idsFormasDePago[2] = ((FormaDePago) cmb_FormaDePago3.getSelectedItem()).getId_FormaDePago();
-            pagos.add(pago3);
+        if (chk_FormaDePago3.isSelected() && chk_FormaDePago3.isEnabled()) {            
+            montos.add(new Double(txt_MontoPago3.getValue().toString()));                        
+            idsFormasDePago.add(((FormaDePago) cmb_FormaDePago3.getSelectedItem()).getId_FormaDePago());
         }
-        facturaVenta.setPagos(pagos);
-        return facturaVenta;
     }
 
     /**
@@ -358,7 +344,6 @@ public class CerrarVentaGUI extends JDialog {
         });
 
         txt_MontoPago1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
-        txt_MontoPago1.setText("0");
         txt_MontoPago1.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         txt_MontoPago1.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -374,7 +359,6 @@ public class CerrarVentaGUI extends JDialog {
         });
 
         txt_MontoPago2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
-        txt_MontoPago2.setText("0");
         txt_MontoPago2.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         txt_MontoPago2.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -390,7 +374,6 @@ public class CerrarVentaGUI extends JDialog {
         });
 
         txt_MontoPago3.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
-        txt_MontoPago3.setText("0");
         txt_MontoPago3.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         txt_MontoPago3.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -412,7 +395,6 @@ public class CerrarVentaGUI extends JDialog {
         lbl_Total1.setText("Abona con:");
 
         txt_AbonaCon.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
-        txt_AbonaCon.setText("0");
         txt_AbonaCon.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
         txt_AbonaCon.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -430,7 +412,6 @@ public class CerrarVentaGUI extends JDialog {
         lbl_Vuelto.setEditable(false);
         lbl_Vuelto.setForeground(new java.awt.Color(29, 156, 37));
         lbl_Vuelto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
-        lbl_Vuelto.setText("0");
         lbl_Vuelto.setFocusable(false);
         lbl_Vuelto.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
 
@@ -470,8 +451,8 @@ public class CerrarVentaGUI extends JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbl_TotalAPagar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                            .addComponent(txt_AbonaCon, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lbl_Vuelto, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addComponent(lbl_Vuelto, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txt_AbonaCon, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(panelLayout.createSequentialGroup()
                         .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lbl_Transporte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -572,10 +553,13 @@ public class CerrarVentaGUI extends JDialog {
         this.setEstadoFormasDePago();
         cmb_Transporte.setSelectedIndex(0);
         lbl_Vendedor.setText(UsuarioActivo.getInstance().getUsuario().getNombre());
+        txt_AbonaCon.setValue(0);
         txt_AbonaCon.requestFocus();
         lbl_TotalAPagar.setValue(gui_puntoDeVenta.getTotal());
         lbl_Vuelto.setValue(0);
         txt_MontoPago1.setValue(gui_puntoDeVenta.getTotal());
+        txt_MontoPago2.setValue(0);
+        txt_MontoPago3.setValue(0);
         indicesParaDividir = new int[gui_puntoDeVenta.getModeloTabla().getRowCount()];
         if ((indicesParaDividir.length > 0) 
                 && (gui_puntoDeVenta.getTipoDeComprobante().equals(TipoDeComprobante.FACTURA_A)
