@@ -1533,15 +1533,9 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         if (pedido == null || pedido.getId_Pedido() == 0) {
                             this.construirPedido();
                         }
-                        Map<Double, Producto> faltantes = this.getProductosSinStockDisponible(renglones);
+                        Map<Double, Producto> faltantes = this.getProductosSinCantidadVentaMinima(renglones);
                         if (faltantes.isEmpty()) {
-                            faltantes = this.getProductosSinCantidadVentaMinima(renglones);
-                            if (faltantes.isEmpty()) {
-                                this.finalizarPedido();
-                            } else {
-                                ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(faltantes);
-                                productosFaltantesGUI.setVisible(true);
-                            }
+                            this.finalizarPedido();
                         } else {
                             ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(faltantes);
                             productosFaltantesGUI.setVisible(true);

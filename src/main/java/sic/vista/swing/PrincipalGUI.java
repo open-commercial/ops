@@ -20,7 +20,7 @@ import sic.util.Utilidades;
 public class PrincipalGUI extends JFrame {
     
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private final Dimension sizeFrame = new Dimension(1200, 700);
+    private final Dimension sizeFrame = new Dimension(1200, 800);
     
     public PrincipalGUI() {
         this.initComponents();

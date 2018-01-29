@@ -157,11 +157,7 @@ public class BuscarProductosGUI extends JDialog {
             this.dispose();
         } else {
             if (movimiento == Movimiento.PEDIDO) {
-                if (this.sumarCantidadesSegunProductosYaCargados() > productoSeleccionado.getCantidad()) {
-                    JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_producto_sin_stock_suficiente"), "Error", JOptionPane.ERROR_MESSAGE);
-                    esValido = false;
-                } else if (Double.valueOf(txtCantidad.getValue().toString()) < productoSeleccionado.getVentaMinima()) {
+                if (Double.valueOf(txtCantidad.getValue().toString()) < productoSeleccionado.getVentaMinima()) {
                     JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                             .getString("mensaje_producto_cantidad_menor_a_minima"), "Error", JOptionPane.ERROR_MESSAGE);
                     esValido = false;
@@ -173,7 +169,7 @@ public class BuscarProductosGUI extends JDialog {
                             .getString("mensaje_producto_sin_stock_suficiente"), "Error", JOptionPane.ERROR_MESSAGE);
                     esValido = false;
                 }
-            }            
+            }
             if (esValido) {
                 try {
                     renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
