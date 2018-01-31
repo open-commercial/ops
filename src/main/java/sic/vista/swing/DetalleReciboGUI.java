@@ -4,7 +4,6 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -27,8 +26,7 @@ import sic.modelo.UsuarioActivo;
 public class DetalleReciboGUI extends JDialog {
     
     private final Cliente cliente;
-    private final Proveedor proveedor;
-    private List<Proveedor> proveedores;
+    private final Proveedor proveedor;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleReciboGUI(Cliente cliente) {

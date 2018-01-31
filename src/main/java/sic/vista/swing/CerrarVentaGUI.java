@@ -36,7 +36,7 @@ public class CerrarVentaGUI extends JDialog {
     private final PuntoDeVentaGUI gui_puntoDeVenta;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int[] indicesParaDividir = null;
-    private final List<Long> idsFormasDePago = new ArrayList();
+    private final List<Long> idsFormasDePago = new ArrayList<>();
     private final List<Double> montos = new ArrayList<>();
     private boolean dividir = false;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
