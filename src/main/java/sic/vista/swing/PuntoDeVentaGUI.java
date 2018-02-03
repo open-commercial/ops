@@ -414,7 +414,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         + "&descuentoPorcentaje=0.0",
                         RenglonFactura.class);
                 boolean esValido = true;
-                Map<Double, Producto> faltantes;
+                Map<Long, Double> faltantes;
                 if (cmb_TipoComprobante.getSelectedItem() == TipoDeComprobante.PEDIDO) {
                     faltantes = this.getProductosSinStockDisponible(Arrays.asList(renglon));
                     if (faltantes.isEmpty()) {
@@ -645,7 +645,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         pedido.setRenglones(renglonesPedido);
     }
     
-    private Map<Double, Producto> getProductosSinStockDisponible(List<RenglonFactura> renglonesFactura) {
+    private Map<Long, Double> getProductosSinStockDisponible(List<RenglonFactura> renglonesFactura) {
         long[] idsProductos = new long[renglonesFactura.size()];
         double[] cantidades = new double[renglonesFactura.size()];
         for (int i = 0; i < idsProductos.length; i++) {
@@ -656,11 +656,11 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 + "idProducto=" + Arrays.toString(idsProductos).substring(1, Arrays.toString(idsProductos).length() - 1)
                 + "&cantidad=" + Arrays.toString(cantidades).substring(1, Arrays.toString(cantidades).length() - 1);
         return RestClient.getRestTemplate()
-                .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Double, Producto>>() {
+                .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, Double>>() {
                 }).getBody();
     }
         
-    private Map<Double, Producto> getProductosSinCantidadVentaMinima(List<RenglonFactura> renglonesFactura) {
+    private Map<Long, Double> getProductosSinCantidadVentaMinima(List<RenglonFactura> renglonesFactura) {
         long[] idsProductos = new long[renglonesFactura.size()];
         double[] cantidades = new double[renglonesFactura.size()];
         for (int i = 0; i < idsProductos.length; i++) {
@@ -671,7 +671,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 + "idProducto=" + Arrays.toString(idsProductos).substring(1, Arrays.toString(idsProductos).length() - 1)
                 + "&cantidad=" + Arrays.toString(cantidades).substring(1, Arrays.toString(cantidades).length() - 1);
         return RestClient.getRestTemplate()
-                .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Double, Producto>>() {
+                .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, Double>>() {
                 }).getBody();        
     }
     
@@ -1527,13 +1527,14 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             } else {
                 this.calcularResultados();
                 try {
+                    Map<Long, Double> faltantes;
                     if (cmb_TipoComprobante.getSelectedItem() == TipoDeComprobante.PEDIDO) {
                         // Es null cuando, se genera un pedido desde el punto de venta entrando por el menu sistemas.
                         // El Id es 0 cuando, se genera un pedido desde el punto de venta entrando por el botón nuevo de administrar pedidos.
                         if (pedido == null || pedido.getId_Pedido() == 0) {
                             this.construirPedido();
                         }
-                        Map<Double, Producto> faltantes = this.getProductosSinCantidadVentaMinima(renglones);
+                        faltantes = this.getProductosSinCantidadVentaMinima(renglones);
                         if (faltantes.isEmpty()) {
                             this.finalizarPedido();
                         } else {
@@ -1541,7 +1542,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                             productosFaltantesGUI.setVisible(true);
                         }
                     } else {
-                        Map<Double, Producto> faltantes = this.getProductosSinStockDisponible(renglones);
+                        faltantes = this.getProductosSinStockDisponible(renglones);
                         if (faltantes.isEmpty()) {
                             CerrarVentaGUI cerrarVentaGUI = new CerrarVentaGUI(this, true);
                             cerrarVentaGUI.setLocationRelativeTo(this);
