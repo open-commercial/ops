@@ -47,7 +47,7 @@ public class DetalleUsuarioGUI extends JDialog {
         txt_Username.setText(usuarioModificar.getUsername());
         chkHabilitado.setSelected(usuarioModificar.isHabilitado());
         List<Rol> roles = usuarioModificar.getRoles();
-        for (Rol rol : roles) {
+        roles.forEach(rol -> {
             if (Rol.ADMINISTRADOR.equals(rol)) {
                 chk_Administrador.setSelected(true);
             }
@@ -60,7 +60,7 @@ public class DetalleUsuarioGUI extends JDialog {
             if (Rol.CLIENTE.equals(rol)) {
                 chk_Cliente.setSelected(true);
             }
-        }
+        });
     }
     
     @SuppressWarnings("unchecked")
