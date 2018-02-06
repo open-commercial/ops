@@ -2,7 +2,7 @@ package sic.modelo;
 
 public enum TipoMovimiento {
     
-    PAGO,
+    RECIBO,
     
     GASTO, 
 

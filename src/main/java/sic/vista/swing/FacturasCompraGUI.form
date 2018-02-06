@@ -298,14 +298,14 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <Component id="btn_Nuevo" linkSize="3" max="32767" attributes="0"/>
+                  <Component id="btn_Nuevo" linkSize="7" min="-2" pref="102" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="btn_Eliminar" linkSize="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btn_Eliminar" linkSize="7" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="btn_VerDetalle" linkSize="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btn_VerDetalle" linkSize="7" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                  <Component id="btn_VerPagos" linkSize="3" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="37" max="32767" attributes="0"/>
+                  <Component id="btn_VerPagos" linkSize="7" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="131" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="lbl_TotalFacturado" alignment="1" min="-2" max="-2" attributes="1"/>
                       <Component id="lbl_TotalIVACompra" alignment="1" min="-2" max="-2" attributes="1"/>
@@ -337,11 +337,11 @@
                           </Group>
                       </Group>
                       <Group type="103" alignment="1" groupAlignment="3" attributes="0">
-                          <Component id="btn_Eliminar" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btn_VerPagos" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btn_VerDetalle" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_Eliminar" linkSize="8" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_VerPagos" linkSize="8" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_VerDetalle" linkSize="8" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="btn_Nuevo" linkSize="1" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="btn_Nuevo" linkSize="8" alignment="1" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>

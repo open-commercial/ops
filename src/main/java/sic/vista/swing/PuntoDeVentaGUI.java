@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
@@ -404,29 +405,51 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                         .getString("mensaje_producto_no_encontrado"),
                         "Error", JOptionPane.ERROR_MESSAGE);
-            } else if (RestClient.getRestTemplate().getForObject("/productos/" + producto.getId_Producto()
-                    + "/stock/disponibilidad?cantidad=1", boolean.class)) {
+            } else {
                 RenglonFactura renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
                         + "idProducto=" + producto.getId_Producto()
                         + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                         + "&movimiento=" + Movimiento.VENTA
-                        + "&cantidad=1"
+                        + "&cantidad=" + producto.getVentaMinima()
                         + "&descuentoPorcentaje=0.0",
                         RenglonFactura.class);
-                this.agregarRenglon(renglon);
-                EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglones.size()];
-                if (tbl_Resultado.getRowCount() == 0) {
-                    estadosRenglones[0] = EstadoRenglon.DESMARCADO;
+                boolean esValido = true;
+                Map<Long, Double> faltantes;
+                if (cmb_TipoComprobante.getSelectedItem() == TipoDeComprobante.PEDIDO) {
+                    faltantes = this.getProductosSinStockDisponible(Arrays.asList(renglon));
+                    if (faltantes.isEmpty()) {
+                        faltantes = this.getProductosSinCantidadVentaMinima(Arrays.asList(renglon));
+                        if (faltantes.isEmpty() == false) {
+                            esValido = false;
+                            JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_producto_cantidad_menor_a_minima"), "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        esValido = false;
+                        JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_producto_sin_stock_suficiente"), "Error", JOptionPane.ERROR_MESSAGE);                        
+                    }
                 } else {
-                    this.cargarEstadoDeLosChkEnTabla(tbl_Resultado, estadosRenglones);
-                    estadosRenglones[tbl_Resultado.getRowCount()] = EstadoRenglon.DESMARCADO;
+                    faltantes = this.getProductosSinStockDisponible(Arrays.asList(renglon));
+                    if (faltantes.isEmpty() == false) {
+                        esValido = false;
+                        JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_producto_sin_stock_suficiente"), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
-                this.cargarRenglonesAlTable(estadosRenglones);
-                this.calcularResultados();
-                txt_CodigoProducto.setText("");
-            } else {
-                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                        .getString("mensaje_producto_sin_stock_suficiente"), "Error", JOptionPane.ERROR_MESSAGE);
+                if (esValido) {
+                    this.agregarRenglon(renglon);
+                    EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglones.size()];
+                    if (tbl_Resultado.getRowCount() == 0) {
+                        estadosRenglones[0] = EstadoRenglon.DESMARCADO;
+                    } else {
+                        this.cargarEstadoDeLosChkEnTabla(tbl_Resultado, estadosRenglones);
+                        estadosRenglones[tbl_Resultado.getRowCount()] = EstadoRenglon.DESMARCADO;
+                    }
+                    this.cargarRenglonesAlTable(estadosRenglones);
+                    this.calcularResultados();
+                    txt_CodigoProducto.setText("");           
+                }
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -621,7 +644,64 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         });
         pedido.setRenglones(renglonesPedido);
     }
-
+    
+    private Map<Long, Double> getProductosSinStockDisponible(List<RenglonFactura> renglonesFactura) {
+        long[] idsProductos = new long[renglonesFactura.size()];
+        double[] cantidades = new double[renglonesFactura.size()];
+        for (int i = 0; i < idsProductos.length; i++) {
+            idsProductos[i] = renglonesFactura.get(i).getId_ProductoItem();
+            cantidades[i] = renglonesFactura.get(i).getCantidad();
+        }
+        String uri = "/productos/disponibilidad-stock?"
+                + "idProducto=" + Arrays.toString(idsProductos).substring(1, Arrays.toString(idsProductos).length() - 1)
+                + "&cantidad=" + Arrays.toString(cantidades).substring(1, Arrays.toString(cantidades).length() - 1);
+        return RestClient.getRestTemplate()
+                .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, Double>>() {
+                }).getBody();
+    }
+        
+    private Map<Long, Double> getProductosSinCantidadVentaMinima(List<RenglonFactura> renglonesFactura) {
+        long[] idsProductos = new long[renglonesFactura.size()];
+        double[] cantidades = new double[renglonesFactura.size()];
+        for (int i = 0; i < idsProductos.length; i++) {
+            idsProductos[i] = renglonesFactura.get(i).getId_ProductoItem();
+            cantidades[i] = renglonesFactura.get(i).getCantidad();
+        }
+        String uri = "/productos/cantidad-venta-minima?"
+                + "idProducto=" + Arrays.toString(idsProductos).substring(1, Arrays.toString(idsProductos).length() - 1)
+                + "&cantidad=" + Arrays.toString(cantidades).substring(1, Arrays.toString(cantidades).length() - 1);
+        return RestClient.getRestTemplate()
+                .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, Double>>() {
+                }).getBody();        
+    }
+    
+    private void finalizarPedido() {
+        PaginaRespuestaRest<Pedido> response = RestClient.getRestTemplate()
+                .exchange("/pedidos/busqueda/criteria?"
+                        + "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        + "&nroPedido=" + pedido.getNroPedido(), HttpMethod.GET, null,
+                        new ParameterizedTypeReference<PaginaRespuestaRest<Pedido>>() {
+                }).getBody();
+        if (response.getContent().isEmpty()) {
+            Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?idEmpresa="
+                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
+                    + "&idCliente=" + cliente.getId_Cliente(), pedido, Pedido.class);
+            int reply = JOptionPane.showConfirmDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                    "Aviso", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION) {
+                this.lanzarReportePedido(p);
+            }
+            this.limpiarYRecargarComponentes();
+        } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificarPedido == true) {
+            this.actualizarPedido(pedido);            
+            JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_pedido_actualizado"),
+                    "Aviso", JOptionPane.INFORMATION_MESSAGE);            
+            this.dispose();
+        }
+    }
+    
     public RenglonPedido convertirRenglonFacturaARenglonPedido(RenglonFactura renglonFactura) {
         RenglonPedido nuevoRenglon = new RenglonPedido();
         nuevoRenglon.setCantidad(renglonFactura.getCantidad());
@@ -1447,15 +1527,23 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             } else {
                 this.calcularResultados();
                 try {
-                    if (!cmb_TipoComprobante.getSelectedItem().equals(TipoDeComprobante.PEDIDO)) {
-                        List<RenglonFactura> productosFaltantes = new ArrayList();
-                        renglones.stream()
-                                .filter(r -> {
-                                    String uri = "/productos/" + r.getId_ProductoItem() + "/stock/disponibilidad?cantidad=" + r.getCantidad();
-                                    return (!RestClient.getRestTemplate().getForObject(uri, boolean.class));
-                                })
-                                .forEachOrdered(r -> productosFaltantes.add(r));
-                        if (productosFaltantes.isEmpty()) {
+                    Map<Long, Double> faltantes;
+                    if (cmb_TipoComprobante.getSelectedItem() == TipoDeComprobante.PEDIDO) {
+                        // Es null cuando, se genera un pedido desde el punto de venta entrando por el menu sistemas.
+                        // El Id es 0 cuando, se genera un pedido desde el punto de venta entrando por el botón nuevo de administrar pedidos.
+                        if (pedido == null || pedido.getId_Pedido() == 0) {
+                            this.construirPedido();
+                        }
+                        faltantes = this.getProductosSinCantidadVentaMinima(renglones);
+                        if (faltantes.isEmpty()) {
+                            this.finalizarPedido();
+                        } else {
+                            ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(faltantes);
+                            productosFaltantesGUI.setVisible(true);
+                        }
+                    } else {
+                        faltantes = this.getProductosSinStockDisponible(renglones);
+                        if (faltantes.isEmpty()) {
                             CerrarVentaGUI cerrarVentaGUI = new CerrarVentaGUI(this, true);
                             cerrarVentaGUI.setLocationRelativeTo(this);
                             cerrarVentaGUI.setVisible(true);
@@ -1463,40 +1551,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                                 this.limpiarYRecargarComponentes();
                             }
                         } else {
-                            ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(productosFaltantes);
-                            productosFaltantesGUI.setModal(true);
-                            productosFaltantesGUI.setLocationRelativeTo(this);
+                            ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(faltantes);
                             productosFaltantesGUI.setVisible(true);
-                        }
-                    } else {
-                        //Es null cuando, se genera un pedido desde el punto de venta entrando por el menu sistemas.
-                        //El Id es 0 cuando, se genera un pedido desde el punto de venta entrando por el botón nuevo de administrar pedidos.
-                        if (pedido == null || pedido.getId_Pedido() == 0) {
-                            this.construirPedido();
-                        }
-                        PaginaRespuestaRest<Pedido> response = RestClient.getRestTemplate()
-                                .exchange("/pedidos/busqueda/criteria?"
-                                        + "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                                        + "&nroPedido=" + pedido.getNroPedido(), HttpMethod.GET, null,
-                                        new ParameterizedTypeReference<PaginaRespuestaRest<Pedido>>() {
-                                }).getBody();
-                        List<Pedido> pedidos = response.getContent();
-                        if (pedidos.isEmpty()) {
-                            Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?idEmpresa="
-                                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                                    + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                                    + "&idCliente=" + cliente.getId_Cliente(), pedido, Pedido.class);
-                            int reply = JOptionPane.showConfirmDialog(this,
-                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
-                                    "Aviso", JOptionPane.YES_NO_OPTION);
-                            if (reply == JOptionPane.YES_OPTION) {
-                                this.lanzarReportePedido(p);
-                            }
-                            this.limpiarYRecargarComponentes();
-                        } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificarPedido == true) {
-                            this.actualizarPedido(pedido);
-                            JOptionPane.showMessageDialog(this, "El pedido se actualizó correctamente.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
-                            this.dispose();
                         }
                     }
                 } catch (RestClientResponseException ex) {

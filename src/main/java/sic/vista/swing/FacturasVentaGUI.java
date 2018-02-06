@@ -27,7 +27,6 @@ import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Factura;
 import sic.modelo.FacturaVenta;
-import sic.modelo.Movimiento;
 import sic.modelo.Usuario;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
@@ -41,7 +40,7 @@ public class FacturasVentaGUI extends JInternalFrame {
     private List<FacturaVenta> facturasTotal = new ArrayList<>();
     private List<FacturaVenta> facturasParcial = new ArrayList<>();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private final Dimension sizeInternalFrame = new Dimension(880, 600);
+    private final Dimension sizeInternalFrame = new Dimension(970, 600);
     private static int totalElementosBusqueda;
     private static int NUMERO_PAGINA = 0;
     private static final int TAMANIO_PAGINA = 50;
@@ -1151,33 +1150,13 @@ public class FacturasVentaGUI extends JInternalFrame {
 
     private void btn_VerPagosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VerPagosActionPerformed
         try {
-            if (tbl_Resultados.getSelectedRow() != -1) {
+            if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                if (tbl_Resultados.getSelectedRowCount() == 1) {
-                    JInternalFrame gui = new PagosGUI(RestClient.getRestTemplate().getForObject("/facturas/" + facturasTotal.get(indexFilaSeleccionada).getId_Factura(), Factura.class));
-                    gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                            getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-                    getDesktopPane().add(gui);
-                    gui.setVisible(true);
-                }
-                if (tbl_Resultados.getSelectedRowCount() > 1) {
-                    int[] indicesTabla = Utilidades.getSelectedRowsModelIndices(tbl_Resultados);
-                    long[] idsFacturas = new long[indicesTabla.length];
-                    for (int i = 0; i < indicesTabla.length; i++) {
-                        idsFacturas[i] = facturasTotal.get(indicesTabla[i]).getId_Factura();
-                    }
-                    String uri = "/facturas/validaciones-pago-multiple?"
-                            + "idFactura=" + Arrays.toString(idsFacturas).substring(1, Arrays.toString(idsFacturas).length() - 1)
-                            + "&movimiento=" + Movimiento.VENTA;
-                    boolean esValido = RestClient.getRestTemplate().getForObject(uri, boolean.class);
-                    if (esValido) {
-                        JInternalFrame gui = new PagoMultiplesFacturasGUI(idsFacturas, Movimiento.VENTA);
-                        gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                                getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-                        getDesktopPane().add(gui);
-                        gui.setVisible(true);
-                    }
-                }
+                JInternalFrame gui = new PagosGUI(RestClient.getRestTemplate().getForObject("/facturas/" + facturasTotal.get(indexFilaSeleccionada).getId_Factura(), Factura.class));
+                gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                        getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+                getDesktopPane().add(gui);
+                gui.setVisible(true);
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

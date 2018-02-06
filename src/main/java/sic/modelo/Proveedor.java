@@ -1,6 +1,7 @@
 package sic.modelo;
 
 import java.io.Serializable;
+import java.util.Date;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -22,6 +23,8 @@ public class Proveedor implements Serializable {
     private Localidad localidad;
     private Empresa empresa;
     private boolean eliminado;
+    private Double saldoCuentaCorriente; 
+    private Date fechaUltimoMovimiento;
 
     @Override
     public String toString() {

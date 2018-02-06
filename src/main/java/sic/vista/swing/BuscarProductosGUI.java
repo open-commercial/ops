@@ -32,15 +32,15 @@ import sic.util.Utilidades;
 
 public class BuscarProductosGUI extends JDialog {
 
-    private final TipoDeComprobante tipoComprobante;
+    private final TipoDeComprobante tipoDeComprobante;
     private ModeloTabla modeloTablaResultados = new ModeloTabla();
     private List<Producto> productosTotal = new ArrayList<>();
     private List<Producto> productosParcial = new ArrayList<>();
     private final List<RenglonFactura> renglones;
-    private Producto prodSeleccionado;
+    private Producto productoSeleccionado;
     private RenglonFactura renglon;
     private boolean debeCargarRenglon;    
-    private final Movimiento tipoMovimiento;
+    private final Movimiento movimiento;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int NUMERO_PAGINA = 0;
     private static final int TAMANIO_PAGINA = 50;
@@ -51,8 +51,8 @@ public class BuscarProductosGUI extends JDialog {
         this.initComponents();
         this.setIcon();
         this.renglones = renglones;
-        tipoMovimiento = movimiento;
-        this.tipoComprobante = tipoDeComprobante;
+        this.movimiento = movimiento;
+        this.tipoDeComprobante = tipoDeComprobante;
         this.setColumnas();
         txtCriteriaBusqueda.addKeyListener(keyHandler);
         btnBuscar.addKeyListener(keyHandler);
@@ -103,7 +103,7 @@ public class BuscarProductosGUI extends JDialog {
     }
     
     public Producto getProductoSeleccionado(){
-        return this.prodSeleccionado;
+        return this.productoSeleccionado;
     }
 
     private void setIcon() {
@@ -133,7 +133,7 @@ public class BuscarProductosGUI extends JDialog {
                         .getBody();
                 productosParcial = response.getContent();
                 productosTotal.addAll(productosParcial);
-                prodSeleccionado = null;
+                productoSeleccionado = null;
                 txt_UnidadMedida.setText("");
                 this.restarCantidadesSegunProductosYaCargados();
                 this.cargarResultadosAlTable();
@@ -150,29 +150,37 @@ public class BuscarProductosGUI extends JDialog {
     }
     
     private void aceptarProducto() {
+        boolean esValido = true;
         this.actualizarEstadoSeleccion();
-        if (prodSeleccionado != null) {
-            if (Double.valueOf(txtCantidad.getValue().toString()) >= prodSeleccionado.getVentaMinima()) {
+        if (productoSeleccionado == null) {
+            debeCargarRenglon = false;
+            this.dispose();
+        } else {
+            if (movimiento == Movimiento.PEDIDO) {
+                if (Double.valueOf(txtCantidad.getValue().toString()) < productoSeleccionado.getVentaMinima()) {
+                    JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                            .getString("mensaje_producto_cantidad_menor_a_minima"), "Error", JOptionPane.ERROR_MESSAGE);
+                    esValido = false;
+                }
+            }
+            if (movimiento == Movimiento.VENTA) {
+                if (this.sumarCantidadesSegunProductosYaCargados() > productoSeleccionado.getCantidad()) {
+                    JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                            .getString("mensaje_producto_sin_stock_suficiente"), "Error", JOptionPane.ERROR_MESSAGE);
+                    esValido = false;
+                }
+            }
+            if (esValido) {
                 try {
                     renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
-                            + "idProducto=" + prodSeleccionado.getId_Producto()
-                            + "&tipoDeComprobante=" + this.tipoComprobante.name()
-                            + "&movimiento=" + tipoMovimiento
+                            + "idProducto=" + productoSeleccionado.getId_Producto()
+                            + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
+                            + "&movimiento=" + movimiento
                             + "&cantidad=" + txtCantidad.getValue().toString()
                             + "&descuentoPorcentaje=" + txtPorcentajeDescuento.getValue().toString(),
                             RenglonFactura.class);
-                    boolean existeStock = RestClient.getRestTemplate().getForObject("/productos/"
-                            + prodSeleccionado.getId_Producto()
-                            + "/stock/disponibilidad?cantidad=" + this.sumarCantidadesSegunProductosYaCargados(),
-                            boolean.class);
-                    if (existeStock || tipoMovimiento == Movimiento.PEDIDO || tipoMovimiento == Movimiento.COMPRA) {
-                        debeCargarRenglon = true;
-                        this.dispose();
-                    } else if (!existeStock) {
-                        JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                                .getString("mensaje_producto_sin_stock_suficiente"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    }
+                    debeCargarRenglon = true;
+                    this.dispose();
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (ResourceAccessException ex) {
@@ -180,27 +188,20 @@ public class BuscarProductosGUI extends JDialog {
                     JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
-            } else {
-                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                        .getString("mensaje_producto_cantidad_menor_a_minima"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } else {
-            debeCargarRenglon = false;
-            this.dispose();
         }
     }
     
     private double sumarCantidadesSegunProductosYaCargados() {
         double cantidad = Double.parseDouble(txtCantidad.getValue().toString());
         return renglones.stream()
-                        .filter(r -> (r.getId_ProductoItem() == prodSeleccionado.getId_Producto()))
+                        .filter(r -> (r.getId_ProductoItem() == productoSeleccionado.getId_Producto()))
                         .map(r -> r.getCantidad())
                         .reduce(cantidad, (accumulator, item) -> accumulator + item);
     }
     
     private void restarCantidadesSegunProductosYaCargados() {
-        if (!(tipoMovimiento == Movimiento.PEDIDO || tipoMovimiento == Movimiento.COMPRA)) {
+        if (!(movimiento == Movimiento.PEDIDO || movimiento == Movimiento.COMPRA)) {
             renglones.stream().forEach(r -> {
                 productosTotal.stream()
                         .filter(p -> (r.getDescripcionItem().equals(p.getDescripcion()) && p.isIlimitado() == false))
@@ -226,9 +227,9 @@ public class BuscarProductosGUI extends JDialog {
     private void seleccionarProductoEnTable() {
         int fila = tbl_Resultados.getSelectedRow();
         if (fila != -1) {
-            prodSeleccionado = productosTotal.get(fila);
-            txt_UnidadMedida.setText(prodSeleccionado.getNombreMedida());
-            ta_ObservacionesProducto.setText(prodSeleccionado.getNota());
+            productoSeleccionado = productosTotal.get(fila);
+            txt_UnidadMedida.setText(productoSeleccionado.getNombreMedida());
+            ta_ObservacionesProducto.setText(productoSeleccionado.getNota());
             this.actualizarEstadoSeleccion();
         }
     }
@@ -241,9 +242,9 @@ public class BuscarProductosGUI extends JDialog {
             fila[2] = p.getCantidad();
             fila[3] = p.getVentaMinima();
             fila[4] = p.getNombreMedida();
-            double precio = (tipoMovimiento == Movimiento.VENTA) ? p.getPrecioLista()
-                    : (tipoMovimiento == Movimiento.PEDIDO) ? p.getPrecioLista()
-                    : (tipoMovimiento == Movimiento.COMPRA) ? p.getPrecioCosto() : 0.0;
+            double precio = (movimiento == Movimiento.VENTA) ? p.getPrecioLista()
+                    : (movimiento == Movimiento.PEDIDO) ? p.getPrecioLista()
+                    : (movimiento == Movimiento.COMPRA) ? p.getPrecioCosto() : 0.0;
             fila[5] = precio;
             return fila;
         }).forEach(fila -> {
@@ -274,9 +275,9 @@ public class BuscarProductosGUI extends JDialog {
         encabezados[2] = "Cantidad";
         encabezados[3] = "Venta Min.";
         encabezados[4] = "Unidad";
-        String encabezadoPrecio = (tipoMovimiento == Movimiento.VENTA) ? "P. Lista"
-                : (tipoMovimiento == Movimiento.PEDIDO) ? "P. Lista"
-                : (tipoMovimiento == Movimiento.COMPRA) ? "P.Costo" : "";
+        String encabezadoPrecio = (movimiento == Movimiento.VENTA) ? "P. Lista"
+                : (movimiento == Movimiento.PEDIDO) ? "P. Lista"
+                : (movimiento == Movimiento.COMPRA) ? "P.Costo" : "";
         encabezados[5] = encabezadoPrecio;
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaResultados);
@@ -578,7 +579,7 @@ public class BuscarProductosGUI extends JDialog {
     }//GEN-LAST:event_txtPorcentajeDescuentoKeyReleased
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        prodSeleccionado = null;
+        productoSeleccionado = null;
         NUMERO_PAGINA = 0;
     }//GEN-LAST:event_formWindowClosing
 

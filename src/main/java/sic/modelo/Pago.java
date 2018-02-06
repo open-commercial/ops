@@ -11,8 +11,7 @@ public class Pago implements Serializable {
 
     private Long id_Pago;    
     private long nroPago;
-    private String nombreFormaDePago;
-    private Nota notaDebito;
+    private String nombreFormaDePago;    
     private double monto;
     private Date fecha;
     private String nota;

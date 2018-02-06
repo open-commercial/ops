@@ -1,6 +1,7 @@
 package sic.vista.swing;
 
-import java.util.List;
+import java.awt.Dimension;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -11,50 +12,55 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Producto;
-import sic.modelo.RenglonFactura;
 import sic.util.RenderTabla;
 
 public class ProductosFaltantesGUI extends JDialog {
 
     private ModeloTabla modeloTablaFaltantes = new ModeloTabla();
-    private final List<RenglonFactura> renglonesFaltantes;
+    private final Map<Long, Double> faltantes;
+    private final Dimension sizeDialog = new Dimension(920, 500);
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public ProductosFaltantesGUI(List<RenglonFactura> faltantes) {
+    public ProductosFaltantesGUI(Map<Long, Double> faltantes) {
+        super.setModal(true);
         this.initComponents();
-        this.renglonesFaltantes = faltantes;        
+        this.setIcon();
+        this.faltantes = faltantes;
+    }
+    
+    private void setIcon() {
         ImageIcon iconoVentana = new ImageIcon(ProductosFaltantesGUI.class.getResource("/sic/icons/SIC_24_square.png"));
         this.setIconImage(iconoVentana.getImage());
     }
 
     private void setColumnas() {
         //nombres de columnas
-        String[] encabezados = new String[4];
+        String[] encabezados = new String[5];
         encabezados[0] = "Codigo";
         encabezados[1] = "Descripcion";
-        encabezados[2] = "Cantidad Requerida";
-        encabezados[3] = "Cantidad Disponible";
+        encabezados[2] = "Cant. Solicitada";
+        encabezados[3] = "Cant. Venta Minima";
+        encabezados[4] = "Cant. Disponible";
         modeloTablaFaltantes.setColumnIdentifiers(encabezados);
         tbl_Faltantes.setModel(modeloTablaFaltantes);
-
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaFaltantes.getColumnCount()];
         tipos[0] = String.class;
         tipos[1] = String.class;
         tipos[2] = String.class;
         tipos[3] = String.class;
+        tipos[4] = String.class;
         modeloTablaFaltantes.setClaseColumnas(tipos);
         tbl_Faltantes.getTableHeader().setReorderingAllowed(false);
         tbl_Faltantes.getTableHeader().setResizingAllowed(true);
-
         //render para los tipos de datos
         tbl_Faltantes.setDefaultRenderer(Double.class, new RenderTabla());
-
         //tamanios de columnas
         tbl_Faltantes.getColumnModel().getColumn(0).setPreferredWidth(80);
         tbl_Faltantes.getColumnModel().getColumn(1).setPreferredWidth(300);
-        tbl_Faltantes.getColumnModel().getColumn(2).setPreferredWidth(100);
-        tbl_Faltantes.getColumnModel().getColumn(3).setPreferredWidth(100);
+        tbl_Faltantes.getColumnModel().getColumn(2).setPreferredWidth(120);
+        tbl_Faltantes.getColumnModel().getColumn(3).setPreferredWidth(120);
+        tbl_Faltantes.getColumnModel().getColumn(4).setPreferredWidth(120);
     }
 
     private void limpiarJTables() {
@@ -65,18 +71,16 @@ public class ProductosFaltantesGUI extends JDialog {
 
     private void cargarResultadosAlTable() {
         this.limpiarJTables();
-        renglonesFaltantes.stream().map(renglonFaltante -> {
-            Object[] fila = new Object[4];
-            fila[0] = renglonFaltante.getCodigoItem();
-            fila[1] = renglonFaltante.getDescripcionItem();
-            fila[2] = renglonFaltante.getCantidad();
-            fila[3] = RestClient.getRestTemplate()
-                    .getForObject("/productos/" + renglonFaltante.getId_ProductoItem(), Producto.class)
-                    .getCantidad();
-            return fila;
-        }).forEachOrdered(fila -> {
+        Object[] fila = new Object[5];
+        faltantes.forEach((id, cantidad) -> {
+            Producto p = RestClient.getRestTemplate().getForObject("/productos/" + id, Producto.class);
+            fila[0] = p.getCodigo();
+            fila[1] = p.getDescripcion();
+            fila[2] = cantidad;
+            fila[3] = p.getVentaMinima();            
+            fila[4] = p.getCantidad();
             modeloTablaFaltantes.addRow(fila);
-        });
+        });        
         tbl_Faltantes.setModel(modeloTablaFaltantes);
     }
 
@@ -98,17 +102,14 @@ public class ProductosFaltantesGUI extends JDialog {
             }
         });
 
-        lbl_faltantes.setText("Los siguientes productos no poseen stock suficiente para continuar con la operación:");
+        lbl_faltantes.setText("Los siguientes productos no poseen stock suficiente o no cumplen con la cantidad venta minima:");
 
         tbl_Faltantes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
         sp_faltantes.setViewportView(tbl_Faltantes);
@@ -156,16 +157,20 @@ public class ProductosFaltantesGUI extends JDialog {
     }//GEN-LAST:event_btn_volverActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        this.setSize(sizeDialog);        
+        this.setLocationRelativeTo(null);
+        this.setColumnas();
         try {
-            this.setColumnas();
-            this.cargarResultadosAlTable();        
+            this.cargarResultadosAlTable();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
         } catch (ResourceAccessException ex) {
             LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
         }
     }//GEN-LAST:event_formWindowOpened
 
