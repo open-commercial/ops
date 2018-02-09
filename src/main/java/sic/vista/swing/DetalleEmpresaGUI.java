@@ -271,7 +271,7 @@ public class DetalleEmpresaGUI extends JDialog {
         });
 
         lbl_Email.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Email.setText("E-Mail:");
+        lbl_Email.setText("Email:");
 
         lbl_Telefono.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Telefono.setText("Teléfono:");

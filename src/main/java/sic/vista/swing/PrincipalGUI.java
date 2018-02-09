@@ -44,7 +44,7 @@ public class PrincipalGUI extends JFrame {
         this.setTitle("S.I.C. Ops "
                 + ResourceBundle.getBundle("Mensajes").getString("version")
                 + " - Empresa: " + EmpresaActiva.getInstance().getEmpresa().getNombre()
-                + " - Usuario: " + UsuarioActivo.getInstance().getUsuario().getNombre());
+                + " - Usuario: " + UsuarioActivo.getInstance().getUsuario().getUsername());
     }
 
     @SuppressWarnings("unchecked")

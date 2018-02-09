@@ -57,23 +57,20 @@ public class UsuariosGUI extends JInternalFrame {
         }
     }
     
-    private void setColumnas() {
-        //sort
-        tbl_Resultado.setAutoCreateRowSorter(true);
-        
+    private void setColumnas() {               
         //nombres de columnas
-        String[] encabezados = new String[8];
+        String[] encabezados = new String[9];
         encabezados[0] = "Habilitado";
-        encabezados[1] = "Nombre";
-        encabezados[2] = "Apellido";
-        encabezados[3] = "Usuario";
+        encabezados[1] = "Usuario";
+        encabezados[2] = "Nombre";
+        encabezados[3] = "Apellido";        
         encabezados[4] = "Email";
         encabezados[5] = "Administrador";
         encabezados[6] = "Viajante";
         encabezados[7] = "Vendedor";
+        encabezados[8] = "Cliente";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultado.setModel(modeloTablaResultados);
-
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
         tipos[0] = Boolean.class;
@@ -84,16 +81,15 @@ public class UsuariosGUI extends JInternalFrame {
         tipos[5] = Boolean.class;
         tipos[6] = Boolean.class;
         tipos[7] = Boolean.class;
+        tipos[8] = Boolean.class;
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultado.getTableHeader().setReorderingAllowed(false);
         tbl_Resultado.getTableHeader().setResizingAllowed(true);
-
         //render para los tipos de datos
         tbl_Resultado.setDefaultRenderer(Double.class, new RenderTabla());
-
         //tamanios de columnas
-        tbl_Resultado.getColumnModel().getColumn(0).setMinWidth(100);
-        tbl_Resultado.getColumnModel().getColumn(0).setMaxWidth(100);
+        tbl_Resultado.getColumnModel().getColumn(0).setMinWidth(90);
+        tbl_Resultado.getColumnModel().getColumn(0).setMaxWidth(90);
         tbl_Resultado.getColumnModel().getColumn(1).setMinWidth(130);
         tbl_Resultado.getColumnModel().getColumn(2).setMinWidth(130);
         tbl_Resultado.getColumnModel().getColumn(3).setMinWidth(130);
@@ -104,19 +100,20 @@ public class UsuariosGUI extends JInternalFrame {
         tbl_Resultado.getColumnModel().getColumn(6).setMaxWidth(130);
         tbl_Resultado.getColumnModel().getColumn(7).setPreferredWidth(130);
         tbl_Resultado.getColumnModel().getColumn(7).setMaxWidth(130);
+        tbl_Resultado.getColumnModel().getColumn(8).setPreferredWidth(130);
+        tbl_Resultado.getColumnModel().getColumn(8).setMaxWidth(130);
     }
     
     private void cargarRenglonesAlTable() {
         this.limpiarJTable();
         usuarios.stream().map(u -> {
-            Object[] fila = new Object[8];
+            Object[] fila = new Object[9];
             fila[0] = u.isHabilitado();
-            fila[1] = u.getNombre();
-            fila[2] = u.getApellido();
-            fila[3] = u.getUsername();
+            fila[1] = u.getUsername();
+            fila[2] = u.getNombre();
+            fila[3] = u.getApellido();
             fila[4] = u.getEmail();
-            List<Rol> roles = u.getRoles();
-            for (Rol rol : roles) {
+            u.getRoles().forEach(rol -> {
                 if (Rol.ADMINISTRADOR.equals(rol)) {
                     fila[5] = true;
                 }
@@ -126,7 +123,10 @@ public class UsuariosGUI extends JInternalFrame {
                 if (Rol.VENDEDOR.equals(rol)) {
                     fila[7] = true;
                 }
-            }
+                if (Rol.CLIENTE.equals(rol)) {
+                    fila[8] = true;
+                }
+            });
             return fila;
         }).forEach(fila -> {
             modeloTablaResultados.addRow(fila);
@@ -285,7 +285,7 @@ public class UsuariosGUI extends JInternalFrame {
                     } else {
                         respuesta = JOptionPane.showConfirmDialog(this,
                                 ResourceBundle.getBundle("Mensajes").getString("mensaje_eliminar_usuario")
-                                + usuarioSeleccionado.getNombre() + "?",
+                                + " " + usuarioSeleccionado.getNombre() + "?",
                                 "Eliminar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                     }
 
@@ -319,7 +319,7 @@ public class UsuariosGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_AgregarActionPerformed
 
     private void btn_ModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ModificarActionPerformed
-        if (existeUsuarioSeleccionado()) {        
+        if (this.existeUsuarioSeleccionado()) {
             if (usuarioSeleccionado != null) {
                 //Si el usuario activo corresponde con el usuario seleccionado para modificar
                 int respuesta = JOptionPane.YES_OPTION;            
@@ -329,7 +329,6 @@ public class UsuariosGUI extends JInternalFrame {
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_modificar_el_usuario_propio"),
                             "Atención", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);                
                 }
-
                 if (respuesta == JOptionPane.YES_OPTION) {
                     DetalleUsuarioGUI gui_DetalleUsuario = new DetalleUsuarioGUI(usuarioSeleccionado);
                     gui_DetalleUsuario.setModal(true);
