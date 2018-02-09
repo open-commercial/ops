@@ -1,5 +1,6 @@
 package sic.vista.swing;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
@@ -34,7 +35,7 @@ public class AbrirCajaGUI extends JDialog {
         this.spinner_Minutos.setModel(spinnerModel);
     }
 
-    private Caja construirCaja(double monto) {
+    private Caja construirCaja(BigDecimal monto) {
         Caja caja = new Caja();
         caja.setEstado(EstadoCaja.ABIERTA);
         caja.setObservacion("Apertura De Caja");
@@ -45,7 +46,7 @@ public class AbrirCajaGUI extends JDialog {
         caja.setFechaCorteInforme(corte.getTime());
         caja.setSaldoInicial(monto);
         caja.setSaldoFinal(monto);
-        caja.setSaldoReal(0);
+        caja.setSaldoReal(BigDecimal.ZERO);
         caja.setUsuarioAbreCaja(UsuarioActivo.getInstance().getUsuario());
         return caja;
     }
@@ -176,7 +177,7 @@ public class AbrirCajaGUI extends JDialog {
         }
         try {
             RestClient.getRestTemplate().postForObject("/cajas",
-                    this.construirCaja(Double.parseDouble(ftxt_Monto.getValue().toString())),
+                    this.construirCaja(new BigDecimal(ftxt_Monto.getValue().toString())),
                     Caja.class);
             this.dispose();
         } catch (RestClientResponseException ex) {

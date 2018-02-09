@@ -1,6 +1,7 @@
 package sic.modelo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,26 +23,26 @@ public class RenglonNotaCredito implements Serializable {
 
     private String medidaItem;
         
-    private double cantidad;
+    private BigDecimal cantidad;
     
-    private double precioUnitario;
+    private BigDecimal precioUnitario;
         
-    private double gananciaPorcentaje;
+    private BigDecimal gananciaPorcentaje;
         
-    private double gananciaNeto;
+    private BigDecimal gananciaNeto;
     
-    private double importe; 
+    private BigDecimal importe; 
     
-    private double descuentoPorcentaje;
+    private BigDecimal descuentoPorcentaje;
     
-    private double descuentoNeto; 
+    private BigDecimal descuentoNeto; 
     
-    private double importeBruto;
+    private BigDecimal importeBruto;
         
-    private double ivaPorcentaje;
+    private BigDecimal ivaPorcentaje;
     
-    private double ivaNeto;
+    private BigDecimal ivaNeto;
     
-    private double importeNeto; 
+    private BigDecimal importeNeto; 
 
 }

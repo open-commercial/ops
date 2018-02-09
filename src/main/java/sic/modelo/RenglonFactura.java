@@ -1,6 +1,7 @@
 package sic.modelo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,15 +14,15 @@ public class RenglonFactura implements Serializable {
     private String codigoItem;
     private String descripcionItem;
     private String medidaItem;
-    private double cantidad;
-    private double precioUnitario;
-    private double descuento_porcentaje;
-    private double descuento_neto;
-    private double iva_porcentaje;
-    private double iva_neto;
-    private double impuesto_porcentaje;
-    private double impuesto_neto;
-    private double ganancia_porcentaje;
-    private double ganancia_neto;
-    private double importe;
+    private BigDecimal cantidad;
+    private BigDecimal precioUnitario;
+    private BigDecimal descuento_porcentaje;
+    private BigDecimal descuento_neto;
+    private BigDecimal iva_porcentaje;
+    private BigDecimal iva_neto;
+    private BigDecimal impuesto_porcentaje;
+    private BigDecimal impuesto_neto;
+    private BigDecimal ganancia_porcentaje;
+    private BigDecimal ganancia_neto;
+    private BigDecimal importe;
 }

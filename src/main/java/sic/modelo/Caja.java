@@ -1,6 +1,7 @@
 package sic.modelo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 import lombok.Data;
@@ -20,12 +21,12 @@ public class Caja implements Serializable {
     private Usuario usuarioCierraCaja;
     private String observacion;
     private EstadoCaja estado;
-    private double saldoInicial;
-    private double saldoFinal;
-    private double saldoReal;
+    private BigDecimal saldoInicial;
+    private BigDecimal saldoFinal;
+    private BigDecimal saldoReal;
     private boolean eliminada;
     private Map<Long, Double> totalesPorFomaDePago;
-    private double totalAfectaCaja;
-    private double totalGeneral;
+    private BigDecimal totalAfectaCaja;
+    private BigDecimal totalGeneral;
 
 }

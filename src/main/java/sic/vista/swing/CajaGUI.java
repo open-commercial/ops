@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
@@ -58,7 +59,7 @@ public class CajaGUI extends JInternalFrame {
         private TipoMovimiento tipoMovimientoCaja;
         private String concepto;
         private Date fecha;
-        private double monto;
+        private BigDecimal monto;
         
         public Movimiento(Recibo recibo) {
             this.idMovimiento = recibo.getIdRecibo();
@@ -76,7 +77,7 @@ public class CajaGUI extends JInternalFrame {
             this.tipoMovimientoCaja = TipoMovimiento.GASTO;
             this.concepto = this.tipoMovimientoCaja + " por: " + gasto.getConcepto();
             this.fecha = gasto.getFecha();
-            this.monto = - gasto.getMonto();
+            this.monto = gasto.getMonto().negate();
         }
 
         @Override
@@ -252,21 +253,21 @@ public class CajaGUI extends JInternalFrame {
   
     private void cargarResultados() {   
         caja.setTotalAfectaCaja(RestClient.getRestTemplate()
-                .getForObject("/cajas/" + this.caja.getId_Caja() + "/total?soloAfectaCaja=true", double.class));
+                .getForObject("/cajas/" + this.caja.getId_Caja() + "/total?soloAfectaCaja=true", BigDecimal.class));
         ftxt_TotalAfectaCaja.setValue(caja.getTotalAfectaCaja());
         caja.setTotalGeneral(RestClient.getRestTemplate()
-                .getForObject("/cajas/" + this.caja.getId_Caja() + "/total", double.class));
+                .getForObject("/cajas/" + this.caja.getId_Caja() + "/total", BigDecimal.class));
         ftxt_TotalGeneral.setValue(caja.getTotalGeneral());              
-        if (caja.getTotalAfectaCaja() > 0) {
+        if (caja.getTotalAfectaCaja().compareTo(BigDecimal.ZERO) > 0) {
             ftxt_TotalAfectaCaja.setBackground(Color.GREEN);
         }
-        if (caja.getTotalAfectaCaja() < 0) {
+        if (caja.getTotalAfectaCaja().compareTo(BigDecimal.ZERO) < 0) {
             ftxt_TotalAfectaCaja.setBackground(Color.PINK);
         }
-        if (caja.getTotalGeneral() < 0) {
+        if (caja.getTotalGeneral().compareTo(BigDecimal.ZERO) < 0) {
             ftxt_TotalGeneral.setBackground(Color.PINK);
         }
-        if (caja.getTotalGeneral() > 0) {
+        if (caja.getTotalGeneral().compareTo(BigDecimal.ZERO) > 0) {
             ftxt_TotalGeneral.setBackground(Color.GREEN);
         }
     }

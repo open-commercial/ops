@@ -5,6 +5,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ public class CerrarVentaGUI extends JDialog {
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int[] indicesParaDividir = null;
     private final List<Long> idsFormasDePago = new ArrayList<>();
-    private final List<Double> montos = new ArrayList<>();
+    private final List<BigDecimal> montos = new ArrayList<>();
     private boolean dividir = false;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
@@ -147,9 +149,9 @@ public class CerrarVentaGUI extends JDialog {
     private void calcularVuelto() {
         try {
             if (txt_AbonaCon.isEditValid()) txt_AbonaCon.commitEdit();
-            double montoRecibido = Double.valueOf(txt_AbonaCon.getValue().toString());
-            double vuelto = montoRecibido - gui_puntoDeVenta.getTotal();
-            lbl_Vuelto.setValue(vuelto >= 0 ? vuelto : 0.0);
+            BigDecimal montoRecibido = new BigDecimal(txt_AbonaCon.getValue().toString());
+            BigDecimal vuelto = montoRecibido.subtract(gui_puntoDeVenta.getTotal());
+            lbl_Vuelto.setValue(vuelto.compareTo(BigDecimal.ZERO) >= 0 ? vuelto : BigDecimal.ZERO);
         } catch (ParseException ex) {
             String mensaje = "Se produjo un error analizando los campos.";
             LOGGER.error(mensaje + " - " + ex.getMessage());
@@ -250,15 +252,15 @@ public class CerrarVentaGUI extends JDialog {
         montos.clear();
         idsFormasDePago.clear();
         if (chk_FormaDePago1.isSelected() && chk_FormaDePago1.isEnabled()) {            
-            montos.add(new Double(txt_MontoPago1.getValue().toString()));            
+            montos.add(new BigDecimal(txt_MontoPago1.getValue().toString()));            
             idsFormasDePago.add(((FormaDePago) cmb_FormaDePago1.getSelectedItem()).getId_FormaDePago());            
         }
         if (chk_FormaDePago2.isSelected() && chk_FormaDePago2.isEnabled()) {            
-            montos.add(new Double(txt_MontoPago2.getValue().toString()));            
+            montos.add(new BigDecimal(txt_MontoPago2.getValue().toString()));            
             idsFormasDePago.add(((FormaDePago) cmb_FormaDePago2.getSelectedItem()).getId_FormaDePago());            
         }
         if (chk_FormaDePago3.isSelected() && chk_FormaDePago3.isEnabled()) {            
-            montos.add(new Double(txt_MontoPago3.getValue().toString()));                        
+            montos.add(new BigDecimal(txt_MontoPago3.getValue().toString()));                        
             idsFormasDePago.add(((FormaDePago) cmb_FormaDePago3.getSelectedItem()).getId_FormaDePago());
         }
     }
@@ -599,19 +601,18 @@ public class CerrarVentaGUI extends JDialog {
         if (dividir) {
             this.finalizarVenta();
         } else {
-            double totalPagos = 0.0;
+            BigDecimal totalPagos = BigDecimal.ZERO;
             if (chk_FormaDePago1.isSelected() && chk_FormaDePago1.isEnabled()) {
-                  totalPagos += Double.parseDouble(txt_MontoPago1.getValue().toString());
+                totalPagos = totalPagos.add(new BigDecimal(txt_MontoPago1.getValue().toString()));
             }
             if (chk_FormaDePago2.isSelected() && chk_FormaDePago2.isEnabled()) {                
-                totalPagos += Double.parseDouble(txt_MontoPago2.getValue().toString());
+                totalPagos = totalPagos.add(new BigDecimal(txt_MontoPago2.getValue().toString()));
             }
             if (chk_FormaDePago3.isSelected() && chk_FormaDePago3.isEnabled()) {
-                totalPagos += Double.parseDouble(txt_MontoPago3.getValue().toString());
+                totalPagos = totalPagos.add(new BigDecimal(txt_MontoPago3.getValue().toString()));
             }
-            double totalAPagar = Math.floor(Double.parseDouble(lbl_TotalAPagar.getValue().toString()) * 100) / 100; 
-            totalPagos = Math.floor(totalPagos * 100) / 100;
-            if (totalPagos < totalAPagar) {
+            BigDecimal totalAPagar = (new BigDecimal(lbl_TotalAPagar.getValue().toString())).setScale(2, RoundingMode.FLOOR);
+            if (totalPagos.compareTo(totalAPagar) < 0) {
                 int reply = JOptionPane.showConfirmDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_montos_insuficientes"),
                         "Aviso", JOptionPane.YES_NO_OPTION);

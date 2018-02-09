@@ -1,6 +1,7 @@
 package sic.modelo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,14 +15,14 @@ public class RenglonNotaDebito implements Serializable {
           
     private String descripcion;
     
-    private double monto; 
+    private BigDecimal monto; 
 
-    private double importeBruto; 
+    private BigDecimal importeBruto; 
 
-    private double ivaPorcentaje;
+    private BigDecimal ivaPorcentaje;
 
-    private double ivaNeto;
+    private BigDecimal ivaNeto;
 
-    private double importeNeto;
+    private BigDecimal importeNeto;
    
 }

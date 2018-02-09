@@ -1,6 +1,7 @@
 package sic.vista.swing;
 
 import java.awt.Dimension;
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
@@ -17,11 +18,11 @@ import sic.util.RenderTabla;
 public class ProductosFaltantesGUI extends JDialog {
 
     private ModeloTabla modeloTablaFaltantes = new ModeloTabla();
-    private final Map<Long, Double> faltantes;
+    private final Map<Long, BigDecimal> faltantes;
     private final Dimension sizeDialog = new Dimension(920, 500);
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public ProductosFaltantesGUI(Map<Long, Double> faltantes) {
+    public ProductosFaltantesGUI(Map<Long, BigDecimal> faltantes) {
         super.setModal(true);
         this.initComponents();
         this.setIcon();
@@ -54,7 +55,7 @@ public class ProductosFaltantesGUI extends JDialog {
         tbl_Faltantes.getTableHeader().setReorderingAllowed(false);
         tbl_Faltantes.getTableHeader().setResizingAllowed(true);
         //render para los tipos de datos
-        tbl_Faltantes.setDefaultRenderer(Double.class, new RenderTabla());
+        tbl_Faltantes.setDefaultRenderer(BigDecimal.class, new RenderTabla());
         //tamanios de columnas
         tbl_Faltantes.getColumnModel().getColumn(0).setPreferredWidth(80);
         tbl_Faltantes.getColumnModel().getColumn(1).setPreferredWidth(300);

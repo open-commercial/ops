@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
@@ -38,10 +39,10 @@ public abstract class Nota implements Serializable {
     private FacturaVenta facturaVenta;
     private List<Pago> pagos;
     private String motivo;
-    private double subTotalBruto;
-    private double iva21Neto;      
-    private double iva105Neto;
-    private double total;
+    private BigDecimal subTotalBruto;
+    private BigDecimal iva21Neto;      
+    private BigDecimal iva105Neto;
+    private BigDecimal total;
     private long CAE;
     private Date vencimientoCAE;
     private long numSerieAfip;
@@ -51,8 +52,8 @@ public abstract class Nota implements Serializable {
 
     public Nota(long idNota, long serie, long nroNota, FacturaVenta facturaVenta, List<Pago> pagos, boolean eliminada,
             TipoDeComprobante tipoDeComprobante, Date fecha, Empresa empresa, Cliente cliente, Usuario usuario,
-            String motivo, double subTotalBruto, double iva21Neto, double iva105Neto,
-            double total, long CAE, Date vencimientoCAE, long numSerieAfip, long numFacturaAfip) {
+            String motivo, BigDecimal subTotalBruto, BigDecimal iva21Neto, BigDecimal iva105Neto,
+            BigDecimal total, long CAE, Date vencimientoCAE, long numSerieAfip, long numFacturaAfip) {
 
         this.idNota = idNota;
         this.serie = serie;

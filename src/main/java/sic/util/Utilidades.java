@@ -213,11 +213,11 @@ public class Utilidades {
      * @param cantidadDecimales cantidad de decimales que debe mantener
      * @return numero truncado
      */
-    public static double truncarDecimal(double valor, int cantidadDecimales) {
-        if (valor > 0) {
-            return (new BigDecimal(String.valueOf(valor)).setScale(cantidadDecimales, BigDecimal.ROUND_FLOOR)).doubleValue();
+    public static BigDecimal truncarDecimal(BigDecimal valor, int cantidadDecimales) {
+        if (valor.compareTo(BigDecimal.ZERO) > 0) {
+            return valor.setScale(cantidadDecimales, BigDecimal.ROUND_FLOOR);
         } else {
-            return (new BigDecimal(String.valueOf(valor)).setScale(cantidadDecimales, BigDecimal.ROUND_CEILING)).doubleValue();
+            return valor.setScale(cantidadDecimales, BigDecimal.ROUND_CEILING);
         }
     }
 

@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -60,10 +61,13 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private Pedido pedido;
     private boolean modificarPedido;
     private int cantidadMaximaRenglones = 0;
-    private double totalComprobante;    
-    private double iva_105_netoFactura;
-    private double iva_21_netoFactura;
-    private double subTotalBruto;
+    private BigDecimal totalComprobante;    
+    private BigDecimal iva_105_netoFactura;
+    private BigDecimal iva_21_netoFactura;
+    private BigDecimal subTotalBruto;
+    private final static BigDecimal IVA_21 = new BigDecimal("21");
+    private final static BigDecimal IVA_105 = new BigDecimal("10.5");
+    private final static BigDecimal CIEN = new BigDecimal("100");
 
     public PuntoDeVentaGUI() {
         this.initComponents();        
@@ -127,7 +131,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         return renglones;
     }
 
-    public double getTotal() {
+    public BigDecimal getTotal() {
         return this.totalComprobante;
     }
 
@@ -142,15 +146,15 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         factura.setFechaVencimiento(cal.getTime());
         factura.setRenglones(this.getRenglones());
         factura.setObservaciones(this.txta_Observaciones.getText().trim());      
-        factura.setSubTotal(Double.parseDouble(txt_Subtotal.getValue().toString()));
-        factura.setDescuento_porcentaje(Double.parseDouble(txt_Descuento_porcentaje.getValue().toString()));
-        factura.setDescuento_neto(Double.parseDouble(txt_Descuento_neto.getValue().toString()));
-        factura.setRecargo_porcentaje(Double.parseDouble(txt_Recargo_porcentaje.getValue().toString()));
-        factura.setRecargo_neto(Double.parseDouble(txt_Recargo_neto.getValue().toString()));
+        factura.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
+        factura.setDescuento_porcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
+        factura.setDescuento_neto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
+        factura.setRecargo_porcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
+        factura.setRecargo_neto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
         factura.setSubTotal_bruto(subTotalBruto);
         factura.setIva_105_neto(iva_105_netoFactura);
         factura.setIva_21_neto(iva_21_netoFactura);
-        factura.setTotal(Double.parseDouble(txt_Total.getValue().toString()));                                             
+        factura.setTotal(new BigDecimal(txt_Total.getValue().toString()));                                             
         return factura;
     }
     
@@ -236,16 +240,16 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         tipos[1] = String.class;
         tipos[2] = String.class;
         tipos[3] = String.class;
-        tipos[4] = Double.class;
-        tipos[5] = Double.class;
-        tipos[6] = Double.class;
-        tipos[7] = Double.class;
+        tipos[4] = BigDecimal.class;
+        tipos[5] = BigDecimal.class;
+        tipos[6] = BigDecimal.class;
+        tipos[7] = BigDecimal.class;
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultado.getTableHeader().setReorderingAllowed(false);
         tbl_Resultado.getTableHeader().setResizingAllowed(true);
 
         //render para los tipos de datos
-        tbl_Resultado.setDefaultRenderer(Double.class, new RenderTabla());
+        tbl_Resultado.setDefaultRenderer(BigDecimal.class, new RenderTabla());
 
         //tamanios de columnas
         tbl_Resultado.getColumnModel().getColumn(0).setPreferredWidth(25);
@@ -270,7 +274,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                             + "idProducto=" + producto.getId_Producto()
                             + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                             + "&movimiento=" + Movimiento.VENTA
-                            + "&cantidad=" + (renglones.get(i).getCantidad() + renglon.getCantidad())
+                            + "&cantidad=" + renglones.get(i).getCantidad().add(renglon.getCantidad())
                             + "&descuentoPorcentaje=" + renglon.getDescuento_porcentaje(),
                             RenglonFactura.class));
                     agregado = true;
@@ -414,7 +418,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         + "&descuentoPorcentaje=0.0",
                         RenglonFactura.class);
                 boolean esValido = true;
-                Map<Long, Double> faltantes;
+                Map<Long, BigDecimal> faltantes;
                 if (cmb_TipoComprobante.getSelectedItem() == TipoDeComprobante.PEDIDO) {
                     faltantes = this.getProductosSinStockDisponible(Arrays.asList(renglon));
                     if (faltantes.isEmpty()) {
@@ -481,52 +485,52 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }
 
     private void calcularResultados() {
-        double subTotal = 0;
-        double descuentoPorcentaje;
-        double descuentoNeto;
-        double recargoPorcentaje;
-        double recargoNeto;
-        double total;
+        BigDecimal subTotal = BigDecimal.ZERO;
+        BigDecimal descuentoPorcentaje;
+        BigDecimal descuentoNeto;
+        BigDecimal recargoPorcentaje;
+        BigDecimal recargoNeto;
+        BigDecimal total;
         this.validarComponentesDeResultados();
-        double[] cantidades = new double[renglones.size()];
-        double[] ivaPorcentajeRenglones = new double[renglones.size()];
-        double[] ivaNetoRenglones = new double[renglones.size()];
+        BigDecimal[] cantidades = new BigDecimal[renglones.size()];
+        BigDecimal[] ivaPorcentajeRenglones = new BigDecimal[renglones.size()];
+        BigDecimal[] ivaNetoRenglones = new BigDecimal[renglones.size()];
         int indice = 0;
         for (RenglonFactura renglon : renglones) {
-            subTotal += renglon.getImporte();
+            subTotal = subTotal.add(renglon.getImporte());
             cantidades[indice] = renglon.getCantidad();
             ivaPorcentajeRenglones[indice] = renglon.getIva_porcentaje();
             ivaNetoRenglones[indice] = renglon.getIva_neto();
             indice++;
         }
         txt_Subtotal.setValue(subTotal);
-        descuentoPorcentaje = Double.parseDouble(txt_Descuento_porcentaje.getValue().toString());
-        descuentoNeto = (subTotal * descuentoPorcentaje) / 100;
+        descuentoPorcentaje = new BigDecimal(txt_Descuento_porcentaje.getValue().toString());
+        descuentoNeto = subTotal.multiply(descuentoPorcentaje).divide(CIEN);
         txt_Descuento_neto.setValue(descuentoNeto);
-        recargoPorcentaje = Double.parseDouble(txt_Recargo_porcentaje.getValue().toString());
-        recargoNeto = (subTotal * recargoPorcentaje) / 100;
+        recargoPorcentaje = new BigDecimal(txt_Recargo_porcentaje.getValue().toString());
+        recargoNeto = subTotal.multiply(recargoPorcentaje).divide(CIEN);
         txt_Recargo_neto.setValue(recargoNeto);
-        iva_105_netoFactura = 0;
-        iva_21_netoFactura = 0;
+        iva_105_netoFactura = BigDecimal.ZERO;
+        iva_21_netoFactura = BigDecimal.ZERO;
         indice = cantidades.length;
         if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.FACTURA_A || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
             for (int i = 0; i < indice; i++) {
-                if (ivaPorcentajeRenglones[i] == 10.5) {
-                    iva_105_netoFactura += cantidades[i] * (ivaNetoRenglones[i]
-                            - (ivaNetoRenglones[i] * (descuentoPorcentaje / 100))
-                            + (ivaNetoRenglones[i] * (recargoPorcentaje / 100)));
-                } else if (ivaPorcentajeRenglones[i] == 21) {
-                    iva_21_netoFactura += cantidades[i] * (ivaNetoRenglones[i]
-                            - (ivaNetoRenglones[i] * (descuentoPorcentaje / 100))
-                            + (ivaNetoRenglones[i] * (recargoPorcentaje / 100)));
+                if (ivaPorcentajeRenglones[i].compareTo(IVA_105) == 0) {
+                    iva_105_netoFactura = iva_105_netoFactura.add(cantidades[i].multiply(ivaNetoRenglones[i]
+                    .subtract(ivaNetoRenglones[i].multiply(descuentoPorcentaje.divide(CIEN)))
+                    .add(ivaNetoRenglones[i].multiply(recargoPorcentaje.divide(CIEN)))));
+                } else if (ivaPorcentajeRenglones[i].compareTo(IVA_21) == 0) {
+                    iva_21_netoFactura = iva_21_netoFactura.add(cantidades[i].multiply(ivaNetoRenglones[i]
+                    .subtract(ivaNetoRenglones[i].multiply(descuentoPorcentaje.divide(CIEN)))
+                    .add(ivaNetoRenglones[i].multiply(recargoPorcentaje.divide(CIEN)))));
                 }
             }
         } else {
             for (int i = 0; i < indice; i++) {
-                if (ivaPorcentajeRenglones[i] == 10.5) {
-                    iva_105_netoFactura += cantidades[i] * ivaNetoRenglones[i];
-                } else if (ivaPorcentajeRenglones[i] == 21) {
-                    iva_21_netoFactura += cantidades[i] * ivaNetoRenglones[i];
+                if (ivaPorcentajeRenglones[i].compareTo(IVA_105) == 0) {
+                    iva_105_netoFactura = iva_105_netoFactura.add(cantidades[i].multiply(ivaNetoRenglones[i]));
+                } else if (ivaPorcentajeRenglones[i].compareTo(IVA_21) == 0) {
+                    iva_21_netoFactura = iva_21_netoFactura.add(cantidades[i].multiply(ivaNetoRenglones[i]));
                 }
             }
         }
@@ -537,11 +541,11 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             txt_IVA105_neto.setValue(iva_105_netoFactura);
             txt_IVA21_neto.setValue(iva_21_netoFactura);
         }
-        subTotalBruto = subTotal + recargoNeto - descuentoNeto;
+        subTotalBruto = subTotal.add(recargoNeto).subtract(descuentoNeto);
         if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
-            subTotalBruto = subTotalBruto - (iva_105_netoFactura + iva_21_netoFactura);
+            subTotalBruto = subTotalBruto.subtract(iva_105_netoFactura.add(iva_21_netoFactura));
         }
-        total = subTotalBruto + iva_105_netoFactura + iva_21_netoFactura;
+        total = subTotalBruto.add(iva_105_netoFactura).add(iva_21_netoFactura);
         txt_Total.setValue(total);
         if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
             txt_SubTotalBruto.setValue(total);
@@ -632,10 +636,10 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         pedido.setFacturas(null);
         pedido.setFechaVencimiento(dc_fechaVencimiento.getDate());
         pedido.setObservaciones(txta_Observaciones.getText());
-        double subTotalEstimado = 0;
-        subTotalEstimado = renglones.stream()
-                .map(renglon -> renglon.getImporte())
-                .reduce(subTotalEstimado, (accumulator, item) -> accumulator + item);
+        BigDecimal subTotalEstimado = BigDecimal.ZERO;
+        for(RenglonFactura r : renglones) {
+            subTotalEstimado = subTotalEstimado.add(r.getImporte());
+        }
         pedido.setTotalEstimado(subTotalEstimado);
         pedido.setEstado(EstadoPedido.ABIERTO);
         List<RenglonPedido> renglonesPedido = new ArrayList<>();
@@ -645,9 +649,9 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         pedido.setRenglones(renglonesPedido);
     }
     
-    private Map<Long, Double> getProductosSinStockDisponible(List<RenglonFactura> renglonesFactura) {
+    private Map<Long, BigDecimal> getProductosSinStockDisponible(List<RenglonFactura> renglonesFactura) {
         long[] idsProductos = new long[renglonesFactura.size()];
-        double[] cantidades = new double[renglonesFactura.size()];
+        BigDecimal[] cantidades = new BigDecimal[renglonesFactura.size()];
         for (int i = 0; i < idsProductos.length; i++) {
             idsProductos[i] = renglonesFactura.get(i).getId_ProductoItem();
             cantidades[i] = renglonesFactura.get(i).getCantidad();
@@ -656,13 +660,13 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 + "idProducto=" + Arrays.toString(idsProductos).substring(1, Arrays.toString(idsProductos).length() - 1)
                 + "&cantidad=" + Arrays.toString(cantidades).substring(1, Arrays.toString(cantidades).length() - 1);
         return RestClient.getRestTemplate()
-                .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, Double>>() {
+                .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {
                 }).getBody();
     }
         
-    private Map<Long, Double> getProductosSinCantidadVentaMinima(List<RenglonFactura> renglonesFactura) {
+    private Map<Long, BigDecimal> getProductosSinCantidadVentaMinima(List<RenglonFactura> renglonesFactura) {
         long[] idsProductos = new long[renglonesFactura.size()];
-        double[] cantidades = new double[renglonesFactura.size()];
+        BigDecimal[] cantidades = new BigDecimal[renglonesFactura.size()];
         for (int i = 0; i < idsProductos.length; i++) {
             idsProductos[i] = renglonesFactura.get(i).getId_ProductoItem();
             cantidades[i] = renglonesFactura.get(i).getCantidad();
@@ -671,7 +675,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 + "idProducto=" + Arrays.toString(idsProductos).substring(1, Arrays.toString(idsProductos).length() - 1)
                 + "&cantidad=" + Arrays.toString(cantidades).substring(1, Arrays.toString(cantidades).length() - 1);
         return RestClient.getRestTemplate()
-                .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, Double>>() {
+                .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {
                 }).getBody();        
     }
     
@@ -747,10 +751,10 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private void actualizarPedido(Pedido pedido) {
         pedido = RestClient.getRestTemplate().getForObject("/pedidos/" + pedido.getId_Pedido(), Pedido.class);
         pedido.setRenglones(this.convertirRenglonesFacturaARenglonesPedido(this.renglones));
-        double subTotal = 0;
-        subTotal = renglones.stream()
-                .map(r -> r.getImporte())
-                .reduce(subTotal, (accumulator, item) -> accumulator + item);
+        BigDecimal subTotal = BigDecimal.ZERO;
+        for (RenglonFactura r : renglones) {
+            subTotal = subTotal.add(r.getImporte());
+        }
         pedido.setTotalEstimado(subTotal);
         RestClient.getRestTemplate().put("/pedidos?idEmpresa="
                 + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
@@ -1521,13 +1525,13 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                     .getString("mensaje_factura_sin_renglones"), "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            if (Double.parseDouble(txt_Descuento_porcentaje.getValue().toString()) > 100) {
+            if (new BigDecimal(txt_Descuento_porcentaje.getValue().toString()).compareTo(CIEN) > 0) {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                         .getString("mensaje_factura_descuento_mayor_cien"), "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 this.calcularResultados();
                 try {
-                    Map<Long, Double> faltantes;
+                    Map<Long, BigDecimal> faltantes;
                     if (cmb_TipoComprobante.getSelectedItem() == TipoDeComprobante.PEDIDO) {
                         // Es null cuando, se genera un pedido desde el punto de venta entrando por el menu sistemas.
                         // El Id es 0 cuando, se genera un pedido desde el punto de venta entrando por el botón nuevo de administrar pedidos.

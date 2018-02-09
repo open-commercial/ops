@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -157,14 +158,14 @@ public class BuscarProductosGUI extends JDialog {
             this.dispose();
         } else {
             if (movimiento == Movimiento.PEDIDO) {
-                if (Double.valueOf(txtCantidad.getValue().toString()) < productoSeleccionado.getVentaMinima()) {
+                if ((new BigDecimal(txtCantidad.getValue().toString())).compareTo(productoSeleccionado.getVentaMinima()) < 0) {
                     JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                             .getString("mensaje_producto_cantidad_menor_a_minima"), "Error", JOptionPane.ERROR_MESSAGE);
                     esValido = false;
                 }
             }
             if (movimiento == Movimiento.VENTA) {
-                if (this.sumarCantidadesSegunProductosYaCargados() > productoSeleccionado.getCantidad()) {
+                if (this.sumarCantidadesSegunProductosYaCargados().compareTo(productoSeleccionado.getCantidad()) > 0) {
                     JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                             .getString("mensaje_producto_sin_stock_suficiente"), "Error", JOptionPane.ERROR_MESSAGE);
                     esValido = false;
@@ -192,21 +193,22 @@ public class BuscarProductosGUI extends JDialog {
         }
     }
     
-    private double sumarCantidadesSegunProductosYaCargados() {
-        double cantidad = Double.parseDouble(txtCantidad.getValue().toString());
-        return renglones.stream()
-                        .filter(r -> (r.getId_ProductoItem() == productoSeleccionado.getId_Producto()))
-                        .map(r -> r.getCantidad())
-                        .reduce(cantidad, (accumulator, item) -> accumulator + item);
+    private BigDecimal sumarCantidadesSegunProductosYaCargados() {
+        BigDecimal cantidad = new BigDecimal(txtCantidad.getValue().toString());
+        for (RenglonFactura r : renglones) {
+            if (r.getId_ProductoItem() == productoSeleccionado.getId_Producto()) {
+                cantidad = cantidad.add(r.getCantidad());
+            }
+        }
+        return cantidad;
     }
     
     private void restarCantidadesSegunProductosYaCargados() {
         if (!(movimiento == Movimiento.PEDIDO || movimiento == Movimiento.COMPRA)) {
-            renglones.stream().forEach(r -> {
-                productosTotal.stream()
-                        .filter(p -> (r.getDescripcionItem().equals(p.getDescripcion()) && p.isIlimitado() == false))
-                        .forEach(p -> {
-                            p.setCantidad(p.getCantidad() - r.getCantidad());
+            renglones.forEach((r) -> {
+                productosTotal.stream().filter((p) -> (r.getDescripcionItem().equals(p.getDescripcion()) && p.isIlimitado() == false))
+                        .forEachOrdered((p) -> {
+                            p.setCantidad(p.getCantidad().subtract(r.getCantidad()));
                         });
             });
         }
@@ -242,9 +244,9 @@ public class BuscarProductosGUI extends JDialog {
             fila[2] = p.getCantidad();
             fila[3] = p.getVentaMinima();
             fila[4] = p.getNombreMedida();
-            double precio = (movimiento == Movimiento.VENTA) ? p.getPrecioLista()
+            BigDecimal precio = (movimiento == Movimiento.VENTA) ? p.getPrecioLista()
                     : (movimiento == Movimiento.PEDIDO) ? p.getPrecioLista()
-                    : (movimiento == Movimiento.COMPRA) ? p.getPrecioCosto() : 0.0;
+                    : (movimiento == Movimiento.COMPRA) ? p.getPrecioCosto() : BigDecimal.ZERO;
             fila[5] = precio;
             return fila;
         }).forEach(fila -> {
@@ -286,16 +288,16 @@ public class BuscarProductosGUI extends JDialog {
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
         tipos[0] = String.class;
         tipos[1] = String.class;
-        tipos[2] = Double.class;
-        tipos[3] = Double.class;
+        tipos[2] = BigDecimal.class;
+        tipos[3] = BigDecimal.class;
         tipos[4] = String.class;
-        tipos[5] = Double.class;
+        tipos[5] = BigDecimal.class;
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
 
         //render para los tipos de datos
-        tbl_Resultados.setDefaultRenderer(Double.class, new RenderTabla());
+        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new RenderTabla());
 
         //Size de columnas        
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(130);

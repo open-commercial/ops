@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.util.List;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,7 +36,7 @@ public abstract class CuentaCorriente implements Serializable {
     private boolean eliminada;    
     private Date fechaApertura;
     private Empresa empresa;
-    private double saldo;
+    private BigDecimal saldo;
     private List<RenglonCuentaCorriente> renglones;    
     
 }

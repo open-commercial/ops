@@ -3,6 +3,7 @@ package sic.vista.swing;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +32,7 @@ public class SeleccionDeProductosGUI extends JDialog {
 
     private final ModeloTabla modeloTablaResultados = new ModeloTabla();
     private FacturaVenta fv;
-    private final HashMap<Long, Double> idsRenglonesYCantidades = new HashMap<>();
+    private final HashMap<Long, BigDecimal> idsRenglonesYCantidades = new HashMap<>();
     private boolean modificarStock;
     private TipoMovimiento tipoMovimiento;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -51,7 +52,7 @@ public class SeleccionDeProductosGUI extends JDialog {
         this.recuperarFactura(idFactura);
     }
     
-    public HashMap<Long, Double> getRenglonesConCantidadNueva() {
+    public HashMap<Long, BigDecimal> getRenglonesConCantidadNueva() {
         return idsRenglonesYCantidades;
     }
     
@@ -77,15 +78,15 @@ public class SeleccionDeProductosGUI extends JDialog {
 
             JLabel cell = (JLabel) super.getTableCellRendererComponent(tabla, valor, isSelected, hasFocus, row, 6);
             this.setHorizontalAlignment(SwingConstants.RIGHT);
-            double cantidadOriginal = (double)tabla.getValueAt(row, 5);
-            if (valor instanceof Double) {
-                Double numero = (Double) valor;
+            BigDecimal cantidadOriginal = (BigDecimal)tabla.getValueAt(row, 5);
+            if (valor instanceof BigDecimal) {
+                BigDecimal numero = (BigDecimal) valor;
                 cell.setText(FormatterNumero.formatConRedondeo(numero));
-                if (numero >= 0 || numero <= cantidadOriginal) {
+                if (numero.compareTo(BigDecimal.ZERO) > -1 || numero.compareTo(cantidadOriginal) < 1) {
                     cell.setBackground(Color.GREEN);
                     cell.setFont(new Font("Font", Font.BOLD, 12));
                 }
-                if (numero < 0 || numero > cantidadOriginal) {
+                if (numero.compareTo(BigDecimal.ZERO) < 0 || numero.compareTo(cantidadOriginal) > 0) {
                     cell.setBackground(Color.PINK);
                     cell.setFont(new Font("Font", Font.BOLD, 12));
                 }
@@ -115,10 +116,10 @@ public class SeleccionDeProductosGUI extends JDialog {
         tipos[0] = String.class;
         tipos[1] = String.class;
         tipos[2] = String.class;
-        tipos[3] = Double.class;
-        tipos[4] = Double.class;
-        tipos[5] = Double.class;
-        tipos[6] = Double.class;
+        tipos[3] = BigDecimal.class;
+        tipos[4] = BigDecimal.class;
+        tipos[5] = BigDecimal.class;
+        tipos[6] = BigDecimal.class;
         modeloTablaResultados.setClaseColumnas(tipos);
         tblResultados.getTableHeader().setReorderingAllowed(false);
         tblResultados.getTableHeader().setResizingAllowed(true);
@@ -128,7 +129,7 @@ public class SeleccionDeProductosGUI extends JDialog {
         modeloTablaResultados.setEditables(editables);
 
         //render para los tipos de datos
-        tblResultados.setDefaultRenderer(Double.class, new RenderTabla());
+        tblResultados.setDefaultRenderer(BigDecimal.class, new RenderTabla());
         tblResultados.getColumnModel().getColumn(6).setCellRenderer(new ColoresProductosTablaRenderer());
         //Finaliza la edicion de la tabla al perder el foco
         tblResultados.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
@@ -145,9 +146,10 @@ public class SeleccionDeProductosGUI extends JDialog {
     
     private void recalcularRenglonesFactura() {
         for (int i = 0; i < tblResultados.getRowCount(); i++) {
-            if (!(((Double) tblResultados.getValueAt(i, 6)) < 0)) {
-                if (((Double) tblResultados.getValueAt(i, 6)) > 0 && ((Double) tblResultados.getValueAt(i, 6)) <= ((Double) tblResultados.getValueAt(i, 5))) {
-                    idsRenglonesYCantidades.put(fv.getRenglones().get(i).getId_RenglonFactura(), ((Double) tblResultados.getValueAt(i, 6)));
+            BigDecimal cantidadElegida = (BigDecimal) tblResultados.getValueAt(i, 6);
+            if (!(cantidadElegida.compareTo(BigDecimal.ZERO) < 0)) {
+                if ((cantidadElegida.compareTo(BigDecimal.ZERO)  > 0 && (cantidadElegida.compareTo((BigDecimal) tblResultados.getValueAt(i, 5)) < 1))) {
+                    idsRenglonesYCantidades.put(fv.getRenglones().get(i).getId_RenglonFactura(), ((BigDecimal) tblResultados.getValueAt(i, 6)));
                 }
             } else {
                 JOptionPane.showMessageDialog(this,
