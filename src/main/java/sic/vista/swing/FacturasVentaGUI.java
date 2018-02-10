@@ -7,6 +7,7 @@ import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -140,15 +141,15 @@ public class FacturasVentaGUI extends JInternalFrame {
         tipos[6] = String.class;
         tipos[7] = String.class;
         tipos[8] = Boolean.class;
-        tipos[9] = Double.class;
-        tipos[10] = Double.class;
-        tipos[11] = Double.class;
-        tipos[12] = Double.class;
-        tipos[13] = Double.class;
-        tipos[14] = Double.class;
-        tipos[15] = Double.class;
-        tipos[16] = Double.class;
-        tipos[17] = Double.class;
+        tipos[9] = BigDecimal.class;
+        tipos[10] = BigDecimal.class;
+        tipos[11] = BigDecimal.class;
+        tipos[12] = BigDecimal.class;
+        tipos[13] = BigDecimal.class;
+        tipos[14] = BigDecimal.class;
+        tipos[15] = BigDecimal.class;
+        tipos[16] = BigDecimal.class;
+        tipos[17] = BigDecimal.class;
         tipos[18] = String.class;
         tipos[19] = Date.class;
         modeloTablaFacturas.setClaseColumnas(tipos);
@@ -156,7 +157,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
 
         //render para los tipos de datos
-        tbl_Resultados.setDefaultRenderer(Double.class, new RenderTabla());
+        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new RenderTabla());
 
         //Tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(120);
@@ -183,11 +184,11 @@ public class FacturasVentaGUI extends JInternalFrame {
 
     private void calcularResultados(String uriCriteria) {
         txt_ResultTotalFacturado.setValue(RestClient.getRestTemplate()
-                .getForObject("/facturas/total-facturado-venta/criteria?" + uriCriteria, double.class));
+                .getForObject("/facturas/total-facturado-venta/criteria?" + uriCriteria, BigDecimal.class));
         txt_ResultGananciaTotal.setValue(RestClient.getRestTemplate()
-                .getForObject("/facturas/ganancia-total/criteria?" + uriCriteria, double.class));
+                .getForObject("/facturas/ganancia-total/criteria?" + uriCriteria, BigDecimal.class));
         txt_ResultTotalIVAVenta.setValue(RestClient.getRestTemplate()
-                .getForObject("/facturas/total-iva-venta/criteria?" + uriCriteria, double.class));        
+                .getForObject("/facturas/total-iva-venta/criteria?" + uriCriteria, BigDecimal.class));        
     }
 
     private void buscar(boolean calcularResultados) {

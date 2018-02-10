@@ -1,5 +1,6 @@
 package sic.vista.swing;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -89,7 +90,7 @@ public class PagosGUI extends JInternalFrame {
         tipos[0] = Integer.class;
         tipos[1] = Date.class;
         tipos[2] = String.class;
-        tipos[3] = Double.class;
+        tipos[3] = BigDecimal.class;
         tipos[4] = String.class;        
         tipos[5] = Date.class;
         tipos[6] = String.class;        
@@ -97,7 +98,7 @@ public class PagosGUI extends JInternalFrame {
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
         //render para los tipos de datos
-        tbl_Resultados.setDefaultRenderer(Double.class, new RenderTabla());
+        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new RenderTabla());
         //size de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setMinWidth(70);
         tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(70);
@@ -161,15 +162,15 @@ public class PagosGUI extends JInternalFrame {
             if (facturaRelacionada != null) {
                 txt_TotalAdeudado.setValue(facturaRelacionada.getTotal());
                 txt_TotalPagado.setValue(RestClient.getRestTemplate()
-                        .getForObject("/pagos/facturas/" + facturaRelacionada.getId_Factura() + "/total-pagado", double.class));
+                        .getForObject("/pagos/facturas/" + facturaRelacionada.getId_Factura() + "/total-pagado", BigDecimal.class));
                 txt_SaldoAPagar.setValue(RestClient.getRestTemplate()
-                        .getForObject("/pagos/facturas/" + facturaRelacionada.getId_Factura() + "/saldo", double.class));
+                        .getForObject("/pagos/facturas/" + facturaRelacionada.getId_Factura() + "/saldo", BigDecimal.class));
             } else if (notaDebitoRelacionada != null) {
                 txt_TotalAdeudado.setValue(notaDebitoRelacionada.getTotal());
                 txt_TotalPagado.setValue(RestClient.getRestTemplate()
-                        .getForObject("/pagos/notas/" + notaDebitoRelacionada.getIdNota() + "/total-pagado", double.class));
+                        .getForObject("/pagos/notas/" + notaDebitoRelacionada.getIdNota() + "/total-pagado", BigDecimal.class));
                 txt_SaldoAPagar.setValue(RestClient.getRestTemplate()
-                        .getForObject("/pagos/notas/" + notaDebitoRelacionada.getIdNota() + "/saldo", double.class));
+                        .getForObject("/pagos/notas/" + notaDebitoRelacionada.getIdNota() + "/saldo", BigDecimal.class));
             } else if (reciboRelacionado != null) {
                 txt_TotalAdeudado.setValue(0);
                 txt_TotalPagado.setValue(reciboRelacionado.getMonto());

@@ -150,7 +150,7 @@ public class CajaGUI extends JInternalFrame {
         Class[] tipos = new Class[modeloTablaBalance.getColumnCount()];
         tipos[0] = String.class;
         tipos[1] = Date.class;
-        tipos[2] = Double.class;
+        tipos[2] = BigDecimal.class;
         modeloTablaBalance.setClaseColumnas(tipos);
         tbl_Movimientos.getTableHeader().setReorderingAllowed(false);
         tbl_Movimientos.getTableHeader().setResizingAllowed(true);
@@ -180,7 +180,7 @@ public class CajaGUI extends JInternalFrame {
         tipos[0] = Long.class;
         tipos[1] = String.class;
         tipos[2] = Boolean.class;
-        tipos[3] = Double.class;
+        tipos[3] = BigDecimal.class;
         modeloTablaResumen.setClaseColumnas(tipos);
         tbl_Resumen.getTableHeader().setReorderingAllowed(false);
         tbl_Resumen.getTableHeader().setResizingAllowed(true);
@@ -224,7 +224,7 @@ public class CajaGUI extends JInternalFrame {
             this.cargarResultados();
             tbl_Resumen.setModel(modeloTablaResumen);
             tbl_Resumen.removeColumn(tbl_Resumen.getColumnModel().getColumn(0));
-            tbl_Resumen.setDefaultRenderer(Double.class, new ColoresNumerosTablaRenderer());
+            tbl_Resumen.setDefaultRenderer(BigDecimal.class, new ColoresNumerosTablaRenderer());
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -577,7 +577,7 @@ public class CajaGUI extends JInternalFrame {
                             + "\nSaldo Real:", "Cerrar Caja", JOptionPane.QUESTION_MESSAGE);
                     if (monto != null) {
                         RestClient.getRestTemplate().put("/cajas/" + caja.getId_Caja() + "/cierre?"
-                                + "monto=" + Double.parseDouble(monto)
+                                + "monto=" + new BigDecimal(monto)
                                 + "&idUsuarioCierre=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario(),
                                 Caja.class);
                         this.dispose();

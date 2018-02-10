@@ -2,6 +2,7 @@ package sic.vista.swing;
 
 import java.awt.Color;
 import java.awt.event.ItemEvent;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,12 +27,12 @@ public class ModificacionProductosBulkGUI extends JDialog {
 
     private final List<Producto> productosParaModificar;
     private ModeloTabla modeloTablaProductos;
-    private double precioDeCosto;
-    private double gananciaPorcentaje;
-    private double gananciaNeto;
-    private double pvp;
-    private double IVANeto;
-    private double precioDeLista;
+    private BigDecimal precioDeCosto = BigDecimal.ZERO;
+    private BigDecimal gananciaPorcentaje = BigDecimal.ZERO;
+    private BigDecimal gananciaNeto = BigDecimal.ZERO;
+    private BigDecimal pvp = BigDecimal.ZERO;
+    private BigDecimal IVANeto = BigDecimal.ZERO;
+    private BigDecimal precioDeLista = BigDecimal.ZERO;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public ModificacionProductosBulkGUI(List<Producto> productosParaModificar) {
@@ -105,18 +106,18 @@ public class ModificacionProductosBulkGUI extends JDialog {
 
     private void cargarComboBoxIVA() {
         cmb_IVA_Porcentaje.removeAllItems();
-        cmb_IVA_Porcentaje.addItem((double) 0);
-        cmb_IVA_Porcentaje.addItem(10.5);
-        cmb_IVA_Porcentaje.addItem((double) 21);
+        cmb_IVA_Porcentaje.addItem(BigDecimal.ZERO);
+        cmb_IVA_Porcentaje.addItem(new BigDecimal("10.5"));
+        cmb_IVA_Porcentaje.addItem(new BigDecimal("21"));
     }
 
     private void prepararComponentes() {
-        txt_PrecioCosto.setValue(0.0);
-        txt_PVP.setValue(0.0);
-        txt_IVA_Neto.setValue(0.0);
-        txt_Ganancia_Porcentaje.setValue(0.0);
-        txt_Ganancia_Neto.setValue(0.0);
-        txt_PrecioLista.setValue(0.0);
+        txt_PrecioCosto.setValue(BigDecimal.ZERO);
+        txt_PVP.setValue(BigDecimal.ZERO);
+        txt_IVA_Neto.setValue(BigDecimal.ZERO);
+        txt_Ganancia_Porcentaje.setValue(BigDecimal.ZERO);
+        txt_Ganancia_Neto.setValue(BigDecimal.ZERO);
+        txt_PrecioLista.setValue(BigDecimal.ZERO);
     }
 
     private void setColumnas() {
@@ -182,30 +183,30 @@ public class ModificacionProductosBulkGUI extends JDialog {
     }
     
     private void calcularGananciaPorcentaje() {
-        pvp = Double.parseDouble(txt_PVP.getValue().toString());
+        pvp = new BigDecimal(txt_PVP.getValue().toString());
         gananciaPorcentaje = RestClient.getRestTemplate()
                 .getForObject("/productos/ganancia-porcentaje?"
-                        + "precioCosto=" + Double.parseDouble(txt_PrecioCosto.getValue().toString())
+                        + "precioCosto=" + new BigDecimal(txt_PrecioCosto.getValue().toString())
                         + "&pvp=" + pvp,
-                        double.class);
+                        BigDecimal.class);
         txt_Ganancia_Porcentaje.setValue(gananciaPorcentaje);
     }
     
     private void calcularGananciaNeto() {
         gananciaNeto = RestClient.getRestTemplate()
                 .getForObject("/productos/ganancia-neto?"
-                        + "precioCosto=" + Double.parseDouble(txt_PrecioCosto.getValue().toString())
+                        + "precioCosto=" + new BigDecimal(txt_PrecioCosto.getValue().toString())
                         + "&gananciaPorcentaje=" + gananciaPorcentaje,
-                        double.class);
+                        BigDecimal.class);
         txt_Ganancia_Neto.setValue(gananciaNeto);
     }
     
     private void calcularPVP() {
         pvp = RestClient.getRestTemplate()
                 .getForObject("/productos/pvp?"
-                        + "precioCosto=" + Double.parseDouble(txt_PrecioCosto.getValue().toString())
+                        + "precioCosto=" + new BigDecimal(txt_PrecioCosto.getValue().toString())
                         + "&gananciaPorcentaje=" + gananciaPorcentaje,
-                        double.class);
+                        BigDecimal.class);
         txt_PVP.setValue(pvp);
     }
     
@@ -213,8 +214,8 @@ public class ModificacionProductosBulkGUI extends JDialog {
         IVANeto = RestClient.getRestTemplate()
                 .getForObject("/productos/iva-neto?"
                         + "pvp=" + pvp
-                        + "&ivaPorcentaje=" + Double.parseDouble(cmb_IVA_Porcentaje.getSelectedItem().toString()),
-                        double.class);
+                        + "&ivaPorcentaje=" + new BigDecimal(cmb_IVA_Porcentaje.getSelectedItem().toString()),
+                        BigDecimal.class);
         txt_IVA_Neto.setValue(IVANeto);
     }
     
@@ -222,20 +223,20 @@ public class ModificacionProductosBulkGUI extends JDialog {
         precioDeLista = RestClient.getRestTemplate()
                 .getForObject("/productos/precio-lista?"
                         + "pvp=" + pvp
-                        + "&ivaPorcentaje=" + Double.parseDouble(cmb_IVA_Porcentaje.getSelectedItem().toString()),
-                        double.class);
+                        + "&ivaPorcentaje=" + new BigDecimal(cmb_IVA_Porcentaje.getSelectedItem().toString()),
+                        BigDecimal.class);
         txt_PrecioLista.setValue(precioDeLista);
     }
     
     private void calcularGananciaSegunPrecioDeLista() {      
         gananciaPorcentaje = RestClient.getRestTemplate()
                 .getForObject("/productos/ganancia-porcentaje?ascendente=true"
-                        + "&precioDeLista=" + Double.parseDouble(txt_PrecioLista.getValue().toString())
+                        + "&precioDeLista=" + new BigDecimal(txt_PrecioLista.getValue().toString())
                         + "&precioDeListaAnterior=" + precioDeLista
                         + "&pvp=" + pvp
-                        + "&ivaPorcentaje=" + Double.parseDouble(cmb_IVA_Porcentaje.getSelectedItem().toString())
+                        + "&ivaPorcentaje=" + new BigDecimal(cmb_IVA_Porcentaje.getSelectedItem().toString())
                         + "&precioCosto=" + precioDeCosto,
-                        double.class);
+                        BigDecimal.class);
         txt_Ganancia_Porcentaje.setValue(gananciaPorcentaje);
     }
     
@@ -679,13 +680,13 @@ public class ModificacionProductosBulkGUI extends JDialog {
         String preciosProducto = "";
         if (chk_Precios.isSelected() == true) {
             checkPrecios = true;
-            preciosProducto = "&precioCosto=" + Double.parseDouble(txt_PrecioCosto.getValue().toString())
-                    + "&gananciaPorcentaje=" + Double.parseDouble(txt_Ganancia_Porcentaje.getValue().toString())
-                    + "&gananciaNeto=" + Double.parseDouble(txt_Ganancia_Neto.getValue().toString())
-                    + "&precioVentaPublico=" + Double.parseDouble(txt_PVP.getValue().toString())
-                    + "&IVAPorcentaje=" + Double.parseDouble(cmb_IVA_Porcentaje.getSelectedItem().toString())
-                    + "&IVANeto=" + Double.parseDouble(txt_IVA_Neto.getValue().toString())
-                    + "&precioLista=" + Double.parseDouble(txt_PrecioLista.getValue().toString());
+            preciosProducto = "&precioCosto=" + new BigDecimal(txt_PrecioCosto.getValue().toString())
+                    + "&gananciaPorcentaje=" + new BigDecimal(txt_Ganancia_Porcentaje.getValue().toString())
+                    + "&gananciaNeto=" + new BigDecimal(txt_Ganancia_Neto.getValue().toString())
+                    + "&precioVentaPublico=" + new BigDecimal(txt_PVP.getValue().toString())
+                    + "&IVAPorcentaje=" + new BigDecimal(cmb_IVA_Porcentaje.getSelectedItem().toString())
+                    + "&IVANeto=" + new BigDecimal(txt_IVA_Neto.getValue().toString())
+                    + "&precioLista=" + new BigDecimal(txt_PrecioLista.getValue().toString());
         }
         if (chk_UnidadDeMedida.isSelected() == true) {
             checkMedida = true;
@@ -861,7 +862,7 @@ public class ModificacionProductosBulkGUI extends JDialog {
     private void txt_Ganancia_PorcentajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_Ganancia_PorcentajeActionPerformed
         this.validarComponentesDePrecios();
         try {
-            gananciaPorcentaje = Double.parseDouble(txt_Ganancia_Porcentaje.getValue().toString());
+            gananciaPorcentaje = new BigDecimal(txt_Ganancia_Porcentaje.getValue().toString());
             this.calcularGananciaNeto();
             this.calcularPVP();
             this.calcularIVANeto();
@@ -885,7 +886,7 @@ public class ModificacionProductosBulkGUI extends JDialog {
     private void txt_PrecioCostoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_PrecioCostoActionPerformed
         this.validarComponentesDePrecios();
         try {
-            precioDeCosto = Double.parseDouble(txt_PrecioCosto.getValue().toString());
+            precioDeCosto = new BigDecimal(txt_PrecioCosto.getValue().toString());
             this.calcularGananciaNeto();
             this.calcularPVP();
             this.calcularIVANeto();

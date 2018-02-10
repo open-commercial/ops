@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -152,7 +153,7 @@ public class ClientesGUI extends JInternalFrame {
         tipos[1] = String.class;
         tipos[2] = String.class;
         tipos[3] = String.class;
-        tipos[4] = Double.class;
+        tipos[4] = BigDecimal.class;
         tipos[5] = Date.class;
         tipos[6] = String.class;
         tipos[7] = String.class;
@@ -169,7 +170,7 @@ public class ClientesGUI extends JInternalFrame {
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
 
-        tbl_Resultados.setDefaultRenderer(Double.class, new RenderTabla());
+        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new RenderTabla());
         //Tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(110);

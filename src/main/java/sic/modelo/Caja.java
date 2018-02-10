@@ -25,7 +25,7 @@ public class Caja implements Serializable {
     private BigDecimal saldoFinal;
     private BigDecimal saldoReal;
     private boolean eliminada;
-    private Map<Long, Double> totalesPorFomaDePago;
+    private Map<Long, BigDecimal> totalesPorFomaDePago;
     private BigDecimal totalAfectaCaja;
     private BigDecimal totalGeneral;
 

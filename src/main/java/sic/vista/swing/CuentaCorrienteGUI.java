@@ -11,6 +11,7 @@ import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
@@ -83,10 +84,10 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             }
         });
         ftf_saldoFinal.addPropertyChangeListener("value", (PropertyChangeEvent e) -> {
-            BigDecimal saldoFinal = new BigDecimal(ftf_saldoFinal.getValue().toString());
-            if (Utilidades.truncarDecimal(saldoFinal, 2).compareTo(BigDecimal.ZERO) < 0) {
+            int cambiarColorFondo = (new BigDecimal(ftf_saldoFinal.getValue().toString())).setScale(2, RoundingMode.HALF_UP).compareTo(BigDecimal.ZERO);
+            if (cambiarColorFondo < 0) {
                 ftf_saldoFinal.setBackground(Color.PINK);
-            } else if (Utilidades.truncarDecimal(saldoFinal, 2).compareTo(BigDecimal.ZERO) > 0) {
+            } else if (cambiarColorFondo > 0) {
                 ftf_saldoFinal.setBackground(Color.GREEN);
             } else {
                 ftf_saldoFinal.setBackground(Color.WHITE);

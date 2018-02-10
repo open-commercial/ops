@@ -19,16 +19,16 @@ public class ColoresNumerosTablaRenderer extends DefaultTableCellRenderer {
 
         JLabel cell = (JLabel) super.getTableCellRendererComponent(tabla, valor, isSelected, hasFocus, row, column);
         this.setHorizontalAlignment(SwingConstants.RIGHT);
-        if (valor instanceof Double) {
-            Double numero = new BigDecimal((Double)valor).setScale(2, RoundingMode.HALF_UP).doubleValue();
-            cell.setText(FormatterNumero.formatConRedondeo(numero));
-            if (numero > 0) {
+        if (valor instanceof BigDecimal) {
+            BigDecimal numero = ((BigDecimal)valor).setScale(2, RoundingMode.HALF_UP);
+            cell.setText(numero.setScale(2, RoundingMode.HALF_UP).toString());
+            if (numero.compareTo(BigDecimal.ZERO) > 0) {
                 cell.setBackground(Color.GREEN);
             }
-            if (numero < 0) {
+            if (numero.compareTo(BigDecimal.ZERO) < 0) {
                 cell.setBackground(Color.PINK);
             }
-            if (numero == 0) {
+            if (numero.compareTo(BigDecimal.ZERO) == 0) {
                 cell.setBackground(Color.WHITE);
             }
         } else {

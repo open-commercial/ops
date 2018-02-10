@@ -2,6 +2,7 @@ package sic.vista.swing;
 
 import java.awt.Dimension;
 import java.beans.PropertyVetoException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -133,7 +134,7 @@ public class ProveedoresGUI extends JInternalFrame {
         tipos[0] = String.class;
         tipos[1] = String.class;
         tipos[2] = String.class;
-        tipos[3] = Double.class;
+        tipos[3] = BigDecimal.class;
         tipos[4] = Date.class;
         tipos[5] = String.class;
         tipos[6] = String.class;

@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -79,15 +80,15 @@ public class CajasGUI extends JInternalFrame {
         tipos[2] = String.class;
         tipos[3] = Date.class;
         tipos[4] = String.class;
-        tipos[5] = Double.class;
-        tipos[6] = Double.class;
-        tipos[7] = Double.class;
+        tipos[5] = BigDecimal.class;
+        tipos[6] = BigDecimal.class;
+        tipos[7] = BigDecimal.class;
         modeloTablaCajas.setClaseColumnas(tipos);
         tbl_Cajas.getTableHeader().setReorderingAllowed(false);
         tbl_Cajas.getTableHeader().setResizingAllowed(true);
 
         //render para los tipos de datos
-        tbl_Cajas.setDefaultRenderer(Double.class, new RenderTabla());
+        tbl_Cajas.setDefaultRenderer(BigDecimal.class, new RenderTabla());
 
         //Tamanios de columnas
         tbl_Cajas.getColumnModel().getColumn(0).setPreferredWidth(0);
@@ -134,10 +135,10 @@ public class CajasGUI extends JInternalFrame {
             }
             ftxt_TotalFinal.setValue(RestClient.getRestTemplate()
                     .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                            + "/saldo-final?" + criteriaBusqueda, Double.class));
+                            + "/saldo-final?" + criteriaBusqueda, BigDecimal.class));
             ftxt_TotalCierre.setValue(RestClient.getRestTemplate()
                     .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                            + "/saldo-real?" + criteriaBusqueda, Double.class));
+                            + "/saldo-real?" + criteriaBusqueda, BigDecimal.class));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
