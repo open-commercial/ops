@@ -553,7 +553,7 @@ public class CerrarVentaGUI extends JDialog {
         this.cargarTransportistas();
         this.setEstadoFormasDePago();
         cmb_Transporte.setSelectedIndex(0);
-        lbl_Vendedor.setText(UsuarioActivo.getInstance().getUsuario().getNombre());
+        lbl_Vendedor.setText(UsuarioActivo.getInstance().getUsuario().toString());
         txt_AbonaCon.setValue(0);
         txt_AbonaCon.requestFocus();
         lbl_TotalAPagar.setValue(gui_puntoDeVenta.getTotal());
