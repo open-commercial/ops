@@ -166,7 +166,7 @@ public class PedidosGUI extends JInternalFrame {
             fila[1] = p.getFecha();
             fila[2] = p.getNroPedido();
             fila[3] = p.getRazonSocialCliente();
-            fila[4] = p.getUsuario();
+            fila[4] = p.getNombreUsuario();
             fila[5] = p.getTotalEstimado();
             fila[6] = p.getTotalActual();
             return fila;
