@@ -146,9 +146,9 @@ public class SeleccionDeProductosGUI extends JDialog {
     
     private void recalcularRenglonesFactura() {
         for (int i = 0; i < tblResultados.getRowCount(); i++) {
-            BigDecimal cantidadElegida = (BigDecimal) tblResultados.getValueAt(i, 6);
+            BigDecimal cantidadElegida = new BigDecimal((tblResultados.getValueAt(i, 6)).toString());
             if (!(cantidadElegida.compareTo(BigDecimal.ZERO) < 0)) {
-                if ((cantidadElegida.compareTo(BigDecimal.ZERO)  > 0 && (cantidadElegida.compareTo((BigDecimal) tblResultados.getValueAt(i, 5)) < 1))) {
+                if ((cantidadElegida.compareTo(BigDecimal.ZERO) > 0 && (cantidadElegida.compareTo((BigDecimal) tblResultados.getValueAt(i, 5)) < 1))) {
                     idsRenglonesYCantidades.put(fv.getRenglones().get(i).getId_RenglonFactura(), ((BigDecimal) tblResultados.getValueAt(i, 6)));
                 }
             } else {

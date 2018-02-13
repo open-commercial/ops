@@ -259,10 +259,9 @@ public class DetalleReciboGUI extends JDialog {
             if (cliente != null) {
                 BigDecimal saldoCC = RestClient.getRestTemplate().getForObject("/cuentas-corrientes/clientes/" + cliente.getId_Cliente() + "/saldo", BigDecimal.class);
                 txtMonto.setValue((saldoCC.compareTo(BigDecimal.ZERO) < 0) ? saldoCC.negate() : BigDecimal.ZERO);
-
             } else {
                 BigDecimal saldoCC = RestClient.getRestTemplate().getForObject("/cuentas-corrientes/proveedores/" + proveedor.getId_Proveedor() + "/saldo", BigDecimal.class);
-                txtMonto.setValue((saldoCC.compareTo(BigDecimal.ZERO) < 0) ? saldoCC : BigDecimal.ZERO);
+                txtMonto.setValue((saldoCC.compareTo(BigDecimal.ZERO) < 0) ? saldoCC.negate() : BigDecimal.ZERO);
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

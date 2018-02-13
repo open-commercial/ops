@@ -30,12 +30,12 @@ public class DetalleProductoGUI extends JDialog {
 
     private Producto productoModificar;
     private final TipoDeOperacion operacion;
-    private BigDecimal precioDeCosto;
-    private BigDecimal gananciaPorcentaje;
-    private BigDecimal gananciaNeto;
-    private BigDecimal pvp;
-    private BigDecimal IVANeto;
-    private BigDecimal precioDeLista;    
+    private BigDecimal precioDeCosto = BigDecimal.ZERO;
+    private BigDecimal gananciaPorcentaje = BigDecimal.ZERO;
+    private BigDecimal gananciaNeto = BigDecimal.ZERO;
+    private BigDecimal pvp = BigDecimal.ZERO;
+    private BigDecimal IVANeto = BigDecimal.ZERO;
+    private BigDecimal precioDeLista = BigDecimal.ZERO;    
     private List<Medida> medidas;
     private List<Rubro> rubros;
     private List<Proveedor> proveedores;
@@ -857,7 +857,7 @@ public class DetalleProductoGUI extends JDialog {
                         + "&precioDeListaAnterior=" + precioDeLista
                         + "&pvp=" + pvp
                         + "&ivaPorcentaje=" + new BigDecimal(cmb_IVA_Porcentaje.getSelectedItem().toString())
-                        + "&impInternoPorcentaje=0"
+                        + "&impInternoPorcentaje=" + BigDecimal.ZERO
                         + "&precioCosto=" + precioDeCosto,
                         BigDecimal.class);
         txt_Ganancia_Porcentaje.setValue(gananciaPorcentaje);
