@@ -36,7 +36,6 @@ public class CajasGUI extends JInternalFrame {
 
     private ModeloTabla modeloTablaCajas = new ModeloTabla();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private final Usuario usuarioParaMostrar = new Usuario();
     private List<Caja> cajasTotal = new ArrayList<>();
     private List<Caja> cajasParcial = new ArrayList<>();
     private static int totalElementosBusqueda;
@@ -58,8 +57,7 @@ public class CajasGUI extends JInternalFrame {
         });
     }
 
-    private void setColumnasCaja() {
-        
+    private void setColumnasCaja() {       
         //nombres de columnas
         String[] encabezados = new String[8];
         encabezados[0] = "Estado";
@@ -544,8 +542,6 @@ public class CajasGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_eliminarCajaActionPerformed
 
     private void chk_UsuarioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UsuarioItemStateChanged
-        cmb_Usuarios.setEnabled(false);
-        cmb_Usuarios.removeAllItems();
         try {
             if (chk_Usuario.isSelected() == true) {
                 cmb_Usuarios.setEnabled(true);
@@ -555,7 +551,8 @@ public class CajasGUI extends JInternalFrame {
                     cmb_Usuarios.addItem(usuario);
                 });
             } else {
-                cmb_Usuarios.addItem(usuarioParaMostrar);
+                cmb_Usuarios.removeAllItems();
+                cmb_Usuarios.setEnabled(false);
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -574,7 +571,6 @@ public class CajasGUI extends JInternalFrame {
     private void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_internalFrameOpened
         this.setSize(sizeInternalFrame);
         this.setColumnasCaja();
-        cmb_Usuarios.addItem(usuarioParaMostrar);
         cmb_Usuarios.setEnabled(false);
         dc_FechaDesde.setDate(new Date());
         dc_FechaHasta.setDate(new Date());

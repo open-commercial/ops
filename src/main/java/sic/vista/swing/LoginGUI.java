@@ -1,5 +1,8 @@
 package sic.vista.swing;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import java.awt.event.KeyEvent;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
@@ -34,16 +37,20 @@ public class LoginGUI extends JFrame {
         if (!txt_Usuario.getText().trim().equals("") || txt_Contrasenia.getPassword().length != 0) {
             try {
                 Credencial credencial = new Credencial(txt_Usuario.getText().trim(), new String(txt_Contrasenia.getPassword()));
-                UsuarioActivo.getInstance().setToken(RestClient.getRestTemplate().postForObject("/login", credencial, String.class));
-                Usuario usuario = RestClient.getRestTemplate().getForObject("/usuarios/busqueda?nombre=" + credencial.getUsername(),
-                        Usuario.class);
+                String token = RestClient.getRestTemplate().postForObject("/login", credencial, String.class);
+                DecodedJWT jwt = JWT.decode(token);
+                UsuarioActivo.getInstance().setToken(token);
+                Usuario usuario = RestClient.getRestTemplate().getForObject("/usuarios/" + jwt.getClaim("idUsuario").asLong(), Usuario.class);
                 UsuarioActivo.getInstance().setUsuario(usuario);
+            } catch (JWTDecodeException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_error_decode_jwt"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             } catch (ResourceAccessException ex) {
                 LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {

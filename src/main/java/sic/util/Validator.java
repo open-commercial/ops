@@ -4,7 +4,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 public class Validator {
 
@@ -40,15 +39,6 @@ public class Validator {
             return true;
         }
     }    
-
-    public static boolean esEmailValido(String cadena) {
-        if (!cadena.equals("")) {
-            return ((Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-		+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")).matcher(cadena)).matches();
-        } else {
-            return true;
-        }
-    }
 
     /**
      * Compara dos fechas pasadas como Date

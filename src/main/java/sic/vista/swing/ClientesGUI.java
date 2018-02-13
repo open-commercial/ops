@@ -194,7 +194,7 @@ public class ClientesGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(4).setCellRenderer(new ColoresNumerosTablaRenderer());
     }
 
-    private void cargarResultadosAlTable() {        
+    private void cargarResultadosAlTable() {
         clientesParcial.stream().map(cliente -> {
             Object[] fila = new Object[17];
             fila[0] = cliente.isPredeterminado();
@@ -203,7 +203,7 @@ public class ClientesGUI extends JInternalFrame {
             fila[3] = cliente.getNombreFantasia(); 
             fila[4] = cliente.getSaldoCuentaCorriente();
             fila[5] = cliente.getFechaUltimoMovimiento();
-            if (cliente.getViajante() != null) fila[6] = cliente.getViajante().getNombre();            
+            if (cliente.getViajante() != null) fila[6] = cliente.getViajante().toString();
             fila[7] = cliente.getDireccion();
             fila[8] = cliente.getCondicionIVA().getNombre();
             fila[9] = cliente.getTelPrimario();

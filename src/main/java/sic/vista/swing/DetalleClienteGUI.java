@@ -31,15 +31,13 @@ public class DetalleClienteGUI extends JDialog {
 
     public DetalleClienteGUI() {
         this.initComponents();
-        this.setIcon();
-        this.setTitle("Nuevo Cliente");
+        this.setIcon();        
         operacion = TipoDeOperacion.ALTA;
     }
 
     public DetalleClienteGUI(Cliente cliente) {
         this.initComponents();
-        this.setIcon();
-        this.setTitle("Modificar Cliente");
+        this.setIcon();        
         operacion = TipoDeOperacion.ACTUALIZACION;
         this.cliente = cliente;
     }
@@ -121,10 +119,8 @@ public class DetalleClienteGUI extends JDialog {
         cmb_Viajante.addItem(null);
         try {
             List<Usuario> usuarios = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                                .getForObject("/usuarios/roles?"
-                                + "rol=" + Rol.VIAJANTE,
-                                Usuario[].class)));
-            usuarios.stream().forEach((u) -> {
+                    .getForObject("/usuarios/roles?rol=" + Rol.VIAJANTE, Usuario[].class)));
+            usuarios.stream().forEach(u -> {
                 cmb_Viajante.addItem(u);
             });
         } catch (RestClientResponseException ex) {
@@ -648,8 +644,10 @@ public class DetalleClienteGUI extends JDialog {
         this.cargarComboBoxPaises();
         this.cargarComboBoxViajantes();
         if (operacion == TipoDeOperacion.ACTUALIZACION) {
+            this.setTitle("Modificar Cliente");
             this.cargarClienteParaModificar();
         } else {
+            this.setTitle("Nuevo Cliente");
             dc_FechaAlta.setDate(new Date());
         }
     }//GEN-LAST:event_formWindowOpened
