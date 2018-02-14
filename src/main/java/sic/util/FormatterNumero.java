@@ -8,7 +8,7 @@ public class FormatterNumero extends DecimalFormat {
 
     public static String formatConRedondeo(Number n) {
         NumberFormat format = DecimalFormat.getInstance();
-        format.setRoundingMode(RoundingMode.FLOOR);
+        format.setRoundingMode(RoundingMode.HALF_UP);
         format.setMinimumFractionDigits(0);
         format.setMaximumFractionDigits(2);
         return format.format(n);

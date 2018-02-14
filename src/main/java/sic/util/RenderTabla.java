@@ -26,7 +26,7 @@ public class RenderTabla extends JFormattedTextField implements TableCellRendere
         if (value instanceof BigDecimal) {
             valor = (BigDecimal) value;
         }
-        this.setValue(valor.setScale(2, RoundingMode.HALF_UP));
+        this.setValue(valor);
         return this;
     }
 }
