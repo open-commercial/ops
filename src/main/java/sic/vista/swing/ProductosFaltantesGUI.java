@@ -48,9 +48,9 @@ public class ProductosFaltantesGUI extends JDialog {
         Class[] tipos = new Class[modeloTablaFaltantes.getColumnCount()];
         tipos[0] = String.class;
         tipos[1] = String.class;
-        tipos[2] = String.class;
-        tipos[3] = String.class;
-        tipos[4] = String.class;
+        tipos[2] = BigDecimal.class;
+        tipos[3] = BigDecimal.class;
+        tipos[4] = BigDecimal.class;
         modeloTablaFaltantes.setClaseColumnas(tipos);
         tbl_Faltantes.getTableHeader().setReorderingAllowed(false);
         tbl_Faltantes.getTableHeader().setResizingAllowed(true);

@@ -2,7 +2,6 @@ package sic.util;
 
 import java.awt.Component;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import javax.swing.JFormattedTextField;
 import javax.swing.JTable;
