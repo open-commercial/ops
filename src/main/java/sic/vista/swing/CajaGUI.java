@@ -68,7 +68,7 @@ public class CajaGUI extends JInternalFrame {
                     + " del " + ((recibo.getRazonSocialCliente().isEmpty()) ? "Proveedor: " : "Cliente: ")
                     + razonSocial;
             this.fecha = recibo.getFecha();
-            this.monto = ((recibo.getRazonSocialCliente().isEmpty()) ? - recibo.getMonto() : recibo.getMonto());
+            this.monto = recibo.getRazonSocialCliente().isEmpty() ? -recibo.getMonto() : recibo.getMonto();
         }
 
         public Movimiento(Gasto gasto) {
