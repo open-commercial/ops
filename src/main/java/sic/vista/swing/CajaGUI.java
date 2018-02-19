@@ -68,7 +68,7 @@ public class CajaGUI extends JInternalFrame {
                     + " del " + ((recibo.getRazonSocialCliente().isEmpty()) ? "Proveedor: " : "Cliente: ")
                     + razonSocial;
             this.fecha = recibo.getFecha();
-            this.monto = recibo.getMonto();
+            this.monto = recibo.getRazonSocialCliente().isEmpty() ? -recibo.getMonto() : recibo.getMonto();
         }
 
         public Movimiento(Gasto gasto) {
@@ -246,7 +246,7 @@ public class CajaGUI extends JInternalFrame {
                 renglonMovimiento[2] = m.getMonto();
                 modeloTablaBalance.addRow(renglonMovimiento);
             });
-            tbl_Movimientos.setModel(modeloTablaBalance);
+            tbl_Movimientos.setModel(modeloTablaBalance); 
         }
     }
   
