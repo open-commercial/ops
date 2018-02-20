@@ -2,18 +2,26 @@ package sic.vista.swing;
 
 import java.awt.Dimension;
 import java.util.Map;
+import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientResponseException;
+import sic.RestClient;
 import sic.modelo.Producto;
 import sic.util.RenderTabla;
 
 public class ProductosFaltantesGUI extends JDialog {
 
     private ModeloTabla modeloTablaFaltantes = new ModeloTabla();
-    private final Map<Double, Producto> faltantes;
+    private final Map<Long, Double> faltantes;
     private final Dimension sizeDialog = new Dimension(920, 500);
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public ProductosFaltantesGUI(Map<Double, Producto> faltantes) {
+    public ProductosFaltantesGUI(Map<Long, Double> faltantes) {
         super.setModal(true);
         this.initComponents();
         this.setIcon();
@@ -64,10 +72,11 @@ public class ProductosFaltantesGUI extends JDialog {
     private void cargarResultadosAlTable() {
         this.limpiarJTables();
         Object[] fila = new Object[5];
-        faltantes.forEach((c, p) -> {
+        faltantes.forEach((id, cantidad) -> {
+            Producto p = RestClient.getRestTemplate().getForObject("/productos/" + id, Producto.class);
             fila[0] = p.getCodigo();
             fila[1] = p.getDescripcion();
-            fila[2] = c;
+            fila[2] = cantidad;
             fila[3] = p.getVentaMinima();            
             fila[4] = p.getCantidad();
             modeloTablaFaltantes.addRow(fila);
@@ -151,7 +160,18 @@ public class ProductosFaltantesGUI extends JDialog {
         this.setSize(sizeDialog);        
         this.setLocationRelativeTo(null);
         this.setColumnas();
-        this.cargarResultadosAlTable();        
+        try {
+            this.cargarResultadosAlTable();
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
+        }
     }//GEN-LAST:event_formWindowOpened
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -62,13 +62,13 @@ public class CajaGUI extends JInternalFrame {
         
         public Movimiento(Recibo recibo) {
             this.idMovimiento = recibo.getIdRecibo();
-            this.tipoMovimientoCaja = TipoMovimiento.RECIBO; // Recibo Nº serie - numero del cliente/proveedor NOMBRE
+            this.tipoMovimientoCaja = TipoMovimiento.RECIBO;
             String razonSocial = ((recibo.getRazonSocialCliente().isEmpty()) ? recibo.getRazonSocialProveedor() : recibo.getRazonSocialCliente());
             this.concepto = "Recibo Nº " + recibo.getNumSerie() + " - " + recibo.getNumRecibo() 
                     + " del " + ((recibo.getRazonSocialCliente().isEmpty()) ? "Proveedor: " : "Cliente: ")
                     + razonSocial;
             this.fecha = recibo.getFecha();
-            this.monto = recibo.getMonto();
+            this.monto = recibo.getRazonSocialCliente().isEmpty() ? -recibo.getMonto() : recibo.getMonto();
         }
 
         public Movimiento(Gasto gasto) {
@@ -210,12 +210,12 @@ public class CajaGUI extends JInternalFrame {
                 fila[3] = caja.getTotalesPorFomaDePago().get(idFormaDePago);
                 modeloTablaResumen.addRow(fila);
                 recibos = this.getRecibosPorFormaDePago(idFormaDePago);
-                recibos.stream().forEach(recibo -> {
-                    movimientos.add(new Movimiento(recibo));
+                recibos.stream().forEach(r -> {
+                    movimientos.add(new Movimiento(r));
                 });
                 gastos = this.getGastosPorFormaDePago(idFormaDePago);
-                gastos.stream().forEach(gasto -> {
-                    movimientos.add(new Movimiento(gasto));
+                gastos.stream().forEach(g -> {
+                    movimientos.add(new Movimiento(g));
                 });
                 Collections.sort(movimientos);
                 mapMovimientos.put(idFormaDePago, new ArrayList<>(movimientos));
@@ -246,7 +246,7 @@ public class CajaGUI extends JInternalFrame {
                 renglonMovimiento[2] = m.getMonto();
                 modeloTablaBalance.addRow(renglonMovimiento);
             });
-            tbl_Movimientos.setModel(modeloTablaBalance);
+            tbl_Movimientos.setModel(modeloTablaBalance); 
         }
     }
   

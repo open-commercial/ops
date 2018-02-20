@@ -36,7 +36,7 @@ public class CerrarVentaGUI extends JDialog {
     private final PuntoDeVentaGUI gui_puntoDeVenta;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int[] indicesParaDividir = null;
-    private final List<Long> idsFormasDePago = new ArrayList();
+    private final List<Long> idsFormasDePago = new ArrayList<>();
     private final List<Double> montos = new ArrayList<>();
     private boolean dividir = false;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -553,7 +553,7 @@ public class CerrarVentaGUI extends JDialog {
         this.cargarTransportistas();
         this.setEstadoFormasDePago();
         cmb_Transporte.setSelectedIndex(0);
-        lbl_Vendedor.setText(UsuarioActivo.getInstance().getUsuario().getNombre());
+        lbl_Vendedor.setText(UsuarioActivo.getInstance().getUsuario().toString());
         txt_AbonaCon.setValue(0);
         txt_AbonaCon.requestFocus();
         lbl_TotalAPagar.setValue(gui_puntoDeVenta.getTotal());

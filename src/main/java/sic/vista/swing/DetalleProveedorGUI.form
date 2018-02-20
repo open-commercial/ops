@@ -253,22 +253,22 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                      <Component id="lbl_Contacto" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbl_Email" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Group type="102" alignment="1" attributes="1">
                           <EmptySpace min="10" pref="10" max="10" attributes="0"/>
-                          <Component id="lbl_Web" max="32767" attributes="0"/>
+                          <Component id="lbl_Web" pref="125" max="32767" attributes="0"/>
                       </Group>
                       <Component id="lbl_TelSecundario" alignment="1" max="32767" attributes="1"/>
                       <Component id="lbl_TelPrimario" alignment="1" min="-2" max="-2" attributes="1"/>
+                      <Component id="lbl_Contacto" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbl_Email" alignment="1" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="txt_TelPrimario" pref="416" max="32767" attributes="1"/>
-                      <Component id="txt_Web" pref="416" max="32767" attributes="1"/>
-                      <Component id="txt_Contacto" alignment="0" pref="416" max="32767" attributes="1"/>
-                      <Component id="txt_Email" alignment="0" pref="416" max="32767" attributes="1"/>
-                      <Component id="txt_TelSecundario" alignment="0" pref="416" max="32767" attributes="1"/>
+                      <Component id="txt_TelPrimario" pref="426" max="32767" attributes="1"/>
+                      <Component id="txt_Web" pref="426" max="32767" attributes="1"/>
+                      <Component id="txt_Contacto" alignment="0" pref="426" max="32767" attributes="1"/>
+                      <Component id="txt_Email" alignment="0" pref="426" max="32767" attributes="1"/>
+                      <Component id="txt_TelSecundario" alignment="0" pref="426" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
               </Group>
@@ -311,7 +311,7 @@
         <Component class="javax.swing.JLabel" name="lbl_Email">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Correo Electr&#xf3;nico:"/>
+            <Property name="text" type="java.lang.String" value="Email:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txt_Email">

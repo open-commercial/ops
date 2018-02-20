@@ -44,7 +44,7 @@ public class PrincipalGUI extends JFrame {
         this.setTitle("S.I.C. Ops "
                 + ResourceBundle.getBundle("Mensajes").getString("version")
                 + " - Empresa: " + EmpresaActiva.getInstance().getEmpresa().getNombre()
-                + " - Usuario: " + UsuarioActivo.getInstance().getUsuario().getNombre());
+                + " - Usuario: " + UsuarioActivo.getInstance().getUsuario().getUsername());
     }
 
     @SuppressWarnings("unchecked")
@@ -332,11 +332,11 @@ public class PrincipalGUI extends JFrame {
     private void mnuItm_UsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_UsuariosActionPerformed
         JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), UsuariosGUI.class);
         if (gui == null) {
-            gui = new UsuariosGUI();
-            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-            getDesktopPane().add(gui);
-            gui.setVisible(true);
+            UsuariosGUI usuariosGUI = new UsuariosGUI();
+            usuariosGUI.setLocation(getDesktopPane().getWidth() / 2 - usuariosGUI.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - usuariosGUI.getHeight() / 2);
+            getDesktopPane().add(usuariosGUI);
+            usuariosGUI.setVisible(true);
         } else {
             try {
                 gui.setSelected(true);
@@ -408,11 +408,11 @@ public class PrincipalGUI extends JFrame {
     private void mnuItm_ProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_ProductosActionPerformed
         JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), ProductosGUI.class);
         if (gui == null) {
-            ProductosGUI productos = new ProductosGUI();
-            productos.setLocation(getDesktopPane().getWidth() / 2 - productos.getWidth() / 2,
-                    getDesktopPane().getHeight() / 2 - productos.getHeight() / 2);
-            getDesktopPane().add(productos);
-            productos.setVisible(true);
+            ProductosGUI productosGUI = new ProductosGUI();
+            productosGUI.setLocation(getDesktopPane().getWidth() / 2 - productosGUI.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - productosGUI.getHeight() / 2);
+            getDesktopPane().add(productosGUI);
+            productosGUI.setVisible(true);
         } else {
             try {
                 gui.setSelected(true);

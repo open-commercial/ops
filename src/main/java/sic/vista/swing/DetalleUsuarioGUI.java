@@ -1,5 +1,6 @@
 package sic.vista.swing;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -14,11 +15,10 @@ import sic.RestClient;
 import sic.modelo.Rol;
 import sic.modelo.Usuario;
 import sic.modelo.TipoDeOperacion;
-import sic.modelo.UsuarioActivo;
 
 public class DetalleUsuarioGUI extends JDialog {
     
-    private Usuario usuarioModificar;
+    private Usuario usuarioParaModificar;
     private final TipoDeOperacion operacion;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
@@ -26,15 +26,16 @@ public class DetalleUsuarioGUI extends JDialog {
         this.initComponents();
         operacion = TipoDeOperacion.ALTA;
         this.setIcon();
-        this.setTitle("Nuevo Usuario");
+        lblAvisoSeguridad.setVisible(false);        
     }
 
     public DetalleUsuarioGUI(Usuario usuario) {
         this.initComponents();
-        this.usuarioModificar = usuario;
-        operacion = TipoDeOperacion.ACTUALIZACION;
+        this.usuarioParaModificar = usuario;
+        operacion = TipoDeOperacion.ACTUALIZACION;        
         this.setIcon();
-        this.setTitle("Modificar Usuario");
+        lbl_Contrasenia.setForeground(Color.BLACK);
+        lbl_RepetirContrasenia.setForeground(Color.BLACK);
     }    
 
     private void setIcon() {
@@ -43,9 +44,12 @@ public class DetalleUsuarioGUI extends JDialog {
     }
     
     private void cargarUsuarioParaModificar() {
-        txt_Usuario.setText(usuarioModificar.getNombre());
-        List<Rol> roles = usuarioModificar.getRoles();
-        for (Rol rol : roles) {
+        txtNombre.setText(usuarioParaModificar.getNombre());
+        txtApellido.setText(usuarioParaModificar.getApellido());
+        txtEmail.setText(usuarioParaModificar.getEmail());
+        txtUsername.setText(usuarioParaModificar.getUsername());
+        chkHabilitado.setSelected(usuarioParaModificar.isHabilitado());
+        usuarioParaModificar.getRoles().forEach(rol -> {
             if (Rol.ADMINISTRADOR.equals(rol)) {
                 chk_Administrador.setSelected(true);
             }
@@ -55,7 +59,10 @@ public class DetalleUsuarioGUI extends JDialog {
             if (Rol.VIAJANTE.equals(rol)) {
                 chk_Viajante.setSelected(true);
             }
-        }
+            if (Rol.CLIENTE.equals(rol)) {
+                chk_Cliente.setSelected(true);
+            }
+        });
     }
     
     @SuppressWarnings("unchecked")
@@ -64,16 +71,27 @@ public class DetalleUsuarioGUI extends JDialog {
 
         btn_Guardar = new javax.swing.JButton();
         panelPrincipal = new javax.swing.JPanel();
-        lbl_Usuario = new javax.swing.JLabel();
-        txt_Usuario = new javax.swing.JTextField();
+        lbl_Username = new javax.swing.JLabel();
+        txtUsername = new javax.swing.JTextField();
+        panelRoles = new javax.swing.JPanel();
+        chk_Administrador = new javax.swing.JCheckBox();
+        chk_Viajante = new javax.swing.JCheckBox();
+        chk_Vendedor = new javax.swing.JCheckBox();
+        chk_Cliente = new javax.swing.JCheckBox();
+        lblNombre = new javax.swing.JLabel();
+        lblApellido = new javax.swing.JLabel();
+        lblEmail = new javax.swing.JLabel();
+        txtNombre = new javax.swing.JTextField();
+        txtApellido = new javax.swing.JTextField();
+        txtEmail = new javax.swing.JTextField();
+        chkHabilitado = new javax.swing.JCheckBox();
+        lblHabilitado = new javax.swing.JLabel();
+        panelSeguridad = new javax.swing.JPanel();
         lbl_Contrasenia = new javax.swing.JLabel();
         txt_Contrasenia = new javax.swing.JPasswordField();
         lbl_RepetirContrasenia = new javax.swing.JLabel();
         txt_RepetirContrasenia = new javax.swing.JPasswordField();
-        jPanel1 = new javax.swing.JPanel();
-        chk_Administrador = new javax.swing.JCheckBox();
-        chk_Viajante = new javax.swing.JCheckBox();
-        chk_Vendedor = new javax.swing.JCheckBox();
+        lblAvisoSeguridad = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -94,23 +112,11 @@ public class DetalleUsuarioGUI extends JDialog {
 
         panelPrincipal.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        lbl_Usuario.setForeground(java.awt.Color.red);
-        lbl_Usuario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Usuario.setText("* Usuario:");
+        lbl_Username.setForeground(java.awt.Color.red);
+        lbl_Username.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbl_Username.setText("* Usuario:");
 
-        lbl_Contrasenia.setForeground(java.awt.Color.red);
-        lbl_Contrasenia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Contrasenia.setText("* Contraseña:");
-
-        txt_Contrasenia.setPreferredSize(new java.awt.Dimension(125, 20));
-
-        lbl_RepetirContrasenia.setForeground(java.awt.Color.red);
-        lbl_RepetirContrasenia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_RepetirContrasenia.setText("* Repetir:");
-
-        txt_RepetirContrasenia.setPreferredSize(new java.awt.Dimension(125, 20));
-
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Roles"));
+        panelRoles.setBorder(javax.swing.BorderFactory.createTitledBorder("Roles"));
 
         chk_Administrador.setText("Administrador");
         chk_Administrador.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
@@ -124,27 +130,101 @@ public class DetalleUsuarioGUI extends JDialog {
         chk_Vendedor.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         chk_Vendedor.setMargin(new java.awt.Insets(2, -2, 2, 2));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        chk_Cliente.setText("Cliente");
+
+        javax.swing.GroupLayout panelRolesLayout = new javax.swing.GroupLayout(panelRoles);
+        panelRoles.setLayout(panelRolesLayout);
+        panelRolesLayout.setHorizontalGroup(
+            panelRolesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRolesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(chk_Administrador, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(chk_Viajante, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(chk_Vendedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(76, Short.MAX_VALUE))
+                .addGroup(panelRolesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(chk_Cliente, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chk_Administrador, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelRolesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(chk_Viajante, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chk_Vendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        panelRolesLayout.setVerticalGroup(
+            panelRolesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelRolesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(chk_Administrador)
+                .addGroup(panelRolesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(chk_Administrador)
+                    .addComponent(chk_Viajante))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelRolesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(chk_Cliente)
+                    .addComponent(chk_Vendedor))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        lblNombre.setForeground(java.awt.Color.red);
+        lblNombre.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblNombre.setText("* Nombre:");
+
+        lblApellido.setForeground(java.awt.Color.red);
+        lblApellido.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblApellido.setText("* Apellido:");
+
+        lblEmail.setForeground(java.awt.Color.red);
+        lblEmail.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblEmail.setText("* Email:");
+
+        chkHabilitado.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+
+        lblHabilitado.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblHabilitado.setText("Habilitado:");
+
+        panelSeguridad.setBorder(javax.swing.BorderFactory.createTitledBorder("Seguridad"));
+
+        lbl_Contrasenia.setForeground(java.awt.Color.red);
+        lbl_Contrasenia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbl_Contrasenia.setText("* Contraseña:");
+
+        txt_Contrasenia.setPreferredSize(new java.awt.Dimension(125, 20));
+
+        lbl_RepetirContrasenia.setForeground(java.awt.Color.red);
+        lbl_RepetirContrasenia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbl_RepetirContrasenia.setText("* Repetir:");
+
+        txt_RepetirContrasenia.setPreferredSize(new java.awt.Dimension(125, 20));
+
+        lblAvisoSeguridad.setText("(Dejar en blanco para mantener la actual)");
+
+        javax.swing.GroupLayout panelSeguridadLayout = new javax.swing.GroupLayout(panelSeguridad);
+        panelSeguridad.setLayout(panelSeguridadLayout);
+        panelSeguridadLayout.setHorizontalGroup(
+            panelSeguridadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelSeguridadLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelSeguridadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblAvisoSeguridad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panelSeguridadLayout.createSequentialGroup()
+                        .addGroup(panelSeguridadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(lbl_RepetirContrasenia, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbl_Contrasenia))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelSeguridadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txt_Contrasenia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txt_RepetirContrasenia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
+        );
+        panelSeguridadLayout.setVerticalGroup(
+            panelSeguridadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSeguridadLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblAvisoSeguridad)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chk_Viajante)
+                .addGroup(panelSeguridadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lbl_Contrasenia)
+                    .addComponent(txt_Contrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chk_Vendedor)
+                .addGroup(panelSeguridadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lbl_RepetirContrasenia)
+                    .addComponent(txt_RepetirContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -154,35 +234,52 @@ public class DetalleUsuarioGUI extends JDialog {
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPrincipalLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(lbl_Usuario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Contrasenia, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_RepetirContrasenia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(txt_Contrasenia, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txt_RepetirContrasenia, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txt_Usuario))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelPrincipalLayout.createSequentialGroup()
+                        .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(lbl_Username, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblHabilitado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblNombre, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblApellido, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblEmail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtApellido, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtNombre)
+                            .addComponent(txtEmail)
+                            .addComponent(chkHabilitado, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtUsername)))
+                    .addComponent(panelRoles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelSeguridad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         panelPrincipalLayout.setVerticalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelPrincipalLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Usuario)
-                    .addComponent(txt_Usuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lbl_Username)
+                    .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Contrasenia)
-                    .addComponent(txt_Contrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblNombre)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_RepetirContrasenia)
-                    .addComponent(txt_RepetirContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblApellido)
+                    .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblEmail)
+                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblHabilitado)
+                    .addComponent(chkHabilitado))
+                .addGap(18, 18, 18)
+                .addComponent(panelSeguridad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(panelRoles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -192,19 +289,21 @@ public class DetalleUsuarioGUI extends JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btn_Guardar)
-                    .addComponent(panelPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btn_Guardar))
+                    .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(panelPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_Guardar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -215,8 +314,12 @@ public class DetalleUsuarioGUI extends JDialog {
             if (operacion == TipoDeOperacion.ALTA) {
                 if (new String(txt_Contrasenia.getPassword()).equals(new String(txt_RepetirContrasenia.getPassword()))) {
                     Usuario usuario = new Usuario();
-                    usuario.setNombre(txt_Usuario.getText().trim());
+                    usuario.setNombre(txtNombre.getText().trim());
+                    usuario.setApellido(txtApellido.getText().trim());
+                    usuario.setEmail(txtEmail.getText().trim());
+                    usuario.setUsername(txtUsername.getText().trim());
                     usuario.setPassword(new String(txt_Contrasenia.getPassword()));
+                    usuario.setHabilitado(chkHabilitado.isSelected());
                     List<Rol> roles = new ArrayList<>();
                     if (chk_Administrador.isSelected()) {
                         roles.add(Rol.ADMINISTRADOR);
@@ -226,27 +329,28 @@ public class DetalleUsuarioGUI extends JDialog {
                     }
                     if (chk_Viajante.isSelected()) {
                         roles.add(Rol.VIAJANTE);
+                    }
+                    if (chk_Cliente.isSelected()) {
+                        roles.add(Rol.CLIENTE);
                     }
                     usuario.setRoles(roles);
                     RestClient.getRestTemplate().postForObject("/usuarios", usuario, Usuario.class);                 
-                    LOGGER.warn("El usuario " + usuario.getNombre() + " se creo correctamente.");
+                    LOGGER.warn("El usuario " + usuario.getUsername() + " se creo correctamente.");
                     this.dispose();
-                } else {
+                } else {                    
                     JOptionPane.showMessageDialog(this, 
-                        "Las contraseñas introducidas deben ser las mismas.",
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_password_diferentes"),
                         "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
-
             if (operacion == TipoDeOperacion.ACTUALIZACION) {
-                if (new String(txt_Contrasenia.getPassword()).equals(new String(txt_RepetirContrasenia.getPassword()))) {
-                    Usuario usuarioModificado = new Usuario();
-                    usuarioModificado.setId_Usuario(usuarioModificar.getId_Usuario());
-                    usuarioModificado.setNombre(txt_Usuario.getText().trim());
-                    usuarioModificado.setPassword(new String(txt_Contrasenia.getPassword()));
-                    if (UsuarioActivo.getInstance().getUsuario().getNombre().equals(usuarioModificar.getNombre())) {
-                        usuarioModificado.setToken(usuarioModificar.getToken());
-                    }
+                if (new String(txt_Contrasenia.getPassword()).equals(new String(txt_RepetirContrasenia.getPassword()))) {                    
+                    usuarioParaModificar.setNombre(txtNombre.getText().trim());
+                    usuarioParaModificar.setApellido(txtApellido.getText().trim());
+                    usuarioParaModificar.setEmail(txtEmail.getText().trim());
+                    usuarioParaModificar.setUsername(txtUsername.getText().trim());
+                    usuarioParaModificar.setHabilitado(chkHabilitado.isSelected());
+                    usuarioParaModificar.setPassword(new String(txt_Contrasenia.getPassword()));                    
                     List<Rol> roles = new ArrayList<>();
                     if (chk_Administrador.isSelected()) {
                         roles.add(Rol.ADMINISTRADOR);
@@ -257,17 +361,19 @@ public class DetalleUsuarioGUI extends JDialog {
                     if (chk_Viajante.isSelected()) {
                         roles.add(Rol.VIAJANTE);
                     }
-                    usuarioModificado.setRoles(roles);
-                    RestClient.getRestTemplate().put("/usuarios", usuarioModificado);
-                    LOGGER.warn("El usuario " + usuarioModificado.getNombre() + " se modifico correctamente.");
+                    if (chk_Cliente.isSelected()) {
+                        roles.add(Rol.CLIENTE);
+                    }
+                    usuarioParaModificar.setRoles(roles);
+                    RestClient.getRestTemplate().put("/usuarios", usuarioParaModificar);
+                    LOGGER.warn("El usuario " + usuarioParaModificar.getUsername() + " se modifico correctamente.");
                     this.dispose();                    
                 } else {
-                    JOptionPane.showMessageDialog(this,
-                        "Las contraseñas introducidas deben ser las mismas.",
+                    JOptionPane.showMessageDialog(this, 
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_password_diferentes"),
                         "Error", JOptionPane.ERROR_MESSAGE);
                 }                
-            }            
-
+            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -280,22 +386,36 @@ public class DetalleUsuarioGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         if (operacion == TipoDeOperacion.ACTUALIZACION) {
+            this.setTitle("Modificar Usuario");
             this.cargarUsuarioParaModificar();
+        } else if (operacion == TipoDeOperacion.ALTA) {
+            this.setTitle("Nuevo Usuario");
         }
     }//GEN-LAST:event_formWindowOpened
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Guardar;
+    private javax.swing.JCheckBox chkHabilitado;
     private javax.swing.JCheckBox chk_Administrador;
+    private javax.swing.JCheckBox chk_Cliente;
     private javax.swing.JCheckBox chk_Vendedor;
     private javax.swing.JCheckBox chk_Viajante;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblApellido;
+    private javax.swing.JLabel lblAvisoSeguridad;
+    private javax.swing.JLabel lblEmail;
+    private javax.swing.JLabel lblHabilitado;
+    private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lbl_Contrasenia;
     private javax.swing.JLabel lbl_RepetirContrasenia;
-    private javax.swing.JLabel lbl_Usuario;
+    private javax.swing.JLabel lbl_Username;
     private javax.swing.JPanel panelPrincipal;
+    private javax.swing.JPanel panelRoles;
+    private javax.swing.JPanel panelSeguridad;
+    private javax.swing.JTextField txtApellido;
+    private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtUsername;
     private javax.swing.JPasswordField txt_Contrasenia;
     private javax.swing.JPasswordField txt_RepetirContrasenia;
-    private javax.swing.JTextField txt_Usuario;
     // End of variables declaration//GEN-END:variables
 }

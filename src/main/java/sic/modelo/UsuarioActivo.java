@@ -8,7 +8,7 @@ public class UsuarioActivo {
     
     private UsuarioActivo() {}
 
-    //Singleton
+    // SINGLETON
     public static UsuarioActivo getInstance() {
         return INSTANCE;
     }        

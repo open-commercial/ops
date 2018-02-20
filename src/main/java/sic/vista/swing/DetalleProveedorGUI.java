@@ -316,7 +316,7 @@ public class DetalleProveedorGUI extends JDialog {
         panel3.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         lbl_Email.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Email.setText("Correo Electrónico:");
+        lbl_Email.setText("Email:");
 
         lbl_Web.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Web.setText("Página Web:");
@@ -335,20 +335,20 @@ public class DetalleProveedorGUI extends JDialog {
             panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel3Layout.createSequentialGroup()
                 .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(lbl_Contacto)
-                    .addComponent(lbl_Email)
                     .addGroup(panel3Layout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addComponent(lbl_Web, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(lbl_Web, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE))
                     .addComponent(lbl_TelSecundario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_TelPrimario))
+                    .addComponent(lbl_TelPrimario)
+                    .addComponent(lbl_Contacto)
+                    .addComponent(lbl_Email))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txt_TelPrimario, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
-                    .addComponent(txt_Web, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
-                    .addComponent(txt_Contacto, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
-                    .addComponent(txt_Email, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
-                    .addComponent(txt_TelSecundario, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE))
+                    .addComponent(txt_TelPrimario, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE)
+                    .addComponent(txt_Web, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE)
+                    .addComponent(txt_Contacto, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE)
+                    .addComponent(txt_Email, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE)
+                    .addComponent(txt_TelSecundario, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE))
                 .addGap(12, 12, 12))
         );
         panel3Layout.setVerticalGroup(
