@@ -90,17 +90,17 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     }
 
     private void prepararComponentes() {
-        txt_SerieFactura.setValue(new Long("0"));
-        txt_NumeroFactura.setValue(new Long("0"));
-        txt_SubTotal.setValue(new BigDecimal("0.0"));
-        txt_Descuento_Porcentaje.setValue(new BigDecimal("0.0"));
-        txt_Descuento_Neto.setValue(new BigDecimal("0.0"));
-        txt_Recargo_Porcentaje.setValue(new BigDecimal("0.0"));
-        txt_Recargo_Neto.setValue(new BigDecimal("0.0"));
-        txt_SubTotal_Neto.setValue(new BigDecimal("0.0"));
-        txt_IVA_105.setValue(new BigDecimal("0.0"));
-        txt_IVA_21.setValue(new BigDecimal("0.0"));
-        txt_Total.setValue(new BigDecimal("0.0"));
+        txt_SerieFactura.setValue(BigDecimal.ZERO);
+        txt_NumeroFactura.setValue(BigDecimal.ZERO);
+        txt_SubTotal.setValue(BigDecimal.ZERO);
+        txt_Descuento_Porcentaje.setValue(BigDecimal.ZERO);
+        txt_Descuento_Neto.setValue(BigDecimal.ZERO);
+        txt_Recargo_Porcentaje.setValue(BigDecimal.ZERO);
+        txt_Recargo_Neto.setValue(BigDecimal.ZERO);
+        txt_SubTotal_Neto.setValue(BigDecimal.ZERO);
+        txt_IVA_105.setValue(BigDecimal.ZERO);
+        txt_IVA_21.setValue(BigDecimal.ZERO);
+        txt_Total.setValue(BigDecimal.ZERO);
         dc_FechaFactura.setDate(new Date());
     }
 
@@ -236,15 +236,15 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         txta_Observaciones.setText("");
         txt_SerieFactura.setValue(0);
         txt_NumeroFactura.setValue(0);
-        txt_SubTotal.setValue(0.0);
-        txt_Descuento_Porcentaje.setValue(0.0);
-        txt_Descuento_Neto.setValue(0.0);
-        txt_Recargo_Porcentaje.setValue(new BigDecimal("0.0"));
-        txt_Recargo_Neto.setValue(new BigDecimal("0.0"));
-        txt_SubTotal_Neto.setValue(0.0);
-        txt_IVA_105.setValue(0.0);
-        txt_IVA_21.setValue(0.0);
-        txt_Total.setValue(0.0);
+        txt_SubTotal.setValue(BigDecimal.ZERO);
+        txt_Descuento_Porcentaje.setValue(BigDecimal.ZERO);
+        txt_Descuento_Neto.setValue(BigDecimal.ZERO);
+        txt_Recargo_Porcentaje.setValue(BigDecimal.ZERO);
+        txt_Recargo_Neto.setValue(BigDecimal.ZERO);
+        txt_SubTotal_Neto.setValue(BigDecimal.ZERO);
+        txt_IVA_105.setValue(BigDecimal.ZERO);
+        txt_IVA_21.setValue(BigDecimal.ZERO);
+        txt_Total.setValue(BigDecimal.ZERO);
     }
 
     private void validarComponentesDeResultados() {
@@ -285,11 +285,10 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         }
         txt_SubTotal.setValue(subTotal);
         descuentoPorcentaje = new BigDecimal(txt_Descuento_Porcentaje.getValue().toString());
-        descuentoNeto = subTotal.multiply(descuentoPorcentaje).divide(BigDecimal.valueOf(100));
+        descuentoNeto = subTotal.multiply(descuentoPorcentaje).divide(CIEN);
         txt_Descuento_Neto.setValue(descuentoNeto);
         recargoPorcentaje = new BigDecimal(txt_Recargo_Porcentaje.getValue().toString());
-        recargoNeto = subTotal.multiply(recargoPorcentaje).divide(BigDecimal.valueOf(100));
-                //(subTotal * recargoPorcentaje) / 100;
+        recargoNeto = subTotal.multiply(recargoPorcentaje).divide(CIEN);
         txt_Recargo_Neto.setValue(recargoNeto);
         iva105netoFactura = BigDecimal.ZERO;
         iva21netoFactura = BigDecimal.ZERO;

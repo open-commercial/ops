@@ -148,8 +148,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
                 + "&iva21Neto=" + txt_IVA21_neto.getValue().toString(), 
                 BigDecimal.class));
         if (fv.getTipoComprobante() == TipoDeComprobante.FACTURA_B || fv.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
-                txt_IVA105_neto.setText("0");
-                txt_IVA21_neto.setText("0");
+                txt_IVA105_neto.setValue(BigDecimal.ZERO);
+                txt_IVA21_neto.setValue(BigDecimal.ZERO);
                 txt_SubTotalBruto.setValue(txt_Total.getValue());
             } else {
             txt_SubTotalBruto.setValue(subTotalBruto);

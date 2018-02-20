@@ -637,7 +637,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         pedido.setFechaVencimiento(dc_fechaVencimiento.getDate());
         pedido.setObservaciones(txta_Observaciones.getText());
         BigDecimal subTotalEstimado = BigDecimal.ZERO;
-        for(RenglonFactura r : renglones) {
+        for (RenglonFactura r : renglones) {
             subTotalEstimado = subTotalEstimado.add(r.getImporte());
         }
         pedido.setTotalEstimado(subTotalEstimado);
