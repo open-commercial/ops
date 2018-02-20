@@ -6,6 +6,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -285,10 +286,10 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         }
         txt_SubTotal.setValue(subTotal);
         descuentoPorcentaje = new BigDecimal(txt_Descuento_Porcentaje.getValue().toString());
-        descuentoNeto = subTotal.multiply(descuentoPorcentaje).divide(CIEN);
+        descuentoNeto = subTotal.multiply(descuentoPorcentaje).divide(CIEN, 15, RoundingMode.HALF_UP);
         txt_Descuento_Neto.setValue(descuentoNeto);
         recargoPorcentaje = new BigDecimal(txt_Recargo_Porcentaje.getValue().toString());
-        recargoNeto = subTotal.multiply(recargoPorcentaje).divide(CIEN);
+        recargoNeto = subTotal.multiply(recargoPorcentaje).divide(CIEN, 15, RoundingMode.HALF_UP);
         txt_Recargo_Neto.setValue(recargoNeto);
         iva105netoFactura = BigDecimal.ZERO;
         iva21netoFactura = BigDecimal.ZERO;
@@ -297,12 +298,12 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
             for (int i = 0; i < indice; i++) {
                 if (ivaPorcentajeRenglones[i].compareTo(IVA_105) == 0) {
                     iva105netoFactura = iva105netoFactura.add(cantidades[i].multiply(ivaNetoRenglones[i]
-                    .subtract(ivaNetoRenglones[i].multiply(descuentoPorcentaje.divide(CIEN)))
-                    .add(ivaNetoRenglones[i].multiply(recargoPorcentaje.divide(CIEN)))));
+                    .subtract(ivaNetoRenglones[i].multiply(descuentoPorcentaje.divide(CIEN, 15, RoundingMode.HALF_UP)))
+                    .add(ivaNetoRenglones[i].multiply(recargoPorcentaje.divide(CIEN, 15, RoundingMode.HALF_UP)))));
                 } else if (ivaPorcentajeRenglones[i].compareTo(IVA_21) == 0) {
                     iva21netoFactura = iva21netoFactura.add(cantidades[i].multiply(ivaNetoRenglones[i]
-                    .subtract(ivaNetoRenglones[i].multiply(descuentoPorcentaje.divide(CIEN)))
-                    .add(ivaNetoRenglones[i].multiply(recargoPorcentaje.divide(CIEN)))));
+                    .subtract(ivaNetoRenglones[i].multiply(descuentoPorcentaje.divide(CIEN, 15, RoundingMode.HALF_UP)))
+                    .add(ivaNetoRenglones[i].multiply(recargoPorcentaje.divide(CIEN, 15, RoundingMode.HALF_UP)))));
                 }
             }
         } else {

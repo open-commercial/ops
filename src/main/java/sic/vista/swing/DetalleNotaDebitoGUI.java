@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Date;
@@ -78,7 +79,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
         } else {
             txtMontoRenglon2.setValue(new BigDecimal(txtMontoRenglon2.getValue().toString()));
         }
-        BigDecimal iva = ((BigDecimal) txtMontoRenglon2.getValue()).multiply(IVA_21.divide(CIEN));
+        BigDecimal iva = ((BigDecimal) txtMontoRenglon2.getValue()).multiply(IVA_21.divide(CIEN, 15, RoundingMode.HALF_UP));
         lblIvaNetoRenglon2.setText("$" + FormatterNumero.formatConRedondeo(iva));
         lblImporteRenglon2.setText("$" + FormatterNumero.formatConRedondeo((new BigDecimal(txtMontoRenglon2.getValue().toString()).add(iva))));
         txtSubTotalBruto.setValue(new BigDecimal(txtMontoRenglon2.getValue().toString()));
