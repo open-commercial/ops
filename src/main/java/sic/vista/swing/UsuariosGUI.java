@@ -1,5 +1,6 @@
 package sic.vista.swing;
 
+import java.math.BigDecimal;
 import java.awt.Dimension;
 import java.beans.PropertyVetoException;
 import java.util.Arrays;
@@ -86,7 +87,7 @@ public class UsuariosGUI extends JInternalFrame {
         tbl_Resultado.getTableHeader().setReorderingAllowed(false);
         tbl_Resultado.getTableHeader().setResizingAllowed(true);
         //render para los tipos de datos
-        tbl_Resultado.setDefaultRenderer(Double.class, new RenderTabla());
+        tbl_Resultado.setDefaultRenderer(BigDecimal.class, new RenderTabla());
         //tamanios de columnas
         tbl_Resultado.getColumnModel().getColumn(0).setMinWidth(90);
         tbl_Resultado.getColumnModel().getColumn(0).setMaxWidth(90);

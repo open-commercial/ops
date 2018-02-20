@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -220,16 +221,16 @@ public class PedidosGUI extends JInternalFrame {
         Class[] tiposRenglones = new Class[modeloTablaRenglones.getColumnCount()];
         tiposRenglones[0] = String.class;
         tiposRenglones[1] = String.class;
-        tiposRenglones[2] = Integer.class;
-        tiposRenglones[3] = Double.class;
-        tiposRenglones[4] = Double.class;
-        tiposRenglones[5] = Double.class;
+        tiposRenglones[2] = BigDecimal.class;
+        tiposRenglones[3] = BigDecimal.class;
+        tiposRenglones[4] = BigDecimal.class;
+        tiposRenglones[5] = BigDecimal.class;
         modeloTablaRenglones.setClaseColumnas(tiposRenglones);
         tbl_RenglonesPedido.getTableHeader().setReorderingAllowed(false);
         tbl_RenglonesPedido.getTableHeader().setResizingAllowed(true);
 
         //render para los tipos de datos
-        tbl_RenglonesPedido.setDefaultRenderer(Double.class, new RenderTabla());
+        tbl_RenglonesPedido.setDefaultRenderer(BigDecimal.class, new RenderTabla());
 
         //Tamanios de columnas
         tbl_RenglonesPedido.getColumnModel().getColumn(0).setPreferredWidth(25);
@@ -263,14 +264,14 @@ public class PedidosGUI extends JInternalFrame {
         tipos[2] = Long.class;
         tipos[3] = String.class;
         tipos[4] = String.class;
-        tipos[5] = Double.class;
-        tipos[6] = Double.class;
+        tipos[5] = BigDecimal.class;
+        tipos[6] = BigDecimal.class;
         modeloTablaPedidos.setClaseColumnas(tipos);
         tbl_Pedidos.getTableHeader().setReorderingAllowed(false);
         tbl_Pedidos.getTableHeader().setResizingAllowed(true);
 
         //render para los tipos de datos
-        tbl_Pedidos.setDefaultRenderer(Double.class, new RenderTabla());
+        tbl_Pedidos.setDefaultRenderer(BigDecimal.class, new RenderTabla());
 
         //Tamanios de columnas
         tbl_Pedidos.getColumnModel().getColumn(0).setPreferredWidth(25);

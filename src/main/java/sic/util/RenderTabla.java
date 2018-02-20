@@ -1,6 +1,7 @@
 package sic.util;
 
 import java.awt.Component;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import javax.swing.JFormattedTextField;
 import javax.swing.JTable;
@@ -20,9 +21,9 @@ public class RenderTabla extends JFormattedTextField implements TableCellRendere
         this.setBackground(isSelected ? UIManager.getColor("Table.selectionBackground") : UIManager.getColor("Table.background"));
         this.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(new DecimalFormat("##,##0.00"))));
         this.setHorizontalAlignment(SwingConstants.RIGHT);
-        Double valor = null;
-        if (value instanceof Double) {
-            valor = (Double) value;
+        BigDecimal valor = BigDecimal.ZERO;
+        if (value instanceof BigDecimal) {
+            valor = (BigDecimal) value;
         }
         this.setValue(valor);
         return this;

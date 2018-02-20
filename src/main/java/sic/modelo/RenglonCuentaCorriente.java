@@ -1,6 +1,7 @@
 package sic.modelo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,11 +23,11 @@ public class RenglonCuentaCorriente implements Serializable {
     private boolean eliminado;
     private Date fecha;
     private Date fechaVencimiento;   
-    private double monto;
+    private BigDecimal monto;
     private CuentaCorriente cuentaCorriente;
     private Factura factura; 
     private Pago pago;
     private Nota nota;    
     private long CAE;   
-    private double saldo;    
+    private BigDecimal saldo;    
 }

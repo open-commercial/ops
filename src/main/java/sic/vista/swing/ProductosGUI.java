@@ -7,6 +7,7 @@ import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -132,18 +133,18 @@ public class ProductosGUI extends JInternalFrame {
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
         tipos[0] = String.class;
         tipos[1] = String.class;
-        tipos[2] = Double.class;
-        tipos[3] = Double.class;
-        tipos[4] = Double.class;
+        tipos[2] = BigDecimal.class;
+        tipos[3] = BigDecimal.class;
+        tipos[4] = BigDecimal.class;
         tipos[5] = Boolean.class;
         tipos[6] = String.class;
-        tipos[7] = Double.class;
-        tipos[8] = Double.class;
-        tipos[9] = Double.class;
-        tipos[10] = Double.class;
-        tipos[11] = Double.class;
-        tipos[12] = Double.class;
-        tipos[13] = Double.class;
+        tipos[7] = BigDecimal.class;
+        tipos[8] = BigDecimal.class;
+        tipos[9] = BigDecimal.class;
+        tipos[10] = BigDecimal.class;
+        tipos[11] = BigDecimal.class;
+        tipos[12] = BigDecimal.class;
+        tipos[13] = BigDecimal.class;
         tipos[14] = String.class;
         tipos[15] = Date.class;
         tipos[16] = String.class;
@@ -157,7 +158,7 @@ public class ProductosGUI extends JInternalFrame {
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
 
         //render para los tipos de datos
-        tbl_Resultados.setDefaultRenderer(Double.class, new RenderTabla());
+        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new RenderTabla());
 
         //Tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(150);
@@ -323,7 +324,7 @@ public class ProductosGUI extends JInternalFrame {
                             new ParameterizedTypeReference<PaginaRespuestaRest<Producto>>() {
                     })
                     .getBody();
-            txt_ValorStock.setValue(RestClient.getRestTemplate().getForObject(criteriaCosto, Double.class));
+            txt_ValorStock.setValue(RestClient.getRestTemplate().getForObject(criteriaCosto, BigDecimal.class));
             totalElementosBusqueda = response.getTotalElements();
             productosParcial = response.getContent();
             productosTotal.addAll(productosParcial);

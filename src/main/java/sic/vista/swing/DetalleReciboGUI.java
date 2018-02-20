@@ -3,6 +3,7 @@ package sic.vista.swing;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
@@ -69,7 +70,7 @@ public class DetalleReciboGUI extends JDialog {
         try {
             if (cliente != null) {
                 Recibo recibo = new Recibo();
-                recibo.setMonto(Double.parseDouble(txtMonto.getValue().toString()));
+                recibo.setMonto(new BigDecimal(txtMonto.getValue().toString()));
                 recibo.setConcepto(txtObservaciones.getText().trim());
                 recibo = RestClient.getRestTemplate().postForObject("/recibos/clientes?idCliente=" + cliente.getId_Cliente()
                         + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
@@ -84,7 +85,7 @@ public class DetalleReciboGUI extends JDialog {
                 }
             } else {
                 Recibo recibo = new Recibo();
-                recibo.setMonto(Double.parseDouble(txtMonto.getValue().toString()));
+                recibo.setMonto(new BigDecimal(txtMonto.getValue().toString()));
                 recibo.setConcepto(txtObservaciones.getText().trim());
                 RestClient.getRestTemplate().postForObject("/recibos/proveedores?idProveedor=" + proveedor.getId_Proveedor()
                         + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
@@ -258,12 +259,11 @@ public class DetalleReciboGUI extends JDialog {
         this.txtObservaciones.setText("SALDO.");
         try {
             if (cliente != null) {
-                double saldoCC = RestClient.getRestTemplate().getForObject("/cuentas-corrientes/clientes/" + cliente.getId_Cliente() + "/saldo", double.class);
-                txtMonto.setValue((saldoCC < 0) ? -saldoCC : 0.0);
-
+                BigDecimal saldoCC = RestClient.getRestTemplate().getForObject("/cuentas-corrientes/clientes/" + cliente.getId_Cliente() + "/saldo", BigDecimal.class);
+                txtMonto.setValue((saldoCC.compareTo(BigDecimal.ZERO) < 0) ? saldoCC.negate() : BigDecimal.ZERO);
             } else {
-                double saldoCC = RestClient.getRestTemplate().getForObject("/cuentas-corrientes/proveedores/" + proveedor.getId_Proveedor() + "/saldo", double.class);
-                txtMonto.setValue((saldoCC < 0) ? -saldoCC : 0.0);
+                BigDecimal saldoCC = RestClient.getRestTemplate().getForObject("/cuentas-corrientes/proveedores/" + proveedor.getId_Proveedor() + "/saldo", BigDecimal.class);
+                txtMonto.setValue((saldoCC.compareTo(BigDecimal.ZERO) < 0) ? saldoCC.negate() : BigDecimal.ZERO);
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

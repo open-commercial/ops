@@ -1,6 +1,7 @@
 package sic.modelo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
@@ -12,22 +13,22 @@ public class NotaCredito extends Nota implements Serializable {
     
     private List<RenglonNotaCredito> renglonesNotaCredito;
     
-    private double subTotal;
+    private BigDecimal subTotal;
     
-    private double recargoPorcentaje;
+    private BigDecimal recargoPorcentaje;
     
-    private double recargoNeto;
+    private BigDecimal recargoNeto;
     
-    private double descuentoPorcentaje;
+    private BigDecimal descuentoPorcentaje;
     
-    private double descuentoNeto;
+    private BigDecimal descuentoNeto;
 
     public NotaCredito() {}
 
     public NotaCredito(long idNota, long serie, long nroNota, FacturaVenta facturaVenta, boolean eliminada,
             TipoDeComprobante tipoDeComprobante, Date fecha, Empresa empresa, Cliente cliente,
-            Usuario usuario, Pago pago, List<Pago> pagos, String motivo, List<RenglonNotaCredito> renglones, double subTotalBruto, 
-            double iva21Neto, double iva105Neto, double total, double montoNoGravado, long CAE, Date vencimientoCAE,
+            Usuario usuario, Pago pago, List<Pago> pagos, String motivo, List<RenglonNotaCredito> renglones, BigDecimal subTotalBruto, 
+            BigDecimal iva21Neto, BigDecimal iva105Neto, BigDecimal total, BigDecimal montoNoGravado, long CAE, Date vencimientoCAE,
             long numSerieAfip, long numFacturaAfip) {
         
         super(idNota, serie, nroNota, facturaVenta, pagos, eliminada, tipoDeComprobante, fecha, empresa, cliente, usuario,

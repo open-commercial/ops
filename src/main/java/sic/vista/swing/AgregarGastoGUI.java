@@ -1,6 +1,7 @@
 package sic.vista.swing;
 
 import java.awt.event.KeyEvent;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -36,7 +37,7 @@ public class AgregarGastoGUI extends JDialog {
         this.setIconImage(iconoVentana.getImage());
     }
     
-    public Gasto construirGasto(String concepto, double monto, FormaDePago formaDePago) {
+    public Gasto construirGasto(String concepto, BigDecimal monto, FormaDePago formaDePago) {
         Empresa empresa = EmpresaActiva.getInstance().getEmpresa();        
         Gasto gasto = new Gasto();
         gasto.setConcepto(concepto);
@@ -182,7 +183,7 @@ public class AgregarGastoGUI extends JDialog {
         Gasto gasto = null;
         try {
             gasto = RestClient.getRestTemplate().postForObject("/gastos", this.construirGasto(ftxt_Concepto.getText(),
-                    Double.parseDouble(ftxt_Monto.getValue().toString()),
+                    new BigDecimal(ftxt_Monto.getValue().toString()),
                     (FormaDePago) cmb_FormaDePago.getSelectedItem()), Gasto.class);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

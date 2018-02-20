@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,20 +84,20 @@ public class FacturasCompraGUI extends JInternalFrame {
         tipos[4] = String.class;
         tipos[5] = String.class;
         tipos[6] = Boolean.class;
-        tipos[7] = Double.class;
-        tipos[8] = Double.class;
-        tipos[9] = Double.class;
-        tipos[10] = Double.class;
-        tipos[11] = Double.class;
-        tipos[12] = Double.class;
-        tipos[13] = Double.class;
-        tipos[14] = Double.class;
-        tipos[15] = Double.class;
+        tipos[7] = BigDecimal.class;
+        tipos[8] = BigDecimal.class;
+        tipos[9] = BigDecimal.class;
+        tipos[10] = BigDecimal.class;
+        tipos[11] = BigDecimal.class;
+        tipos[12] = BigDecimal.class;
+        tipos[13] = BigDecimal.class;
+        tipos[14] = BigDecimal.class;
+        tipos[15] = BigDecimal.class;
         modeloTablaFacturas.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
         //render para los tipos de datos
-        tbl_Resultados.setDefaultRenderer(Double.class, new RenderTabla());
+        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new RenderTabla());
         //Tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(100);
@@ -186,8 +187,8 @@ public class FacturasCompraGUI extends JInternalFrame {
         String criteriaBusqueda = "/facturas/compra/busqueda/criteria?" + criteria;
         criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
         try {
-            txt_ResultGastoTotal.setValue(RestClient.getRestTemplate().getForObject("/facturas/total-facturado-compra/criteria?" + criteria, Double.class));
-            txt_ResultTotalIVACompra.setValue(RestClient.getRestTemplate().getForObject("/facturas/total-iva-compra/criteria?" +  criteria, Double.class));
+            txt_ResultGastoTotal.setValue(RestClient.getRestTemplate().getForObject("/facturas/total-facturado-compra/criteria?" + criteria, BigDecimal.class));
+            txt_ResultTotalIVACompra.setValue(RestClient.getRestTemplate().getForObject("/facturas/total-iva-compra/criteria?" +  criteria, BigDecimal.class));
             PaginaRespuestaRest<FacturaCompra> response = RestClient.getRestTemplate()
                     .exchange(criteriaBusqueda, HttpMethod.GET, null,
                             new ParameterizedTypeReference<PaginaRespuestaRest<FacturaCompra>>() {

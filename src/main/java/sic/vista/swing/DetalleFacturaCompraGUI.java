@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,11 +40,14 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final FormatterFechaHora formatter = new FormatterFechaHora(FormatterFechaHora.FORMATO_FECHA_HISPANO);
-    private double totalComprobante;    
-    private double iva105netoFactura;
-    private double iva21netoFactura;
-    private double subTotalBruto;
-
+    private BigDecimal totalComprobante;    
+    private BigDecimal iva105netoFactura;
+    private BigDecimal iva21netoFactura;
+    private BigDecimal subTotalBruto;
+    private final static BigDecimal IVA_21 = new BigDecimal("21");
+    private final static BigDecimal IVA_105 = new BigDecimal("10.5");
+    private final static BigDecimal CIEN = new BigDecimal("100");
+    
     public DetalleFacturaCompraGUI() {
         this.initComponents();     
         facturaParaMostrar = new FacturaCompra();
@@ -86,17 +90,17 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     }
 
     private void prepararComponentes() {
-        txt_SerieFactura.setValue(new Long("0"));
-        txt_NumeroFactura.setValue(new Long("0"));
-        txt_SubTotal.setValue(new Double("0.0"));
-        txt_Descuento_Porcentaje.setValue(new Double("0.0"));
-        txt_Descuento_Neto.setValue(new Double("0.0"));
-        txt_Recargo_Porcentaje.setValue(new Double("0.0"));
-        txt_Recargo_Neto.setValue(new Double("0.0"));
-        txt_SubTotal_Neto.setValue(new Double("0.0"));
-        txt_IVA_105.setValue(new Double("0.0"));
-        txt_IVA_21.setValue(new Double("0.0"));
-        txt_Total.setValue(new Double("0.0"));
+        txt_SerieFactura.setValue(BigDecimal.ZERO);
+        txt_NumeroFactura.setValue(BigDecimal.ZERO);
+        txt_SubTotal.setValue(BigDecimal.ZERO);
+        txt_Descuento_Porcentaje.setValue(BigDecimal.ZERO);
+        txt_Descuento_Neto.setValue(BigDecimal.ZERO);
+        txt_Recargo_Porcentaje.setValue(BigDecimal.ZERO);
+        txt_Recargo_Neto.setValue(BigDecimal.ZERO);
+        txt_SubTotal_Neto.setValue(BigDecimal.ZERO);
+        txt_IVA_105.setValue(BigDecimal.ZERO);
+        txt_IVA_21.setValue(BigDecimal.ZERO);
+        txt_Total.setValue(BigDecimal.ZERO);
         dc_FechaFactura.setDate(new Date());
     }
 
@@ -190,13 +194,13 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         facturaCompra.setNumFactura(Long.parseLong(txt_NumeroFactura.getValue().toString()));
         facturaCompra.setFechaVencimiento(dc_FechaVencimiento.getDate());
         facturaCompra.setRenglones(new ArrayList<>(renglones));
-        facturaCompra.setSubTotal(Double.parseDouble(txt_SubTotal.getValue().toString()));
-        facturaCompra.setRecargo_porcentaje(0);
-        facturaCompra.setRecargo_neto(0);
-        facturaCompra.setDescuento_porcentaje(Double.parseDouble(txt_Descuento_Porcentaje.getValue().toString()));
-        facturaCompra.setDescuento_neto(Double.parseDouble(txt_Descuento_Neto.getValue().toString()));
-        facturaCompra.setRecargo_porcentaje(Double.parseDouble(txt_Recargo_Porcentaje.getValue().toString()));
-        facturaCompra.setRecargo_neto(Double.parseDouble(txt_Recargo_Neto.getValue().toString()));
+        facturaCompra.setSubTotal(new BigDecimal(txt_SubTotal.getValue().toString()));
+        facturaCompra.setRecargo_porcentaje(BigDecimal.ZERO);
+        facturaCompra.setRecargo_neto(BigDecimal.ZERO);
+        facturaCompra.setDescuento_porcentaje(new BigDecimal(txt_Descuento_Porcentaje.getValue().toString()));
+        facturaCompra.setDescuento_neto(new BigDecimal(txt_Descuento_Neto.getValue().toString()));
+        facturaCompra.setRecargo_porcentaje(new BigDecimal(txt_Recargo_Porcentaje.getValue().toString()));
+        facturaCompra.setRecargo_neto(new BigDecimal(txt_Recargo_Neto.getValue().toString()));
         facturaCompra.setSubTotal_bruto(subTotalBruto);
         facturaCompra.setIva_105_neto(iva105netoFactura);
         facturaCompra.setIva_21_neto(iva21netoFactura);
@@ -232,15 +236,15 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         txta_Observaciones.setText("");
         txt_SerieFactura.setValue(0);
         txt_NumeroFactura.setValue(0);
-        txt_SubTotal.setValue(0.0);
-        txt_Descuento_Porcentaje.setValue(0.0);
-        txt_Descuento_Neto.setValue(0.0);
-        txt_Recargo_Porcentaje.setValue(new Double("0.0"));
-        txt_Recargo_Neto.setValue(new Double("0.0"));
-        txt_SubTotal_Neto.setValue(0.0);
-        txt_IVA_105.setValue(0.0);
-        txt_IVA_21.setValue(0.0);
-        txt_Total.setValue(0.0);
+        txt_SubTotal.setValue(BigDecimal.ZERO);
+        txt_Descuento_Porcentaje.setValue(BigDecimal.ZERO);
+        txt_Descuento_Neto.setValue(BigDecimal.ZERO);
+        txt_Recargo_Porcentaje.setValue(BigDecimal.ZERO);
+        txt_Recargo_Neto.setValue(BigDecimal.ZERO);
+        txt_SubTotal_Neto.setValue(BigDecimal.ZERO);
+        txt_IVA_105.setValue(BigDecimal.ZERO);
+        txt_IVA_21.setValue(BigDecimal.ZERO);
+        txt_Total.setValue(BigDecimal.ZERO);
     }
 
     private void validarComponentesDeResultados() {
@@ -262,51 +266,51 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     }
 
     private void calcularResultados() {
-        double subTotal = 0;
-        double descuentoPorcentaje;
-        double descuentoNeto;
-        double recargoPorcentaje;
-        double recargoNeto;
+        BigDecimal subTotal = BigDecimal.ZERO;
+        BigDecimal descuentoPorcentaje;
+        BigDecimal descuentoNeto;
+        BigDecimal recargoPorcentaje;
+        BigDecimal recargoNeto;
         this.validarComponentesDeResultados();
-        double[] cantidades = new double[renglones.size()];
-        double[] ivaPorcentajeRenglones = new double[renglones.size()];
-        double[] ivaNetoRenglones = new double[renglones.size()];
+        BigDecimal[] cantidades = new BigDecimal[renglones.size()];
+        BigDecimal[] ivaPorcentajeRenglones = new BigDecimal[renglones.size()];
+        BigDecimal[] ivaNetoRenglones = new BigDecimal[renglones.size()];
         int indice = 0;
         for (RenglonFactura renglon : renglones) {
-            subTotal += renglon.getImporte();
+            subTotal = subTotal.add(renglon.getImporte());
             cantidades[indice] = renglon.getCantidad();
             ivaPorcentajeRenglones[indice] = renglon.getIva_porcentaje();
             ivaNetoRenglones[indice] = renglon.getIva_neto();
             indice++;
         }
         txt_SubTotal.setValue(subTotal);
-        descuentoPorcentaje = Double.parseDouble(txt_Descuento_Porcentaje.getValue().toString());
-        descuentoNeto = (subTotal * descuentoPorcentaje) / 100;
+        descuentoPorcentaje = new BigDecimal(txt_Descuento_Porcentaje.getValue().toString());
+        descuentoNeto = subTotal.multiply(descuentoPorcentaje).divide(CIEN);
         txt_Descuento_Neto.setValue(descuentoNeto);
-        recargoPorcentaje = Double.parseDouble(txt_Recargo_Porcentaje.getValue().toString());
-        recargoNeto = (subTotal * recargoPorcentaje) / 100;
+        recargoPorcentaje = new BigDecimal(txt_Recargo_Porcentaje.getValue().toString());
+        recargoNeto = subTotal.multiply(recargoPorcentaje).divide(CIEN);
         txt_Recargo_Neto.setValue(recargoNeto);
-        iva105netoFactura = 0;
-        iva21netoFactura = 0;
+        iva105netoFactura = BigDecimal.ZERO;
+        iva21netoFactura = BigDecimal.ZERO;
         indice = cantidades.length;
         if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.FACTURA_A || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
             for (int i = 0; i < indice; i++) {
-                if (ivaPorcentajeRenglones[i] == 10.5) {
-                    iva105netoFactura += cantidades[i] * (ivaNetoRenglones[i]
-                            - (ivaNetoRenglones[i] * (descuentoPorcentaje / 100))
-                            + (ivaNetoRenglones[i] * (recargoPorcentaje / 100)));
-                } else if (ivaPorcentajeRenglones[i] == 21) {
-                    iva21netoFactura += cantidades[i] * (ivaNetoRenglones[i]
-                            - (ivaNetoRenglones[i] * (descuentoPorcentaje / 100))
-                            + (ivaNetoRenglones[i] * (recargoPorcentaje / 100)));
+                if (ivaPorcentajeRenglones[i].compareTo(IVA_105) == 0) {
+                    iva105netoFactura = iva105netoFactura.add(cantidades[i].multiply(ivaNetoRenglones[i]
+                    .subtract(ivaNetoRenglones[i].multiply(descuentoPorcentaje.divide(CIEN)))
+                    .add(ivaNetoRenglones[i].multiply(recargoPorcentaje.divide(CIEN)))));
+                } else if (ivaPorcentajeRenglones[i].compareTo(IVA_21) == 0) {
+                    iva21netoFactura = iva21netoFactura.add(cantidades[i].multiply(ivaNetoRenglones[i]
+                    .subtract(ivaNetoRenglones[i].multiply(descuentoPorcentaje.divide(CIEN)))
+                    .add(ivaNetoRenglones[i].multiply(recargoPorcentaje.divide(CIEN)))));
                 }
             }
         } else {
             for (int i = 0; i < indice; i++) {
-                if (ivaPorcentajeRenglones[i] == 10.5) {
-                    iva105netoFactura += cantidades[i] * ivaNetoRenglones[i];
-                } else if (ivaPorcentajeRenglones[i] == 21) {
-                    iva21netoFactura += cantidades[i] * ivaNetoRenglones[i];
+                if (ivaPorcentajeRenglones[i].compareTo(IVA_105) == 0) {
+                    iva105netoFactura = iva105netoFactura.add(cantidades[i].multiply(ivaNetoRenglones[i]));
+                } else if (ivaPorcentajeRenglones[i].compareTo(IVA_21) == 0) {
+                    iva21netoFactura = iva21netoFactura.add(cantidades[i].multiply(ivaNetoRenglones[i]));
                 }
             }
         }
@@ -317,11 +321,11 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
             txt_IVA_105.setValue(iva105netoFactura);
             txt_IVA_21.setValue(iva21netoFactura);
         }
-        subTotalBruto = subTotal + recargoNeto - descuentoNeto;
+        subTotalBruto = subTotal.add(recargoNeto).subtract(descuentoNeto);
         if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
-            subTotalBruto = subTotalBruto - (iva105netoFactura + iva21netoFactura);
+            subTotalBruto = subTotalBruto.subtract(iva105netoFactura.add(iva21netoFactura));
         }
-        totalComprobante = subTotalBruto + iva105netoFactura + iva21netoFactura;
+        totalComprobante = subTotalBruto.add(iva105netoFactura).add(iva21netoFactura);
         if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
             txt_SubTotal_Neto.setValue(totalComprobante);
         } else {
@@ -348,16 +352,16 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         tipos[0] = String.class;
         tipos[1] = String.class;
         tipos[2] = String.class;
-        tipos[3] = Double.class;
-        tipos[4] = Double.class;
-        tipos[5] = Double.class;
-        tipos[6] = Double.class;
+        tipos[3] = BigDecimal.class;
+        tipos[4] = BigDecimal.class;
+        tipos[5] = BigDecimal.class;
+        tipos[6] = BigDecimal.class;
         modeloTablaRenglones.setClaseColumnas(tipos);
         tbl_Renglones.getTableHeader().setReorderingAllowed(false);
         tbl_Renglones.getTableHeader().setResizingAllowed(true);
 
         //render para los tipos de datos
-        tbl_Renglones.setDefaultRenderer(Double.class, new RenderTabla());
+        tbl_Renglones.setDefaultRenderer(BigDecimal.class, new RenderTabla());
 
         //Tamanios de columnas
         tbl_Renglones.getColumnModel().getColumn(0).setPreferredWidth(200);

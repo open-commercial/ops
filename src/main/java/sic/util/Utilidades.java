@@ -205,21 +205,6 @@ public class Utilidades {
             return true;
         }
     }
-    
-    /**
-     * Trunca los decimales de un double, segun la cantidad que uno requiera
-     *
-     * @param valor para ser truncado
-     * @param cantidadDecimales cantidad de decimales que debe mantener
-     * @return numero truncado
-     */
-    public static double truncarDecimal(double valor, int cantidadDecimales) {
-        if (valor > 0) {
-            return (new BigDecimal(String.valueOf(valor)).setScale(cantidadDecimales, BigDecimal.ROUND_FLOOR)).doubleValue();
-        } else {
-            return (new BigDecimal(String.valueOf(valor)).setScale(cantidadDecimales, BigDecimal.ROUND_CEILING)).doubleValue();
-        }
-    }
 
     public static void controlarEntradaSoloNumerico(KeyEvent evt) {
         char c = evt.getKeyChar();

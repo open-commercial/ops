@@ -4,6 +4,7 @@ import java.awt.Desktop;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Date;
@@ -20,7 +21,6 @@ import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.NotaDebito;
-import sic.modelo.Pago;
 import sic.modelo.Recibo;
 import sic.modelo.RenglonNotaDebito;
 import sic.modelo.UsuarioActivo;
@@ -32,6 +32,9 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private final long idCliente;
     private final long idRecibo;
     private boolean notaDebitoCreada;    
+    private final static BigDecimal IVA_21 = new BigDecimal("21");
+    private final static BigDecimal IVA_105 = new BigDecimal("10.5");
+    private final static BigDecimal CIEN = new BigDecimal("100");
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleNotaDebitoGUI(long idCliente, long idRecibo) {
@@ -71,17 +74,17 @@ public class DetalleNotaDebitoGUI extends JDialog {
     
     private void cargarDetalleComprobante() {
         if (txtMontoRenglon2.getValue() == null) {
-            txtMontoRenglon2.setValue(Double.parseDouble(txtMontoRenglon2.getText()));
+            txtMontoRenglon2.setValue(new BigDecimal(txtMontoRenglon2.getText()));
         } else {
-            txtMontoRenglon2.setValue(Double.parseDouble(txtMontoRenglon2.getValue().toString()));
+            txtMontoRenglon2.setValue(new BigDecimal(txtMontoRenglon2.getValue().toString()));
         }
-        double iva = (Double) txtMontoRenglon2.getValue() * 0.21;
+        BigDecimal iva = ((BigDecimal) txtMontoRenglon2.getValue()).multiply(IVA_21.divide(CIEN));
         lblIvaNetoRenglon2.setText("$" + FormatterNumero.formatConRedondeo(iva));
-        lblImporteRenglon2.setText("$" + FormatterNumero.formatConRedondeo((Double.parseDouble(txtMontoRenglon2.getValue().toString()) + iva)));
-        txtSubTotalBruto.setValue(Double.parseDouble(txtMontoRenglon2.getValue().toString()));
+        lblImporteRenglon2.setText("$" + FormatterNumero.formatConRedondeo((new BigDecimal(txtMontoRenglon2.getValue().toString()).add(iva))));
+        txtSubTotalBruto.setValue(new BigDecimal(txtMontoRenglon2.getValue().toString()));
         txtIVA21Neto.setValue(iva);
         txtNoGravado.setValue(recibo.getMonto());
-        txtTotal.setValue(recibo.getMonto() + ((Double) txtMontoRenglon2.getValue()) + iva); 
+        txtTotal.setValue(recibo.getMonto().add(new BigDecimal(txtMontoRenglon2.getValue().toString())).add(iva)); 
     }
     
     @SuppressWarnings("unchecked")
@@ -501,19 +504,19 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         NotaDebito notaDebito = new NotaDebito();
         notaDebito.setFecha(new Date());
-        notaDebito.setIva21Neto((Double)txtIVA21Neto.getValue());
-        notaDebito.setIva105Neto(0);
+        notaDebito.setIva21Neto(new BigDecimal(txtIVA21Neto.getValue().toString()));
+        notaDebito.setIva105Neto(BigDecimal.ZERO);
         notaDebito.setMontoNoGravado(recibo.getMonto());
         notaDebito.setMotivo(cmbDescripcionRenglon2.getSelectedItem().toString());
         try {
             notaDebito.setRenglonesNotaDebito(Arrays.asList(RestClient.getRestTemplate().getForObject("/notas/renglon/debito/recibo/" + recibo.getIdRecibo()
-                    + "?monto=" + (Double) txtSubTotalBruto.getValue()
+                    + "?monto=" + new BigDecimal(txtSubTotalBruto.getValue().toString())
                     + "&ivaPorcentaje=21", RenglonNotaDebito[].class)));
-            notaDebito.setSubTotalBruto((Double) txtSubTotalBruto.getValue());
+            notaDebito.setSubTotalBruto(new BigDecimal(txtSubTotalBruto.getValue().toString()));
             notaDebito.setTotal(RestClient.getRestTemplate().getForObject("/notas/debito/total"
-                    + "?subTotalBruto=" + (Double) txtSubTotalBruto.getValue()
+                    + "?subTotalBruto=" + new BigDecimal(txtSubTotalBruto.getValue().toString())
                     + "&iva21Neto=" + notaDebito.getIva21Neto()
-                    + "&montoNoGravado=" + notaDebito.getMontoNoGravado(), double.class));
+                    + "&montoNoGravado=" + notaDebito.getMontoNoGravado(), BigDecimal.class));
             notaDebito.setUsuario(UsuarioActivo.getInstance().getUsuario());
             notaDebito = RestClient.getRestTemplate().postForObject("/notas/debito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                     + "/cliente/" + cliente.getId_Cliente()

@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
@@ -58,7 +59,7 @@ public class CajaGUI extends JInternalFrame {
         private TipoMovimiento tipoMovimientoCaja;
         private String concepto;
         private Date fecha;
-        private double monto;
+        private BigDecimal monto;
         
         public Movimiento(Recibo recibo) {
             this.idMovimiento = recibo.getIdRecibo();
@@ -76,7 +77,7 @@ public class CajaGUI extends JInternalFrame {
             this.tipoMovimientoCaja = TipoMovimiento.GASTO;
             this.concepto = this.tipoMovimientoCaja + " por: " + gasto.getConcepto();
             this.fecha = gasto.getFecha();
-            this.monto = - gasto.getMonto();
+            this.monto = gasto.getMonto().negate();
         }
 
         @Override
@@ -149,7 +150,7 @@ public class CajaGUI extends JInternalFrame {
         Class[] tipos = new Class[modeloTablaBalance.getColumnCount()];
         tipos[0] = String.class;
         tipos[1] = Date.class;
-        tipos[2] = Double.class;
+        tipos[2] = BigDecimal.class;
         modeloTablaBalance.setClaseColumnas(tipos);
         tbl_Movimientos.getTableHeader().setReorderingAllowed(false);
         tbl_Movimientos.getTableHeader().setResizingAllowed(true);
@@ -179,7 +180,7 @@ public class CajaGUI extends JInternalFrame {
         tipos[0] = Long.class;
         tipos[1] = String.class;
         tipos[2] = Boolean.class;
-        tipos[3] = Double.class;
+        tipos[3] = BigDecimal.class;
         modeloTablaResumen.setClaseColumnas(tipos);
         tbl_Resumen.getTableHeader().setReorderingAllowed(false);
         tbl_Resumen.getTableHeader().setResizingAllowed(true);
@@ -223,7 +224,7 @@ public class CajaGUI extends JInternalFrame {
             this.cargarResultados();
             tbl_Resumen.setModel(modeloTablaResumen);
             tbl_Resumen.removeColumn(tbl_Resumen.getColumnModel().getColumn(0));
-            tbl_Resumen.setDefaultRenderer(Double.class, new ColoresNumerosTablaRenderer());
+            tbl_Resumen.setDefaultRenderer(BigDecimal.class, new ColoresNumerosTablaRenderer());
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -252,21 +253,21 @@ public class CajaGUI extends JInternalFrame {
   
     private void cargarResultados() {   
         caja.setTotalAfectaCaja(RestClient.getRestTemplate()
-                .getForObject("/cajas/" + this.caja.getId_Caja() + "/total?soloAfectaCaja=true", double.class));
+                .getForObject("/cajas/" + this.caja.getId_Caja() + "/total?soloAfectaCaja=true", BigDecimal.class));
         ftxt_TotalAfectaCaja.setValue(caja.getTotalAfectaCaja());
         caja.setTotalGeneral(RestClient.getRestTemplate()
-                .getForObject("/cajas/" + this.caja.getId_Caja() + "/total", double.class));
+                .getForObject("/cajas/" + this.caja.getId_Caja() + "/total", BigDecimal.class));
         ftxt_TotalGeneral.setValue(caja.getTotalGeneral());              
-        if (caja.getTotalAfectaCaja() > 0) {
+        if (caja.getTotalAfectaCaja().compareTo(BigDecimal.ZERO) > 0) {
             ftxt_TotalAfectaCaja.setBackground(Color.GREEN);
         }
-        if (caja.getTotalAfectaCaja() < 0) {
+        if (caja.getTotalAfectaCaja().compareTo(BigDecimal.ZERO) < 0) {
             ftxt_TotalAfectaCaja.setBackground(Color.PINK);
         }
-        if (caja.getTotalGeneral() < 0) {
+        if (caja.getTotalGeneral().compareTo(BigDecimal.ZERO) < 0) {
             ftxt_TotalGeneral.setBackground(Color.PINK);
         }
-        if (caja.getTotalGeneral() > 0) {
+        if (caja.getTotalGeneral().compareTo(BigDecimal.ZERO) > 0) {
             ftxt_TotalGeneral.setBackground(Color.GREEN);
         }
     }
@@ -576,7 +577,7 @@ public class CajaGUI extends JInternalFrame {
                             + "\nSaldo Real:", "Cerrar Caja", JOptionPane.QUESTION_MESSAGE);
                     if (monto != null) {
                         RestClient.getRestTemplate().put("/cajas/" + caja.getId_Caja() + "/cierre?"
-                                + "monto=" + Double.parseDouble(monto)
+                                + "monto=" + new BigDecimal(monto)
                                 + "&idUsuarioCierre=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario(),
                                 Caja.class);
                         this.dispose();

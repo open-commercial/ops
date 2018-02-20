@@ -10,6 +10,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
@@ -82,9 +84,10 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             }
         });
         ftf_saldoFinal.addPropertyChangeListener("value", (PropertyChangeEvent e) -> {
-            if (Utilidades.truncarDecimal((Double) ftf_saldoFinal.getValue(), 2) < 0) {
+            int cambiarColorFondo = (new BigDecimal(ftf_saldoFinal.getValue().toString())).setScale(2, RoundingMode.HALF_UP).compareTo(BigDecimal.ZERO);
+            if (cambiarColorFondo < 0) {
                 ftf_saldoFinal.setBackground(Color.PINK);
-            } else if (Utilidades.truncarDecimal((Double) ftf_saldoFinal.getValue(), 2) > 0) {
+            } else if (cambiarColorFondo > 0) {
                 ftf_saldoFinal.setBackground(Color.GREEN);
             } else {
                 ftf_saldoFinal.setBackground(Color.WHITE);
@@ -174,13 +177,13 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         tipos[2] = Date.class;
         tipos[3] = Object.class;
         tipos[4] = String.class;
-        tipos[5] = Double.class;
-        tipos[6] = Double.class;
+        tipos[5] = BigDecimal.class;
+        tipos[6] = BigDecimal.class;
         modeloTablaResultados.setClaseColumnas(tipos);        
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
 
         //Tamanios de columnas
-        tbl_Resultados.setDefaultRenderer(Double.class, new RenderTabla());
+        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new RenderTabla());
         tbl_Resultados.getColumnModel().getColumn(6).setCellRenderer(new ColoresNumerosTablaRenderer());
         tbl_Resultados.getColumnModel().getColumn(0).setMinWidth(100);
         tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(100);
@@ -215,12 +218,12 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             if (cliente != null) {
                 ftf_saldoFinal.setValue(RestClient.getRestTemplate()
                         .getForObject("/cuentas-corrientes/clientes/" + cliente.getId_Cliente() + "/saldo",
-                                double.class));
+                                BigDecimal.class));
                 ftf_saldoFinal.setText(FormatterNumero.formatConRedondeo((Number) ftf_saldoFinal.getValue()));
             } else if (proveedor != null) {
                 ftf_saldoFinal.setValue(RestClient.getRestTemplate()
                         .getForObject("/cuentas-corrientes/proveedores/" + proveedor.getId_Proveedor()+ "/saldo",
-                                double.class));
+                                BigDecimal.class));
                 ftf_saldoFinal.setText(FormatterNumero.formatConRedondeo((Number) ftf_saldoFinal.getValue()));
             }
         } catch (RestClientResponseException ex) {

@@ -1,6 +1,7 @@
 package sic.modelo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,6 +17,6 @@ public class Gasto implements Serializable {
     private Empresa empresa;
     private Usuario usuario;
     private FormaDePago formaDePago;
-    private double monto;
+    private BigDecimal monto;
     private boolean eliminado;
 }
