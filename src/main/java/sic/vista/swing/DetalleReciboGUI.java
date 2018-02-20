@@ -26,7 +26,7 @@ import sic.modelo.UsuarioActivo;
 public class DetalleReciboGUI extends JDialog {
     
     private final Cliente cliente;
-    private final Proveedor proveedor;    
+    private final Proveedor proveedor;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleReciboGUI(Cliente cliente) {
@@ -172,8 +172,9 @@ public class DetalleReciboGUI extends JDialog {
         lblMonto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblMonto.setText("* Monto:");
 
+        lblConcepto.setForeground(java.awt.Color.red);
         lblConcepto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblConcepto.setText("Concepto:");
+        lblConcepto.setText("* Concepto:");
 
         javax.swing.GroupLayout panelGeneralLayout = new javax.swing.GroupLayout(panelGeneral);
         panelGeneral.setLayout(panelGeneralLayout);
@@ -254,6 +255,7 @@ public class DetalleReciboGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cargarFormasDePago();
+        this.txtObservaciones.setText("SALDO.");
         try {
             if (cliente != null) {
                 double saldoCC = RestClient.getRestTemplate().getForObject("/cuentas-corrientes/clientes/" + cliente.getId_Cliente() + "/saldo", double.class);
