@@ -32,7 +32,9 @@ import sic.modelo.Usuario;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
-import sic.util.RenderTabla;
+import sic.util.DecimalesRenderer;
+import sic.util.FechasRenderer;
+import sic.util.FormatosFechaHora;
 import sic.util.Utilidades;
 
 public class FacturasVentaGUI extends JInternalFrame {
@@ -103,8 +105,7 @@ public class FacturasVentaGUI extends JInternalFrame {
     private void setColumnas() {
         // Momentaneamente desactivado hasta terminar la paginacion.        
         //sorting
-        // tbl_Resultados.setAutoCreateRowSorter(true);
-        
+        // tbl_Resultados.setAutoCreateRowSorter(true);        
         //nombres de columnas
         String[] encabezados = new String[20];
         encabezados[0] = "CAE";
@@ -129,7 +130,6 @@ public class FacturasVentaGUI extends JInternalFrame {
         encabezados[19] = "Vencimiento CAE";
         modeloTablaFacturas.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaFacturas);
-
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaFacturas.getColumnCount()];
         tipos[0] = Object.class;
@@ -154,14 +154,10 @@ public class FacturasVentaGUI extends JInternalFrame {
         tipos[19] = Date.class;
         modeloTablaFacturas.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
-        tbl_Resultados.getTableHeader().setResizingAllowed(true);
-
-        //render para los tipos de datos
-        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new RenderTabla());
-
-        //Tamanios de columnas
+        tbl_Resultados.getTableHeader().setResizingAllowed(true);        
+        //tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(120);
-        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(140);
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(90);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(130);
@@ -180,6 +176,11 @@ public class FacturasVentaGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(17).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(18).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(19).setPreferredWidth(120);
+        //render para los tipos de datos
+        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
+        tbl_Resultados.getColumnModel().getColumn(1).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(4).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(19).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 
     private void calcularResultados(String uriCriteria) {

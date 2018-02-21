@@ -18,9 +18,10 @@ import sic.modelo.Nota;
 import sic.modelo.NotaDebito;
 import sic.modelo.Pago;
 import sic.modelo.Recibo;
-import sic.util.FormatoFechasEnTablasRenderer;
+import sic.util.DecimalesRenderer;
+import sic.util.FechasRenderer;
+import sic.util.FormatosFechaHora;
 import sic.util.FormatterFechaHora;
-import sic.util.RenderTabla;
 
 public class PagosGUI extends JInternalFrame {
 
@@ -29,7 +30,7 @@ public class PagosGUI extends JInternalFrame {
     private NotaDebito notaDebitoRelacionada = null;
     private Recibo reciboRelacionado = null;    
     private final ModeloTabla modeloTablaResultados = new ModeloTabla();
-    private final FormatterFechaHora formateador = new FormatterFechaHora(FormatterFechaHora.FORMATO_FECHA_HISPANO);
+    private final FormatterFechaHora formateador = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO);
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public PagosGUI(Factura factura) {
@@ -98,7 +99,7 @@ public class PagosGUI extends JInternalFrame {
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
         //render para los tipos de datos
-        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new RenderTabla());
+        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         //size de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setMinWidth(70);
         tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(70);
@@ -145,7 +146,7 @@ public class PagosGUI extends JInternalFrame {
             }).forEach(fila -> {
                 modeloTablaResultados.addRow(fila);
             });
-            tbl_Resultados.getColumnModel().getColumn(0).setCellRenderer(new FormatoFechasEnTablasRenderer());
+            tbl_Resultados.getColumnModel().getColumn(0).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
             tbl_Resultados.setModel(modeloTablaResultados);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

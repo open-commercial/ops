@@ -27,7 +27,7 @@ import sic.modelo.NotaCredito;
 import sic.modelo.RenglonNotaCredito;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.UsuarioActivo;
-import sic.util.RenderTabla;
+import sic.util.DecimalesRenderer;
 
 public class DetalleNotaCreditoGUI extends JDialog {
 
@@ -186,7 +186,6 @@ public class DetalleNotaCreditoGUI extends JDialog {
         encabezados[6] = "Importe";
         modeloTablaRenglones.setColumnIdentifiers(encabezados);
         tblResultados.setModel(modeloTablaRenglones);
-
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaRenglones.getColumnCount()];
         tipos[0] = String.class;
@@ -199,10 +198,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
         modeloTablaRenglones.setClaseColumnas(tipos);
         tblResultados.getTableHeader().setReorderingAllowed(false);
         tblResultados.getTableHeader().setResizingAllowed(true);
-
         //render para los tipos de datos
-        tblResultados.setDefaultRenderer(BigDecimal.class, new RenderTabla());
-
+        tblResultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         //Tamanios de columnas
         tblResultados.getColumnModel().getColumn(0).setPreferredWidth(200);
         tblResultados.getColumnModel().getColumn(1).setPreferredWidth(400);

@@ -13,7 +13,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Producto;
-import sic.util.RenderTabla;
+import sic.util.DecimalesRenderer;
 
 public class ProductosFaltantesGUI extends JDialog {
 
@@ -53,15 +53,15 @@ public class ProductosFaltantesGUI extends JDialog {
         tipos[4] = BigDecimal.class;
         modeloTablaFaltantes.setClaseColumnas(tipos);
         tbl_Faltantes.getTableHeader().setReorderingAllowed(false);
-        tbl_Faltantes.getTableHeader().setResizingAllowed(true);
-        //render para los tipos de datos
-        tbl_Faltantes.setDefaultRenderer(BigDecimal.class, new RenderTabla());
+        tbl_Faltantes.getTableHeader().setResizingAllowed(true);                
         //tamanios de columnas
         tbl_Faltantes.getColumnModel().getColumn(0).setPreferredWidth(80);
         tbl_Faltantes.getColumnModel().getColumn(1).setPreferredWidth(300);
         tbl_Faltantes.getColumnModel().getColumn(2).setPreferredWidth(120);
         tbl_Faltantes.getColumnModel().getColumn(3).setPreferredWidth(120);
         tbl_Faltantes.getColumnModel().getColumn(4).setPreferredWidth(120);
+        //renderers
+        tbl_Faltantes.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
     }
 
     private void limpiarJTables() {

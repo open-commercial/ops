@@ -11,9 +11,8 @@ import sic.modelo.EstadoPedido;
 public class ColoresEstadosRenderer extends DefaultTableCellRenderer {
 
     @Override
-    public Component getTableCellRendererComponent(JTable tabla,
-            Object valor, boolean isSelected, boolean hasFocus,
-            int row, int column) {
+    public Component getTableCellRendererComponent(JTable tabla, Object valor,
+            boolean isSelected, boolean hasFocus, int row, int column) {
 
         JLabel cell = (JLabel) super.getTableCellRendererComponent(tabla, valor, isSelected, hasFocus, row, column);
         if (valor instanceof EstadoPedido) {

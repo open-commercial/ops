@@ -36,14 +36,15 @@ import sic.modelo.Gasto;
 import sic.modelo.UsuarioActivo;
 import sic.modelo.EstadoCaja;
 import sic.modelo.Recibo;
-import sic.util.ColoresNumerosTablaRenderer;
-import sic.util.FormatoFechasEnTablasRenderer;
+import sic.util.ColoresNumerosRenderer;
+import sic.util.FechasRenderer;
+import sic.util.FormatosFechaHora;
 import sic.util.FormatterFechaHora;
 import sic.util.Utilidades;
 
 public class CajaGUI extends JInternalFrame {
 
-    private final FormatterFechaHora formatter = new FormatterFechaHora(FormatterFechaHora.FORMATO_FECHAHORA_HISPANO);
+    private final FormatterFechaHora formatter = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO);
     private ModeloTabla modeloTablaBalance = new ModeloTabla();
     private ModeloTabla modeloTablaResumen = new ModeloTabla();
     private List<Movimiento> movimientos = new ArrayList<>();
@@ -137,7 +138,6 @@ public class CajaGUI extends JInternalFrame {
     private void setColumnasTablaMovimientos() {
         //sorting
         tbl_Movimientos.setAutoCreateRowSorter(true);
-
         //nombres de columnas
         String[] encabezados = new String[3];
         encabezados[0] = "Concepto";
@@ -145,7 +145,6 @@ public class CajaGUI extends JInternalFrame {
         encabezados[2] = "Monto";
         modeloTablaBalance.setColumnIdentifiers(encabezados);
         tbl_Movimientos.setModel(modeloTablaBalance);
-
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaBalance.getColumnCount()];
         tipos[0] = String.class;
@@ -154,18 +153,17 @@ public class CajaGUI extends JInternalFrame {
         modeloTablaBalance.setClaseColumnas(tipos);
         tbl_Movimientos.getTableHeader().setReorderingAllowed(false);
         tbl_Movimientos.getTableHeader().setResizingAllowed(true);
-
         //Tamanios de columnas
         tbl_Movimientos.getColumnModel().getColumn(0).setPreferredWidth(200);
         tbl_Movimientos.getColumnModel().getColumn(1).setPreferredWidth(5);
-        tbl_Movimientos.getColumnModel().getColumn(2).setCellRenderer(new ColoresNumerosTablaRenderer());
-        tbl_Movimientos.getColumnModel().getColumn(1).setCellRenderer(new FormatoFechasEnTablasRenderer());
+        //Renderers
+        tbl_Movimientos.getColumnModel().getColumn(2).setCellRenderer(new ColoresNumerosRenderer());
+        tbl_Movimientos.getColumnModel().getColumn(1).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
     }
 
     private void setColumnasTablaResumen() {
         //sorting
         tbl_Resumen.setAutoCreateRowSorter(true);
-
         //nombres de columnas
         String[] encabezados = new String[4];
         encabezados[0] = "idFormaDePago";
@@ -173,8 +171,7 @@ public class CajaGUI extends JInternalFrame {
         encabezados[2] = "Afecta la Caja";
         encabezados[3] = "Total";
         modeloTablaResumen.setColumnIdentifiers(encabezados);
-        tbl_Resumen.setModel(modeloTablaResumen);
-        
+        tbl_Resumen.setModel(modeloTablaResumen);        
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaResumen.getColumnCount()];
         tipos[0] = Long.class;
@@ -184,7 +181,6 @@ public class CajaGUI extends JInternalFrame {
         modeloTablaResumen.setClaseColumnas(tipos);
         tbl_Resumen.getTableHeader().setReorderingAllowed(false);
         tbl_Resumen.getTableHeader().setResizingAllowed(true);
-
         //Tamanios de columnas
         tbl_Resumen.getColumnModel().getColumn(0).setPreferredWidth(200);
         tbl_Resumen.getColumnModel().getColumn(1).setPreferredWidth(5);
@@ -224,7 +220,7 @@ public class CajaGUI extends JInternalFrame {
             this.cargarResultados();
             tbl_Resumen.setModel(modeloTablaResumen);
             tbl_Resumen.removeColumn(tbl_Resumen.getColumnModel().getColumn(0));
-            tbl_Resumen.setDefaultRenderer(BigDecimal.class, new ColoresNumerosTablaRenderer());
+            tbl_Resumen.setDefaultRenderer(BigDecimal.class, new ColoresNumerosRenderer());
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {

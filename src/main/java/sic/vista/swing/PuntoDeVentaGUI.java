@@ -47,7 +47,7 @@ import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.Transportista;
-import sic.util.RenderTabla;
+import sic.util.DecimalesRenderer;
 import sic.util.Utilidades;
 
 public class PuntoDeVentaGUI extends JInternalFrame {
@@ -234,7 +234,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         encabezados[7] = "Importe";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultado.setModel(modeloTablaResultados);
-
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
         tipos[0] = Boolean.class;
@@ -248,10 +247,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultado.getTableHeader().setReorderingAllowed(false);
         tbl_Resultado.getTableHeader().setResizingAllowed(true);
-
         //render para los tipos de datos
-        tbl_Resultado.setDefaultRenderer(BigDecimal.class, new RenderTabla());
-
+        tbl_Resultado.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         //tamanios de columnas
         tbl_Resultado.getColumnModel().getColumn(0).setPreferredWidth(25);
         tbl_Resultado.getColumnModel().getColumn(1).setPreferredWidth(170);

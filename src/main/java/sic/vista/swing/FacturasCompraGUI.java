@@ -26,7 +26,9 @@ import sic.modelo.FacturaCompra;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Proveedor;
 import sic.modelo.TipoDeOperacion;
-import sic.util.RenderTabla;
+import sic.util.DecimalesRenderer;
+import sic.util.FechasRenderer;
+import sic.util.FormatosFechaHora;
 import sic.util.Utilidades;
 
 public class FacturasCompraGUI extends JInternalFrame {
@@ -95,9 +97,7 @@ public class FacturasCompraGUI extends JInternalFrame {
         tipos[15] = BigDecimal.class;
         modeloTablaFacturas.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
-        tbl_Resultados.getTableHeader().setResizingAllowed(true);
-        //render para los tipos de datos
-        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new RenderTabla());
+        tbl_Resultados.getTableHeader().setResizingAllowed(true);        
         //Tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(100);
@@ -115,6 +115,9 @@ public class FacturasCompraGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(13).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(14).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(15).setPreferredWidth(120);
+        //renderers        
+        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
+        tbl_Resultados.setDefaultRenderer(Date.class, new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 
     private void cambiarEstadoEnabledComponentes(boolean status) {

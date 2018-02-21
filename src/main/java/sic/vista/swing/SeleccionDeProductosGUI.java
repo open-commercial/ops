@@ -24,9 +24,10 @@ import sic.RestClient;
 import sic.modelo.FacturaVenta;
 import sic.modelo.RenglonFactura;
 import sic.modelo.TipoMovimiento;
+import sic.util.DecimalesRenderer;
+import sic.util.FormatosFechaHora;
 import sic.util.FormatterFechaHora;
 import sic.util.FormatterNumero;
-import sic.util.RenderTabla;
 
 public class SeleccionDeProductosGUI extends JDialog {
 
@@ -72,9 +73,8 @@ public class SeleccionDeProductosGUI extends JDialog {
     private class ColoresProductosTablaRenderer extends DefaultTableCellRenderer {
 
         @Override
-        public Component getTableCellRendererComponent(JTable tabla,
-                Object valor, boolean isSelected, boolean hasFocus,
-                int row, int column) {
+        public Component getTableCellRendererComponent(JTable tabla, Object valor,
+                boolean isSelected, boolean hasFocus, int row, int column) {
 
             JLabel cell = (JLabel) super.getTableCellRendererComponent(tabla, valor, isSelected, hasFocus, row, 6);
             this.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -110,7 +110,6 @@ public class SeleccionDeProductosGUI extends JDialog {
         encabezados[6] = "";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tblResultados.setModel(modeloTablaResultados);
-
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
         tipos[0] = String.class;
@@ -123,17 +122,14 @@ public class SeleccionDeProductosGUI extends JDialog {
         modeloTablaResultados.setClaseColumnas(tipos);
         tblResultados.getTableHeader().setReorderingAllowed(false);
         tblResultados.getTableHeader().setResizingAllowed(true);
-
         //editables                
         Boolean[] editables = {false, false, false, false, false, false, true};
         modeloTablaResultados.setEditables(editables);
-
         //render para los tipos de datos
-        tblResultados.setDefaultRenderer(BigDecimal.class, new RenderTabla());
+        tblResultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         tblResultados.getColumnModel().getColumn(6).setCellRenderer(new ColoresProductosTablaRenderer());
         //Finaliza la edicion de la tabla al perder el foco
         tblResultados.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
-
         //size de columnas        
         tblResultados.getColumnModel().getColumn(0).setPreferredWidth(50);
         tblResultados.getColumnModel().getColumn(1).setPreferredWidth(300);
@@ -296,7 +292,7 @@ public class SeleccionDeProductosGUI extends JDialog {
         this.cargarRenglonesAlTable();
         this.setTitle(fv.getTipoComprobante() + " Nro: " + fv.getNumSerie() + " - " + fv.getNumFactura() 
                 + " del Cliente: " + fv.getRazonSocialCliente() 
-                + " con Fecha: " + (new FormatterFechaHora(FormatterFechaHora.FORMATO_FECHA_HISPANO)).format(fv.getFecha()));
+                + " con Fecha: " + (new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO)).format(fv.getFecha()));
     }//GEN-LAST:event_formWindowOpened
 
     private void btnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuarActionPerformed

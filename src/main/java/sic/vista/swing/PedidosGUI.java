@@ -33,7 +33,9 @@ import sic.modelo.RenglonPedido;
 import sic.modelo.Usuario;
 import sic.modelo.EstadoPedido;
 import sic.modelo.PaginaRespuestaRest;
-import sic.util.RenderTabla;
+import sic.util.DecimalesRenderer;
+import sic.util.FechasRenderer;
+import sic.util.FormatosFechaHora;
 import sic.util.Utilidades;
 
 public class PedidosGUI extends JInternalFrame {
@@ -204,8 +206,7 @@ public class PedidosGUI extends JInternalFrame {
 
     private void setColumnasRenglonesPedido() {
         //sorting
-        tbl_RenglonesPedido.setAutoCreateRowSorter(true);
-
+        // tbl_RenglonesPedido.setAutoCreateRowSorter(true);
         //nombres de columnas
         String[] encabezadoRenglones = new String[6];
         encabezadoRenglones[0] = "Codigo";
@@ -216,7 +217,6 @@ public class PedidosGUI extends JInternalFrame {
         encabezadoRenglones[5] = "SubTotal";
         modeloTablaRenglones.setColumnIdentifiers(encabezadoRenglones);
         tbl_RenglonesPedido.setModel(modeloTablaRenglones);
-
         //tipo de dato columnas
         Class[] tiposRenglones = new Class[modeloTablaRenglones.getColumnCount()];
         tiposRenglones[0] = String.class;
@@ -228,23 +228,20 @@ public class PedidosGUI extends JInternalFrame {
         modeloTablaRenglones.setClaseColumnas(tiposRenglones);
         tbl_RenglonesPedido.getTableHeader().setReorderingAllowed(false);
         tbl_RenglonesPedido.getTableHeader().setResizingAllowed(true);
-
-        //render para los tipos de datos
-        tbl_RenglonesPedido.setDefaultRenderer(BigDecimal.class, new RenderTabla());
-
-        //Tamanios de columnas
+        //tamanios de columnas
         tbl_RenglonesPedido.getColumnModel().getColumn(0).setPreferredWidth(25);
         tbl_RenglonesPedido.getColumnModel().getColumn(1).setPreferredWidth(250);
         tbl_RenglonesPedido.getColumnModel().getColumn(2).setPreferredWidth(25);
         tbl_RenglonesPedido.getColumnModel().getColumn(3).setPreferredWidth(25);
         tbl_RenglonesPedido.getColumnModel().getColumn(4).setPreferredWidth(25);
         tbl_RenglonesPedido.getColumnModel().getColumn(5).setPreferredWidth(25);
+        //renderers
+        tbl_RenglonesPedido.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
     }
 
     private void setColumnasPedido() {
         //sorting
         //tbl_Pedidos.setAutoCreateRowSorter(true);
-
         //nombres de columnas
         String[] encabezados = new String[7];
         encabezados[0] = "Estado";
@@ -256,7 +253,6 @@ public class PedidosGUI extends JInternalFrame {
         encabezados[6] = "Total Actual";
         modeloTablaPedidos.setColumnIdentifiers(encabezados);
         tbl_Pedidos.setModel(modeloTablaPedidos);
-
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaPedidos.getColumnCount()];
         tipos[0] = EstadoPedido.class;
@@ -269,11 +265,7 @@ public class PedidosGUI extends JInternalFrame {
         modeloTablaPedidos.setClaseColumnas(tipos);
         tbl_Pedidos.getTableHeader().setReorderingAllowed(false);
         tbl_Pedidos.getTableHeader().setResizingAllowed(true);
-
-        //render para los tipos de datos
-        tbl_Pedidos.setDefaultRenderer(BigDecimal.class, new RenderTabla());
-
-        //Tamanios de columnas
+        //tamanios de columnas
         tbl_Pedidos.getColumnModel().getColumn(0).setPreferredWidth(25);
         tbl_Pedidos.getColumnModel().getColumn(1).setPreferredWidth(25);
         tbl_Pedidos.getColumnModel().getColumn(2).setPreferredWidth(25);
@@ -281,6 +273,9 @@ public class PedidosGUI extends JInternalFrame {
         tbl_Pedidos.getColumnModel().getColumn(4).setPreferredWidth(100);
         tbl_Pedidos.getColumnModel().getColumn(5).setPreferredWidth(25);
         tbl_Pedidos.getColumnModel().getColumn(6).setPreferredWidth(25);
+        //renderers
+        tbl_Pedidos.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
+        tbl_Pedidos.getColumnModel().getColumn(1).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
     }
 
     private void cargarClientes() {
