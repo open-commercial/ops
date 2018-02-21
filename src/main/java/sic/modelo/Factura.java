@@ -36,7 +36,6 @@ public abstract class Factura implements Serializable {
     private Date fechaVencimiento;  
     private String nombreTransportista;     
     private List<RenglonFactura> renglones;
-    private List<Pago> pagos;
     private BigDecimal subTotal;
     private BigDecimal recargo_porcentaje;
     private BigDecimal recargo_neto;
@@ -47,8 +46,7 @@ public abstract class Factura implements Serializable {
     private BigDecimal iva_21_neto;
     private BigDecimal impuestoInterno_neto;
     private BigDecimal total;    
-    private String observaciones;
-    private boolean pagada;    
+    private String observaciones; 
     private String nombreEmpresa;
     private boolean eliminada;   
     private long CAE;

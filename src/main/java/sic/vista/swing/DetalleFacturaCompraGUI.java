@@ -207,7 +207,6 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         facturaCompra.setIva_21_neto(iva21netoFactura);
         facturaCompra.setTotal(totalComprobante);
         facturaCompra.setObservaciones(txta_Observaciones.getText().trim());
-        facturaCompra.setPagada(false);
         facturaCompra.setEliminada(false);
         try {
             RestClient.getRestTemplate().postForObject("/facturas/compra"

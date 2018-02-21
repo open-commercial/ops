@@ -26,7 +26,6 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
-import sic.modelo.Factura;
 import sic.modelo.FacturaVenta;
 import sic.modelo.Usuario;
 import sic.modelo.PaginaRespuestaRest;
@@ -106,7 +105,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         // tbl_Resultados.setAutoCreateRowSorter(true);
         
         //nombres de columnas
-        String[] encabezados = new String[20];
+        String[] encabezados = new String[19];
         encabezados[0] = "CAE";
         encabezados[1] = "Fecha Factura";
         encabezados[2] = "Tipo";
@@ -115,18 +114,17 @@ public class FacturasVentaGUI extends JInternalFrame {
         encabezados[5] = "Cliente";
         encabezados[6] = "Vendedor";
         encabezados[7] = "Transportista";
-        encabezados[8] = "Pagada";
-        encabezados[9] = "Total";
-        encabezados[10] = "SubTotal";
-        encabezados[11] = "% Descuento";
-        encabezados[12] = "Descuento neto";
-        encabezados[13] = "% Recargo";
-        encabezados[14] = "Recargo neto";
-        encabezados[15] = "SubTotal bruto";
-        encabezados[16] = "IVA 10.5% neto";
-        encabezados[17] = "IVA 21% neto";
-        encabezados[18] = "Nº Factura Afip";
-        encabezados[19] = "Vencimiento CAE";
+        encabezados[8] = "Total";
+        encabezados[9] = "SubTotal";
+        encabezados[10] = "% Descuento";
+        encabezados[11] = "Descuento neto";
+        encabezados[12] = "% Recargo";
+        encabezados[13] = "Recargo neto";
+        encabezados[14] = "SubTotal bruto";
+        encabezados[15] = "IVA 10.5% neto";
+        encabezados[16] = "IVA 21% neto";
+        encabezados[17] = "Nº Factura Afip";
+        encabezados[18] = "Vencimiento CAE";
         modeloTablaFacturas.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaFacturas);
 
@@ -140,7 +138,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         tipos[5] = String.class;
         tipos[6] = String.class;
         tipos[7] = String.class;
-        tipos[8] = Boolean.class;
+        tipos[8] = BigDecimal.class;
         tipos[9] = BigDecimal.class;
         tipos[10] = BigDecimal.class;
         tipos[11] = BigDecimal.class;
@@ -149,9 +147,8 @@ public class FacturasVentaGUI extends JInternalFrame {
         tipos[14] = BigDecimal.class;
         tipos[15] = BigDecimal.class;
         tipos[16] = BigDecimal.class;
-        tipos[17] = BigDecimal.class;
-        tipos[18] = String.class;
-        tipos[19] = Date.class;
+        tipos[17] = String.class;
+        tipos[18] = Date.class;
         modeloTablaFacturas.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
@@ -168,7 +165,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(280);
         tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(190);
         tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(190);
-        tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(80);
+        tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(11).setPreferredWidth(120);
@@ -179,7 +176,6 @@ public class FacturasVentaGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(16).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(17).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(18).setPreferredWidth(120);
-        tbl_Resultados.getColumnModel().getColumn(19).setPreferredWidth(120);
     }
 
     private void calcularResultados(String uriCriteria) {
@@ -286,7 +282,7 @@ public class FacturasVentaGUI extends JInternalFrame {
 
     private void cargarResultadosAlTable() {
         facturasParcial.stream().map(factura -> {
-            Object[] fila = new Object[21];
+            Object[] fila = new Object[20];
             fila[0] = factura.getCAE() == 0 ? "" : factura.getCAE();
             fila[1] = factura.getFecha();
             fila[2] = factura.getTipoComprobante();
@@ -295,22 +291,21 @@ public class FacturasVentaGUI extends JInternalFrame {
             fila[5] = factura.getRazonSocialCliente();
             fila[6] = factura.getNombreUsuario();
             fila[7] = factura.getNombreTransportista();
-            fila[8] = factura.isPagada();
-            fila[9] = factura.getTotal();
-            fila[10] = factura.getSubTotal();
-            fila[11] = factura.getDescuento_porcentaje();
-            fila[12] = factura.getDescuento_neto();
-            fila[13] = factura.getRecargo_porcentaje();
-            fila[14] = factura.getRecargo_neto();
-            fila[15] = factura.getSubTotal_bruto();
-            fila[16] = factura.getIva_105_neto();
-            fila[17] = factura.getIva_21_neto();
+            fila[8] = factura.getTotal();
+            fila[9] = factura.getSubTotal();
+            fila[10] = factura.getDescuento_porcentaje();
+            fila[11] = factura.getDescuento_neto();
+            fila[12] = factura.getRecargo_porcentaje();
+            fila[13] = factura.getRecargo_neto();
+            fila[14] = factura.getSubTotal_bruto();
+            fila[15] = factura.getIva_105_neto();
+            fila[16] = factura.getIva_21_neto();
             if (factura.getNumSerieAfip() == 0 && factura.getNumFacturaAfip() == 0) {
-                fila[18] = "";
+                fila[17] = "";
             } else {
-                fila[18] = factura.getNumSerieAfip() + " - " + factura.getNumFacturaAfip();
+                fila[17] = factura.getNumSerieAfip() + " - " + factura.getNumFacturaAfip();
             }
-            fila[19] = factura.getVencimientoCAE();
+            fila[18] = factura.getVencimientoCAE();
             return fila;
         }).forEach(fila -> {
             modeloTablaFacturas.addRow(fila);
@@ -486,7 +481,6 @@ public class FacturasVentaGUI extends JInternalFrame {
         txt_ResultTotalIVAVenta = new javax.swing.JFormattedTextField();
         btn_Nueva = new javax.swing.JButton();
         btn_Autorizar = new javax.swing.JButton();
-        btn_VerPagos = new javax.swing.JButton();
         panelFiltros = new javax.swing.JPanel();
         subPanelFiltros1 = new javax.swing.JPanel();
         chk_Fecha = new javax.swing.JCheckBox();
@@ -636,15 +630,6 @@ public class FacturasVentaGUI extends JInternalFrame {
             }
         });
 
-        btn_VerPagos.setForeground(java.awt.Color.blue);
-        btn_VerPagos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/StampArrow_16x16.png"))); // NOI18N
-        btn_VerPagos.setText("Ver Pagos");
-        btn_VerPagos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_VerPagosActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
@@ -657,14 +642,12 @@ public class FacturasVentaGUI extends JInternalFrame {
                 .addComponent(btn_Autorizar)
                 .addGap(0, 0, 0)
                 .addComponent(btn_VerDetalle)
-                .addGap(0, 0, 0)
-                .addComponent(btn_VerPagos)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panelNumeros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(sp_Resultados)
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Autorizar, btn_Eliminar, btn_Nueva, btn_VerDetalle, btn_VerPagos});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Autorizar, btn_Eliminar, btn_Nueva, btn_VerDetalle});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -677,11 +660,10 @@ public class FacturasVentaGUI extends JInternalFrame {
                         .addComponent(btn_Nueva)
                         .addComponent(btn_Eliminar)
                         .addComponent(btn_Autorizar)
-                        .addComponent(btn_VerDetalle)
-                        .addComponent(btn_VerPagos, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(btn_VerDetalle))))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Autorizar, btn_Eliminar, btn_Nueva, btn_VerDetalle, btn_VerPagos});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Autorizar, btn_Eliminar, btn_Nueva, btn_VerDetalle});
 
         panelFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
 
@@ -1149,26 +1131,6 @@ public class FacturasVentaGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btn_AutorizarActionPerformed
 
-    private void btn_VerPagosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VerPagosActionPerformed
-        try {
-            if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
-                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                JInternalFrame gui = new PagosGUI(RestClient.getRestTemplate().getForObject("/facturas/" + facturasTotal.get(indexFilaSeleccionada).getId_Factura(), Factura.class));
-                gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                        getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-                getDesktopPane().add(gui);
-                gui.setVisible(true);
-            }
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_btn_VerPagosActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bg_estadoFactura;
     private javax.swing.JButton btn_Autorizar;
@@ -1176,7 +1138,6 @@ public class FacturasVentaGUI extends JInternalFrame {
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_Nueva;
     private javax.swing.JButton btn_VerDetalle;
-    private javax.swing.JButton btn_VerPagos;
     private javax.swing.JCheckBox chk_Cliente;
     private javax.swing.JCheckBox chk_EstadoFactura;
     private javax.swing.JCheckBox chk_Fecha;
