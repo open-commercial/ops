@@ -122,17 +122,15 @@ public class DetalleNotaCreditoGUI extends JDialog {
                     + "&ivaPorcentaje=21"
                     + "&descuentoPorcentaje=" + fv.getDescuento_porcentaje()
                     + "&recargoPorcentaje=" + fv.getRecargo_porcentaje(), BigDecimal.class);
-            if (fv.getTipoComprobante() != TipoDeComprobante.FACTURA_X) {
-                txt_IVA105_neto.setValue(iva_105_netoFactura);
-                txt_IVA21_neto.setValue(iva_21_netoFactura);
-            }
+            txt_IVA105_neto.setValue(iva_105_netoFactura);
+            txt_IVA21_neto.setValue(iva_21_netoFactura);
             subTotalBruto = RestClient.getRestTemplate().getForObject("/notas/credito/sub-total-bruto?"
                     + "tipoDeComprobante=" + fv.getTipoComprobante().name()
                     + "&subTotal=" + txt_Subtotal.getValue().toString()
                     + "&recargoNeto=" + txt_Recargo_neto.getValue().toString()
                     + "&descuentoNeto=" + txt_Decuento_neto.getValue().toString()
-                    + "&iva105Neto=" + txt_IVA105_neto.getValue().toString()
-                    + "&iva21Neto=" + txt_IVA21_neto.getValue().toString(), BigDecimal.class);
+                    + "&iva105Neto=" + iva_105_netoFactura
+                    + "&iva21Neto=" + iva_21_netoFactura, BigDecimal.class);
             txt_Total.setValue(RestClient.getRestTemplate().getForObject("/notas/credito/total?"
                     + "subTotalBruto=" + subTotalBruto
                     + "&iva105Neto=" + iva_105_netoFactura
@@ -222,7 +220,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
             fila[3] = r.getCantidad();
             fila[4] = r.getPrecioUnitario();
             fila[5] = r.getDescuentoPorcentaje();
-            fila[6] = r.getImporte();
+            fila[6] = r.getImporteBruto();
             return fila;
         }).forEach(fila -> {
             modeloTablaRenglones.addRow(fila);
