@@ -62,10 +62,10 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private Pedido pedido;
     private boolean modificarPedido;
     private int cantidadMaximaRenglones = 0;
-    private BigDecimal totalComprobante;    
-    private BigDecimal iva_105_netoFactura;
-    private BigDecimal iva_21_netoFactura;
     private BigDecimal subTotalBruto;
+    private BigDecimal iva_105_netoFactura;
+    private BigDecimal iva_21_netoFactura;    
+    private BigDecimal totalComprobante;    
     private final static BigDecimal IVA_21 = new BigDecimal("21");
     private final static BigDecimal IVA_105 = new BigDecimal("10.5");
     private final static BigDecimal CIEN = new BigDecimal("100");
