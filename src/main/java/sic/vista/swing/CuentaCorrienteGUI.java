@@ -31,18 +31,16 @@ import sic.modelo.Cliente;
 import sic.modelo.CuentaCorriente;
 import sic.modelo.CuentaCorrienteCliente;
 import sic.modelo.CuentaCorrienteProveedor;
-import sic.modelo.Factura;
 import sic.modelo.FacturaCompra;
 import sic.modelo.Nota;
-import sic.modelo.NotaDebito;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Proveedor;
-import sic.modelo.Recibo;
 import sic.modelo.RenglonCuentaCorriente;
 import sic.modelo.TipoDeComprobante;
-import sic.util.ColoresNumerosTablaRenderer;
-import sic.util.FormatterNumero;
-import sic.util.RenderTabla;
+import sic.util.ColoresNumerosRenderer;
+import sic.util.DecimalesRenderer;
+import sic.util.FechasRenderer;
+import sic.util.FormatosFechaHora;
 import sic.util.Utilidades;
 
 public class CuentaCorrienteGUI extends JInternalFrame {
@@ -83,14 +81,16 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 }
             }
         });
-        ftf_saldoFinal.addPropertyChangeListener("value", (PropertyChangeEvent e) -> {
-            int cambiarColorFondo = (new BigDecimal(ftf_saldoFinal.getValue().toString())).setScale(2, RoundingMode.HALF_UP).compareTo(BigDecimal.ZERO);
+        ftxtSaldoFinal.addPropertyChangeListener("value", (PropertyChangeEvent e) -> {
+            int cambiarColorFondo = new BigDecimal(ftxtSaldoFinal.getValue().toString())
+                    .setScale(2, RoundingMode.HALF_UP)
+                    .compareTo(BigDecimal.ZERO);
             if (cambiarColorFondo < 0) {
-                ftf_saldoFinal.setBackground(Color.PINK);
+                ftxtSaldoFinal.setBackground(Color.PINK);
             } else if (cambiarColorFondo > 0) {
-                ftf_saldoFinal.setBackground(Color.GREEN);
+                ftxtSaldoFinal.setBackground(Color.GREEN);
             } else {
-                ftf_saldoFinal.setBackground(Color.WHITE);
+                ftxtSaldoFinal.setBackground(Color.WHITE);
             }
         });
     }
@@ -113,14 +113,13 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         try {
             PaginaRespuestaRest<RenglonCuentaCorriente> response = RestClient.getRestTemplate()
                     .exchange("/cuentas-corrientes/" + cuentaCorriente.getIdCuentaCorriente() + "/renglones"
-                            + "?pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA,
-                            HttpMethod.GET, null,
+                            + "?pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA, HttpMethod.GET, null,
                             new ParameterizedTypeReference<PaginaRespuestaRest<RenglonCuentaCorriente>>() {
                     })
                     .getBody();
             movimientosParcial = response.getContent();
             movimientosTotal.addAll(movimientosParcial);
-            this.cargarSaldoAlInicioYAlFinal();
+            this.cargarSaldoCuentaCorriente();
             this.cargarResultadosAlTable();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -157,7 +156,6 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     }
 
     private void setColumnas() {
-        //nombres de columnas
         String[] encabezados = new String[7];
         encabezados[0] = "Fecha";
         encabezados[1] = "Comprobante";
@@ -167,9 +165,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         encabezados[5] = "Monto";
         encabezados[6] = "Saldo";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
-        tbl_Resultados.setModel(modeloTablaResultados);
-
-        //tipo de dato columnas
+        tbl_Resultados.setModel(modeloTablaResultados);        
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
         tipos[0] = Date.class;
         tipos[1] = String.class;
@@ -179,12 +175,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         tipos[5] = BigDecimal.class;
         tipos[6] = BigDecimal.class;
         modeloTablaResultados.setClaseColumnas(tipos);        
-        tbl_Resultados.getTableHeader().setReorderingAllowed(false);
-
-        //Tamanios de columnas
-        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new RenderTabla());
-        tbl_Resultados.getColumnModel().getColumn(6).setCellRenderer(new ColoresNumerosTablaRenderer());
-        tbl_Resultados.getColumnModel().getColumn(0).setMinWidth(100);
+        tbl_Resultados.getTableHeader().setReorderingAllowed(false);                                
+        tbl_Resultados.getColumnModel().getColumn(0).setMinWidth(140);
         tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(100);
         tbl_Resultados.getColumnModel().getColumn(1).setMinWidth(200);
         tbl_Resultados.getColumnModel().getColumn(1).setMaxWidth(200);
@@ -196,6 +188,11 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(100);
         tbl_Resultados.getColumnModel().getColumn(6).setMinWidth(100);
         tbl_Resultados.getColumnModel().getColumn(6).setMaxWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(0).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(2).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(5).setCellRenderer(new DecimalesRenderer());
+        tbl_Resultados.getColumnModel().getColumn(6).setCellRenderer(new ColoresNumerosRenderer());
+        
     }
 
     private void resetScroll() {
@@ -212,18 +209,14 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         this.buscar();
     }
 
-    private void cargarSaldoAlInicioYAlFinal() {
+    private void cargarSaldoCuentaCorriente() {
         try {
             if (cliente != null) {
-                ftf_saldoFinal.setValue(RestClient.getRestTemplate()
-                        .getForObject("/cuentas-corrientes/clientes/" + cliente.getId_Cliente() + "/saldo",
-                                BigDecimal.class));
-                ftf_saldoFinal.setText(FormatterNumero.formatConRedondeo((Number) ftf_saldoFinal.getValue()));
+                ftxtSaldoFinal.setValue(RestClient.getRestTemplate()
+                        .getForObject("/cuentas-corrientes/clientes/" + cliente.getId_Cliente() + "/saldo", BigDecimal.class));                
             } else if (proveedor != null) {
-                ftf_saldoFinal.setValue(RestClient.getRestTemplate()
-                        .getForObject("/cuentas-corrientes/proveedores/" + proveedor.getId_Proveedor()+ "/saldo",
-                                BigDecimal.class));
-                ftf_saldoFinal.setText(FormatterNumero.formatConRedondeo((Number) ftf_saldoFinal.getValue()));
+                ftxtSaldoFinal.setValue(RestClient.getRestTemplate()
+                        .getForObject("/cuentas-corrientes/proveedores/" + proveedor.getId_Proveedor() + "/saldo", BigDecimal.class));                
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -425,7 +418,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         btnVerDetalle = new javax.swing.JButton();
         btnAutorizarNota = new javax.swing.JButton();
         lbl_saldoFinal = new javax.swing.JLabel();
-        ftf_saldoFinal = new javax.swing.JFormattedTextField();
+        ftxtSaldoFinal = new javax.swing.JFormattedTextField();
         btnCrearNotaDebito = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
         btnCrearRecibo = new javax.swing.JButton();
@@ -501,11 +494,11 @@ public class CuentaCorrienteGUI extends JInternalFrame {
 
         lbl_saldoFinal.setText("Saldo:");
 
-        ftf_saldoFinal.setEditable(false);
-        ftf_saldoFinal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
-        ftf_saldoFinal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        ftf_saldoFinal.setFocusable(false);
-        ftf_saldoFinal.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        ftxtSaldoFinal.setEditable(false);
+        ftxtSaldoFinal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
+        ftxtSaldoFinal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        ftxtSaldoFinal.setFocusable(false);
+        ftxtSaldoFinal.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
 
         btnCrearNotaDebito.setForeground(java.awt.Color.blue);
         btnCrearNotaDebito.setText("Nueva Nota Debito");
@@ -541,7 +534,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbl_saldoFinal)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ftf_saldoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(ftxtSaldoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(pnlResultadosLayout.createSequentialGroup()
                 .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlResultadosLayout.createSequentialGroup()
@@ -565,7 +558,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlResultadosLayout.createSequentialGroup()
                 .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ftf_saldoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ftxtSaldoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_saldoFinal))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
@@ -873,7 +866,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnVerDetalle;
     private javax.swing.JButton btn_Eliminar;
-    private javax.swing.JFormattedTextField ftf_saldoFinal;
+    private javax.swing.JFormattedTextField ftxtSaldoFinal;
     private javax.swing.JLabel lblCondicionIVACliente;
     private javax.swing.JLabel lblDomicilioCliente;
     private javax.swing.JLabel lblIDFiscalCliente;

@@ -28,8 +28,9 @@ import sic.modelo.Proveedor;
 import sic.modelo.RenglonFactura;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.Transportista;
+import sic.util.DecimalesRenderer;
+import sic.util.FormatosFechaHora;
 import sic.util.FormatterFechaHora;
-import sic.util.RenderTabla;
 
 public class DetalleFacturaCompraGUI extends JInternalFrame {
 
@@ -40,7 +41,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     private final boolean operacionAlta;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private final FormatterFechaHora formatter = new FormatterFechaHora(FormatterFechaHora.FORMATO_FECHA_HISPANO);
+    private final FormatterFechaHora formatter = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO);
     private BigDecimal totalComprobante;    
     private BigDecimal iva105netoFactura;
     private BigDecimal iva21netoFactura;
@@ -346,7 +347,6 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         encabezados[6] = "Importe";
         modeloTablaRenglones.setColumnIdentifiers(encabezados);
         tbl_Renglones.setModel(modeloTablaRenglones);
-
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaRenglones.getColumnCount()];
         tipos[0] = String.class;
@@ -359,10 +359,8 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         modeloTablaRenglones.setClaseColumnas(tipos);
         tbl_Renglones.getTableHeader().setReorderingAllowed(false);
         tbl_Renglones.getTableHeader().setResizingAllowed(true);
-
         //render para los tipos de datos
-        tbl_Renglones.setDefaultRenderer(BigDecimal.class, new RenderTabla());
-
+        tbl_Renglones.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         //Tamanios de columnas
         tbl_Renglones.getColumnModel().getColumn(0).setPreferredWidth(200);
         tbl_Renglones.getColumnModel().getColumn(1).setPreferredWidth(400);

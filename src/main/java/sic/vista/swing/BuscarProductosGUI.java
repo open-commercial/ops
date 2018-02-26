@@ -28,7 +28,7 @@ import sic.modelo.Producto;
 import sic.modelo.RenglonFactura;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.TipoDeComprobante;
-import sic.util.RenderTabla;
+import sic.util.DecimalesRenderer;
 import sic.util.Utilidades;
 
 public class BuscarProductosGUI extends JDialog {
@@ -283,7 +283,6 @@ public class BuscarProductosGUI extends JDialog {
         encabezados[5] = encabezadoPrecio;
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaResultados);
-
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
         tipos[0] = String.class;
@@ -295,10 +294,8 @@ public class BuscarProductosGUI extends JDialog {
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
-
         //render para los tipos de datos
-        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new RenderTabla());
-
+        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         //Size de columnas        
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(130);
         tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(130);        

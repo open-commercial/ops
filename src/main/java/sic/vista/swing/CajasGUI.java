@@ -27,9 +27,10 @@ import sic.modelo.EstadoCaja;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
 import sic.util.ColoresEstadosRenderer;
-import sic.util.FormatoFechasEnTablasRenderer;
+import sic.util.DecimalesRenderer;
+import sic.util.FechasRenderer;
+import sic.util.FormatosFechaHora;
 import sic.util.FormatterFechaHora;
-import sic.util.RenderTabla;
 import sic.util.Utilidades;
 
 public class CajasGUI extends JInternalFrame {
@@ -70,7 +71,6 @@ public class CajasGUI extends JInternalFrame {
         encabezados[7] = "Saldo Real";
         modeloTablaCajas.setColumnIdentifiers(encabezados);
         tbl_Cajas.setModel(modeloTablaCajas);
-
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaCajas.getColumnCount()];
         tipos[0] = String.class;
@@ -84,11 +84,7 @@ public class CajasGUI extends JInternalFrame {
         modeloTablaCajas.setClaseColumnas(tipos);
         tbl_Cajas.getTableHeader().setReorderingAllowed(false);
         tbl_Cajas.getTableHeader().setResizingAllowed(true);
-
-        //render para los tipos de datos
-        tbl_Cajas.setDefaultRenderer(BigDecimal.class, new RenderTabla());
-
-        //Tamanios de columnas
+        //tamanios de columnas
         tbl_Cajas.getColumnModel().getColumn(0).setPreferredWidth(0);
         tbl_Cajas.getColumnModel().getColumn(1).setPreferredWidth(80);
         tbl_Cajas.getColumnModel().getColumn(2).setPreferredWidth(30);
@@ -97,10 +93,11 @@ public class CajasGUI extends JInternalFrame {
         tbl_Cajas.getColumnModel().getColumn(5).setPreferredWidth(25);
         tbl_Cajas.getColumnModel().getColumn(6).setPreferredWidth(20);
         tbl_Cajas.getColumnModel().getColumn(7).setPreferredWidth(20);
-        //renderer fechas
-        tbl_Cajas.getColumnModel().getColumn(1).setCellRenderer(new FormatoFechasEnTablasRenderer());
-        tbl_Cajas.getColumnModel().getColumn(2).setCellRenderer(new FormatoFechasEnTablasRenderer());
-        tbl_Cajas.getColumnModel().getColumn(3).setCellRenderer(new FormatoFechasEnTablasRenderer());
+        //renderers
+        tbl_Cajas.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
+        tbl_Cajas.getColumnModel().getColumn(1).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
+        tbl_Cajas.getColumnModel().getColumn(2).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
+        tbl_Cajas.getColumnModel().getColumn(3).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
     }
 
     private void buscar() {
@@ -177,7 +174,7 @@ public class CajasGUI extends JInternalFrame {
             Object[] fila = new Object[8];
             fila[0] = caja.getEstado();
             fila[1] = caja.getFechaApertura();
-            fila[2] = (new FormatterFechaHora(FormatterFechaHora.FORMATO_HORA_INTERNACIONAL)).format(caja.getFechaCorteInforme());
+            fila[2] = (new FormatterFechaHora(FormatosFechaHora.FORMATO_HORA_INTERNACIONAL)).format(caja.getFechaCorteInforme());
             if (caja.getFechaCierre() != null) {
                 fila[3] = caja.getFechaCierre();
             }

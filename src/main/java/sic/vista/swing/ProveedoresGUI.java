@@ -20,7 +20,9 @@ import sic.modelo.Localidad;
 import sic.modelo.Pais;
 import sic.modelo.Proveedor;
 import sic.modelo.Provincia;
-import sic.util.ColoresNumerosTablaRenderer;
+import sic.util.ColoresNumerosRenderer;
+import sic.util.FechasRenderer;
+import sic.util.FormatosFechaHora;
 import sic.util.Utilidades;
 
 public class ProveedoresGUI extends JInternalFrame {
@@ -149,7 +151,7 @@ public class ProveedoresGUI extends JInternalFrame {
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
-        //Tamanios de columnas
+        //tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(70);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(300);
@@ -165,8 +167,9 @@ public class ProveedoresGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(12).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(13).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(14).setPreferredWidth(200);        
-        //Render Columna C/C
-        tbl_Resultados.getColumnModel().getColumn(3).setCellRenderer(new ColoresNumerosTablaRenderer());
+        //renderers
+        tbl_Resultados.getColumnModel().getColumn(3).setCellRenderer(new ColoresNumerosRenderer());
+        tbl_Resultados.setDefaultRenderer(Date.class, new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
     }
 
     private void cargarResultadosAlTable() {
@@ -231,8 +234,7 @@ public class ProveedoresGUI extends JInternalFrame {
         tbl_Resultados.setEnabled(status);
         btn_Nuevo.setEnabled(status);
         btn_Modificar.setEnabled(status);
-        btn_Eliminar.setEnabled(status);
-        btn_Seleccionar.setEnabled(status);
+        btn_Eliminar.setEnabled(status);        
     }
 
     private void buscar() {    
@@ -305,7 +307,6 @@ public class ProveedoresGUI extends JInternalFrame {
         btn_Modificar = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
         btnCuentaCorriente = new javax.swing.JButton();
-        btn_Seleccionar = new javax.swing.JButton();
 
         setClosable(true);
         setMaximizable(true);
@@ -511,7 +512,7 @@ public class ProveedoresGUI extends JInternalFrame {
                 .addGap(0, 0, 0)
                 .addComponent(btnCuentaCorriente)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 1047, Short.MAX_VALUE)
+            .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 790, Short.MAX_VALUE)
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCuentaCorriente, btn_Eliminar, btn_Modificar, btn_Nuevo});
@@ -519,7 +520,7 @@ public class ProveedoresGUI extends JInternalFrame {
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnCuentaCorriente, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -527,15 +528,6 @@ public class ProveedoresGUI extends JInternalFrame {
                     .addComponent(btn_Modificar, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btn_Nuevo, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
-
-        btn_Seleccionar.setForeground(java.awt.Color.blue);
-        btn_Seleccionar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/ArrowRight_16x16.png"))); // NOI18N
-        btn_Seleccionar.setText("Seleccionar");
-        btn_Seleccionar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_SeleccionarActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -545,18 +537,13 @@ public class ProveedoresGUI extends JInternalFrame {
                 .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btn_Seleccionar))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn_Seleccionar))
+                .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -673,18 +660,6 @@ public class ProveedoresGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btn_ModificarActionPerformed
 
-    private void btn_SeleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SeleccionarActionPerformed
-        if (tbl_Resultados.getSelectedRow() == -1) {
-            JOptionPane.showInternalMessageDialog(this,
-                    "Selecione un Proveedor de la lista para continuar.",
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        } else {
-            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-            proveedorSeleccionado = proveedores.get(indexFilaSeleccionada);
-            this.dispose();
-        }
-    }//GEN-LAST:event_btn_SeleccionarActionPerformed
-
     private void chk_RazonSocialItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_RazonSocialItemStateChanged
         //Pregunta el estado actual del checkBox
         if (chk_RazonSocial.isSelected() == true) {
@@ -706,8 +681,7 @@ public class ProveedoresGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_Id_FiscalItemStateChanged
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
-        this.setSize(sizeInternalFrame);        
-        btn_Seleccionar.setVisible(false);
+        this.setSize(sizeInternalFrame);
         this.setColumnas();
         try {            
             this.setMaximum(true);
@@ -748,7 +722,6 @@ public class ProveedoresGUI extends JInternalFrame {
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_Modificar;
     private javax.swing.JButton btn_Nuevo;
-    private javax.swing.JButton btn_Seleccionar;
     private javax.swing.JCheckBox chk_Codigo;
     private javax.swing.JCheckBox chk_Id_Fiscal;
     private javax.swing.JCheckBox chk_RazonSocial;

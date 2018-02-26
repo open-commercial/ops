@@ -29,7 +29,9 @@ import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
 import sic.modelo.Proveedor;
 import sic.modelo.Rubro;
-import sic.util.RenderTabla;
+import sic.util.DecimalesRenderer;
+import sic.util.FechasRenderer;
+import sic.util.FormatosFechaHora;
 import sic.util.Utilidades;
 
 public class ProductosGUI extends JInternalFrame {
@@ -101,7 +103,6 @@ public class ProductosGUI extends JInternalFrame {
         // Momentaneamente desactivado hasta terminar la paginacion.
         // sorting
         // tbl_Resultados.setAutoCreateRowSorter(true);
-
         //nombres de columnas
         String[] encabezados = new String[22];
         encabezados[0] = "Codigo";
@@ -128,7 +129,6 @@ public class ProductosGUI extends JInternalFrame {
         encabezados[21] = "Nota";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaResultados);
-
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
         tipos[0] = String.class;
@@ -156,11 +156,9 @@ public class ProductosGUI extends JInternalFrame {
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
-
         //render para los tipos de datos
-        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new RenderTabla());
-
-        //Tamanios de columnas
+        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
+        //tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(150);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(400);
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(100);
@@ -183,7 +181,10 @@ public class ProductosGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(19).setPreferredWidth(125);
         tbl_Resultados.getColumnModel().getColumn(20).setPreferredWidth(125);
         tbl_Resultados.getColumnModel().getColumn(21).setPreferredWidth(400);
-
+        //renderers
+        tbl_Resultados.getColumnModel().getColumn(15).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(19).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(20).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 
     private void cargarResultadosAlTable() {

@@ -24,6 +24,7 @@ import sic.modelo.Producto;
 import sic.modelo.Proveedor;
 import sic.modelo.Rubro;
 import sic.modelo.TipoDeOperacion;
+import sic.util.FormatosFechaHora;
 import sic.util.FormatterFechaHora;
 
 public class DetalleProductoGUI extends JDialog {
@@ -680,7 +681,7 @@ public class DetalleProductoGUI extends JDialog {
         txt_VentaMinima.setValue(productoModificar.getVentaMinima());
         cmb_Rubro.setSelectedItem(productoModificar.getNombreRubro());
         cmb_Proveedor.setSelectedItem(productoModificar.getRazonSocialProveedor());
-        FormatterFechaHora formateador = new FormatterFechaHora(FormatterFechaHora.FORMATO_FECHAHORA_LETRAS);
+        FormatterFechaHora formateador = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO);
         lbl_FechaUltimaModificacion.setText(formateador.format(productoModificar.getFechaUltimaModificacion()));
         lbl_FechaAlta.setText(formateador.format(productoModificar.getFechaAlta()));
         dc_Vencimiento.setDate(productoModificar.getFechaVencimiento());

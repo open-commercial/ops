@@ -26,8 +26,9 @@ import sic.modelo.Localidad;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Pais;
 import sic.modelo.Provincia;
-import sic.util.ColoresNumerosTablaRenderer;
-import sic.util.RenderTabla;
+import sic.util.ColoresNumerosRenderer;
+import sic.util.FechasRenderer;
+import sic.util.FormatosFechaHora;
 import sic.util.Utilidades;
 
 public class ClientesGUI extends JInternalFrame {
@@ -124,7 +125,6 @@ public class ClientesGUI extends JInternalFrame {
         // Momentaneamente desactivado hasta terminar la paginacion.
         // sorting
         // tbl_Resultados.setAutoCreateRowSorter(true);
-
         //nombres de columnas
         String[] encabezados = new String[17];
         encabezados[0] = "Predeterminado";
@@ -146,7 +146,6 @@ public class ClientesGUI extends JInternalFrame {
         encabezados[16] = "Pais";
         modeloTablaDeResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaDeResultados);
-
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaDeResultados.getColumnCount()];
         tipos[0] = Boolean.class;
@@ -168,10 +167,8 @@ public class ClientesGUI extends JInternalFrame {
         tipos[16] = String.class;
         modeloTablaDeResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
-        tbl_Resultados.getTableHeader().setResizingAllowed(true);
-
-        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new RenderTabla());
-        //Tamanios de columnas
+        tbl_Resultados.getTableHeader().setResizingAllowed(true);        
+        //tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(110);
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(250);
@@ -188,10 +185,11 @@ public class ClientesGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(13).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(14).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(15).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(16).setPreferredWidth(200);
-        
-        //Render Columna C/C
-        tbl_Resultados.getColumnModel().getColumn(4).setCellRenderer(new ColoresNumerosTablaRenderer());
+        tbl_Resultados.getColumnModel().getColumn(16).setPreferredWidth(200);        
+        //renderers
+        tbl_Resultados.getColumnModel().getColumn(4).setCellRenderer(new ColoresNumerosRenderer());
+        tbl_Resultados.getColumnModel().getColumn(5).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(13).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 
     private void cargarResultadosAlTable() {

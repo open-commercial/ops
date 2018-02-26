@@ -110,7 +110,7 @@
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="lbl_saldoFinal" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="ftf_saldoFinal" min="-2" pref="118" max="-2" attributes="0"/>
+                  <Component id="ftxtSaldoFinal" min="-2" pref="118" max="-2" attributes="0"/>
               </Group>
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -137,7 +137,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="ftf_saldoFinal" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftxtSaldoFinal" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="lbl_saldoFinal" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -225,7 +225,7 @@
             <Property name="text" type="java.lang.String" value="Saldo:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="ftf_saldoFinal">
+        <Component class="javax.swing.JFormattedTextField" name="ftxtSaldoFinal">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
