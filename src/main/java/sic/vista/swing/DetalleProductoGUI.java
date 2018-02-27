@@ -3,6 +3,7 @@ package sic.vista.swing;
 import java.awt.Color;
 import java.awt.event.ItemEvent;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -695,7 +696,7 @@ public class DetalleProductoGUI extends JDialog {
         txt_Ganancia_Neto.setValue(gananciaNeto);
         pvp = productoModificar.getPrecioVentaPublico();
         txt_PVP.setValue(pvp);
-        cmb_IVA_Porcentaje.setSelectedItem(productoModificar.getIva_porcentaje());
+        cmb_IVA_Porcentaje.setSelectedItem(productoModificar.getIva_porcentaje().stripTrailingZeros());
         IVANeto = productoModificar.getIva_neto();
         txt_IVA_Neto.setValue(IVANeto);
         precioDeLista = productoModificar.getPrecioLista();
