@@ -77,7 +77,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
                 if (movimientosTotal.size() >= TAMANIO_PAGINA) {
                     NUMERO_PAGINA += 1;
-                    buscar();
+                    buscar(false);
                 }
             }
         });
@@ -108,7 +108,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         btnRefresh.setEnabled(status);
     }
 
-    private void buscar() {
+    private void buscar(boolean cargarSaldoCuentaCorriente) {
         this.cambiarEstadoEnabledComponentes(false);
         try {
             PaginaRespuestaRest<RenglonCuentaCorriente> response = RestClient.getRestTemplate()
@@ -119,7 +119,9 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     .getBody();
             movimientosParcial = response.getContent();
             movimientosTotal.addAll(movimientosParcial);
-            this.cargarSaldoCuentaCorriente();
+            if (cargarSaldoCuentaCorriente) {
+                this.cargarSaldoCuentaCorriente();
+            }
             this.cargarResultadosAlTable();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -206,17 +208,17 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     private void refrescarVista() {
         this.resetScroll();
         this.limpiarJTable();
-        this.buscar();
+        this.buscar(true);
     }
 
     private void cargarSaldoCuentaCorriente() {
         try {
             if (cliente != null) {
                 ftxtSaldoFinal.setValue(RestClient.getRestTemplate()
-                        .getForObject("/cuentas-corrientes/clientes/" + cliente.getId_Cliente() + "/saldo", BigDecimal.class));                
+                        .getForObject("/cuentas-corrientes/clientes/" + cliente.getId_Cliente() + "/saldo", BigDecimal.class));
             } else if (proveedor != null) {
                 ftxtSaldoFinal.setValue(RestClient.getRestTemplate()
-                        .getForObject("/cuentas-corrientes/proveedores/" + proveedor.getId_Proveedor() + "/saldo", BigDecimal.class));                
+                        .getForObject("/cuentas-corrientes/proveedores/" + proveedor.getId_Proveedor() + "/saldo", BigDecimal.class));
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

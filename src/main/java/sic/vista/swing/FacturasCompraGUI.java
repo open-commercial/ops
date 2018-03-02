@@ -50,7 +50,7 @@ public class FacturasCompraGUI extends JInternalFrame {
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
                 if (facturasTotal.size() >= TAMANIO_PAGINA) {
                     NUMERO_PAGINA += 1;
-                    buscar();
+                    buscar(false);
                 }
             }
         });
@@ -149,7 +149,7 @@ public class FacturasCompraGUI extends JInternalFrame {
         tbl_Resultados.requestFocus();
     }
     
-    private void buscar() {
+    private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
         String criteria = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
         if (chk_Fecha.isSelected()) {
@@ -172,8 +172,9 @@ public class FacturasCompraGUI extends JInternalFrame {
         String criteriaBusqueda = "/facturas/compra/busqueda/criteria?" + criteria;
         criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
         try {
-            txt_ResultGastoTotal.setValue(RestClient.getRestTemplate().getForObject("/facturas/total-facturado-compra/criteria?" + criteria, BigDecimal.class));
-            txt_ResultTotalIVACompra.setValue(RestClient.getRestTemplate().getForObject("/facturas/total-iva-compra/criteria?" +  criteria, BigDecimal.class));
+            if (calcularResultados) {
+                this.calcularResultados(criteria);
+            }
             PaginaRespuestaRest<FacturaCompra> response = RestClient.getRestTemplate()
                     .exchange(criteriaBusqueda, HttpMethod.GET, null,
                             new ParameterizedTypeReference<PaginaRespuestaRest<FacturaCompra>>() {
@@ -192,6 +193,11 @@ public class FacturasCompraGUI extends JInternalFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
         this.cambiarEstadoEnabledComponentes(true);
+    }
+
+    private void calcularResultados(String criteria) {
+        txt_ResultGastoTotal.setValue(RestClient.getRestTemplate().getForObject("/facturas/total-facturado-compra/criteria?" + criteria, BigDecimal.class));
+        txt_ResultTotalIVACompra.setValue(RestClient.getRestTemplate().getForObject("/facturas/total-iva-compra/criteria?" + criteria, BigDecimal.class));
     }
 
     private void cargarResultadosAlTable() {
@@ -586,7 +592,7 @@ public class FacturasCompraGUI extends JInternalFrame {
 
     private void btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarActionPerformed
         this.limpiarJTable();
-        this.buscar();
+        this.buscar(true);
     }//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void chk_ProveedorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ProveedorItemStateChanged
@@ -640,7 +646,7 @@ public class FacturasCompraGUI extends JInternalFrame {
                     RestClient.getRestTemplate().delete("/facturas?idFactura="
                         + Arrays.toString(idsFacturas).substring(1, Arrays.toString(idsFacturas).length() - 1));
                     this.limpiarJTable();
-                    this.buscar();
+                    this.buscar(true);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (ResourceAccessException ex) {

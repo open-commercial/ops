@@ -29,7 +29,7 @@ import sic.util.FormatterFechaHora;
 
 public class DetalleProductoGUI extends JDialog {
 
-    private Producto productoModificar;
+    private Producto productoParaModificar;
     private final TipoDeOperacion operacion;
     private BigDecimal precioDeCosto = BigDecimal.ZERO;
     private BigDecimal gananciaPorcentaje = BigDecimal.ZERO;
@@ -58,7 +58,7 @@ public class DetalleProductoGUI extends JDialog {
         this.initComponents();
         this.setIcon();        
         operacion = TipoDeOperacion.ACTUALIZACION;
-        productoModificar = producto;
+        productoParaModificar = producto;
     }
 
     private void setIcon() {
@@ -671,34 +671,34 @@ public class DetalleProductoGUI extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cargarProductoParaModificar() {
-        txt_Codigo.setText(productoModificar.getCodigo());
-        txt_Descripcion.setText(productoModificar.getDescripcion());
-        txt_Nota.setText(productoModificar.getNota());
-        cmb_Medida.setSelectedItem(productoModificar.getNombreMedida());
-        chk_Ilimitado.setSelected(productoModificar.isIlimitado());
-        txt_Cantidad.setValue(productoModificar.getCantidad());
-        txt_CantMinima.setValue(productoModificar.getCantMinima());
-        txt_VentaMinima.setValue(productoModificar.getVentaMinima());
-        cmb_Rubro.setSelectedItem(productoModificar.getNombreRubro());
-        cmb_Proveedor.setSelectedItem(productoModificar.getRazonSocialProveedor());
+        txt_Codigo.setText(productoParaModificar.getCodigo());
+        txt_Descripcion.setText(productoParaModificar.getDescripcion());
+        txt_Nota.setText(productoParaModificar.getNota());
+        cmb_Medida.setSelectedItem(productoParaModificar.getNombreMedida());
+        chk_Ilimitado.setSelected(productoParaModificar.isIlimitado());
+        txt_Cantidad.setValue(productoParaModificar.getCantidad());
+        txt_CantMinima.setValue(productoParaModificar.getCantMinima());
+        txt_VentaMinima.setValue(productoParaModificar.getVentaMinima());
+        cmb_Rubro.setSelectedItem(productoParaModificar.getNombreRubro());
+        cmb_Proveedor.setSelectedItem(productoParaModificar.getRazonSocialProveedor());
         FormatterFechaHora formateador = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO);
-        lbl_FechaUltimaModificacion.setText(formateador.format(productoModificar.getFechaUltimaModificacion()));
-        lbl_FechaAlta.setText(formateador.format(productoModificar.getFechaAlta()));
-        dc_Vencimiento.setDate(productoModificar.getFechaVencimiento());
-        txt_Estanteria.setText(productoModificar.getEstanteria());
-        txt_Estante.setText(productoModificar.getEstante());
-        precioDeCosto = productoModificar.getPrecioCosto();
+        lbl_FechaUltimaModificacion.setText(formateador.format(productoParaModificar.getFechaUltimaModificacion()));
+        lbl_FechaAlta.setText(formateador.format(productoParaModificar.getFechaAlta()));
+        dc_Vencimiento.setDate(productoParaModificar.getFechaVencimiento());
+        txt_Estanteria.setText(productoParaModificar.getEstanteria());
+        txt_Estante.setText(productoParaModificar.getEstante());
+        precioDeCosto = productoParaModificar.getPrecioCosto();
         txt_PrecioCosto.setValue(precioDeCosto);
-        gananciaPorcentaje = productoModificar.getGanancia_porcentaje();
+        gananciaPorcentaje = productoParaModificar.getGanancia_porcentaje();
         txt_Ganancia_Porcentaje.setValue(gananciaPorcentaje);
-        gananciaNeto = productoModificar.getGanancia_neto();
+        gananciaNeto = productoParaModificar.getGanancia_neto();
         txt_Ganancia_Neto.setValue(gananciaNeto);
-        pvp = productoModificar.getPrecioVentaPublico();
+        pvp = productoParaModificar.getPrecioVentaPublico();
         txt_PVP.setValue(pvp);
-        cmb_IVA_Porcentaje.setSelectedItem(productoModificar.getIva_porcentaje());
-        IVANeto = productoModificar.getIva_neto();
+        cmb_IVA_Porcentaje.setSelectedItem(productoParaModificar.getIva_porcentaje().stripTrailingZeros());
+        IVANeto = productoParaModificar.getIva_neto();
         txt_IVA_Neto.setValue(IVANeto);
-        precioDeLista = productoModificar.getPrecioLista();
+        precioDeLista = productoParaModificar.getPrecioLista();
         txt_PrecioLista.setValue(precioDeLista);
     }
 
@@ -891,6 +891,8 @@ public class DetalleProductoGUI extends JDialog {
                 producto.setPrecioVentaPublico(new BigDecimal(txt_PVP.getValue().toString()));
                 producto.setIva_porcentaje(new BigDecimal(cmb_IVA_Porcentaje.getSelectedItem().toString()));
                 producto.setIva_neto(new BigDecimal(txt_IVA_Neto.getValue().toString()));
+                producto.setImpuestoInterno_porcentaje(BigDecimal.ZERO);
+                producto.setImpuestoInterno_neto(BigDecimal.ZERO);
                 producto.setPrecioLista(new BigDecimal(txt_PrecioLista.getValue().toString()));
                 producto.setIlimitado(chk_Ilimitado.isSelected());
                 producto.setFechaUltimaModificacion(new Date());
@@ -913,30 +915,32 @@ public class DetalleProductoGUI extends JDialog {
             }
 
             if (operacion == TipoDeOperacion.ACTUALIZACION) {
-                productoModificar.setCodigo(txt_Codigo.getText());
-                productoModificar.setDescripcion(txt_Descripcion.getText().trim());
-                productoModificar.setCantidad(new BigDecimal(txt_Cantidad.getValue().toString()));
-                productoModificar.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
-                productoModificar.setCantidad(new BigDecimal(txt_Cantidad.getValue().toString()));
-                productoModificar.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
-                productoModificar.setVentaMinima(new BigDecimal(txt_VentaMinima.getValue().toString()));
-                productoModificar.setPrecioCosto(new BigDecimal(txt_PrecioCosto.getValue().toString()));
-                productoModificar.setGanancia_porcentaje(new BigDecimal(txt_Ganancia_Porcentaje.getValue().toString()));
-                productoModificar.setGanancia_neto(new BigDecimal(txt_Ganancia_Neto.getValue().toString()));
-                productoModificar.setPrecioVentaPublico(new BigDecimal(txt_PVP.getValue().toString()));
-                productoModificar.setIva_porcentaje(new BigDecimal(cmb_IVA_Porcentaje.getSelectedItem().toString()));
-                productoModificar.setIva_neto(new BigDecimal(txt_IVA_Neto.getValue().toString()));
-                productoModificar.setPrecioLista(new BigDecimal(txt_PrecioLista.getValue().toString()));
-                productoModificar.setIlimitado(chk_Ilimitado.isSelected());
-                productoModificar.setFechaUltimaModificacion(new Date());
-                productoModificar.setEstanteria(txt_Estanteria.getText().trim());
-                productoModificar.setEstante(txt_Estante.getText().trim());
-                productoModificar.setNota(txt_Nota.getText().trim());
-                productoModificar.setFechaVencimiento(dc_Vencimiento.getDate());
+                productoParaModificar.setCodigo(txt_Codigo.getText());
+                productoParaModificar.setDescripcion(txt_Descripcion.getText().trim());
+                productoParaModificar.setCantidad(new BigDecimal(txt_Cantidad.getValue().toString()));
+                productoParaModificar.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
+                productoParaModificar.setCantidad(new BigDecimal(txt_Cantidad.getValue().toString()));
+                productoParaModificar.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
+                productoParaModificar.setVentaMinima(new BigDecimal(txt_VentaMinima.getValue().toString()));
+                productoParaModificar.setPrecioCosto(new BigDecimal(txt_PrecioCosto.getValue().toString()));
+                productoParaModificar.setGanancia_porcentaje(new BigDecimal(txt_Ganancia_Porcentaje.getValue().toString()));
+                productoParaModificar.setGanancia_neto(new BigDecimal(txt_Ganancia_Neto.getValue().toString()));
+                productoParaModificar.setPrecioVentaPublico(new BigDecimal(txt_PVP.getValue().toString()));
+                productoParaModificar.setIva_porcentaje(new BigDecimal(cmb_IVA_Porcentaje.getSelectedItem().toString()));
+                productoParaModificar.setIva_neto(new BigDecimal(txt_IVA_Neto.getValue().toString()));
+                productoParaModificar.setImpuestoInterno_porcentaje(BigDecimal.ZERO);
+                productoParaModificar.setImpuestoInterno_neto(BigDecimal.ZERO);
+                productoParaModificar.setPrecioLista(new BigDecimal(txt_PrecioLista.getValue().toString()));
+                productoParaModificar.setIlimitado(chk_Ilimitado.isSelected());
+                productoParaModificar.setFechaUltimaModificacion(new Date());
+                productoParaModificar.setEstanteria(txt_Estanteria.getText().trim());
+                productoParaModificar.setEstante(txt_Estante.getText().trim());
+                productoParaModificar.setNota(txt_Nota.getText().trim());
+                productoParaModificar.setFechaVencimiento(dc_Vencimiento.getDate());
                 RestClient.getRestTemplate().put("/productos?idMedida=" + idMedida + "&idRubro=" + idRubro
                         + "&idProveedor=" + idProveedor + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                        productoModificar);                
-                LOGGER.warn("El producto " + productoModificar + " se modificó correctamente");
+                        productoParaModificar);                
+                LOGGER.warn("El producto " + productoParaModificar + " se modificó correctamente");
                 JOptionPane.showMessageDialog(this, "El producto se modificó correctamente.",
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
