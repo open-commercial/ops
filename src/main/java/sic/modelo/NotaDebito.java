@@ -19,11 +19,11 @@ public class NotaDebito extends Nota implements Serializable {
 
     public NotaDebito(long idNota, long serie, long nroNota, FacturaVenta facturaVenta, boolean eliminada,
             TipoDeComprobante tipoDeComprobante, Date fecha, Empresa empresa, Cliente cliente,
-            Usuario usuario, Pago pago, List<Pago> pagos, String motivo, BigDecimal subTotalBruto, BigDecimal iva21Neto,
+            Usuario usuario, String motivo, BigDecimal subTotalBruto, BigDecimal iva21Neto,
             BigDecimal iva105Neto, BigDecimal total, BigDecimal montoNoGravado, long CAE, Date vencimientoCAE,
             long numSerieAfip, long numFacturaAfip, List<RenglonNotaDebito> renglonesDebito) {
         
-        super(idNota, serie, nroNota, facturaVenta, pagos, eliminada, tipoDeComprobante, fecha, empresa, cliente, usuario,
+        super(idNota, serie, nroNota, facturaVenta, eliminada, tipoDeComprobante, fecha, empresa, cliente, usuario,
                 motivo, subTotalBruto, iva21Neto, iva105Neto, total, CAE, vencimientoCAE, numSerieAfip, numFacturaAfip);
         this.montoNoGravado = montoNoGravado;
         this.renglonesNotaDebito = renglonesDebito;

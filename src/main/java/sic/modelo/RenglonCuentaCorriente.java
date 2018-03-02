@@ -26,7 +26,6 @@ public class RenglonCuentaCorriente implements Serializable {
     private BigDecimal monto;
     private CuentaCorriente cuentaCorriente;
     private Factura factura; 
-    private Pago pago;
     private Nota nota;    
     private long CAE;   
     private BigDecimal saldo;    

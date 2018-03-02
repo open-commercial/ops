@@ -31,13 +31,10 @@ import sic.modelo.Cliente;
 import sic.modelo.CuentaCorriente;
 import sic.modelo.CuentaCorrienteCliente;
 import sic.modelo.CuentaCorrienteProveedor;
-import sic.modelo.Factura;
 import sic.modelo.FacturaCompra;
 import sic.modelo.Nota;
-import sic.modelo.NotaDebito;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Proveedor;
-import sic.modelo.Recibo;
 import sic.modelo.RenglonCuentaCorriente;
 import sic.modelo.TipoDeComprobante;
 import sic.util.ColoresNumerosRenderer;
@@ -108,7 +105,6 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         tbl_Resultados.requestFocus();
         sp_Resultados.setEnabled(status);
         btn_Eliminar.setEnabled(status);
-        btn_VerPagos.setEnabled(status);
         btnRefresh.setEnabled(status);
     }
 
@@ -426,7 +422,6 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         lbl_saldoFinal = new javax.swing.JLabel();
         ftxtSaldoFinal = new javax.swing.JFormattedTextField();
         btnCrearNotaDebito = new javax.swing.JButton();
-        btn_VerPagos = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
         btnCrearRecibo = new javax.swing.JButton();
         txtCondicionIVACliente = new javax.swing.JTextField();
@@ -515,15 +510,6 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             }
         });
 
-        btn_VerPagos.setForeground(java.awt.Color.blue);
-        btn_VerPagos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/StampArrow_16x16.png"))); // NOI18N
-        btn_VerPagos.setText("Ver Pagos");
-        btn_VerPagos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_VerPagosActionPerformed(evt);
-            }
-        });
-
         btn_Eliminar.setForeground(java.awt.Color.blue);
         btn_Eliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Cancel_16x16.png"))); // NOI18N
         btn_Eliminar.setText("Eliminar ");
@@ -534,6 +520,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         });
 
         btnCrearRecibo.setForeground(java.awt.Color.blue);
+        btnCrearRecibo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Stamp_16x16.png"))); // NOI18N
         btnCrearRecibo.setText("Nuevo Recibo");
         btnCrearRecibo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -558,19 +545,17 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                         .addGap(0, 0, 0)
                         .addComponent(btnVerDetalle)
                         .addGap(0, 0, 0)
-                        .addComponent(btn_VerPagos))
+                        .addComponent(btn_Eliminar))
                     .addGroup(pnlResultadosLayout.createSequentialGroup()
                         .addComponent(btnCrearNotaCredito)
                         .addGap(0, 0, 0)
                         .addComponent(btnCrearNotaDebito)
                         .addGap(0, 0, 0)
-                        .addComponent(btnCrearRecibo)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_Eliminar)))
-                .addContainerGap(99, Short.MAX_VALUE))
+                        .addComponent(btnCrearRecibo)))
+                .addContainerGap(261, Short.MAX_VALUE))
         );
 
-        pnlResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAutorizarNota, btnCrearNotaCredito, btnCrearNotaDebito, btnCrearRecibo, btnVerDetalle, btn_Eliminar, btn_VerPagos});
+        pnlResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAutorizarNota, btnCrearNotaCredito, btnCrearNotaDebito, btnCrearRecibo, btnVerDetalle, btn_Eliminar});
 
         pnlResultadosLayout.setVerticalGroup(
             pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -584,16 +569,15 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAutorizarNota, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnVerDetalle)
-                    .addComponent(btn_VerPagos))
+                    .addComponent(btn_Eliminar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btnCrearNotaCredito)
                     .addComponent(btnCrearNotaDebito)
-                    .addComponent(btn_Eliminar)
                     .addComponent(btnCrearRecibo)))
         );
 
-        pnlResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAutorizarNota, btnCrearNotaCredito, btnCrearNotaDebito, btnCrearRecibo, btnVerDetalle, btn_Eliminar, btn_VerPagos});
+        pnlResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAutorizarNota, btnCrearNotaCredito, btnCrearNotaDebito, btnCrearRecibo, btnVerDetalle, btn_Eliminar});
 
         txtCondicionIVACliente.setEditable(false);
         txtCondicionIVACliente.setFocusable(false);
@@ -800,69 +784,6 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btnAutorizarNotaActionPerformed
 
-    private void btn_VerPagosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VerPagosActionPerformed
-        try {
-            if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
-                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
-                if (null == renglonCC.getTipoComprobante()) {
-                    JOptionPane.showInternalMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    switch (renglonCC.getTipoComprobante()) {
-                        case FACTURA_A:
-                        case FACTURA_B:
-                        case FACTURA_C:
-                        case FACTURA_X:
-                        case FACTURA_Y:
-                        case PRESUPUESTO: {
-                            JInternalFrame gui = new PagosGUI(RestClient.getRestTemplate().getForObject("/facturas/" + renglonCC.getIdMovimiento(), Factura.class));
-                            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-                            getDesktopPane().add(gui);
-                            gui.setVisible(true);
-                            break;
-                        }
-                        case NOTA_DEBITO_A:
-                        case NOTA_DEBITO_B:
-                        case NOTA_DEBITO_X:
-                        case NOTA_DEBITO_Y:
-                        case NOTA_DEBITO_PRESUPUESTO: {
-                            JInternalFrame gui = new PagosGUI(RestClient.getRestTemplate().getForObject("/notas/" + renglonCC.getIdMovimiento(), NotaDebito.class));
-                            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-                            getDesktopPane().add(gui);
-                            gui.setVisible(true);
-                            break;
-                        }
-                        case RECIBO: {
-                            JInternalFrame gui = new PagosGUI(RestClient.getRestTemplate().getForObject("/recibos/" + renglonCC.getIdMovimiento(), Recibo.class));
-                            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-                            getDesktopPane().add(gui);
-                            gui.setVisible(true);
-                            break;
-                        }
-                        default:
-                            JOptionPane.showInternalMessageDialog(this,
-                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
-                                    "Error", JOptionPane.ERROR_MESSAGE);
-                            break;
-                    }
-                }
-                this.refrescarVista();
-            }
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_btn_VerPagosActionPerformed
-
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
             int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
@@ -948,7 +869,6 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnVerDetalle;
     private javax.swing.JButton btn_Eliminar;
-    private javax.swing.JButton btn_VerPagos;
     private javax.swing.JFormattedTextField ftxtSaldoFinal;
     private javax.swing.JLabel lblCondicionIVACliente;
     private javax.swing.JLabel lblDomicilioCliente;

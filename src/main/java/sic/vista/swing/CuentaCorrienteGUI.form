@@ -119,7 +119,7 @@
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Component id="btnVerDetalle" linkSize="4" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="btn_VerPagos" linkSize="4" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_Eliminar" linkSize="4" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
                           <Component id="btnCrearNotaCredito" linkSize="4" min="-2" max="-2" attributes="0"/>
@@ -127,11 +127,9 @@
                           <Component id="btnCrearNotaDebito" linkSize="4" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Component id="btnCrearRecibo" linkSize="4" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="btn_Eliminar" linkSize="4" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="99" max="32767" attributes="0"/>
+                  <EmptySpace pref="261" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -148,13 +146,12 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnAutorizarNota" linkSize="7" alignment="3" min="-2" pref="17" max="-2" attributes="0"/>
                       <Component id="btnVerDetalle" linkSize="7" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btn_VerPagos" linkSize="7" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btn_Eliminar" linkSize="7" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="btnCrearNotaCredito" linkSize="7" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="btnCrearNotaDebito" linkSize="7" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btn_Eliminar" linkSize="7" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="btnCrearRecibo" linkSize="7" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -252,20 +249,6 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCrearNotaDebitoActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btn_VerPagos">
-          <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
-            </Property>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/StampArrow_16x16.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Ver Pagos"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_VerPagosActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JButton" name="btn_Eliminar">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -284,6 +267,9 @@
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/sic/icons/Stamp_16x16.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Nuevo Recibo"/>
           </Properties>
