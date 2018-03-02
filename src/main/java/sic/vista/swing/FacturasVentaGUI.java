@@ -71,9 +71,7 @@ public class FacturasVentaGUI extends JInternalFrame {
     }
 
     private String getUriCriteria() {
-        String uriCriteria = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                + "&soloPagas=" + (chk_EstadoFactura.isSelected() && rb_soloPagadas.isSelected())
-                + "&soloImpagas=" + (chk_EstadoFactura.isSelected() && rb_soloImpagas.isSelected());
+        String uriCriteria = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
         if (chk_Cliente.isSelected()) {
             uriCriteria += "&idCliente=" + ((Cliente) cmb_Cliente.getSelectedItem()).getId_Cliente();
         }
@@ -261,15 +259,6 @@ public class FacturasVentaGUI extends JInternalFrame {
             txt_NumeroPedido.setEnabled(true);
         } else {
             txt_NumeroPedido.setEnabled(false);
-        }
-
-        chk_EstadoFactura.setEnabled(status);
-        if (status == true && chk_EstadoFactura.isSelected() == true) {
-            rb_soloImpagas.setEnabled(true);
-            rb_soloPagadas.setEnabled(true);
-        } else {
-            rb_soloImpagas.setEnabled(false);
-            rb_soloPagadas.setEnabled(false);
         }
         btn_Buscar.setEnabled(status);        
         btn_Nueva.setEnabled(status);
@@ -504,9 +493,6 @@ public class FacturasVentaGUI extends JInternalFrame {
         cmb_TipoFactura = new javax.swing.JComboBox();
         chk_NumeroPedido = new javax.swing.JCheckBox();
         txt_NumeroPedido = new javax.swing.JFormattedTextField();
-        chk_EstadoFactura = new javax.swing.JCheckBox();
-        rb_soloImpagas = new javax.swing.JRadioButton();
-        rb_soloPagadas = new javax.swing.JRadioButton();
         btn_Buscar = new javax.swing.JButton();
         lbl_cantResultados = new javax.swing.JLabel();
 
@@ -833,21 +819,6 @@ public class FacturasVentaGUI extends JInternalFrame {
             }
         });
 
-        chk_EstadoFactura.setText("Estado Factura:");
-        chk_EstadoFactura.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                chk_EstadoFacturaItemStateChanged(evt);
-            }
-        });
-
-        bg_estadoFactura.add(rb_soloImpagas);
-        rb_soloImpagas.setText("Solo Impagas");
-        rb_soloImpagas.setEnabled(false);
-
-        bg_estadoFactura.add(rb_soloPagadas);
-        rb_soloPagadas.setText("Solo Pagadas");
-        rb_soloPagadas.setEnabled(false);
-
         javax.swing.GroupLayout subPanelFiltros2Layout = new javax.swing.GroupLayout(subPanelFiltros2);
         subPanelFiltros2.setLayout(subPanelFiltros2Layout);
         subPanelFiltros2Layout.setHorizontalGroup(
@@ -855,14 +826,11 @@ public class FacturasVentaGUI extends JInternalFrame {
             .addGroup(subPanelFiltros2Layout.createSequentialGroup()
                 .addGroup(subPanelFiltros2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(chk_NumeroPedido, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(chk_TipoFactura, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(chk_EstadoFactura, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(chk_TipoFactura, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(subPanelFiltros2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txt_NumeroPedido, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(cmb_TipoFactura, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(rb_soloImpagas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(rb_soloPagadas, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(cmb_TipoFactura, 0, 129, Short.MAX_VALUE)))
         );
         subPanelFiltros2Layout.setVerticalGroup(
             subPanelFiltros2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -874,16 +842,8 @@ public class FacturasVentaGUI extends JInternalFrame {
                 .addGroup(subPanelFiltros2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_NumeroPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txt_NumeroPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(subPanelFiltros2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(chk_EstadoFactura)
-                    .addComponent(rb_soloImpagas))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rb_soloPagadas)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
-
-        subPanelFiltros2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {rb_soloImpagas, rb_soloPagadas});
 
         btn_Buscar.setForeground(java.awt.Color.blue);
         btn_Buscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
@@ -1023,8 +983,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         try {
             this.setSize(sizeInternalFrame);
             this.setColumnas();
-            this.setMaximum(true);
-            rb_soloImpagas.setSelected(true);
+            this.setMaximum(true);            
             dc_FechaDesde.setDate(new Date());
             dc_FechaHasta.setDate(new Date());
         } catch (PropertyVetoException ex) {
@@ -1094,16 +1053,6 @@ public class FacturasVentaGUI extends JInternalFrame {
         txt_NumeroPedido.setEnabled(chk_NumeroPedido.isSelected());
     }//GEN-LAST:event_chk_NumeroPedidoItemStateChanged
 
-    private void chk_EstadoFacturaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_EstadoFacturaItemStateChanged
-        if (chk_EstadoFactura.isSelected() == true) {
-            rb_soloImpagas.setEnabled(true);
-            rb_soloPagadas.setEnabled(true);
-        } else {
-            rb_soloImpagas.setEnabled(false);
-            rb_soloPagadas.setEnabled(false);
-        }
-    }//GEN-LAST:event_chk_EstadoFacturaItemStateChanged
-
     private void chk_VendedorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_VendedorItemStateChanged
         this.cargarUsuarios();
     }//GEN-LAST:event_chk_VendedorItemStateChanged
@@ -1140,7 +1089,6 @@ public class FacturasVentaGUI extends JInternalFrame {
     private javax.swing.JButton btn_Nueva;
     private javax.swing.JButton btn_VerDetalle;
     private javax.swing.JCheckBox chk_Cliente;
-    private javax.swing.JCheckBox chk_EstadoFactura;
     private javax.swing.JCheckBox chk_Fecha;
     private javax.swing.JCheckBox chk_NumFactura;
     private javax.swing.JCheckBox chk_NumeroPedido;
@@ -1162,8 +1110,6 @@ public class FacturasVentaGUI extends JInternalFrame {
     private javax.swing.JPanel panelFiltros;
     private javax.swing.JPanel panelNumeros;
     private javax.swing.JPanel panelResultados;
-    private javax.swing.JRadioButton rb_soloImpagas;
-    private javax.swing.JRadioButton rb_soloPagadas;
     private javax.swing.JLabel separador;
     private javax.swing.JScrollPane sp_Resultados;
     private javax.swing.JPanel subPanelFiltros1;
