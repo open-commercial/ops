@@ -748,7 +748,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                             this.refrescarVista();
                         }
                     } else if (proveedor != null) {
-                        DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(cliente, renglonCC.getIdMovimiento());
+                        DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(proveedor, renglonCC.getIdMovimiento());
                         detalleNotaDebitoGUI.setLocationRelativeTo(this);
                         detalleNotaDebitoGUI.setVisible(true);
                         if (detalleNotaDebitoGUI.isNotaDebitoCreada()) {

@@ -723,7 +723,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
                         + "/usuario/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                         + "/factura/" + factura.getId_Factura()
                         + "?modificarStock=" + modificarStock,
-                        notaCreditoProveedor, NotaCreditoCliente.class);
+                        notaCreditoProveedor, NotaCreditoProveedor.class);
                 notaCreada = (nc != null);
                 this.dispose();
             } catch (RestClientResponseException ex) {

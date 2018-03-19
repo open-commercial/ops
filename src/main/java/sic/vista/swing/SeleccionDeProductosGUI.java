@@ -179,7 +179,7 @@ public class SeleccionDeProductosGUI extends JDialog {
 
     private void recuperarFactura(long idFactura) {
         try {
-            factura = RestClient.getRestTemplate().getForObject("/facturas/" + idFactura, FacturaVenta.class);
+            factura = RestClient.getRestTemplate().getForObject("/facturas/" + idFactura, Factura.class);
             if (tipoMovimiento == null) {
                 factura.setRenglones(new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                         .getForObject("/facturas/" + factura.getId_Factura() + "/renglones", RenglonFactura[].class))));

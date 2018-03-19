@@ -600,7 +600,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
                         + "&montoNoGravado=" + notaDebitoProveedor.getMontoNoGravado(), BigDecimal.class));
                 notaDebitoProveedor.setUsuario(UsuarioActivo.getInstance().getUsuario());
                 NotaDebito nd = RestClient.getRestTemplate().postForObject("/notas/debito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "/cliente/" + cliente.getId_Cliente()
+                        + "/proveedor/" + proveedor.getId_Proveedor()
                         + "/usuario/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                         + "/recibo/" + recibo.getIdRecibo(), notaDebitoProveedor, NotaDebito.class);
                 notaDebitoCreada = (nd != null);
