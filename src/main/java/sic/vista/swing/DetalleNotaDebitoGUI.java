@@ -9,6 +9,7 @@ import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -28,14 +29,18 @@ import sic.modelo.Proveedor;
 import sic.modelo.Recibo;
 import sic.modelo.RenglonNotaDebito;
 import sic.modelo.UsuarioActivo;
+import sic.util.FormatosFechaHora;
+import sic.util.FormatterFechaHora;
 import sic.util.FormatterNumero;
 
 public class DetalleNotaDebitoGUI extends JDialog {
     private final Cliente cliente;
     private Recibo recibo;
     private final Proveedor proveedor;
-    private final long idRecibo;
-    private boolean notaDebitoCreada;    
+    private long idRecibo;
+    private boolean notaDebitoCreada;   
+    private long idNotaDebitoProveedor;
+    private final FormatterFechaHora formatter = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO);
     private final static BigDecimal IVA_21 = new BigDecimal("21");
     private final static BigDecimal CIEN = new BigDecimal("100");
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -56,6 +61,15 @@ public class DetalleNotaDebitoGUI extends JDialog {
         this.proveedor = proveedor;
         this.cliente = null;
         this.idRecibo = idRecibo;
+    }
+    
+   public DetalleNotaDebitoGUI(long idNotaDebitoProveedor) {
+        this.initComponents();
+        this.setIcon();
+        this.notaDebitoCreada = false;
+        this.proveedor = null;
+        this.cliente = null;
+        this.idNotaDebitoProveedor = idNotaDebitoProveedor;
     }
     
     public boolean isNotaDebitoCreada() {
@@ -628,9 +642,56 @@ public class DetalleNotaDebitoGUI extends JDialog {
     }//GEN-LAST:event_txtMontoRenglon2FocusLost
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        this.setTitle("Nueva Nota de Debito");
+        if (cliente != null || proveedor != null) {
+            this.setTitle("Nueva Nota de Debito");
+            try {
+                recibo = RestClient.getRestTemplate().getForObject("/recibos/" + idRecibo, Recibo.class);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            if (cliente != null) {
+                this.cargarDetalleCliente();
+            } else if (proveedor != null) {
+                this.cargarDetalleProveedor();
+            }
+            this.cargarDetalleRecibo();
+        } else {
+            this.cargarDetalleNotaDebitoProveedor();
+        }
+    }//GEN-LAST:event_formWindowOpened
+
+    private void cargarDetalleNotaDebitoProveedor() {
         try {
-            recibo = RestClient.getRestTemplate().getForObject("/recibos/" + idRecibo, Recibo.class);
+            NotaDebitoProveedor notaDebitoProveedor = RestClient.getRestTemplate().getForObject("/notas/" + idNotaDebitoProveedor, NotaDebitoProveedor.class);
+            this.setTitle(notaDebitoProveedor.getTipoComprobante() + " Nº " + notaDebitoProveedor.getSerie() + " - " + notaDebitoProveedor.getNroNota()
+                    + " con fecha " + formatter.format(notaDebitoProveedor.getFecha()) + " del Proveedor : " + notaDebitoProveedor.getProveedor().getRazonSocial());
+            this.txtNombre.setText(notaDebitoProveedor.getProveedor().getRazonSocial());
+            this.txtDomicilio.setText(notaDebitoProveedor.getProveedor().getDireccion()
+                    + " " + notaDebitoProveedor.getProveedor().getLocalidad().getNombre()
+                    + " " + notaDebitoProveedor.getProveedor().getLocalidad().getProvincia().getNombre()
+                    + " " + notaDebitoProveedor.getProveedor().getLocalidad().getProvincia().getPais());
+            txtCondicionIVA.setText(notaDebitoProveedor.getProveedor().getCondicionIVA().getNombre());
+            txtIDFiscal.setText(notaDebitoProveedor.getProveedor().getIdFiscal());
+            lblDetallePago.setText("Nº Recibo: " + notaDebitoProveedor.getRecibo().getNumSerie() + " - " + notaDebitoProveedor.getRecibo().getNumRecibo() + " - " + notaDebitoProveedor.getRecibo().getConcepto());
+            lblMontoPago.setText("$" + FormatterNumero.formatConRedondeo(notaDebitoProveedor.getRecibo().getMonto()));
+            lblImportePago.setText("$" + FormatterNumero.formatConRedondeo(notaDebitoProveedor.getRecibo().getMonto()));
+            List<RenglonNotaDebito> renglonesNotaDebito = Arrays.asList(RestClient.getRestTemplate().getForObject("/notas/renglones/debito/proveedores/" + idNotaDebitoProveedor, RenglonNotaDebito[].class));
+            txtMontoRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(1).getImporteBruto()));
+            lblIvaNetoRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(1).getIvaNeto()));
+            lblImporteRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(1).getImporteNeto()));
+            cmbDescripcionRenglon2.addItem(notaDebitoProveedor.getMotivo());
+            txtSubTotalBruto.setText(FormatterNumero.formatConRedondeo(notaDebitoProveedor.getSubTotalBruto()));
+            txtIVA21Neto.setText(FormatterNumero.formatConRedondeo(notaDebitoProveedor.getIva21Neto()));
+            txtNoGravado.setText(FormatterNumero.formatConRedondeo(notaDebitoProveedor.getMontoNoGravado()));
+            txtTotal.setText(FormatterNumero.formatConRedondeo(notaDebitoProveedor.getTotal()));
+            txtMontoRenglon2.setEnabled(false);
+            cmbDescripcionRenglon2.setEnabled(false);
+            btnGuardar.setEnabled(false);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -639,14 +700,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-        if (cliente != null) {
-            this.cargarDetalleCliente();
-        } else if (proveedor != null) {
-            this.cargarDetalleProveedor();
-        }
-        this.cargarDetalleRecibo();
-    }//GEN-LAST:event_formWindowOpened
-
+    }
+    
     private void txtMontoRenglon2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMontoRenglon2KeyTyped
         if (evt.getKeyChar() == KeyEvent.VK_MINUS) {
             evt.consume();

@@ -383,6 +383,35 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
         } else {
             switch (renglonCC.getTipoComprobante()) {
+                case NOTA_DEBITO_A:
+                case NOTA_DEBITO_B:
+                case NOTA_DEBITO_PRESUPUESTO:
+                case NOTA_DEBITO_X:
+                case NOTA_DEBITO_Y:
+                    DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(renglonCC.getIdMovimiento());
+                    detalleNotaDebitoGUI.setLocationRelativeTo(this);
+                    detalleNotaDebitoGUI.setVisible(true);
+                    if (detalleNotaDebitoGUI.isNotaDebitoCreada()) {
+                        this.refrescarVista();
+                    }
+                    break;
+//                case NOTA_CREDITO_A:
+//                case NOTA_CREDITO_B:
+//                case NOTA_CREDITO_PRESUPUESTO:
+//                case NOTA_CREDITO_X:
+//                case NOTA_CREDITO_Y:
+//                    if (Desktop.isDesktopSupported()) {
+//                        byte[] reporte = RestClient.getRestTemplate()
+//                                .getForObject("/notas/" + renglonCC.getIdMovimiento() + "/reporte", byte[].class);
+//                        File f = new File(System.getProperty("user.home") + "/NotaCredito.pdf");
+//                        Files.write(f.toPath(), reporte);
+//                        Desktop.getDesktop().open(f);
+//                    } else {
+//                        JOptionPane.showMessageDialog(this,
+//                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
+//                                "Error", JOptionPane.ERROR_MESSAGE);
+//                    }
+//                    break;
                 case FACTURA_A:
                 case FACTURA_B:
                 case FACTURA_C:
