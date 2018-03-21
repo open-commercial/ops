@@ -167,6 +167,10 @@ public class DetalleNotaDebitoGUI extends JDialog {
         panelMotivo = new javax.swing.JPanel();
         lblMotivo = new javax.swing.JLabel();
         cmbDescripcionRenglon2 = new javax.swing.JComboBox<>();
+        txt_Serie = new javax.swing.JFormattedTextField();
+        lbl_separador = new javax.swing.JLabel();
+        txt_Numero = new javax.swing.JFormattedTextField();
+        lbl_NumComprobante = new javax.swing.JLabel();
 
         setLocationByPlatform(true);
         setModal(true);
@@ -502,6 +506,16 @@ public class DetalleNotaDebitoGUI extends JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        txt_Serie.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+
+        lbl_separador.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_separador.setText("-");
+
+        txt_Numero.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+
+        lbl_NumComprobante.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbl_NumComprobante.setText("Nº de Nota:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -516,17 +530,36 @@ public class DetalleNotaDebitoGUI extends JDialog {
                         .addComponent(panelResultados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnGuardar)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(lbl_NumComprobante)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txt_Serie, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbl_separador, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txt_Numero, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(8, 8, 8)))
                 .addContainerGap())
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txt_Numero, txt_Serie});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panelCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lbl_NumComprobante)
+                    .addComponent(txt_Serie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_separador)
+                    .addComponent(txt_Numero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelMotivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -534,6 +567,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
                     .addComponent(btnGuardar, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
+
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txt_Numero, txt_Serie});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -603,6 +638,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
             notaDebitoProveedor.setIva105Neto(BigDecimal.ZERO);
             notaDebitoProveedor.setMontoNoGravado(recibo.getMonto());
             notaDebitoProveedor.setMotivo(cmbDescripcionRenglon2.getSelectedItem().toString());
+            notaDebitoProveedor.setSerie(Long.parseLong(txt_Serie.getValue().toString()));
+            notaDebitoProveedor.setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
             try {
                 notaDebitoProveedor.setRenglonesNotaDebito(Arrays.asList(RestClient.getRestTemplate().getForObject("/notas/renglon/debito/recibo/" + recibo.getIdRecibo()
                         + "?monto=" + new BigDecimal(txtSubTotalBruto.getValue().toString())
@@ -655,6 +692,10 @@ public class DetalleNotaDebitoGUI extends JDialog {
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
             if (cliente != null) {
+                lbl_NumComprobante.setVisible(false);
+                txt_Serie.setVisible(false);
+                lbl_separador.setVisible(false);
+                txt_Numero.setVisible(false);
                 this.cargarDetalleCliente();
             } else if (proveedor != null) {
                 this.cargarDetalleProveedor();
@@ -670,8 +711,12 @@ public class DetalleNotaDebitoGUI extends JDialog {
             NotaDebitoProveedor notaDebitoProveedor = RestClient.getRestTemplate().getForObject("/notas/" + idNotaDebitoProveedor, NotaDebitoProveedor.class);
             this.setTitle(notaDebitoProveedor.getTipoComprobante() + " Nº " + notaDebitoProveedor.getSerie() + " - " + notaDebitoProveedor.getNroNota()
                     + " con fecha " + formatter.format(notaDebitoProveedor.getFecha()) + " del Proveedor : " + notaDebitoProveedor.getProveedor().getRazonSocial());
-            this.txtNombre.setText(notaDebitoProveedor.getProveedor().getRazonSocial());
-            this.txtDomicilio.setText(notaDebitoProveedor.getProveedor().getDireccion()
+            txt_Serie.setEnabled(false);
+            txt_Numero.setEnabled(false);
+            txt_Serie.setText(String.valueOf(notaDebitoProveedor.getSerie()));
+            txt_Numero.setText(String.valueOf(notaDebitoProveedor.getNroNota()));
+            txtNombre.setText(notaDebitoProveedor.getProveedor().getRazonSocial());
+            txtDomicilio.setText(notaDebitoProveedor.getProveedor().getDireccion()
                     + " " + notaDebitoProveedor.getProveedor().getLocalidad().getNombre()
                     + " " + notaDebitoProveedor.getProveedor().getLocalidad().getProvincia().getNombre()
                     + " " + notaDebitoProveedor.getProveedor().getLocalidad().getProvincia().getPais());
@@ -739,6 +784,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private javax.swing.JLabel lblTotal;
     private javax.swing.JLabel lbl_IVA105;
     private javax.swing.JLabel lbl_Monto;
+    private javax.swing.JLabel lbl_NumComprobante;
+    private javax.swing.JLabel lbl_separador;
     private javax.swing.JPanel panelCliente;
     private javax.swing.JPanel panelDetalle;
     private javax.swing.JPanel panelMotivo;
@@ -752,5 +799,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private javax.swing.JTextField txtNombre;
     private javax.swing.JFormattedTextField txtSubTotalBruto;
     private javax.swing.JFormattedTextField txtTotal;
+    private javax.swing.JFormattedTextField txt_Numero;
+    private javax.swing.JFormattedTextField txt_Serie;
     // End of variables declaration//GEN-END:variables
 }
