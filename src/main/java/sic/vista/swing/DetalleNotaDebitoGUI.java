@@ -74,11 +74,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
     }
     
     private void cargarDetalleComprobante() {
-        if (txtMontoRenglon2.getValue() == null) {
-            txtMontoRenglon2.setValue(new BigDecimal(txtMontoRenglon2.getText()));
-        } else {
-            txtMontoRenglon2.setValue(new BigDecimal(txtMontoRenglon2.getValue().toString()));
-        }
+        txtMontoRenglon2.setValue(new BigDecimal(txtMontoRenglon2.getText()));
         BigDecimal iva = ((BigDecimal) txtMontoRenglon2.getValue()).multiply(IVA_21.divide(CIEN, 15, RoundingMode.HALF_UP));
         lblIvaNetoRenglon2.setText("$" + FormatterNumero.formatConRedondeo(iva));
         lblImporteRenglon2.setText("$" + FormatterNumero.formatConRedondeo((new BigDecimal(txtMontoRenglon2.getValue().toString()).add(iva))));
