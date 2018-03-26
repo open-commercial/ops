@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -165,7 +166,12 @@ public class BuscarProductosGUI extends JDialog {
                 }
             }
             if (movimiento == Movimiento.VENTA) {
-                if (this.sumarCantidadesSegunProductosYaCargados().compareTo(productoSeleccionado.getCantidad()) > 0) {
+                String uri = "/productos/disponibilidad-stock?"
+                        + "idProducto=" + productoSeleccionado.getId_Producto()
+                        + "&cantidad=" + this.sumarCantidadesSegunProductosYaCargados();
+                if (!RestClient.getRestTemplate()
+                        .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {
+                        }).getBody().isEmpty()) {
                     JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                             .getString("mensaje_producto_sin_stock_suficiente"), "Error", JOptionPane.ERROR_MESSAGE);
                     esValido = false;
