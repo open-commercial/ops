@@ -16,6 +16,7 @@ public class Usuario implements Serializable {
     private String apellido;   
     private String email;   
     private String token;
+    private long idEmpresa;
     private long passwordRecoveryKey;   
     private List<Rol> roles;
     private boolean habilitado;    

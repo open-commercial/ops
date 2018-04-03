@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.Empresa;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.UsuarioActivo;
 import sic.util.Utilidades;
@@ -41,10 +42,6 @@ public class PrincipalGUI extends JFrame {
         seleccionEmpresaGUI.setModal(true);
         seleccionEmpresaGUI.setLocationRelativeTo(this);
         seleccionEmpresaGUI.setVisible(true);
-        this.setTitle("S.I.C. Ops "
-                + ResourceBundle.getBundle("Mensajes").getString("version")
-                + " - Empresa: " + EmpresaActiva.getInstance().getEmpresa().getNombre()
-                + " - Usuario: " + UsuarioActivo.getInstance().getUsuario().getUsername());
     }
 
     @SuppressWarnings("unchecked")
@@ -326,7 +323,15 @@ public class PrincipalGUI extends JFrame {
         this.setLocationRelativeTo(null);
         this.setSize(sizeFrame);
         this.setExtendedState(MAXIMIZED_BOTH);
-        this.llamarSeleccionEmpresaGUI();
+        if (UsuarioActivo.getInstance().getUsuario().getIdEmpresa() == 0) {
+            this.llamarSeleccionEmpresaGUI();
+        } else {
+            EmpresaActiva.getInstance().setEmpresa(RestClient.getRestTemplate().getForObject("/empresas/" + UsuarioActivo.getInstance().getUsuario().getIdEmpresa(), Empresa.class));
+        }
+        this.setTitle("S.I.C. Ops "
+                      + ResourceBundle.getBundle("Mensajes").getString("version")
+                      + " - Empresa: " + EmpresaActiva.getInstance().getEmpresa().getNombre()
+                      + " - Usuario: " + UsuarioActivo.getInstance().getUsuario().getUsername());
     }//GEN-LAST:event_formWindowOpened
 
     private void mnuItm_UsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_UsuariosActionPerformed

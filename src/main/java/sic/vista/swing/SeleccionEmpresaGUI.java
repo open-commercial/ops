@@ -14,6 +14,7 @@ import sic.RestClient;
 import sic.modelo.Empresa;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Rol;
+import sic.modelo.Usuario;
 import sic.modelo.UsuarioActivo;
 
 public class SeleccionEmpresaGUI extends JDialog {
@@ -126,8 +127,19 @@ public class SeleccionEmpresaGUI extends JDialog {
             empresas.stream()
                     .filter(e -> (e.getNombre().equals(cmb_Empresas.getSelectedItem())))
                     .forEachOrdered(e -> {
-                EmpresaActiva.getInstance().setEmpresa(e);
-            });
+                        EmpresaActiva.getInstance().setEmpresa(e);
+                        try {
+                            RestClient.getRestTemplate().put("/usuarios/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario() + "/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), Usuario.class);
+                        } catch (RestClientResponseException ex) {
+                            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                            this.dispose();
+                        } catch (ResourceAccessException ex) {
+                            LOGGER.error(ex.getMessage());
+                            JOptionPane.showMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    });
             this.dispose();
         }
     }//GEN-LAST:event_btn_AceptarActionPerformed
@@ -149,11 +161,12 @@ public class SeleccionEmpresaGUI extends JDialog {
                     empresasGUI.setVisible(true);
                 }
                 empresas = Arrays.asList(RestClient.getRestTemplate().getForObject("/empresas", Empresa[].class));
-                this.cargarComboBoxEmpresas();    
+                this.cargarComboBoxEmpresas();
             } else {
                 EmpresaActiva.getInstance().setEmpresa(empresas.get(0));
+                RestClient.getRestTemplate().put("/usuarios/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario() + "/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), Usuario.class);
                 this.dispose();
-            }          
+            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();
@@ -162,7 +175,7 @@ public class SeleccionEmpresaGUI extends JDialog {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
-        }        
+        }
     }//GEN-LAST:event_formWindowOpened
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Aceptar;
