@@ -174,6 +174,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
 
         setLocationByPlatform(true);
         setModal(true);
+        setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -381,6 +382,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
         txtIVA21Neto.setText("0");
         txtIVA21Neto.setFocusable(false);
         txtIVA21Neto.setFont(new java.awt.Font("DejaVu Sans", 0, 15)); // NOI18N
+        txtIVA21Neto.setValue(0);
 
         lblTotal.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblTotal.setText("TOTAL");
@@ -392,6 +394,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
         txtTotal.setText("0");
         txtTotal.setFocusable(false);
         txtTotal.setFont(new java.awt.Font("DejaVu Sans", 1, 30)); // NOI18N
+        txtTotal.setValue(0);
 
         txtSubTotalBruto.setEditable(false);
         txtSubTotalBruto.setForeground(new java.awt.Color(29, 156, 37));
@@ -400,6 +403,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
         txtSubTotalBruto.setText("0");
         txtSubTotalBruto.setFocusable(false);
         txtSubTotalBruto.setFont(new java.awt.Font("DejaVu Sans", 0, 15)); // NOI18N
+        txtSubTotalBruto.setValue(0);
 
         lblSubTotalBruto.setText("SubTotal Bruto");
 
@@ -415,6 +419,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
         txtNoGravado.setText("0");
         txtNoGravado.setFocusable(false);
         txtNoGravado.setFont(new java.awt.Font("DejaVu Sans", 0, 15)); // NOI18N
+        txtNoGravado.setValue(0);
 
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
@@ -507,11 +512,13 @@ public class DetalleNotaDebitoGUI extends JDialog {
         );
 
         txt_Serie.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        txt_Serie.setText("0");
 
         lbl_separador.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_separador.setText("-");
 
         txt_Numero.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        txt_Numero.setText("0");
 
         lbl_NumComprobante.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_NumComprobante.setText("Nº de Nota:");
@@ -535,11 +542,11 @@ public class DetalleNotaDebitoGUI extends JDialog {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(lbl_NumComprobante)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_Serie, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txt_Serie, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbl_separador, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_Numero, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txt_Numero, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(8, 8, 8)))
                 .addContainerGap())
         );
@@ -697,11 +704,12 @@ public class DetalleNotaDebitoGUI extends JDialog {
                 lbl_separador.setVisible(false);
                 txt_Numero.setVisible(false);
                 this.cargarDetalleCliente();
-            } else if (proveedor != null) {
+            } else if (proveedor != null) {                
                 this.cargarDetalleProveedor();
             }
             this.cargarDetalleRecibo();
         } else {
+            btnGuardar.setVisible(false);
             this.cargarDetalleNotaDebitoProveedor();
         }
     }//GEN-LAST:event_formWindowOpened
@@ -710,7 +718,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
         try {
             NotaDebitoProveedor notaDebitoProveedor = RestClient.getRestTemplate().getForObject("/notas/" + idNotaDebitoProveedor, NotaDebitoProveedor.class);
             this.setTitle(notaDebitoProveedor.getTipoComprobante() + " Nº " + notaDebitoProveedor.getSerie() + " - " + notaDebitoProveedor.getNroNota()
-                    + " con fecha " + formatter.format(notaDebitoProveedor.getFecha()) + " del Proveedor : " + notaDebitoProveedor.getProveedor().getRazonSocial());
+                    + " con fecha " + formatter.format(notaDebitoProveedor.getFecha()) + " del Proveedor: " + notaDebitoProveedor.getProveedor().getRazonSocial());
             txt_Serie.setEnabled(false);
             txt_Numero.setEnabled(false);
             txt_Serie.setText(String.valueOf(notaDebitoProveedor.getSerie()));
