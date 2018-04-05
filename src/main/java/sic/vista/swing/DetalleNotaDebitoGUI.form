@@ -454,7 +454,6 @@
               <Format subtype="0" type="4"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="0"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="DejaVu Sans" size="15" style="0"/>
@@ -480,7 +479,6 @@
               <Format subtype="0" type="4"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="0"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="DejaVu Sans" size="30" style="1"/>
@@ -500,7 +498,6 @@
               <Format subtype="0" type="4"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="0"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="DejaVu Sans" size="15" style="0"/>
@@ -536,7 +533,6 @@
               <Format subtype="0" type="4"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="0"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="DejaVu Sans" size="15" style="0"/>

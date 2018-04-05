@@ -110,11 +110,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
     }
     
     private void cargarDetalleComprobante() {
-        if (txtMontoRenglon2.getValue() == null) {
-            txtMontoRenglon2.setValue(new BigDecimal(txtMontoRenglon2.getText()));
-        } else {
-            txtMontoRenglon2.setValue(new BigDecimal(txtMontoRenglon2.getValue().toString()));
-        }
+        txtMontoRenglon2.setValue(new BigDecimal(txtMontoRenglon2.getText()));
         BigDecimal iva = ((BigDecimal) txtMontoRenglon2.getValue()).multiply(IVA_21.divide(CIEN, 15, RoundingMode.HALF_UP));
         lblIvaNetoRenglon2.setText("$" + FormatterNumero.formatConRedondeo(iva));
         lblImporteRenglon2.setText("$" + FormatterNumero.formatConRedondeo((new BigDecimal(txtMontoRenglon2.getValue().toString()).add(iva))));
@@ -645,8 +641,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
             notaDebitoProveedor.setIva105Neto(BigDecimal.ZERO);
             notaDebitoProveedor.setMontoNoGravado(recibo.getMonto());
             notaDebitoProveedor.setMotivo(cmbDescripcionRenglon2.getSelectedItem().toString());
-            notaDebitoProveedor.setSerie(Long.parseLong(txt_Serie.getValue().toString()));
-            notaDebitoProveedor.setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
+            notaDebitoProveedor.setSerie(Long.parseLong(txt_Serie.getText()));
+            notaDebitoProveedor.setNroNota(Long.parseLong(txt_Numero.getText()));
             try {
                 notaDebitoProveedor.setRenglonesNotaDebito(Arrays.asList(RestClient.getRestTemplate().getForObject("/notas/renglon/debito/recibo/" + recibo.getIdRecibo()
                         + "?monto=" + new BigDecimal(txtSubTotalBruto.getValue().toString())
@@ -738,10 +734,10 @@ public class DetalleNotaDebitoGUI extends JDialog {
             lblIvaNetoRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(1).getIvaNeto()));
             lblImporteRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(1).getImporteNeto()));
             cmbDescripcionRenglon2.addItem(notaDebitoProveedor.getMotivo());
-            txtSubTotalBruto.setText(FormatterNumero.formatConRedondeo(notaDebitoProveedor.getSubTotalBruto()));
-            txtIVA21Neto.setText(FormatterNumero.formatConRedondeo(notaDebitoProveedor.getIva21Neto()));
-            txtNoGravado.setText(FormatterNumero.formatConRedondeo(notaDebitoProveedor.getMontoNoGravado()));
-            txtTotal.setText(FormatterNumero.formatConRedondeo(notaDebitoProveedor.getTotal()));
+            txtSubTotalBruto.setValue(notaDebitoProveedor.getSubTotalBruto());
+            txtIVA21Neto.setValue(notaDebitoProveedor.getIva21Neto());
+            txtNoGravado.setValue(notaDebitoProveedor.getMontoNoGravado());
+            txtTotal.setValue(notaDebitoProveedor.getTotal());
             txtMontoRenglon2.setEnabled(false);
             cmbDescripcionRenglon2.setEnabled(false);
             btnGuardar.setEnabled(false);
