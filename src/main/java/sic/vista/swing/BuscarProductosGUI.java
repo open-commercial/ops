@@ -169,9 +169,10 @@ public class BuscarProductosGUI extends JDialog {
                 String uri = "/productos/disponibilidad-stock?"
                         + "idProducto=" + productoSeleccionado.getId_Producto()
                         + "&cantidad=" + this.sumarCantidadesSegunProductosYaCargados();
-                if (!RestClient.getRestTemplate()
-                        .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {
-                        }).getBody().isEmpty()) {
+                boolean existeStockSuficiente = RestClient.getRestTemplate()
+                        .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {})
+                        .getBody().isEmpty();
+                if (!existeStockSuficiente) {
                     JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                             .getString("mensaje_producto_sin_stock_suficiente"), "Error", JOptionPane.ERROR_MESSAGE);
                     esValido = false;
