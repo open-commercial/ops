@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.Empresa;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.UsuarioActivo;
 import sic.util.Utilidades;
@@ -326,7 +327,24 @@ public class PrincipalGUI extends JFrame {
         this.setLocationRelativeTo(null);
         this.setSize(sizeFrame);
         this.setExtendedState(MAXIMIZED_BOTH);
-        this.llamarSeleccionEmpresaGUI();
+        if (UsuarioActivo.getInstance().getUsuario().getIdEmpresaPredeterminada()== 0) {
+            this.llamarSeleccionEmpresaGUI();
+        } else {
+            try {
+                Empresa empresa = RestClient.getRestTemplate().getForObject("/empresas/" + UsuarioActivo.getInstance().getUsuario().getIdEmpresaPredeterminada(), Empresa.class);
+                EmpresaActiva.getInstance().setEmpresa(empresa);
+                this.setTitle("S.I.C. Ops "
+                        + ResourceBundle.getBundle("Mensajes").getString("version")
+                        + " - Empresa: " + EmpresaActiva.getInstance().getEmpresa().getNombre()
+                        + " - Usuario: " + UsuarioActivo.getInstance().getUsuario().getUsername());
+            } catch (RestClientResponseException ex) {
+                this.llamarSeleccionEmpresaGUI();
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_formWindowOpened
 
     private void mnuItm_UsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_UsuariosActionPerformed
