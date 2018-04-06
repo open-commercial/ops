@@ -42,6 +42,10 @@ public class PrincipalGUI extends JFrame {
         seleccionEmpresaGUI.setModal(true);
         seleccionEmpresaGUI.setLocationRelativeTo(this);
         seleccionEmpresaGUI.setVisible(true);
+        this.setTitle("S.I.C. Ops "
+                + ResourceBundle.getBundle("Mensajes").getString("version")
+                + " - Empresa: " + EmpresaActiva.getInstance().getEmpresa().getNombre()
+                + " - Usuario: " + UsuarioActivo.getInstance().getUsuario().getUsername());
     }
 
     @SuppressWarnings("unchecked")
@@ -323,15 +327,24 @@ public class PrincipalGUI extends JFrame {
         this.setLocationRelativeTo(null);
         this.setSize(sizeFrame);
         this.setExtendedState(MAXIMIZED_BOTH);
-        if (UsuarioActivo.getInstance().getUsuario().getIdEmpresa() == 0) {
+        if (UsuarioActivo.getInstance().getUsuario().getIdEmpresaPredeterminada()== 0) {
             this.llamarSeleccionEmpresaGUI();
         } else {
-            EmpresaActiva.getInstance().setEmpresa(RestClient.getRestTemplate().getForObject("/empresas/" + UsuarioActivo.getInstance().getUsuario().getIdEmpresa(), Empresa.class));
+            try {
+                Empresa empresa = RestClient.getRestTemplate().getForObject("/empresas/" + UsuarioActivo.getInstance().getUsuario().getIdEmpresaPredeterminada(), Empresa.class);
+                EmpresaActiva.getInstance().setEmpresa(empresa);
+                this.setTitle("S.I.C. Ops "
+                        + ResourceBundle.getBundle("Mensajes").getString("version")
+                        + " - Empresa: " + EmpresaActiva.getInstance().getEmpresa().getNombre()
+                        + " - Usuario: " + UsuarioActivo.getInstance().getUsuario().getUsername());
+            } catch (RestClientResponseException ex) {
+                this.llamarSeleccionEmpresaGUI();
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
-        this.setTitle("S.I.C. Ops "
-                      + ResourceBundle.getBundle("Mensajes").getString("version")
-                      + " - Empresa: " + EmpresaActiva.getInstance().getEmpresa().getNombre()
-                      + " - Usuario: " + UsuarioActivo.getInstance().getUsuario().getUsername());
     }//GEN-LAST:event_formWindowOpened
 
     private void mnuItm_UsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_UsuariosActionPerformed
