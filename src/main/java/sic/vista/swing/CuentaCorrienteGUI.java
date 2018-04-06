@@ -383,6 +383,24 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
         } else {
             switch (renglonCC.getTipoComprobante()) {
+                case NOTA_DEBITO_A:
+                case NOTA_DEBITO_B:
+                case NOTA_DEBITO_PRESUPUESTO:
+                case NOTA_DEBITO_X:
+                case NOTA_DEBITO_Y:
+                    DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(renglonCC.getIdMovimiento());
+                    detalleNotaDebitoGUI.setLocationRelativeTo(this);
+                    detalleNotaDebitoGUI.setVisible(true);
+                    break;
+                case NOTA_CREDITO_A:
+                case NOTA_CREDITO_B:
+                case NOTA_CREDITO_PRESUPUESTO:
+                case NOTA_CREDITO_X:
+                case NOTA_CREDITO_Y:
+                    DetalleNotaCreditoGUI detalleNotaCreditoGUI = new DetalleNotaCreditoGUI(renglonCC.getIdMovimiento());
+                    detalleNotaCreditoGUI.setLocationRelativeTo(this);
+                    detalleNotaCreditoGUI.setVisible(true);
+                    break;
                 case FACTURA_A:
                 case FACTURA_B:
                 case FACTURA_C:
@@ -672,8 +690,6 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         } else if (proveedor != null) {
             this.cargarDetalleProveedor();
             this.btnAutorizarNota.setVisible(false);
-            this.btnCrearNotaCredito.setVisible(false);
-            this.btnCrearNotaDebito.setVisible(false);
         }
         this.setColumnas();
         this.setSize(sizeInternalFrame);
@@ -692,7 +708,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
-            if (renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_A || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_B 
+            if (renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_A || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_B
                     || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_C || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_X
                     || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_Y || renglonCC.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
                 SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(renglonCC.getIdMovimiento(), TipoMovimiento.CREDITO);
@@ -700,14 +716,29 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 seleccionDeProductosGUI.setLocationRelativeTo(this);
                 seleccionDeProductosGUI.setVisible(true);
                 if (!seleccionDeProductosGUI.getRenglonesConCantidadNueva().isEmpty()) {
-                    DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(
-                            seleccionDeProductosGUI.getRenglonesConCantidadNueva(),
-                            seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock(),
-                            this.cliente.getId_Cliente());
-                    detalleNotaCredito.setModal(true);
-                    detalleNotaCredito.setLocationRelativeTo(this);
-                    detalleNotaCredito.setVisible(true);
-                    if (detalleNotaCredito.isNotaCreada()) this.refrescarVista();                    
+                    if (cliente != null) {
+                        DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(
+                                seleccionDeProductosGUI.getRenglonesConCantidadNueva(),
+                                seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock(),
+                                this.cliente);
+                        detalleNotaCredito.setModal(true);
+                        detalleNotaCredito.setLocationRelativeTo(this);
+                        detalleNotaCredito.setVisible(true);
+                        if (detalleNotaCredito.isNotaCreada()) {
+                            this.refrescarVista();
+                        }
+                    } else if (proveedor != null) {
+                        DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(
+                                seleccionDeProductosGUI.getRenglonesConCantidadNueva(),
+                                seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock(),
+                                this.proveedor);
+                        detalleNotaCredito.setModal(true);
+                        detalleNotaCredito.setLocationRelativeTo(this);
+                        detalleNotaCredito.setVisible(true);
+                        if (detalleNotaCredito.isNotaCreada()) {
+                            this.refrescarVista();
+                        }
+                    }
                 }
             } else {
                 JOptionPane.showInternalMessageDialog(this,
@@ -727,10 +758,21 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_recibo_con_nota_debito"),
                             "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(cliente.getId_Cliente(), renglonCC.getIdMovimiento());
-                    detalleNotaDebitoGUI.setLocationRelativeTo(this);
-                    detalleNotaDebitoGUI.setVisible(true);
-                    if (detalleNotaDebitoGUI.isNotaDebitoCreada()) this.refrescarVista();
+                    if (cliente != null) {
+                        DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(cliente, renglonCC.getIdMovimiento());
+                        detalleNotaDebitoGUI.setLocationRelativeTo(this);
+                        detalleNotaDebitoGUI.setVisible(true);
+                        if (detalleNotaDebitoGUI.isNotaDebitoCreada()) {
+                            this.refrescarVista();
+                        }
+                    } else if (proveedor != null) {
+                        DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(proveedor, renglonCC.getIdMovimiento());
+                        detalleNotaDebitoGUI.setLocationRelativeTo(this);
+                        detalleNotaDebitoGUI.setVisible(true);
+                        if (detalleNotaDebitoGUI.isNotaDebitoCreada()) {
+                            this.refrescarVista();
+                        }
+                    }
                 }
             } else {
                 JOptionPane.showInternalMessageDialog(this,

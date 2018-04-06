@@ -4,6 +4,7 @@
   <Properties>
     <Property name="locationByPlatform" type="boolean" value="true"/>
     <Property name="modal" type="boolean" value="true"/>
+    <Property name="resizable" type="boolean" value="false"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -39,6 +40,17 @@
                       <Component id="btnGuardar" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="lbl_NumComprobante" min="-2" max="-2" attributes="1"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="txt_Serie" linkSize="7" min="-2" pref="75" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="lbl_separador" min="-2" pref="20" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="txt_Numero" linkSize="7" min="-2" pref="75" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -48,10 +60,17 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="panelCliente" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="2" attributes="0">
+                  <Component id="lbl_NumComprobante" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="txt_Serie" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="lbl_separador" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="txt_Numero" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Component id="panelCliente" max="32767" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="panelDetalle" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="panelMotivo" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -78,14 +97,14 @@
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="txtDomicilioCliente" alignment="1" max="32767" attributes="2"/>
-                      <Component id="txtNombreCliente" alignment="0" max="32767" attributes="2"/>
+                      <Component id="txtDomicilio" alignment="1" max="32767" attributes="2"/>
+                      <Component id="txtNombre" alignment="0" max="32767" attributes="2"/>
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="txtCondicionIVACliente" max="32767" attributes="2"/>
+                          <Component id="txtCondicionIVA" max="32767" attributes="2"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Component id="lblIDFiscalCliente" min="-2" max="-2" attributes="1"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="txtIDFiscalCliente" max="32767" attributes="2"/>
+                          <Component id="txtIDFiscal" max="32767" attributes="2"/>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -96,19 +115,19 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="txtNombreCliente" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtNombre" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="lblNombreCliente" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="txtDomicilioCliente" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtDomicilio" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="lblDomicilioCliente" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="txtCondicionIVACliente" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtCondicionIVA" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="lblCondicionIVACliente" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtIDFiscalCliente" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtIDFiscal" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="lblIDFiscalCliente" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -140,25 +159,25 @@
             <Property name="text" type="java.lang.String" value="Condici&#xf3;n IVA:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtCondicionIVACliente">
+        <Component class="javax.swing.JTextField" name="txtCondicionIVA">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtIDFiscalCliente">
+        <Component class="javax.swing.JTextField" name="txtIDFiscal">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtDomicilioCliente">
+        <Component class="javax.swing.JTextField" name="txtDomicilio">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtNombreCliente">
+        <Component class="javax.swing.JTextField" name="txtNombre">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -435,10 +454,12 @@
               <Format subtype="0" type="4"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="0"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="DejaVu Sans" size="15" style="0"/>
+            </Property>
+            <Property name="value" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="0" type="code"/>
             </Property>
           </Properties>
         </Component>
@@ -458,10 +479,12 @@
               <Format subtype="0" type="4"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="0"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="DejaVu Sans" size="30" style="1"/>
+            </Property>
+            <Property name="value" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="0" type="code"/>
             </Property>
           </Properties>
         </Component>
@@ -475,10 +498,12 @@
               <Format subtype="0" type="4"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="0"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="DejaVu Sans" size="15" style="0"/>
+            </Property>
+            <Property name="value" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="0" type="code"/>
             </Property>
           </Properties>
         </Component>
@@ -508,10 +533,12 @@
               <Format subtype="0" type="4"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="0"/>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="DejaVu Sans" size="15" style="0"/>
+            </Property>
+            <Property name="value" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="0" type="code"/>
             </Property>
           </Properties>
         </Component>
@@ -589,5 +616,33 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JFormattedTextField" name="txt_Serie">
+      <Properties>
+        <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+          <Format format="#0" subtype="-1" type="0"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="0"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lbl_separador">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="-"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JFormattedTextField" name="txt_Numero">
+      <Properties>
+        <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+          <Format format="#0" subtype="-1" type="0"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="0"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lbl_NumComprobante">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="4"/>
+        <Property name="text" type="java.lang.String" value="N&#xba; de Nota:"/>
+      </Properties>
+    </Component>
   </SubComponents>
 </Form>

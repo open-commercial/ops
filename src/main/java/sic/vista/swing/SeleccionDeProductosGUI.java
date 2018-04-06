@@ -21,6 +21,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.Factura;
+import sic.modelo.FacturaCompra;
 import sic.modelo.FacturaVenta;
 import sic.modelo.RenglonFactura;
 import sic.modelo.TipoMovimiento;
@@ -32,7 +34,7 @@ import sic.util.FormatterNumero;
 public class SeleccionDeProductosGUI extends JDialog {
 
     private final ModeloTabla modeloTablaResultados = new ModeloTabla();
-    private FacturaVenta fv;
+    private Factura factura;
     private final HashMap<Long, BigDecimal> idsRenglonesYCantidades = new HashMap<>();
     private boolean modificarStock;
     private TipoMovimiento tipoMovimiento;    
@@ -58,7 +60,7 @@ public class SeleccionDeProductosGUI extends JDialog {
     }
     
     public long getIdFactura() {
-        return fv.getId_Factura();
+        return factura.getId_Factura();
     }
     
     public boolean modificarStock() {
@@ -145,12 +147,12 @@ public class SeleccionDeProductosGUI extends JDialog {
             BigDecimal cantidadElegida = new BigDecimal((tblResultados.getValueAt(i, 6)).toString());
             if (!(cantidadElegida.compareTo(BigDecimal.ZERO) < 0)) {
                 if ((cantidadElegida.compareTo(BigDecimal.ZERO) > 0 && (cantidadElegida.compareTo((BigDecimal) tblResultados.getValueAt(i, 5)) < 1))) {
-                    idsRenglonesYCantidades.put(fv.getRenglones().get(i).getId_RenglonFactura(), ((BigDecimal) tblResultados.getValueAt(i, 6)));
+                    idsRenglonesYCantidades.put(factura.getRenglones().get(i).getId_RenglonFactura(), ((BigDecimal) tblResultados.getValueAt(i, 6)));
                 }
             } else {
                 JOptionPane.showMessageDialog(this,
                         MessageFormat.format(ResourceBundle.getBundle("Mensajes").getString(
-                                "mensaje_nota_credito_renglon_no_valido"), fv.getRenglones().get(i).getDescripcionItem()),
+                                "mensaje_nota_credito_renglon_no_valido"), factura.getRenglones().get(i).getDescripcionItem()),
                         "Error", JOptionPane.ERROR_MESSAGE);
                 i = tblResultados.getRowCount();
                 idsRenglonesYCantidades.clear();
@@ -159,7 +161,7 @@ public class SeleccionDeProductosGUI extends JDialog {
     }
     
     private void cargarRenglonesAlTable() {
-        fv.getRenglones().stream().map(r -> {
+        factura.getRenglones().stream().map(r -> {
             Object[] fila = new Object[7];
             fila[0] = r.getCodigoItem();
             fila[1] = r.getDescripcionItem();
@@ -177,13 +179,13 @@ public class SeleccionDeProductosGUI extends JDialog {
 
     private void recuperarFactura(long idFactura) {
         try {
-            fv = RestClient.getRestTemplate().getForObject("/facturas/" + idFactura, FacturaVenta.class);
+            factura = RestClient.getRestTemplate().getForObject("/facturas/" + idFactura, Factura.class);
             if (tipoMovimiento == null) {
-                fv.setRenglones(new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                        .getForObject("/facturas/" + fv.getId_Factura() + "/renglones", RenglonFactura[].class))));
+                factura.setRenglones(new ArrayList(Arrays.asList(RestClient.getRestTemplate()
+                        .getForObject("/facturas/" + factura.getId_Factura() + "/renglones", RenglonFactura[].class))));
             } else if (tipoMovimiento == TipoMovimiento.CREDITO) {
-                fv.setRenglones(new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                        .getForObject("/facturas/" + fv.getId_Factura() + "/renglones/notas/credito", RenglonFactura[].class))));
+                factura.setRenglones(new ArrayList(Arrays.asList(RestClient.getRestTemplate()
+                        .getForObject("/facturas/" + factura.getId_Factura() + "/renglones/notas/credito", RenglonFactura[].class))));
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -290,9 +292,15 @@ public class SeleccionDeProductosGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cargarRenglonesAlTable();
-        this.setTitle(fv.getTipoComprobante() + " Nro: " + fv.getNumSerie() + " - " + fv.getNumFactura() 
-                + " del Cliente: " + fv.getRazonSocialCliente() 
-                + " con Fecha: " + (new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO)).format(fv.getFecha()));
+        if (factura instanceof FacturaVenta) {
+            this.setTitle(factura.getTipoComprobante() + " Nro: " + factura.getNumSerie() + " - " + factura.getNumFactura()
+                    + " del Cliente: " + ((FacturaVenta) factura).getRazonSocialCliente()
+                    + " con Fecha: " + (new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO)).format(factura.getFecha()));
+        } else if (factura instanceof FacturaCompra) {
+            this.setTitle(factura.getTipoComprobante() + " Nro: " + factura.getNumSerie() + " - " + factura.getNumFactura()
+                    + " del Proveedor: " + ((FacturaCompra) factura).getRazonSocialProveedor()
+                    + " con Fecha: " + (new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO)).format(factura.getFecha()));
+        }
     }//GEN-LAST:event_formWindowOpened
 
     private void btnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuarActionPerformed
@@ -310,7 +318,7 @@ public class SeleccionDeProductosGUI extends JDialog {
     private void chkSeleccionarTodoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkSeleccionarTodoItemStateChanged
         int i = 0;
         if (chkSeleccionarTodo.isSelected()) {
-            for (RenglonFactura r : fv.getRenglones()) {
+            for (RenglonFactura r : factura.getRenglones()) {
                 tblResultados.setValueAt(r.getCantidad(), i, 6);
                 i++;
             }
