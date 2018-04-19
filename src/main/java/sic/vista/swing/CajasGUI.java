@@ -128,12 +128,12 @@ public class CajasGUI extends JInternalFrame {
             if (chk_Usuario.isSelected()) {
                 criteriaBusqueda += "&idUsuario=" + ((Usuario) cmb_Usuarios.getSelectedItem()).getId_Usuario();
             }
-            ftxt_TotalFinal.setValue(RestClient.getRestTemplate()
-                    .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                            + "/saldo-final?" + criteriaBusqueda, BigDecimal.class));
-            ftxt_TotalCierre.setValue(RestClient.getRestTemplate()
-                    .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                            + "/saldo-real?" + criteriaBusqueda, BigDecimal.class));
+//            ftxt_TotalFinal.setValue(RestClient.getRestTemplate()
+//                    .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+//                            + "/saldo-final?" + criteriaBusqueda, BigDecimal.class));
+//            ftxt_TotalCierre.setValue(RestClient.getRestTemplate()
+//                    .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+//                            + "/saldo-real?" + criteriaBusqueda, BigDecimal.class));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {

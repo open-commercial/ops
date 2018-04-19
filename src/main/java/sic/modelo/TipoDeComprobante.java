@@ -22,6 +22,8 @@ public enum TipoDeComprobante {
     
     RECIBO("Recibo"),
     
+    GASTO("Gasto"),
+    
     AJUSTE("Ajuste"),
     
     NOTA_CREDITO_A("Nota de Credito \"A\""),
