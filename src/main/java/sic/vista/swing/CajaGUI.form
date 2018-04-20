@@ -266,7 +266,7 @@
     <Component class="javax.swing.JLabel" name="lbl_totalCaja">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="2"/>
-        <Property name="text" type="java.lang.String" value="Total que afecta Caja:"/>
+        <Property name="text" type="java.lang.String" value="Total afecta Caja:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="ftxt_TotalAfectaCaja">

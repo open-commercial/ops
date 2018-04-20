@@ -443,7 +443,7 @@ public class CajaGUI extends JInternalFrame {
         lbl_Total.setText("Total General:");
 
         lbl_totalCaja.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lbl_totalCaja.setText("Total que afecta Caja:");
+        lbl_totalCaja.setText("Total afecta Caja:");
 
         ftxt_TotalAfectaCaja.setEditable(false);
         ftxt_TotalAfectaCaja.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));

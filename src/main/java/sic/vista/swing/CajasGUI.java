@@ -66,9 +66,9 @@ public class CajasGUI extends JInternalFrame {
         encabezados[2] = "Hora Control";
         encabezados[3] = "Fecha Cierre";
         encabezados[4] = "Usuario de Cierre";
-        encabezados[5] = "Saldo Apertura";
-        encabezados[6] = "Saldo Sistema";
-        encabezados[7] = "Saldo Real";
+        encabezados[5] = "Apertura";
+        encabezados[6] = "Cierre Final";
+        encabezados[7] = "Cierre Real";
         modeloTablaCajas.setColumnIdentifiers(encabezados);
         tbl_Cajas.setModel(modeloTablaCajas);
         //tipo de dato columnas
@@ -389,7 +389,7 @@ public class CajasGUI extends JInternalFrame {
             }
         });
 
-        lbl_TotalFinal.setText("Total Sistema:");
+        lbl_TotalFinal.setText("Total Final:");
 
         ftxt_TotalFinal.setEditable(false);
         ftxt_TotalFinal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
@@ -451,6 +451,8 @@ public class CajasGUI extends JInternalFrame {
         );
 
         pnl_CajasLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_eliminarCaja, btn_verDetalle});
+
+        lbl_TotalFinal.getAccessibleContext().setAccessibleName("Total Final:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

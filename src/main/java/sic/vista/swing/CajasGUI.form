@@ -314,8 +314,11 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lbl_TotalFinal">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Total Sistema:"/>
+            <Property name="text" type="java.lang.String" value="Total Final:"/>
           </Properties>
+          <AccessibilityProperties>
+            <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Total Final:"/>
+          </AccessibilityProperties>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="ftxt_TotalFinal">
           <Properties>
