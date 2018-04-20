@@ -11,15 +11,11 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.text.DecimalFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
@@ -35,7 +31,6 @@ import sic.modelo.Gasto;
 import sic.modelo.UsuarioActivo;
 import sic.modelo.EstadoCaja;
 import sic.modelo.MovimientoCaja;
-import sic.modelo.Recibo;
 import sic.modelo.TipoDeComprobante;
 import sic.util.ColoresNumerosRenderer;
 import sic.util.FechasRenderer;
@@ -49,7 +44,6 @@ public class CajaGUI extends JInternalFrame {
     private ModeloTabla modeloTablaBalance = new ModeloTabla();
     private ModeloTabla modeloTablaResumen = new ModeloTabla();
     private List<MovimientoCaja> movimientos = new ArrayList<>();
-    private Map<Long, List<MovimientoCaja>> mapMovimientos = new HashMap<>();
     private Caja caja;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(880, 600);    
@@ -160,31 +154,18 @@ public class CajaGUI extends JInternalFrame {
         renglonSaldoApertura[2] = true;
         renglonSaldoApertura[3] = caja.getSaldoInicial();
         modeloTablaResumen.addRow(renglonSaldoApertura);
-//        List<Recibo> recibos;
-//        List<Gasto> gastos;
         try {
-            for (long idFormaDePago : caja.getTotalesPorFomaDePago().keySet()) {
-//                movimientos.clear();
+            caja.getTotalesPorFomaDePago().keySet().stream().map((idFormaDePago) -> {
                 FormaDePago fdp = RestClient.getRestTemplate().getForObject("/formas-de-pago/" + idFormaDePago, FormaDePago.class);
                 Object[] fila = new Object[4];
                 fila[0] = fdp.getId_FormaDePago();
                 fila[1] = fdp.getNombre();
                 fila[2] = fdp.isAfectaCaja();
                 fila[3] = caja.getTotalesPorFomaDePago().get(idFormaDePago);
+                return fila;
+            }).forEachOrdered((fila) -> {
                 modeloTablaResumen.addRow(fila);
-                mapMovimientos.put(idFormaDePago, Arrays.asList(RestClient.getRestTemplate().getForObject("/cajas/"+ caja.getId_Caja() + "/movimientos?idFormaDePago=" + idFormaDePago, MovimientoCaja[].class)));
-//                recibos = this.getRecibosPorFormaDePago(idFormaDePago);
-//                recibos.stream().forEach(r -> {
-//                    movimientos.add(new Movimiento(r));
-//                });
-//                gastos = this.getGastosPorFormaDePago(idFormaDePago);
-//                gastos.stream().forEach(g -> {
-//                    movimientos.add(new Movimiento(g));
-//                });1
-//                Collections.sort(movimientos);
-//                mapMovimientos.put(idFormaDePago, new ArrayList<>(movimientos));
-                
-            }
+            });
             this.cargarResultados();
             tbl_Resumen.setModel(modeloTablaResumen);
             tbl_Resumen.removeColumn(tbl_Resumen.getColumnModel().getColumn(0));
@@ -204,7 +185,8 @@ public class CajaGUI extends JInternalFrame {
         this.limpiarTablaMovimientos();
         if (idFormaDePago != 0) {
             Object[] renglonMovimiento = new Object[3];
-            movimientos = mapMovimientos.get(idFormaDePago);
+            movimientos = 
+            Arrays.asList(RestClient.getRestTemplate().getForObject("/cajas/"+ caja.getId_Caja() + "/movimientos?idFormaDePago=" + idFormaDePago, MovimientoCaja[].class));
             movimientos.forEach(m -> {
                 renglonMovimiento[0] = m.getConcepto();
                 renglonMovimiento[1] = m.getFecha();
@@ -265,32 +247,6 @@ public class CajaGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-    
-    private List<Recibo> getRecibosPorFormaDePago(long idFormaDePago) {
-        String criteriaRecibos = "/recibos/busqueda?"
-                + "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                + "&idFormaDePago=" + idFormaDePago
-                + "&desde=" + caja.getFechaApertura().getTime()
-                + "&hasta=" + this.getFechaHastaCaja(caja);
-        return new ArrayList(Arrays.asList(RestClient.getRestTemplate().getForObject(criteriaRecibos, Recibo[].class)));
-    }
-
-    private List<Gasto> getGastosPorFormaDePago(long idFormaDePago) {
-        String criteriaGastos = "/gastos/busqueda?"
-                + "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                + "&idFormaDePago=" + idFormaDePago
-                + "&desde=" + caja.getFechaApertura().getTime()
-                + "&hasta=" + this.getFechaHastaCaja(caja);
-        return new ArrayList(Arrays.asList(RestClient.getRestTemplate().getForObject(criteriaGastos, Gasto[].class)));
-    }
-        
-    private long getFechaHastaCaja(Caja caja) {
-        LocalDateTime hasta = caja.getFechaApertura().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-        hasta = hasta.withHour(23);
-        hasta = hasta.withMinute(59);
-        hasta = hasta.withSecond(59);
-        return hasta.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
     @SuppressWarnings("unchecked")
@@ -614,7 +570,7 @@ public class CajaGUI extends JInternalFrame {
         if (tbl_Movimientos.getSelectedRow() != -1) {
             long idMovimientoTable = this.movimientos.get(Utilidades.getSelectedRowModelIndice(tbl_Movimientos)).getIdMovimiento();
             TipoDeComprobante tipoDeComprobante = this.movimientos.get(Utilidades.getSelectedRowModelIndice(tbl_Movimientos)).getTipoComprobante();
-            if (tipoDeComprobante.equals(TipoMovimiento.GASTO) && this.caja.getEstado().equals(EstadoCaja.ABIERTA)) {
+            if (tipoDeComprobante.equals(TipoDeComprobante.GASTO) && this.caja.getEstado().equals(EstadoCaja.ABIERTA)) {
                 int confirmacionEliminacion = JOptionPane.showConfirmDialog(this,
                         "¿Esta seguro que desea eliminar el gasto seleccionado?",
                         "Eliminar", JOptionPane.YES_NO_OPTION);
