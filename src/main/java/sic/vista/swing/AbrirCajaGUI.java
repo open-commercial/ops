@@ -1,13 +1,10 @@
 package sic.vista.swing;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import javax.swing.SpinnerModel;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,25 +24,13 @@ public class AbrirCajaGUI extends JDialog {
         this.initComponents();        
     }
     
-    private void setModelSpinner() {
-        SpinnerModel spinnerModel = new SpinnerNumberModel(Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
-                                                           Calendar.getInstance().get(Calendar.HOUR_OF_DAY), 23, 1);
-        this.spinner_Hora.setModel(spinnerModel);
-        spinnerModel = new SpinnerNumberModel(Calendar.getInstance().get(Calendar.MINUTE), 00, 59, 1);
-        this.spinner_Minutos.setModel(spinnerModel);
-    }
-
     private Caja construirCaja(BigDecimal monto) {
         Caja caja = new Caja();
         caja.setEstado(EstadoCaja.ABIERTA);
         caja.setObservacion("Apertura De Caja");
         caja.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
-        Calendar corte = Calendar.getInstance();
-        corte.set(Calendar.HOUR_OF_DAY, (int) spinner_Hora.getValue());
-        corte.set(Calendar.MINUTE, (int) spinner_Minutos.getValue());
-        caja.setFechaCorteInforme(corte.getTime());
         caja.setSaldoInicial(monto);
-        caja.setSaldoFinal(monto);
+        caja.setSaldoSistema(monto);
         caja.setSaldoReal(BigDecimal.ZERO);
         caja.setUsuarioAbreCaja(UsuarioActivo.getInstance().getUsuario());
         return caja;
@@ -56,9 +41,6 @@ public class AbrirCajaGUI extends JDialog {
     private void initComponents() {
 
         p_container = new javax.swing.JPanel();
-        lbl_CorteControl = new javax.swing.JLabel();
-        spinner_Hora = new javax.swing.JSpinner();
-        spinner_Minutos = new javax.swing.JSpinner();
         lbl_monto = new javax.swing.JLabel();
         ftxt_Monto = new javax.swing.JFormattedTextField();
         btn_AbrirCaja = new javax.swing.JButton();
@@ -74,11 +56,8 @@ public class AbrirCajaGUI extends JDialog {
 
         p_container.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        lbl_CorteControl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_CorteControl.setText("Hora de Control:");
-
         lbl_monto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_monto.setText("Monto:");
+        lbl_monto.setText("Monto Apertura:");
 
         ftxt_Monto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
         ftxt_Monto.setText("0");
@@ -99,37 +78,22 @@ public class AbrirCajaGUI extends JDialog {
             p_containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(p_containerLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(p_containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lbl_CorteControl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_monto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(lbl_monto, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(p_containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(p_containerLayout.createSequentialGroup()
-                        .addComponent(spinner_Hora, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(spinner_Minutos, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(ftxt_Monto))
+                .addComponent(ftxt_Monto, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        p_containerLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {spinner_Hora, spinner_Minutos});
-
         p_containerLayout.setVerticalGroup(
             p_containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(p_containerLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(p_containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(spinner_Hora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spinner_Minutos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_CorteControl, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(p_containerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_monto)
                     .addComponent(ftxt_Monto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        p_containerLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {ftxt_Monto, lbl_CorteControl, lbl_monto, spinner_Hora, spinner_Minutos});
+        p_containerLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {ftxt_Monto, lbl_monto});
 
         btn_AbrirCaja.setForeground(java.awt.Color.blue);
         btn_AbrirCaja.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AbrirCaja_16x16.png"))); // NOI18N
@@ -200,17 +164,13 @@ public class AbrirCajaGUI extends JDialog {
         this.setModal(true);
         ImageIcon iconoVentana = new ImageIcon(AbrirCajaGUI.class.getResource("/sic/icons/Caja_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
-        this.setModelSpinner();
     }//GEN-LAST:event_formWindowOpened
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_AbrirCaja;
     private javax.swing.JFormattedTextField ftxt_Monto;
-    private javax.swing.JLabel lbl_CorteControl;
     private javax.swing.JLabel lbl_monto;
     private javax.swing.JPanel p_container;
-    private javax.swing.JSpinner spinner_Hora;
-    private javax.swing.JSpinner spinner_Minutos;
     // End of variables declaration//GEN-END:variables
 
 }

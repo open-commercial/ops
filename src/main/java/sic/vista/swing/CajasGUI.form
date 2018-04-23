@@ -212,14 +212,14 @@
                   <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <Component id="lbl_TotalFinal" linkSize="7" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbl_TotalSistema" linkSize="7" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="ftxt_TotalFinal" linkSize="9" min="-2" max="-2" attributes="0"/>
+                          <Component id="ftxt_TotalSistema" linkSize="9" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="lbl_TotalCierre" linkSize="7" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="ftxt_TotalCierre" linkSize="9" min="-2" pref="163" max="-2" attributes="0"/>
+                          <Component id="ftxt_TotalReal" linkSize="9" min="-2" pref="163" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -239,13 +239,13 @@
                       </Group>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lbl_TotalFinal" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="ftxt_TotalFinal" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_TotalSistema" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="ftxt_TotalSistema" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="lbl_TotalCierre" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="ftxt_TotalCierre" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="ftxt_TotalReal" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -312,15 +312,12 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_eliminarCajaActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JLabel" name="lbl_TotalFinal">
+        <Component class="javax.swing.JLabel" name="lbl_TotalSistema">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Total Final:"/>
+            <Property name="text" type="java.lang.String" value="Total Sistema:"/>
           </Properties>
-          <AccessibilityProperties>
-            <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Total Final:"/>
-          </AccessibilityProperties>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="ftxt_TotalFinal">
+        <Component class="javax.swing.JFormattedTextField" name="ftxt_TotalSistema">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
@@ -334,7 +331,7 @@
             <Property name="text" type="java.lang.String" value="Total Real:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="ftxt_TotalCierre">
+        <Component class="javax.swing.JFormattedTextField" name="ftxt_TotalReal">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">

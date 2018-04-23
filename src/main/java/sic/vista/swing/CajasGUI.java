@@ -30,7 +30,6 @@ import sic.util.ColoresEstadosRenderer;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
-import sic.util.FormatterFechaHora;
 import sic.util.Utilidades;
 
 public class CajasGUI extends JInternalFrame {
@@ -63,20 +62,20 @@ public class CajasGUI extends JInternalFrame {
         String[] encabezados = new String[8];
         encabezados[0] = "Estado";
         encabezados[1] = "Fecha Apertura";
-        encabezados[2] = "Hora Control";
-        encabezados[3] = "Fecha Cierre";
+        encabezados[2] = "Fecha Cierre";
+        encabezados[3] = "Usuario Apertura";
         encabezados[4] = "Usuario de Cierre";
         encabezados[5] = "Apertura";
-        encabezados[6] = "Cierre Final";
-        encabezados[7] = "Cierre Real";
+        encabezados[6] = "Saldo Sistema";
+        encabezados[7] = "Saldo Real";
         modeloTablaCajas.setColumnIdentifiers(encabezados);
         tbl_Cajas.setModel(modeloTablaCajas);
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaCajas.getColumnCount()];
         tipos[0] = String.class;
         tipos[1] = Date.class;
-        tipos[2] = String.class;
-        tipos[3] = Date.class;
+        tipos[2] = Date.class;
+        tipos[3] = String.class;
         tipos[4] = String.class;
         tipos[5] = BigDecimal.class;
         tipos[6] = BigDecimal.class;
@@ -87,8 +86,8 @@ public class CajasGUI extends JInternalFrame {
         //tamanios de columnas
         tbl_Cajas.getColumnModel().getColumn(0).setPreferredWidth(0);
         tbl_Cajas.getColumnModel().getColumn(1).setPreferredWidth(80);
-        tbl_Cajas.getColumnModel().getColumn(2).setPreferredWidth(30);
-        tbl_Cajas.getColumnModel().getColumn(3).setPreferredWidth(80);
+        tbl_Cajas.getColumnModel().getColumn(2).setPreferredWidth(80);
+        tbl_Cajas.getColumnModel().getColumn(3).setPreferredWidth(40);
         tbl_Cajas.getColumnModel().getColumn(4).setPreferredWidth(40);
         tbl_Cajas.getColumnModel().getColumn(5).setPreferredWidth(25);
         tbl_Cajas.getColumnModel().getColumn(6).setPreferredWidth(20);
@@ -97,7 +96,6 @@ public class CajasGUI extends JInternalFrame {
         tbl_Cajas.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         tbl_Cajas.getColumnModel().getColumn(1).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
         tbl_Cajas.getColumnModel().getColumn(2).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
-        tbl_Cajas.getColumnModel().getColumn(3).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
     }
 
     private void buscar() {
@@ -128,12 +126,12 @@ public class CajasGUI extends JInternalFrame {
             if (chk_Usuario.isSelected()) {
                 criteriaBusqueda += "&idUsuario=" + ((Usuario) cmb_Usuarios.getSelectedItem()).getId_Usuario();
             }
-//            ftxt_TotalFinal.setValue(RestClient.getRestTemplate()
-//                    .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-//                            + "/saldo-final?" + criteriaBusqueda, BigDecimal.class));
-//            ftxt_TotalCierre.setValue(RestClient.getRestTemplate()
-//                    .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-//                            + "/saldo-real?" + criteriaBusqueda, BigDecimal.class));
+            ftxt_TotalSistema.setValue(RestClient.getRestTemplate()
+                    .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                            + "/saldo-sistema?" + criteriaBusqueda, BigDecimal.class));
+            ftxt_TotalReal.setValue(RestClient.getRestTemplate()
+                    .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                            + "/saldo-real?" + criteriaBusqueda, BigDecimal.class));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -170,20 +168,18 @@ public class CajasGUI extends JInternalFrame {
     }
 
     private void cargarResultadosAlTable() {
-        for (Caja caja : cajasParcial) {
+        cajasParcial.stream().map(caja -> {
             Object[] fila = new Object[8];
             fila[0] = caja.getEstado();
             fila[1] = caja.getFechaApertura();
-            fila[2] = (new FormatterFechaHora(FormatosFechaHora.FORMATO_HORA_INTERNACIONAL)).format(caja.getFechaCorteInforme());
-            if (caja.getFechaCierre() != null) {
-                fila[3] = caja.getFechaCierre();
-            }
+            if (caja.getFechaCierre() != null) fila[2] = caja.getFechaCierre();
+            fila[3] = caja.getUsuarioAbreCaja();
             fila[4] = (caja.getUsuarioCierraCaja() != null ? caja.getUsuarioCierraCaja() : "");
             fila[5] = caja.getSaldoInicial();
-            fila[6] = caja.getSaldoFinal();
+            fila[6] = caja.getSaldoSistema();
             fila[7] = (caja.getEstado().equals(EstadoCaja.CERRADA) ? caja.getSaldoReal() : 0.0);
-            modeloTablaCajas.addRow(fila);
-        }
+            return fila;
+        }).forEachOrdered(modeloTablaCajas::addRow);
         tbl_Cajas.setModel(modeloTablaCajas);
         tbl_Cajas.getColumnModel().getColumn(0).setCellRenderer(new ColoresEstadosRenderer());
         lbl_cantidadMostrar.setText(totalElementosBusqueda + " Cajas encontradas");
@@ -229,10 +225,10 @@ public class CajasGUI extends JInternalFrame {
         btn_AbrirCaja = new javax.swing.JButton();
         btn_verDetalle = new javax.swing.JButton();
         btn_eliminarCaja = new javax.swing.JButton();
-        lbl_TotalFinal = new javax.swing.JLabel();
-        ftxt_TotalFinal = new javax.swing.JFormattedTextField();
+        lbl_TotalSistema = new javax.swing.JLabel();
+        ftxt_TotalSistema = new javax.swing.JFormattedTextField();
         lbl_TotalCierre = new javax.swing.JLabel();
-        ftxt_TotalCierre = new javax.swing.JFormattedTextField();
+        ftxt_TotalReal = new javax.swing.JFormattedTextField();
 
         setClosable(true);
         setMaximizable(true);
@@ -389,17 +385,17 @@ public class CajasGUI extends JInternalFrame {
             }
         });
 
-        lbl_TotalFinal.setText("Total Final:");
+        lbl_TotalSistema.setText("Total Sistema:");
 
-        ftxt_TotalFinal.setEditable(false);
-        ftxt_TotalFinal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
-        ftxt_TotalFinal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        ftxt_TotalSistema.setEditable(false);
+        ftxt_TotalSistema.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        ftxt_TotalSistema.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         lbl_TotalCierre.setText("Total Real:");
 
-        ftxt_TotalCierre.setEditable(false);
-        ftxt_TotalCierre.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
-        ftxt_TotalCierre.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        ftxt_TotalReal.setEditable(false);
+        ftxt_TotalReal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        ftxt_TotalReal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         javax.swing.GroupLayout pnl_CajasLayout = new javax.swing.GroupLayout(pnl_Cajas);
         pnl_Cajas.setLayout(pnl_CajasLayout);
@@ -414,21 +410,21 @@ public class CajasGUI extends JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(pnl_CajasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnl_CajasLayout.createSequentialGroup()
-                        .addComponent(lbl_TotalFinal)
+                        .addComponent(lbl_TotalSistema)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ftxt_TotalFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(ftxt_TotalSistema, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnl_CajasLayout.createSequentialGroup()
                         .addComponent(lbl_TotalCierre)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ftxt_TotalCierre, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(ftxt_TotalReal, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))))
             .addComponent(sp_Cajas, javax.swing.GroupLayout.DEFAULT_SIZE, 709, Short.MAX_VALUE)
         );
 
         pnl_CajasLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_AbrirCaja, btn_eliminarCaja, btn_verDetalle});
 
-        pnl_CajasLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lbl_TotalCierre, lbl_TotalFinal});
+        pnl_CajasLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lbl_TotalCierre, lbl_TotalSistema});
 
-        pnl_CajasLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ftxt_TotalCierre, ftxt_TotalFinal});
+        pnl_CajasLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ftxt_TotalReal, ftxt_TotalSistema});
 
         pnl_CajasLayout.setVerticalGroup(
             pnl_CajasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -442,17 +438,15 @@ public class CajasGUI extends JInternalFrame {
                         .addComponent(btn_AbrirCaja))
                     .addGroup(pnl_CajasLayout.createSequentialGroup()
                         .addGroup(pnl_CajasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lbl_TotalFinal)
-                            .addComponent(ftxt_TotalFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lbl_TotalSistema)
+                            .addComponent(ftxt_TotalSistema, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(7, 7, 7)
                         .addGroup(pnl_CajasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbl_TotalCierre)
-                            .addComponent(ftxt_TotalCierre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addComponent(ftxt_TotalReal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
         );
 
         pnl_CajasLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_eliminarCaja, btn_verDetalle});
-
-        lbl_TotalFinal.getAccessibleContext().setAccessibleName("Total Final:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -593,12 +587,12 @@ public class CajasGUI extends JInternalFrame {
     private javax.swing.JComboBox<Usuario> cmb_Usuarios;
     private com.toedter.calendar.JDateChooser dc_FechaDesde;
     private com.toedter.calendar.JDateChooser dc_FechaHasta;
-    private javax.swing.JFormattedTextField ftxt_TotalCierre;
-    private javax.swing.JFormattedTextField ftxt_TotalFinal;
+    private javax.swing.JFormattedTextField ftxt_TotalReal;
+    private javax.swing.JFormattedTextField ftxt_TotalSistema;
     private javax.swing.JLabel lbl_Desde;
     private javax.swing.JLabel lbl_Hasta;
     private javax.swing.JLabel lbl_TotalCierre;
-    private javax.swing.JLabel lbl_TotalFinal;
+    private javax.swing.JLabel lbl_TotalSistema;
     private javax.swing.JLabel lbl_cantidadMostrar;
     private javax.swing.JPanel pnl_Cajas;
     private javax.swing.JPanel pnl_Filtros;

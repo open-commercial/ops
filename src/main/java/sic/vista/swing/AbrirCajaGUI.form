@@ -65,19 +65,9 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="lbl_CorteControl" max="32767" attributes="0"/>
-                      <Component id="lbl_monto" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="lbl_monto" min="-2" pref="117" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Component id="spinner_Hora" linkSize="6" min="-2" pref="73" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="spinner_Minutos" linkSize="6" min="-2" pref="74" max="-2" attributes="0"/>
-                      </Group>
-                      <Component id="ftxt_Monto" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="ftxt_Monto" min="-2" pref="154" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -85,12 +75,6 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="spinner_Hora" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="spinner_Minutos" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbl_CorteControl" linkSize="5" alignment="2" min="-2" pref="28" max="-2" attributes="0"/>
-                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lbl_monto" linkSize="5" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -102,20 +86,10 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="lbl_CorteControl">
-          <Properties>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Hora de Control:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JSpinner" name="spinner_Hora">
-        </Component>
-        <Component class="javax.swing.JSpinner" name="spinner_Minutos">
-        </Component>
         <Component class="javax.swing.JLabel" name="lbl_monto">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Monto:"/>
+            <Property name="text" type="java.lang.String" value="Monto Apertura:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="ftxt_Monto">

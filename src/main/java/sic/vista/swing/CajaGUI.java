@@ -1,6 +1,5 @@
 package sic.vista.swing;
 
-import sic.modelo.TipoMovimiento;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -13,14 +12,16 @@ import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
@@ -96,8 +97,6 @@ public class CajaGUI extends JInternalFrame {
     }
 
     private void setColumnasTablaMovimientos() {
-        //sorting
-        tbl_Movimientos.setAutoCreateRowSorter(true);
         //nombres de columnas
         String[] encabezados = new String[3];
         encabezados[0] = "Concepto";
@@ -122,8 +121,6 @@ public class CajaGUI extends JInternalFrame {
     }
 
     private void setColumnasTablaResumen() {
-        //sorting
-        tbl_Resumen.setAutoCreateRowSorter(true);
         //nombres de columnas
         String[] encabezados = new String[4];
         encabezados[0] = "idFormaDePago";
@@ -155,17 +152,19 @@ public class CajaGUI extends JInternalFrame {
         renglonSaldoApertura[3] = caja.getSaldoInicial();
         modeloTablaResumen.addRow(renglonSaldoApertura);
         try {
-            caja.getTotalesPorFomaDePago().keySet().stream().map((idFormaDePago) -> {
+            String uri = "/cajas/" + this.caja.getId_Caja() + "/totales-formas-de-pago";
+            Map<Long, BigDecimal> totalesPorFormasDePago = RestClient.getRestTemplate()
+                .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {
+                }).getBody();
+            totalesPorFormasDePago.keySet().stream().map(idFormaDePago -> {
                 FormaDePago fdp = RestClient.getRestTemplate().getForObject("/formas-de-pago/" + idFormaDePago, FormaDePago.class);
                 Object[] fila = new Object[4];
                 fila[0] = fdp.getId_FormaDePago();
                 fila[1] = fdp.getNombre();
                 fila[2] = fdp.isAfectaCaja();
-                fila[3] = caja.getTotalesPorFomaDePago().get(idFormaDePago);
+                fila[3] = totalesPorFormasDePago.get(idFormaDePago);
                 return fila;
-            }).forEachOrdered((fila) -> {
-                modeloTablaResumen.addRow(fila);
-            });
+            }).forEachOrdered(modeloTablaResumen::addRow);
             this.cargarResultados();
             tbl_Resumen.setModel(modeloTablaResumen);
             tbl_Resumen.removeColumn(tbl_Resumen.getColumnModel().getColumn(0));
@@ -185,8 +184,9 @@ public class CajaGUI extends JInternalFrame {
         this.limpiarTablaMovimientos();
         if (idFormaDePago != 0) {
             Object[] renglonMovimiento = new Object[3];
-            movimientos = 
-            Arrays.asList(RestClient.getRestTemplate().getForObject("/cajas/"+ caja.getId_Caja() + "/movimientos?idFormaDePago=" + idFormaDePago, MovimientoCaja[].class));
+            movimientos = Arrays.asList(RestClient.getRestTemplate()
+                    .getForObject("/cajas/"+ caja.getId_Caja() + "/movimientos?idFormaDePago=" + idFormaDePago,
+                            MovimientoCaja[].class));
             movimientos.forEach(m -> {
                 renglonMovimiento[0] = m.getConcepto();
                 renglonMovimiento[1] = m.getFecha();
@@ -198,19 +198,21 @@ public class CajaGUI extends JInternalFrame {
     }
   
     private void cargarResultados() {   
-        ftxt_TotalAfectaCaja.setValue(caja.getTotalAfectaCaja());
-        ftxt_TotalGeneral.setValue(caja.getTotalGeneral());              
-        if (caja.getTotalAfectaCaja().compareTo(BigDecimal.ZERO) > 0) {
+        ftxt_TotalAfectaCaja.setValue(RestClient.getRestTemplate()                
+                    .getForObject("/cajas/"+ caja.getId_Caja() +"/total-afecta-caja",
+                            BigDecimal.class));
+        ftxt_TotalSistema.setValue(caja.getSaldoSistema());              
+        if (((BigDecimal)ftxt_TotalAfectaCaja.getValue()).compareTo(BigDecimal.ZERO) > 0) {
             ftxt_TotalAfectaCaja.setBackground(Color.GREEN);
         }
-        if (caja.getTotalAfectaCaja().compareTo(BigDecimal.ZERO) < 0) {
+        if (((BigDecimal)ftxt_TotalAfectaCaja.getValue()).compareTo(BigDecimal.ZERO) < 0) {
             ftxt_TotalAfectaCaja.setBackground(Color.PINK);
         }
-        if (caja.getTotalGeneral().compareTo(BigDecimal.ZERO) < 0) {
-            ftxt_TotalGeneral.setBackground(Color.PINK);
+        if (((BigDecimal)ftxt_TotalAfectaCaja.getValue()).compareTo(BigDecimal.ZERO) < 0) {
+            ftxt_TotalSistema.setBackground(Color.PINK);
         }
-        if (caja.getTotalGeneral().compareTo(BigDecimal.ZERO) > 0) {
-            ftxt_TotalGeneral.setBackground(Color.GREEN);
+        if (((BigDecimal)ftxt_TotalAfectaCaja.getValue()).compareTo(BigDecimal.ZERO) > 0) {
+            ftxt_TotalSistema.setBackground(Color.GREEN);
         }
     }
 
@@ -265,10 +267,10 @@ public class CajaGUI extends JInternalFrame {
         lbl_estadoDinamico = new javax.swing.JLabel();
         btn_CerrarCaja = new javax.swing.JButton();
         btn_AgregarGasto = new javax.swing.JButton();
-        lbl_Total = new javax.swing.JLabel();
-        lbl_totalCaja = new javax.swing.JLabel();
+        lbl_TotalSistema = new javax.swing.JLabel();
+        lbl_totalAfectaCaja = new javax.swing.JLabel();
         ftxt_TotalAfectaCaja = new javax.swing.JFormattedTextField();
-        ftxt_TotalGeneral = new javax.swing.JFormattedTextField();
+        ftxt_TotalSistema = new javax.swing.JFormattedTextField();
         btn_Refresh = new javax.swing.JButton();
 
         setClosable(true);
@@ -395,11 +397,11 @@ public class CajaGUI extends JInternalFrame {
             }
         });
 
-        lbl_Total.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lbl_Total.setText("Total General:");
+        lbl_TotalSistema.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lbl_TotalSistema.setText("Total Sistema:");
 
-        lbl_totalCaja.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lbl_totalCaja.setText("Total afecta Caja:");
+        lbl_totalAfectaCaja.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lbl_totalAfectaCaja.setText("Total afecta Caja:");
 
         ftxt_TotalAfectaCaja.setEditable(false);
         ftxt_TotalAfectaCaja.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
@@ -407,11 +409,11 @@ public class CajaGUI extends JInternalFrame {
         ftxt_TotalAfectaCaja.setText("0");
         ftxt_TotalAfectaCaja.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
 
-        ftxt_TotalGeneral.setEditable(false);
-        ftxt_TotalGeneral.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
-        ftxt_TotalGeneral.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        ftxt_TotalGeneral.setText("0");
-        ftxt_TotalGeneral.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        ftxt_TotalSistema.setEditable(false);
+        ftxt_TotalSistema.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        ftxt_TotalSistema.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        ftxt_TotalSistema.setText("0");
+        ftxt_TotalSistema.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
 
         btn_Refresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Refresh_16x16.png"))); // NOI18N
         btn_Refresh.setFocusable(false);
@@ -435,11 +437,11 @@ public class CajaGUI extends JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lbl_Total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lbl_TotalSistema, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ftxt_TotalGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(ftxt_TotalSistema, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lbl_totalCaja)
+                                .addComponent(lbl_totalAfectaCaja)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(ftxt_TotalAfectaCaja, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(pnl_Resumen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -452,7 +454,7 @@ public class CajaGUI extends JInternalFrame {
                 .addContainerGap())
         );
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ftxt_TotalAfectaCaja, ftxt_TotalGeneral});
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ftxt_TotalAfectaCaja, ftxt_TotalSistema});
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_AgregarGasto, btn_CerrarCaja});
 
@@ -468,18 +470,18 @@ public class CajaGUI extends JInternalFrame {
                 .addComponent(pnl_Resumen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_totalCaja, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbl_totalAfectaCaja, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(ftxt_TotalAfectaCaja, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btn_AgregarGasto)
                     .addComponent(btn_CerrarCaja)
-                    .addComponent(lbl_Total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(ftxt_TotalGeneral))
+                    .addComponent(lbl_TotalSistema, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ftxt_TotalSistema))
                 .addContainerGap())
         );
 
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {ftxt_TotalAfectaCaja, ftxt_TotalGeneral, lbl_Total, lbl_totalCaja});
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {ftxt_TotalAfectaCaja, ftxt_TotalSistema, lbl_TotalSistema, lbl_totalAfectaCaja});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -489,7 +491,7 @@ public class CajaGUI extends JInternalFrame {
             if (caja.getEstado() == EstadoCaja.ABIERTA) {
                 try {
                     String monto = JOptionPane.showInputDialog(this,
-                            "Saldo del Sistema: " + new DecimalFormat("#.##").format(caja.getSaldoFinal())
+                            "Saldo del Sistema: " + new DecimalFormat("#.##").format(caja.getSaldoSistema())
                             + "\nSaldo Real:", "Cerrar Caja", JOptionPane.QUESTION_MESSAGE);
                     if (monto != null) {
                         RestClient.getRestTemplate().put("/cajas/" + caja.getId_Caja() + "/cierre?"
@@ -630,12 +632,7 @@ public class CajaGUI extends JInternalFrame {
     }//GEN-LAST:event_tbl_ResumenKeyPressed
 
     private void btn_RefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_RefreshActionPerformed
-        if (caja.getEstado().equals(EstadoCaja.CERRADA)) {
-            JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                    .getString("mensaje_caja_cerrada"), "Aviso", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            this.limpiarYCargarTablas();
-        }
+        this.limpiarYCargarTablas();
     }//GEN-LAST:event_btn_RefreshActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -645,12 +642,12 @@ public class CajaGUI extends JInternalFrame {
     private javax.swing.JButton btn_Refresh;
     private javax.swing.JButton btn_VerDetalle;
     private javax.swing.JFormattedTextField ftxt_TotalAfectaCaja;
-    private javax.swing.JFormattedTextField ftxt_TotalGeneral;
-    private javax.swing.JLabel lbl_Total;
+    private javax.swing.JFormattedTextField ftxt_TotalSistema;
+    private javax.swing.JLabel lbl_TotalSistema;
     private javax.swing.JLabel lbl_estadoDinamico;
     private javax.swing.JLabel lbl_estadoEstatico;
     private javax.swing.JLabel lbl_movimientos;
-    private javax.swing.JLabel lbl_totalCaja;
+    private javax.swing.JLabel lbl_totalAfectaCaja;
     private javax.swing.JPanel pnl_Resumen;
     private javax.swing.JScrollPane sp_Tabla;
     private javax.swing.JScrollPane sp_TablaResumen;
