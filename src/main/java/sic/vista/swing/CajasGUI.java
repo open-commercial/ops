@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -26,6 +27,7 @@ import sic.modelo.Usuario;
 import sic.modelo.EstadoCaja;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
+import sic.modelo.UsuarioActivo;
 import sic.util.ColoresEstadosRenderer;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
@@ -197,12 +199,34 @@ public class CajasGUI extends JInternalFrame {
     }
 
     private void abrirNuevaCaja() {
-        AbrirCajaGUI abrirCaja = new AbrirCajaGUI();
-        abrirCaja.setModal(true);
-        abrirCaja.setLocationRelativeTo(this);
-        abrirCaja.setVisible(true);
+        String monto = JOptionPane.showInputDialog(this,
+                "Saldo Inicial: \n", "Abrir Caja", JOptionPane.QUESTION_MESSAGE);
+        try {
+            RestClient.getRestTemplate().postForObject("/cajas",
+                    this.construirCaja(new BigDecimal(monto)),
+                    Caja.class);
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
         this.limpiarResultados();
-        this.buscar();        
+        this.buscar();
+    }
+
+    private Caja construirCaja(BigDecimal monto) {
+        Caja caja = new Caja();
+        caja.setEstado(EstadoCaja.ABIERTA);
+        caja.setObservacion("Apertura De Caja");
+        caja.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
+        caja.setSaldoInicial(monto);
+        caja.setSaldoSistema(monto);
+        caja.setSaldoReal(BigDecimal.ZERO);
+        caja.setUsuarioAbreCaja(UsuarioActivo.getInstance().getUsuario());
+        return caja;
     }
 
     @SuppressWarnings("unchecked")
