@@ -5,7 +5,7 @@ import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -102,18 +102,21 @@ public class CajasGUI extends JInternalFrame {
 
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
-        String criteriaBusqueda = "/cajas/busqueda/criteria?";
+        String busqueda = "/cajas/busqueda/criteria?";
+        String criteria = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
         if (chk_Fecha.isSelected()) {
-            criteriaBusqueda += "desde=" + dc_FechaDesde.getDate().getTime() + "&hasta=" + dc_FechaHasta.getDate().getTime();
+            criteria += "&desde=" + dc_FechaDesde.getDate().getTime() + "&hasta=" + dc_FechaHasta.getDate().getTime();
         }
-        if (chk_Usuario.isSelected()) {
-            criteriaBusqueda += "&idUsuario=" + ((Usuario) cmb_Usuarios.getSelectedItem()).getId_Usuario();
+        if (chk_UsuarioApertura.isSelected()) {
+            criteria += "&idUsuarioApertura=" + ((Usuario) cmb_UsuariosApertura.getSelectedItem()).getId_Usuario();
         }
-        criteriaBusqueda += "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
-        criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
+        if (chk_UsuarioCierre.isSelected()) {
+            criteria += "&idUsuarioCierre=" + ((Usuario) cmb_UsuariosApertura.getSelectedItem()).getId_Usuario();
+        }
+        criteria += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
         try {
             PaginaRespuestaRest<Caja> response = RestClient.getRestTemplate()
-                    .exchange(criteriaBusqueda, HttpMethod.GET, null,
+                    .exchange(busqueda + criteria, HttpMethod.GET, null,
                             new ParameterizedTypeReference<PaginaRespuestaRest<Caja>>() {
                     })
                     .getBody();
@@ -121,19 +124,10 @@ public class CajasGUI extends JInternalFrame {
             cajasParcial = response.getContent();
             cajasTotal.addAll(cajasParcial);
             this.cargarResultadosAlTable();
-            criteriaBusqueda = "";
-            if (chk_Fecha.isSelected()) {
-                criteriaBusqueda += "desde=" + dc_FechaDesde.getDate().getTime() + "&hasta=" + dc_FechaHasta.getDate().getTime();
-            }
-            if (chk_Usuario.isSelected()) {
-                criteriaBusqueda += "&idUsuario=" + ((Usuario) cmb_Usuarios.getSelectedItem()).getId_Usuario();
-            }
             ftxt_TotalSistema.setValue(RestClient.getRestTemplate()
-                    .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                            + "/saldo-sistema?" + criteriaBusqueda, BigDecimal.class));
+                    .getForObject("/cajas/saldo-sistema?" + criteria, BigDecimal.class));
             ftxt_TotalReal.setValue(RestClient.getRestTemplate()
-                    .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                            + "/saldo-real?" + criteriaBusqueda, BigDecimal.class));
+                    .getForObject("/cajas/saldo-real?" + criteria, BigDecimal.class));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -142,7 +136,7 @@ public class CajasGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-        this.cambiarEstadoEnabledComponentes(true);    
+        this.cambiarEstadoEnabledComponentes(true);
     }
     
     private void cambiarEstadoEnabledComponentes(boolean status) {
@@ -154,11 +148,16 @@ public class CajasGUI extends JInternalFrame {
             dc_FechaDesde.setEnabled(false);
             dc_FechaHasta.setEnabled(false);
         }
-        chk_Usuario.setEnabled(status);
-        if (status == true && chk_Usuario.isSelected() == true) {
-            cmb_Usuarios.setEnabled(true);
+        chk_UsuarioApertura.setEnabled(status);
+        if (status == true && chk_UsuarioApertura.isSelected() == true) {
+            cmb_UsuariosApertura.setEnabled(true);
         } else {
-            cmb_Usuarios.setEnabled(false);
+            cmb_UsuariosApertura.setEnabled(false);
+        }
+        if (status == true && chk_UsuarioCierre.isSelected() == true) {
+            cmb_UsuariosCierre.setEnabled(true);
+        } else {
+            cmb_UsuariosCierre.setEnabled(false);
         }
         btn_buscar.setEnabled(status);        
         tbl_Cajas.setEnabled(status);
@@ -240,9 +239,11 @@ public class CajasGUI extends JInternalFrame {
         lbl_Hasta = new javax.swing.JLabel();
         lbl_Desde = new javax.swing.JLabel();
         btn_buscar = new javax.swing.JButton();
-        chk_Usuario = new javax.swing.JCheckBox();
-        cmb_Usuarios = new javax.swing.JComboBox<>();
+        chk_UsuarioApertura = new javax.swing.JCheckBox();
+        cmb_UsuariosApertura = new javax.swing.JComboBox<>();
         lbl_cantidadMostrar = new javax.swing.JLabel();
+        chk_UsuarioCierre = new javax.swing.JCheckBox();
+        cmb_UsuariosCierre = new javax.swing.JComboBox<>();
         pnl_Cajas = new javax.swing.JPanel();
         sp_Cajas = new javax.swing.JScrollPane();
         tbl_Cajas = new javax.swing.JTable();
@@ -253,6 +254,7 @@ public class CajasGUI extends JInternalFrame {
         ftxt_TotalSistema = new javax.swing.JFormattedTextField();
         lbl_TotalCierre = new javax.swing.JLabel();
         ftxt_TotalReal = new javax.swing.JFormattedTextField();
+        btn_ReabrirCaja = new javax.swing.JButton();
 
         setClosable(true);
         setMaximizable(true);
@@ -307,14 +309,21 @@ public class CajasGUI extends JInternalFrame {
             }
         });
 
-        chk_Usuario.setText("Usuario:");
-        chk_Usuario.addItemListener(new java.awt.event.ItemListener() {
+        chk_UsuarioApertura.setText("Usuario Apertura:");
+        chk_UsuarioApertura.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                chk_UsuarioItemStateChanged(evt);
+                chk_UsuarioAperturaItemStateChanged(evt);
             }
         });
 
         lbl_cantidadMostrar.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+
+        chk_UsuarioCierre.setText("Usuario Cierre:");
+        chk_UsuarioCierre.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chk_UsuarioCierreItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnl_FiltrosLayout = new javax.swing.GroupLayout(pnl_Filtros);
         pnl_Filtros.setLayout(pnl_FiltrosLayout);
@@ -329,24 +338,31 @@ public class CajasGUI extends JInternalFrame {
                         .addComponent(lbl_cantidadMostrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(pnl_FiltrosLayout.createSequentialGroup()
                         .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(chk_Usuario)
-                            .addComponent(chk_Fecha))
+                            .addComponent(chk_UsuarioApertura)
+                            .addComponent(chk_Fecha)
+                            .addComponent(chk_UsuarioCierre))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnl_FiltrosLayout.createSequentialGroup()
+                                .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cmb_UsuariosCierre, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cmb_UsuariosApertura, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnl_FiltrosLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(lbl_Desde)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lbl_Hasta)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(cmb_Usuarios, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
 
-        pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_buscar, chk_Fecha, chk_Usuario});
+        pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_buscar, chk_Fecha, chk_UsuarioApertura, chk_UsuarioCierre});
+
+        pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cmb_UsuariosApertura, cmb_UsuariosCierre});
 
         pnl_FiltrosLayout.setVerticalGroup(
             pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -359,16 +375,22 @@ public class CajasGUI extends JInternalFrame {
                     .addComponent(lbl_Hasta))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(cmb_Usuarios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chk_Usuario))
+                    .addComponent(cmb_UsuariosApertura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chk_UsuarioApertura))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(cmb_UsuariosCierre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chk_UsuarioCierre))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btn_buscar)
                     .addComponent(lbl_cantidadMostrar))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_buscar, lbl_cantidadMostrar});
+
+        pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmb_UsuariosApertura, cmb_UsuariosCierre});
 
         pnl_Cajas.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados"));
 
@@ -421,12 +443,23 @@ public class CajasGUI extends JInternalFrame {
         ftxt_TotalReal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
         ftxt_TotalReal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
+        btn_ReabrirCaja.setForeground(java.awt.Color.blue);
+        btn_ReabrirCaja.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/ReAbrirCaja_16x16.png"))); // NOI18N
+        btn_ReabrirCaja.setText("Reabrir");
+        btn_ReabrirCaja.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ReabrirCajaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnl_CajasLayout = new javax.swing.GroupLayout(pnl_Cajas);
         pnl_Cajas.setLayout(pnl_CajasLayout);
         pnl_CajasLayout.setHorizontalGroup(
             pnl_CajasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_CajasLayout.createSequentialGroup()
                 .addComponent(btn_AbrirCaja)
+                .addGap(0, 0, 0)
+                .addComponent(btn_ReabrirCaja)
                 .addGap(0, 0, 0)
                 .addComponent(btn_verDetalle)
                 .addGap(0, 0, 0)
@@ -441,10 +474,10 @@ public class CajasGUI extends JInternalFrame {
                         .addComponent(lbl_TotalCierre)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ftxt_TotalReal, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))))
-            .addComponent(sp_Cajas, javax.swing.GroupLayout.DEFAULT_SIZE, 709, Short.MAX_VALUE)
+            .addComponent(sp_Cajas, javax.swing.GroupLayout.DEFAULT_SIZE, 1110, Short.MAX_VALUE)
         );
 
-        pnl_CajasLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_AbrirCaja, btn_eliminarCaja, btn_verDetalle});
+        pnl_CajasLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_AbrirCaja, btn_ReabrirCaja, btn_eliminarCaja, btn_verDetalle});
 
         pnl_CajasLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lbl_TotalCierre, lbl_TotalSistema});
 
@@ -453,13 +486,14 @@ public class CajasGUI extends JInternalFrame {
         pnl_CajasLayout.setVerticalGroup(
             pnl_CajasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_CajasLayout.createSequentialGroup()
-                .addComponent(sp_Cajas, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                .addComponent(sp_Cajas, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_CajasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(pnl_CajasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btn_verDetalle)
                         .addComponent(btn_eliminarCaja)
-                        .addComponent(btn_AbrirCaja))
+                        .addComponent(btn_AbrirCaja)
+                        .addComponent(btn_ReabrirCaja))
                     .addGroup(pnl_CajasLayout.createSequentialGroup()
                         .addGroup(pnl_CajasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbl_TotalSistema)
@@ -470,7 +504,7 @@ public class CajasGUI extends JInternalFrame {
                             .addComponent(ftxt_TotalReal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
         );
 
-        pnl_CajasLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_eliminarCaja, btn_verDetalle});
+        pnl_CajasLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_AbrirCaja, btn_ReabrirCaja, btn_eliminarCaja, btn_verDetalle});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -558,18 +592,18 @@ public class CajasGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btn_eliminarCajaActionPerformed
 
-    private void chk_UsuarioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UsuarioItemStateChanged
+    private void chk_UsuarioAperturaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UsuarioAperturaItemStateChanged
         try {
-            if (chk_Usuario.isSelected() == true) {
-                cmb_Usuarios.setEnabled(true);
+            if (chk_UsuarioApertura.isSelected() == true) {
+                cmb_UsuariosApertura.setEnabled(true);
                 List<Usuario> usuarios = Arrays.asList(RestClient.getRestTemplate()
                         .getForObject("/usuarios/roles?rol=" + Rol.ADMINISTRADOR, Usuario[].class));
                 usuarios.stream().forEach((usuario) -> {
-                    cmb_Usuarios.addItem(usuario);
+                    cmb_UsuariosApertura.addItem(usuario);
                 });
             } else {
-                cmb_Usuarios.removeAllItems();
-                cmb_Usuarios.setEnabled(false);
+                cmb_UsuariosApertura.removeAllItems();
+                cmb_UsuariosApertura.setEnabled(false);
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -579,7 +613,7 @@ public class CajasGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_chk_UsuarioItemStateChanged
+    }//GEN-LAST:event_chk_UsuarioAperturaItemStateChanged
 
     private void btn_AbrirCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AbrirCajaActionPerformed
         this.abrirNuevaCaja();
@@ -588,7 +622,8 @@ public class CajasGUI extends JInternalFrame {
     private void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_internalFrameOpened
         this.setSize(sizeInternalFrame);
         this.setColumnasCaja();
-        cmb_Usuarios.setEnabled(false);
+        cmb_UsuariosApertura.setEnabled(false);
+        cmb_UsuariosCierre.setEnabled(false);
         dc_FechaDesde.setDate(new Date());
         dc_FechaHasta.setDate(new Date());
         try {
@@ -601,14 +636,65 @@ public class CajasGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_internalFrameOpened
 
+    private void chk_UsuarioCierreItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UsuarioCierreItemStateChanged
+        try {
+            if (chk_UsuarioCierre.isSelected() == true) {
+                cmb_UsuariosCierre.setEnabled(true);
+                List<Usuario> usuarios = Arrays.asList(RestClient.getRestTemplate()
+                        .getForObject("/usuarios/roles?rol=" + Rol.ADMINISTRADOR, Usuario[].class));
+                usuarios.stream().forEach((usuario) -> {
+                    cmb_UsuariosCierre.addItem(usuario);
+                });
+            } else {
+                cmb_UsuariosCierre.removeAllItems();
+                cmb_UsuariosCierre.setEnabled(false);
+            }
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_chk_UsuarioCierreItemStateChanged
+
+    private void btn_ReabrirCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ReabrirCajaActionPerformed
+        if (tbl_Cajas.getSelectedRow() != -1) {
+            int indice = Utilidades.getSelectedRowModelIndice(tbl_Cajas);
+            int reply = JOptionPane.showConfirmDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_caja_reapertura"),
+                    "Aviso", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION) {
+                String monto = JOptionPane.showInputDialog(this,
+                        "Saldo Inicial: \n", "Reabrir Caja", JOptionPane.QUESTION_MESSAGE);
+                try {
+                    RestClient.getRestTemplate().put("/cajas/" + this.cajasTotal.get(indice).getId_Caja() + "/reabrir?monto=" + new BigDecimal(monto), null);
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                this.limpiarResultados();
+                this.buscar();
+            }
+        }
+    }//GEN-LAST:event_btn_ReabrirCajaActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_AbrirCaja;
+    private javax.swing.JButton btn_ReabrirCaja;
     private javax.swing.JButton btn_buscar;
     private javax.swing.JButton btn_eliminarCaja;
     private javax.swing.JButton btn_verDetalle;
     private javax.swing.JCheckBox chk_Fecha;
-    private javax.swing.JCheckBox chk_Usuario;
-    private javax.swing.JComboBox<Usuario> cmb_Usuarios;
+    private javax.swing.JCheckBox chk_UsuarioApertura;
+    private javax.swing.JCheckBox chk_UsuarioCierre;
+    private javax.swing.JComboBox<Usuario> cmb_UsuariosApertura;
+    private javax.swing.JComboBox<Usuario> cmb_UsuariosCierre;
     private com.toedter.calendar.JDateChooser dc_FechaDesde;
     private com.toedter.calendar.JDateChooser dc_FechaHasta;
     private javax.swing.JFormattedTextField ftxt_TotalReal;

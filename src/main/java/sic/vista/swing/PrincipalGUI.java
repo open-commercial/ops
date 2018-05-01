@@ -348,7 +348,7 @@ public class PrincipalGUI extends JFrame {
         boolean seEncontroCajaAbierta = RestClient.getRestTemplate().getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/estado-ultima-caja", boolean.class);
         if (!seEncontroCajaAbierta) {
             JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_caja_ninguna_abierta"),
-                    "Error", JOptionPane.INFORMATION_MESSAGE);
+                    "INFORMACIÓN IMPORTANTE", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_formWindowOpened
 
