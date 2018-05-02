@@ -111,7 +111,7 @@ public class CajasGUI extends JInternalFrame {
             criteria += "&idUsuarioApertura=" + ((Usuario) cmb_UsuariosApertura.getSelectedItem()).getId_Usuario();
         }
         if (chk_UsuarioCierre.isSelected()) {
-            criteria += "&idUsuarioCierre=" + ((Usuario) cmb_UsuariosApertura.getSelectedItem()).getId_Usuario();
+            criteria += "&idUsuarioCierre=" + ((Usuario) cmb_UsuariosCierre.getSelectedItem()).getId_Usuario();
         }
         criteria += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
         try {
@@ -210,6 +210,11 @@ public class CajasGUI extends JInternalFrame {
             LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (NumberFormatException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_formato_numero"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
         this.limpiarResultados();
@@ -662,25 +667,25 @@ public class CajasGUI extends JInternalFrame {
     private void btn_ReabrirCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ReabrirCajaActionPerformed
         if (tbl_Cajas.getSelectedRow() != -1) {
             int indice = Utilidades.getSelectedRowModelIndice(tbl_Cajas);
-            int reply = JOptionPane.showConfirmDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_caja_reapertura"),
-                    "Aviso", JOptionPane.YES_NO_OPTION);
-            if (reply == JOptionPane.YES_OPTION) {
-                String monto = JOptionPane.showInputDialog(this,
-                        "Saldo Inicial: \n", "Reabrir Caja", JOptionPane.QUESTION_MESSAGE);
-                try {
-                    RestClient.getRestTemplate().put("/cajas/" + this.cajasTotal.get(indice).getId_Caja() + "/reabrir?monto=" + new BigDecimal(monto), null);
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                this.limpiarResultados();
-                this.buscar();
+            String monto = JOptionPane.showInputDialog(this,
+                    "Saldo Inicial: \n", "Reabrir Caja", JOptionPane.QUESTION_MESSAGE);
+            try {
+                RestClient.getRestTemplate().put("/cajas/" + this.cajasTotal.get(indice).getId_Caja() + "/reabrir?monto=" + new BigDecimal(monto), null);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (NumberFormatException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_formato_numero"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
+            this.limpiarResultados();
+            this.buscar();
         }
     }//GEN-LAST:event_btn_ReabrirCajaActionPerformed
 

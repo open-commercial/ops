@@ -220,6 +220,7 @@ public class CajaGUI extends JInternalFrame {
         this.limpiarTablaResumen();
         this.cargarTablaResumen();
         this.limpiarTablaMovimientos();
+        this.cambiarMensajeEstadoCaja();
     }
 
     private void lanzarReporteRecibo(long idRecibo) {
@@ -501,9 +502,10 @@ public class CajaGUI extends JInternalFrame {
                         this.dispose();
                     }
                 } catch (NumberFormatException e) {
-                    String msjError = "Monto inválido";
-                    LOGGER.error(msjError + " - " + e.getMessage());
-                    JOptionPane.showMessageDialog(this, msjError, "Error", JOptionPane.INFORMATION_MESSAGE);
+                    LOGGER.error(e.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_formato_numero"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (ResourceAccessException ex) {
@@ -565,6 +567,11 @@ public class CajaGUI extends JInternalFrame {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (NumberFormatException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_formato_numero"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_AgregarGastoActionPerformed
 
@@ -603,6 +610,18 @@ public class CajaGUI extends JInternalFrame {
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         this.setSize(sizeInternalFrame);        
         this.setTitle("Arqueo de Caja - Apertura: " + formatter.format(this.caja.getFechaApertura()));
+        this.cambiarMensajeEstadoCaja();
+        this.limpiarYCargarTablas();
+        try {
+            this.setMaximum(true);
+        } catch (PropertyVetoException ex) {
+            String mensaje = "Se produjo un error al intentar maximizar la ventana.";
+            LOGGER.error(mensaje + " - " + ex.getMessage());
+            JOptionPane.showInternalMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_formInternalFrameOpened
+
+    private void cambiarMensajeEstadoCaja() {
         switch (caja.getEstado()) {
             case ABIERTA: {
                 lbl_estadoDinamico.setText("Abierta");
@@ -615,16 +634,8 @@ public class CajaGUI extends JInternalFrame {
                 break;
             }
         }
-        this.limpiarYCargarTablas();
-        try {
-            this.setMaximum(true);
-        } catch (PropertyVetoException ex) {
-            String mensaje = "Se produjo un error al intentar maximizar la ventana.";
-            LOGGER.error(mensaje + " - " + ex.getMessage());
-            JOptionPane.showInternalMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_formInternalFrameOpened
-
+    }
+    
     private void tbl_ResumenKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbl_ResumenKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_UP || evt.getKeyCode() == KeyEvent.VK_DOWN) {
             this.cargarMovimientosDeFormaDePago(evt);
