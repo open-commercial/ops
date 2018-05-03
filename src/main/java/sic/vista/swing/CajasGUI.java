@@ -199,25 +199,27 @@ public class CajasGUI extends JInternalFrame {
     private void abrirNuevaCaja() {
         String monto = JOptionPane.showInputDialog(this,
                 "Saldo Inicial: \n", "Abrir Caja", JOptionPane.QUESTION_MESSAGE);
-        try {
-            RestClient.getRestTemplate().postForObject("/cajas",
-                    this.construirCaja(new BigDecimal(monto)),
-                    Caja.class);
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (NumberFormatException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_formato_numero"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+        if (monto != null) {
+            try {
+                RestClient.getRestTemplate().postForObject("/cajas",
+                        this.construirCaja(new BigDecimal(monto)),
+                        Caja.class);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (NumberFormatException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_formato_numero"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            this.limpiarResultados();
+            this.buscar();
         }
-        this.limpiarResultados();
-        this.buscar();
     }
 
     private Caja construirCaja(BigDecimal monto) {
@@ -667,23 +669,25 @@ public class CajasGUI extends JInternalFrame {
             int indice = Utilidades.getSelectedRowModelIndice(tbl_Cajas);
             String monto = JOptionPane.showInputDialog(this,
                     "Saldo Inicial: \n", "Reabrir Caja", JOptionPane.QUESTION_MESSAGE);
-            try {
-                RestClient.getRestTemplate().put("/cajas/" + this.cajasTotal.get(indice).getId_Caja() + "/reabrir?monto=" + new BigDecimal(monto), null);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (NumberFormatException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_formato_numero"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+            if (monto != null) {
+                try {
+                    RestClient.getRestTemplate().put("/cajas/" + this.cajasTotal.get(indice).getId_Caja() + "/reabrir?monto=" + new BigDecimal(monto), null);
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (NumberFormatException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_formato_numero"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                this.limpiarResultados();
+                this.buscar();
             }
-            this.limpiarResultados();
-            this.buscar();
         }
     }//GEN-LAST:event_btn_ReabrirCajaActionPerformed
 
