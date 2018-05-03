@@ -865,93 +865,117 @@ public class DetalleProductoGUI extends JDialog {
     }
     
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
-        long idMedida = 0;
-        long idRubro = 0;
-        long idProveedor = 0;
+        Long idMedida = null;
+        Long idRubro = null;
+        Long idProveedor = null;
+        boolean ejecutarOperacion = true;
+        String mensajeError = "";
         for (Medida m : medidas) {
-            if (m.getNombre().equals(cmb_Medida.getSelectedItem())) idMedida = m.getId_Medida();
-        }                
-        for (Rubro r : rubros) {
-            if (r.getNombre().equals(cmb_Rubro.getSelectedItem())) idRubro = r.getId_Rubro();
-        }                
-        for (Proveedor p : proveedores) {
-            if (p.getRazonSocial().equals(cmb_Proveedor.getSelectedItem())) idProveedor = p.getId_Proveedor();
+            if (m.getNombre().equals(cmb_Medida.getSelectedItem())) {
+                idMedida = m.getId_Medida();
+            }
         }
-        try {
-            if (operacion == TipoDeOperacion.ALTA) {                
-                Producto producto = new Producto();
-                producto.setCodigo(txt_Codigo.getText());
-                producto.setDescripcion(txt_Descripcion.getText().trim());
-                producto.setCantidad(new BigDecimal(txt_Cantidad.getValue().toString()));
-                producto.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
-                producto.setVentaMinima(new BigDecimal(txt_VentaMinima.getValue().toString()));
-                producto.setPrecioCosto(new BigDecimal(txt_PrecioCosto.getValue().toString()));
-                producto.setGanancia_porcentaje(new BigDecimal(txt_Ganancia_Porcentaje.getValue().toString()));
-                producto.setGanancia_neto(new BigDecimal(txt_Ganancia_Neto.getValue().toString()));
-                producto.setPrecioVentaPublico(new BigDecimal(txt_PVP.getValue().toString()));
-                producto.setIva_porcentaje(new BigDecimal(cmb_IVA_Porcentaje.getSelectedItem().toString()));
-                producto.setIva_neto(new BigDecimal(txt_IVA_Neto.getValue().toString()));
-                producto.setImpuestoInterno_porcentaje(BigDecimal.ZERO);
-                producto.setImpuestoInterno_neto(BigDecimal.ZERO);
-                producto.setPrecioLista(new BigDecimal(txt_PrecioLista.getValue().toString()));
-                producto.setIlimitado(chk_Ilimitado.isSelected());
-                producto.setFechaUltimaModificacion(new Date());
-                producto.setEstanteria(txt_Estanteria.getText().trim());
-                producto.setEstante(txt_Estante.getText().trim());
-                producto.setNota(txt_Nota.getText().trim());
-                producto.setFechaAlta(new Date());
-                producto.setFechaVencimiento(dc_Vencimiento.getDate());                
-                RestClient.getRestTemplate().postForObject("/productos?idMedida=" + idMedida + "&idRubro=" + idRubro
-                        + "&idProveedor=" + idProveedor + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                        producto, Producto.class);
-                LOGGER.warn("El producto " + producto + " se guardó correctamente");
-                int respuesta = JOptionPane.showConfirmDialog(this,
-                        "El producto se guardó correctamente.\n¿Desea dar de alta otro producto?",
-                        "Aviso", JOptionPane.YES_NO_OPTION);
-                this.limpiarYRecargarComponentes();
-                if (respuesta == JOptionPane.NO_OPTION) {
+        for (Rubro r : rubros) {
+            if (r.getNombre().equals(cmb_Rubro.getSelectedItem())) {
+                idRubro = r.getId_Rubro();
+            }
+        }
+        for (Proveedor p : proveedores) {
+            if (p.getRazonSocial().equals(cmb_Proveedor.getSelectedItem())) {
+                idProveedor = p.getId_Proveedor();
+            }
+        }
+        if (idMedida == null) {
+            mensajeError = mensajeError.concat(ResourceBundle.getBundle("Mensajes").getString("mensaje_producto_vacio_medida") + "\n");
+            ejecutarOperacion = false;
+        }
+        if (idRubro == null) {
+            mensajeError = mensajeError.concat(ResourceBundle.getBundle("Mensajes").getString("mensaje_producto_vacio_rubro") + "\n");
+            ejecutarOperacion = false;
+        }
+        if (idProveedor == null) {
+            mensajeError = mensajeError.concat(ResourceBundle.getBundle("Mensajes").getString("mensaje_producto_vacio_proveedor") + "\n");
+            ejecutarOperacion = false;
+        }
+        if (ejecutarOperacion) {
+            try {
+                if (operacion == TipoDeOperacion.ALTA) {
+                    Producto producto = new Producto();
+                    producto.setCodigo(txt_Codigo.getText());
+                    producto.setDescripcion(txt_Descripcion.getText().trim());
+                    producto.setCantidad(new BigDecimal(txt_Cantidad.getValue().toString()));
+                    producto.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
+                    producto.setVentaMinima(new BigDecimal(txt_VentaMinima.getValue().toString()));
+                    producto.setPrecioCosto(new BigDecimal(txt_PrecioCosto.getValue().toString()));
+                    producto.setGanancia_porcentaje(new BigDecimal(txt_Ganancia_Porcentaje.getValue().toString()));
+                    producto.setGanancia_neto(new BigDecimal(txt_Ganancia_Neto.getValue().toString()));
+                    producto.setPrecioVentaPublico(new BigDecimal(txt_PVP.getValue().toString()));
+                    producto.setIva_porcentaje(new BigDecimal(cmb_IVA_Porcentaje.getSelectedItem().toString()));
+                    producto.setIva_neto(new BigDecimal(txt_IVA_Neto.getValue().toString()));
+                    producto.setImpuestoInterno_porcentaje(BigDecimal.ZERO);
+                    producto.setImpuestoInterno_neto(BigDecimal.ZERO);
+                    producto.setPrecioLista(new BigDecimal(txt_PrecioLista.getValue().toString()));
+                    producto.setIlimitado(chk_Ilimitado.isSelected());
+                    producto.setFechaUltimaModificacion(new Date());
+                    producto.setEstanteria(txt_Estanteria.getText().trim());
+                    producto.setEstante(txt_Estante.getText().trim());
+                    producto.setNota(txt_Nota.getText().trim());
+                    producto.setFechaAlta(new Date());
+                    producto.setFechaVencimiento(dc_Vencimiento.getDate());
+                    RestClient.getRestTemplate().postForObject("/productos?idMedida=" + idMedida + "&idRubro=" + idRubro
+                            + "&idProveedor=" + idProveedor + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                            producto, Producto.class);
+                    LOGGER.warn("El producto " + producto + " se guardó correctamente");
+                    int respuesta = JOptionPane.showConfirmDialog(this,
+                            "El producto se guardó correctamente.\n¿Desea dar de alta otro producto?",
+                            "Aviso", JOptionPane.YES_NO_OPTION);
+                    this.limpiarYRecargarComponentes();
+                    if (respuesta == JOptionPane.NO_OPTION) {
+                        this.dispose();
+                    }
+                }
+
+                if (operacion == TipoDeOperacion.ACTUALIZACION) {
+                    productoParaModificar.setCodigo(txt_Codigo.getText());
+                    productoParaModificar.setDescripcion(txt_Descripcion.getText().trim());
+                    productoParaModificar.setCantidad(new BigDecimal(txt_Cantidad.getValue().toString()));
+                    productoParaModificar.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
+                    productoParaModificar.setCantidad(new BigDecimal(txt_Cantidad.getValue().toString()));
+                    productoParaModificar.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
+                    productoParaModificar.setVentaMinima(new BigDecimal(txt_VentaMinima.getValue().toString()));
+                    productoParaModificar.setPrecioCosto(new BigDecimal(txt_PrecioCosto.getValue().toString()));
+                    productoParaModificar.setGanancia_porcentaje(new BigDecimal(txt_Ganancia_Porcentaje.getValue().toString()));
+                    productoParaModificar.setGanancia_neto(new BigDecimal(txt_Ganancia_Neto.getValue().toString()));
+                    productoParaModificar.setPrecioVentaPublico(new BigDecimal(txt_PVP.getValue().toString()));
+                    productoParaModificar.setIva_porcentaje(new BigDecimal(cmb_IVA_Porcentaje.getSelectedItem().toString()));
+                    productoParaModificar.setIva_neto(new BigDecimal(txt_IVA_Neto.getValue().toString()));
+                    productoParaModificar.setImpuestoInterno_porcentaje(BigDecimal.ZERO);
+                    productoParaModificar.setImpuestoInterno_neto(BigDecimal.ZERO);
+                    productoParaModificar.setPrecioLista(new BigDecimal(txt_PrecioLista.getValue().toString()));
+                    productoParaModificar.setIlimitado(chk_Ilimitado.isSelected());
+                    productoParaModificar.setFechaUltimaModificacion(new Date());
+                    productoParaModificar.setEstanteria(txt_Estanteria.getText().trim());
+                    productoParaModificar.setEstante(txt_Estante.getText().trim());
+                    productoParaModificar.setNota(txt_Nota.getText().trim());
+                    productoParaModificar.setFechaVencimiento(dc_Vencimiento.getDate());
+                    RestClient.getRestTemplate().put("/productos?idMedida=" + idMedida + "&idRubro=" + idRubro
+                            + "&idProveedor=" + idProveedor + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                            productoParaModificar);
+                    LOGGER.warn("El producto " + productoParaModificar + " se modificó correctamente");
+                    JOptionPane.showMessageDialog(this, "El producto se modificó correctamente.",
+                            "Aviso", JOptionPane.INFORMATION_MESSAGE);
                     this.dispose();
                 }
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
-
-            if (operacion == TipoDeOperacion.ACTUALIZACION) {
-                productoParaModificar.setCodigo(txt_Codigo.getText());
-                productoParaModificar.setDescripcion(txt_Descripcion.getText().trim());
-                productoParaModificar.setCantidad(new BigDecimal(txt_Cantidad.getValue().toString()));
-                productoParaModificar.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
-                productoParaModificar.setCantidad(new BigDecimal(txt_Cantidad.getValue().toString()));
-                productoParaModificar.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
-                productoParaModificar.setVentaMinima(new BigDecimal(txt_VentaMinima.getValue().toString()));
-                productoParaModificar.setPrecioCosto(new BigDecimal(txt_PrecioCosto.getValue().toString()));
-                productoParaModificar.setGanancia_porcentaje(new BigDecimal(txt_Ganancia_Porcentaje.getValue().toString()));
-                productoParaModificar.setGanancia_neto(new BigDecimal(txt_Ganancia_Neto.getValue().toString()));
-                productoParaModificar.setPrecioVentaPublico(new BigDecimal(txt_PVP.getValue().toString()));
-                productoParaModificar.setIva_porcentaje(new BigDecimal(cmb_IVA_Porcentaje.getSelectedItem().toString()));
-                productoParaModificar.setIva_neto(new BigDecimal(txt_IVA_Neto.getValue().toString()));
-                productoParaModificar.setImpuestoInterno_porcentaje(BigDecimal.ZERO);
-                productoParaModificar.setImpuestoInterno_neto(BigDecimal.ZERO);
-                productoParaModificar.setPrecioLista(new BigDecimal(txt_PrecioLista.getValue().toString()));
-                productoParaModificar.setIlimitado(chk_Ilimitado.isSelected());
-                productoParaModificar.setFechaUltimaModificacion(new Date());
-                productoParaModificar.setEstanteria(txt_Estanteria.getText().trim());
-                productoParaModificar.setEstante(txt_Estante.getText().trim());
-                productoParaModificar.setNota(txt_Nota.getText().trim());
-                productoParaModificar.setFechaVencimiento(dc_Vencimiento.getDate());
-                RestClient.getRestTemplate().put("/productos?idMedida=" + idMedida + "&idRubro=" + idRubro
-                        + "&idProveedor=" + idProveedor + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                        productoParaModificar);                
-                LOGGER.warn("El producto " + productoParaModificar + " se modificó correctamente");
-                JOptionPane.showMessageDialog(this, "El producto se modificó correctamente.",
-                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
-                this.dispose();
-            }
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, mensajeError, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_GuardarActionPerformed
 
