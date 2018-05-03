@@ -5,7 +5,6 @@ import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -87,10 +86,10 @@ public class CajasGUI extends JInternalFrame {
         tbl_Cajas.getTableHeader().setResizingAllowed(true);
         //tamanios de columnas
         tbl_Cajas.getColumnModel().getColumn(0).setPreferredWidth(0);
-        tbl_Cajas.getColumnModel().getColumn(1).setPreferredWidth(80);
-        tbl_Cajas.getColumnModel().getColumn(2).setPreferredWidth(80);
-        tbl_Cajas.getColumnModel().getColumn(3).setPreferredWidth(40);
-        tbl_Cajas.getColumnModel().getColumn(4).setPreferredWidth(40);
+        tbl_Cajas.getColumnModel().getColumn(1).setPreferredWidth(60);
+        tbl_Cajas.getColumnModel().getColumn(2).setPreferredWidth(60);
+        tbl_Cajas.getColumnModel().getColumn(3).setPreferredWidth(80);
+        tbl_Cajas.getColumnModel().getColumn(4).setPreferredWidth(80);
         tbl_Cajas.getColumnModel().getColumn(5).setPreferredWidth(25);
         tbl_Cajas.getColumnModel().getColumn(6).setPreferredWidth(20);
         tbl_Cajas.getColumnModel().getColumn(7).setPreferredWidth(20);
@@ -346,28 +345,27 @@ public class CajasGUI extends JInternalFrame {
                             .addComponent(chk_UsuarioApertura)
                             .addComponent(chk_Fecha)
                             .addComponent(chk_UsuarioCierre))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnl_FiltrosLayout.createSequentialGroup()
-                                .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cmb_UsuariosCierre, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cmb_UsuariosApertura, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnl_FiltrosLayout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGap(0, 12, Short.MAX_VALUE)
                                 .addComponent(lbl_Desde)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lbl_Hasta)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnl_FiltrosLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cmb_UsuariosApertura, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cmb_UsuariosCierre, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                 .addContainerGap())
         );
 
-        pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_buscar, chk_Fecha, chk_UsuarioApertura, chk_UsuarioCierre});
+        pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chk_Fecha, chk_UsuarioApertura, chk_UsuarioCierre});
 
-        pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cmb_UsuariosApertura, cmb_UsuariosCierre});
+        pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {dc_FechaDesde, dc_FechaHasta});
 
         pnl_FiltrosLayout.setVerticalGroup(
             pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -479,7 +477,7 @@ public class CajasGUI extends JInternalFrame {
                         .addComponent(lbl_TotalCierre)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ftxt_TotalReal, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))))
-            .addComponent(sp_Cajas, javax.swing.GroupLayout.DEFAULT_SIZE, 1110, Short.MAX_VALUE)
+            .addComponent(sp_Cajas, javax.swing.GroupLayout.DEFAULT_SIZE, 838, Short.MAX_VALUE)
         );
 
         pnl_CajasLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_AbrirCaja, btn_ReabrirCaja, btn_eliminarCaja, btn_verDetalle});

@@ -65,7 +65,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="btn_buscar" linkSize="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_buscar" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="lbl_cantidadMostrar" max="32767" attributes="0"/>
                       </Group>
@@ -76,22 +76,22 @@
                               <Component id="chk_UsuarioCierre" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="cmb_UsuariosCierre" linkSize="15" alignment="1" min="-2" pref="415" max="-2" attributes="0"/>
-                                      <Component id="cmb_UsuariosApertura" linkSize="15" alignment="1" max="32767" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                              </Group>
                               <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="12" max="32767" attributes="0"/>
                                   <Component id="lbl_Desde" min="-2" max="-2" attributes="1"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="dc_FechaDesde" min="-2" pref="150" max="-2" attributes="0"/>
+                                  <Component id="dc_FechaDesde" linkSize="17" min="-2" pref="150" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="lbl_Hasta" min="-2" max="-2" attributes="1"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="dc_FechaHasta" min="-2" pref="150" max="-2" attributes="0"/>
+                                  <Component id="dc_FechaHasta" linkSize="17" min="-2" pref="150" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="cmb_UsuariosApertura" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="cmb_UsuariosCierre" alignment="1" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                       </Group>
@@ -254,7 +254,7 @@
                       </Group>
                   </Group>
               </Group>
-              <Component id="sp_Cajas" pref="1110" max="32767" attributes="0"/>
+              <Component id="sp_Cajas" pref="838" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">

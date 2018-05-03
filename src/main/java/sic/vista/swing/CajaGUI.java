@@ -42,8 +42,8 @@ import sic.util.Utilidades;
 public class CajaGUI extends JInternalFrame {
 
     private final FormatterFechaHora formatter = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO);
-    private ModeloTabla modeloTablaBalance = new ModeloTabla();
-    private ModeloTabla modeloTablaResumen = new ModeloTabla();
+    private final ModeloTabla modeloTablaBalance = new ModeloTabla();
+    private final ModeloTabla modeloTablaResumen = new ModeloTabla();
     private List<MovimientoCaja> movimientos = new ArrayList<>();
     private Caja caja;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
