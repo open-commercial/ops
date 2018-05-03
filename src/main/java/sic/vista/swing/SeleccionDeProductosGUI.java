@@ -25,7 +25,7 @@ import sic.modelo.Factura;
 import sic.modelo.FacturaCompra;
 import sic.modelo.FacturaVenta;
 import sic.modelo.RenglonFactura;
-import sic.modelo.TipoMovimiento;
+import sic.modelo.TipoDeComprobante;
 import sic.util.DecimalesRenderer;
 import sic.util.FormatosFechaHora;
 import sic.util.FormatterFechaHora;
@@ -37,7 +37,7 @@ public class SeleccionDeProductosGUI extends JDialog {
     private Factura factura;
     private final HashMap<Long, BigDecimal> idsRenglonesYCantidades = new HashMap<>();
     private boolean modificarStock;
-    private TipoMovimiento tipoMovimiento;    
+    private TipoDeComprobante tipoDeComprobante;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public SeleccionDeProductosGUI(long idFactura) {        
@@ -47,11 +47,11 @@ public class SeleccionDeProductosGUI extends JDialog {
         this.recuperarFactura(idFactura);
     }
     
-    public SeleccionDeProductosGUI(long idFactura, TipoMovimiento tipoMovimiento) {        
+    public SeleccionDeProductosGUI(long idFactura, TipoDeComprobante tipoDeComprobante) {        
         this.initComponents();
         this.setIcon();
         this.setColumnas();
-        this.tipoMovimiento = tipoMovimiento;
+        this.tipoDeComprobante = tipoDeComprobante;
         this.recuperarFactura(idFactura);
     }
     
@@ -180,10 +180,12 @@ public class SeleccionDeProductosGUI extends JDialog {
     private void recuperarFactura(long idFactura) {
         try {
             factura = RestClient.getRestTemplate().getForObject("/facturas/" + idFactura, Factura.class);
-            if (tipoMovimiento == null) {
+            if (tipoDeComprobante == null) {
                 factura.setRenglones(new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                         .getForObject("/facturas/" + factura.getId_Factura() + "/renglones", RenglonFactura[].class))));
-            } else if (tipoMovimiento == TipoMovimiento.CREDITO) {
+            } else if (tipoDeComprobante == TipoDeComprobante.FACTURA_A || tipoDeComprobante == TipoDeComprobante.FACTURA_B
+                    || tipoDeComprobante == TipoDeComprobante.FACTURA_C || tipoDeComprobante == TipoDeComprobante.FACTURA_X
+                    || tipoDeComprobante == TipoDeComprobante.FACTURA_Y || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
                 factura.setRenglones(new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                         .getForObject("/facturas/" + factura.getId_Factura() + "/renglones/notas/credito", RenglonFactura[].class))));
             }
