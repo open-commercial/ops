@@ -52,7 +52,7 @@ public class CajasGUI extends JInternalFrame {
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
                 if (cajasTotal.size() >= TAMANIO_PAGINA) {
                     NUMERO_PAGINA += 1;
-                    buscar();
+                    buscar(false);
                 }
             }
         });
@@ -99,7 +99,7 @@ public class CajasGUI extends JInternalFrame {
         tbl_Cajas.getColumnModel().getColumn(2).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
     }
 
-    private void buscar() {
+    private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
         String busqueda = "/cajas/busqueda/criteria?";
         String criteria = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
@@ -123,10 +123,12 @@ public class CajasGUI extends JInternalFrame {
             cajasParcial = response.getContent();
             cajasTotal.addAll(cajasParcial);
             this.cargarResultadosAlTable();
-            ftxt_TotalSistema.setValue(RestClient.getRestTemplate()
-                    .getForObject("/cajas/saldo-sistema?" + criteria, BigDecimal.class));
-            ftxt_TotalReal.setValue(RestClient.getRestTemplate()
-                    .getForObject("/cajas/saldo-real?" + criteria, BigDecimal.class));
+            if (calcularResultados) {
+                ftxt_TotalSistema.setValue(RestClient.getRestTemplate()
+                        .getForObject("/cajas/saldo-sistema?" + criteria, BigDecimal.class));
+                ftxt_TotalReal.setValue(RestClient.getRestTemplate()
+                        .getForObject("/cajas/saldo-real?" + criteria, BigDecimal.class));
+            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -218,7 +220,7 @@ public class CajasGUI extends JInternalFrame {
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
             this.limpiarResultados();
-            this.buscar();
+            this.buscar(true);
         }
     }
 
@@ -549,7 +551,7 @@ public class CajasGUI extends JInternalFrame {
 
     private void btn_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_buscarActionPerformed
         this.limpiarResultados();
-        this.buscar();        
+        this.buscar(true);        
     }//GEN-LAST:event_btn_buscarActionPerformed
     
     private void btn_verDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_verDetalleActionPerformed
@@ -585,7 +587,7 @@ public class CajasGUI extends JInternalFrame {
                     RestClient.getRestTemplate().delete("/cajas/" + this.cajasTotal.get(indiceDelModel).getId_Caja());
                 }
                 this.limpiarResultados();
-                this.buscar();                
+                this.buscar(true);                
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             } catch (ResourceAccessException ex) {
@@ -686,7 +688,7 @@ public class CajasGUI extends JInternalFrame {
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
                 this.limpiarResultados();
-                this.buscar();
+                this.buscar(true);
             }
         }
     }//GEN-LAST:event_btn_ReabrirCajaActionPerformed
