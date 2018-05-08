@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -791,6 +792,19 @@ public class DetalleProductoGUI extends JDialog {
         dc_Vencimiento.setDate(null);
     }
     
+    private void validarComponentesDePrecios() {
+        try {
+            txt_PrecioCosto.commitEdit();
+            txt_PVP.commitEdit();
+            txt_IVA_Neto.commitEdit();
+            txt_Ganancia_Porcentaje.commitEdit();
+            txt_Ganancia_Neto.commitEdit();
+            txt_PrecioLista.commitEdit();
+        } catch (ParseException ex) {
+            LOGGER.error(ex.getMessage());
+        }
+    }
+    
     private void calcularGananciaPorcentaje() {
         pvp = new BigDecimal(txt_PVP.getValue().toString());
         gananciaPorcentaje = RestClient.getRestTemplate()
@@ -1080,6 +1094,7 @@ public class DetalleProductoGUI extends JDialog {
 
     private void txt_PrecioCostoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_PrecioCostoActionPerformed
         try {
+            txt_PrecioCosto.commitEdit();
             precioDeCosto = new BigDecimal(txt_PrecioCosto.getValue().toString());
             this.calcularGananciaNeto();
             this.calcularPVP();
@@ -1092,6 +1107,8 @@ public class DetalleProductoGUI extends JDialog {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ParseException ex) {
+            LOGGER.error(ex.getMessage());
         }
     }//GEN-LAST:event_txt_PrecioCostoActionPerformed
 
@@ -1130,6 +1147,13 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_btn_RubrosActionPerformed
 
     private void txt_PrecioListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_PrecioListaActionPerformed
+        if (((BigDecimal) txt_PrecioLista.getValue()).compareTo(new BigDecimal(txt_PrecioLista.getText())) != 0) {
+            try {
+                txt_PrecioLista.commitEdit();
+            } catch (ParseException ex) {
+                LOGGER.error(ex.getMessage());
+            }
+        }
         try {
             this.calcularGananciaSegunPrecioDeLista();
             this.calcularGananciaNeto();
