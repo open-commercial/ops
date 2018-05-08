@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
@@ -915,12 +914,10 @@ public class DetalleProductoGUI extends JDialog {
                     producto.setImpuestoInterno_porcentaje(BigDecimal.ZERO);
                     producto.setImpuestoInterno_neto(BigDecimal.ZERO);
                     producto.setPrecioLista(new BigDecimal(txt_PrecioLista.getValue().toString()));
-                    producto.setIlimitado(chk_Ilimitado.isSelected());
-                    producto.setFechaUltimaModificacion(new Date());
+                    producto.setIlimitado(chk_Ilimitado.isSelected());                    
                     producto.setEstanteria(txt_Estanteria.getText().trim());
                     producto.setEstante(txt_Estante.getText().trim());
-                    producto.setNota(txt_Nota.getText().trim());
-                    producto.setFechaAlta(new Date());
+                    producto.setNota(txt_Nota.getText().trim());                    
                     producto.setFechaVencimiento(dc_Vencimiento.getDate());
                     RestClient.getRestTemplate().postForObject("/productos?idMedida=" + idMedida + "&idRubro=" + idRubro
                             + "&idProveedor=" + idProveedor + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
@@ -952,8 +949,7 @@ public class DetalleProductoGUI extends JDialog {
                     productoParaModificar.setImpuestoInterno_porcentaje(BigDecimal.ZERO);
                     productoParaModificar.setImpuestoInterno_neto(BigDecimal.ZERO);
                     productoParaModificar.setPrecioLista(new BigDecimal(txt_PrecioLista.getValue().toString()));
-                    productoParaModificar.setIlimitado(chk_Ilimitado.isSelected());
-                    productoParaModificar.setFechaUltimaModificacion(new Date());
+                    productoParaModificar.setIlimitado(chk_Ilimitado.isSelected());                    
                     productoParaModificar.setEstanteria(txt_Estanteria.getText().trim());
                     productoParaModificar.setEstante(txt_Estante.getText().trim());
                     productoParaModificar.setNota(txt_Nota.getText().trim());
