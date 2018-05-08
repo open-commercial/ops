@@ -1039,6 +1039,13 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_cmb_IVA_PorcentajeItemStateChanged
 
     private void txt_PVPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_PVPActionPerformed
+        if (((BigDecimal) txt_PVP.getValue()).compareTo(new BigDecimal(txt_PVP.getText())) != 0) {
+            try {
+                txt_PVP.commitEdit();
+            } catch (ParseException ex) {
+                LOGGER.error(ex.getMessage());
+            }
+        }        
         try {
             pvp = new BigDecimal(txt_PVP.getValue().toString());
             this.calcularGananciaPorcentaje();
@@ -1066,6 +1073,13 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_txt_PVPFocusGained
 
     private void txt_Ganancia_PorcentajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_Ganancia_PorcentajeActionPerformed
+        if (((BigDecimal) txt_Ganancia_Porcentaje.getValue()).compareTo(new BigDecimal(txt_Ganancia_Porcentaje.getText())) != 0) {
+            try {
+                txt_Ganancia_Porcentaje.commitEdit();
+            } catch (ParseException ex) {
+                LOGGER.error(ex.getMessage());
+            }
+        }
         try {
             gananciaPorcentaje = new BigDecimal(txt_Ganancia_Porcentaje.getValue().toString());
             this.calcularGananciaNeto();
