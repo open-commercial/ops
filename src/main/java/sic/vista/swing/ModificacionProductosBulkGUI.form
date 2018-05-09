@@ -292,12 +292,10 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="txt_PrecioLista" linkSize="4" pref="92" max="32767" attributes="1"/>
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="txt_IVA_Neto" linkSize="4" alignment="0" pref="92" max="32767" attributes="2"/>
-                          <Component id="txt_PVP" linkSize="4" alignment="0" max="32767" attributes="0"/>
-                          <Component id="txt_Ganancia_Neto" linkSize="4" alignment="0" max="32767" attributes="1"/>
-                          <Component id="txt_PrecioCosto" linkSize="4" alignment="0" max="32767" attributes="1"/>
-                      </Group>
+                      <Component id="txt_IVA_Neto" linkSize="4" alignment="0" pref="92" max="32767" attributes="2"/>
+                      <Component id="txt_PVP" linkSize="4" alignment="0" max="32767" attributes="0"/>
+                      <Component id="txt_Ganancia_Neto" linkSize="4" alignment="0" max="32767" attributes="1"/>
+                      <Component id="txt_PrecioCosto" linkSize="4" alignment="0" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>

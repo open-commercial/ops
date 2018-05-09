@@ -168,19 +168,6 @@ public class ModificacionProductosBulkGUI extends JDialog {
             btn_Guardar.setEnabled(false);
         }
     }
-
-    private void validarComponentesDePrecios() {
-        try {
-            txt_PrecioCosto.commitEdit();
-            txt_PVP.commitEdit();
-            txt_IVA_Neto.commitEdit();
-            txt_Ganancia_Porcentaje.commitEdit();
-            txt_Ganancia_Neto.commitEdit();
-            txt_PrecioLista.commitEdit();
-        } catch (ParseException ex) {
-            LOGGER.error(ex.getMessage());
-        }
-    }
     
     private void calcularGananciaPorcentaje() {
         pvp = new BigDecimal(txt_PVP.getValue().toString());
@@ -777,7 +764,6 @@ public class ModificacionProductosBulkGUI extends JDialog {
     }//GEN-LAST:event_formWindowOpened
 
     private void cmb_IVA_PorcentajeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_IVA_PorcentajeItemStateChanged
-        this.validarComponentesDePrecios();
         try {
             this.calcularIVANeto();            
             this.calcularPrecioLista();
@@ -833,10 +819,12 @@ public class ModificacionProductosBulkGUI extends JDialog {
     }//GEN-LAST:event_txt_PVPFocusGained
 
     private void txt_PVPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_PVPActionPerformed
-        this.validarComponentesDePrecios();
         try {
+            txt_PVP.commitEdit();
+            pvp = new BigDecimal(txt_PVP.getValue().toString());
             this.calcularGananciaPorcentaje();
             this.calcularGananciaNeto();
+            this.calcularPVP();
             this.calcularIVANeto();
             this.calcularPrecioLista();
         } catch (RestClientResponseException ex) {
@@ -846,6 +834,8 @@ public class ModificacionProductosBulkGUI extends JDialog {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ParseException ex) {
+            LOGGER.error(ex.getMessage());
         }
     }//GEN-LAST:event_txt_PVPActionPerformed
 
@@ -860,8 +850,8 @@ public class ModificacionProductosBulkGUI extends JDialog {
     }//GEN-LAST:event_txt_Ganancia_PorcentajeFocusGained
 
     private void txt_Ganancia_PorcentajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_Ganancia_PorcentajeActionPerformed
-        this.validarComponentesDePrecios();
         try {
+            txt_Ganancia_Porcentaje.commitEdit();
             gananciaPorcentaje = new BigDecimal(txt_Ganancia_Porcentaje.getValue().toString());
             this.calcularGananciaNeto();
             this.calcularPVP();
@@ -874,6 +864,8 @@ public class ModificacionProductosBulkGUI extends JDialog {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ParseException ex) {
+            LOGGER.error(ex.getMessage());
         }
     }//GEN-LAST:event_txt_Ganancia_PorcentajeActionPerformed
 
@@ -884,8 +876,8 @@ public class ModificacionProductosBulkGUI extends JDialog {
     }//GEN-LAST:event_txt_PrecioCostoFocusGained
 
     private void txt_PrecioCostoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_PrecioCostoActionPerformed
-        this.validarComponentesDePrecios();
         try {
+            txt_PrecioCosto.commitEdit();
             precioDeCosto = new BigDecimal(txt_PrecioCosto.getValue().toString());
             this.calcularGananciaNeto();
             this.calcularPVP();
@@ -898,6 +890,8 @@ public class ModificacionProductosBulkGUI extends JDialog {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ParseException ex) {
+            LOGGER.error(ex.getMessage());
         }
     }//GEN-LAST:event_txt_PrecioCostoActionPerformed
 
@@ -906,13 +900,19 @@ public class ModificacionProductosBulkGUI extends JDialog {
     }//GEN-LAST:event_txt_PrecioCostoFocusLost
 
     private void txt_PrecioListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_PrecioListaActionPerformed
-        this.validarComponentesDePrecios();
+        if (txt_PrecioLista.getValue() instanceof Long) {
+            try {
+                txt_PrecioLista.commitEdit();
+            } catch (ParseException ex) {
+                LOGGER.error(ex.getMessage());
+            }
+        }
         try {
             this.calcularGananciaSegunPrecioDeLista();
             this.calcularGananciaNeto();
             this.calcularPVP();
             this.calcularIVANeto();
-            this.calcularPrecioLista(); 
+            this.calcularPrecioLista();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {

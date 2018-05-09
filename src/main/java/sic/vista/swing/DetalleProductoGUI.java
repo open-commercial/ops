@@ -792,19 +792,6 @@ public class DetalleProductoGUI extends JDialog {
         dc_Vencimiento.setDate(null);
     }
     
-    private void validarComponentesDePrecios() {
-        try {
-            txt_PrecioCosto.commitEdit();
-            txt_PVP.commitEdit();
-            txt_IVA_Neto.commitEdit();
-            txt_Ganancia_Porcentaje.commitEdit();
-            txt_Ganancia_Neto.commitEdit();
-            txt_PrecioLista.commitEdit();
-        } catch (ParseException ex) {
-            LOGGER.error(ex.getMessage());
-        }
-    }
-    
     private void calcularGananciaPorcentaje() {
         pvp = new BigDecimal(txt_PVP.getValue().toString());
         gananciaPorcentaje = RestClient.getRestTemplate()
@@ -843,7 +830,7 @@ public class DetalleProductoGUI extends JDialog {
     }
     
     private void calcularPrecioLista() {
-        precioDeLista = RestClient.getRestTemplate()
+       precioDeLista = RestClient.getRestTemplate()
                 .getForObject("/productos/precio-lista?"
                         + "pvp=" + pvp
                         + "&ivaPorcentaje=" + new BigDecimal(cmb_IVA_Porcentaje.getSelectedItem().toString())
@@ -1026,7 +1013,7 @@ public class DetalleProductoGUI extends JDialog {
 
     private void cmb_IVA_PorcentajeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_IVA_PorcentajeItemStateChanged
         try {
-            this.calcularIVANeto();            
+            this.calcularIVANeto();
             this.calcularPrecioLista();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -1039,17 +1026,18 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_cmb_IVA_PorcentajeItemStateChanged
 
     private void txt_PVPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_PVPActionPerformed
-        if (((BigDecimal) txt_PVP.getValue()).compareTo(new BigDecimal(txt_PVP.getText())) != 0) {
+        if (txt_PVP.getValue() instanceof Long || productoParaModificar == null) {
             try {
                 txt_PVP.commitEdit();
             } catch (ParseException ex) {
                 LOGGER.error(ex.getMessage());
             }
-        }        
+        }
         try {
             pvp = new BigDecimal(txt_PVP.getValue().toString());
             this.calcularGananciaPorcentaje();
             this.calcularGananciaNeto();
+            this.calcularPVP();
             this.calcularIVANeto();
             this.calcularPrecioLista();
         } catch (RestClientResponseException ex) {
@@ -1073,7 +1061,7 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_txt_PVPFocusGained
 
     private void txt_Ganancia_PorcentajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_Ganancia_PorcentajeActionPerformed
-        if (((BigDecimal) txt_Ganancia_Porcentaje.getValue()).compareTo(new BigDecimal(txt_Ganancia_Porcentaje.getText())) != 0) {
+        if (txt_Ganancia_Porcentaje.getValue() instanceof Long || productoParaModificar == null) {
             try {
                 txt_Ganancia_Porcentaje.commitEdit();
             } catch (ParseException ex) {
@@ -1123,7 +1111,7 @@ public class DetalleProductoGUI extends JDialog {
                     "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ParseException ex) {
             LOGGER.error(ex.getMessage());
-        }
+        }     
     }//GEN-LAST:event_txt_PrecioCostoActionPerformed
 
     private void txt_PrecioCostoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_PrecioCostoFocusLost
@@ -1161,7 +1149,7 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_btn_RubrosActionPerformed
 
     private void txt_PrecioListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_PrecioListaActionPerformed
-        if (((BigDecimal) txt_PrecioLista.getValue()).compareTo(new BigDecimal(txt_PrecioLista.getText())) != 0) {
+        if (txt_PrecioLista.getValue() instanceof Long || productoParaModificar == null) {
             try {
                 txt_PrecioLista.commitEdit();
             } catch (ParseException ex) {
