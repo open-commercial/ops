@@ -1026,7 +1026,7 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_cmb_IVA_PorcentajeItemStateChanged
 
     private void txt_PVPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_PVPActionPerformed
-        if (txt_PVP.getValue() instanceof Long || productoParaModificar == null) {
+        if (txt_PVP.getValue() instanceof Long || !txt_PVP.getText().equals(txt_PVP.getValue().toString()) || productoParaModificar == null) {
             try {
                 txt_PVP.commitEdit();
             } catch (ParseException ex) {
@@ -1061,7 +1061,7 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_txt_PVPFocusGained
 
     private void txt_Ganancia_PorcentajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_Ganancia_PorcentajeActionPerformed
-        if (txt_Ganancia_Porcentaje.getValue() instanceof Long || productoParaModificar == null) {
+        if (txt_Ganancia_Porcentaje.getValue() instanceof Long || !txt_Ganancia_Porcentaje.getText().equals(txt_Ganancia_Porcentaje.getValue().toString()) || productoParaModificar == null) {
             try {
                 txt_Ganancia_Porcentaje.commitEdit();
             } catch (ParseException ex) {
@@ -1149,7 +1149,7 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_btn_RubrosActionPerformed
 
     private void txt_PrecioListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_PrecioListaActionPerformed
-        if (txt_PrecioLista.getValue() instanceof Long || productoParaModificar == null) {
+        if (txt_PrecioLista.getValue() instanceof Long || !txt_PrecioLista.getText().equals(txt_PrecioLista.getValue().toString()) || productoParaModificar == null) {
             try {
                 txt_PrecioLista.commitEdit();
             } catch (ParseException ex) {
