@@ -768,9 +768,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         return renglonesPedido;
     }
 
-    /**
-     * Clase interna para manejar las hotkeys del TPV
-     */
+    // Clase interna para manejar las hotkeys del TPV     
     class HotKeysHandler extends KeyAdapter {
 
         @Override
