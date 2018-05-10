@@ -2,6 +2,8 @@ package sic.vista.swing;
 
 import java.awt.Color;
 import java.awt.event.ItemEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -40,6 +42,32 @@ public class ModificacionProductosBulkGUI extends JDialog {
         this.setIcon();        
         this.productosParaModificar = productosParaModificar;
         this.cargarResultadosAlTable();
+        this.setListeners();
+    }
+
+    private void setListeners() {
+        txtPrecioCosto.addPropertyChangeListener("value", new FormattedTextFieldListener());
+        txtPVP.addPropertyChangeListener("value", new FormattedTextFieldListener());
+        txtGananciaPorcentaje.addPropertyChangeListener("value", new FormattedTextFieldListener());
+        txtPrecioLista.addPropertyChangeListener("value", new FormattedTextFieldListener());
+    }
+
+    // Clase interna para manejar el cambio de value de los JFormattedTextFields
+    class FormattedTextFieldListener implements PropertyChangeListener {
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            Object source = evt.getSource();
+            if (source == txtPrecioCosto) {
+                txtPrecioCostoActionPerformed(null);
+            } else if (source == txtPVP) {
+                txtPVPActionPerformed(null);
+            } else if (source == txtGananciaPorcentaje) {
+                txtGananciaPorcentajeActionPerformed(null);
+            } else if (source == txtPrecioLista) {
+                txtPrecioListaActionPerformed(null);
+            }
+        }
     }
 
     private void setIcon() {
@@ -402,9 +430,6 @@ public class ModificacionProductosBulkGUI extends JDialog {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtPrecioCostoFocusGained(evt);
             }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtPrecioCostoFocusLost(evt);
-            }
         });
         txtPrecioCosto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -420,9 +445,6 @@ public class ModificacionProductosBulkGUI extends JDialog {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtGananciaPorcentajeFocusGained(evt);
             }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtGananciaPorcentajeFocusLost(evt);
-            }
         });
         txtGananciaPorcentaje.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -437,9 +459,6 @@ public class ModificacionProductosBulkGUI extends JDialog {
         txtPrecioLista.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtPrecioListaFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtPrecioListaFocusLost(evt);
             }
         });
         txtPrecioLista.addActionListener(new java.awt.event.ActionListener() {
@@ -477,9 +496,6 @@ public class ModificacionProductosBulkGUI extends JDialog {
         txtPVP.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtPVPFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtPVPFocusLost(evt);
             }
         });
         txtPVP.addActionListener(new java.awt.event.ActionListener() {
@@ -797,10 +813,6 @@ public class ModificacionProductosBulkGUI extends JDialog {
         this.habilitarBotonGuardar();
     }//GEN-LAST:event_chk_PreciosItemStateChanged
 
-    private void txtPVPFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPVPFocusLost
-        this.txtPVPActionPerformed(null);
-    }//GEN-LAST:event_txtPVPFocusLost
-
     private void txtPVPFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPVPFocusGained
         SwingUtilities.invokeLater(() -> {
             txtPVP.selectAll();
@@ -809,7 +821,6 @@ public class ModificacionProductosBulkGUI extends JDialog {
 
     private void txtPVPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPVPActionPerformed
         try {
-            txtPVP.commitEdit();
             pvp = new BigDecimal(txtPVP.getValue().toString());
             this.calcularGananciaPorcentaje();
             this.calcularGananciaNeto();
@@ -823,12 +834,8 @@ public class ModificacionProductosBulkGUI extends JDialog {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ParseException ex) {}
+        }
     }//GEN-LAST:event_txtPVPActionPerformed
-
-    private void txtGananciaPorcentajeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGananciaPorcentajeFocusLost
-        this.txtGananciaPorcentajeActionPerformed(null);
-    }//GEN-LAST:event_txtGananciaPorcentajeFocusLost
 
     private void txtGananciaPorcentajeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGananciaPorcentajeFocusGained
         SwingUtilities.invokeLater(() -> {
@@ -838,7 +845,6 @@ public class ModificacionProductosBulkGUI extends JDialog {
 
     private void txtGananciaPorcentajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGananciaPorcentajeActionPerformed
         try {
-            txtGananciaPorcentaje.commitEdit();
             gananciaPorcentaje = new BigDecimal(txtGananciaPorcentaje.getValue().toString());
             this.calcularGananciaNeto();
             this.calcularPVP();
@@ -851,7 +857,7 @@ public class ModificacionProductosBulkGUI extends JDialog {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ParseException ex) {}
+        } 
     }//GEN-LAST:event_txtGananciaPorcentajeActionPerformed
 
     private void txtPrecioCostoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioCostoFocusGained
@@ -862,7 +868,6 @@ public class ModificacionProductosBulkGUI extends JDialog {
 
     private void txtPrecioCostoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioCostoActionPerformed
         try {
-            txtPrecioCosto.commitEdit();
             precioDeCosto = new BigDecimal(txtPrecioCosto.getValue().toString());
             this.calcularGananciaNeto();
             this.calcularPVP();
@@ -875,18 +880,11 @@ public class ModificacionProductosBulkGUI extends JDialog {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ParseException ex) {}
+        }
     }//GEN-LAST:event_txtPrecioCostoActionPerformed
-
-    private void txtPrecioCostoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioCostoFocusLost
-        txtPrecioCostoActionPerformed(null);
-    }//GEN-LAST:event_txtPrecioCostoFocusLost
 
     private void txtPrecioListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioListaActionPerformed
         try {
-            if (txtPrecioLista.getValue() instanceof Long) {
-                txtPrecioLista.commitEdit();
-            }
             this.calcularGananciaSegunPrecioDeLista();
             this.calcularGananciaNeto();
             this.calcularPVP();
@@ -899,7 +897,7 @@ public class ModificacionProductosBulkGUI extends JDialog {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ParseException ex) {}
+        }
     }//GEN-LAST:event_txtPrecioListaActionPerformed
 
     private void txtPrecioListaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioListaFocusGained
@@ -907,10 +905,6 @@ public class ModificacionProductosBulkGUI extends JDialog {
             txtPrecioLista.selectAll();
         });
     }//GEN-LAST:event_txtPrecioListaFocusGained
-
-    private void txtPrecioListaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioListaFocusLost
-        this.txtPrecioListaActionPerformed(null);
-    }//GEN-LAST:event_txtPrecioListaFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Guardar;
