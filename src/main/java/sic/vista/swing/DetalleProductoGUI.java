@@ -41,12 +41,13 @@ public class DetalleProductoGUI extends JDialog {
     private List<Medida> medidas;
     private List<Rubro> rubros;
     private List<Proveedor> proveedores;    
+    private final static BigDecimal IVA_21 = new BigDecimal("21");	
+    private final static BigDecimal IVA_105 = new BigDecimal("10.5");
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleProductoGUI() {
         this.initComponents();
-        this.setIcon();        
-        this.setListeners();
+        this.setIcon();                
         operacion = TipoDeOperacion.ALTA;
         lbl_FUM.setVisible(false);
         lbl_FechaUltimaModificacion.setVisible(false);
@@ -56,8 +57,7 @@ public class DetalleProductoGUI extends JDialog {
 
     public DetalleProductoGUI(Producto producto) {
         this.initComponents();
-        this.setIcon();        
-        this.setListeners();
+        this.setIcon();                
         operacion = TipoDeOperacion.ACTUALIZACION;
         productoParaModificar = producto;        
     }
@@ -356,7 +356,6 @@ public class DetalleProductoGUI extends JDialog {
             }
         });
 
-        cmbIVAPorcentaje.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "10.5", "21" }));
         cmbIVAPorcentaje.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbIVAPorcentajeItemStateChanged(evt);
@@ -529,7 +528,7 @@ public class DetalleProductoGUI extends JDialog {
                         .addComponent(panel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(panel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 30, Short.MAX_VALUE)))
+                        .addGap(0, 55, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panelGeneralLayout.setVerticalGroup(
@@ -728,6 +727,13 @@ public class DetalleProductoGUI extends JDialog {
         txtPrecioLista.setValue(BigDecimal.ZERO);
     }
 
+    private void cargarIVAs() {
+        cmbIVAPorcentaje.removeAllItems();
+        cmbIVAPorcentaje.addItem(BigDecimal.ZERO);
+        cmbIVAPorcentaje.addItem(IVA_105);
+        cmbIVAPorcentaje.addItem(IVA_21);
+    }
+    
     private void cargarMedidas() {
         cmb_Medida.removeAllItems();
         try {
@@ -845,7 +851,7 @@ public class DetalleProductoGUI extends JDialog {
         txtPrecioLista.setValue(precioDeLista);
     }
     
-    private void calcularGananciaSegunPrecioDeLista() {      
+    private void calcularGananciaPorcentajeSegunPrecioDeLista() {      
         gananciaPorcentaje = RestClient.getRestTemplate()
                 .getForObject("/productos/ganancia-porcentaje?ascendente=true"
                         + "&precioDeLista=" + new BigDecimal(txtPrecioLista.getValue().toString())
@@ -977,7 +983,9 @@ public class DetalleProductoGUI extends JDialog {
         this.prepararComponentes();
         this.cargarMedidas();
         this.cargarRubros();
-        this.cargarProveedores();        
+        this.cargarProveedores();     
+        this.cargarIVAs();
+        this.setListeners();
         if (operacion == TipoDeOperacion.ALTA) {
             this.setTitle("Nuevo Producto");
         } else if (operacion == TipoDeOperacion.ACTUALIZACION) {
@@ -1126,7 +1134,7 @@ public class DetalleProductoGUI extends JDialog {
 
     private void txtPrecioListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioListaActionPerformed
         try {
-            this.calcularGananciaSegunPrecioDeLista();
+            this.calcularGananciaPorcentajeSegunPrecioDeLista();
             this.calcularGananciaNeto();
             this.calcularPVP();
             this.calcularIVANeto();

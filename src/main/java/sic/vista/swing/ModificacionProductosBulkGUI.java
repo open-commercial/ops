@@ -5,7 +5,6 @@ import java.awt.event.ItemEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -35,14 +34,15 @@ public class ModificacionProductosBulkGUI extends JDialog {
     private BigDecimal pvp = BigDecimal.ZERO;
     private BigDecimal IVANeto = BigDecimal.ZERO;
     private BigDecimal precioDeLista = BigDecimal.ZERO;
+    private final static BigDecimal IVA_21 = new BigDecimal("21");	
+    private final static BigDecimal IVA_105 = new BigDecimal("10.5");
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public ModificacionProductosBulkGUI(List<Producto> productosParaModificar) {
         this.initComponents();
         this.setIcon();        
         this.productosParaModificar = productosParaModificar;
-        this.cargarResultadosAlTable();
-        this.setListeners();
+        this.cargarResultadosAlTable();        
     }
 
     private void setListeners() {
@@ -54,7 +54,6 @@ public class ModificacionProductosBulkGUI extends JDialog {
 
     // Clase interna para manejar el cambio de value de los JFormattedTextFields
     class FormattedTextFieldListener implements PropertyChangeListener {
-
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             Object source = evt.getSource();
@@ -141,6 +140,13 @@ public class ModificacionProductosBulkGUI extends JDialog {
         txtPrecioLista.setValue(BigDecimal.ZERO);
     }
 
+    private void cargarIVAs() {
+        cmbIVAPorcentaje.removeAllItems();
+        cmbIVAPorcentaje.addItem(BigDecimal.ZERO);
+        cmbIVAPorcentaje.addItem(IVA_105);
+        cmbIVAPorcentaje.addItem(IVA_21);
+    }
+    
     private void setColumnas() {
         //nombres de columnas
         String[] encabezados = new String[2];
@@ -236,7 +242,7 @@ public class ModificacionProductosBulkGUI extends JDialog {
         txtPrecioLista.setValue(precioDeLista);
     }
     
-    private void calcularGananciaSegunPrecioDeLista() {      
+    private void calcularGananciaPorcentajeSegunPrecioDeLista() {      
         gananciaPorcentaje = RestClient.getRestTemplate()
                 .getForObject("/productos/ganancia-porcentaje?ascendente=true"
                         + "&precioDeLista=" + new BigDecimal(txtPrecioLista.getValue().toString())
@@ -510,7 +516,6 @@ public class ModificacionProductosBulkGUI extends JDialog {
             }
         });
 
-        cmbIVAPorcentaje.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "10.5", "21" }));
         cmbIVAPorcentaje.setEnabled(false);
         cmbIVAPorcentaje.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -763,9 +768,11 @@ public class ModificacionProductosBulkGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.prepararComponentes();
+        this.cargarMedidas();   
         this.cargarRubros();
-        this.cargarProveedores();
-        this.cargarMedidas();        
+        this.cargarProveedores();        
+        this.cargarIVAs();
+        this.setListeners();
     }//GEN-LAST:event_formWindowOpened
 
     private void cmbIVAPorcentajeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbIVAPorcentajeItemStateChanged
@@ -885,7 +892,7 @@ public class ModificacionProductosBulkGUI extends JDialog {
 
     private void txtPrecioListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioListaActionPerformed
         try {
-            this.calcularGananciaSegunPrecioDeLista();
+            this.calcularGananciaPorcentajeSegunPrecioDeLista();
             this.calcularGananciaNeto();
             this.calcularPVP();
             this.calcularIVANeto();
