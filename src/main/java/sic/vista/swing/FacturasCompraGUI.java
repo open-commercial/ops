@@ -25,6 +25,7 @@ import sic.modelo.EmpresaActiva;
 import sic.modelo.FacturaCompra;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Proveedor;
+import sic.modelo.TipoDeComprobante;
 import sic.modelo.TipoDeOperacion;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
@@ -159,6 +160,9 @@ public class FacturasCompraGUI extends JInternalFrame {
         if (chk_Proveedor.isSelected()) {
             criteria += "&idProveedor=" + ((Proveedor) cmb_Proveedor.getSelectedItem()).getId_Proveedor();
         }
+        if (chk_TipoFactura.isSelected()) {
+            criteria += "&tipoDeComprobante=" + ((TipoDeComprobante) cmb_TipoFactura.getSelectedItem()).name();
+        }
         if (chk_NumFactura.isSelected()) {
             try {
                 txt_SerieFactura.commitEdit();
@@ -263,6 +267,24 @@ public class FacturasCompraGUI extends JInternalFrame {
             Proveedor[].class)).isEmpty();
     }
     
+    private void cargarTiposDeFactura() {
+        try {
+            TipoDeComprobante[] tiposDeComprobantes = RestClient.getRestTemplate()
+                    .getForObject("/facturas/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                            TipoDeComprobante[].class);
+            for (int i = 0; tiposDeComprobantes.length > i; i++) {
+                cmb_TipoFactura.addItem(tiposDeComprobantes[i]);
+            }
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -281,6 +303,8 @@ public class FacturasCompraGUI extends JInternalFrame {
         txt_SerieFactura = new javax.swing.JFormattedTextField();
         txt_NroFactura = new javax.swing.JFormattedTextField();
         lbl_CantRegistrosEncontrados = new javax.swing.JLabel();
+        chk_TipoFactura = new javax.swing.JCheckBox();
+        cmb_TipoFactura = new javax.swing.JComboBox();
         panelResultados = new javax.swing.JPanel();
         sp_Resultados = new javax.swing.JScrollPane();
         tbl_Resultados = new javax.swing.JTable();
@@ -385,13 +409,22 @@ public class FacturasCompraGUI extends JInternalFrame {
 
         lbl_CantRegistrosEncontrados.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
+        chk_TipoFactura.setText("Tipo de Factura:");
+        chk_TipoFactura.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chk_TipoFacturaItemStateChanged(evt);
+            }
+        });
+
+        cmb_TipoFactura.setEnabled(false);
+
         javax.swing.GroupLayout panelFiltrosLayout = new javax.swing.GroupLayout(panelFiltros);
         panelFiltros.setLayout(panelFiltrosLayout);
         panelFiltrosLayout.setHorizontalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFiltrosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
                         .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(chk_Proveedor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -413,12 +446,16 @@ public class FacturasCompraGUI extends JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txt_NroFactura))))
+                                .addComponent(txt_NroFactura)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(chk_TipoFactura, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmb_TipoFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
                         .addComponent(btn_Buscar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbl_CantRegistrosEncontrados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         panelFiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {dc_FechaDesde, dc_FechaHasta});
@@ -432,7 +469,9 @@ public class FacturasCompraGUI extends JInternalFrame {
                     .addComponent(lbl_Desde)
                     .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_Hasta)
-                    .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chk_TipoFactura)
+                    .addComponent(cmb_TipoFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(3, 3, 3)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_Proveedor)
@@ -694,6 +733,17 @@ public class FacturasCompraGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btn_NuevoActionPerformed
 
+    private void chk_TipoFacturaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_TipoFacturaItemStateChanged
+        if (chk_TipoFactura.isSelected() == true) {
+            cmb_TipoFactura.setEnabled(true);
+            this.cargarTiposDeFactura();
+            cmb_TipoFactura.requestFocus();
+        } else {
+            cmb_TipoFactura.setEnabled(false);
+            cmb_TipoFactura.removeAllItems();
+        }
+    }//GEN-LAST:event_chk_TipoFacturaItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;
@@ -702,7 +752,9 @@ public class FacturasCompraGUI extends JInternalFrame {
     private javax.swing.JCheckBox chk_Fecha;
     private javax.swing.JCheckBox chk_NumFactura;
     private javax.swing.JCheckBox chk_Proveedor;
+    private javax.swing.JCheckBox chk_TipoFactura;
     private javax.swing.JComboBox cmb_Proveedor;
+    private javax.swing.JComboBox cmb_TipoFactura;
     private com.toedter.calendar.JDateChooser dc_FechaDesde;
     private com.toedter.calendar.JDateChooser dc_FechaHasta;
     private javax.swing.JLabel jLabel1;
