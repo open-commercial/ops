@@ -913,7 +913,7 @@ public class DetalleProductoGUI extends JDialog {
                     producto.setIva_neto(new BigDecimal(txtIVANeto.getValue().toString()));
                     producto.setImpuestoInterno_porcentaje(BigDecimal.ZERO);
                     producto.setImpuestoInterno_neto(BigDecimal.ZERO);
-                    producto.setPrecioLista(new BigDecimal(txt_PrecioLista.getValue().toString()));
+                    producto.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
                     producto.setIlimitado(chk_Ilimitado.isSelected());                  
                     producto.setEstanteria(txt_Estanteria.getText().trim());
                     producto.setEstante(txt_Estante.getText().trim());
@@ -948,7 +948,7 @@ public class DetalleProductoGUI extends JDialog {
                     productoParaModificar.setIva_neto(new BigDecimal(txtIVANeto.getValue().toString()));
                     productoParaModificar.setImpuestoInterno_porcentaje(BigDecimal.ZERO);
                     productoParaModificar.setImpuestoInterno_neto(BigDecimal.ZERO);
-                    productoParaModificar.setPrecioLista(new BigDecimal(txt_PrecioLista.getValue().toString()));
+                    productoParaModificar.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
                     productoParaModificar.setIlimitado(chk_Ilimitado.isSelected());                      
                     productoParaModificar.setEstanteria(txt_Estanteria.getText().trim());
                     productoParaModificar.setEstante(txt_Estante.getText().trim());
