@@ -62,30 +62,28 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="chkCriteria" max="32767" attributes="0"/>
                               <Component id="chk_Ubicacion" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="cmb_Localidad" max="32767" attributes="2"/>
-                                  <Component id="cmb_Provincia" alignment="0" max="32767" attributes="2"/>
-                                  <Component id="cmb_Pais" alignment="0" min="-2" pref="200" max="-2" attributes="2"/>
-                              </Group>
-                              <Component id="txtCriteria" min="-2" pref="200" max="-2" attributes="2"/>
+                              <Component id="cmb_Localidad" pref="216" max="32767" attributes="2"/>
+                              <Component id="cmb_Provincia" alignment="0" max="32767" attributes="2"/>
+                              <Component id="cmb_Pais" alignment="0" max="32767" attributes="2"/>
+                              <Component id="txtCriteria" max="32767" attributes="2"/>
                           </Group>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="btn_Buscar" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="lbl_cantResultados" min="-2" pref="428" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Component id="lbl_cantResultados" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

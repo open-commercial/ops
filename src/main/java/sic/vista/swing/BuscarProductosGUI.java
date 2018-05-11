@@ -276,8 +276,7 @@ public class BuscarProductosGUI extends JDialog {
         this.setColumnas();
     }
 
-    private void setColumnas() {
-        //nombres de columnas
+    private void setColumnas() {        
         String[] encabezados = new String[6];
         encabezados[0] = "Codigo";
         encabezados[1] = "Descripción";
@@ -289,8 +288,7 @@ public class BuscarProductosGUI extends JDialog {
                 : (movimiento == Movimiento.COMPRA) ? "P.Costo" : "";
         encabezados[5] = encabezadoPrecio;
         modeloTablaResultados.setColumnIdentifiers(encabezados);
-        tbl_Resultados.setModel(modeloTablaResultados);
-        //tipo de dato columnas
+        tbl_Resultados.setModel(modeloTablaResultados);        
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
         tipos[0] = String.class;
         tipos[1] = String.class;
@@ -300,10 +298,8 @@ public class BuscarProductosGUI extends JDialog {
         tipos[5] = BigDecimal.class;
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
-        tbl_Resultados.getTableHeader().setResizingAllowed(true);
-        //render para los tipos de datos
-        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
-        //Size de columnas        
+        tbl_Resultados.getTableHeader().setResizingAllowed(true);        
+        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());        
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(130);
         tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(130);        
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(380);        
@@ -384,7 +380,7 @@ public class BuscarProductosGUI extends JDialog {
 
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
         tbl_Resultados.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);

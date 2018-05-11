@@ -805,8 +805,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
         panelGeneral = new javax.swing.JPanel();
         panelCliente = new javax.swing.JPanel();
-        lbl_NombreCliente = new javax.swing.JLabel();
-        lbl_DomicilioCliente = new javax.swing.JLabel();
+        lblRazonSocialCliente = new javax.swing.JLabel();
+        lblDireccionCliente = new javax.swing.JLabel();
         lbl_IDFiscalCliente = new javax.swing.JLabel();
         lbl_CondicionIVACliente = new javax.swing.JLabel();
         txt_CondicionIVACliente = new javax.swing.JTextField();
@@ -879,11 +879,11 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
         panelGeneral.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        lbl_NombreCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lbl_NombreCliente.setText("Nombre:");
+        lblRazonSocialCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblRazonSocialCliente.setText("Razon Social:");
 
-        lbl_DomicilioCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lbl_DomicilioCliente.setText("Domicilio:");
+        lblDireccionCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblDireccionCliente.setText("Direccion:");
 
         lbl_IDFiscalCliente.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_IDFiscalCliente.setText("ID Fiscal:");
@@ -910,8 +910,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             .addGroup(panelClienteLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lbl_NombreCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_DomicilioCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblRazonSocialCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblDireccionCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_CondicionIVACliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -930,11 +930,11 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             .addGroup(panelClienteLayout.createSequentialGroup()
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txt_NombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_NombreCliente))
+                    .addComponent(lblRazonSocialCliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txt_DomicilioCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_DomicilioCliente))
+                    .addComponent(lblDireccionCliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txt_CondicionIVACliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1715,17 +1715,17 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private javax.swing.JComboBox cmb_TipoComprobante;
     private com.toedter.calendar.JDateChooser dc_fechaVencimiento;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblDireccionCliente;
+    private javax.swing.JLabel lblRazonSocialCliente;
     private javax.swing.JLabel lblSeparadorDerecho;
     private javax.swing.JLabel lblSeparadorIzquierdo;
     private javax.swing.JLabel lbl_105;
     private javax.swing.JLabel lbl_21;
     private javax.swing.JLabel lbl_CondicionIVACliente;
     private javax.swing.JLabel lbl_DescuentoRecargo;
-    private javax.swing.JLabel lbl_DomicilioCliente;
     private javax.swing.JLabel lbl_IDFiscalCliente;
     private javax.swing.JLabel lbl_IVA105;
     private javax.swing.JLabel lbl_IVA21;
-    private javax.swing.JLabel lbl_NombreCliente;
     private javax.swing.JLabel lbl_Observaciones;
     private javax.swing.JLabel lbl_SubTotal;
     private javax.swing.JLabel lbl_SubTotalBruto;

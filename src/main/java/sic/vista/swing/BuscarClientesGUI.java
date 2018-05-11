@@ -41,7 +41,7 @@ public class BuscarClientesGUI extends JDialog {
         this.setIcon();        
         this.setColumnas();        
         txtCriteriaBusqueda.addKeyListener(keyHandler);
-        tbl_Resultados.addKeyListener(keyHandler);
+        tblResultados.addKeyListener(keyHandler);
         // desactivado momentaneamente
         /*Timer timer = new Timer(false);
         txtCriteriaBusqueda.addKeyListener(new KeyAdapter() {
@@ -101,8 +101,7 @@ public class BuscarClientesGUI extends JDialog {
                         + "&pagina=" + NUMERO_PAGINA
                         + "&tamanio=" + TAMANIO_PAGINA;
                 PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
-                        .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {
-                        })
+                        .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {})
                         .getBody();
                 clientesParcial = response.getContent();
                 clientesTotal.addAll(clientesParcial);
@@ -120,49 +119,40 @@ public class BuscarClientesGUI extends JDialog {
         }
     }
 
-    private void setColumnas() {
-        //nombres de columnas
-        String[] encabezados = new String[5];
+    private void setColumnas() {        
+        String[] encabezados = new String[4];
         encabezados[0] = "ID Fiscal";
         encabezados[1] = "Razon Social";
         encabezados[2] = "Nombre Fantasia";
-        encabezados[3] = "Direccion";
-        encabezados[4] = "Condicion IVA";
+        encabezados[3] = "Direccion";        
         modeloTablaResultados.setColumnIdentifiers(encabezados);
-        tbl_Resultados.setModel(modeloTablaResultados);
-
-        //tipo de dato columnas
+        tblResultados.setModel(modeloTablaResultados);        
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
         tipos[0] = String.class;
         tipos[1] = String.class;
         tipos[2] = String.class;
-        tipos[3] = String.class;
-        tipos[4] = String.class;        
+        tipos[3] = String.class;        
         modeloTablaResultados.setClaseColumnas(tipos);
-        tbl_Resultados.getTableHeader().setReorderingAllowed(false);
-        tbl_Resultados.getTableHeader().setResizingAllowed(true);
-
-        //Tamanios de columnas
-        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(110);
-        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(400);
-        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(300);
+        tblResultados.getTableHeader().setReorderingAllowed(false);
+        tblResultados.getTableHeader().setResizingAllowed(true);        
+        tblResultados.getColumnModel().getColumn(0).setPreferredWidth(110);
+        tblResultados.getColumnModel().getColumn(1).setPreferredWidth(250);
+        tblResultados.getColumnModel().getColumn(2).setPreferredWidth(250);
+        tblResultados.getColumnModel().getColumn(3).setPreferredWidth(400);        
     }
 
     private void cargarResultadosAlTable() {
         clientesParcial.stream().map(cliente -> {
-            Object[] fila = new Object[5];
+            Object[] fila = new Object[4];
             fila[0] = cliente.getIdFiscal();
             fila[1] = cliente.getRazonSocial();
             fila[2] = cliente.getNombreFantasia();
-            fila[3] = cliente.getDireccion();
-            fila[4] = cliente.getCondicionIVA();
+            fila[3] = cliente.getDireccion();            
             return fila;
         }).forEachOrdered(fila -> {
             modeloTablaResultados.addRow(fila);
         });
-        tbl_Resultados.setModel(modeloTablaResultados);
+        tblResultados.setModel(modeloTablaResultados);
     }
 
     private void resetScroll() {
@@ -175,13 +165,13 @@ public class BuscarClientesGUI extends JDialog {
     
     private void limpiarJTable() {
         modeloTablaResultados = new ModeloTabla();
-        tbl_Resultados.setModel(modeloTablaResultados);
+        tblResultados.setModel(modeloTablaResultados);
         this.setColumnas();
     }
 
     private void seleccionarCliente() {
-        if (tbl_Resultados.getSelectedRow() != -1) {
-            int filaSeleccionada = tbl_Resultados.getSelectedRow();
+        if (tblResultados.getSelectedRow() != -1) {
+            int filaSeleccionada = tblResultados.getSelectedRow();
             clienteSeleccionado = clientesTotal.get(filaSeleccionada);
         } else {
             clienteSeleccionado = null;
@@ -211,7 +201,7 @@ public class BuscarClientesGUI extends JDialog {
         btnBuscar = new javax.swing.JButton();
         btnAceptar = new javax.swing.JButton();
         sp_Resultados = new javax.swing.JScrollPane();
-        tbl_Resultados = new javax.swing.JTable();
+        tblResultados = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -251,27 +241,27 @@ public class BuscarClientesGUI extends JDialog {
             }
         });
 
-        tbl_Resultados.setModel(new javax.swing.table.DefaultTableModel(
+        tblResultados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
-        tbl_Resultados.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        tbl_Resultados.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        tbl_Resultados.addFocusListener(new java.awt.event.FocusAdapter() {
+        tblResultados.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tblResultados.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tblResultados.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                tbl_ResultadosFocusGained(evt);
+                tblResultadosFocusGained(evt);
             }
         });
-        tbl_Resultados.addKeyListener(new java.awt.event.KeyAdapter() {
+        tblResultados.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                tbl_ResultadosKeyPressed(evt);
+                tblResultadosKeyPressed(evt);
             }
         });
-        sp_Resultados.setViewportView(tbl_Resultados);
+        sp_Resultados.setViewportView(tblResultados);
 
         javax.swing.GroupLayout panelFondoLayout = new javax.swing.GroupLayout(panelFondo);
         panelFondo.setLayout(panelFondoLayout);
@@ -331,14 +321,14 @@ public class BuscarClientesGUI extends JDialog {
         this.buscar();
     }//GEN-LAST:event_btnBuscarActionPerformed
 
-    private void tbl_ResultadosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbl_ResultadosKeyPressed
+    private void tblResultadosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblResultadosKeyPressed
         if (evt.getKeyCode() == 10) {
             this.seleccionarCliente();
         }
         if (evt.getKeyCode() == 9) {
             txtCriteriaBusqueda.requestFocus();
         }
-    }//GEN-LAST:event_tbl_ResultadosKeyPressed
+    }//GEN-LAST:event_tblResultadosKeyPressed
 
     private void txtCriteriaBusquedaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCriteriaBusquedaKeyTyped
         evt.setKeyChar(Utilidades.convertirAMayusculas(evt.getKeyChar()));
@@ -350,12 +340,12 @@ public class BuscarClientesGUI extends JDialog {
         this.setColumnas();
     }//GEN-LAST:event_formWindowOpened
 
-    private void tbl_ResultadosFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbl_ResultadosFocusGained
+    private void tblResultadosFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tblResultadosFocusGained
         //Si no hay nada seleccionado y NO esta vacio el table, selecciona la primer fila
-        if ((tbl_Resultados.getSelectedRow() == -1) && (tbl_Resultados.getRowCount() != 0)) {
-            tbl_Resultados.setRowSelectionInterval(0, 0);
+        if ((tblResultados.getSelectedRow() == -1) && (tblResultados.getRowCount() != 0)) {
+            tblResultados.setRowSelectionInterval(0, 0);
         }
-    }//GEN-LAST:event_tbl_ResultadosFocusGained
+    }//GEN-LAST:event_tblResultadosFocusGained
 
     private void txtCriteriaBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCriteriaBusquedaActionPerformed
         this.resetScroll();
@@ -368,7 +358,7 @@ public class BuscarClientesGUI extends JDialog {
     private javax.swing.JButton btnBuscar;
     private javax.swing.JPanel panelFondo;
     private javax.swing.JScrollPane sp_Resultados;
-    private javax.swing.JTable tbl_Resultados;
+    private javax.swing.JTable tblResultados;
     private javax.swing.JTextField txtCriteriaBusqueda;
     // End of variables declaration//GEN-END:variables
 }
