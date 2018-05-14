@@ -154,8 +154,8 @@ public class CajaGUI extends JInternalFrame {
         try {
             String uri = "/cajas/" + this.caja.getId_Caja() + "/totales-formas-de-pago";
             Map<Long, BigDecimal> totalesPorFormasDePago = RestClient.getRestTemplate()
-                .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {
-                }).getBody();
+                .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {})
+                .getBody();
             totalesPorFormasDePago.keySet().stream().map(idFormaDePago -> {
                 FormaDePago fdp = RestClient.getRestTemplate().getForObject("/formas-de-pago/" + idFormaDePago, FormaDePago.class);
                 Object[] fila = new Object[4];
@@ -198,20 +198,24 @@ public class CajaGUI extends JInternalFrame {
     }
   
     private void cargarResultados() {   
-        ftxt_TotalAfectaCaja.setValue(RestClient.getRestTemplate()                
-                    .getForObject("/cajas/"+ caja.getId_Caja() +"/total-afecta-caja",
-                            BigDecimal.class));
-        ftxt_TotalSistema.setValue(caja.getSaldoSistema());              
-        if (((BigDecimal)ftxt_TotalAfectaCaja.getValue()).compareTo(BigDecimal.ZERO) > 0) {
+        ftxt_TotalAfectaCaja.setValue(RestClient.getRestTemplate()
+                .getForObject("/cajas/" + caja.getId_Caja() + "/saldo-afecta-caja", BigDecimal.class));
+        if (caja.getEstado().equals(EstadoCaja.CERRADA)) {
+            ftxt_TotalSistema.setValue(caja.getSaldoSistema());
+        } else {
+            ftxt_TotalSistema.setValue(RestClient.getRestTemplate()
+                .getForObject("/cajas/" + caja.getId_Caja() + "/saldo-sistema", BigDecimal.class));
+        }
+        if (((BigDecimal) ftxt_TotalAfectaCaja.getValue()).compareTo(BigDecimal.ZERO) > 0) {
             ftxt_TotalAfectaCaja.setBackground(Color.GREEN);
         }
-        if (((BigDecimal)ftxt_TotalAfectaCaja.getValue()).compareTo(BigDecimal.ZERO) < 0) {
+        if (((BigDecimal) ftxt_TotalAfectaCaja.getValue()).compareTo(BigDecimal.ZERO) < 0) {
             ftxt_TotalAfectaCaja.setBackground(Color.PINK);
         }
-        if (((BigDecimal)ftxt_TotalAfectaCaja.getValue()).compareTo(BigDecimal.ZERO) < 0) {
+        if (((BigDecimal) ftxt_TotalSistema.getValue()).compareTo(BigDecimal.ZERO) < 0) {
             ftxt_TotalSistema.setBackground(Color.PINK);
         }
-        if (((BigDecimal)ftxt_TotalAfectaCaja.getValue()).compareTo(BigDecimal.ZERO) > 0) {
+        if (((BigDecimal) ftxt_TotalSistema.getValue()).compareTo(BigDecimal.ZERO) > 0) {
             ftxt_TotalSistema.setBackground(Color.GREEN);
         }
     }
@@ -492,7 +496,8 @@ public class CajaGUI extends JInternalFrame {
             if (caja.getEstado() == EstadoCaja.ABIERTA) {
                 try {
                     String monto = JOptionPane.showInputDialog(this,
-                            "Saldo del Sistema: " + new DecimalFormat("#.##").format(caja.getSaldoSistema())
+                            "Saldo Sistema: " + new DecimalFormat("#.##").format(RestClient.getRestTemplate()
+                                    .getForObject("/cajas/" + caja.getId_Caja() + "/saldo-sistema", BigDecimal.class))
                             + "\nSaldo Real:", "Cerrar Caja", JOptionPane.QUESTION_MESSAGE);
                     if (monto != null) {
                         RestClient.getRestTemplate().put("/cajas/" + caja.getId_Caja() + "/cierre?"

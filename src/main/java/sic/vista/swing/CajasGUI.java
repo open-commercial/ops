@@ -67,7 +67,7 @@ public class CajasGUI extends JInternalFrame {
         encabezados[3] = "Usuario Apertura";
         encabezados[4] = "Usuario de Cierre";
         encabezados[5] = "Apertura";
-        encabezados[6] = "Saldo Sistema";
+        encabezados[6] = "Saldo Sistema"; 
         encabezados[7] = "Saldo Real";
         modeloTablaCajas.setColumnIdentifiers(encabezados);
         tbl_Cajas.setModel(modeloTablaCajas);
@@ -199,12 +199,12 @@ public class CajasGUI extends JInternalFrame {
     }
 
     private void abrirNuevaCaja() {
-        String monto = JOptionPane.showInputDialog(this,
-                "Saldo Inicial: \n", "Abrir Caja", JOptionPane.QUESTION_MESSAGE);
-        if (monto != null) {
+        String saldoApertura = JOptionPane.showInputDialog(this,
+                "Saldo Apertura: \n", "Abrir Caja", JOptionPane.QUESTION_MESSAGE);
+        if (saldoApertura != null) {
             try {
                 RestClient.getRestTemplate().postForObject("/cajas",
-                        this.construirCaja(new BigDecimal(monto)),
+                        this.construirCaja(new BigDecimal(saldoApertura)),
                         Caja.class);
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -224,13 +224,13 @@ public class CajasGUI extends JInternalFrame {
         }
     }
 
-    private Caja construirCaja(BigDecimal monto) {
+    private Caja construirCaja(BigDecimal saldoApertura) {
         Caja caja = new Caja();
         caja.setEstado(EstadoCaja.ABIERTA);
-        caja.setObservacion("Apertura De Caja");
+        caja.setObservacion("Apertura de Caja");
         caja.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
-        caja.setSaldoInicial(monto);
-        caja.setSaldoSistema(monto);
+        caja.setSaldoInicial(saldoApertura);
+        caja.setSaldoSistema(saldoApertura);
         caja.setSaldoReal(BigDecimal.ZERO);
         caja.setUsuarioAbreCaja(UsuarioActivo.getInstance().getUsuario());
         return caja;
@@ -670,7 +670,7 @@ public class CajasGUI extends JInternalFrame {
         if (tbl_Cajas.getSelectedRow() != -1) {
             int indice = Utilidades.getSelectedRowModelIndice(tbl_Cajas);
             String monto = JOptionPane.showInputDialog(this,
-                    "Saldo Inicial: \n", "Reabrir Caja", JOptionPane.QUESTION_MESSAGE);
+                    "Saldo Apertura: \n", "Reabrir Caja", JOptionPane.QUESTION_MESSAGE);
             if (monto != null) {
                 try {
                     RestClient.getRestTemplate().put("/cajas/" + this.cajasTotal.get(indice).getId_Caja() + "/reabrir?monto=" + new BigDecimal(monto), null);
