@@ -13,6 +13,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -44,7 +45,8 @@ public class CajaGUI extends JInternalFrame {
     private final FormatterFechaHora formatter = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO);
     private final ModeloTabla modeloTablaBalance = new ModeloTabla();
     private final ModeloTabla modeloTablaResumen = new ModeloTabla();
-    private List<MovimientoCaja> movimientos = new ArrayList<>();
+    private HashMap<Long, List<MovimientoCaja>> movimientos = new HashMap<>();
+    private long idFormaDePagoSeleccionada = 0l;
     private Caja caja;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(880, 600);    
@@ -68,8 +70,8 @@ public class CajaGUI extends JInternalFrame {
             }
             try {
                 if (row != 0) {
-                    long idFormaDePago = (long) tbl_Resumen.getModel().getValueAt(row, 0);
-                    this.cargarTablaMovimientos(idFormaDePago);                  
+                    idFormaDePagoSeleccionada = (long) tbl_Resumen.getModel().getValueAt(row, 0);
+                    this.cargarTablaMovimientos(idFormaDePagoSeleccionada);                  
                 } else {
                     this.limpiarTablaMovimientos();
                 }
@@ -184,10 +186,7 @@ public class CajaGUI extends JInternalFrame {
         this.limpiarTablaMovimientos();
         if (idFormaDePago != 0) {
             Object[] renglonMovimiento = new Object[3];
-            movimientos = Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/cajas/"+ caja.getId_Caja() + "/movimientos?idFormaDePago=" + idFormaDePago,
-                            MovimientoCaja[].class));
-            movimientos.forEach(m -> {
+            movimientos.get(idFormaDePago).forEach(m -> {
                 renglonMovimiento[0] = m.getConcepto();
                 renglonMovimiento[1] = m.getFecha();
                 renglonMovimiento[2] = m.getMonto();
@@ -528,8 +527,8 @@ public class CajaGUI extends JInternalFrame {
 
     private void btn_VerDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VerDetalleActionPerformed
         if (tbl_Movimientos.getSelectedRow() != -1) {
-            long id = this.movimientos.get(Utilidades.getSelectedRowModelIndice(tbl_Movimientos)).getIdMovimiento();
-            TipoDeComprobante tipoDeComprobante = this.movimientos.get(Utilidades.getSelectedRowModelIndice(tbl_Movimientos)).getTipoComprobante();
+            long id = this.movimientos.get(idFormaDePagoSeleccionada).get(Utilidades.getSelectedRowModelIndice(tbl_Movimientos)).getIdMovimiento();
+            TipoDeComprobante tipoDeComprobante = this.movimientos.get(idFormaDePagoSeleccionada).get(Utilidades.getSelectedRowModelIndice(tbl_Movimientos)).getTipoComprobante();
             try {
                 if (tipoDeComprobante.equals(TipoDeComprobante.RECIBO)) {
                     this.lanzarReporteRecibo(id);
@@ -582,8 +581,8 @@ public class CajaGUI extends JInternalFrame {
 
     private void btn_EliminarGastoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarGastoActionPerformed
         if (tbl_Movimientos.getSelectedRow() != -1) {
-            long idMovimientoTable = this.movimientos.get(Utilidades.getSelectedRowModelIndice(tbl_Movimientos)).getIdMovimiento();
-            TipoDeComprobante tipoDeComprobante = this.movimientos.get(Utilidades.getSelectedRowModelIndice(tbl_Movimientos)).getTipoComprobante();
+            long idMovimientoTable = this.movimientos.get(idFormaDePagoSeleccionada).get(Utilidades.getSelectedRowModelIndice(tbl_Movimientos)).getIdMovimiento();
+            TipoDeComprobante tipoDeComprobante = this.movimientos.get(idFormaDePagoSeleccionada).get(Utilidades.getSelectedRowModelIndice(tbl_Movimientos)).getTipoComprobante();
             if (tipoDeComprobante.equals(TipoDeComprobante.GASTO) && this.caja.getEstado().equals(EstadoCaja.ABIERTA)) {
                 int confirmacionEliminacion = JOptionPane.showConfirmDialog(this,
                         "¿Esta seguro que desea eliminar el gasto seleccionado?",
@@ -618,6 +617,14 @@ public class CajaGUI extends JInternalFrame {
         this.cambiarMensajeEstadoCaja();
         this.limpiarYCargarTablas();
         try {
+            List<FormaDePago> formasDePago = Arrays.asList(RestClient.getRestTemplate()
+                    .getForObject("/formas-de-pago/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                            FormaDePago[].class));
+            formasDePago.forEach(formaDePago -> {
+                movimientos.put(formaDePago.getId_FormaDePago(), Arrays.asList(RestClient.getRestTemplate()
+                        .getForObject("/cajas/" + caja.getId_Caja() + "/movimientos?idFormaDePago=" + formaDePago.getId_FormaDePago(),
+                                MovimientoCaja[].class)));
+            });
             this.setMaximum(true);
         } catch (PropertyVetoException ex) {
             String mensaje = "Se produjo un error al intentar maximizar la ventana.";
