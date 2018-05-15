@@ -157,7 +157,7 @@ public class CajaGUI extends JInternalFrame {
             String uri = "/cajas/" + this.caja.getId_Caja() + "/totales-formas-de-pago";
             Map<Long, BigDecimal> totalesPorFormasDePago = RestClient.getRestTemplate()
                 .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {})
-                .getBody();
+                .getBody(); // aca puedo cargar el hashmap, usando los key del hash que son los id de forma de pago
             totalesPorFormasDePago.keySet().stream().map(idFormaDePago -> {
                 FormaDePago fdp = RestClient.getRestTemplate().getForObject("/formas-de-pago/" + idFormaDePago, FormaDePago.class);
                 Object[] fila = new Object[4];
@@ -171,6 +171,10 @@ public class CajaGUI extends JInternalFrame {
             tbl_Resumen.setModel(modeloTablaResumen);
             tbl_Resumen.removeColumn(tbl_Resumen.getColumnModel().getColumn(0));
             tbl_Resumen.setDefaultRenderer(BigDecimal.class, new ColoresNumerosRenderer());
+            totalesPorFormasDePago.keySet().forEach(idFormaDePago
+                    -> movimientos.put(idFormaDePago, Arrays.asList(RestClient.getRestTemplate()
+                            .getForObject("/cajas/" + caja.getId_Caja() + "/movimientos?idFormaDePago=" + idFormaDePago,
+                                    MovimientoCaja[].class))));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -617,14 +621,6 @@ public class CajaGUI extends JInternalFrame {
         this.cambiarMensajeEstadoCaja();
         this.limpiarYCargarTablas();
         try {
-            List<FormaDePago> formasDePago = Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/formas-de-pago/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                            FormaDePago[].class));
-            formasDePago.forEach(formaDePago -> {
-                movimientos.put(formaDePago.getId_FormaDePago(), Arrays.asList(RestClient.getRestTemplate()
-                        .getForObject("/cajas/" + caja.getId_Caja() + "/movimientos?idFormaDePago=" + formaDePago.getId_FormaDePago(),
-                                MovimientoCaja[].class)));
-            });
             this.setMaximum(true);
         } catch (PropertyVetoException ex) {
             String mensaje = "Se produjo un error al intentar maximizar la ventana.";
