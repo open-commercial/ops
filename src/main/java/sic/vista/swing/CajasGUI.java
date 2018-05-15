@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -179,7 +180,7 @@ public class CajasGUI extends JInternalFrame {
             fila[4] = (caja.getUsuarioCierraCaja() != null ? caja.getUsuarioCierraCaja() : "");
             fila[5] = caja.getSaldoInicial();
             fila[6] = caja.getSaldoSistema();
-            fila[7] = (caja.getEstado().equals(EstadoCaja.CERRADA) ? caja.getSaldoReal() : 0.0);
+            fila[7] = caja.getSaldoReal();
             return fila;
         }).forEachOrdered(modeloTablaCajas::addRow);
         tbl_Cajas.setModel(modeloTablaCajas);
@@ -203,8 +204,9 @@ public class CajasGUI extends JInternalFrame {
                 "Saldo Apertura: \n", "Abrir Caja", JOptionPane.QUESTION_MESSAGE);
         if (saldoApertura != null) {
             try {
-                RestClient.getRestTemplate().postForObject("/cajas",
-                        this.construirCaja(new BigDecimal(saldoApertura)),
+                RestClient.getRestTemplate().postForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        + "/usuarios/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
+                        + "/abrir?observacion=Saldo Apertura&saldoApertura=" + new BigDecimal(saldoApertura), null,
                         Caja.class);
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -222,18 +224,6 @@ public class CajasGUI extends JInternalFrame {
             this.limpiarResultados();
             this.buscar(true);
         }
-    }
-
-    private Caja construirCaja(BigDecimal saldoApertura) {
-        Caja caja = new Caja();
-        caja.setEstado(EstadoCaja.ABIERTA);
-        caja.setObservacion("Apertura de Caja");
-        caja.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
-        caja.setSaldoInicial(saldoApertura);
-        caja.setSaldoSistema(saldoApertura);
-        caja.setSaldoReal(BigDecimal.ZERO);
-        caja.setUsuarioAbreCaja(UsuarioActivo.getInstance().getUsuario());
-        return caja;
     }
 
     @SuppressWarnings("unchecked")
