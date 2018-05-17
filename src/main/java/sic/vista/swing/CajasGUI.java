@@ -5,7 +5,6 @@ import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -24,7 +23,6 @@ import sic.RestClient;
 import sic.modelo.Caja;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Usuario;
-import sic.modelo.EstadoCaja;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
@@ -104,21 +102,14 @@ public class CajasGUI extends JInternalFrame {
         this.cambiarEstadoEnabledComponentes(false);
         String busqueda = "/cajas/busqueda/criteria?";
         String criteria = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
-        if (chk_Fecha.isSelected()) {
-            criteria += "&desde=" + dc_FechaDesde.getDate().getTime() + "&hasta=" + dc_FechaHasta.getDate().getTime();
-        }
-        if (chk_UsuarioApertura.isSelected()) {
-            criteria += "&idUsuarioApertura=" + ((Usuario) cmb_UsuariosApertura.getSelectedItem()).getId_Usuario();
-        }
-        if (chk_UsuarioCierre.isSelected()) {
-            criteria += "&idUsuarioCierre=" + ((Usuario) cmb_UsuariosCierre.getSelectedItem()).getId_Usuario();
-        }
+        if (chk_Fecha.isSelected()) criteria += "&desde=" + dc_FechaDesde.getDate().getTime() + "&hasta=" + dc_FechaHasta.getDate().getTime();
+        if (chk_UsuarioApertura.isSelected()) criteria += "&idUsuarioApertura=" + ((Usuario) cmb_UsuariosApertura.getSelectedItem()).getId_Usuario();
+        if (chk_UsuarioCierre.isSelected()) criteria += "&idUsuarioCierre=" + ((Usuario) cmb_UsuariosCierre.getSelectedItem()).getId_Usuario();
         criteria += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
         try {
             PaginaRespuestaRest<Caja> response = RestClient.getRestTemplate()
                     .exchange(busqueda + criteria, HttpMethod.GET, null,
-                            new ParameterizedTypeReference<PaginaRespuestaRest<Caja>>() {
-                    })
+                            new ParameterizedTypeReference<PaginaRespuestaRest<Caja>>() {})
                     .getBody();
             totalElementosBusqueda = response.getTotalElements();
             cajasParcial = response.getContent();
@@ -178,7 +169,7 @@ public class CajasGUI extends JInternalFrame {
             if (caja.getFechaCierre() != null) fila[2] = caja.getFechaCierre();
             fila[3] = caja.getUsuarioAbreCaja();
             fila[4] = (caja.getUsuarioCierraCaja() != null ? caja.getUsuarioCierraCaja() : "");
-            fila[5] = caja.getSaldoInicial();
+            fila[5] = caja.getSaldoApertura();
             fila[6] = caja.getSaldoSistema();
             fila[7] = caja.getSaldoReal();
             return fila;
@@ -204,9 +195,9 @@ public class CajasGUI extends JInternalFrame {
                 "Saldo Apertura: \n", "Abrir Caja", JOptionPane.QUESTION_MESSAGE);
         if (saldoApertura != null) {
             try {
-                RestClient.getRestTemplate().postForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                RestClient.getRestTemplate().postForObject("/cajas/apertura/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                         + "/usuarios/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                        + "/abrir?observacion=Saldo Apertura&saldoApertura=" + new BigDecimal(saldoApertura), null,
+                        + "?observacion=Saldo Apertura&saldoApertura=" + new BigDecimal(saldoApertura), null,
                         Caja.class);
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

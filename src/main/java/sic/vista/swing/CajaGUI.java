@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -45,8 +44,8 @@ public class CajaGUI extends JInternalFrame {
     private final FormatterFechaHora formatter = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO);
     private final ModeloTabla modeloTablaBalance = new ModeloTabla();
     private final ModeloTabla modeloTablaResumen = new ModeloTabla();
-    private HashMap<Long, List<MovimientoCaja>> movimientos = new HashMap<>();
-    private long idFormaDePagoSeleccionada = 0l;
+    private final HashMap<Long, List<MovimientoCaja>> movimientos = new HashMap<>();
+    private Long idFormaDePagoSeleccionada;
     private Caja caja;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(880, 600);    
@@ -67,7 +66,7 @@ public class CajaGUI extends JInternalFrame {
                 if ((evt.getKeyCode() == KeyEvent.VK_DOWN) && (row + 1) < tbl_Resumen.getRowCount()) {
                     row++;
                 }
-            }
+            } // ver corregir el uso de re pag y av pag
             try {
                 if (row != 0) {
                     idFormaDePagoSeleccionada = (long) tbl_Resumen.getModel().getValueAt(row, 0);
@@ -151,19 +150,19 @@ public class CajaGUI extends JInternalFrame {
         renglonSaldoApertura[0] = 0L;
         renglonSaldoApertura[1] = "Saldo Apertura";
         renglonSaldoApertura[2] = true;
-        renglonSaldoApertura[3] = caja.getSaldoInicial();
+        renglonSaldoApertura[3] = caja.getSaldoApertura();
         modeloTablaResumen.addRow(renglonSaldoApertura);
         try {
             String uri = "/cajas/" + this.caja.getId_Caja() + "/totales-formas-de-pago";
             Map<Long, BigDecimal> totalesPorFormasDePago = RestClient.getRestTemplate()
                 .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {})
-                .getBody(); // aca puedo cargar el hashmap, usando los key del hash que son los id de forma de pago
+                .getBody(); 
             totalesPorFormasDePago.keySet().stream().map(idFormaDePago -> {
                 FormaDePago fdp = RestClient.getRestTemplate().getForObject("/formas-de-pago/" + idFormaDePago, FormaDePago.class);
                 Object[] fila = new Object[4];
                 fila[0] = fdp.getId_FormaDePago();
                 fila[1] = fdp.getNombre();
-                fila[2] = fdp.isAfectaCaja();
+                fila[2] = fdp.isAfectaCaja(); 
                 fila[3] = totalesPorFormasDePago.get(idFormaDePago);
                 return fila;
             }).forEachOrdered(modeloTablaResumen::addRow);
@@ -171,10 +170,10 @@ public class CajaGUI extends JInternalFrame {
             tbl_Resumen.setModel(modeloTablaResumen);
             tbl_Resumen.removeColumn(tbl_Resumen.getColumnModel().getColumn(0));
             tbl_Resumen.setDefaultRenderer(BigDecimal.class, new ColoresNumerosRenderer());
-            totalesPorFormasDePago.keySet().forEach(idFormaDePago
-                    -> movimientos.put(idFormaDePago, Arrays.asList(RestClient.getRestTemplate()
-                            .getForObject("/cajas/" + caja.getId_Caja() + "/movimientos?idFormaDePago=" + idFormaDePago,
-                                    MovimientoCaja[].class))));
+            totalesPorFormasDePago.keySet()
+                    .forEach(idFormaDePago -> movimientos.put(idFormaDePago, Arrays.asList(RestClient.getRestTemplate()
+                    .getForObject("/cajas/" + caja.getId_Caja() + "/movimientos?idFormaDePago=" + idFormaDePago,        
+                     MovimientoCaja[].class))));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -189,6 +188,7 @@ public class CajaGUI extends JInternalFrame {
     private void cargarTablaMovimientos(Long idFormaDePago) {
         this.limpiarTablaMovimientos();
         if (idFormaDePago != 0) {
+            idFormaDePagoSeleccionada = idFormaDePago;
             Object[] renglonMovimiento = new Object[3];
             movimientos.get(idFormaDePago).forEach(m -> {
                 renglonMovimiento[0] = m.getConcepto();
