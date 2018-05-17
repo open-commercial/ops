@@ -30,6 +30,7 @@ import sic.util.FormatterFechaHora;
 public class DetalleProductoGUI extends JDialog {
 
     private Producto productoParaModificar;
+    private boolean modificando;
     private final TipoDeOperacion operacion;
     private BigDecimal precioDeCosto = BigDecimal.ZERO;
     private BigDecimal gananciaPorcentaje = BigDecimal.ZERO;
@@ -52,13 +53,15 @@ public class DetalleProductoGUI extends JDialog {
         lbl_FechaUltimaModificacion.setVisible(false);
         lbl_FA.setVisible(false);
         lbl_FechaAlta.setVisible(false);
+        this.modificando = false;
     }       
 
     public DetalleProductoGUI(Producto producto) {
         this.initComponents();
         this.setIcon();                
         operacion = TipoDeOperacion.ACTUALIZACION;
-        productoParaModificar = producto;        
+        productoParaModificar = producto;       
+        this.modificando = true;
     }
 
     private void setListeners() {
@@ -81,6 +84,8 @@ public class DetalleProductoGUI extends JDialog {
                 txtGananciaPorcentajeActionPerformed(null);
             } else if (source == txtPrecioLista) {
                 txtPrecioListaActionPerformed(null);
+            } else if (source == cmbIVAPorcentaje) {
+                cmbIVAPorcentajeActionPerformed(null);
             }
         }    
     }
@@ -358,6 +363,11 @@ public class DetalleProductoGUI extends JDialog {
         cmbIVAPorcentaje.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbIVAPorcentajeItemStateChanged(evt);
+            }
+        });
+        cmbIVAPorcentaje.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbIVAPorcentajeActionPerformed(evt);
             }
         });
 
@@ -712,6 +722,7 @@ public class DetalleProductoGUI extends JDialog {
         txtIVANeto.setValue(IVANeto);
         precioDeLista = productoParaModificar.getPrecioLista();
         txtPrecioLista.setValue(precioDeLista);
+        this.modificando = false;
     }
 
     private void prepararComponentes() {
@@ -981,13 +992,13 @@ public class DetalleProductoGUI extends JDialog {
         this.cargarRubros();
         this.cargarProveedores();     
         this.cargarIVAs();
-        this.setListeners();
         if (operacion == TipoDeOperacion.ALTA) {
             this.setTitle("Nuevo Producto");
         } else if (operacion == TipoDeOperacion.ACTUALIZACION) {
             this.setTitle("Modificar Producto");
             this.cargarProductoParaModificar();
         }
+        this.setListeners();
     }//GEN-LAST:event_formWindowOpened
 
     private void txt_CantMinimaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_CantMinimaFocusGained
@@ -1021,17 +1032,19 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_chk_IlimitadoItemStateChanged
 
     private void cmbIVAPorcentajeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbIVAPorcentajeItemStateChanged
-        try {
-            this.calcularIVANeto();
-            this.calcularPrecioLista();
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
+//        if (productoParaModificar == null) {
+//            try {
+//                this.calcularIVANeto();
+//                this.calcularPrecioLista();
+//            } catch (RestClientResponseException ex) {
+//                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+//            } catch (ResourceAccessException ex) {
+//                LOGGER.error(ex.getMessage());
+//                JOptionPane.showMessageDialog(this,
+//                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+//                        "Error", JOptionPane.ERROR_MESSAGE);
+//            }
+//        }
     }//GEN-LAST:event_cmbIVAPorcentajeItemStateChanged
 
     private void txtPVPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPVPActionPerformed
@@ -1156,6 +1169,22 @@ public class DetalleProductoGUI extends JDialog {
             txt_VentaMinima.selectAll();
         });
     }//GEN-LAST:event_txt_VentaMinimaFocusGained
+
+    private void cmbIVAPorcentajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbIVAPorcentajeActionPerformed
+        if (productoParaModificar == null || this.modificando == false) {
+            try {
+                this.calcularIVANeto();
+                this.calcularPrecioLista();
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } 
+    }//GEN-LAST:event_cmbIVAPorcentajeActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Guardar;
