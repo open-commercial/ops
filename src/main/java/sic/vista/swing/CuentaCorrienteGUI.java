@@ -47,7 +47,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     private final Cliente cliente;
     private final Proveedor proveedor;
     private CuentaCorriente cuentaCorriente;
-    private final ModeloTabla modeloTablaResultados = new ModeloTabla();
+    private ModeloTabla modeloTablaResultados = new ModeloTabla();
     private static int NUMERO_PAGINA = 0;
     private static final int TAMANIO_PAGINA = 50;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -151,7 +151,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     }
     
     private void limpiarJTable() {
-        modeloTablaResultados.setRowCount(0);
+        modeloTablaResultados = new ModeloTabla();
         tbl_Resultados.setModel(modeloTablaResultados);
         this.setColumnas();
     }
