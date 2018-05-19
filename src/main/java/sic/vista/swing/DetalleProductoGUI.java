@@ -2,9 +2,8 @@ package sic.vista.swing;
 
 import java.awt.Color;
 import java.awt.event.ItemEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,22 +23,18 @@ import sic.modelo.Producto;
 import sic.modelo.Proveedor;
 import sic.modelo.Rubro;
 import sic.modelo.TipoDeOperacion;
+import sic.util.CalculosPrecioProducto;
 import sic.util.FormatosFechaHora;
 import sic.util.FormatterFechaHora;
 
 public class DetalleProductoGUI extends JDialog {
 
     private Producto productoParaModificar;
-    private final TipoDeOperacion operacion;
-    private BigDecimal precioDeCosto = BigDecimal.ZERO;
-    private BigDecimal gananciaPorcentaje = BigDecimal.ZERO;
-    private BigDecimal gananciaNeto = BigDecimal.ZERO;
-    private BigDecimal pvp = BigDecimal.ZERO;
-    private BigDecimal IVANeto = BigDecimal.ZERO;
-    private BigDecimal precioDeLista = BigDecimal.ZERO;    
+    private final TipoDeOperacion operacion;        
     private List<Medida> medidas;
     private List<Rubro> rubros;
     private List<Proveedor> proveedores;    
+    private BigDecimal precioListaAnterior = BigDecimal.ZERO;
     private final static BigDecimal IVA_21 = new BigDecimal("21");	
     private final static BigDecimal IVA_105 = new BigDecimal("10.5");
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -51,39 +46,15 @@ public class DetalleProductoGUI extends JDialog {
         lbl_FUM.setVisible(false);
         lbl_FechaUltimaModificacion.setVisible(false);
         lbl_FA.setVisible(false);
-        lbl_FechaAlta.setVisible(false);
+        lbl_FechaAlta.setVisible(false);        
     }       
 
     public DetalleProductoGUI(Producto producto) {
         this.initComponents();
         this.setIcon();                
         operacion = TipoDeOperacion.ACTUALIZACION;
-        productoParaModificar = producto;        
-    }
-
-    private void setListeners() {
-        txtPrecioCosto.addPropertyChangeListener("value", new FormattedTextFieldListener());
-        txtPVP.addPropertyChangeListener("value", new FormattedTextFieldListener());
-        txtGananciaPorcentaje.addPropertyChangeListener("value", new FormattedTextFieldListener());
-        txtPrecioLista.addPropertyChangeListener("value", new FormattedTextFieldListener());
-    }
-    
-    // Clase interna para manejar el cambio de value de los JFormattedTextFields
-    class FormattedTextFieldListener implements PropertyChangeListener {
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            Object source = evt.getSource();
-            if (source == txtPrecioCosto) {
-                txtPrecioCostoActionPerformed(null);
-            } else if (source == txtPVP) {
-                txtPVPActionPerformed(null);
-            } else if (source == txtGananciaPorcentaje) {
-                txtGananciaPorcentajeActionPerformed(null);
-            } else if (source == txtPrecioLista) {
-                txtPrecioListaActionPerformed(null);
-            }
-        }    
-    }
+        productoParaModificar = producto;                
+    }            
     
     private void setIcon() {
         ImageIcon iconoVentana = new ImageIcon(DetalleProductoGUI.class.getResource("/sic/icons/Product_16x16.png"));
@@ -288,6 +259,9 @@ public class DetalleProductoGUI extends JDialog {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtPrecioCostoFocusGained(evt);
             }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPrecioCostoFocusLost(evt);
+            }
         });
         txtPrecioCosto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -302,6 +276,9 @@ public class DetalleProductoGUI extends JDialog {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtGananciaPorcentajeFocusGained(evt);
             }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtGananciaPorcentajeFocusLost(evt);
+            }
         });
         txtGananciaPorcentaje.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -315,6 +292,9 @@ public class DetalleProductoGUI extends JDialog {
         txtPrecioLista.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtPrecioListaFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPrecioListaFocusLost(evt);
             }
         });
         txtPrecioLista.addActionListener(new java.awt.event.ActionListener() {
@@ -348,6 +328,9 @@ public class DetalleProductoGUI extends JDialog {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtPVPFocusGained(evt);
             }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPVPFocusLost(evt);
+            }
         });
         txtPVP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -355,6 +338,7 @@ public class DetalleProductoGUI extends JDialog {
             }
         });
 
+        cmbIVAPorcentaje.setModel(new javax.swing.DefaultComboBoxModel(new BigDecimal[] { BigDecimal.ZERO, IVA_105, IVA_21 }));
         cmbIVAPorcentaje.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbIVAPorcentajeItemStateChanged(evt);
@@ -557,7 +541,7 @@ public class DetalleProductoGUI extends JDialog {
         dc_Vencimiento.setDateFormatString("dd/MM/yyyy");
 
         lbl_Nota.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Nota.setText("Nota ó Comentario:");
+        lbl_Nota.setText("Nota:");
 
         lbl_FA.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_FA.setText("Fecha de Alta:");
@@ -581,31 +565,21 @@ public class DetalleProductoGUI extends JDialog {
             .addGroup(panel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel5Layout.createSequentialGroup()
-                        .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(panel5Layout.createSequentialGroup()
-                                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(lbl_Estante, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lbl_Nota, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(16, 16, 16))
-                            .addGroup(panel5Layout.createSequentialGroup()
-                                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lbl_Ven)
-                                    .addComponent(lbl_Estanteria))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                        .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dc_Vencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_Estanteria, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_Estante, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(panel5Layout.createSequentialGroup()
-                        .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(lbl_FA, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lbl_FUM))
-                        .addGap(12, 12, 12)
-                        .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lbl_FechaAlta, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
-                            .addComponent(lbl_FechaUltimaModificacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(lbl_Estante, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_Nota, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_Ven, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_Estanteria, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(lbl_FA, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lbl_FUM)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_FechaAlta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_FechaUltimaModificacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_Estante, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_Estanteria)
+                    .addComponent(dc_Vencimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panel5Layout.setVerticalGroup(
@@ -698,20 +672,14 @@ public class DetalleProductoGUI extends JDialog {
         lbl_FechaAlta.setText(formateador.format(productoParaModificar.getFechaAlta()));
         dc_Vencimiento.setDate(productoParaModificar.getFechaVencimiento());
         txt_Estanteria.setText(productoParaModificar.getEstanteria());
-        txt_Estante.setText(productoParaModificar.getEstante());
-        precioDeCosto = productoParaModificar.getPrecioCosto();
-        txtPrecioCosto.setValue(precioDeCosto);
-        gananciaPorcentaje = productoParaModificar.getGanancia_porcentaje();
-        txtGananciaPorcentaje.setValue(gananciaPorcentaje);
-        gananciaNeto = productoParaModificar.getGanancia_neto();
-        txtGananciaNeto.setValue(gananciaNeto);
-        pvp = productoParaModificar.getPrecioVentaPublico();
-        txtPVP.setValue(pvp);
-        cmbIVAPorcentaje.setSelectedItem(productoParaModificar.getIva_porcentaje().stripTrailingZeros());
-        IVANeto = productoParaModificar.getIva_neto();
-        txtIVANeto.setValue(IVANeto);
-        precioDeLista = productoParaModificar.getPrecioLista();
-        txtPrecioLista.setValue(precioDeLista);
+        txt_Estante.setText(productoParaModificar.getEstante());        
+        txtPrecioCosto.setValue(productoParaModificar.getPrecioCosto());        
+        txtGananciaPorcentaje.setValue(productoParaModificar.getGanancia_porcentaje());        
+        txtGananciaNeto.setValue(productoParaModificar.getGanancia_neto());        
+        txtPVP.setValue(productoParaModificar.getPrecioVentaPublico());        
+        cmbIVAPorcentaje.setSelectedItem(productoParaModificar.getIva_porcentaje().stripTrailingZeros());        
+        txtIVANeto.setValue(productoParaModificar.getIva_neto());        
+        txtPrecioLista.setValue(productoParaModificar.getPrecioLista());
     }
 
     private void prepararComponentes() {
@@ -724,13 +692,6 @@ public class DetalleProductoGUI extends JDialog {
         txtGananciaPorcentaje.setValue(BigDecimal.ZERO);
         txtGananciaNeto.setValue(BigDecimal.ZERO);
         txtPrecioLista.setValue(BigDecimal.ZERO);
-    }
-
-    private void cargarIVAs() {
-        cmbIVAPorcentaje.removeAllItems();
-        cmbIVAPorcentaje.addItem(BigDecimal.ZERO);
-        cmbIVAPorcentaje.addItem(IVA_105);
-        cmbIVAPorcentaje.addItem(IVA_21);
     }
     
     private void cargarMedidas() {
@@ -804,63 +765,44 @@ public class DetalleProductoGUI extends JDialog {
     }
     
     private void calcularGananciaPorcentaje() {
-        pvp = new BigDecimal(txtPVP.getValue().toString());
-        gananciaPorcentaje = RestClient.getRestTemplate()
-                .getForObject("/productos/ganancia-porcentaje?"
-                        + "precioCosto=" + new BigDecimal(txtPrecioCosto.getValue().toString())
-                        + "&pvp=" + pvp,
-                        BigDecimal.class);
+        BigDecimal gananciaPorcentaje = CalculosPrecioProducto.calcularGananciaPorcentaje(BigDecimal.ZERO,
+                BigDecimal.ZERO, new BigDecimal(txtPVP.getValue().toString()), BigDecimal.ZERO, BigDecimal.ZERO,
+                new BigDecimal(txtPrecioCosto.getValue().toString()), false);
         txtGananciaPorcentaje.setValue(gananciaPorcentaje);
     }
     
-    private void calcularGananciaNeto() {
-        gananciaNeto = RestClient.getRestTemplate()
-                .getForObject("/productos/ganancia-neto?"
-                        + "precioCosto=" + new BigDecimal(txtPrecioCosto.getValue().toString())
-                        + "&gananciaPorcentaje=" + gananciaPorcentaje,
-                        BigDecimal.class);
+    private void calcularGananciaNeto() {        
+        BigDecimal gananciaNeto = CalculosPrecioProducto.calcularGananciaNeto(new BigDecimal(txtPrecioCosto.getValue().toString()),
+                new BigDecimal(txtGananciaPorcentaje.getValue().toString()));
         txtGananciaNeto.setValue(gananciaNeto);
     }
     
-    private void calcularPVP() {
-        pvp = RestClient.getRestTemplate()
-                .getForObject("/productos/pvp?"
-                        + "precioCosto=" + new BigDecimal(txtPrecioCosto.getValue().toString())
-                        + "&gananciaPorcentaje=" + gananciaPorcentaje,
-                        BigDecimal.class);
+    private void calcularPVP() {                
+        BigDecimal pvp = CalculosPrecioProducto.calcularPVP(new BigDecimal(txtPrecioCosto.getValue().toString()),
+                new BigDecimal(txtGananciaPorcentaje.getValue().toString()));
         txtPVP.setValue(pvp);
     }
     
     private void calcularIVANeto() {
-        IVANeto = RestClient.getRestTemplate()
-                .getForObject("/productos/iva-neto?"
-                        + "pvp=" + pvp
-                        + "&ivaPorcentaje=" + new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()),
-                        BigDecimal.class);
+        BigDecimal IVANeto = CalculosPrecioProducto.calcularIVANeto(new BigDecimal(txtPVP.getValue().toString()),
+                new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()));
         txtIVANeto.setValue(IVANeto);
     }
     
-    private void calcularPrecioLista() {
-        precioDeLista = RestClient.getRestTemplate()
-                .getForObject("/productos/precio-lista?"
-                        + "pvp=" + pvp
-                        + "&ivaPorcentaje=" + new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString())
-                        + "&impInternoPorcentaje=0",
-                        BigDecimal.class);
+    private void calcularPrecioLista() {        
+        BigDecimal precioDeLista = CalculosPrecioProducto.calcularPrecioLista(new BigDecimal(txtPVP.getValue().toString()),
+                new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()), BigDecimal.ZERO);
         txtPrecioLista.setValue(precioDeLista);
     }
     
-    private void calcularGananciaPorcentajeSegunPrecioDeLista() {      
-        gananciaPorcentaje = RestClient.getRestTemplate()
-                .getForObject("/productos/ganancia-porcentaje?ascendente=true"
-                        + "&precioDeLista=" + new BigDecimal(txtPrecioLista.getValue().toString())
-                        + "&precioDeListaAnterior=" + precioDeLista
-                        + "&pvp=" + pvp
-                        + "&ivaPorcentaje=" + new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString())
-                        + "&impInternoPorcentaje=" + BigDecimal.ZERO
-                        + "&precioCosto=" + precioDeCosto,
-                        BigDecimal.class);
+    private void calcularGananciaPorcentajeSegunPrecioDeLista() {        
+        BigDecimal gananciaPorcentaje = CalculosPrecioProducto.calcularGananciaPorcentaje(
+                new BigDecimal(txtPrecioLista.getValue().toString()), precioListaAnterior,
+                new BigDecimal(txtPVP.getValue().toString()), 
+                new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()), BigDecimal.ZERO,
+                new BigDecimal(txtPrecioCosto.getValue().toString()), true);
         txtGananciaPorcentaje.setValue(gananciaPorcentaje);
+        precioListaAnterior = new BigDecimal(txtPrecioLista.getValue().toString());
     }
     
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
@@ -979,9 +921,7 @@ public class DetalleProductoGUI extends JDialog {
         this.prepararComponentes();
         this.cargarMedidas();
         this.cargarRubros();
-        this.cargarProveedores();     
-        this.cargarIVAs();
-        this.setListeners();
+        this.cargarProveedores();
         if (operacion == TipoDeOperacion.ALTA) {
             this.setTitle("Nuevo Producto");
         } else if (operacion == TipoDeOperacion.ACTUALIZACION) {
@@ -1021,35 +961,16 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_chk_IlimitadoItemStateChanged
 
     private void cmbIVAPorcentajeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbIVAPorcentajeItemStateChanged
-        try {
-            this.calcularIVANeto();
-            this.calcularPrecioLista();
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        this.calcularIVANeto();
+        this.calcularPrecioLista();        
     }//GEN-LAST:event_cmbIVAPorcentajeItemStateChanged
 
     private void txtPVPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPVPActionPerformed
-        try {            
-            pvp = new BigDecimal(txtPVP.getValue().toString());
-            this.calcularGananciaPorcentaje();
-            this.calcularGananciaNeto();
-            this.calcularPVP();
-            this.calcularIVANeto();
-            this.calcularPrecioLista();
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        this.calcularGananciaPorcentaje();
+        this.calcularGananciaNeto();
+        this.calcularPVP();
+        this.calcularIVANeto();
+        this.calcularPrecioLista();        
     }//GEN-LAST:event_txtPVPActionPerformed
 
     private void txtPVPFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPVPFocusGained
@@ -1059,20 +980,11 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_txtPVPFocusGained
 
     private void txtGananciaPorcentajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGananciaPorcentajeActionPerformed
-        try {           
-            gananciaPorcentaje = new BigDecimal(txtGananciaPorcentaje.getValue().toString());
-            this.calcularGananciaNeto();
-            this.calcularPVP();
-            this.calcularIVANeto();
-            this.calcularPrecioLista();
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        this.calcularGananciaNeto();
+        this.calcularPVP();
+        this.calcularGananciaPorcentaje();
+        this.calcularIVANeto();
+        this.calcularPrecioLista();                    
     }//GEN-LAST:event_txtGananciaPorcentajeActionPerformed
 
     private void txtGananciaPorcentajeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGananciaPorcentajeFocusGained
@@ -1082,20 +994,10 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_txtGananciaPorcentajeFocusGained
 
     private void txtPrecioCostoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioCostoActionPerformed
-        try {
-            precioDeCosto = new BigDecimal(txtPrecioCosto.getValue().toString());
-            this.calcularGananciaNeto();
-            this.calcularPVP();
-            this.calcularIVANeto();
-            this.calcularPrecioLista();
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        this.calcularGananciaNeto();
+        this.calcularPVP();
+        this.calcularIVANeto();
+        this.calcularPrecioLista();        
     }//GEN-LAST:event_txtPrecioCostoActionPerformed
 
     private void txtPrecioCostoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioCostoFocusGained
@@ -1129,23 +1031,15 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_btn_RubrosActionPerformed
 
     private void txtPrecioListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioListaActionPerformed
-        try {
-            this.calcularGananciaPorcentajeSegunPrecioDeLista();
-            this.calcularGananciaNeto();
-            this.calcularPVP();
-            this.calcularIVANeto();
-            this.calcularPrecioLista();
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        this.calcularGananciaPorcentajeSegunPrecioDeLista();
+        this.calcularGananciaNeto();
+        this.calcularPVP();
+        this.calcularIVANeto();
+        this.calcularPrecioLista();        
     }//GEN-LAST:event_txtPrecioListaActionPerformed
 
     private void txtPrecioListaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioListaFocusGained
+        precioListaAnterior = new BigDecimal(txtPrecioLista.getValue().toString());
         SwingUtilities.invokeLater(() -> {
             txtPrecioLista.selectAll();
         });
@@ -1156,6 +1050,49 @@ public class DetalleProductoGUI extends JDialog {
             txt_VentaMinima.selectAll();
         });
     }//GEN-LAST:event_txt_VentaMinimaFocusGained
+
+    private void txtPrecioCostoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioCostoFocusLost
+        try {
+            txtPrecioCosto.commitEdit();
+        } catch (ParseException ex) {}                
+        this.calcularGananciaNeto();
+        this.calcularPVP();
+        this.calcularIVANeto();
+        this.calcularPrecioLista();
+    }//GEN-LAST:event_txtPrecioCostoFocusLost
+
+    private void txtPVPFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPVPFocusLost
+        try {
+            txtPVP.commitEdit();
+        } catch (ParseException ex) {}                
+        this.calcularGananciaPorcentaje();
+        this.calcularGananciaNeto();
+        this.calcularPVP();
+        this.calcularIVANeto();
+        this.calcularPrecioLista();
+    }//GEN-LAST:event_txtPVPFocusLost
+
+    private void txtGananciaPorcentajeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGananciaPorcentajeFocusLost
+        try {
+            txtGananciaPorcentaje.commitEdit();
+        } catch (ParseException ex) {}                
+        this.calcularGananciaNeto();
+        this.calcularPVP();
+        this.calcularGananciaPorcentaje();
+        this.calcularIVANeto();
+        this.calcularPrecioLista();
+    }//GEN-LAST:event_txtGananciaPorcentajeFocusLost
+
+    private void txtPrecioListaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioListaFocusLost
+        try {
+            txtPrecioLista.commitEdit();
+        } catch (ParseException ex) {}        
+        this.calcularGananciaPorcentajeSegunPrecioDeLista();
+        this.calcularGananciaNeto();
+        this.calcularPVP();
+        this.calcularIVANeto();
+        this.calcularPrecioLista();
+    }//GEN-LAST:event_txtPrecioListaFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Guardar;

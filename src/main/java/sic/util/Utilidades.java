@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.security.CodeSource;
 import java.security.MessageDigest;
@@ -44,17 +43,13 @@ public class Utilidades {
      */
     public static boolean contieneVentanas(JDesktopPane desktop) {
         JInternalFrame[] frames = desktop.getAllFrames();
-        if (frames.length == 0) {
-            return false;
-        }
-
-        return true;
+        return frames.length != 0;
     }
 
     public static void cerrarTodasVentanas(JDesktopPane desktop) {
         JInternalFrame[] frames = desktop.getAllFrames();
-        for (int i = 0; i < frames.length; i++) {
-            frames[i].dispose();
+        for (JInternalFrame frame : frames) {
+            frame.dispose();
         }
     }
 
@@ -198,12 +193,7 @@ public class Utilidades {
         if (archivo == null) {
             throw new FileNotFoundException();
         }
-
-        if (archivo.length() > tamanioValido) {
-            return false;
-        } else {
-            return true;
-        }
+        return archivo.length() <= tamanioValido;
     }
 
     public static void controlarEntradaSoloNumerico(KeyEvent evt) {
