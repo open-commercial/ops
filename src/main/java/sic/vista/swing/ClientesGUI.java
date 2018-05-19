@@ -26,6 +26,7 @@ import sic.modelo.Localidad;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Pais;
 import sic.modelo.Provincia;
+import sic.modelo.Usuario;
 import sic.util.ColoresNumerosRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
@@ -57,15 +58,33 @@ public class ClientesGUI extends JInternalFrame {
     }
 
     private void cargarComboBoxPaises() {
-        cmb_Pais.removeAllItems();
+        cmbPais.removeAllItems();
         try {
             List<Pais> paises = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/paises", Pais[].class)));
             Pais paisTodos = new Pais();
             paisTodos.setNombre("Todos");
-            cmb_Pais.addItem(paisTodos);
-            paises.stream().forEach((p) -> {
-                cmb_Pais.addItem(p);
+            cmbPais.addItem(paisTodos);
+            paises.stream().forEach(p -> {
+                cmbPais.addItem(p);
+            });
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void cargarComboBoxViajantes() {
+        cmbViajante.removeAllItems();
+        try {
+            List<Usuario> viajantes = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
+                    .getForObject("/usuarios/roles?rol=VIAJANTE", Usuario[].class)));
+            viajantes.stream().forEach(v -> {
+                cmbViajante.addItem(v);
             });
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -78,16 +97,16 @@ public class ClientesGUI extends JInternalFrame {
     }
 
     private void cargarComboBoxProvinciasDelPais() {
-        cmb_Provincia.removeAllItems();
+        cmbProvincia.removeAllItems();
         try {
             List<Provincia> provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/provincias/paises/" + ((Pais) cmb_Pais.getSelectedItem()).getId_Pais(),
+                    .getForObject("/provincias/paises/" + ((Pais) cmbPais.getSelectedItem()).getId_Pais(),
                     Provincia[].class)));
             Provincia provinciaTodas = new Provincia();
             provinciaTodas.setNombre("Todas");
-            cmb_Provincia.addItem(provinciaTodas);
+            cmbProvincia.addItem(provinciaTodas);
             provincias.stream().forEach((p) -> {
-                cmb_Provincia.addItem(p);
+                cmbProvincia.addItem(p);
             });
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -100,16 +119,16 @@ public class ClientesGUI extends JInternalFrame {
     }
 
     private void cargarComboBoxLocalidadesDeLaProvincia() {
-        cmb_Localidad.removeAllItems();
+        cmbLocalidad.removeAllItems();
         try {
             List<Localidad> Localidades = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/localidades/provincias/" + ((Provincia) cmb_Provincia.getSelectedItem()).getId_Provincia(),
+                    .getForObject("/localidades/provincias/" + ((Provincia) cmbProvincia.getSelectedItem()).getId_Provincia(),
                     Localidad[].class)));
             Localidad localidadTodas = new Localidad();
             localidadTodas.setNombre("Todas");
-            cmb_Localidad.addItem(localidadTodas);
+            cmbLocalidad.addItem(localidadTodas);
             Localidades.stream().forEach((l) -> {
-                cmb_Localidad.addItem(l);
+                cmbLocalidad.addItem(l);
             });
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -243,13 +262,13 @@ public class ClientesGUI extends JInternalFrame {
         }        
         chk_Ubicacion.setEnabled(status);
         if (status == true && chk_Ubicacion.isSelected() == true) {
-            cmb_Pais.setEnabled(true);
-            cmb_Provincia.setEnabled(true);
-            cmb_Localidad.setEnabled(true);
+            cmbPais.setEnabled(true);
+            cmbProvincia.setEnabled(true);
+            cmbLocalidad.setEnabled(true);
         } else {
-            cmb_Pais.setEnabled(false);
-            cmb_Provincia.setEnabled(false);
-            cmb_Localidad.setEnabled(false);
+            cmbPais.setEnabled(false);
+            cmbProvincia.setEnabled(false);
+            cmbLocalidad.setEnabled(false);
         }
         btn_Buscar.setEnabled(status);  
         btnCuentaCorriente.setEnabled(status);
@@ -270,15 +289,18 @@ public class ClientesGUI extends JInternalFrame {
             criteriaBusqueda += "nombreFantasia=" + txtCriteria.getText().trim() + "&";
             criteriaBusqueda += "idFiscal=" + txtCriteria.getText().trim() + "&";
         }
+        if (chkViajante.isSelected()) {
+            criteriaBusqueda += "idViajante=" + ((Usuario) cmbViajante.getSelectedItem()).getId_Usuario() + "&";
+        }
         if (chk_Ubicacion.isSelected()) {
-            if (!((Pais) cmb_Pais.getSelectedItem()).getNombre().equals("Todos")) {
-                criteriaBusqueda += "idPais=" + String.valueOf(((Pais) cmb_Pais.getSelectedItem()).getId_Pais()) + "&";
+            if (!((Pais) cmbPais.getSelectedItem()).getNombre().equals("Todos")) {
+                criteriaBusqueda += "idPais=" + String.valueOf(((Pais) cmbPais.getSelectedItem()).getId_Pais()) + "&";
             }
-            if (!((Provincia) (cmb_Provincia.getSelectedItem())).getNombre().equals("Todas")) {
-                criteriaBusqueda += "idProvincia=" + String.valueOf(((Provincia) (cmb_Provincia.getSelectedItem())).getId_Provincia()) + "&";
+            if (!((Provincia) (cmbProvincia.getSelectedItem())).getNombre().equals("Todas")) {
+                criteriaBusqueda += "idProvincia=" + String.valueOf(((Provincia) (cmbProvincia.getSelectedItem())).getId_Provincia()) + "&";
             }
-            if (!((Localidad) cmb_Localidad.getSelectedItem()).getNombre().equals("Todas")) {
-                criteriaBusqueda += "idLocalidad=" + String.valueOf((((Localidad) cmb_Localidad.getSelectedItem()).getId_Localidad())) + "&";
+            if (!((Localidad) cmbLocalidad.getSelectedItem()).getNombre().equals("Todas")) {
+                criteriaBusqueda += "idLocalidad=" + String.valueOf((((Localidad) cmbLocalidad.getSelectedItem()).getId_Localidad())) + "&";
             }
         }
         criteriaBusqueda += "idEmpresa=" + String.valueOf(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
@@ -286,8 +308,7 @@ public class ClientesGUI extends JInternalFrame {
         try {
             PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
                     .exchange(criteriaBusqueda, HttpMethod.GET, null,
-                            new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {
-                    })
+                            new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {})
                     .getBody();
             totalElementosBusqueda = response.getTotalElements();
             clientesParcial = response.getContent();
@@ -312,11 +333,13 @@ public class ClientesGUI extends JInternalFrame {
         chkCriteria = new javax.swing.JCheckBox();
         txtCriteria = new javax.swing.JTextField();
         chk_Ubicacion = new javax.swing.JCheckBox();
-        cmb_Provincia = new javax.swing.JComboBox();
-        cmb_Pais = new javax.swing.JComboBox();
-        cmb_Localidad = new javax.swing.JComboBox();
+        cmbProvincia = new javax.swing.JComboBox();
+        cmbPais = new javax.swing.JComboBox();
+        cmbLocalidad = new javax.swing.JComboBox();
         btn_Buscar = new javax.swing.JButton();
         lbl_cantResultados = new javax.swing.JLabel();
+        chkViajante = new javax.swing.JCheckBox();
+        cmbViajante = new javax.swing.JComboBox<Usuario>();
         panelResultados = new javax.swing.JPanel();
         sp_Resultados = new javax.swing.JScrollPane();
         tbl_Resultados = new javax.swing.JTable();
@@ -351,7 +374,7 @@ public class ClientesGUI extends JInternalFrame {
 
         panelFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
 
-        chkCriteria.setText("ID Fiscal / Razon Social / Nombre Fantasia:");
+        chkCriteria.setText("ID Fiscal, Razon Social, Nombre Fantasia:");
         chkCriteria.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 chkCriteriaItemStateChanged(evt);
@@ -367,21 +390,21 @@ public class ClientesGUI extends JInternalFrame {
             }
         });
 
-        cmb_Provincia.setEnabled(false);
-        cmb_Provincia.addItemListener(new java.awt.event.ItemListener() {
+        cmbProvincia.setEnabled(false);
+        cmbProvincia.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cmb_ProvinciaItemStateChanged(evt);
+                cmbProvinciaItemStateChanged(evt);
             }
         });
 
-        cmb_Pais.setEnabled(false);
-        cmb_Pais.addItemListener(new java.awt.event.ItemListener() {
+        cmbPais.setEnabled(false);
+        cmbPais.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cmb_PaisItemStateChanged(evt);
+                cmbPaisItemStateChanged(evt);
             }
         });
 
-        cmb_Localidad.setEnabled(false);
+        cmbLocalidad.setEnabled(false);
 
         btn_Buscar.setForeground(java.awt.Color.blue);
         btn_Buscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
@@ -394,6 +417,15 @@ public class ClientesGUI extends JInternalFrame {
 
         lbl_cantResultados.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
+        chkViajante.setText("Viajante:");
+        chkViajante.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chkViajanteItemStateChanged(evt);
+            }
+        });
+
+        cmbViajante.setEnabled(false);
+
         javax.swing.GroupLayout panelFiltrosLayout = new javax.swing.GroupLayout(panelFiltros);
         panelFiltros.setLayout(panelFiltrosLayout);
         panelFiltrosLayout.setHorizontalGroup(
@@ -402,19 +434,21 @@ public class ClientesGUI extends JInternalFrame {
                 .addContainerGap()
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(chkCriteria, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(chk_Ubicacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmb_Localidad, 0, 216, Short.MAX_VALUE)
-                            .addComponent(cmb_Provincia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmb_Pais, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtCriteria)))
-                    .addGroup(panelFiltrosLayout.createSequentialGroup()
                         .addComponent(btn_Buscar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelFiltrosLayout.createSequentialGroup()
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(chkViajante, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(chkCriteria, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(chk_Ubicacion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmbLocalidad, 0, 302, Short.MAX_VALUE)
+                            .addComponent(cmbProvincia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cmbPais, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtCriteria)
+                            .addComponent(cmbViajante, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         panelFiltrosLayout.setVerticalGroup(
@@ -424,18 +458,22 @@ public class ClientesGUI extends JInternalFrame {
                     .addComponent(chkCriteria)
                     .addComponent(txtCriteria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(chkViajante)
+                    .addComponent(cmbViajante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_Ubicacion)
-                    .addComponent(cmb_Pais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbPais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmb_Provincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cmbProvincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmb_Localidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cmbLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_Buscar))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelResultados.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados"));
@@ -512,7 +550,7 @@ public class ClientesGUI extends JInternalFrame {
                 .addComponent(btn_setPredeterminado)
                 .addGap(0, 0, 0)
                 .addComponent(btnCuentaCorriente)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 148, Short.MAX_VALUE))
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Eliminar, btn_Modificar, btn_Nuevo});
@@ -520,7 +558,7 @@ public class ClientesGUI extends JInternalFrame {
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btn_setPredeterminado)
@@ -562,53 +600,53 @@ public class ClientesGUI extends JInternalFrame {
     }//GEN-LAST:event_chkCriteriaItemStateChanged
 
     private void chk_UbicacionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UbicacionItemStateChanged
-        if (chk_Ubicacion.isSelected() == true) {
+        if (chk_Ubicacion.isSelected()) {
             this.cargarComboBoxPaises();
-            cmb_Pais.setEnabled(true);
-            cmb_Provincia.setEnabled(true);
-            cmb_Localidad.setEnabled(true);
-            cmb_Pais.requestFocus();
+            cmbPais.setEnabled(true);
+            cmbProvincia.setEnabled(true);
+            cmbLocalidad.setEnabled(true);
+            cmbPais.requestFocus();
         } else {
-            cmb_Pais.removeAllItems();
-            cmb_Pais.setEnabled(false);
-            cmb_Provincia.removeAllItems();
-            cmb_Provincia.setEnabled(false);
-            cmb_Localidad.setEnabled(false);
-            cmb_Localidad.removeAllItems();
+            cmbPais.removeAllItems();
+            cmbPais.setEnabled(false);
+            cmbProvincia.removeAllItems();
+            cmbProvincia.setEnabled(false);
+            cmbLocalidad.setEnabled(false);
+            cmbLocalidad.removeAllItems();
         }
     }//GEN-LAST:event_chk_UbicacionItemStateChanged
 
-    private void cmb_PaisItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_PaisItemStateChanged
-        if (cmb_Pais.getItemCount() > 0) {
-            if (!cmb_Pais.getSelectedItem().toString().equals("Todos")) {
+    private void cmbPaisItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbPaisItemStateChanged
+        if (cmbPais.getItemCount() > 0) {
+            if (!cmbPais.getSelectedItem().toString().equals("Todos")) {
                 this.cargarComboBoxProvinciasDelPais();
             } else {
-                cmb_Provincia.removeAllItems();
+                cmbProvincia.removeAllItems();
                 Provincia provinciaTodas = new Provincia();
                 provinciaTodas.setNombre("Todas");
-                cmb_Provincia.addItem(provinciaTodas);
-                cmb_Localidad.removeAllItems();
+                cmbProvincia.addItem(provinciaTodas);
+                cmbLocalidad.removeAllItems();
                 Localidad localidadTodas = new Localidad();
                 localidadTodas.setNombre("Todas");
-                cmb_Localidad.addItem(localidadTodas);
+                cmbLocalidad.addItem(localidadTodas);
             }
         }
-    }//GEN-LAST:event_cmb_PaisItemStateChanged
+    }//GEN-LAST:event_cmbPaisItemStateChanged
 
-    private void cmb_ProvinciaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_ProvinciaItemStateChanged
-        if (cmb_Provincia.getItemCount() > 0) {
-            if (!cmb_Provincia.getSelectedItem().toString().equals("Todas")) {
+    private void cmbProvinciaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbProvinciaItemStateChanged
+        if (cmbProvincia.getItemCount() > 0) {
+            if (!cmbProvincia.getSelectedItem().toString().equals("Todas")) {
                 cargarComboBoxLocalidadesDeLaProvincia();
             } else {
-                cmb_Localidad.removeAllItems();
+                cmbLocalidad.removeAllItems();
                 Localidad localidadTodas = new Localidad();
                 localidadTodas.setNombre("Todas");
-                cmb_Localidad.addItem(localidadTodas);
+                cmbLocalidad.addItem(localidadTodas);
             }
         } else {
-            cmb_Localidad.removeAllItems();
+            cmbLocalidad.removeAllItems();
         }
-    }//GEN-LAST:event_cmb_ProvinciaItemStateChanged
+    }//GEN-LAST:event_cmbProvinciaItemStateChanged
 
     private void btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarActionPerformed
         this.resetScroll();
@@ -746,6 +784,17 @@ public class ClientesGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btnCuentaCorrienteActionPerformed
 
+    private void chkViajanteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkViajanteItemStateChanged
+        if (chkViajante.isSelected()) {
+            this.cargarComboBoxViajantes();
+            cmbViajante.setEnabled(true);            
+            cmbViajante.requestFocus();
+        } else {
+            cmbViajante.removeAllItems();
+            cmbViajante.setEnabled(false);            
+        }
+    }//GEN-LAST:event_chkViajanteItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCuentaCorriente;
     private javax.swing.JButton btn_Buscar;
@@ -754,10 +803,12 @@ public class ClientesGUI extends JInternalFrame {
     private javax.swing.JButton btn_Nuevo;
     private javax.swing.JButton btn_setPredeterminado;
     private javax.swing.JCheckBox chkCriteria;
+    private javax.swing.JCheckBox chkViajante;
     private javax.swing.JCheckBox chk_Ubicacion;
-    private javax.swing.JComboBox cmb_Localidad;
-    private javax.swing.JComboBox cmb_Pais;
-    private javax.swing.JComboBox cmb_Provincia;
+    private javax.swing.JComboBox cmbLocalidad;
+    private javax.swing.JComboBox cmbPais;
+    private javax.swing.JComboBox cmbProvincia;
+    private javax.swing.JComboBox cmbViajante;
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;
     private javax.swing.JPanel panelResultados;

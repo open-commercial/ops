@@ -64,23 +64,25 @@
               <Group type="102" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="chkCriteria" max="32767" attributes="0"/>
-                              <Component id="chk_Ubicacion" max="32767" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="btn_Buscar" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="lbl_cantResultados" max="32767" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="chkViajante" alignment="0" max="32767" attributes="0"/>
+                              <Component id="chkCriteria" alignment="0" max="32767" attributes="0"/>
+                              <Component id="chk_Ubicacion" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cmb_Localidad" pref="216" max="32767" attributes="2"/>
-                              <Component id="cmb_Provincia" alignment="0" max="32767" attributes="2"/>
-                              <Component id="cmb_Pais" alignment="0" max="32767" attributes="2"/>
+                              <Component id="cmbLocalidad" pref="302" max="32767" attributes="2"/>
+                              <Component id="cmbProvincia" alignment="0" max="32767" attributes="2"/>
+                              <Component id="cmbPais" alignment="0" max="32767" attributes="2"/>
                               <Component id="txtCriteria" max="32767" attributes="2"/>
+                              <Component id="cmbViajante" alignment="0" max="32767" attributes="0"/>
                           </Group>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="btn_Buscar" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="lbl_cantResultados" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -95,20 +97,25 @@
                       <Component id="txtCriteria" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="chk_Ubicacion" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmb_Pais" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="chkViajante" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cmbViajante" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="cmb_Provincia" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="chk_Ubicacion" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="cmbPais" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="cmb_Localidad" min="-2" max="-2" attributes="0"/>
+                  <Component id="cmbProvincia" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="cmbLocalidad" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lbl_cantResultados" alignment="2" min="-2" pref="25" max="-2" attributes="0"/>
                       <Component id="btn_Buscar" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -116,7 +123,7 @@
       <SubComponents>
         <Component class="javax.swing.JCheckBox" name="chkCriteria">
           <Properties>
-            <Property name="text" type="java.lang.String" value="ID Fiscal / Razon Social / Nombre Fantasia:"/>
+            <Property name="text" type="java.lang.String" value="ID Fiscal, Razon Social, Nombre Fantasia:"/>
           </Properties>
           <Events>
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkCriteriaItemStateChanged"/>
@@ -135,7 +142,7 @@
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_UbicacionItemStateChanged"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JComboBox" name="cmb_Provincia">
+        <Component class="javax.swing.JComboBox" name="cmbProvincia">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>
@@ -143,10 +150,10 @@
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmb_ProvinciaItemStateChanged"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmbProvinciaItemStateChanged"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JComboBox" name="cmb_Pais">
+        <Component class="javax.swing.JComboBox" name="cmbPais">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>
@@ -154,10 +161,10 @@
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmb_PaisItemStateChanged"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmbPaisItemStateChanged"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JComboBox" name="cmb_Localidad">
+        <Component class="javax.swing.JComboBox" name="cmbLocalidad">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>
@@ -184,6 +191,26 @@
             <Property name="horizontalAlignment" type="int" value="4"/>
           </Properties>
         </Component>
+        <Component class="javax.swing.JCheckBox" name="chkViajante">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Viajante:"/>
+          </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkViajanteItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cmbViajante">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JComboBox&lt;Usuario&gt;()"/>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="panelResultados">
@@ -209,14 +236,14 @@
                   <Component id="btn_setPredeterminado" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="btnCuentaCorriente" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="148" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="sp_Resultados" pref="219" max="32767" attributes="0"/>
+                  <Component id="sp_Resultados" pref="415" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="btn_setPredeterminado" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
