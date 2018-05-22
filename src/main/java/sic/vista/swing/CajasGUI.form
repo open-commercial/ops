@@ -65,29 +65,35 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="btn_buscar" linkSize="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_buscar" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="lbl_cantidadMostrar" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="chk_Usuario" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="chk_UsuarioApertura" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="chk_Fecha" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="chk_UsuarioCierre" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace min="0" pref="12" max="32767" attributes="0"/>
                                   <Component id="lbl_Desde" min="-2" max="-2" attributes="1"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="dc_FechaDesde" min="-2" pref="150" max="-2" attributes="0"/>
+                                  <Component id="dc_FechaDesde" linkSize="17" min="-2" pref="150" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="lbl_Hasta" min="-2" max="-2" attributes="1"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="dc_FechaHasta" min="-2" pref="150" max="-2" attributes="0"/>
+                                  <Component id="dc_FechaHasta" linkSize="17" min="-2" pref="150" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="cmb_Usuarios" max="32767" attributes="0"/>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="cmb_UsuariosApertura" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="cmb_UsuariosCierre" alignment="1" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
                           </Group>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -106,15 +112,20 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="cmb_Usuarios" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="chk_Usuario" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="cmb_UsuariosApertura" linkSize="16" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="chk_UsuarioApertura" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="cmb_UsuariosCierre" linkSize="16" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="chk_UsuarioCierre" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="btn_buscar" linkSize="14" max="-2" attributes="0"/>
                       <Component id="lbl_cantidadMostrar" linkSize="14" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -166,15 +177,15 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_buscarActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="chk_Usuario">
+        <Component class="javax.swing.JCheckBox" name="chk_UsuarioApertura">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Usuario:"/>
+            <Property name="text" type="java.lang.String" value="Usuario Apertura:"/>
           </Properties>
           <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_UsuarioItemStateChanged"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_UsuarioAperturaItemStateChanged"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JComboBox" name="cmb_Usuarios">
+        <Component class="javax.swing.JComboBox" name="cmb_UsuariosApertura">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>
@@ -188,6 +199,24 @@
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="chk_UsuarioCierre">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Usuario Cierre:"/>
+          </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_UsuarioCierreItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cmb_UsuariosCierre">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Usuario&gt;"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>
@@ -206,46 +235,49 @@
               <Group type="102" attributes="0">
                   <Component id="btn_AbrirCaja" linkSize="1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                  <Component id="btn_ReabrirCaja" linkSize="1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="btn_verDetalle" linkSize="1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="btn_eliminarCaja" linkSize="1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <Component id="lbl_TotalFinal" linkSize="7" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbl_TotalSistema" linkSize="7" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="ftxt_TotalFinal" linkSize="9" min="-2" max="-2" attributes="0"/>
+                          <Component id="ftxt_TotalSistema" linkSize="9" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="lbl_TotalCierre" linkSize="7" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="ftxt_TotalCierre" linkSize="9" min="-2" pref="163" max="-2" attributes="0"/>
+                          <Component id="ftxt_TotalReal" linkSize="9" min="-2" pref="163" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
-              <Component id="sp_Cajas" pref="709" max="32767" attributes="0"/>
+              <Component id="sp_Cajas" pref="838" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="sp_Cajas" pref="204" max="32767" attributes="0"/>
+                  <Component id="sp_Cajas" pref="173" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btn_verDetalle" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btn_eliminarCaja" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btn_AbrirCaja" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_AbrirCaja" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_ReabrirCaja" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lbl_TotalFinal" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="ftxt_TotalFinal" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_TotalSistema" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="ftxt_TotalSistema" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="lbl_TotalCierre" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="ftxt_TotalCierre" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="ftxt_TotalReal" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -312,12 +344,12 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_eliminarCajaActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JLabel" name="lbl_TotalFinal">
+        <Component class="javax.swing.JLabel" name="lbl_TotalSistema">
           <Properties>
             <Property name="text" type="java.lang.String" value="Total Sistema:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="ftxt_TotalFinal">
+        <Component class="javax.swing.JFormattedTextField" name="ftxt_TotalSistema">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
@@ -331,7 +363,7 @@
             <Property name="text" type="java.lang.String" value="Total Real:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="ftxt_TotalCierre">
+        <Component class="javax.swing.JFormattedTextField" name="ftxt_TotalReal">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
@@ -339,6 +371,20 @@
             </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btn_ReabrirCaja">
+          <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/sic/icons/ReAbrirCaja_16x16.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Reabrir"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_ReabrirCajaActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

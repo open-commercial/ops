@@ -40,12 +40,12 @@
                       <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="lbl_Total" max="32767" attributes="0"/>
+                              <Component id="lbl_TotalSistema" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="ftxt_TotalGeneral" linkSize="14" min="-2" pref="150" max="-2" attributes="0"/>
+                              <Component id="ftxt_TotalSistema" linkSize="14" min="-2" pref="150" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="lbl_totalCaja" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_totalAfectaCaja" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="ftxt_TotalAfectaCaja" linkSize="14" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -77,15 +77,15 @@
               <Component id="pnl_Resumen" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="lbl_totalCaja" linkSize="1" alignment="1" min="-2" max="-2" attributes="0"/>
+                  <Component id="lbl_totalAfectaCaja" linkSize="1" alignment="1" min="-2" max="-2" attributes="0"/>
                   <Component id="ftxt_TotalAfectaCaja" linkSize="1" alignment="1" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="2" attributes="0">
                   <Component id="btn_AgregarGasto" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="btn_CerrarCaja" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="lbl_Total" linkSize="1" alignment="2" max="32767" attributes="0"/>
-                  <Component id="ftxt_TotalGeneral" linkSize="1" alignment="2" max="32767" attributes="0"/>
+                  <Component id="lbl_TotalSistema" linkSize="1" alignment="2" max="32767" attributes="0"/>
+                  <Component id="ftxt_TotalSistema" linkSize="1" alignment="2" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -257,16 +257,16 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_AgregarGastoActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JLabel" name="lbl_Total">
+    <Component class="javax.swing.JLabel" name="lbl_TotalSistema">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="2"/>
-        <Property name="text" type="java.lang.String" value="Total General:"/>
+        <Property name="text" type="java.lang.String" value="Total Sistema:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="lbl_totalCaja">
+    <Component class="javax.swing.JLabel" name="lbl_totalAfectaCaja">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="2"/>
-        <Property name="text" type="java.lang.String" value="Total que afecta Caja:"/>
+        <Property name="text" type="java.lang.String" value="Total afecta Caja:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JFormattedTextField" name="ftxt_TotalAfectaCaja">
@@ -282,7 +282,7 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JFormattedTextField" name="ftxt_TotalGeneral">
+    <Component class="javax.swing.JFormattedTextField" name="ftxt_TotalSistema">
       <Properties>
         <Property name="editable" type="boolean" value="false"/>
         <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">

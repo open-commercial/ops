@@ -77,14 +77,15 @@
         <Component class="javax.swing.JTable" name="tbl_ProductosAModifcar">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="4" rowCount="4">
-                <Column editable="true" title="Title 1" type="java.lang.Object"/>
-                <Column editable="true" title="Title 2" type="java.lang.Object"/>
-                <Column editable="true" title="Title 3" type="java.lang.Object"/>
-                <Column editable="true" title="Title 4" type="java.lang.Object"/>
-              </Table>
+              <Table columnCount="0" rowCount="0"/>
+            </Property>
+            <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+              <TableColumnModel selectionModel="0"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
+            <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+              <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+            </Property>
           </Properties>
         </Component>
       </SubComponents>
@@ -276,7 +277,7 @@
                                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <Component id="txt_Ganancia_Porcentaje" min="-2" pref="74" max="-2" attributes="2"/>
+                              <Component id="txtGananciaPorcentaje" min="-2" pref="74" max="-2" attributes="2"/>
                           </Group>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="1" max="-2" attributes="0">
@@ -284,20 +285,18 @@
                                   <Component id="lbl_IVA" alignment="1" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cmb_IVA_Porcentaje" min="-2" pref="74" max="-2" attributes="0"/>
+                              <Component id="cmbIVAPorcentaje" min="-2" pref="74" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Component id="lbl_PrecioLista" alignment="0" min="-2" pref="153" max="-2" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="txt_PrecioLista" linkSize="4" pref="92" max="32767" attributes="1"/>
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="txt_IVA_Neto" linkSize="4" alignment="0" pref="92" max="32767" attributes="2"/>
-                          <Component id="txt_PVP" linkSize="4" alignment="0" max="32767" attributes="0"/>
-                          <Component id="txt_Ganancia_Neto" linkSize="4" alignment="0" max="32767" attributes="1"/>
-                          <Component id="txt_PrecioCosto" linkSize="4" alignment="0" max="32767" attributes="1"/>
-                      </Group>
+                      <Component id="txtPrecioLista" linkSize="4" pref="92" max="32767" attributes="1"/>
+                      <Component id="txtIVANeto" linkSize="4" alignment="0" pref="92" max="32767" attributes="2"/>
+                      <Component id="txtPVP" linkSize="4" alignment="0" max="32767" attributes="0"/>
+                      <Component id="txtGananciaNeto" linkSize="4" alignment="0" max="32767" attributes="1"/>
+                      <Component id="txtPrecioCosto" linkSize="4" alignment="0" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -311,28 +310,28 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lbl_PrecioCosto" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txt_PrecioCosto" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtPrecioCosto" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lbl_Ganancia" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txt_Ganancia_Porcentaje" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txt_Ganancia_Neto" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtGananciaPorcentaje" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtGananciaNeto" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lbl_PVP" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txt_PVP" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtPVP" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lbl_IVA" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmb_IVA_Porcentaje" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txt_IVA_Neto" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="cmbIVAPorcentaje" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtIVANeto" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="txt_PrecioLista" linkSize="5" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtPrecioLista" linkSize="5" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="lbl_PrecioLista" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
@@ -368,7 +367,7 @@
             <Property name="text" type="java.lang.String" value="Precio de Lista:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txt_PrecioCosto">
+        <Component class="javax.swing.JFormattedTextField" name="txtPrecioCosto">
           <Properties>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
               <Format format="#,##0.##" subtype="-1" type="0"/>
@@ -378,12 +377,12 @@
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txt_PrecioCostoFocusGained"/>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txt_PrecioCostoFocusLost"/>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_PrecioCostoActionPerformed"/>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPrecioCostoFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPrecioCostoFocusLost"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtPrecioCostoActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txt_Ganancia_Porcentaje">
+        <Component class="javax.swing.JFormattedTextField" name="txtGananciaPorcentaje">
           <Properties>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
               <Format format="#,##0.##" subtype="-1" type="0"/>
@@ -393,12 +392,12 @@
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txt_Ganancia_PorcentajeFocusGained"/>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txt_Ganancia_PorcentajeFocusLost"/>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_Ganancia_PorcentajeActionPerformed"/>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtGananciaPorcentajeFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtGananciaPorcentajeFocusLost"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtGananciaPorcentajeActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txt_PrecioLista">
+        <Component class="javax.swing.JFormattedTextField" name="txtPrecioLista">
           <Properties>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
               <Format format="#,##0.##" subtype="-1" type="0"/>
@@ -408,9 +407,9 @@
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txt_PrecioListaFocusGained"/>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txt_PrecioListaFocusLost"/>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_PrecioListaActionPerformed"/>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPrecioListaFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPrecioListaFocusLost"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtPrecioListaActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lbl_IVA">
@@ -422,7 +421,7 @@
             <Property name="text" type="java.lang.String" value="I.V.A. (%):"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txt_IVA_Neto">
+        <Component class="javax.swing.JFormattedTextField" name="txtIVANeto">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
@@ -434,7 +433,7 @@
             <Property name="focusable" type="boolean" value="false"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txt_Ganancia_Neto">
+        <Component class="javax.swing.JFormattedTextField" name="txtGananciaNeto">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
@@ -455,7 +454,7 @@
             <Property name="text" type="java.lang.String" value="Precio Venta P&#xfa;blico:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txt_PVP">
+        <Component class="javax.swing.JFormattedTextField" name="txtPVP">
           <Properties>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
               <Format format="#,##0.##" subtype="-1" type="0"/>
@@ -465,9 +464,9 @@
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txt_PVPFocusGained"/>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txt_PVPFocusLost"/>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_PVPActionPerformed"/>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPVPFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPVPFocusLost"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtPVPActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JCheckBox" name="chk_Precios">
@@ -475,15 +474,15 @@
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_PreciosItemStateChanged"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JComboBox" name="cmb_IVA_Porcentaje">
+        <Component class="javax.swing.JComboBox" name="cmbIVAPorcentaje">
           <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new javax.swing.DefaultComboBoxModel(new BigDecimal[] { BigDecimal.ZERO, IVA_105, IVA_21 })" type="code"/>
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmb_IVA_PorcentajeItemStateChanged"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmbIVAPorcentajeItemStateChanged"/>
           </Events>
         </Component>
       </SubComponents>

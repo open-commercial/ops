@@ -26,16 +26,13 @@ public class FormasDePagoGUI extends JInternalFrame {
         this.initComponents();
     }
 
-    private void setColumnas() {
-        //nombres de columnas
+    private void setColumnas() {        
         String[] encabezados = new String[3];
         encabezados[0] = "Predeterminado";
         encabezados[1] = "Nombre";
         encabezados[2] = "Afecta la Caja";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
-        tbl_FormasDePago.setModel(modeloTablaResultados);
-
-        //tipo de dato columnas
+        tbl_FormasDePago.setModel(modeloTablaResultados);        
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
         tipos[0] = Boolean.class;
         tipos[1] = String.class;
@@ -43,22 +40,22 @@ public class FormasDePagoGUI extends JInternalFrame {
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_FormasDePago.getTableHeader().setReorderingAllowed(false);
         tbl_FormasDePago.getTableHeader().setResizingAllowed(true);
-
-        //Tamanios de columnas
         tbl_FormasDePago.getColumnModel().getColumn(0).setPreferredWidth(130);
         tbl_FormasDePago.getColumnModel().getColumn(1).setPreferredWidth(340);
         tbl_FormasDePago.getColumnModel().getColumn(2).setPreferredWidth(130);
     }
 
-    private void cargarResultadosAlTable() {
+    private void cargarFormasDePago() {
+        formasDePago = new ArrayList(Arrays.asList(RestClient.getRestTemplate().getForObject("/formas-de-pago/empresas/"
+                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), FormaDePago[].class)));
         this.limpiarJTable();
-        formasDePago.stream().map((fdp) -> {
+        formasDePago.stream().map(fdp -> {
             Object[] fila = new Object[3];
             fila[0] = fdp.isPredeterminado();
             fila[1] = fdp.getNombre();
             fila[2] = fdp.isAfectaCaja();
             return fila;
-        }).forEach((fila) -> {
+        }).forEach(fila -> {
             modeloTablaResultados.addRow(fila);
         });
         tbl_FormasDePago.setModel(modeloTablaResultados);
@@ -68,12 +65,6 @@ public class FormasDePagoGUI extends JInternalFrame {
         modeloTablaResultados = new ModeloTabla();
         tbl_FormasDePago.setModel(modeloTablaResultados);
         this.setColumnas();
-    }
-
-    private void getFormasDePagos() {
-        formasDePago = new ArrayList(Arrays.asList(RestClient.getRestTemplate().getForObject("/formas-de-pago/empresas/"
-                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                FormaDePago[].class)));
     }
 
     private void agregarFormaDePago() {
@@ -86,9 +77,8 @@ public class FormasDePagoGUI extends JInternalFrame {
                     formaDePago,
                     FormaDePago.class);
             txt_Nombre.setText("");
-            chk_AfectaCaja.setSelected(false);
-            this.getFormasDePagos();
-            this.cargarResultadosAlTable();
+            chk_AfectaCaja.setSelected(false);            
+            this.cargarFormasDePago();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -105,14 +95,11 @@ public class FormasDePagoGUI extends JInternalFrame {
             int respuesta = JOptionPane.showConfirmDialog(this,
                     "¿Esta seguro que desea eliminar la forma de pago seleccionada?",
                     "Eliminar", JOptionPane.YES_NO_OPTION);
-
             if (respuesta == JOptionPane.YES_OPTION) {
                 try {
                     RestClient.getRestTemplate().delete("/formas-de-pago/" + formasDePago.get(filaSeleccionada).getId_FormaDePago());
-                    formasDePago.remove(formasDePago.get(filaSeleccionada));
-                    this.getFormasDePagos();
-                    this.cargarResultadosAlTable();
-
+                    formasDePago.remove(formasDePago.get(filaSeleccionada));                    
+                    this.cargarFormasDePago();
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (ResourceAccessException ex) {
@@ -128,21 +115,19 @@ public class FormasDePagoGUI extends JInternalFrame {
     private void setPredeterminado() {
         if (tbl_FormasDePago.getSelectedRow() != -1) {
             int filaSeleccionada = tbl_FormasDePago.getSelectedRow();
-
             try {
                 if (RestClient.getRestTemplate().getForObject("/formas-de-pago/"
-                        +formasDePago.get(filaSeleccionada).getId_FormaDePago(),
+                        + formasDePago.get(filaSeleccionada).getId_FormaDePago(),
                         FormaDePago.class) != null) {
-                    RestClient.getRestTemplate().put("/formas-de-pago/predeterminada/"+formasDePago.get(filaSeleccionada).getId_FormaDePago(),
-                                                 formasDePago.get(filaSeleccionada).getId_FormaDePago());
-                    this.getFormasDePagos();
-                    this.cargarResultadosAlTable();
+                    RestClient.getRestTemplate()
+                            .put("/formas-de-pago/predeterminada/" + formasDePago.get(filaSeleccionada).getId_FormaDePago(),
+                                    formasDePago.get(filaSeleccionada).getId_FormaDePago());                    
+                    this.cargarFormasDePago();
                 } else {
                     JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                             .getString("mensaje_forma_de_pago_seleccionada_no_existente"),
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
-
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             } catch (ResourceAccessException ex) {
@@ -155,8 +140,18 @@ public class FormasDePagoGUI extends JInternalFrame {
     }
 
     private void verificarExistenciaPredeterminado() {
-        RestClient.getRestTemplate().getForObject("/formas-de-pago/predeterminada/empresas/"
-                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), FormaDePago.class);
+        try {
+            RestClient.getRestTemplate().getForObject("/formas-de-pago/predeterminada/empresas/"
+                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), FormaDePago.class);
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -326,9 +321,8 @@ public class FormasDePagoGUI extends JInternalFrame {
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         try {
             this.setSize(sizeInternalFrame);
-            this.setColumnas();
-            this.getFormasDePagos();
-            this.cargarResultadosAlTable();
+            this.setColumnas();            
+            this.cargarFormasDePago();
             this.verificarExistenciaPredeterminado();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

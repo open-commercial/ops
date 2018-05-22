@@ -1,6 +1,5 @@
 package sic.vista.swing;
 
-import sic.modelo.TipoMovimiento;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -48,7 +47,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     private final Cliente cliente;
     private final Proveedor proveedor;
     private CuentaCorriente cuentaCorriente;
-    private final ModeloTabla modeloTablaResultados = new ModeloTabla();
+    private ModeloTabla modeloTablaResultados = new ModeloTabla();
     private static int NUMERO_PAGINA = 0;
     private static final int TAMANIO_PAGINA = 50;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -152,7 +151,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     }
     
     private void limpiarJTable() {
-        modeloTablaResultados.setRowCount(0);
+        modeloTablaResultados = new ModeloTabla();
         tbl_Resultados.setModel(modeloTablaResultados);
         this.setColumnas();
     }
@@ -711,7 +710,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             if (renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_A || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_B
                     || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_C || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_X
                     || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_Y || renglonCC.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
-                SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(renglonCC.getIdMovimiento(), TipoMovimiento.CREDITO);
+                SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(renglonCC.getIdMovimiento(), renglonCC.getTipoComprobante());
                 seleccionDeProductosGUI.setModal(true);
                 seleccionDeProductosGUI.setLocationRelativeTo(this);
                 seleccionDeProductosGUI.setVisible(true);
