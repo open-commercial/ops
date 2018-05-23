@@ -191,28 +191,35 @@ public class CajasGUI extends JInternalFrame {
     }
 
     private void abrirNuevaCaja() {
-        String saldoApertura = JOptionPane.showInputDialog(this,
-                "Saldo Apertura: \n", "Abrir Caja", JOptionPane.QUESTION_MESSAGE);
-        if (saldoApertura != null) {
-            try {
-                RestClient.getRestTemplate().postForObject("/cajas/apertura/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "/usuarios/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                        + "?saldoApertura=" + new BigDecimal(saldoApertura), null, Caja.class);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (NumberFormatException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_formato_numero"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+        if (!RestClient.getRestTemplate()
+                .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/estado-ultima-caja", boolean.class)) {
+            String saldoApertura = JOptionPane.showInputDialog(this,
+                    "Saldo Apertura: \n", "Abrir Caja", JOptionPane.QUESTION_MESSAGE);
+            if (saldoApertura != null) {
+                try {
+                    RestClient.getRestTemplate().postForObject("/cajas/apertura/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                            + "/usuarios/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
+                            + "?saldoApertura=" + new BigDecimal(saldoApertura), null, Caja.class);
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (NumberFormatException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_formato_numero"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                this.limpiarResultados();
+                this.buscar(true);
             }
-            this.limpiarResultados();
-            this.buscar(true);
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_caja_anterior_abierta"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
