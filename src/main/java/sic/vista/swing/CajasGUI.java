@@ -191,8 +191,10 @@ public class CajasGUI extends JInternalFrame {
     }
 
     private void abrirNuevaCaja() {
-        if (!RestClient.getRestTemplate()
-                .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/estado-ultima-caja", boolean.class)) {
+        boolean ultimaCajaAbierta = RestClient.getRestTemplate()
+                .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/estado-ultima-caja",
+                        boolean.class);
+        if (!ultimaCajaAbierta) {
             String saldoApertura = JOptionPane.showInputDialog(this,
                     "Saldo Apertura: \n", "Abrir Caja", JOptionPane.QUESTION_MESSAGE);
             if (saldoApertura != null) {
