@@ -497,7 +497,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         });
 
         btnVerDetalle.setForeground(java.awt.Color.blue);
-        btnVerDetalle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/pdf_16x16.png"))); // NOI18N
+        btnVerDetalle.setText("Ver Detalle");
         btnVerDetalle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVerDetalleActionPerformed(evt);
@@ -549,7 +549,6 @@ public class CuentaCorrienteGUI extends JInternalFrame {
 
         btn_reporteCuentaCorrientePDF.setForeground(new java.awt.Color(0, 0, 255));
         btn_reporteCuentaCorrientePDF.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/pdf_16x16.png"))); // NOI18N
-        btn_reporteCuentaCorrientePDF.setText("Reporte CC");
         btn_reporteCuentaCorrientePDF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_reporteCuentaCorrientePDFActionPerformed(evt);
@@ -558,7 +557,6 @@ public class CuentaCorrienteGUI extends JInternalFrame {
 
         btn_reporteCuentaCorrienteXLSX.setForeground(new java.awt.Color(0, 0, 255));
         btn_reporteCuentaCorrienteXLSX.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/xls_16x16.png"))); // NOI18N
-        btn_reporteCuentaCorrienteXLSX.setText("Reporte CC");
         btn_reporteCuentaCorrienteXLSX.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_reporteCuentaCorrienteXLSXActionPerformed(evt);
