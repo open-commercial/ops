@@ -353,7 +353,7 @@ public class ProductosGUI extends JInternalFrame {
         if (productosTotal != null) {
             if (Desktop.isDesktopSupported()) {
                 try {
-                    String uriReporteListaProductosCriteria = "/productos/reporte-pdf/criteria?"
+                    String uriReporteListaProductosCriteria = "/productos/reporte/criteria?"
                             + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
                     if (chk_Codigo.isSelected()) {
                         uriReporteListaProductosCriteria += "&codigo=" + txt_Codigo.getText().trim();
@@ -370,6 +370,7 @@ public class ProductosGUI extends JInternalFrame {
                     if (chk_Disponibilidad.isSelected()) {
                         uriReporteListaProductosCriteria += "&soloFantantes=" + rb_Faltantes.isSelected();
                     }
+                    uriReporteListaProductosCriteria +=  "&formato=pdf";
                     byte[] reporte = RestClient.getRestTemplate()
                             .getForObject(uriReporteListaProductosCriteria, byte[].class);
                     File f = new File(System.getProperty("user.home") + "/ListaPrecios.pdf");
@@ -828,7 +829,7 @@ public class ProductosGUI extends JInternalFrame {
         if (productosTotal != null) {
             if (Desktop.isDesktopSupported()) {
                 try {
-                    String uriReporteListaProductosCriteria = "/productos/reporte-xls/criteria?"
+                    String uriReporteListaProductosCriteria = "/productos/reporte/criteria?"
                             + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
                     if (chk_Codigo.isSelected()) {
                         uriReporteListaProductosCriteria += "&codigo=" + txt_Codigo.getText().trim();
@@ -845,6 +846,7 @@ public class ProductosGUI extends JInternalFrame {
                     if (chk_Disponibilidad.isSelected()) {
                         uriReporteListaProductosCriteria += "&soloFantantes=" + rb_Faltantes.isSelected();
                     }
+                    uriReporteListaProductosCriteria +=  "&formato=xlsx";
                     byte[] reporte = RestClient.getRestTemplate()
                             .getForObject(uriReporteListaProductosCriteria, byte[].class);
                     File f = new File(System.getProperty("user.home") + "/ListaPrecios.xlsx");
