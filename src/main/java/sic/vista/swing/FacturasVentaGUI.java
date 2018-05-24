@@ -533,7 +533,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         sp_Resultados.setViewportView(tbl_Resultados);
 
         btn_VerDetalle.setForeground(java.awt.Color.blue);
-        btn_VerDetalle.setText("Ver Detalle");
+        btn_VerDetalle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/pdf_16x16.png"))); // NOI18N
         btn_VerDetalle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_VerDetalleActionPerformed(evt);

@@ -441,6 +441,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         btnCrearNotaDebito = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
         btnCrearRecibo = new javax.swing.JButton();
+        btn_reporteCuentaCorrienteXLSX = new javax.swing.JButton();
         txtCondicionIVACliente = new javax.swing.JTextField();
         lblCondicionIVACliente = new javax.swing.JLabel();
         txtIDFiscalCliente = new javax.swing.JTextField();
@@ -495,7 +496,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         });
 
         btnVerDetalle.setForeground(java.awt.Color.blue);
-        btnVerDetalle.setText("Ver Detalle");
+        btnVerDetalle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/pdf_16x16.png"))); // NOI18N
         btnVerDetalle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVerDetalleActionPerformed(evt);
@@ -545,6 +546,15 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             }
         });
 
+        btn_reporteCuentaCorrienteXLSX.setForeground(new java.awt.Color(0, 0, 255));
+        btn_reporteCuentaCorrienteXLSX.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/xls_16x16.png"))); // NOI18N
+        btn_reporteCuentaCorrienteXLSX.setText("Reporte CC");
+        btn_reporteCuentaCorrienteXLSX.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_reporteCuentaCorrienteXLSXActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlResultadosLayout = new javax.swing.GroupLayout(pnlResultados);
         pnlResultados.setLayout(pnlResultadosLayout);
         pnlResultadosLayout.setHorizontalGroup(
@@ -558,21 +568,23 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             .addGroup(pnlResultadosLayout.createSequentialGroup()
                 .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlResultadosLayout.createSequentialGroup()
-                        .addComponent(btnAutorizarNota)
-                        .addGap(0, 0, 0)
-                        .addComponent(btnVerDetalle)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_Eliminar))
-                    .addGroup(pnlResultadosLayout.createSequentialGroup()
                         .addComponent(btnCrearNotaCredito)
                         .addGap(0, 0, 0)
                         .addComponent(btnCrearNotaDebito)
                         .addGap(0, 0, 0)
-                        .addComponent(btnCrearRecibo)))
-                .addContainerGap(261, Short.MAX_VALUE))
+                        .addComponent(btnCrearRecibo)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_reporteCuentaCorrienteXLSX))
+                    .addGroup(pnlResultadosLayout.createSequentialGroup()
+                        .addComponent(btnAutorizarNota)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnVerDetalle)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_Eliminar)))
+                .addContainerGap(87, Short.MAX_VALUE))
         );
 
-        pnlResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAutorizarNota, btnCrearNotaCredito, btnCrearNotaDebito, btnCrearRecibo, btnVerDetalle, btn_Eliminar});
+        pnlResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAutorizarNota, btnCrearNotaCredito, btnCrearNotaDebito, btnCrearRecibo, btnVerDetalle, btn_Eliminar, btn_reporteCuentaCorrienteXLSX});
 
         pnlResultadosLayout.setVerticalGroup(
             pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -588,13 +600,14 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     .addComponent(btnVerDetalle)
                     .addComponent(btn_Eliminar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btnCrearNotaCredito)
-                    .addComponent(btnCrearNotaDebito)
-                    .addComponent(btnCrearRecibo)))
+                .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btn_reporteCuentaCorrienteXLSX, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnCrearRecibo, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnCrearNotaDebito, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnCrearNotaCredito, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
 
-        pnlResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAutorizarNota, btnCrearNotaCredito, btnCrearNotaDebito, btnCrearRecibo, btnVerDetalle, btn_Eliminar});
+        pnlResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAutorizarNota, btnCrearNotaCredito, btnCrearNotaDebito, btnCrearRecibo, btnVerDetalle, btn_Eliminar, btn_reporteCuentaCorrienteXLSX});
 
         txtCondicionIVACliente.setEditable(false);
         txtCondicionIVACliente.setFocusable(false);
@@ -902,6 +915,35 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         this.refrescarVista();
     }//GEN-LAST:event_btnCrearReciboActionPerformed
 
+    private void btn_reporteCuentaCorrienteXLSXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_reporteCuentaCorrienteXLSXActionPerformed
+        if (Desktop.isDesktopSupported()) {
+                try {
+                    byte[] reporte = RestClient.getRestTemplate()
+                            .getForObject("/cuentas-corrientes/clientes/" + this.cliente.getId_Cliente() + "/reporte-xls?"
+                                    + "pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA, byte[].class);
+                    File f = new File(System.getProperty("user.home") + "/EstadoCuentaCorriente.xlsx");
+                    Files.write(f.toPath(), reporte);
+                    Desktop.getDesktop().open(f);
+                } catch (IOException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+    }//GEN-LAST:event_btn_reporteCuentaCorrienteXLSXActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAutorizarNota;
     private javax.swing.JButton btnCrearNotaCredito;
@@ -910,6 +952,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnVerDetalle;
     private javax.swing.JButton btn_Eliminar;
+    private javax.swing.JButton btn_reporteCuentaCorrienteXLSX;
     private javax.swing.JFormattedTextField ftxtSaldoFinal;
     private javax.swing.JLabel lblCondicionIVACliente;
     private javax.swing.JLabel lblDomicilioCliente;

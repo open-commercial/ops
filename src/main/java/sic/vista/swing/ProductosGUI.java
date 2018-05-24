@@ -271,7 +271,7 @@ public class ProductosGUI extends JInternalFrame {
         btn_Nuevo.setEnabled(status);
         btn_Modificar.setEnabled(status);
         btn_Eliminar.setEnabled(status);
-        btn_ReporteListaPrecios.setEnabled(status);
+        btn_ReporteListaPreciosPDF.setEnabled(status);
         tbl_Resultados.setEnabled(status);
         sp_Resultados.setEnabled(status);
         tbl_Resultados.requestFocus();
@@ -349,11 +349,11 @@ public class ProductosGUI extends JInternalFrame {
         return productosSeleccionados;
     }
 
-    private void lanzarReporteListaDePrecios() {
+    private void lanzarReporteListaDePreciosPDF() {
         if (productosTotal != null) {
             if (Desktop.isDesktopSupported()) {
                 try {
-                    String uriReporteListaProductosCriteria = "/productos/reporte/criteria?"
+                    String uriReporteListaProductosCriteria = "/productos/reporte-pdf/criteria?"
                             + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
                     if (chk_Codigo.isSelected()) {
                         uriReporteListaProductosCriteria += "&codigo=" + txt_Codigo.getText().trim();
@@ -421,9 +421,10 @@ public class ProductosGUI extends JInternalFrame {
         btn_Nuevo = new javax.swing.JButton();
         btn_Modificar = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
-        btn_ReporteListaPrecios = new javax.swing.JButton();
+        btn_ReporteListaPreciosPDF = new javax.swing.JButton();
         txt_ValorStock = new javax.swing.JFormattedTextField();
         lbl_ValorStock = new javax.swing.JLabel();
+        btn_ReporteListaPreciosXLSX = new javax.swing.JButton();
 
         setClosable(true);
         setMaximizable(true);
@@ -614,12 +615,11 @@ public class ProductosGUI extends JInternalFrame {
             }
         });
 
-        btn_ReporteListaPrecios.setForeground(new java.awt.Color(0, 0, 255));
-        btn_ReporteListaPrecios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Printer_16x16.png"))); // NOI18N
-        btn_ReporteListaPrecios.setText("Imprimir");
-        btn_ReporteListaPrecios.addActionListener(new java.awt.event.ActionListener() {
+        btn_ReporteListaPreciosPDF.setForeground(new java.awt.Color(0, 0, 255));
+        btn_ReporteListaPreciosPDF.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/pdf_16x16.png"))); // NOI18N
+        btn_ReporteListaPreciosPDF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_ReporteListaPreciosActionPerformed(evt);
+                btn_ReporteListaPreciosPDFActionPerformed(evt);
             }
         });
 
@@ -629,11 +629,18 @@ public class ProductosGUI extends JInternalFrame {
 
         lbl_ValorStock.setText("Valor del Stock:");
 
+        btn_ReporteListaPreciosXLSX.setForeground(new java.awt.Color(0, 0, 255));
+        btn_ReporteListaPreciosXLSX.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/xls_16x16.png"))); // NOI18N
+        btn_ReporteListaPreciosXLSX.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ReporteListaPreciosXLSXActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 838, Short.MAX_VALUE)
             .addGroup(panelResultadosLayout.createSequentialGroup()
                 .addComponent(btn_Nuevo)
                 .addGap(0, 0, 0)
@@ -641,30 +648,35 @@ public class ProductosGUI extends JInternalFrame {
                 .addGap(0, 0, 0)
                 .addComponent(btn_Eliminar)
                 .addGap(0, 0, 0)
-                .addComponent(btn_ReporteListaPrecios)
+                .addComponent(btn_ReporteListaPreciosPDF)
+                .addGap(0, 0, 0)
+                .addComponent(btn_ReporteListaPreciosXLSX)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbl_ValorStock)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txt_ValorStock, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 913, Short.MAX_VALUE)
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Eliminar, btn_Modificar, btn_Nuevo});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Eliminar, btn_Modificar, btn_Nuevo, btn_ReporteListaPreciosPDF, btn_ReporteListaPreciosXLSX});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
+            .addGroup(panelResultadosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_ValorStock)
-                    .addComponent(txt_ValorStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_ReporteListaPrecios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btn_Eliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btn_Modificar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btn_Nuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txt_ValorStock, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_ValorStock, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btn_Nuevo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_Modificar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_Eliminar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_ReporteListaPreciosPDF, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_ReporteListaPreciosXLSX, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Eliminar, btn_Modificar, btn_Nuevo, btn_ReporteListaPrecios});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Eliminar, btn_Modificar, btn_Nuevo, btn_ReporteListaPreciosPDF, btn_ReporteListaPreciosXLSX});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -808,10 +820,57 @@ public class ProductosGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_formInternalFrameOpened
 
-    private void btn_ReporteListaPreciosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ReporteListaPreciosActionPerformed
-        this.lanzarReporteListaDePrecios();
-    }//GEN-LAST:event_btn_ReporteListaPreciosActionPerformed
+    private void btn_ReporteListaPreciosPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ReporteListaPreciosPDFActionPerformed
+        this.lanzarReporteListaDePreciosPDF();
+    }//GEN-LAST:event_btn_ReporteListaPreciosPDFActionPerformed
 
+    private void lanzarReporteListaDePreciosXLS() {
+        if (productosTotal != null) {
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    String uriReporteListaProductosCriteria = "/productos/reporte-xls/criteria?"
+                            + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
+                    if (chk_Codigo.isSelected()) {
+                        uriReporteListaProductosCriteria += "&codigo=" + txt_Codigo.getText().trim();
+                    }
+                    if (chk_Descripcion.isSelected()) {
+                        uriReporteListaProductosCriteria += "&descripcion=" + txt_Descripcion.getText().trim();
+                    }
+                    if (chk_Rubro.isSelected()) {
+                        uriReporteListaProductosCriteria += "&idRubro=" + this.getIdRubroSeleccionado();
+                    }
+                    if (chk_Proveedor.isSelected()) {
+                        uriReporteListaProductosCriteria += "&idProveedor=" + this.getIdProveedorSeleccionado();
+                    }
+                    if (chk_Disponibilidad.isSelected()) {
+                        uriReporteListaProductosCriteria += "&soloFantantes=" + rb_Faltantes.isSelected();
+                    }
+                    byte[] reporte = RestClient.getRestTemplate()
+                            .getForObject(uriReporteListaProductosCriteria, byte[].class);
+                    File f = new File(System.getProperty("user.home") + "/ListaPrecios.xlsx");
+                    Files.write(f.toPath(), reporte);
+                    Desktop.getDesktop().open(f);
+                } catch (IOException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    
     private void chk_DisponibilidadItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_DisponibilidadItemStateChanged
         if (chk_Disponibilidad.isSelected() == true) {
             rb_Todos.setEnabled(true);
@@ -822,13 +881,18 @@ public class ProductosGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_chk_DisponibilidadItemStateChanged
 
+    private void btn_ReporteListaPreciosXLSXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ReporteListaPreciosXLSXActionPerformed
+        this.lanzarReporteListaDePreciosXLS();
+    }//GEN-LAST:event_btn_ReporteListaPreciosXLSXActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bg_TiposDeListados;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_Modificar;
     private javax.swing.JButton btn_Nuevo;
-    private javax.swing.JButton btn_ReporteListaPrecios;
+    private javax.swing.JButton btn_ReporteListaPreciosPDF;
+    private javax.swing.JButton btn_ReporteListaPreciosXLSX;
     private javax.swing.JCheckBox chk_Codigo;
     private javax.swing.JCheckBox chk_Descripcion;
     private javax.swing.JCheckBox chk_Disponibilidad;
