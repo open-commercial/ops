@@ -770,7 +770,7 @@ public class ProductosGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_DisponibilidadItemStateChanged
 
     private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
-        if (productosTotal != null) {
+        if (!productosTotal.isEmpty()) {
             if (Desktop.isDesktopSupported()) {
                 String uriReporte = "/productos/reporte/criteria?"
                     + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
