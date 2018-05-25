@@ -5,10 +5,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
-import java.io.File;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -271,7 +268,7 @@ public class ProductosGUI extends JInternalFrame {
         btn_Nuevo.setEnabled(status);
         btn_Modificar.setEnabled(status);
         btn_Eliminar.setEnabled(status);
-        btn_ReporteListaPreciosPDF.setEnabled(status);
+        btnExportar.setEnabled(status);
         tbl_Resultados.setEnabled(status);
         sp_Resultados.setEnabled(status);
         tbl_Resultados.requestFocus();
@@ -348,55 +345,7 @@ public class ProductosGUI extends JInternalFrame {
         }
         return productosSeleccionados;
     }
-
-    private void lanzarReporteListaDePreciosPDF() {
-        if (productosTotal != null) {
-            if (Desktop.isDesktopSupported()) {
-                try {
-                    String uriReporteListaProductosCriteria = "/productos/reporte/criteria?"
-                            + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
-                    if (chk_Codigo.isSelected()) {
-                        uriReporteListaProductosCriteria += "&codigo=" + txt_Codigo.getText().trim();
-                    }
-                    if (chk_Descripcion.isSelected()) {
-                        uriReporteListaProductosCriteria += "&descripcion=" + txt_Descripcion.getText().trim();
-                    }
-                    if (chk_Rubro.isSelected()) {
-                        uriReporteListaProductosCriteria += "&idRubro=" + this.getIdRubroSeleccionado();
-                    }
-                    if (chk_Proveedor.isSelected()) {
-                        uriReporteListaProductosCriteria += "&idProveedor=" + this.getIdProveedorSeleccionado();
-                    }
-                    if (chk_Disponibilidad.isSelected()) {
-                        uriReporteListaProductosCriteria += "&soloFantantes=" + rb_Faltantes.isSelected();
-                    }
-                    uriReporteListaProductosCriteria +=  "&formato=pdf";
-                    byte[] reporte = RestClient.getRestTemplate()
-                            .getForObject(uriReporteListaProductosCriteria, byte[].class);
-                    File f = new File(System.getProperty("user.home") + "/ListaPrecios.pdf");
-                    Files.write(f.toPath(), reporte);
-                    Desktop.getDesktop().open(f);
-                } catch (IOException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -422,10 +371,9 @@ public class ProductosGUI extends JInternalFrame {
         btn_Nuevo = new javax.swing.JButton();
         btn_Modificar = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
-        btn_ReporteListaPreciosPDF = new javax.swing.JButton();
         txt_ValorStock = new javax.swing.JFormattedTextField();
         lbl_ValorStock = new javax.swing.JLabel();
-        btn_ReporteListaPreciosXLSX = new javax.swing.JButton();
+        btnExportar = new javax.swing.JButton();
 
         setClosable(true);
         setMaximizable(true);
@@ -616,25 +564,18 @@ public class ProductosGUI extends JInternalFrame {
             }
         });
 
-        btn_ReporteListaPreciosPDF.setForeground(new java.awt.Color(0, 0, 255));
-        btn_ReporteListaPreciosPDF.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/pdf_16x16.png"))); // NOI18N
-        btn_ReporteListaPreciosPDF.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_ReporteListaPreciosPDFActionPerformed(evt);
-            }
-        });
-
         txt_ValorStock.setEditable(false);
         txt_ValorStock.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
         txt_ValorStock.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         lbl_ValorStock.setText("Valor del Stock:");
 
-        btn_ReporteListaPreciosXLSX.setForeground(new java.awt.Color(0, 0, 255));
-        btn_ReporteListaPreciosXLSX.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/xls_16x16.png"))); // NOI18N
-        btn_ReporteListaPreciosXLSX.addActionListener(new java.awt.event.ActionListener() {
+        btnExportar.setForeground(java.awt.Color.blue);
+        btnExportar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Export_16x16.png"))); // NOI18N
+        btnExportar.setText("Exportar");
+        btnExportar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_ReporteListaPreciosXLSXActionPerformed(evt);
+                btnExportarActionPerformed(evt);
             }
         });
 
@@ -649,17 +590,15 @@ public class ProductosGUI extends JInternalFrame {
                 .addGap(0, 0, 0)
                 .addComponent(btn_Eliminar)
                 .addGap(0, 0, 0)
-                .addComponent(btn_ReporteListaPreciosPDF)
-                .addGap(0, 0, 0)
-                .addComponent(btn_ReporteListaPreciosXLSX)
+                .addComponent(btnExportar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbl_ValorStock)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txt_ValorStock, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 913, Short.MAX_VALUE)
+            .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 1004, Short.MAX_VALUE)
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Eliminar, btn_Modificar, btn_Nuevo, btn_ReporteListaPreciosPDF, btn_ReporteListaPreciosXLSX});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnExportar, btn_Eliminar, btn_Modificar, btn_Nuevo});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -667,17 +606,16 @@ public class ProductosGUI extends JInternalFrame {
                 .addContainerGap()
                 .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txt_ValorStock, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_ValorStock, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btn_Nuevo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btn_Modificar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btn_Eliminar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btn_ReporteListaPreciosPDF, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btn_ReporteListaPreciosXLSX, javax.swing.GroupLayout.Alignment.TRAILING)))
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(btn_Nuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_Modificar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_Eliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnExportar)
+                    .addComponent(lbl_ValorStock)
+                    .addComponent(txt_ValorStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Eliminar, btn_Modificar, btn_Nuevo, btn_ReporteListaPreciosPDF, btn_ReporteListaPreciosXLSX});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Eliminar, btn_Modificar, btn_Nuevo});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -820,58 +758,6 @@ public class ProductosGUI extends JInternalFrame {
             this.dispose();
         }
     }//GEN-LAST:event_formInternalFrameOpened
-
-    private void btn_ReporteListaPreciosPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ReporteListaPreciosPDFActionPerformed
-        this.lanzarReporteListaDePreciosPDF();
-    }//GEN-LAST:event_btn_ReporteListaPreciosPDFActionPerformed
-
-    private void lanzarReporteListaDePreciosXLS() {
-        if (productosTotal != null) {
-            if (Desktop.isDesktopSupported()) {
-                try {
-                    String uriReporteListaProductosCriteria = "/productos/reporte/criteria?"
-                            + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
-                    if (chk_Codigo.isSelected()) {
-                        uriReporteListaProductosCriteria += "&codigo=" + txt_Codigo.getText().trim();
-                    }
-                    if (chk_Descripcion.isSelected()) {
-                        uriReporteListaProductosCriteria += "&descripcion=" + txt_Descripcion.getText().trim();
-                    }
-                    if (chk_Rubro.isSelected()) {
-                        uriReporteListaProductosCriteria += "&idRubro=" + this.getIdRubroSeleccionado();
-                    }
-                    if (chk_Proveedor.isSelected()) {
-                        uriReporteListaProductosCriteria += "&idProveedor=" + this.getIdProveedorSeleccionado();
-                    }
-                    if (chk_Disponibilidad.isSelected()) {
-                        uriReporteListaProductosCriteria += "&soloFantantes=" + rb_Faltantes.isSelected();
-                    }
-                    uriReporteListaProductosCriteria +=  "&formato=xlsx";
-                    byte[] reporte = RestClient.getRestTemplate()
-                            .getForObject(uriReporteListaProductosCriteria, byte[].class);
-                    File f = new File(System.getProperty("user.home") + "/ListaPrecios.xlsx");
-                    Files.write(f.toPath(), reporte);
-                    Desktop.getDesktop().open(f);
-                } catch (IOException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
     
     private void chk_DisponibilidadItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_DisponibilidadItemStateChanged
         if (chk_Disponibilidad.isSelected() == true) {
@@ -883,18 +769,36 @@ public class ProductosGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_chk_DisponibilidadItemStateChanged
 
-    private void btn_ReporteListaPreciosXLSXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ReporteListaPreciosXLSXActionPerformed
-        this.lanzarReporteListaDePreciosXLS();
-    }//GEN-LAST:event_btn_ReporteListaPreciosXLSXActionPerformed
+    private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
+        if (productosTotal != null) {
+            if (Desktop.isDesktopSupported()) {
+                String uriReporte = "/productos/reporte/criteria?"
+                    + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
+                if (chk_Codigo.isSelected()) uriReporte += "&codigo=" + txt_Codigo.getText().trim();                    
+                if (chk_Descripcion.isSelected()) uriReporte += "&descripcion=" + txt_Descripcion.getText().trim();                    
+                if (chk_Rubro.isSelected()) uriReporte += "&idRubro=" + this.getIdRubroSeleccionado();
+                if (chk_Proveedor.isSelected()) uriReporte += "&idProveedor=" + this.getIdProveedorSeleccionado();
+                if (chk_Disponibilidad.isSelected()) uriReporte += "&soloFantantes=" + rb_Faltantes.isSelected();                
+                ExportGUI exportGUI = new ExportGUI(uriReporte + "&formato=xlsx", "ListaPrecios.xlsx",
+                    uriReporte + "&formato=pdf", "ListaPrecios.pdf");
+                exportGUI.setModal(true);
+                exportGUI.setLocationRelativeTo(this);
+                exportGUI.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnExportarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bg_TiposDeListados;
+    private javax.swing.JButton btnExportar;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_Modificar;
     private javax.swing.JButton btn_Nuevo;
-    private javax.swing.JButton btn_ReporteListaPreciosPDF;
-    private javax.swing.JButton btn_ReporteListaPreciosXLSX;
     private javax.swing.JCheckBox chk_Codigo;
     private javax.swing.JCheckBox chk_Descripcion;
     private javax.swing.JCheckBox chk_Disponibilidad;

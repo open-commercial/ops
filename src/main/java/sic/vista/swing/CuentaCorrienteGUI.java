@@ -441,8 +441,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         btnCrearNotaDebito = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
         btnCrearRecibo = new javax.swing.JButton();
-        btn_reporteCuentaCorrientePDF = new javax.swing.JButton();
-        btn_reporteCuentaCorrienteXLSX = new javax.swing.JButton();
+        btnExportar = new javax.swing.JButton();
         txtCondicionIVACliente = new javax.swing.JTextField();
         lblCondicionIVACliente = new javax.swing.JLabel();
         txtIDFiscalCliente = new javax.swing.JTextField();
@@ -547,19 +546,12 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             }
         });
 
-        btn_reporteCuentaCorrientePDF.setForeground(new java.awt.Color(0, 0, 255));
-        btn_reporteCuentaCorrientePDF.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/pdf_16x16.png"))); // NOI18N
-        btn_reporteCuentaCorrientePDF.addActionListener(new java.awt.event.ActionListener() {
+        btnExportar.setForeground(java.awt.Color.blue);
+        btnExportar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Export_16x16.png"))); // NOI18N
+        btnExportar.setText("Exportar");
+        btnExportar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_reporteCuentaCorrientePDFActionPerformed(evt);
-            }
-        });
-
-        btn_reporteCuentaCorrienteXLSX.setForeground(new java.awt.Color(0, 0, 255));
-        btn_reporteCuentaCorrienteXLSX.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/xls_16x16.png"))); // NOI18N
-        btn_reporteCuentaCorrienteXLSX.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_reporteCuentaCorrienteXLSXActionPerformed(evt);
+                btnExportarActionPerformed(evt);
             }
         });
 
@@ -574,27 +566,24 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ftxtSaldoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(pnlResultadosLayout.createSequentialGroup()
-                .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(pnlResultadosLayout.createSequentialGroup()
                         .addComponent(btnAutorizarNota)
                         .addGap(0, 0, 0)
                         .addComponent(btnVerDetalle)
                         .addGap(0, 0, 0)
-                        .addComponent(btn_reporteCuentaCorrientePDF)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_reporteCuentaCorrienteXLSX))
+                        .addComponent(btnExportar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(pnlResultadosLayout.createSequentialGroup()
                         .addComponent(btnCrearNotaCredito)
                         .addGap(0, 0, 0)
                         .addComponent(btnCrearNotaDebito)
                         .addGap(0, 0, 0)
-                        .addComponent(btnCrearRecibo)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_Eliminar)))
-                .addContainerGap(53, Short.MAX_VALUE))
+                        .addComponent(btnCrearRecibo)))
+                .addComponent(btn_Eliminar)
+                .addContainerGap(295, Short.MAX_VALUE))
         );
 
-        pnlResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAutorizarNota, btnCrearNotaCredito, btnCrearNotaDebito, btnCrearRecibo, btnVerDetalle, btn_Eliminar, btn_reporteCuentaCorrientePDF, btn_reporteCuentaCorrienteXLSX});
+        pnlResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAutorizarNota, btnCrearNotaCredito, btnCrearNotaDebito, btnCrearRecibo, btnExportar, btnVerDetalle, btn_Eliminar});
 
         pnlResultadosLayout.setVerticalGroup(
             pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -603,15 +592,12 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     .addComponent(ftxtSaldoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_saldoFinal))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
+                .addComponent(sp_Resultados)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnAutorizarNota, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnVerDetalle))
-                    .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btn_reporteCuentaCorrientePDF)
-                        .addComponent(btn_reporteCuentaCorrienteXLSX)))
+                .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAutorizarNota, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnVerDetalle)
+                    .addComponent(btnExportar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -621,7 +607,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     .addComponent(btnCrearNotaCredito, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
 
-        pnlResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAutorizarNota, btnCrearNotaCredito, btnCrearNotaDebito, btnCrearRecibo, btnVerDetalle, btn_Eliminar, btn_reporteCuentaCorrientePDF, btn_reporteCuentaCorrienteXLSX});
+        pnlResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAutorizarNota, btnCrearNotaCredito, btnCrearNotaDebito, btnCrearRecibo, btnVerDetalle, btn_Eliminar});
 
         txtCondicionIVACliente.setEditable(false);
         txtCondicionIVACliente.setFocusable(false);
@@ -928,55 +914,32 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         detalleComprobante.setVisible(true);
         this.refrescarVista();
     }//GEN-LAST:event_btnCrearReciboActionPerformed
-
-    private void btn_reporteCuentaCorrientePDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_reporteCuentaCorrientePDFActionPerformed
-        this.lanzarReporte("pdf");
-    }//GEN-LAST:event_btn_reporteCuentaCorrientePDFActionPerformed
-
-    private void lanzarReporte(String formato) {
+    
+    private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
         if (Desktop.isDesktopSupported()) {
-            try {
-                byte[] reporte = RestClient.getRestTemplate()
-                        .getForObject("/cuentas-corrientes/clientes/" + this.cliente.getId_Cliente() + "/reporte?"
-                                + "pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA
-                                + "&formato=" + formato, byte[].class);
-                String nombreArchivo = (formato.equals("xlsx") )? "CuentaCorriente.xlsx" : "CuentaCorriente.pdf";
-                File f = new File(System.getProperty("user.home") + "/" + nombreArchivo);
-                Files.write(f.toPath(), reporte);
-                Desktop.getDesktop().open(f);
-            } catch (IOException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            String uriReporte = "/cuentas-corrientes/clientes/" + this.cliente.getId_Cliente() + "/reporte?"
+                + "pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
+            ExportGUI exportGUI = new ExportGUI(uriReporte + "&formato=xlsx", "CuentaCorriente.xlsx",
+                    uriReporte + "&formato=pdf", "CuentaCorriente.pdf");
+                exportGUI.setModal(true);
+                exportGUI.setLocationRelativeTo(this);
+                exportGUI.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-    private void btn_reporteCuentaCorrienteXLSXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_reporteCuentaCorrienteXLSXActionPerformed
-        this.lanzarReporte("xlsx");
-    }//GEN-LAST:event_btn_reporteCuentaCorrienteXLSXActionPerformed
+    }//GEN-LAST:event_btnExportarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAutorizarNota;
     private javax.swing.JButton btnCrearNotaCredito;
     private javax.swing.JButton btnCrearNotaDebito;
     private javax.swing.JButton btnCrearRecibo;
+    private javax.swing.JButton btnExportar;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnVerDetalle;
     private javax.swing.JButton btn_Eliminar;
-    private javax.swing.JButton btn_reporteCuentaCorrientePDF;
-    private javax.swing.JButton btn_reporteCuentaCorrienteXLSX;
     private javax.swing.JFormattedTextField ftxtSaldoFinal;
     private javax.swing.JLabel lblCondicionIVACliente;
     private javax.swing.JLabel lblDomicilioCliente;

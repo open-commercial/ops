@@ -113,15 +113,13 @@
                   <Component id="ftxtSaldoFinal" min="-2" pref="118" max="-2" attributes="0"/>
               </Group>
               <Group type="102" attributes="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Group type="102" attributes="0">
                           <Component id="btnAutorizarNota" linkSize="4" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Component id="btnVerDetalle" linkSize="4" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="btn_reporteCuentaCorrientePDF" linkSize="4" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="btn_reporteCuentaCorrienteXLSX" linkSize="4" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnExportar" linkSize="4" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
                           <Component id="btnCrearNotaCredito" linkSize="4" min="-2" max="-2" attributes="0"/>
@@ -129,11 +127,10 @@
                           <Component id="btnCrearNotaDebito" linkSize="4" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Component id="btnCrearRecibo" linkSize="4" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="btn_Eliminar" linkSize="4" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="53" max="32767" attributes="0"/>
+                  <Component id="btn_Eliminar" linkSize="4" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="295" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -145,17 +142,12 @@
                       <Component id="lbl_saldoFinal" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="sp_Resultados" pref="319" max="32767" attributes="0"/>
+                  <Component id="sp_Resultados" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="btnAutorizarNota" linkSize="7" alignment="3" min="-2" pref="17" max="-2" attributes="0"/>
-                          <Component id="btnVerDetalle" linkSize="7" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                          <Component id="btn_reporteCuentaCorrientePDF" linkSize="7" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btn_reporteCuentaCorrienteXLSX" linkSize="7" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="btnAutorizarNota" linkSize="7" alignment="3" min="-2" pref="17" max="-2" attributes="0"/>
+                      <Component id="btnVerDetalle" linkSize="7" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnExportar" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -289,30 +281,18 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCrearReciboActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btn_reporteCuentaCorrientePDF">
+        <Component class="javax.swing.JButton" name="btnExportar">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="0" red="0" type="rgb"/>
+              <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/pdf_16x16.png"/>
+              <Image iconType="3" name="/sic/icons/Export_16x16.png"/>
             </Property>
+            <Property name="text" type="java.lang.String" value="Exportar"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_reporteCuentaCorrientePDFActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="btn_reporteCuentaCorrienteXLSX">
-          <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="0" red="0" type="rgb"/>
-            </Property>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/xls_16x16.png"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_reporteCuentaCorrienteXLSXActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExportarActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
