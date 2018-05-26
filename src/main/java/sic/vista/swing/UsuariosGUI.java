@@ -65,8 +65,8 @@ public class UsuariosGUI extends JInternalFrame {
         encabezados[3] = "Apellido";        
         encabezados[4] = "Email";
         encabezados[5] = "Administrador";
-        encabezados[6] = "Viajante";
-        encabezados[7] = "Vendedor";
+        encabezados[6] = "Vendedor";
+        encabezados[7] = "Viajante";
         encabezados[8] = "Cliente";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultado.setModel(modeloTablaResultados);
@@ -114,10 +114,10 @@ public class UsuariosGUI extends JInternalFrame {
                 if (Rol.ADMINISTRADOR.equals(rol)) {
                     fila[5] = true;
                 }
-                if (Rol.VIAJANTE.equals(rol)) {
+                if (Rol.VENDEDOR.equals(rol)) {
                     fila[6] = true;
                 }
-                if (Rol.VENDEDOR.equals(rol)) {
+                if (Rol.VIAJANTE.equals(rol)) {
                     fila[7] = true;
                 }
                 if (Rol.CLIENTE.equals(rol)) {
