@@ -566,21 +566,21 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ftxtSaldoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(pnlResultadosLayout.createSequentialGroup()
-                .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(pnlResultadosLayout.createSequentialGroup()
-                        .addComponent(btnAutorizarNota)
-                        .addGap(0, 0, 0)
-                        .addComponent(btnVerDetalle)
-                        .addGap(0, 0, 0)
-                        .addComponent(btnExportar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(pnlResultadosLayout.createSequentialGroup()
-                        .addComponent(btnCrearNotaCredito)
-                        .addGap(0, 0, 0)
-                        .addComponent(btnCrearNotaDebito)
-                        .addGap(0, 0, 0)
-                        .addComponent(btnCrearRecibo)))
-                .addComponent(btn_Eliminar)
+                .addComponent(btnCrearNotaCredito)
+                .addGap(0, 0, 0)
+                .addComponent(btnCrearNotaDebito)
+                .addGap(0, 0, 0)
+                .addComponent(btnCrearRecibo)
+                .addGap(0, 0, 0)
+                .addComponent(btnExportar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap(295, Short.MAX_VALUE))
+            .addGroup(pnlResultadosLayout.createSequentialGroup()
+                .addComponent(btnAutorizarNota)
+                .addGap(0, 0, 0)
+                .addComponent(btnVerDetalle)
+                .addGap(0, 0, 0)
+                .addComponent(btn_Eliminar)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pnlResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAutorizarNota, btnCrearNotaCredito, btnCrearNotaDebito, btnCrearRecibo, btnExportar, btnVerDetalle, btn_Eliminar});
@@ -597,12 +597,12 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAutorizarNota, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnVerDetalle)
-                    .addComponent(btnExportar))
+                    .addComponent(btn_Eliminar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(btn_Eliminar, javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(btnCrearRecibo, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnCrearRecibo)
+                        .addComponent(btnExportar))
                     .addComponent(btnCrearNotaDebito, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnCrearNotaCredito, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
@@ -702,6 +702,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         } else if (proveedor != null) {
             this.cargarDetalleProveedor();
             this.btnAutorizarNota.setVisible(false);
+            this.btnExportar.setVisible(false);
         }
         this.setColumnas();
         this.setSize(sizeInternalFrame);
