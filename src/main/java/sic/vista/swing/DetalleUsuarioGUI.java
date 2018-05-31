@@ -2,6 +2,7 @@ package sic.vista.swing;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
@@ -12,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.Cliente;
+import sic.modelo.EmpresaActiva;
 import sic.modelo.Rol;
 import sic.modelo.Usuario;
 import sic.modelo.TipoDeOperacion;
@@ -61,6 +64,7 @@ public class DetalleUsuarioGUI extends JDialog {
             }
             if (Rol.CLIENTE.equals(rol)) {
                 chk_Cliente.setSelected(true);
+                cmb_Cliente.setEnabled(true);
             }
         });
     }
@@ -92,6 +96,8 @@ public class DetalleUsuarioGUI extends JDialog {
         lbl_RepetirContrasenia = new javax.swing.JLabel();
         txt_RepetirContrasenia = new javax.swing.JPasswordField();
         lblAvisoSeguridad = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        cmb_Cliente = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -131,6 +137,11 @@ public class DetalleUsuarioGUI extends JDialog {
         chk_Vendedor.setMargin(new java.awt.Insets(2, -2, 2, 2));
 
         chk_Cliente.setText("Cliente");
+        chk_Cliente.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chk_ClienteItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelRolesLayout = new javax.swing.GroupLayout(panelRoles);
         panelRoles.setLayout(panelRolesLayout);
@@ -228,6 +239,24 @@ public class DetalleUsuarioGUI extends JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Cliente a asignar"));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(cmb_Cliente, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(cmb_Cliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(8, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
         panelPrincipal.setLayout(panelPrincipalLayout);
         panelPrincipalLayout.setHorizontalGroup(
@@ -250,7 +279,8 @@ public class DetalleUsuarioGUI extends JDialog {
                             .addComponent(chkHabilitado, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtUsername)))
                     .addComponent(panelRoles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelSeguridad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(panelSeguridad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panelPrincipalLayout.setVerticalGroup(
@@ -280,6 +310,8 @@ public class DetalleUsuarioGUI extends JDialog {
                 .addComponent(panelSeguridad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(panelRoles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -311,6 +343,7 @@ public class DetalleUsuarioGUI extends JDialog {
 
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
         try {
+            Long idClienteParaVincular = null;
             if (operacion == TipoDeOperacion.ALTA) {
                 if (new String(txt_Contrasenia.getPassword()).equals(new String(txt_RepetirContrasenia.getPassword()))) {
                     Usuario usuario = new Usuario();
@@ -332,9 +365,10 @@ public class DetalleUsuarioGUI extends JDialog {
                     }
                     if (chk_Cliente.isSelected()) {
                         roles.add(Rol.CLIENTE);
+                        idClienteParaVincular = ((Cliente)cmb_Cliente.getSelectedItem()).getId_Cliente();
                     }
                     usuario.setRoles(roles);
-                    RestClient.getRestTemplate().postForObject("/usuarios", usuario, Usuario.class);                 
+                    RestClient.getRestTemplate().postForObject("/usuarios?idCliente=" + idClienteParaVincular, usuario, Usuario.class);                 
                     LOGGER.warn("El usuario " + usuario.getUsername() + " se creo correctamente.");
                     this.dispose();
                 } else {                    
@@ -363,9 +397,10 @@ public class DetalleUsuarioGUI extends JDialog {
                     }
                     if (chk_Cliente.isSelected()) {
                         roles.add(Rol.CLIENTE);
+                        idClienteParaVincular = ((Cliente)cmb_Cliente.getSelectedItem()).getId_Cliente();
                     }
                     usuarioParaModificar.setRoles(roles);
-                    RestClient.getRestTemplate().put("/usuarios", usuarioParaModificar);
+                    RestClient.getRestTemplate().put("/usuarios?idCliente=" + idClienteParaVincular, usuarioParaModificar);
                     LOGGER.warn("El usuario " + usuarioParaModificar.getUsername() + " se modifico correctamente.");
                     this.dispose();                    
                 } else {
@@ -385,6 +420,7 @@ public class DetalleUsuarioGUI extends JDialog {
     }//GEN-LAST:event_btn_GuardarActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        this.cmb_Cliente.setEnabled(false);
         if (operacion == TipoDeOperacion.ACTUALIZACION) {
             this.setTitle("Modificar Usuario");
             this.cargarUsuarioParaModificar();
@@ -393,6 +429,32 @@ public class DetalleUsuarioGUI extends JDialog {
         }
     }//GEN-LAST:event_formWindowOpened
 
+    private void chk_ClienteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ClienteItemStateChanged
+        if (chk_Cliente.isSelected() == true) {
+            cmb_Cliente.setEnabled(true);
+            cmb_Cliente.removeAllItems();
+            try {
+                List<Cliente> clientes = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
+                        .getForObject("/clientes/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                                Cliente[].class)));
+                clientes.stream().forEach((c) -> {
+                    cmb_Cliente.addItem(c);
+                });
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            cmb_Cliente.requestFocus();
+        } else {
+            cmb_Cliente.removeAllItems();
+            cmb_Cliente.setEnabled(false);
+        }
+    }//GEN-LAST:event_chk_ClienteItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Guardar;
     private javax.swing.JCheckBox chkHabilitado;
@@ -400,6 +462,8 @@ public class DetalleUsuarioGUI extends JDialog {
     private javax.swing.JCheckBox chk_Cliente;
     private javax.swing.JCheckBox chk_Vendedor;
     private javax.swing.JCheckBox chk_Viajante;
+    private javax.swing.JComboBox<Cliente> cmb_Cliente;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblApellido;
     private javax.swing.JLabel lblAvisoSeguridad;
     private javax.swing.JLabel lblEmail;
