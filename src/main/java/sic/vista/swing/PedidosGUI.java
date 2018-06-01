@@ -284,9 +284,16 @@ public class PedidosGUI extends JInternalFrame {
     private void cargarClientes() {
         try {
             cmb_Cliente.removeAllItems();
-            List<Cliente> clientes = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                .getForObject("/clientes/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), Cliente[].class)));
-            clientes.stream().forEach(c -> {
+            String criteriaBusqueda = "/clientes/busqueda/criteria?idEmpresa="
+                    + String.valueOf(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())
+                    + "&pagina=0&tamanio=" + Integer.MAX_VALUE
+                    + "&conSaldo=false";
+            PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
+                    .exchange(criteriaBusqueda, HttpMethod.GET, null,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {
+                    })
+                    .getBody();
+            response.getContent().stream().forEach((c) -> {
                 cmb_Cliente.addItem(c);
             });
         } catch (RestClientResponseException ex) {

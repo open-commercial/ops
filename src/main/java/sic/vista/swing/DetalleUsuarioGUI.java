@@ -10,11 +10,14 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
+import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
 import sic.modelo.Usuario;
 import sic.modelo.TipoDeOperacion;
@@ -239,7 +242,7 @@ public class DetalleUsuarioGUI extends JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Cliente a asignar"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Cliente asignado"));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -434,10 +437,15 @@ public class DetalleUsuarioGUI extends JDialog {
             cmb_Cliente.setEnabled(true);
             cmb_Cliente.removeAllItems();
             try {
-                List<Cliente> clientes = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                        .getForObject("/clientes/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                                Cliente[].class)));
-                clientes.stream().forEach((c) -> {
+                String criteriaBusqueda = "/clientes/busqueda/criteria?idEmpresa="
+                        + String.valueOf(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())
+                        + "&pagina=0&tamanio=" + Integer.MAX_VALUE + "&conSaldo=false";
+                PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
+                        .exchange(criteriaBusqueda, HttpMethod.GET, null,
+                                new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {
+                        })
+                        .getBody();
+                response.getContent().stream().forEach((c) -> {
                     cmb_Cliente.addItem(c);
                 });
             } catch (RestClientResponseException ex) {
