@@ -68,6 +68,7 @@ public class DetalleUsuarioGUI extends JDialog {
             if (Rol.CLIENTE.equals(rol)) {
                 chk_Cliente.setSelected(true);
                 cmb_Cliente.setEnabled(true);
+                this.panelClientes.setEnabled(true);
             }
         });
     }
@@ -99,7 +100,7 @@ public class DetalleUsuarioGUI extends JDialog {
         lbl_RepetirContrasenia = new javax.swing.JLabel();
         txt_RepetirContrasenia = new javax.swing.JPasswordField();
         lblAvisoSeguridad = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
+        panelClientes = new javax.swing.JPanel();
         cmb_Cliente = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -242,20 +243,20 @@ public class DetalleUsuarioGUI extends JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Cliente asignado"));
+        panelClientes.setBorder(javax.swing.BorderFactory.createTitledBorder("Cliente asignado"));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelClientesLayout = new javax.swing.GroupLayout(panelClientes);
+        panelClientes.setLayout(panelClientesLayout);
+        panelClientesLayout.setHorizontalGroup(
+            panelClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelClientesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(cmb_Cliente, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        panelClientesLayout.setVerticalGroup(
+            panelClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelClientesLayout.createSequentialGroup()
                 .addComponent(cmb_Cliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(8, Short.MAX_VALUE))
         );
@@ -283,7 +284,7 @@ public class DetalleUsuarioGUI extends JDialog {
                             .addComponent(txtUsername)))
                     .addComponent(panelRoles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelSeguridad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(panelClientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panelPrincipalLayout.setVerticalGroup(
@@ -314,7 +315,7 @@ public class DetalleUsuarioGUI extends JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(panelRoles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -346,7 +347,7 @@ public class DetalleUsuarioGUI extends JDialog {
 
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
         try {
-            Long idClienteParaVincular = null;
+            String idClienteParaVincular = "";
             if (operacion == TipoDeOperacion.ALTA) {
                 if (new String(txt_Contrasenia.getPassword()).equals(new String(txt_RepetirContrasenia.getPassword()))) {
                     Usuario usuario = new Usuario();
@@ -368,7 +369,7 @@ public class DetalleUsuarioGUI extends JDialog {
                     }
                     if (chk_Cliente.isSelected()) {
                         roles.add(Rol.CLIENTE);
-                        idClienteParaVincular = ((Cliente)cmb_Cliente.getSelectedItem()).getId_Cliente();
+                        idClienteParaVincular = Long.toString(((Cliente)cmb_Cliente.getSelectedItem()).getId_Cliente());
                     }
                     usuario.setRoles(roles);
                     RestClient.getRestTemplate().postForObject("/usuarios?idCliente=" + idClienteParaVincular, usuario, Usuario.class);                 
@@ -400,7 +401,7 @@ public class DetalleUsuarioGUI extends JDialog {
                     }
                     if (chk_Cliente.isSelected()) {
                         roles.add(Rol.CLIENTE);
-                        idClienteParaVincular = ((Cliente)cmb_Cliente.getSelectedItem()).getId_Cliente();
+                        idClienteParaVincular = Long.toString(((Cliente)cmb_Cliente.getSelectedItem()).getId_Cliente());
                     }
                     usuarioParaModificar.setRoles(roles);
                     RestClient.getRestTemplate().put("/usuarios?idCliente=" + idClienteParaVincular, usuarioParaModificar);
@@ -424,6 +425,7 @@ public class DetalleUsuarioGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cmb_Cliente.setEnabled(false);
+        this.panelClientes.setEnabled(false);
         if (operacion == TipoDeOperacion.ACTUALIZACION) {
             this.setTitle("Modificar Usuario");
             this.cargarUsuarioParaModificar();
@@ -435,6 +437,7 @@ public class DetalleUsuarioGUI extends JDialog {
     private void chk_ClienteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ClienteItemStateChanged
         if (chk_Cliente.isSelected() == true) {
             cmb_Cliente.setEnabled(true);
+            this.panelClientes.setEnabled(true);
             cmb_Cliente.removeAllItems();
             try {
                 String criteriaBusqueda = "/clientes/busqueda/criteria?idEmpresa="
@@ -460,6 +463,7 @@ public class DetalleUsuarioGUI extends JDialog {
         } else {
             cmb_Cliente.removeAllItems();
             cmb_Cliente.setEnabled(false);
+            this.panelClientes.setEnabled(false);
         }
     }//GEN-LAST:event_chk_ClienteItemStateChanged
 
@@ -471,7 +475,6 @@ public class DetalleUsuarioGUI extends JDialog {
     private javax.swing.JCheckBox chk_Vendedor;
     private javax.swing.JCheckBox chk_Viajante;
     private javax.swing.JComboBox<Cliente> cmb_Cliente;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblApellido;
     private javax.swing.JLabel lblAvisoSeguridad;
     private javax.swing.JLabel lblEmail;
@@ -480,6 +483,7 @@ public class DetalleUsuarioGUI extends JDialog {
     private javax.swing.JLabel lbl_Contrasenia;
     private javax.swing.JLabel lbl_RepetirContrasenia;
     private javax.swing.JLabel lbl_Username;
+    private javax.swing.JPanel panelClientes;
     private javax.swing.JPanel panelPrincipal;
     private javax.swing.JPanel panelRoles;
     private javax.swing.JPanel panelSeguridad;
