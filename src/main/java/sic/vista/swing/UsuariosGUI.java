@@ -19,8 +19,7 @@ import sic.util.Utilidades;
 
 public class UsuariosGUI extends JInternalFrame {
 
-    private Usuario usuarioSeleccionado;
-    private boolean mismoUsuarioActivo = false;
+    private Usuario usuarioSeleccionado;    
     private ModeloTabla modeloTablaResultados = new ModeloTabla();
     private List<Usuario> usuarios;
     private final Dimension sizeInternalFrame =  new Dimension(880, 600);
@@ -271,37 +270,35 @@ public class UsuariosGUI extends JInternalFrame {
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
         if (this.existeUsuarioSeleccionado()) {
-            try {
-                if (usuarioSeleccionado != null) {
-                    //Si el usuario activo corresponde con el usuario seleccionado para modificar
-                    int respuesta;
-                    if (UsuarioActivo.getInstance().getUsuario().getId_Usuario() == usuarioSeleccionado.getId_Usuario()) {
-                        respuesta = JOptionPane.showConfirmDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_eliminar_usuario_propio"),
-                                "Eliminar", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-                    } else {
-                        respuesta = JOptionPane.showConfirmDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_eliminar_usuario")
-                                + " " + usuarioSeleccionado.getNombre() + "?",
-                                "Eliminar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-                    }
-
-                    if (respuesta == JOptionPane.YES_OPTION) {
+            if (usuarioSeleccionado != null) {
+                //Si el usuario activo corresponde con el usuario seleccionado para modificar
+                int respuesta;
+                if (UsuarioActivo.getInstance().getUsuario().getId_Usuario() == usuarioSeleccionado.getId_Usuario()) {
+                    respuesta = JOptionPane.showConfirmDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_eliminar_usuario_propio"),
+                            "Eliminar", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                } else {
+                    respuesta = JOptionPane.showConfirmDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_eliminar_usuario")
+                            + " " + usuarioSeleccionado.getNombre() + "?",
+                            "Eliminar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                }
+                if (respuesta == JOptionPane.YES_OPTION) {
+                    try {
                         RestClient.getRestTemplate().delete("/usuarios/" + usuarioSeleccionado.getId_Usuario());
                         LOGGER.warn("El usuario " + usuarioSeleccionado.getNombre() + " se elimino correctamente.");
                         usuarioSeleccionado = null;
                         this.cargarUsuarios();
                         this.cargarRenglonesAlTable();
+                    } catch (RestClientResponseException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    } catch (ResourceAccessException ex) {
+                        LOGGER.error(ex.getMessage());
+                        JOptionPane.showMessageDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
-
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btn_EliminarActionPerformed
@@ -319,18 +316,19 @@ public class UsuariosGUI extends JInternalFrame {
         if (this.existeUsuarioSeleccionado()) {
             if (usuarioSeleccionado != null) {
                 //Si el usuario activo corresponde con el usuario seleccionado para modificar
-                int respuesta = JOptionPane.YES_OPTION;            
-                if (UsuarioActivo.getInstance().getUsuario().getNombre().equals(usuarioSeleccionado.getNombre())) {
+                int respuesta = JOptionPane.YES_OPTION;
+                boolean mismoUsuarioActivo = false;
+                if (UsuarioActivo.getInstance().getUsuario().getId_Usuario() == usuarioSeleccionado.getId_Usuario()) {
                     mismoUsuarioActivo = true;
                     respuesta = JOptionPane.showConfirmDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_modificar_el_usuario_propio"),
-                            "Atención", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);                
+                            "Atención", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
                 }
                 if (respuesta == JOptionPane.YES_OPTION) {
                     DetalleUsuarioGUI gui_DetalleUsuario = new DetalleUsuarioGUI(usuarioSeleccionado);
                     gui_DetalleUsuario.setModal(true);
                     gui_DetalleUsuario.setLocationRelativeTo(this);
-                    gui_DetalleUsuario.setVisible(true);                
+                    gui_DetalleUsuario.setVisible(true);
                     if (mismoUsuarioActivo == true) {
                         UsuarioActivo.getInstance().setUsuario(usuarioSeleccionado);
                     }
