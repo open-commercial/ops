@@ -10,6 +10,8 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
@@ -17,6 +19,7 @@ import sic.modelo.Cliente;
 import sic.modelo.CondicionIVA;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Localidad;
+import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Pais;
 import sic.modelo.Provincia;
 import sic.modelo.Rol;
@@ -118,9 +121,15 @@ public class DetalleClienteGUI extends JDialog {
         cmb_Viajante.removeAllItems();
         cmb_Viajante.addItem(null);
         try {
-            List<Usuario> usuarios = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/usuarios/roles?rol=" + Rol.VIAJANTE, Usuario[].class)));
-            usuarios.stream().forEach(u -> {
+            PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
+                    .exchange("/usuarios/busqueda/criteria?idEmpresa="
+                            + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                            + "&roles=" + Rol.VIAJANTE
+                            + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
+                    })
+                    .getBody();
+            response.getContent().stream().forEach(u -> {
                 cmb_Viajante.addItem(u);
             });
         } catch (RestClientResponseException ex) {

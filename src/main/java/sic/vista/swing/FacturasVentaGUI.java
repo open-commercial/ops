@@ -355,11 +355,15 @@ public class FacturasVentaGUI extends JInternalFrame {
             cmb_Vendedor.setEnabled(true);
             cmb_Vendedor.removeAllItems();
             try {
-                List<Usuario> usuarios = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                        .getForObject("/usuarios/roles?"
-                                + "rol=" + Rol.VENDEDOR,
-                                Usuario[].class)));
-                usuarios.stream().forEach((u) -> {
+                PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
+                        .exchange("/usuarios/busqueda/criteria?idEmpresa="
+                                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                                + "&roles=" + Rol.VENDEDOR
+                                + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
+                                new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
+                        })
+                        .getBody();
+                response.getContent().stream().forEach(u -> {
                     cmb_Vendedor.addItem(u);
                 });
             } catch (RestClientResponseException ex) {
@@ -382,11 +386,15 @@ public class FacturasVentaGUI extends JInternalFrame {
             cmb_Viajante.setEnabled(true);
             cmb_Viajante.removeAllItems();
             try {
-                List<Usuario> usuarios = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                        .getForObject("/usuarios/roles?"
-                                + "rol=" + Rol.VIAJANTE,
-                                Usuario[].class)));
-                usuarios.stream().forEach((u) -> {
+                PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
+                        .exchange("/usuarios/busqueda/criteria?idEmpresa="
+                                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                                + "&roles=" + Rol.VIAJANTE
+                                + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
+                                new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
+                        })
+                        .getBody();
+                response.getContent().stream().forEach(u -> {
                     cmb_Viajante.addItem(u);
                 });
             } catch (RestClientResponseException ex) {

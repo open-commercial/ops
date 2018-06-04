@@ -26,6 +26,7 @@ import sic.modelo.Localidad;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Pais;
 import sic.modelo.Provincia;
+import sic.modelo.Rol;
 import sic.modelo.Usuario;
 import sic.util.ColoresNumerosRenderer;
 import sic.util.FechasRenderer;
@@ -81,9 +82,14 @@ public class ClientesGUI extends JInternalFrame {
     private void cargarComboBoxViajantes() {
         cmbViajante.removeAllItems();
         try {
-            List<Usuario> viajantes = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/usuarios/roles?rol=VIAJANTE", Usuario[].class)));
-            viajantes.stream().forEach(v -> {
+            PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
+                    .exchange("/usuarios/busqueda/criteria?idEmpresa="
+                            + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                            + "&roles=" + Rol.VIAJANTE, HttpMethod.GET, null,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
+                    })
+                    .getBody();
+            response.getContent().stream().forEach(v -> {
                 cmbViajante.addItem(v);
             });
         } catch (RestClientResponseException ex) {

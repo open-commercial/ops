@@ -308,10 +308,14 @@ public class PedidosGUI extends JInternalFrame {
 
     private void cargarUsuarios() {
         try {
-            cmb_Vendedor.removeAllItems();
-            List<Usuario> usuarios = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/usuarios", Usuario[].class)));
-            usuarios.stream().forEach(u -> {
+            PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
+                    .exchange("/usuarios/busqueda/criteria?idEmpresa="
+                            + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                            + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
+                    })
+                    .getBody();
+            response.getContent().stream().forEach(u -> {
                 cmb_Vendedor.addItem(u);
             });
         } catch (RestClientResponseException ex) {
@@ -325,7 +329,14 @@ public class PedidosGUI extends JInternalFrame {
     }
 
     private boolean existeClienteDisponible() {
-        return !Arrays.asList(RestClient.getRestTemplate().getForObject("/usuarios", Usuario[].class)).isEmpty();
+        PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
+                .exchange("/clientes/busqueda/criteria?idEmpresa="
+                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        + "&pagina=0&tamanio=1", HttpMethod.GET, null,
+                        new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {
+                })
+                .getBody();
+        return !response.getContent().isEmpty();
     }
 
     private void cargarRenglonesDelPedidoSeleccionadoEnTabla(KeyEvent evt) {

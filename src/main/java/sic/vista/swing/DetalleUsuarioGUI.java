@@ -2,7 +2,6 @@ package sic.vista.swing;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
@@ -451,6 +450,9 @@ public class DetalleUsuarioGUI extends JDialog {
                 response.getContent().stream().forEach((c) -> {
                     cmb_Cliente.addItem(c);
                 });
+                if (usuarioParaModificar != null) {
+                    cmb_Cliente.setSelectedItem(RestClient.getRestTemplate().getForObject("/clientes/usuarios/" + usuarioParaModificar.getId_Usuario(), Cliente.class));
+                }
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             } catch (ResourceAccessException ex) {

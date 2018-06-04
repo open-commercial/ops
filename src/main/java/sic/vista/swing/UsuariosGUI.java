@@ -9,9 +9,13 @@ import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.EmpresaActiva;
+import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
 import sic.modelo.Usuario;
@@ -44,7 +48,14 @@ public class UsuariosGUI extends JInternalFrame {
 
     private void cargarUsuarios() {
         try {
-            usuarios = Arrays.asList(RestClient.getRestTemplate().getForObject("/usuarios", Usuario[].class));
+            PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
+                    .exchange("/usuarios/busqueda/criteria?idEmpresa="
+                            + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                            + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
+                    })
+                    .getBody();
+            usuarios = response.getContent();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {

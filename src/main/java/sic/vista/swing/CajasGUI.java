@@ -583,9 +583,15 @@ public class CajasGUI extends JInternalFrame {
         try {
             if (chk_UsuarioApertura.isSelected() == true) {
                 cmb_UsuariosApertura.setEnabled(true);
-                List<Usuario> usuarios = Arrays.asList(RestClient.getRestTemplate()
-                        .getForObject("/usuarios/roles?rol=" + Rol.ADMINISTRADOR, Usuario[].class));
-                usuarios.stream().forEach((usuario) -> {
+                PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
+                        .exchange("/usuarios/busqueda/criteria?idEmpresa="
+                                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                                + "&roles=" + Rol.ADMINISTRADOR
+                                + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
+                                new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
+                        })
+                        .getBody();
+                response.getContent().stream().forEach(usuario -> {
                     cmb_UsuariosApertura.addItem(usuario);
                 });
             } else {
@@ -627,9 +633,14 @@ public class CajasGUI extends JInternalFrame {
         try {
             if (chk_UsuarioCierre.isSelected() == true) {
                 cmb_UsuariosCierre.setEnabled(true);
-                List<Usuario> usuarios = Arrays.asList(RestClient.getRestTemplate()
-                        .getForObject("/usuarios/roles?rol=" + Rol.ADMINISTRADOR, Usuario[].class));
-                usuarios.stream().forEach((usuario) -> {
+                PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
+                        .exchange("/usuarios/busqueda/criteria?idEmpresa="
+                                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                                + "&roles=" + Rol.ADMINISTRADOR, HttpMethod.GET, null,
+                                new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
+                        })
+                        .getBody();
+                response.getContent().stream().forEach(usuario -> {
                     cmb_UsuariosCierre.addItem(usuario);
                 });
             } else {
