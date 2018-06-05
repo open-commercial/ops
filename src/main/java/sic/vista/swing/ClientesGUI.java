@@ -83,9 +83,8 @@ public class ClientesGUI extends JInternalFrame {
         cmbViajante.removeAllItems();
         try {
             PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                    .exchange("/usuarios/busqueda/criteria?idEmpresa="
-                            + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                            + "&roles=" + Rol.VIAJANTE, HttpMethod.GET, null,
+                    .exchange("/usuarios/busqueda/criteria?"
+                            + "roles=" + Rol.VIAJANTE, HttpMethod.GET, null,
                             new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
                     })
                     .getBody();

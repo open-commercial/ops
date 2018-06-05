@@ -309,9 +309,8 @@ public class PedidosGUI extends JInternalFrame {
     private void cargarUsuarios() {
         try {
             PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                    .exchange("/usuarios/busqueda/criteria?idEmpresa="
-                            + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                            + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
+                    .exchange("/usuarios/busqueda/criteria?idEmpresa"
+                            + "pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
                             new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
                     })
                     .getBody();

@@ -6,7 +6,6 @@ import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -584,9 +583,8 @@ public class CajasGUI extends JInternalFrame {
             if (chk_UsuarioApertura.isSelected() == true) {
                 cmb_UsuariosApertura.setEnabled(true);
                 PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                        .exchange("/usuarios/busqueda/criteria?idEmpresa="
-                                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                                + "&roles=" + Rol.ADMINISTRADOR
+                        .exchange("/usuarios/busqueda/criteria?"
+                                + "roles=" + Rol.ADMINISTRADOR
                                 + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
                                 new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
                         })
@@ -634,9 +632,8 @@ public class CajasGUI extends JInternalFrame {
             if (chk_UsuarioCierre.isSelected() == true) {
                 cmb_UsuariosCierre.setEnabled(true);
                 PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                        .exchange("/usuarios/busqueda/criteria?idEmpresa="
-                                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                                + "&roles=" + Rol.ADMINISTRADOR, HttpMethod.GET, null,
+                        .exchange("/usuarios/busqueda/criteria?"
+                                + "roles=" + Rol.ADMINISTRADOR, HttpMethod.GET, null,
                                 new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
                         })
                         .getBody();

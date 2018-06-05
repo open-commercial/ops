@@ -356,9 +356,8 @@ public class FacturasVentaGUI extends JInternalFrame {
             cmb_Vendedor.removeAllItems();
             try {
                 PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                        .exchange("/usuarios/busqueda/criteria?idEmpresa="
-                                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                                + "&roles=" + Rol.VENDEDOR
+                        .exchange("/usuarios/busqueda/criteria?"
+                                + "roles=" + Rol.VENDEDOR
                                 + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
                                 new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
                         })
@@ -387,9 +386,8 @@ public class FacturasVentaGUI extends JInternalFrame {
             cmb_Viajante.removeAllItems();
             try {
                 PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                        .exchange("/usuarios/busqueda/criteria?idEmpresa="
-                                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                                + "&roles=" + Rol.VIAJANTE
+                        .exchange("/usuarios/busqueda/criteria?"
+                                + "roles=" + Rol.VIAJANTE
                                 + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
                                 new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
                         })
