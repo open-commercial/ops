@@ -1,11 +1,15 @@
 package sic.vista.swing;
 
 import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -23,19 +27,39 @@ public class UsuariosGUI extends JInternalFrame {
 
     private Usuario usuarioSeleccionado;    
     private ModeloTabla modeloTablaResultados = new ModeloTabla();
-    private List<Usuario> usuarios;
+    private List<Usuario> usuariosTotal = new ArrayList<>();
+    private List<Usuario> usuariosParcial = new ArrayList<>();
+    private static int NUMERO_PAGINA = 0;
+    private static final int TAMANIO_PAGINA = 50;
     private final Dimension sizeInternalFrame =  new Dimension(880, 600);
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public UsuariosGUI() {
-        this.initComponents();       
+        this.initComponents();
+        sp_resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
+            JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
+            int va = scrollBar.getVisibleAmount() + 50;
+            if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
+                if (usuariosTotal.size() >= TAMANIO_PAGINA) {
+                    NUMERO_PAGINA += 1;
+                    cargarUsuarios();
+                }
+            }
+        });
+    }
+    
+    private void resetScroll() {
+        NUMERO_PAGINA = 0;
+        usuariosTotal.clear();
+        usuariosParcial.clear();
+        Point p = new Point(0, 0);
+        sp_resultados.getViewport().setViewPosition(p);
     }
 
     private void comprobarPrivilegiosUsuarioActivo() {
         //Comprueba si el usuario es Administrador
         if (UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR) == true) {
             this.cargarUsuarios();            
-            this.cargarRenglonesAlTable();
         } else {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_privilegios_usuario"),
@@ -45,14 +69,18 @@ public class UsuariosGUI extends JInternalFrame {
     }
 
     private void cargarUsuarios() {
+        this.cambiarEstadoDeComponentes(false);
         try {
             PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
                     .exchange("/usuarios/busqueda/criteria?"
-                            + "pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
+                            + "pagina=" + NUMERO_PAGINA
+                            + "&tamanio=" + TAMANIO_PAGINA, HttpMethod.GET, null,
                             new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
                     })
                     .getBody();
-            usuarios = response.getContent();
+            usuariosParcial = response.getContent();
+            usuariosTotal.addAll(usuariosParcial);
+            cargarRenglonesAlTable();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -61,6 +89,13 @@ public class UsuariosGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
+        this.cambiarEstadoDeComponentes(true);
+    }
+    
+    private void cambiarEstadoDeComponentes(boolean status) {
+        btn_Eliminar.setEnabled(status);
+        btn_Modificar.setEnabled(status);
+        btn_Agregar.setEnabled(status);
     }
     
     private void setColumnas() {               
@@ -109,8 +144,7 @@ public class UsuariosGUI extends JInternalFrame {
     }
     
     private void cargarRenglonesAlTable() {
-        this.limpiarJTable();
-        usuarios.stream().map(u -> {
+        usuariosParcial.stream().map(u -> {
             Object[] fila = new Object[9];
             fila[0] = u.isHabilitado();
             fila[1] = u.getUsername();
@@ -147,7 +181,7 @@ public class UsuariosGUI extends JInternalFrame {
     private boolean existeUsuarioSeleccionado() {
         if (tbl_Resultado.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultado);
-            usuarioSeleccionado = usuarios.get(indexFilaSeleccionada);
+            usuarioSeleccionado = usuariosTotal.get(indexFilaSeleccionada);
             return true;
         }
         return false;
@@ -158,7 +192,7 @@ public class UsuariosGUI extends JInternalFrame {
     private void initComponents() {
 
         panelPrincipal = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        sp_resultados = new javax.swing.JScrollPane();
         tbl_Resultado = new javax.swing.JTable();
         btn_Agregar = new javax.swing.JButton();
         btn_Modificar = new javax.swing.JButton();
@@ -198,17 +232,17 @@ public class UsuariosGUI extends JInternalFrame {
             }
         ));
         tbl_Resultado.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.setViewportView(tbl_Resultado);
+        sp_resultados.setViewportView(tbl_Resultado);
 
         javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
         panelPrincipal.setLayout(panelPrincipalLayout);
         panelPrincipalLayout.setHorizontalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
+            .addComponent(sp_resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
         );
         panelPrincipalLayout.setVerticalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
+            .addComponent(sp_resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
         );
 
         btn_Agregar.setForeground(java.awt.Color.blue);
@@ -296,8 +330,9 @@ public class UsuariosGUI extends JInternalFrame {
                         RestClient.getRestTemplate().delete("/usuarios/" + usuarioSeleccionado.getId_Usuario());
                         LOGGER.warn("El usuario " + usuarioSeleccionado.getNombre() + " se elimino correctamente.");
                         usuarioSeleccionado = null;
+                        this.resetScroll();
+                        this.limpiarJTable();
                         this.cargarUsuarios();
-                        this.cargarRenglonesAlTable();
                     } catch (RestClientResponseException ex) {
                         JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     } catch (ResourceAccessException ex) {
@@ -316,8 +351,9 @@ public class UsuariosGUI extends JInternalFrame {
         gui_DetalleUsuario.setModal(true);
         gui_DetalleUsuario.setLocationRelativeTo(this);
         gui_DetalleUsuario.setVisible(true);
+        this.resetScroll();
+        this.limpiarJTable();
         this.cargarUsuarios();
-        this.cargarRenglonesAlTable();
     }//GEN-LAST:event_btn_AgregarActionPerformed
 
     private void btn_ModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ModificarActionPerformed
@@ -340,8 +376,9 @@ public class UsuariosGUI extends JInternalFrame {
                     if (mismoUsuarioActivo == true) {
                         UsuarioActivo.getInstance().setUsuario(usuarioSeleccionado);
                     }
+                    this.resetScroll();
+                    this.limpiarJTable();
                     this.cargarUsuarios();
-                    this.cargarRenglonesAlTable();
                 }
             }
         }
@@ -349,6 +386,7 @@ public class UsuariosGUI extends JInternalFrame {
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         this.setSize(sizeInternalFrame);
+        this.setColumnas();
         try {
             this.setMaximum(true);
         } catch (PropertyVetoException ex) {
@@ -364,8 +402,8 @@ public class UsuariosGUI extends JInternalFrame {
     private javax.swing.JButton btn_Agregar;
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_Modificar;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel panelPrincipal;
+    private javax.swing.JScrollPane sp_resultados;
     private javax.swing.JTable tbl_Resultado;
     // End of variables declaration//GEN-END:variables
 }
