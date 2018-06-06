@@ -661,7 +661,7 @@ public class CajasGUI extends JInternalFrame {
                     "Saldo Apertura: \n", "Reabrir Caja", JOptionPane.QUESTION_MESSAGE);
             if (monto != null) {
                 try {
-                    RestClient.getRestTemplate().put("/cajas/" + this.cajasTotal.get(indice).getId_Caja() + "/reabrir?monto=" + new BigDecimal(monto), null);
+                    RestClient.getRestTemplate().put("/cajas/" + this.cajasTotal.get(indice).getId_Caja() + "/reapertura?monto=" + new BigDecimal(monto), null);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (ResourceAccessException ex) {
