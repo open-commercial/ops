@@ -2,6 +2,8 @@ package sic.vista.swing;
 
 import java.awt.Dimension;
 import java.beans.PropertyVetoException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
@@ -15,6 +17,7 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Empresa;
 import sic.modelo.EmpresaActiva;
+import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
 import sic.util.Utilidades;
 
@@ -48,6 +51,18 @@ public class PrincipalGUI extends JFrame {
                 + " - Usuario: " + UsuarioActivo.getInstance().getUsuario().getUsername());
     }
 
+    private boolean tienePermisosDeUsuarioValidos(List<Rol> roles) {
+        if (UsuarioActivo.getInstance().getUsuario().getRoles().containsAll(roles)) {
+            return true;
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_privilegios_usuario"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+            
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -353,20 +368,22 @@ public class PrincipalGUI extends JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private void mnuItm_UsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_UsuariosActionPerformed
-        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), UsuariosGUI.class);
-        if (gui == null) {
-            UsuariosGUI usuariosGUI = new UsuariosGUI();
-            usuariosGUI.setLocation(getDesktopPane().getWidth() / 2 - usuariosGUI.getWidth() / 2,
-                    getDesktopPane().getHeight() / 2 - usuariosGUI.getHeight() / 2);
-            getDesktopPane().add(usuariosGUI);
-            usuariosGUI.setVisible(true);
-        } else {
-            try {
-                gui.setSelected(true);
-            } catch (PropertyVetoException ex) {
-                String msjError = "No se pudo seleccionar la ventana requerida.";
-                LOGGER.error(msjError + " - " + ex.getMessage());
-                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+        if (this.tienePermisosDeUsuarioValidos(Arrays.asList(Rol.ADMINISTRADOR))) {
+            JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), UsuariosGUI.class);
+            if (gui == null) {
+                UsuariosGUI usuariosGUI = new UsuariosGUI();
+                usuariosGUI.setLocation(getDesktopPane().getWidth() / 2 - usuariosGUI.getWidth() / 2,
+                        getDesktopPane().getHeight() / 2 - usuariosGUI.getHeight() / 2);
+                getDesktopPane().add(usuariosGUI);
+                usuariosGUI.setVisible(true);
+            } else {
+                try {
+                    gui.setSelected(true);
+                } catch (PropertyVetoException ex) {
+                    String msjError = "No se pudo seleccionar la ventana requerida.";
+                    LOGGER.error(msjError + " - " + ex.getMessage());
+                    JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }//GEN-LAST:event_mnuItm_UsuariosActionPerformed
