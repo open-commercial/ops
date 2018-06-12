@@ -408,6 +408,11 @@ public class ProductosGUI extends JInternalFrame {
         });
 
         txt_Codigo.setEnabled(false);
+        txt_Codigo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_CodigoActionPerformed(evt);
+            }
+        });
 
         chk_Proveedor.setText("Proveedor:");
         chk_Proveedor.addItemListener(new java.awt.event.ItemListener() {
@@ -428,6 +433,11 @@ public class ProductosGUI extends JInternalFrame {
         });
 
         txt_Descripcion.setEnabled(false);
+        txt_Descripcion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_DescripcionActionPerformed(evt);
+            }
+        });
 
         chk_Descripcion.setText("Descripción:");
         chk_Descripcion.addItemListener(new java.awt.event.ItemListener() {
@@ -791,6 +801,14 @@ public class ProductosGUI extends JInternalFrame {
             }
         }
     }//GEN-LAST:event_btnExportarActionPerformed
+
+    private void txt_CodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_CodigoActionPerformed
+        btn_BuscarActionPerformed(null);
+    }//GEN-LAST:event_txt_CodigoActionPerformed
+
+    private void txt_DescripcionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_DescripcionActionPerformed
+        btn_BuscarActionPerformed(null);
+    }//GEN-LAST:event_txt_DescripcionActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bg_TiposDeListados;

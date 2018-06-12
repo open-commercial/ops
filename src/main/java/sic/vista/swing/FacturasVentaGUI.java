@@ -711,6 +711,11 @@ public class FacturasVentaGUI extends JInternalFrame {
         txt_SerieFactura.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         txt_SerieFactura.setText("0");
         txt_SerieFactura.setEnabled(false);
+        txt_SerieFactura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_SerieFacturaActionPerformed(evt);
+            }
+        });
         txt_SerieFactura.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txt_SerieFacturaKeyTyped(evt);
@@ -724,6 +729,11 @@ public class FacturasVentaGUI extends JInternalFrame {
         txt_NroFactura.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         txt_NroFactura.setText("0");
         txt_NroFactura.setEnabled(false);
+        txt_NroFactura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_NroFacturaActionPerformed(evt);
+            }
+        });
         txt_NroFactura.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txt_NroFacturaKeyTyped(evt);
@@ -812,6 +822,11 @@ public class FacturasVentaGUI extends JInternalFrame {
         txt_NumeroPedido.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         txt_NumeroPedido.setText("0");
         txt_NumeroPedido.setEnabled(false);
+        txt_NumeroPedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_NumeroPedidoActionPerformed(evt);
+            }
+        });
         txt_NumeroPedido.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txt_NumeroPedidoKeyTyped(evt);
@@ -1079,6 +1094,18 @@ public class FacturasVentaGUI extends JInternalFrame {
             }
         }
     }//GEN-LAST:event_btn_AutorizarActionPerformed
+
+    private void txt_SerieFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_SerieFacturaActionPerformed
+        btn_BuscarActionPerformed(null);
+    }//GEN-LAST:event_txt_SerieFacturaActionPerformed
+
+    private void txt_NroFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_NroFacturaActionPerformed
+        btn_BuscarActionPerformed(null);
+    }//GEN-LAST:event_txt_NroFacturaActionPerformed
+
+    private void txt_NumeroPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_NumeroPedidoActionPerformed
+        btn_BuscarActionPerformed(null);
+    }//GEN-LAST:event_txt_NumeroPedidoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Autorizar;

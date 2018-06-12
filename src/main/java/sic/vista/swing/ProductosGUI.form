@@ -149,6 +149,9 @@
           <Properties>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_CodigoActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JCheckBox" name="chk_Proveedor">
           <Properties>
@@ -184,6 +187,9 @@
           <Properties>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_DescripcionActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JCheckBox" name="chk_Descripcion">
           <Properties>

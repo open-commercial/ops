@@ -299,7 +299,7 @@ public class FacturasCompraGUI extends JInternalFrame {
         lbl_Desde = new javax.swing.JLabel();
         dc_FechaDesde = new com.toedter.calendar.JDateChooser();
         dc_FechaHasta = new com.toedter.calendar.JDateChooser();
-        jLabel1 = new javax.swing.JLabel();
+        lblSeparador = new javax.swing.JLabel();
         txt_SerieFactura = new javax.swing.JFormattedTextField();
         txt_NroFactura = new javax.swing.JFormattedTextField();
         lbl_CantRegistrosEncontrados = new javax.swing.JLabel();
@@ -385,13 +385,18 @@ public class FacturasCompraGUI extends JInternalFrame {
         dc_FechaHasta.setDateFormatString("dd/MM/yyyy");
         dc_FechaHasta.setEnabled(false);
 
-        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 0, 15)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("-");
+        lblSeparador.setFont(new java.awt.Font("DejaVu Sans", 0, 15)); // NOI18N
+        lblSeparador.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblSeparador.setText("-");
 
         txt_SerieFactura.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         txt_SerieFactura.setText("0");
         txt_SerieFactura.setEnabled(false);
+        txt_SerieFactura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_SerieFacturaActionPerformed(evt);
+            }
+        });
         txt_SerieFactura.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txt_SerieFacturaKeyTyped(evt);
@@ -401,6 +406,11 @@ public class FacturasCompraGUI extends JInternalFrame {
         txt_NroFactura.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         txt_NroFactura.setText("0");
         txt_NroFactura.setEnabled(false);
+        txt_NroFactura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_NroFacturaActionPerformed(evt);
+            }
+        });
         txt_NroFactura.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txt_NroFacturaKeyTyped(evt);
@@ -444,7 +454,7 @@ public class FacturasCompraGUI extends JInternalFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFiltrosLayout.createSequentialGroup()
                                 .addComponent(txt_SerieFactura)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblSeparador, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txt_NroFactura)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -480,7 +490,7 @@ public class FacturasCompraGUI extends JInternalFrame {
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_NumFactura)
                     .addComponent(txt_SerieFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
+                    .addComponent(lblSeparador)
                     .addComponent(txt_NroFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
@@ -744,6 +754,14 @@ public class FacturasCompraGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_chk_TipoFacturaItemStateChanged
 
+    private void txt_SerieFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_SerieFacturaActionPerformed
+        btn_BuscarActionPerformed(null);
+    }//GEN-LAST:event_txt_SerieFacturaActionPerformed
+
+    private void txt_NroFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_NroFacturaActionPerformed
+        btn_BuscarActionPerformed(null);
+    }//GEN-LAST:event_txt_NroFacturaActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;
@@ -757,7 +775,7 @@ public class FacturasCompraGUI extends JInternalFrame {
     private javax.swing.JComboBox cmb_TipoFactura;
     private com.toedter.calendar.JDateChooser dc_FechaDesde;
     private com.toedter.calendar.JDateChooser dc_FechaHasta;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel lblSeparador;
     private javax.swing.JLabel lbl_CantRegistrosEncontrados;
     private javax.swing.JLabel lbl_Desde;
     private javax.swing.JLabel lbl_Hasta;

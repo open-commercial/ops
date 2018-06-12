@@ -339,7 +339,7 @@ public class ClientesGUI extends JInternalFrame {
         btn_Buscar = new javax.swing.JButton();
         lbl_cantResultados = new javax.swing.JLabel();
         chkViajante = new javax.swing.JCheckBox();
-        cmbViajante = new javax.swing.JComboBox<Usuario>();
+        cmbViajante = new javax.swing.JComboBox();
         panelResultados = new javax.swing.JPanel();
         sp_Resultados = new javax.swing.JScrollPane();
         tbl_Resultados = new javax.swing.JTable();
@@ -382,6 +382,11 @@ public class ClientesGUI extends JInternalFrame {
         });
 
         txtCriteria.setEnabled(false);
+        txtCriteria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCriteriaActionPerformed(evt);
+            }
+        });
 
         chk_Ubicacion.setText("Ubicación:");
         chk_Ubicacion.addItemListener(new java.awt.event.ItemListener() {
@@ -794,6 +799,10 @@ public class ClientesGUI extends JInternalFrame {
             cmbViajante.setEnabled(false);            
         }
     }//GEN-LAST:event_chkViajanteItemStateChanged
+
+    private void txtCriteriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCriteriaActionPerformed
+        btn_BuscarActionPerformed(null);
+    }//GEN-LAST:event_txtCriteriaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCuentaCorriente;

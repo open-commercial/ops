@@ -234,7 +234,8 @@ public class ProveedoresGUI extends JInternalFrame {
         tbl_Resultados.setEnabled(status);
         btn_Nuevo.setEnabled(status);
         btn_Modificar.setEnabled(status);
-        btn_Eliminar.setEnabled(status);        
+        btn_Eliminar.setEnabled(status);     
+        tbl_Resultados.requestFocus();
     }
 
     private void buscar() {    
@@ -341,6 +342,11 @@ public class ProveedoresGUI extends JInternalFrame {
         });
 
         txt_Codigo.setEnabled(false);
+        txt_Codigo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_CodigoActionPerformed(evt);
+            }
+        });
 
         chk_Ubicacion.setText("Ubicación:");
         chk_Ubicacion.addItemListener(new java.awt.event.ItemListener() {
@@ -375,6 +381,11 @@ public class ProveedoresGUI extends JInternalFrame {
         });
 
         txt_RazonSocial.setEnabled(false);
+        txt_RazonSocial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_RazonSocialActionPerformed(evt);
+            }
+        });
 
         chk_RazonSocial.setText("Razón Social:");
         chk_RazonSocial.addItemListener(new java.awt.event.ItemListener() {
@@ -384,6 +395,11 @@ public class ProveedoresGUI extends JInternalFrame {
         });
 
         txt_Id_Fiscal.setEnabled(false);
+        txt_Id_Fiscal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_Id_FiscalActionPerformed(evt);
+            }
+        });
 
         chk_Id_Fiscal.setText("ID Fiscal:");
         chk_Id_Fiscal.addItemListener(new java.awt.event.ItemListener() {
@@ -610,12 +626,7 @@ public class ProveedoresGUI extends JInternalFrame {
     }//GEN-LAST:event_cmb_ProvinciaItemStateChanged
 
     private void btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarActionPerformed
-        this.buscar();
-        if (proveedores.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                ResourceBundle.getBundle("Mensajes").getString("mensaje_busqueda_sin_resultados"),
-                "Aviso", JOptionPane.INFORMATION_MESSAGE);
-        }
+        this.buscar();        
     }//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void btn_NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoActionPerformed
@@ -715,6 +726,18 @@ public class ProveedoresGUI extends JInternalFrame {
             }
         }
     }//GEN-LAST:event_btnCuentaCorrienteActionPerformed
+
+    private void txt_CodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_CodigoActionPerformed
+        btn_BuscarActionPerformed(null);
+    }//GEN-LAST:event_txt_CodigoActionPerformed
+
+    private void txt_RazonSocialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_RazonSocialActionPerformed
+        btn_BuscarActionPerformed(null);
+    }//GEN-LAST:event_txt_RazonSocialActionPerformed
+
+    private void txt_Id_FiscalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_Id_FiscalActionPerformed
+        btn_BuscarActionPerformed(null);
+    }//GEN-LAST:event_txt_Id_FiscalActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCuentaCorriente;
