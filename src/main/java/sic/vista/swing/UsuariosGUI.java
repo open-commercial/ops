@@ -102,9 +102,10 @@ public class UsuariosGUI extends JInternalFrame {
         encabezados[3] = "Apellido";        
         encabezados[4] = "Email";
         encabezados[5] = "Administrador";
-        encabezados[6] = "Vendedor";
-        encabezados[7] = "Viajante";
-        encabezados[8] = "Comprador";
+        encabezados[6] = "Encargado";
+        encabezados[7] = "Vendedor";
+        encabezados[8] = "Viajante";
+        encabezados[9] = "Comprador";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultado.setModel(modeloTablaResultados);
         //tipo de dato columnas
@@ -118,6 +119,7 @@ public class UsuariosGUI extends JInternalFrame {
         tipos[6] = Boolean.class;
         tipos[7] = Boolean.class;
         tipos[8] = Boolean.class;
+        tipos[9] = Boolean.class;
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultado.getTableHeader().setReorderingAllowed(false);
         tbl_Resultado.getTableHeader().setResizingAllowed(true);        
@@ -131,11 +133,13 @@ public class UsuariosGUI extends JInternalFrame {
         tbl_Resultado.getColumnModel().getColumn(5).setPreferredWidth(130);
         tbl_Resultado.getColumnModel().getColumn(5).setMaxWidth(130);
         tbl_Resultado.getColumnModel().getColumn(6).setPreferredWidth(130);
-        tbl_Resultado.getColumnModel().getColumn(6).setMaxWidth(130);
+        tbl_Resultado.getColumnModel().getColumn(6).setMaxWidth(130);        
         tbl_Resultado.getColumnModel().getColumn(7).setPreferredWidth(130);
         tbl_Resultado.getColumnModel().getColumn(7).setMaxWidth(130);
         tbl_Resultado.getColumnModel().getColumn(8).setPreferredWidth(130);
         tbl_Resultado.getColumnModel().getColumn(8).setMaxWidth(130);
+        tbl_Resultado.getColumnModel().getColumn(9).setPreferredWidth(130);
+        tbl_Resultado.getColumnModel().getColumn(9).setMaxWidth(130);
     }
     
     private void cargarRenglonesAlTable() {
@@ -150,14 +154,17 @@ public class UsuariosGUI extends JInternalFrame {
                 if (Rol.ADMINISTRADOR.equals(rol)) {
                     fila[5] = true;
                 }
-                if (Rol.VENDEDOR.equals(rol)) {
+                if (Rol.ENCARGADO.equals(rol)) {
                     fila[6] = true;
                 }
-                if (Rol.VIAJANTE.equals(rol)) {
+                if (Rol.VENDEDOR.equals(rol)) {
                     fila[7] = true;
                 }
-                if (Rol.COMPRADOR.equals(rol)) {
+                if (Rol.VIAJANTE.equals(rol)) {
                     fila[8] = true;
+                }
+                if (Rol.COMPRADOR.equals(rol)) {
+                    fila[9] = true;
                 }
             });
             return fila;
