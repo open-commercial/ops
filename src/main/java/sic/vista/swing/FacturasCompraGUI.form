@@ -85,7 +85,7 @@
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="txt_SerieFactura" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jLabel1" min="-2" pref="20" max="-2" attributes="0"/>
+                                  <Component id="lblSeparador" min="-2" pref="20" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="txt_NroFactura" max="32767" attributes="0"/>
                               </Group>
@@ -127,7 +127,7 @@
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="chk_NumFactura" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="txt_SerieFactura" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel1" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblSeparador" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="txt_NroFactura" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -211,7 +211,7 @@
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabel1">
+        <Component class="javax.swing.JLabel" name="lblSeparador">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="DejaVu Sans" size="15" style="0"/>
@@ -229,6 +229,7 @@
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_SerieFacturaActionPerformed"/>
             <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_SerieFacturaKeyTyped"/>
           </Events>
         </Component>
@@ -241,6 +242,7 @@
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_NroFacturaActionPerformed"/>
             <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_NroFacturaKeyTyped"/>
           </Events>
         </Component>

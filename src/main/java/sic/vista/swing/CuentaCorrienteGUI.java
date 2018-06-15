@@ -441,6 +441,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         btnCrearNotaDebito = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
         btnCrearRecibo = new javax.swing.JButton();
+        btnExportar = new javax.swing.JButton();
         txtCondicionIVACliente = new javax.swing.JTextField();
         lblCondicionIVACliente = new javax.swing.JLabel();
         txtIDFiscalCliente = new javax.swing.JTextField();
@@ -545,6 +546,15 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             }
         });
 
+        btnExportar.setForeground(java.awt.Color.blue);
+        btnExportar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Export_16x16.png"))); // NOI18N
+        btnExportar.setText("Exportar");
+        btnExportar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExportarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlResultadosLayout = new javax.swing.GroupLayout(pnlResultados);
         pnlResultados.setLayout(pnlResultadosLayout);
         pnlResultadosLayout.setHorizontalGroup(
@@ -556,23 +566,24 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ftxtSaldoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(pnlResultadosLayout.createSequentialGroup()
-                .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlResultadosLayout.createSequentialGroup()
-                        .addComponent(btnAutorizarNota)
-                        .addGap(0, 0, 0)
-                        .addComponent(btnVerDetalle)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_Eliminar))
-                    .addGroup(pnlResultadosLayout.createSequentialGroup()
-                        .addComponent(btnCrearNotaCredito)
-                        .addGap(0, 0, 0)
-                        .addComponent(btnCrearNotaDebito)
-                        .addGap(0, 0, 0)
-                        .addComponent(btnCrearRecibo)))
-                .addContainerGap(261, Short.MAX_VALUE))
+                .addComponent(btnCrearNotaCredito)
+                .addGap(0, 0, 0)
+                .addComponent(btnCrearNotaDebito)
+                .addGap(0, 0, 0)
+                .addComponent(btnCrearRecibo)
+                .addGap(0, 0, 0)
+                .addComponent(btnExportar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(295, Short.MAX_VALUE))
+            .addGroup(pnlResultadosLayout.createSequentialGroup()
+                .addComponent(btnAutorizarNota)
+                .addGap(0, 0, 0)
+                .addComponent(btnVerDetalle)
+                .addGap(0, 0, 0)
+                .addComponent(btn_Eliminar)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        pnlResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAutorizarNota, btnCrearNotaCredito, btnCrearNotaDebito, btnCrearRecibo, btnVerDetalle, btn_Eliminar});
+        pnlResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAutorizarNota, btnCrearNotaCredito, btnCrearNotaDebito, btnCrearRecibo, btnExportar, btnVerDetalle, btn_Eliminar});
 
         pnlResultadosLayout.setVerticalGroup(
             pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -581,17 +592,19 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     .addComponent(ftxtSaldoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_saldoFinal))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
+                .addComponent(sp_Resultados)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAutorizarNota, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnVerDetalle)
                     .addComponent(btn_Eliminar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btnCrearNotaCredito)
-                    .addComponent(btnCrearNotaDebito)
-                    .addComponent(btnCrearRecibo)))
+                .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnCrearRecibo)
+                        .addComponent(btnExportar))
+                    .addComponent(btnCrearNotaDebito, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnCrearNotaCredito, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
 
         pnlResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAutorizarNota, btnCrearNotaCredito, btnCrearNotaDebito, btnCrearRecibo, btnVerDetalle, btn_Eliminar});
@@ -689,6 +702,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         } else if (proveedor != null) {
             this.cargarDetalleProveedor();
             this.btnAutorizarNota.setVisible(false);
+            this.btnExportar.setVisible(false);
         }
         this.setColumnas();
         this.setSize(sizeInternalFrame);
@@ -901,12 +915,29 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         detalleComprobante.setVisible(true);
         this.refrescarVista();
     }//GEN-LAST:event_btnCrearReciboActionPerformed
+    
+    private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
+        if (Desktop.isDesktopSupported()) {
+            String uriReporte = "/cuentas-corrientes/clientes/" + this.cliente.getId_Cliente() + "/reporte?"
+                + "pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
+            ExportGUI exportGUI = new ExportGUI(uriReporte + "&formato=xlsx", "CuentaCorriente.xlsx",
+                    uriReporte + "&formato=pdf", "CuentaCorriente.pdf");
+                exportGUI.setModal(true);
+                exportGUI.setLocationRelativeTo(this);
+                exportGUI.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnExportarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAutorizarNota;
     private javax.swing.JButton btnCrearNotaCredito;
     private javax.swing.JButton btnCrearNotaDebito;
     private javax.swing.JButton btnCrearRecibo;
+    private javax.swing.JButton btnExportar;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnVerDetalle;
     private javax.swing.JButton btn_Eliminar;

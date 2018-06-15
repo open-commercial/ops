@@ -514,6 +514,11 @@ public class PedidosGUI extends JInternalFrame {
         txt_NumeroPedido.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0"))));
         txt_NumeroPedido.setText("0");
         txt_NumeroPedido.setEnabled(false);
+        txt_NumeroPedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_NumeroPedidoActionPerformed(evt);
+            }
+        });
         txt_NumeroPedido.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txt_NumeroPedidoKeyTyped(evt);
@@ -991,6 +996,10 @@ public class PedidosGUI extends JInternalFrame {
             cmbEstado.setEnabled(false);
         }
     }//GEN-LAST:event_chkEstadoItemStateChanged
+
+    private void txt_NumeroPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_NumeroPedidoActionPerformed
+        btn_BuscarActionPerformed(null);
+    }//GEN-LAST:event_txt_NumeroPedidoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEliminarPedido;

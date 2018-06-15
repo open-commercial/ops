@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.scene.input.KeyCode;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
@@ -191,6 +192,7 @@ public class TransportistasGUI extends JInternalFrame {
         btn_Nuevo.setEnabled(status);
         btn_Modificar.setEnabled(status);
         btn_Eliminar.setEnabled(status);
+        tbl_Resultados.requestFocus();
     }
 
     private void buscar() {
@@ -280,6 +282,11 @@ public class TransportistasGUI extends JInternalFrame {
         });
 
         txt_Nombre.setEnabled(false);
+        txt_Nombre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_NombreActionPerformed(evt);
+            }
+        });
 
         chk_Ubicacion.setText("Ubicación:");
         chk_Ubicacion.addItemListener(new java.awt.event.ItemListener() {
@@ -508,12 +515,7 @@ public class TransportistasGUI extends JInternalFrame {
     }//GEN-LAST:event_cmb_ProvinciaItemStateChanged
 
     private void btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarActionPerformed
-        this.buscar();
-        if (transportistas.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                ResourceBundle.getBundle("Mensajes").getString("mensaje_busqueda_sin_resultados"),
-                "Aviso", JOptionPane.INFORMATION_MESSAGE);
-        }
+        this.buscar();        
     }//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void btn_NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoActionPerformed
@@ -569,6 +571,11 @@ public class TransportistasGUI extends JInternalFrame {
             this.dispose();
         }
     }//GEN-LAST:event_formInternalFrameOpened
+
+    private void txt_NombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_NombreActionPerformed
+        btn_BuscarActionPerformed(null);
+    }//GEN-LAST:event_txt_NombreActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;

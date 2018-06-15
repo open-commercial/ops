@@ -149,6 +149,9 @@
           <Properties>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_CodigoActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JCheckBox" name="chk_Proveedor">
           <Properties>
@@ -184,6 +187,9 @@
           <Properties>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_DescripcionActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JCheckBox" name="chk_Descripcion">
           <Properties>
@@ -257,34 +263,35 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="sp_Resultados" pref="838" max="32767" attributes="0"/>
               <Group type="102" attributes="0">
                   <Component id="btn_Nuevo" linkSize="1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="btn_Modificar" linkSize="1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="btn_Eliminar" linkSize="1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                  <Component id="btn_ReporteListaPrecios" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                  <Component id="btnExportar" linkSize="1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="lbl_ValorStock" min="-2" max="-2" attributes="1"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="txt_ValorStock" min="-2" pref="170" max="-2" attributes="0"/>
               </Group>
+              <Component id="sp_Resultados" pref="1004" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
-                  <Component id="sp_Resultados" pref="272" max="32767" attributes="0"/>
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="sp_Resultados" pref="266" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="btn_Nuevo" linkSize="2" alignment="2" max="32767" attributes="0"/>
+                      <Component id="btn_Modificar" linkSize="2" alignment="2" max="32767" attributes="0"/>
+                      <Component id="btn_Eliminar" linkSize="2" alignment="2" max="32767" attributes="0"/>
+                      <Component id="btnExportar" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lbl_ValorStock" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="txt_ValorStock" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btn_ReporteListaPrecios" linkSize="2" alignment="2" max="32767" attributes="0"/>
-                      <Component id="btn_Eliminar" linkSize="2" alignment="2" max="32767" attributes="0"/>
-                      <Component id="btn_Modificar" linkSize="2" alignment="2" max="32767" attributes="0"/>
-                      <Component id="btn_Nuevo" linkSize="2" alignment="2" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -360,20 +367,6 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_EliminarActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btn_ReporteListaPrecios">
-          <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="0" red="0" type="rgb"/>
-            </Property>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/Printer_16x16.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Imprimir"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_ReporteListaPreciosActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JFormattedTextField" name="txt_ValorStock">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
@@ -387,6 +380,20 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Valor del Stock:"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnExportar">
+          <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/sic/icons/Export_16x16.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Exportar"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExportarActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
