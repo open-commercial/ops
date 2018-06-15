@@ -9,14 +9,11 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
-import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
 import sic.modelo.Usuario;
 import sic.modelo.TipoDeOperacion;
@@ -64,12 +61,14 @@ public class DetalleUsuarioGUI extends JDialog {
             if (Rol.VIAJANTE.equals(rol)) {
                 chk_Viajante.setSelected(true);
             }
-            if (Rol.CLIENTE.equals(rol)) {
-                chk_Cliente.setSelected(true);
+            if (Rol.COMPRADOR.equals(rol)) {
+                chk_Comprador.setSelected(true);
                 try {
                     Cliente clienteRelacionado = RestClient.getRestTemplate().getForObject("/clientes/usuarios/" + usuarioParaModificar.getId_Usuario()
                             + "/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), Cliente.class);
-                    lbl_nombreCliente.setText(clienteRelacionado.getRazonSocial());
+                    if (clienteRelacionado != null) {
+                        lbl_nombreCliente.setText(clienteRelacionado.getRazonSocial());
+                    }
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (ResourceAccessException ex) {
@@ -95,7 +94,7 @@ public class DetalleUsuarioGUI extends JDialog {
         chk_Administrador = new javax.swing.JCheckBox();
         chk_Viajante = new javax.swing.JCheckBox();
         chk_Vendedor = new javax.swing.JCheckBox();
-        chk_Cliente = new javax.swing.JCheckBox();
+        chk_Comprador = new javax.swing.JCheckBox();
         lblNombre = new javax.swing.JLabel();
         lblApellido = new javax.swing.JLabel();
         lblEmail = new javax.swing.JLabel();
@@ -150,7 +149,7 @@ public class DetalleUsuarioGUI extends JDialog {
         chk_Vendedor.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         chk_Vendedor.setMargin(new java.awt.Insets(2, -2, 2, 2));
 
-        chk_Cliente.setText("Cliente");
+        chk_Comprador.setText("Comprador");
 
         javax.swing.GroupLayout panelRolesLayout = new javax.swing.GroupLayout(panelRoles);
         panelRoles.setLayout(panelRolesLayout);
@@ -159,7 +158,7 @@ public class DetalleUsuarioGUI extends JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRolesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelRolesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(chk_Cliente, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chk_Comprador, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chk_Administrador, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelRolesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -176,7 +175,7 @@ public class DetalleUsuarioGUI extends JDialog {
                     .addComponent(chk_Viajante))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelRolesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(chk_Cliente)
+                    .addComponent(chk_Comprador)
                     .addComponent(chk_Vendedor))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -369,8 +368,8 @@ public class DetalleUsuarioGUI extends JDialog {
                     if (chk_Viajante.isSelected()) {
                         roles.add(Rol.VIAJANTE);
                     }
-                    if (chk_Cliente.isSelected()) {
-                        roles.add(Rol.CLIENTE);
+                    if (chk_Comprador.isSelected()) {
+                        roles.add(Rol.COMPRADOR);
                     }
                     usuario.setRoles(roles);
                     RestClient.getRestTemplate().postForObject("/usuarios", usuario, Usuario.class);                 
@@ -400,8 +399,8 @@ public class DetalleUsuarioGUI extends JDialog {
                     if (chk_Viajante.isSelected()) {
                         roles.add(Rol.VIAJANTE);
                     }
-                    if (chk_Cliente.isSelected()) {
-                        roles.add(Rol.CLIENTE);
+                    if (chk_Comprador.isSelected()) {
+                        roles.add(Rol.COMPRADOR);
                     }
                     usuarioParaModificar.setRoles(roles);
                     RestClient.getRestTemplate().put("/usuarios", usuarioParaModificar);
@@ -426,7 +425,6 @@ public class DetalleUsuarioGUI extends JDialog {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.lbl_nombreCliente.setEnabled(false);
         this.panelClientes.setEnabled(false);
-        this.chk_Cliente.setEnabled(false);
         if (operacion == TipoDeOperacion.ACTUALIZACION) {
             this.setTitle("Modificar Usuario");
             this.cargarUsuarioParaModificar();
@@ -439,7 +437,7 @@ public class DetalleUsuarioGUI extends JDialog {
     private javax.swing.JButton btn_Guardar;
     private javax.swing.JCheckBox chkHabilitado;
     private javax.swing.JCheckBox chk_Administrador;
-    private javax.swing.JCheckBox chk_Cliente;
+    private javax.swing.JCheckBox chk_Comprador;
     private javax.swing.JCheckBox chk_Vendedor;
     private javax.swing.JCheckBox chk_Viajante;
     private javax.swing.JLabel lblApellido;
