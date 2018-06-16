@@ -328,21 +328,11 @@ public class DetalleUsuarioGUI extends JDialog {
                     usuario.setPassword(new String(txt_Contrasenia.getPassword()));
                     usuario.setHabilitado(chkHabilitado.isSelected());
                     List<Rol> roles = new ArrayList<>();
-                    if (chk_Administrador.isSelected()) {
-                        roles.add(Rol.ADMINISTRADOR);
-                    }
-                    if (chk_Encargado.isSelected()) {
-                        roles.add(Rol.ENCARGADO);
-                    }
-                    if (chk_Vendedor.isSelected()) {
-                        roles.add(Rol.VENDEDOR);
-                    }
-                    if (chk_Viajante.isSelected()) {
-                        roles.add(Rol.VIAJANTE);
-                    }
-                    if (chk_Comprador.isSelected()) {
-                        roles.add(Rol.COMPRADOR);
-                    }
+                    if (chk_Administrador.isSelected()) roles.add(Rol.ADMINISTRADOR);
+                    if (chk_Encargado.isSelected()) roles.add(Rol.ENCARGADO);
+                    if (chk_Vendedor.isSelected()) roles.add(Rol.VENDEDOR);
+                    if (chk_Viajante.isSelected()) roles.add(Rol.VIAJANTE);
+                    if (chk_Comprador.isSelected()) roles.add(Rol.COMPRADOR);
                     usuario.setRoles(roles);
                     RestClient.getRestTemplate().postForObject("/usuarios", usuario, Usuario.class);                 
                     LOGGER.warn("El usuario " + usuario.getUsername() + " se creo correctamente.");
@@ -362,25 +352,29 @@ public class DetalleUsuarioGUI extends JDialog {
                     usuarioParaModificar.setHabilitado(chkHabilitado.isSelected());
                     usuarioParaModificar.setPassword(new String(txt_Contrasenia.getPassword()));                    
                     List<Rol> roles = new ArrayList<>();
-                    if (chk_Administrador.isSelected()) {
-                        roles.add(Rol.ADMINISTRADOR);
+                    if (chk_Administrador.isSelected()) roles.add(Rol.ADMINISTRADOR);                  
+                    if (chk_Encargado.isSelected()) roles.add(Rol.ENCARGADO);
+                    if (chk_Vendedor.isSelected()) roles.add(Rol.VENDEDOR);
+                    if (chk_Viajante.isSelected()) roles.add(Rol.VIAJANTE);
+                    if (chk_Comprador.isSelected()) roles.add(Rol.COMPRADOR);                   
+                    boolean debeActualizar = false;
+                    if (usuarioParaModificar.getRoles().contains(Rol.COMPRADOR) && !chk_Comprador.isSelected()) {
+                        int reply = JOptionPane.showConfirmDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_quitar_rol_comprador"),
+                                "Aviso", JOptionPane.YES_NO_OPTION);
+                        if (reply == JOptionPane.YES_OPTION) {
+                            roles.remove(Rol.COMPRADOR);
+                            debeActualizar = true;
+                        } else chk_Comprador.setSelected(true);
+                    } else debeActualizar = true;                   
+                    if (debeActualizar) {
+                        usuarioParaModificar.setRoles(roles);
+                        RestClient.getRestTemplate().put("/usuarios", usuarioParaModificar);
+                        LOGGER.warn("El usuario " + usuarioParaModificar.getUsername() + " se modifico correctamente.");
+                        JOptionPane.showMessageDialog(this, "El Usuario se modificó correctamente!",
+                                "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                        this.dispose();
                     }
-                    if (chk_Encargado.isSelected()) {
-                        roles.add(Rol.ENCARGADO);
-                    }
-                    if (chk_Vendedor.isSelected()) {
-                        roles.add(Rol.VENDEDOR);
-                    }
-                    if (chk_Viajante.isSelected()) {
-                        roles.add(Rol.VIAJANTE);
-                    }
-                    if (chk_Comprador.isSelected()) {
-                        roles.add(Rol.COMPRADOR);
-                    }
-                    usuarioParaModificar.setRoles(roles);
-                    RestClient.getRestTemplate().put("/usuarios", usuarioParaModificar);
-                    LOGGER.warn("El usuario " + usuarioParaModificar.getUsername() + " se modifico correctamente.");
-                    this.dispose();                    
                 } else {
                     JOptionPane.showMessageDialog(this, 
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_password_diferentes"),
