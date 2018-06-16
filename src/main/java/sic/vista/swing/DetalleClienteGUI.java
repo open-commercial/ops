@@ -59,7 +59,7 @@ public class DetalleClienteGUI extends JDialog {
         cmb_Pais.setSelectedItem(cliente.getLocalidad().getProvincia().getPais());
         cmb_Provincia.setSelectedItem(cliente.getLocalidad().getProvincia());
         cmb_Localidad.setSelectedItem(cliente.getLocalidad());
-        cmb_Usuarios.setSelectedItem(cliente.getCredencial());
+        cmb_UsuariosCompradores.setSelectedItem(cliente.getCredencial());
         cmb_Viajante.setSelectedItem(cliente.getViajante());
         txt_TelPrimario.setText(cliente.getTelPrimario());
         txt_TelSecundario.setText(cliente.getTelSecundario());
@@ -144,17 +144,18 @@ public class DetalleClienteGUI extends JDialog {
     }
     
     private void cargarComboBoxUsuarios() {
-        cmb_Usuarios.removeAllItems();
-        cmb_Usuarios.addItem(null);
+        cmb_UsuariosCompradores.removeAllItems();
+        cmb_UsuariosCompradores.addItem(null);
         try {
             PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
                     .exchange("/usuarios/busqueda/criteria?"
-                            + "pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
+                            + "roles=" + Rol.COMPRADOR
+                            + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
                             new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
                     })
                     .getBody();
             response.getContent().stream().forEach(u -> {
-                cmb_Usuarios.addItem(u);
+                cmb_UsuariosCompradores.addItem(u);
             });
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -238,7 +239,7 @@ public class DetalleClienteGUI extends JDialog {
         lbl_Viajante = new javax.swing.JLabel();
         cmb_Viajante = new javax.swing.JComboBox();
         lbl_Credencial = new javax.swing.JLabel();
-        cmb_Usuarios = new javax.swing.JComboBox<>();
+        cmb_UsuariosCompradores = new javax.swing.JComboBox<>();
         panel1 = new javax.swing.JPanel();
         lbl_CondicionIVA = new javax.swing.JLabel();
         cmb_CondicionIVA = new javax.swing.JComboBox();
@@ -421,7 +422,7 @@ public class DetalleClienteGUI extends JDialog {
                     .addComponent(dc_FechaAlta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txt_TelPrimario, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(cmb_Viajante, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cmb_Usuarios, 0, 452, Short.MAX_VALUE))
+                    .addComponent(cmb_UsuariosCompradores, 0, 452, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panel3Layout.setVerticalGroup(
@@ -430,7 +431,7 @@ public class DetalleClienteGUI extends JDialog {
                 .addContainerGap()
                 .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_Credencial)
-                    .addComponent(cmb_Usuarios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmb_UsuariosCompradores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_Viajante)
@@ -458,7 +459,7 @@ public class DetalleClienteGUI extends JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panel3Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmb_Usuarios, cmb_Viajante});
+        panel3Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmb_UsuariosCompradores, cmb_Viajante});
 
         panel3Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lbl_Credencial, lbl_TelPrimario, lbl_Viajante});
 
@@ -644,7 +645,7 @@ public class DetalleClienteGUI extends JDialog {
                 cliente.setEmail(txt_Email.getText().trim());
                 cliente.setFechaAlta(dc_FechaAlta.getDate());
                 cliente.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
-                usuarioSeleccionado = (Usuario) cmb_Usuarios.getSelectedItem();
+                usuarioSeleccionado = (Usuario) cmb_UsuariosCompradores.getSelectedItem();
                 cliente = RestClient.getRestTemplate().postForObject("/clientes?idUsuarioCredencial=" 
                         + (usuarioSeleccionado != null? usuarioSeleccionado.getId_Usuario() : ""), cliente, Cliente.class);
                 int respuesta = JOptionPane.showConfirmDialog(this,
@@ -674,7 +675,7 @@ public class DetalleClienteGUI extends JDialog {
                 cliente.setEmail(txt_Email.getText().trim());
                 cliente.setFechaAlta(dc_FechaAlta.getDate());
                 cliente.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
-                usuarioSeleccionado = (Usuario) cmb_Usuarios.getSelectedItem();
+                usuarioSeleccionado = (Usuario) cmb_UsuariosCompradores.getSelectedItem();
                 RestClient.getRestTemplate().put("/clientes?idUsuarioCredencial=" 
                         + (usuarioSeleccionado != null? usuarioSeleccionado.getId_Usuario() : ""), cliente);
                 JOptionPane.showMessageDialog(this, "El Cliente se modificó correctamente!",
@@ -716,7 +717,7 @@ public class DetalleClienteGUI extends JDialog {
     private javax.swing.JComboBox cmb_Localidad;
     private javax.swing.JComboBox cmb_Pais;
     private javax.swing.JComboBox cmb_Provincia;
-    private javax.swing.JComboBox<Usuario> cmb_Usuarios;
+    private javax.swing.JComboBox<Usuario> cmb_UsuariosCompradores;
     private javax.swing.JComboBox cmb_Viajante;
     private com.toedter.calendar.JDateChooser dc_FechaAlta;
     private javax.swing.JLabel lbl_CondicionIVA;
