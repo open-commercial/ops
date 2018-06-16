@@ -95,7 +95,7 @@ public class UsuariosGUI extends JInternalFrame {
     
     private void setColumnas() {               
         //nombres de columnas
-        String[] encabezados = new String[9];
+        String[] encabezados = new String[10];
         encabezados[0] = "Habilitado";
         encabezados[1] = "Usuario";
         encabezados[2] = "Nombre";
@@ -130,8 +130,8 @@ public class UsuariosGUI extends JInternalFrame {
         tbl_Resultado.getColumnModel().getColumn(2).setMinWidth(130);
         tbl_Resultado.getColumnModel().getColumn(3).setMinWidth(130);
         tbl_Resultado.getColumnModel().getColumn(4).setPreferredWidth(350);
-        tbl_Resultado.getColumnModel().getColumn(5).setPreferredWidth(130);
-        tbl_Resultado.getColumnModel().getColumn(5).setMaxWidth(130);
+        tbl_Resultado.getColumnModel().getColumn(5).setPreferredWidth(150);
+        tbl_Resultado.getColumnModel().getColumn(5).setMaxWidth(150);
         tbl_Resultado.getColumnModel().getColumn(6).setPreferredWidth(130);
         tbl_Resultado.getColumnModel().getColumn(6).setMaxWidth(130);        
         tbl_Resultado.getColumnModel().getColumn(7).setPreferredWidth(130);
@@ -144,7 +144,7 @@ public class UsuariosGUI extends JInternalFrame {
     
     private void cargarRenglonesAlTable() {
         usuariosParcial.stream().map(u -> {
-            Object[] fila = new Object[9];
+            Object[] fila = new Object[10];
             fila[0] = u.isHabilitado();
             fila[1] = u.getUsername();
             fila[2] = u.getNombre();
