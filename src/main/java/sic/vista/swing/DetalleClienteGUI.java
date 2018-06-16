@@ -124,7 +124,7 @@ public class DetalleClienteGUI extends JDialog {
         cmb_Viajante.addItem(null);
         try {
             PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                    .exchange("/usuarios/busqueda/criteria?idEmpresa"
+                    .exchange("/usuarios/busqueda/criteria?"
                             + "roles=" + Rol.VIAJANTE
                             + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
                             new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
