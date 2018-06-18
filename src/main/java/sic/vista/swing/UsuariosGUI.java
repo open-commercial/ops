@@ -452,7 +452,6 @@ public class UsuariosGUI extends JInternalFrame {
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         this.setSize(sizeInternalFrame);
         this.setColumnas();
-        this.buscar();
         try {
             this.setMaximum(true);
         } catch (PropertyVetoException ex) {
