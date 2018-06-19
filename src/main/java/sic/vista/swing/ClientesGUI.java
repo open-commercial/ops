@@ -157,7 +157,7 @@ public class ClientesGUI extends JInternalFrame {
         encabezados[3] = "Nombre Fantasia";
         encabezados[4] = "Saldo C/C";
         encabezados[5] = "Ultimo Movimiento C/C";
-        encabezados[6] = "Credenciales";
+        encabezados[6] = "Credencial";
         encabezados[7] = "Viajante";
         encabezados[8] = "Direccion";
         encabezados[9] = "Condicion IVA";

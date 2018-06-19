@@ -114,7 +114,7 @@ public class DetalleUsuarioGUI extends JDialog {
             }
         });
 
-        panelPrincipal.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        panelPrincipal.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         lbl_Username.setForeground(java.awt.Color.red);
         lbl_Username.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -154,7 +154,7 @@ public class DetalleUsuarioGUI extends JDialog {
                     .addComponent(txtApellido, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtNombre)
                     .addComponent(txtEmail)
-                    .addComponent(chkHabilitado, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                    .addComponent(chkHabilitado, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
                     .addComponent(txtUsername))
                 .addContainerGap())
         );
@@ -184,7 +184,7 @@ public class DetalleUsuarioGUI extends JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panelRoles.setBorder(javax.swing.BorderFactory.createTitledBorder("Roles"));
+        panelRoles.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         chk_Administrador.setText("Administrador");
         chk_Administrador.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
@@ -209,13 +209,13 @@ public class DetalleUsuarioGUI extends JDialog {
             .addGroup(panelRolesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelRolesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(chk_Comprador, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(chk_Administrador, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
                     .addComponent(chk_Vendedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(chk_Administrador, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, Short.MAX_VALUE)
+                    .addComponent(chk_Comprador, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelRolesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(chk_Encargado, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
-                    .addComponent(chk_Viajante, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(chk_Viajante, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(chk_Encargado, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panelRolesLayout.setVerticalGroup(
@@ -234,7 +234,7 @@ public class DetalleUsuarioGUI extends JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panelSeguridad.setBorder(javax.swing.BorderFactory.createTitledBorder("Seguridad"));
+        panelSeguridad.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         lbl_Contrasenia.setForeground(java.awt.Color.red);
         lbl_Contrasenia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);

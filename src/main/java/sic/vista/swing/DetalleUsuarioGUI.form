@@ -76,8 +76,8 @@
     <Container class="javax.swing.JPanel" name="panelPrincipal">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder/>
+          <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+            <EtchetBorder/>
           </Border>
         </Property>
       </Properties>
@@ -99,7 +99,7 @@
                       <Component id="txtApellido" alignment="1" max="32767" attributes="0"/>
                       <Component id="txtNombre" max="32767" attributes="0"/>
                       <Component id="txtEmail" max="32767" attributes="0"/>
-                      <Component id="chkHabilitado" alignment="1" pref="250" max="32767" attributes="0"/>
+                      <Component id="chkHabilitado" alignment="1" pref="248" max="32767" attributes="0"/>
                       <Component id="txtUsername" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -200,8 +200,8 @@
     <Container class="javax.swing.JPanel" name="panelRoles">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Roles"/>
+          <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+            <EtchetBorder/>
           </Border>
         </Property>
       </Properties>
@@ -212,14 +212,14 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="chk_Comprador" alignment="0" max="32767" attributes="0"/>
+                      <Component id="chk_Administrador" alignment="0" pref="165" max="32767" attributes="0"/>
                       <Component id="chk_Vendedor" alignment="0" max="32767" attributes="0"/>
-                      <Component id="chk_Administrador" alignment="0" max="32767" attributes="0"/>
+                      <Component id="chk_Comprador" alignment="0" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace type="separate" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="chk_Encargado" pref="177" max="32767" attributes="0"/>
                       <Component id="chk_Viajante" max="32767" attributes="0"/>
+                      <Component id="chk_Encargado" pref="161" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -288,8 +288,8 @@
     <Container class="javax.swing.JPanel" name="panelSeguridad">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Seguridad"/>
+          <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+            <EtchetBorder/>
           </Border>
         </Property>
       </Properties>
