@@ -62,15 +62,15 @@ public class LoginGUI extends JFrame {
 
     private void ingresar() {
         if (UsuarioActivo.getInstance().getUsuario() != null) {
-            if (UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
+//            if (UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
                 this.setVisible(false);
                 new PrincipalGUI().setVisible(true);
                 this.dispose();
-            } else {
-                this.setVisible(false);
-                new PuntoDeVentaContainerGUI().setVisible(true);
-                this.dispose();
-            }
+//            } else {
+//                this.setVisible(false);
+//                new PuntoDeVentaContainerGUI().setVisible(true);
+//                this.dispose();
+//            }
         }
     }
 

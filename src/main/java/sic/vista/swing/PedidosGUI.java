@@ -33,6 +33,7 @@ import sic.modelo.RenglonPedido;
 import sic.modelo.Usuario;
 import sic.modelo.EstadoPedido;
 import sic.modelo.PaginaRespuestaRest;
+import sic.modelo.Rol;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
@@ -799,79 +800,88 @@ public class PedidosGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_FechaItemStateChanged
 
     private void btnNuevoPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoPedidoActionPerformed
-        try {
-            if (this.existeClienteDisponible()) {
-                JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), PuntoDeVentaGUI.class);
-                if (gui == null) {
-                    Pedido pedido = new Pedido();
-                    pedido.setObservaciones("Los precios se encuentran sujetos a modificaciones.");
-                    PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
-                    puntoDeVentaGUI.setPedido(pedido);
-                    puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
-                            getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
-                    getDesktopPane().add(puntoDeVentaGUI);
-                    puntoDeVentaGUI.setMaximizable(true);
-                    puntoDeVentaGUI.setClosable(true);
-                    puntoDeVentaGUI.setVisible(true);
-                } else {
-                    //selecciona y trae al frente el internalframe
-                    try {
-                        gui.setSelected(true);
-                    } catch (PropertyVetoException ex) {
-                        String msjError = "No se pudo seleccionar la ventana requerida.";
-                        LOGGER.error(msjError + " - " + ex.getMessage());
-                        JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO,
+                Rol.VENDEDOR, Rol.VIAJANTE))) {
+            try {
+                if (this.existeClienteDisponible()) {
+                    JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), PuntoDeVentaGUI.class);
+                    if (gui == null) {
+                        Pedido pedido = new Pedido();
+                        pedido.setObservaciones("Los precios se encuentran sujetos a modificaciones.");
+                        PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
+                        puntoDeVentaGUI.setPedido(pedido);
+                        puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
+                                getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
+                        getDesktopPane().add(puntoDeVentaGUI);
+                        puntoDeVentaGUI.setMaximizable(true);
+                        puntoDeVentaGUI.setClosable(true);
+                        puntoDeVentaGUI.setVisible(true);
+                    } else {
+                        //selecciona y trae al frente el internalframe
+                        try {
+                            gui.setSelected(true);
+                        } catch (PropertyVetoException ex) {
+                            String msjError = "No se pudo seleccionar la ventana requerida.";
+                            LOGGER.error(msjError + " - " + ex.getMessage());
+                            JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
-                }         
-            } else {
-                JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_btnNuevoPedidoActionPerformed
-
-    private void btnFacturarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFacturarActionPerformed
-        try {
-            if (tbl_Pedidos.getSelectedRow() != -1) {
-                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
-                Pedido pedido = RestClient.getRestTemplate()
-                        .getForObject("/pedidos/" + pedidosTotal.get(indexFilaSeleccionada).getId_Pedido(), Pedido.class);
-                if (pedido.getEstado() == EstadoPedido.CERRADO) {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_pedido_facturado"), "Error", JOptionPane.ERROR_MESSAGE);
-                } else if (this.existeClienteDisponible()) {
-                    PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
-                    puntoDeVentaGUI.setPedido(pedido);
-                    puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
-                            getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
-                    getDesktopPane().add(puntoDeVentaGUI);
-                    puntoDeVentaGUI.setMaximizable(true);
-                    puntoDeVentaGUI.setClosable(true);
-                    puntoDeVentaGUI.setVisible(true);
                 } else {
                     JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnNuevoPedidoActionPerformed
+
+    private void btnFacturarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFacturarActionPerformed
+        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO,
+                Rol.VENDEDOR))) {
+            try {
+                if (tbl_Pedidos.getSelectedRow() != -1) {
+                    int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
+                    Pedido pedido = RestClient.getRestTemplate()
+                            .getForObject("/pedidos/" + pedidosTotal.get(indexFilaSeleccionada).getId_Pedido(), Pedido.class);
+                    if (pedido.getEstado() == EstadoPedido.CERRADO) {
+                        JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_pedido_facturado"), "Error", JOptionPane.ERROR_MESSAGE);
+                    } else if (this.existeClienteDisponible()) {
+                        PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
+                        puntoDeVentaGUI.setPedido(pedido);
+                        puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
+                                getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
+                        getDesktopPane().add(puntoDeVentaGUI);
+                        puntoDeVentaGUI.setMaximizable(true);
+                        puntoDeVentaGUI.setClosable(true);
+                        puntoDeVentaGUI.setVisible(true);
+                    } else {
+                        JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_btnFacturarActionPerformed
 
     private void btnVerFacturasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerFacturasActionPerformed
-        this.verFacturasVenta();
+        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO,
+                Rol.VENDEDOR, Rol.VIAJANTE))) {
+            this.verFacturasVenta();
+        }
     }//GEN-LAST:event_btnVerFacturasActionPerformed
 
     private void tbl_PedidosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_PedidosMouseClicked
@@ -901,82 +911,90 @@ public class PedidosGUI extends JInternalFrame {
     }//GEN-LAST:event_tbl_PedidosKeyPressed
 
     private void btnImprimirPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirPedidoActionPerformed
-        if (tbl_Pedidos.getSelectedRow() != -1) {
-            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
-            this.lanzarReportePedido(pedidosTotal.get(indexFilaSeleccionada).getId_Pedido());
+        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO,
+                Rol.VENDEDOR, Rol.VIAJANTE))) {
+            if (tbl_Pedidos.getSelectedRow() != -1) {
+                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
+                this.lanzarReportePedido(pedidosTotal.get(indexFilaSeleccionada).getId_Pedido());
+            }
         }
     }//GEN-LAST:event_btnImprimirPedidoActionPerformed
 
     private void btnModificarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarPedidoActionPerformed
-        try {
-            if (tbl_Pedidos.getSelectedRow() != -1) {
-                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
-                Pedido pedido = RestClient.getRestTemplate()
-                        .getForObject("/pedidos/" + pedidosTotal.get(indexFilaSeleccionada).getId_Pedido(), Pedido.class);
-                if (pedido.getEstado() == EstadoPedido.CERRADO) {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_pedido_facturado"), "Error", JOptionPane.ERROR_MESSAGE);
-                } else if (pedido.getEstado() == EstadoPedido.ACTIVO) {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_pedido_procesado"), "Error", JOptionPane.ERROR_MESSAGE);
-                } else if (this.existeClienteDisponible()) {
-                    PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
-                    puntoDeVentaGUI.setPedido(pedido);
-                    puntoDeVentaGUI.setModificarPedido(true);
-                    puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
-                            getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
-                    getDesktopPane().add(puntoDeVentaGUI);
-                    puntoDeVentaGUI.setMaximizable(true);
-                    puntoDeVentaGUI.setClosable(true);
-                    puntoDeVentaGUI.setVisible(true);
-                } else {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO,
+                Rol.VENDEDOR, Rol.VIAJANTE))) {
+            try {
+                if (tbl_Pedidos.getSelectedRow() != -1) {
+                    int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
+                    Pedido pedido = RestClient.getRestTemplate()
+                            .getForObject("/pedidos/" + pedidosTotal.get(indexFilaSeleccionada).getId_Pedido(), Pedido.class);
+                    if (pedido.getEstado() == EstadoPedido.CERRADO) {
+                        JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_pedido_facturado"), "Error", JOptionPane.ERROR_MESSAGE);
+                    } else if (pedido.getEstado() == EstadoPedido.ACTIVO) {
+                        JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_pedido_procesado"), "Error", JOptionPane.ERROR_MESSAGE);
+                    } else if (this.existeClienteDisponible()) {
+                        PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
+                        puntoDeVentaGUI.setPedido(pedido);
+                        puntoDeVentaGUI.setModificarPedido(true);
+                        puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
+                                getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
+                        getDesktopPane().add(puntoDeVentaGUI);
+                        puntoDeVentaGUI.setMaximizable(true);
+                        puntoDeVentaGUI.setClosable(true);
+                        puntoDeVentaGUI.setVisible(true);
+                    } else {
+                        JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnModificarPedidoActionPerformed
 
     private void btnEliminarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarPedidoActionPerformed
-        try {
-            if (tbl_Pedidos.getSelectedRow() != -1) {
-                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
-                Pedido pedido = RestClient.getRestTemplate().getForObject("/pedidos/" + pedidosTotal.get(indexFilaSeleccionada).getId_Pedido(), Pedido.class);
-                if (pedido.getEstado() == EstadoPedido.CERRADO) {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_pedido_facturado"), "Error", JOptionPane.ERROR_MESSAGE);
-                } else if (pedido.getEstado() == EstadoPedido.ACTIVO) {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_pedido_procesado"), "Error", JOptionPane.ERROR_MESSAGE);
-                } else if (this.existeClienteDisponible()) {
-                    int respuesta = JOptionPane.showConfirmDialog(this,
-                            "¿Esta seguro que desea eliminar el pedido seleccionado?",
-                            "Eliminar", JOptionPane.YES_NO_OPTION);
-                    if (respuesta == JOptionPane.YES_OPTION) {
-                        RestClient.getRestTemplate().delete("/pedidos/" + pedido.getId_Pedido());                        
-                        this.resetScroll();
-                        this.limpiarJTables();
-                        this.buscar();
+        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
+            try {
+                if (tbl_Pedidos.getSelectedRow() != -1) {
+                    int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
+                    Pedido pedido = RestClient.getRestTemplate().getForObject("/pedidos/" + pedidosTotal.get(indexFilaSeleccionada).getId_Pedido(), Pedido.class);
+                    if (pedido.getEstado() == EstadoPedido.CERRADO) {
+                        JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_pedido_facturado"), "Error", JOptionPane.ERROR_MESSAGE);
+                    } else if (pedido.getEstado() == EstadoPedido.ACTIVO) {
+                        JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_pedido_procesado"), "Error", JOptionPane.ERROR_MESSAGE);
+                    } else if (this.existeClienteDisponible()) {
+                        int respuesta = JOptionPane.showConfirmDialog(this,
+                                "¿Esta seguro que desea eliminar el pedido seleccionado?",
+                                "Eliminar", JOptionPane.YES_NO_OPTION);
+                        if (respuesta == JOptionPane.YES_OPTION) {
+                            RestClient.getRestTemplate().delete("/pedidos/" + pedido.getId_Pedido());
+                            this.resetScroll();
+                            this.limpiarJTables();
+                            this.buscar();
+                        }
+                    } else {
+                        JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                } else {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnEliminarPedidoActionPerformed
       

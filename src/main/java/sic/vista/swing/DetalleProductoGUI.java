@@ -21,11 +21,14 @@ import sic.modelo.EmpresaActiva;
 import sic.modelo.Medida;
 import sic.modelo.Producto;
 import sic.modelo.Proveedor;
+import sic.modelo.Rol;
 import sic.modelo.Rubro;
 import sic.modelo.TipoDeOperacion;
+import sic.modelo.UsuarioActivo;
 import sic.util.CalculosPrecioProducto;
 import sic.util.FormatosFechaHora;
 import sic.util.FormatterFechaHora;
+import sic.util.Utilidades;
 
 public class DetalleProductoGUI extends JDialog {
 
@@ -928,6 +931,9 @@ public class DetalleProductoGUI extends JDialog {
             this.setTitle("Modificar Producto");
             this.cargarProductoParaModificar();
         }
+        if (!UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
+            panel3.setVisible(false);
+        }
     }//GEN-LAST:event_formWindowOpened
 
     private void txt_CantMinimaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_CantMinimaFocusGained
@@ -1015,11 +1021,13 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_btn_MedidasActionPerformed
 
     private void btn_NuevoProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoProveedorActionPerformed
-        DetalleProveedorGUI gui_DetalleProveedor = new DetalleProveedorGUI();
-        gui_DetalleProveedor.setModal(true);
-        gui_DetalleProveedor.setLocationRelativeTo(this);
-        gui_DetalleProveedor.setVisible(true);
-        this.cargarProveedores();
+        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
+            DetalleProveedorGUI gui_DetalleProveedor = new DetalleProveedorGUI();
+            gui_DetalleProveedor.setModal(true);
+            gui_DetalleProveedor.setLocationRelativeTo(this);
+            gui_DetalleProveedor.setVisible(true);
+            this.cargarProveedores();
+        }
     }//GEN-LAST:event_btn_NuevoProveedorActionPerformed
 
     private void btn_RubrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_RubrosActionPerformed

@@ -1,5 +1,6 @@
 package sic.util;
 
+import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -10,10 +11,15 @@ import java.net.URISyntaxException;
 import java.security.CodeSource;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import sic.modelo.Rol;
+import sic.modelo.UsuarioActivo;
 
 public class Utilidades {
 
@@ -203,4 +209,19 @@ public class Utilidades {
         }
     }
     
+    public static boolean isUsuarioAutorizado(Component component, List<Rol> rolesRequeridos) {
+        boolean usuarioAutorizado = false;
+        for (Rol rolRequerido : rolesRequeridos) {
+            if (UsuarioActivo.getInstance().getUsuario().getRoles().contains(rolRequerido)) {
+                usuarioAutorizado = true;
+            }
+        }
+        if (!usuarioAutorizado) {
+            JOptionPane.showMessageDialog(component,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_privilegios_usuario"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return usuarioAutorizado;
+    }
+
 }
