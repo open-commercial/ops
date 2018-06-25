@@ -15,7 +15,6 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Credencial;
-import sic.modelo.Rol;
 import sic.modelo.Usuario;
 import sic.modelo.UsuarioActivo;
 
@@ -62,15 +61,9 @@ public class LoginGUI extends JFrame {
 
     private void ingresar() {
         if (UsuarioActivo.getInstance().getUsuario() != null) {
-//            if (UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
-                this.setVisible(false);
-                new PrincipalGUI().setVisible(true);
-                this.dispose();
-//            } else {
-//                this.setVisible(false);
-//                new PuntoDeVentaContainerGUI().setVisible(true);
-//                this.dispose();
-//            }
+            this.setVisible(false);
+            new PrincipalGUI().setVisible(true);
+            this.dispose();
         }
     }
 
