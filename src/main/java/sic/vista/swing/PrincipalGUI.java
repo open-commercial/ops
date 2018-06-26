@@ -554,8 +554,6 @@ public class PrincipalGUI extends JFrame {
     }//GEN-LAST:event_mnuItm_IrTPVActionPerformed
 
     private void mnuItm_FacturasVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_FacturasVentaActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO,
-                Rol.VENDEDOR))) {
             JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), FacturasVentaGUI.class);
             if (gui == null) {
                 gui = new FacturasVentaGUI();
@@ -572,7 +570,6 @@ public class PrincipalGUI extends JFrame {
                     JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
-        }
     }//GEN-LAST:event_mnuItm_FacturasVentaActionPerformed
 
     private void mnuItm_ConfiguracionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_ConfiguracionActionPerformed
