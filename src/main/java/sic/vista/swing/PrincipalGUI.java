@@ -357,17 +357,17 @@ public class PrincipalGUI extends JFrame {
     private void eliminarElementosDelMenuSegunRolDeUsuario() {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
         if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            mnuItm_Empresas.setVisible(false);
+            mnuItm_Configuracion.setVisible(false);
+            mnuItm_Usuarios.setVisible(false);
             if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-                mnuItm_Empresas.setVisible(false);
-                mnuItm_Configuracion.setVisible(false);
-                mnuItm_Usuarios.setVisible(false);
                 mnu_Compras.setVisible(false);
                 mnu_Stock.setVisible(false);
                 mnu_Administracion.setVisible(false);
             }
         }
     }
-    
+
     private void mostrarMensajeDeNingunaCajaAbierta() {
         if (UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)
                 || UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ENCARGADO)

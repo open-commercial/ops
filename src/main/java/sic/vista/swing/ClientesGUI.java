@@ -228,7 +228,7 @@ public class ClientesGUI extends JInternalFrame {
             fila[3] = cliente.getNombreFantasia(); 
             fila[4] = cliente.getSaldoCuentaCorriente();
             fila[5] = cliente.getFechaUltimoMovimiento();
-            if (cliente.getViajante() != null) fila[6] = cliente.getCredencial().toString();
+            if (cliente.getCredencial() != null) fila[6] = cliente.getCredencial().toString();
             if (cliente.getViajante() != null) fila[7] = cliente.getViajante().toString();
             fila[8] = cliente.getDireccion();
             fila[9] = cliente.getCondicionIVA().getNombre();
