@@ -600,9 +600,9 @@ public class FacturasVentaGUI extends JInternalFrame {
                     .addComponent(lbl_GananciaTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelNumerosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txt_ResultTotalIVAVenta, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
-                    .addComponent(txt_ResultGananciaTotal)
-                    .addComponent(txt_ResultTotalFacturado)))
+                    .addComponent(txt_ResultTotalIVAVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_ResultGananciaTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_ResultTotalFacturado, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         panelNumerosLayout.setVerticalGroup(
             panelNumerosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1021,7 +1021,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         try {
             this.setSize(sizeInternalFrame);
             this.setColumnas();
-            this.setMaximum(true);            
+            this.setMaximum(true);
             dc_FechaDesde.setDate(new Date());
             dc_FechaHasta.setDate(new Date());
         } catch (PropertyVetoException ex) {
@@ -1029,6 +1029,13 @@ public class FacturasVentaGUI extends JInternalFrame {
             LOGGER.error(mensaje + " - " + ex.getMessage());
             JOptionPane.showInternalMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();
+        }
+        if (!UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)
+                && !UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ENCARGADO)) {
+            txt_ResultGananciaTotal.setVisible(false);
+            lbl_GananciaTotal.setVisible(false);
+            lbl_TotalIVAVenta.setVisible(false);
+            txt_ResultTotalIVAVenta.setVisible(false);
         }
     }//GEN-LAST:event_formInternalFrameOpened
 

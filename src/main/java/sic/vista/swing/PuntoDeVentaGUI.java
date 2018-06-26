@@ -1665,10 +1665,9 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             this.setColumnas();
             this.setMaximum(true);
             this.setTitle("Punto de Venta");
-            ConfiguracionDelSistema cds = RestClient.getRestTemplate()
-                    .getForObject("/configuraciones-del-sistema/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                            ConfiguracionDelSistema.class);
-            cantidadMaximaRenglones = cds.getCantidadMaximaDeRenglonesEnFactura();
+            cantidadMaximaRenglones = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
+                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + "/cantidad-renglones", Integer.class);
             if (this.existeClientePredeterminado() && this.existeFormaDePagoPredeterminada() && this.existeTransportistaCargado()) {
                 Cliente clientePredeterminado = RestClient.getRestTemplate()
                         .getForObject("/clientes/predeterminado/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),

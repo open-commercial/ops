@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -15,8 +16,10 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Credencial;
+import sic.modelo.Rol;
 import sic.modelo.Usuario;
 import sic.modelo.UsuarioActivo;
+import sic.util.Utilidades;
 
 public class LoginGUI extends JFrame {
     
@@ -60,7 +63,8 @@ public class LoginGUI extends JFrame {
     }
 
     private void ingresar() {
-        if (UsuarioActivo.getInstance().getUsuario() != null) {
+        if (UsuarioActivo.getInstance().getUsuario() != null && 
+                Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR, Rol.VIAJANTE))) {
             this.setVisible(false);
             new PrincipalGUI().setVisible(true);
             this.dispose();
