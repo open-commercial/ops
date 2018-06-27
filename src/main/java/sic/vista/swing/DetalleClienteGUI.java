@@ -25,6 +25,7 @@ import sic.modelo.Provincia;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeOperacion;
 import sic.modelo.Usuario;
+import sic.modelo.UsuarioActivo;
 
 public class DetalleClienteGUI extends JDialog {
 
@@ -122,48 +123,56 @@ public class DetalleClienteGUI extends JDialog {
     private void cargarComboBoxViajantes() {
         cmb_Viajante.removeAllItems();
         cmb_Viajante.addItem(null);
-        try {
-            PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                    .exchange("/usuarios/busqueda/criteria?"
-                            + "roles=" + Rol.VIAJANTE
-                            + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
-                            new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
-                    })
-                    .getBody();
-            response.getContent().stream().forEach(u -> {
-                cmb_Viajante.addItem(u);
-            });
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+            try {
+                PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
+                        .exchange("/usuarios/busqueda/criteria?"
+                                + "roles=" + Rol.VIAJANTE
+                                + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
+                                new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
+                        })
+                        .getBody();
+                response.getContent().stream().forEach(u -> {
+                    cmb_Viajante.addItem(u);
+                });
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)) {
+            cmb_Viajante.addItem(UsuarioActivo.getInstance().getUsuario());
         }
     }
     
     private void cargarComboBoxUsuarios() {
         cmb_UsuariosCompradores.removeAllItems();
         cmb_UsuariosCompradores.addItem(null);
-        try {
-            PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                    .exchange("/usuarios/busqueda/criteria?"
-                            + "roles=" + Rol.COMPRADOR
-                            + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
-                            new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
-                    })
-                    .getBody();
-            response.getContent().stream().forEach(u -> {
-                cmb_UsuariosCompradores.addItem(u);
-            });
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+            try {
+                PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
+                        .exchange("/usuarios/busqueda/criteria?"
+                                + "roles=" + Rol.COMPRADOR
+                                + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
+                                new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
+                        })
+                        .getBody();
+                response.getContent().stream().forEach(u -> {
+                    cmb_UsuariosCompradores.addItem(u);
+                });
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -710,6 +719,7 @@ public class DetalleClienteGUI extends JDialog {
         this.cargarComboBoxPaises();
         this.cargarComboBoxUsuarios();
         this.cargarComboBoxViajantes();
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
         if (operacion == TipoDeOperacion.ACTUALIZACION) {
             this.setTitle("Modificar Cliente");
             this.cargarClienteParaModificar();
@@ -719,6 +729,18 @@ public class DetalleClienteGUI extends JDialog {
         }
     }//GEN-LAST:event_formWindowOpened
 
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+            btn_NuevaCondicionIVA.setEnabled(false);
+            btn_NuevaCredencial.setEnabled(false);
+            btn_NuevaLocalidad.setEnabled(false);
+            btn_NuevaProvincia.setEnabled(false);
+            btn_NuevoPais.setEnabled(false);
+        }
+    }
+        
     private void btn_NuevaCredencialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevaCredencialActionPerformed
         DetalleUsuarioGUI gui_DetalleUsuario = new DetalleUsuarioGUI();
         gui_DetalleUsuario.setModal(true);

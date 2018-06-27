@@ -33,7 +33,6 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
-import sic.modelo.ConfiguracionDelSistema;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Pedido;
 import sic.modelo.RenglonFactura;

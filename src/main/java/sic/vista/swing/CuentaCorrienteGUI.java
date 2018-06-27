@@ -38,6 +38,7 @@ import sic.modelo.Proveedor;
 import sic.modelo.RenglonCuentaCorriente;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
+import sic.modelo.UsuarioActivo;
 import sic.util.ColoresNumerosRenderer;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
@@ -133,6 +134,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
         this.cambiarEstadoEnabledComponentes(true);
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
     }
 
     private void cargarResultadosAlTable() {
@@ -711,6 +713,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         try {
             this.setMaximum(true);
             this.refrescarVista();
+            this.cambiarEstadoDeComponentesSegunRolUsuario();
         } catch (PropertyVetoException ex) {
             String mensaje = "Se produjo un error al intentar maximizar la ventana.";
             LOGGER.error(mensaje + " - " + ex.getMessage());
@@ -719,6 +722,19 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_formInternalFrameOpened
 
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+            btn_Eliminar.setEnabled(false);
+            btnCrearRecibo.setEnabled(false);
+            if (!rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+                btnCrearNotaCredito.setEnabled(false);
+                btnCrearNotaDebito.setEnabled(false);
+            }
+        }
+    }
+        
     private void btnCrearNotaCreditoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearNotaCreditoActionPerformed
         List<Rol> rolesAVerificar = new ArrayList();
         if (proveedor != null) {

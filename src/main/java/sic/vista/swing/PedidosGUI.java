@@ -34,6 +34,7 @@ import sic.modelo.Usuario;
 import sic.modelo.EstadoPedido;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
+import sic.modelo.UsuarioActivo;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
@@ -104,6 +105,7 @@ public class PedidosGUI extends JInternalFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
         this.cambiarEstadoEnabledComponentes(true);
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
     }
 
     private void verFacturasVenta() {
@@ -902,8 +904,19 @@ public class PedidosGUI extends JInternalFrame {
             JOptionPane.showInternalMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();
         }
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
     }//GEN-LAST:event_formInternalFrameOpened
 
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+            btnEliminarPedido.setEnabled(false);
+            if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)) {
+                btnFacturar.setEnabled(false);
+            }
+        }
+    }
+        
     private void tbl_PedidosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbl_PedidosKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_UP || evt.getKeyCode() == KeyEvent.VK_DOWN) {
             this.cargarRenglonesDelPedidoSeleccionadoEnTabla(evt);

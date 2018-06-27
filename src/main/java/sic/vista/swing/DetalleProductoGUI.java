@@ -932,7 +932,13 @@ public class DetalleProductoGUI extends JDialog {
             this.cargarProductoParaModificar();
         }
         if (!UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
-            panelCantidades.setVisible(false);
+            chk_Ilimitado.setEnabled(false);
+            lbl_Cantidad.setEnabled(false);
+            txt_Cantidad.setEnabled(false);
+            lbl_CantMinima.setEnabled(false);
+            txt_CantMinima.setEnabled(false);
+            lbl_VentaMinima.setEnabled(false);
+            txt_VentaMinima.setEnabled(false);
         }
     }//GEN-LAST:event_formWindowOpened
 

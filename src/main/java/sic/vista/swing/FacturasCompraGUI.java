@@ -28,6 +28,7 @@ import sic.modelo.Proveedor;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.TipoDeOperacion;
+import sic.modelo.UsuarioActivo;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
@@ -198,6 +199,7 @@ public class FacturasCompraGUI extends JInternalFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
         this.cambiarEstadoEnabledComponentes(true);
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
     }
 
     private void calcularResultados(String criteria) {
@@ -622,6 +624,7 @@ public class FacturasCompraGUI extends JInternalFrame {
         this.setColumnas();
         dc_FechaDesde.setDate(new Date());
         dc_FechaHasta.setDate(new Date());
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
         try {
             this.setMaximum(true);            
         } catch (PropertyVetoException ex) {
@@ -629,6 +632,13 @@ public class FacturasCompraGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_formInternalFrameOpened
 
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(false);
+        } 
+    }
+        
     private void chk_NumFacturaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_NumFacturaItemStateChanged
         if (chk_NumFactura.isSelected() == true) {
             txt_NroFactura.setEnabled(true);

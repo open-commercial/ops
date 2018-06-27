@@ -21,6 +21,7 @@ import sic.modelo.Pais;
 import sic.modelo.Proveedor;
 import sic.modelo.Provincia;
 import sic.modelo.Rol;
+import sic.modelo.UsuarioActivo;
 import sic.util.ColoresNumerosRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
@@ -277,6 +278,7 @@ public class ProveedoresGUI extends JInternalFrame {
             this.cambiarEstadoEnabled(true);
         }
         this.cambiarEstadoEnabled(true);
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
     }
 
     private void limpiarJTable() {
@@ -703,6 +705,7 @@ public class ProveedoresGUI extends JInternalFrame {
         this.setColumnas();
         try {            
             this.setMaximum(true);
+            this.cambiarEstadoDeComponentesSegunRolUsuario();
         } catch (PropertyVetoException ex) {
             String msjError = "Se produjo un error al intentar maximizar la ventana.";
             LOGGER.error(msjError + " - " + ex.getMessage());
@@ -711,6 +714,13 @@ public class ProveedoresGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_formInternalFrameOpened
 
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(false);
+        } 
+    }
+ 
     private void btnCuentaCorrienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaCorrienteActionPerformed
         if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
             if (tbl_Resultados.getSelectedRow() != -1) {

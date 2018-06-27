@@ -28,6 +28,7 @@ import sic.modelo.Pais;
 import sic.modelo.Provincia;
 import sic.modelo.Rol;
 import sic.modelo.Usuario;
+import sic.modelo.UsuarioActivo;
 import sic.util.ColoresNumerosRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
@@ -332,6 +333,7 @@ public class ClientesGUI extends JInternalFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
         this.cambiarEstadoEnabledComponentes(true);
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
     }
 
     @SuppressWarnings("unchecked")
@@ -728,14 +730,13 @@ public class ClientesGUI extends JInternalFrame {
             this.setSize(sizeInternalFrame);
             this.setColumnas();
             this.setMaximum(true);
-            RestClient.getRestTemplate().getForObject("/clientes/predeterminado/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), Cliente.class);
             if ((RestClient.getRestTemplate().getForObject("/clientes/predeterminado/empresas/"
                     + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), Cliente.class)) == null) {
                 JOptionPane.showInternalMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_no_existe_cliente_predeterminado"),
                     "Aviso", JOptionPane.WARNING_MESSAGE);
             }
+            this.cambiarEstadoDeComponentesSegunRolUsuario();
         } catch (PropertyVetoException ex) {
             String msjError = "Se produjo un error al intentar maximizar la ventana.";
             LOGGER.error(msjError + " - " + ex.getMessage());
@@ -753,6 +754,15 @@ public class ClientesGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_formInternalFrameOpened
 
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(false);
+            btn_Modificar.setEnabled(false);
+            btn_setPredeterminado.setEnabled(false);
+        }
+    }
+    
     private void btn_setPredeterminadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_setPredeterminadoActionPerformed
         if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
             if (tbl_Resultados.getSelectedRow() != -1) {

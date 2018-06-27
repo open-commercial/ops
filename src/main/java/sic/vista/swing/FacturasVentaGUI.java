@@ -215,6 +215,7 @@ public class FacturasVentaGUI extends JInternalFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
         this.cambiarEstadoEnabledComponentes(true);
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
     }
 
     private void cambiarEstadoEnabledComponentes(boolean status) {
@@ -1024,20 +1025,31 @@ public class FacturasVentaGUI extends JInternalFrame {
             this.setMaximum(true);
             dc_FechaDesde.setDate(new Date());
             dc_FechaHasta.setDate(new Date());
+            this.cambiarEstadoDeComponentesSegunRolUsuario();
         } catch (PropertyVetoException ex) {
             String mensaje = "Se produjo un error al intentar maximizar la ventana.";
             LOGGER.error(mensaje + " - " + ex.getMessage());
             JOptionPane.showInternalMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();
         }
-        if (!UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)
-                && !UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ENCARGADO)) {
-            txt_ResultGananciaTotal.setVisible(false);
-            lbl_GananciaTotal.setVisible(false);
-            lbl_TotalIVAVenta.setVisible(false);
-            txt_ResultTotalIVAVenta.setVisible(false);
-        }
     }//GEN-LAST:event_formInternalFrameOpened
+
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(false);
+            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+                txt_ResultGananciaTotal.setVisible(false);
+                lbl_GananciaTotal.setVisible(false);
+                lbl_TotalIVAVenta.setVisible(false);
+                txt_ResultTotalIVAVenta.setVisible(false);
+                if (!rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+                    btn_Nueva.setEnabled(false);
+                    btn_Autorizar.setEnabled(false);
+                }
+            }
+        }
+    }
 
     private void chk_ViajanteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ViajanteItemStateChanged
         this.cargarUsuariosViajante();

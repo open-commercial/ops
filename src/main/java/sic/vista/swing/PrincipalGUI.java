@@ -59,13 +59,10 @@ public class PrincipalGUI extends JFrame {
         mb_BarraMenues = new javax.swing.JMenuBar();
         mnu_Sistema = new javax.swing.JMenu();
         mnuItm_IrTPV = new javax.swing.JMenuItem();
-        jSeparator1 = new javax.swing.JPopupMenu.Separator();
         mnuItm_Empresas = new javax.swing.JMenuItem();
         mnuItm_CambiarEmpresa = new javax.swing.JMenuItem();
-        Separador1 = new javax.swing.JPopupMenu.Separator();
         mnuItm_Usuarios = new javax.swing.JMenuItem();
         mnuItm_CambiarUser = new javax.swing.JMenuItem();
-        Separador2 = new javax.swing.JPopupMenu.Separator();
         mnuItm_Configuracion = new javax.swing.JMenuItem();
         mnuItm_Salir = new javax.swing.JMenuItem();
         mnu_Compras = new javax.swing.JMenu();
@@ -84,11 +81,11 @@ public class PrincipalGUI extends JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
+            }
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
 
@@ -104,7 +101,6 @@ public class PrincipalGUI extends JFrame {
             }
         });
         mnu_Sistema.add(mnuItm_IrTPV);
-        mnu_Sistema.add(jSeparator1);
 
         mnuItm_Empresas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Empresa_16x16.png"))); // NOI18N
         mnuItm_Empresas.setText("Empresas");
@@ -123,7 +119,6 @@ public class PrincipalGUI extends JFrame {
             }
         });
         mnu_Sistema.add(mnuItm_CambiarEmpresa);
-        mnu_Sistema.add(Separador1);
 
         mnuItm_Usuarios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Group_16x16.png"))); // NOI18N
         mnuItm_Usuarios.setText("Usuarios");
@@ -142,7 +137,6 @@ public class PrincipalGUI extends JFrame {
             }
         });
         mnu_Sistema.add(mnuItm_CambiarUser);
-        mnu_Sistema.add(Separador2);
 
         mnuItm_Configuracion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Gears_16x16.png"))); // NOI18N
         mnuItm_Configuracion.setText("Configuración");
@@ -364,6 +358,9 @@ public class PrincipalGUI extends JFrame {
                 mnu_Compras.setVisible(false);
                 mnu_Stock.setVisible(false);
                 mnu_Administracion.setVisible(false);
+                if (!rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+                    mnuItm_IrTPV.setVisible(false);
+                }
             }
         }
     }
@@ -637,10 +634,7 @@ public class PrincipalGUI extends JFrame {
     }//GEN-LAST:event_mnu_CajasActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPopupMenu.Separator Separador1;
-    private javax.swing.JPopupMenu.Separator Separador2;
     private javax.swing.JDesktopPane dp_Escritorio;
-    private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JMenuBar mb_BarraMenues;
     private javax.swing.JMenuItem mnuItm_CambiarEmpresa;
     private javax.swing.JMenuItem mnuItm_CambiarUser;
