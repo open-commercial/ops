@@ -760,6 +760,12 @@ public class ClientesGUI extends JInternalFrame {
             btn_Eliminar.setEnabled(false);
             btn_Modificar.setEnabled(false);
             btn_setPredeterminado.setEnabled(false);
+            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO) 
+                    && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)
+                    && rolesDeUsuarioActivo.contains(Rol.VIAJANTE)) {
+                chkViajante.setEnabled(false);
+                cmbViajante.setEnabled(false);
+            }
         }
     }
     

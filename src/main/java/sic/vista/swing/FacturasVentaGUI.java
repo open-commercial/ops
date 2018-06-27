@@ -1046,6 +1046,8 @@ public class FacturasVentaGUI extends JInternalFrame {
                 if (!rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
                     btn_Nueva.setEnabled(false);
                     btn_Autorizar.setEnabled(false);
+                    chk_Viajante.setEnabled(false);
+                    cmb_Viajante.setEnabled(false);
                 }
             }
         }
