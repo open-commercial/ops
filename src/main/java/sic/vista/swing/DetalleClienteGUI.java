@@ -124,28 +124,27 @@ public class DetalleClienteGUI extends JDialog {
         cmb_Viajante.removeAllItems();
         cmb_Viajante.addItem(null);
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
-        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-            try {
-                PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                        .exchange("/usuarios/busqueda/criteria?"
-                                + "roles=" + Rol.VIAJANTE
-                                + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
-                                new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
-                        })
-                        .getBody();
-                response.getContent().stream().forEach(u -> {
-                    cmb_Viajante.addItem(u);
-                });
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } else if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)) {
-            cmb_Viajante.addItem(UsuarioActivo.getInstance().getUsuario());
+        try {
+            PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
+                    .exchange("/usuarios/busqueda/criteria?"
+                            + "roles=" + Rol.VIAJANTE
+                            + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
+                    })
+                    .getBody();
+            response.getContent().stream().forEach(u -> {
+                cmb_Viajante.addItem(u);
+            });
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)) {
+            cmb_Viajante.setSelectedItem(UsuarioActivo.getInstance().getUsuario());
         }
     }
     
@@ -735,6 +734,8 @@ public class DetalleClienteGUI extends JDialog {
                 && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
             btn_NuevaCondicionIVA.setEnabled(false);
             btn_NuevaCredencial.setEnabled(false);
+            lbl_Credencial.setEnabled(false);
+            cmb_UsuariosCompradores.setEnabled(false);
             btn_NuevaLocalidad.setEnabled(false);
             btn_NuevaProvincia.setEnabled(false);
             btn_NuevoPais.setEnabled(false);

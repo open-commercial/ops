@@ -913,6 +913,9 @@ public class PedidosGUI extends JInternalFrame {
             btnEliminarPedido.setEnabled(false);
             if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)) {
                 btnFacturar.setEnabled(false);
+                btnNuevoPedido.setEnabled(false);
+                chk_Vendedor.setEnabled(false);
+                cmb_Vendedor.setEnabled(false);
             }
         }
     }
