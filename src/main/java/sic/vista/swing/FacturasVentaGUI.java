@@ -1048,6 +1048,8 @@ public class FacturasVentaGUI extends JInternalFrame {
                     btn_Autorizar.setEnabled(false);
                     chk_Viajante.setEnabled(false);
                     cmb_Viajante.setEnabled(false);
+                    chk_Vendedor.setEnabled(false);
+                    cmb_Vendedor.setEnabled(false);
                 }
             }
         }

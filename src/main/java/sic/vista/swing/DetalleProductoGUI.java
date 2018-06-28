@@ -931,7 +931,8 @@ public class DetalleProductoGUI extends JDialog {
             this.setTitle("Modificar Producto");
             this.cargarProductoParaModificar();
         }
-        if (!UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
+        if (!UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR) 
+                && operacion == TipoDeOperacion.ACTUALIZACION) {
             chk_Ilimitado.setEnabled(false);
             lbl_Cantidad.setEnabled(false);
             txt_Cantidad.setEnabled(false);
