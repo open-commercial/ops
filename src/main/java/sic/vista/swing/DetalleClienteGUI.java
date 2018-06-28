@@ -144,6 +144,7 @@ public class DetalleClienteGUI extends JDialog {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
         if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)) {
+            cmb_Viajante.removeAllItems();
             cmb_Viajante.setSelectedItem(UsuarioActivo.getInstance().getUsuario());
         }
     }

@@ -358,9 +358,6 @@ public class PrincipalGUI extends JFrame {
                 mnu_Compras.setVisible(false);
                 mnu_Stock.setVisible(false);
                 mnu_Administracion.setVisible(false);
-                if (!rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-                    mnuItm_IrTPV.setVisible(false);
-                }
             }
         }
     }

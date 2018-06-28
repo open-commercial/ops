@@ -633,7 +633,7 @@ public class ProveedoresGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void btn_NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR))) {
+        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
             DetalleProveedorGUI gui_DetalleProveedor = new DetalleProveedorGUI();
             gui_DetalleProveedor.setModal(true);
             gui_DetalleProveedor.setLocationRelativeTo(this);

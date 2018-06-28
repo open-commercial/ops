@@ -731,6 +731,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             if (!rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
                 btnCrearNotaCredito.setEnabled(false);
                 btnCrearNotaDebito.setEnabled(false);
+                btnVerDetalle.setEnabled(false);
+                btnAutorizarNota.setEnabled(false);
             }
         }
     }
