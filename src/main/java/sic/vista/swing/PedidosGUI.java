@@ -703,16 +703,16 @@ public class PedidosGUI extends JInternalFrame {
             .addGroup(panel_resultadosLayout.createSequentialGroup()
                 .addComponent(btnNuevoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(btnVerFacturas)
-                .addGap(0, 0, 0)
-                .addComponent(btnFacturar)
-                .addGap(0, 0, 0)
                 .addComponent(btnModificarPedido)
                 .addGap(0, 0, 0)
                 .addComponent(btnEliminarPedido)
                 .addGap(0, 0, 0)
+                .addComponent(btnVerFacturas)
+                .addGap(0, 0, 0)
+                .addComponent(btnFacturar)
+                .addGap(0, 0, 0)
                 .addComponent(btnImprimirPedido)
-                .addGap(0, 240, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         panel_resultadosLayout.setVerticalGroup(
             panel_resultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -739,7 +739,7 @@ public class PedidosGUI extends JInternalFrame {
             .addComponent(panel_resultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panel_Filtros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 80, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
