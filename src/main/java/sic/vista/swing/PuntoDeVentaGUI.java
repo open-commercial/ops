@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -44,6 +45,7 @@ import sic.modelo.FormaDePago;
 import sic.modelo.Movimiento;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
+import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.Transportista;
 import sic.util.DecimalesRenderer;
@@ -553,22 +555,28 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }
 
     private void cargarTiposDeComprobantesDisponibles() {
+        cmb_TipoComprobante.removeAllItems();
         TipoDeComprobante[] tiposDeComprobante = new TipoDeComprobante[0];
-        try {
-            cmb_TipoComprobante.removeAllItems();
-            tiposDeComprobante = RestClient.getRestTemplate()
-                    .getForObject("/facturas/venta/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                            + "/clientes/" + cliente.getId_Cliente(), TipoDeComprobante[].class);
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        for (int i = 0; tiposDeComprobante.length > i; i++) {
-            cmb_TipoComprobante.addItem(tiposDeComprobante[i]);
+        List<Rol> rolesDeUsuario = UsuarioActivo.getInstance().getUsuario().getRoles();
+        if (rolesDeUsuario.contains(Rol.ADMINISTRADOR)
+                || rolesDeUsuario.contains(Rol.ENCARGADO)
+                || rolesDeUsuario.contains(Rol.VENDEDOR)) {
+            try {
+                cmb_TipoComprobante.removeAllItems();
+                tiposDeComprobante = RestClient.getRestTemplate()
+                        .getForObject("/facturas/venta/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                                + "/clientes/" + cliente.getId_Cliente(), TipoDeComprobante[].class);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            for (int i = 0; tiposDeComprobante.length > i; i++) {
+                cmb_TipoComprobante.addItem(tiposDeComprobante[i]);
+            }
         }
         cmb_TipoComprobante.addItem(TipoDeComprobante.PEDIDO);
         if (this.pedido != null) {
@@ -683,24 +691,30 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         + "&nroPedido=" + pedido.getNroPedido(), HttpMethod.GET, null,
                         new ParameterizedTypeReference<PaginaRespuestaRest<Pedido>>() {
                 }).getBody();
-        if (response.getContent().isEmpty()) {
-            Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?idEmpresa="
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                    + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                    + "&idCliente=" + cliente.getId_Cliente(), pedido, Pedido.class);
-            int reply = JOptionPane.showConfirmDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
-                    "Aviso", JOptionPane.YES_NO_OPTION);
-            if (reply == JOptionPane.YES_OPTION) {
-                this.lanzarReportePedido(p);
+        if (cliente != null) {
+            if (response.getContent().isEmpty()) {
+                Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?idEmpresa="
+                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
+                        + "&idCliente=" + cliente.getId_Cliente(), pedido, Pedido.class);
+                int reply = JOptionPane.showConfirmDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                        "Aviso", JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION) {
+                    this.lanzarReportePedido(p);
+                }
+                this.limpiarYRecargarComponentes();
+            } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificarPedido == true) {
+                this.actualizarPedido(pedido);
+                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_pedido_actualizado"),
+                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                this.dispose();
             }
-            this.limpiarYRecargarComponentes();
-        } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificarPedido == true) {
-            this.actualizarPedido(pedido);            
-            JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_pedido_actualizado"),
-                    "Aviso", JOptionPane.INFORMATION_MESSAGE);            
-            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_seleccionar_cliente"),
+                    "Aviso", JOptionPane.INFORMATION_MESSAGE);
         }
+
     }
     
     public RenglonPedido convertirRenglonFacturaARenglonPedido(RenglonFactura renglonFactura) {
@@ -1666,16 +1680,24 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             this.setTitle("Punto de Venta");
             cantidadMaximaRenglones = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
                     + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                    + "/cantidad-renglones", Integer.class);
-            if (this.existeClientePredeterminado() && this.existeFormaDePagoPredeterminada() && this.existeTransportistaCargado()) {
-                Cliente clientePredeterminado = RestClient.getRestTemplate()
-                        .getForObject("/clientes/predeterminado/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                            Cliente.class);
-                this.cargarCliente(clientePredeterminado);
-                this.cargarTiposDeComprobantesDisponibles();
-            } else {
+                    + "/cantidad-renglones", Integer.class); 
+            List<Rol> rolesDeUsuario = UsuarioActivo.getInstance().getUsuario().getRoles();
+            if (rolesDeUsuario.contains(Rol.ADMINISTRADOR)
+                || rolesDeUsuario.contains(Rol.ENCARGADO)
+                || rolesDeUsuario.contains(Rol.VENDEDOR)) {
+                if (this.existeClientePredeterminado()) {
+                    Cliente clientePredeterminado = RestClient.getRestTemplate()
+                            .getForObject("/clientes/predeterminado/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                                    Cliente.class);
+                    this.cargarCliente(clientePredeterminado);
+                } else {
+                    this.dispose();
+                }
+            }
+            if (!this.existeFormaDePagoPredeterminada() || !this.existeTransportistaCargado()) {
                 this.dispose();
             }
+            this.cargarTiposDeComprobantesDisponibles();
             if (this.pedido != null && this.pedido.getId_Pedido() != 0) {
                 this.cargarPedidoParaFacturar();
                 btn_NuevoCliente.setEnabled(false);
