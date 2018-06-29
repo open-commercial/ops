@@ -591,6 +591,9 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 cmb_TipoComprobante.removeItem(TipoDeComprobante.PEDIDO);
             }
         }
+        if (cmb_TipoComprobante.getItemCount() == 1) {
+            cmb_TipoComprobante.setEnabled(false);
+        }
     }
 
     private void recargarRenglonesSegunTipoDeFactura() {
