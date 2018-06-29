@@ -712,17 +712,15 @@ public class ClientesGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_EliminarActionPerformed
 
     private void btn_ModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ModificarActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR))) {
-            if (tbl_Resultados.getSelectedRow() != -1) {
-                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                DetalleClienteGUI gui_DetalleCliente = new DetalleClienteGUI(clientesTotal.get(indexFilaSeleccionada));
-                gui_DetalleCliente.setModal(true);
-                gui_DetalleCliente.setLocationRelativeTo(this);
-                gui_DetalleCliente.setVisible(true);
-                this.resetScroll();
-                this.limpiarJTable();
-                this.buscar();
-            }
+        if (tbl_Resultados.getSelectedRow() != -1) {
+            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+            DetalleClienteGUI gui_DetalleCliente = new DetalleClienteGUI(clientesTotal.get(indexFilaSeleccionada));
+            gui_DetalleCliente.setModal(true);
+            gui_DetalleCliente.setLocationRelativeTo(this);
+            gui_DetalleCliente.setVisible(true);
+            this.resetScroll();
+            this.limpiarJTable();
+            this.buscar();
         }
     }//GEN-LAST:event_btn_ModificarActionPerformed
 
@@ -761,7 +759,6 @@ public class ClientesGUI extends JInternalFrame {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
         if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
             btn_Eliminar.setEnabled(false);
-            btn_Modificar.setEnabled(false);
             btn_setPredeterminado.setEnabled(false);
             if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO) 
                     && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)

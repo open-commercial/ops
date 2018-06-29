@@ -144,7 +144,7 @@ public class DetalleClienteGUI extends JDialog {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
         if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)) {
-            cmb_Viajante.removeAllItems();
+            cmb_Viajante.remove(0);
             cmb_Viajante.setSelectedItem(UsuarioActivo.getInstance().getUsuario());
         }
     }
@@ -731,15 +731,16 @@ public class DetalleClienteGUI extends JDialog {
 
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
-        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
-                && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
             btn_NuevaCondicionIVA.setEnabled(false);
             btn_NuevaCredencial.setEnabled(false);
             lbl_Credencial.setEnabled(false);
             cmb_UsuariosCompradores.setEnabled(false);
-            btn_NuevaLocalidad.setEnabled(false);
-            btn_NuevaProvincia.setEnabled(false);
-            btn_NuevoPais.setEnabled(false);
+            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+                btn_NuevaLocalidad.setEnabled(false);
+                btn_NuevaProvincia.setEnabled(false);
+                btn_NuevoPais.setEnabled(false);
+            }
         }
     }
         

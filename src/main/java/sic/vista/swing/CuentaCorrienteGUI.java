@@ -724,15 +724,16 @@ public class CuentaCorrienteGUI extends JInternalFrame {
 
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
-        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
-                && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
             btn_Eliminar.setEnabled(false);
-            btnCrearRecibo.setEnabled(false);
-            if (!rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-                btnCrearNotaCredito.setEnabled(false);
-                btnCrearNotaDebito.setEnabled(false);
-                btnVerDetalle.setEnabled(false);
-                btnAutorizarNota.setEnabled(false);
+            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+                btnCrearRecibo.setEnabled(false);
+                if (!rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+                    btnCrearNotaCredito.setEnabled(false);
+                    btnCrearNotaDebito.setEnabled(false);
+                    btnVerDetalle.setEnabled(false);
+                    btnAutorizarNota.setEnabled(false);
+                }
             }
         }
     }
