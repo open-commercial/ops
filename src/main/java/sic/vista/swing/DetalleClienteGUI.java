@@ -152,27 +152,24 @@ public class DetalleClienteGUI extends JDialog {
     private void cargarComboBoxUsuarios() {
         cmb_UsuariosCompradores.removeAllItems();
         cmb_UsuariosCompradores.addItem(null);
-        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
-        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-            try {
-                PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                        .exchange("/usuarios/busqueda/criteria?"
-                                + "roles=" + Rol.COMPRADOR
-                                + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
-                                new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
-                        })
-                        .getBody();
-                response.getContent().stream().forEach(u -> {
-                    cmb_UsuariosCompradores.addItem(u);
-                });
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
+        try {
+            PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
+                    .exchange("/usuarios/busqueda/criteria?"
+                            + "roles=" + Rol.COMPRADOR
+                            + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
+                    })
+                    .getBody();
+            response.getContent().stream().forEach(u -> {
+                cmb_UsuariosCompradores.addItem(u);
+            });
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

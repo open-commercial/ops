@@ -715,9 +715,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             }
         } else {
             JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_seleccionar_cliente"),
-                    "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                    "Aviso", JOptionPane.ERROR_MESSAGE);
         }
-
     }
     
     public RenglonPedido convertirRenglonFacturaARenglonPedido(RenglonFactura renglonFactura) {
