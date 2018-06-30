@@ -18,6 +18,8 @@ import sic.RestClient;
 import sic.modelo.Localidad;
 import sic.modelo.Pais;
 import sic.modelo.Provincia;
+import sic.modelo.Rol;
+import sic.modelo.UsuarioActivo;
 
 public class DetalleLocalidadGUI extends JDialog {
 
@@ -26,6 +28,7 @@ public class DetalleLocalidadGUI extends JDialog {
     private final DefaultComboBoxModel modeloComboProvincias = new DefaultComboBoxModel();
     private final DefaultComboBoxModel modeloComboProvinciasBusqueda = new DefaultComboBoxModel();
     private Localidad localidadSeleccionada;
+    private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleLocalidadGUI() {
@@ -411,6 +414,9 @@ public class DetalleLocalidadGUI extends JDialog {
         this.cargarPaises();
         cmb_PaisesItemStateChanged(null);
         cmb_ProvinciasBusquedaItemStateChanged(null);
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(false);
+        }
     }//GEN-LAST:event_formWindowOpened
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Actualizar;

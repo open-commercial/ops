@@ -14,11 +14,14 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Pais;
+import sic.modelo.Rol;
+import sic.modelo.UsuarioActivo;
 
 public class DetallePaisGUI extends JDialog {
 
     private final DefaultListModel modeloList = new DefaultListModel();
     private Pais paisSeleccionado;
+    private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetallePaisGUI() {
@@ -266,7 +269,10 @@ public class DetallePaisGUI extends JDialog {
     }//GEN-LAST:event_btn_EliminarActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-            this.cargarPaises();
+        this.cargarPaises();
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(false);
+        }
     }//GEN-LAST:event_formWindowOpened
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Actualizar;

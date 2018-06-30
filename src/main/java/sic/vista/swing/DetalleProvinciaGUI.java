@@ -17,6 +17,8 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Pais;
 import sic.modelo.Provincia;
+import sic.modelo.Rol;
+import sic.modelo.UsuarioActivo;
 
 public class DetalleProvinciaGUI extends JDialog {
 
@@ -24,6 +26,7 @@ public class DetalleProvinciaGUI extends JDialog {
     private final DefaultComboBoxModel modeloComboPaises = new DefaultComboBoxModel();
     private final DefaultComboBoxModel modeloComboPaisesBusqueda = new DefaultComboBoxModel();
     private Provincia provinciaSeleccionada;
+    private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleProvinciaGUI() {
@@ -345,6 +348,9 @@ public class DetalleProvinciaGUI extends JDialog {
         cargarPaises(cmb_Paises, modeloComboPaises);
         cargarPaises(cmb_PaisesBusqueda, modeloComboPaisesBusqueda);
         cmb_PaisesBusquedaItemStateChanged(null);
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(false);
+        }
     }//GEN-LAST:event_formWindowOpened
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
