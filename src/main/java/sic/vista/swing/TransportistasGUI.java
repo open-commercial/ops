@@ -17,7 +17,9 @@ import sic.modelo.EmpresaActiva;
 import sic.modelo.Localidad;
 import sic.modelo.Pais;
 import sic.modelo.Provincia;
+import sic.modelo.Rol;
 import sic.modelo.Transportista;
+import sic.modelo.UsuarioActivo;
 import sic.util.Utilidades;
 
 public class TransportistasGUI extends JInternalFrame {
@@ -25,6 +27,7 @@ public class TransportistasGUI extends JInternalFrame {
     private ModeloTabla modeloTablaResultados = new ModeloTabla();
     private List<Transportista> transportistas;
     private Transportista transSeleccionado; 
+    private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(880, 600);
 
@@ -226,6 +229,7 @@ public class TransportistasGUI extends JInternalFrame {
             this.cambiarEstadoEnabled(true);
         } 
         this.cambiarEstadoEnabled(true);
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
     }
 
     @SuppressWarnings("unchecked")
@@ -562,6 +566,7 @@ public class TransportistasGUI extends JInternalFrame {
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         this.setSize(sizeInternalFrame);
         this.setColumnas();
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
         try {
             this.setMaximum(true);
         } catch (PropertyVetoException ex) {
@@ -572,6 +577,12 @@ public class TransportistasGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_formInternalFrameOpened
 
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(false);
+        }
+    }
+    
     private void txt_NombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_NombreActionPerformed
         btn_BuscarActionPerformed(null);
     }//GEN-LAST:event_txt_NombreActionPerformed
