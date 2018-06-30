@@ -33,7 +33,7 @@
           <Component id="panel_resultados" max="32767" attributes="0"/>
           <Group type="102" alignment="0" attributes="0">
               <Component id="panel_Filtros" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="80" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -284,16 +284,16 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="btnNuevoPedido" min="-2" pref="110" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="btnVerFacturas" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="btnFacturar" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="btnModificarPedido" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="btnEliminarPedido" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                  <Component id="btnVerFacturas" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                  <Component id="btnFacturar" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="btnImprimirPedido" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="240" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -303,7 +303,7 @@
                   <Component id="sp_Pedidos" pref="164" max="32767" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="sp_RenglonesPedido" pref="164" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnNuevoPedido" linkSize="7" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnVerFacturas" linkSize="7" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>

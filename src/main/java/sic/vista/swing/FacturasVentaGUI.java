@@ -31,6 +31,7 @@ import sic.modelo.Usuario;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
+import sic.modelo.UsuarioActivo;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
@@ -180,10 +181,13 @@ public class FacturasVentaGUI extends JInternalFrame {
     private void calcularResultados(String uriCriteria) {
         txt_ResultTotalFacturado.setValue(RestClient.getRestTemplate()
                 .getForObject("/facturas/total-facturado-venta/criteria?" + uriCriteria, BigDecimal.class));
-        txt_ResultGananciaTotal.setValue(RestClient.getRestTemplate()
-                .getForObject("/facturas/ganancia-total/criteria?" + uriCriteria, BigDecimal.class));
-        txt_ResultTotalIVAVenta.setValue(RestClient.getRestTemplate()
-                .getForObject("/facturas/total-iva-venta/criteria?" + uriCriteria, BigDecimal.class));        
+        if (UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)
+                || UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ENCARGADO)) {
+            txt_ResultGananciaTotal.setValue(RestClient.getRestTemplate()
+                    .getForObject("/facturas/ganancia-total/criteria?" + uriCriteria, BigDecimal.class));
+            txt_ResultTotalIVAVenta.setValue(RestClient.getRestTemplate()
+                    .getForObject("/facturas/total-iva-venta/criteria?" + uriCriteria, BigDecimal.class));
+        }
     }
 
     private void buscar(boolean calcularResultados) {
@@ -211,6 +215,7 @@ public class FacturasVentaGUI extends JInternalFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
         this.cambiarEstadoEnabledComponentes(true);
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
     }
 
     private void cambiarEstadoEnabledComponentes(boolean status) {
@@ -323,10 +328,16 @@ public class FacturasVentaGUI extends JInternalFrame {
             cmb_Cliente.setEnabled(true);
             cmb_Cliente.removeAllItems();
             try {
-                List<Cliente> clientes = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                        .getForObject("/clientes/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                                Cliente[].class)));
-                clientes.stream().forEach((c) -> {
+                String criteriaBusqueda = "/clientes/busqueda/criteria?idEmpresa="
+                        + String.valueOf(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())
+                        + "&pagina=0&tamanio=" + Integer.MAX_VALUE
+                        + "&conSaldo=false";
+                PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
+                        .exchange(criteriaBusqueda, HttpMethod.GET, null,
+                                new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {
+                        })
+                        .getBody();
+                response.getContent().stream().forEach((c) -> {
                     cmb_Cliente.addItem(c);
                 });
             } catch (RestClientResponseException ex) {
@@ -349,11 +360,14 @@ public class FacturasVentaGUI extends JInternalFrame {
             cmb_Vendedor.setEnabled(true);
             cmb_Vendedor.removeAllItems();
             try {
-                List<Usuario> usuarios = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                        .getForObject("/usuarios/roles?"
-                                + "rol=" + Rol.VENDEDOR,
-                                Usuario[].class)));
-                usuarios.stream().forEach((u) -> {
+                PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
+                        .exchange("/usuarios/busqueda/criteria?"
+                                + "roles=" + Rol.VENDEDOR
+                                + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
+                                new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
+                        })
+                        .getBody();
+                response.getContent().stream().forEach(u -> {
                     cmb_Vendedor.addItem(u);
                 });
             } catch (RestClientResponseException ex) {
@@ -376,11 +390,14 @@ public class FacturasVentaGUI extends JInternalFrame {
             cmb_Viajante.setEnabled(true);
             cmb_Viajante.removeAllItems();
             try {
-                List<Usuario> usuarios = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                        .getForObject("/usuarios/roles?"
-                                + "rol=" + Rol.VIAJANTE,
-                                Usuario[].class)));
-                usuarios.stream().forEach((u) -> {
+                PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
+                        .exchange("/usuarios/busqueda/criteria?"
+                                + "roles=" + Rol.VIAJANTE
+                                + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
+                                new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
+                        })
+                        .getBody();
+                response.getContent().stream().forEach(u -> {
                     cmb_Viajante.addItem(u);
                 });
             } catch (RestClientResponseException ex) {
@@ -447,9 +464,15 @@ public class FacturasVentaGUI extends JInternalFrame {
     }
 
     private boolean existeClienteDisponible() {
-        return !Arrays.asList(RestClient.getRestTemplate()
-                .getForObject("/clientes/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                        Cliente[].class)).isEmpty();
+        String criteriaBusqueda = "/clientes/busqueda/criteria?idEmpresa="
+                + String.valueOf(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())
+                + "&pagina=0&tamanio=" + 1 + "&conSaldo=false";
+        PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
+                .exchange(criteriaBusqueda, HttpMethod.GET, null,
+                        new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {
+                })
+                .getBody();
+        return !response.getContent().isEmpty();
     }
 
     @SuppressWarnings("unchecked")
@@ -573,29 +596,29 @@ public class FacturasVentaGUI extends JInternalFrame {
             panelNumerosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelNumerosLayout.createSequentialGroup()
                 .addGroup(panelNumerosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(lbl_TotalFacturado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_TotalIVAVenta, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_GananciaTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_TotalFacturado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbl_GananciaTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelNumerosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txt_ResultTotalIVAVenta, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
-                    .addComponent(txt_ResultGananciaTotal)
-                    .addComponent(txt_ResultTotalFacturado, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addComponent(txt_ResultTotalIVAVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_ResultGananciaTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_ResultTotalFacturado, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         panelNumerosLayout.setVerticalGroup(
             panelNumerosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelNumerosLayout.createSequentialGroup()
-                .addGroup(panelNumerosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_TotalFacturado)
-                    .addComponent(txt_ResultTotalFacturado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelNumerosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_GananciaTotal)
                     .addComponent(txt_ResultGananciaTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelNumerosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_TotalIVAVenta)
-                    .addComponent(txt_ResultTotalIVAVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(txt_ResultTotalIVAVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelNumerosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_TotalFacturado)
+                    .addComponent(txt_ResultTotalFacturado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         btn_Nueva.setForeground(java.awt.Color.blue);
@@ -952,31 +975,33 @@ public class FacturasVentaGUI extends JInternalFrame {
 }//GEN-LAST:event_btn_VerDetalleActionPerformed
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1) {
-            int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
-                    .getString("mensaje_eliminar_multiples_facturas"),
-                    "Eliminar", JOptionPane.YES_NO_OPTION);
-            if (respuesta == JOptionPane.YES_OPTION) {
-                int[] indexFilasSeleccionadas = Utilidades.getSelectedRowsModelIndices(tbl_Resultados);
-                long[] idsFacturas = new long[indexFilasSeleccionadas.length];
-                int i = 0;
-                for (int indice : indexFilasSeleccionadas) {
-                    idsFacturas[i] = facturasTotal.get(indice).getId_Factura();
-                    i++;
-                }
-                try {
-                    RestClient.getRestTemplate().delete("/facturas?idFactura="
-                            + Arrays.toString(idsFacturas).substring(1, Arrays.toString(idsFacturas).length() - 1));
-                    this.resetScroll();
-                    this.limpiarJTable();
-                    this.buscar(true);
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR))) {
+            if (tbl_Resultados.getSelectedRow() != -1) {
+                int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
+                        .getString("mensaje_eliminar_multiples_facturas"),
+                        "Eliminar", JOptionPane.YES_NO_OPTION);
+                if (respuesta == JOptionPane.YES_OPTION) {
+                    int[] indexFilasSeleccionadas = Utilidades.getSelectedRowsModelIndices(tbl_Resultados);
+                    long[] idsFacturas = new long[indexFilasSeleccionadas.length];
+                    int i = 0;
+                    for (int indice : indexFilasSeleccionadas) {
+                        idsFacturas[i] = facturasTotal.get(indice).getId_Factura();
+                        i++;
+                    }
+                    try {
+                        RestClient.getRestTemplate().delete("/facturas?idFactura="
+                                + Arrays.toString(idsFacturas).substring(1, Arrays.toString(idsFacturas).length() - 1));
+                        this.resetScroll();
+                        this.limpiarJTable();
+                        this.buscar(true);
+                    } catch (RestClientResponseException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    } catch (ResourceAccessException ex) {
+                        LOGGER.error(ex.getMessage());
+                        JOptionPane.showMessageDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         }
@@ -997,9 +1022,10 @@ public class FacturasVentaGUI extends JInternalFrame {
         try {
             this.setSize(sizeInternalFrame);
             this.setColumnas();
-            this.setMaximum(true);            
+            this.setMaximum(true);
             dc_FechaDesde.setDate(new Date());
             dc_FechaHasta.setDate(new Date());
+            this.cambiarEstadoDeComponentesSegunRolUsuario();
         } catch (PropertyVetoException ex) {
             String mensaje = "Se produjo un error al intentar maximizar la ventana.";
             LOGGER.error(mensaje + " - " + ex.getMessage());
@@ -1007,6 +1033,27 @@ public class FacturasVentaGUI extends JInternalFrame {
             this.dispose();
         }
     }//GEN-LAST:event_formInternalFrameOpened
+
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(false);
+            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+                txt_ResultGananciaTotal.setVisible(false);
+                lbl_GananciaTotal.setVisible(false);
+                lbl_TotalIVAVenta.setVisible(false);
+                txt_ResultTotalIVAVenta.setVisible(false);
+                if (!rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+                    btn_Nueva.setEnabled(false);
+                    btn_Autorizar.setEnabled(false);
+                    chk_Viajante.setEnabled(false);
+                    cmb_Viajante.setEnabled(false);
+                    chk_Vendedor.setEnabled(false);
+                    cmb_Vendedor.setEnabled(false);
+                }
+            }
+        }
+    }
 
     private void chk_ViajanteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ViajanteItemStateChanged
         this.cargarUsuariosViajante();
@@ -1024,30 +1071,32 @@ public class FacturasVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_TipoFacturaItemStateChanged
 
     private void btn_NuevaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevaActionPerformed
-        if (this.existeClienteDisponible()) {
-            JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), PuntoDeVentaGUI.class);
-            if (gui == null) {
-                PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
-                puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
-                        getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
-                getDesktopPane().add(puntoDeVentaGUI);
-                puntoDeVentaGUI.setMaximizable(true);
-                puntoDeVentaGUI.setClosable(true);
-                puntoDeVentaGUI.setVisible(true);
-            } else {
-                //selecciona y trae al frente el internalframe
-                try {
-                    gui.setSelected(true);
-                } catch (PropertyVetoException ex) {
-                    String msjError = "No se pudo seleccionar la ventana requerida.";
-                    LOGGER.error(msjError + " - " + ex.getMessage());
-                    JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR))) {
+            if (this.existeClienteDisponible()) {
+                JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), PuntoDeVentaGUI.class);
+                if (gui == null) {
+                    PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
+                    puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
+                            getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
+                    getDesktopPane().add(puntoDeVentaGUI);
+                    puntoDeVentaGUI.setMaximizable(true);
+                    puntoDeVentaGUI.setClosable(true);
+                    puntoDeVentaGUI.setVisible(true);
+                } else {
+                    //selecciona y trae al frente el internalframe
+                    try {
+                        gui.setSelected(true);
+                    } catch (PropertyVetoException ex) {
+                        String msjError = "No se pudo seleccionar la ventana requerida.";
+                        LOGGER.error(msjError + " - " + ex.getMessage());
+                        JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
+            } else {
+                JOptionPane.showInternalMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } else {
-            JOptionPane.showInternalMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_NuevaActionPerformed
 
@@ -1072,25 +1121,28 @@ public class FacturasVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_VendedorItemStateChanged
 
     private void btn_AutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AutorizarActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
-            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-            long idFacturaSeleccionada = facturasTotal.get(indexFilaSeleccionada).getId_Factura();
-            try {
-                RestClient.getRestTemplate().postForObject("/facturas/" + idFacturaSeleccionada + "/autorizacion",
-                        null, FacturaVenta.class);
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_autorizada"),
-                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
-                this.resetScroll();
-                this.limpiarJTable();
-                this.buscar(false);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO,
+                Rol.VENDEDOR))) {
+            if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
+                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+                long idFacturaSeleccionada = facturasTotal.get(indexFilaSeleccionada).getId_Factura();
+                try {
+                    RestClient.getRestTemplate().postForObject("/facturas/" + idFacturaSeleccionada + "/autorizacion",
+                            null, FacturaVenta.class);
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_autorizada"),
+                            "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                    this.resetScroll();
+                    this.limpiarJTable();
+                    this.buscar(false);
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }//GEN-LAST:event_btn_AutorizarActionPerformed

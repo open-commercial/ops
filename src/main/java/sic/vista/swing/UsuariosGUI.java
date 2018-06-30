@@ -1,17 +1,23 @@
 package sic.vista.swing;
 
 import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
 import sic.modelo.Usuario;
@@ -19,33 +25,57 @@ import sic.util.Utilidades;
 
 public class UsuariosGUI extends JInternalFrame {
 
-    private Usuario usuarioSeleccionado;
-    private boolean mismoUsuarioActivo = false;
-    private ModeloTabla modeloTablaResultados = new ModeloTabla();
-    private List<Usuario> usuarios;
+    private Usuario usuarioSeleccionado;    
+    private ModeloTabla modeloTablaResultados = new ModeloTabla();    
+    private List<Usuario> usuariosTotal = new ArrayList<>();
+    private List<Usuario> usuariosParcial = new ArrayList<>();
+    private static int totalElementosBusqueda;
+    private static int NUMERO_PAGINA = 0;
+    private static final int TAMANIO_PAGINA = 50;
     private final Dimension sizeInternalFrame =  new Dimension(880, 600);
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public UsuariosGUI() {
-        this.initComponents();       
+        this.initComponents();
+        sp_resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
+            JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
+            int va = scrollBar.getVisibleAmount() + 50;
+            if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
+                if (usuariosTotal.size() >= TAMANIO_PAGINA) {
+                    NUMERO_PAGINA += 1;
+                    buscar();
+                }
+            }
+        });
     }
+    
+    private void resetScroll() {
+        NUMERO_PAGINA = 0;
+        usuariosTotal.clear();
+        usuariosParcial.clear();
+        Point p = new Point(0, 0);
+        sp_resultados.getViewport().setViewPosition(p);
+    }    
 
-    private void comprobarPrivilegiosUsuarioActivo() {
-        //Comprueba si el usuario es Administrador
-        if (UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR) == true) {
-            this.cargarUsuarios();            
-            this.cargarRenglonesAlTable();
-        } else {
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_privilegios_usuario"),
-                    "Error", JOptionPane.ERROR_MESSAGE);            
-            this.dispose();
+    private void buscar() {
+        this.cambiarEstadoDeComponentes(false);
+        String criteriaBusqueda = "/usuarios/busqueda/criteria?";
+        if (chkCriteria.isSelected()) {
+            criteriaBusqueda += "username=" + txtCriteria.getText().trim() + "&";
+            criteriaBusqueda += "nombre=" + txtCriteria.getText().trim() + "&";
+            criteriaBusqueda += "apellido=" + txtCriteria.getText().trim() + "&";
+            criteriaBusqueda += "email=" + txtCriteria.getText().trim() + "&";
         }
-    }
-
-    private void cargarUsuarios() {
+        criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
         try {
-            usuarios = Arrays.asList(RestClient.getRestTemplate().getForObject("/usuarios", Usuario[].class));
+            PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
+                    .exchange(criteriaBusqueda, HttpMethod.GET, null,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {})
+                    .getBody();
+            totalElementosBusqueda = response.getTotalElements();
+            usuariosParcial = response.getContent();
+            usuariosTotal.addAll(usuariosParcial);
+            this.cargarRenglonesAlTable();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -54,20 +84,28 @@ public class UsuariosGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
+        this.cambiarEstadoDeComponentes(true);
+    }
+    
+    private void cambiarEstadoDeComponentes(boolean status) {
+        btn_Eliminar.setEnabled(status);
+        btn_Modificar.setEnabled(status);
+        btn_Agregar.setEnabled(status);
     }
     
     private void setColumnas() {               
         //nombres de columnas
-        String[] encabezados = new String[9];
+        String[] encabezados = new String[10];
         encabezados[0] = "Habilitado";
         encabezados[1] = "Usuario";
         encabezados[2] = "Nombre";
         encabezados[3] = "Apellido";        
         encabezados[4] = "Email";
         encabezados[5] = "Administrador";
-        encabezados[6] = "Viajante";
+        encabezados[6] = "Encargado";
         encabezados[7] = "Vendedor";
-        encabezados[8] = "Cliente";
+        encabezados[8] = "Viajante";
+        encabezados[9] = "Comprador";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultado.setModel(modeloTablaResultados);
         //tipo de dato columnas
@@ -81,6 +119,7 @@ public class UsuariosGUI extends JInternalFrame {
         tipos[6] = Boolean.class;
         tipos[7] = Boolean.class;
         tipos[8] = Boolean.class;
+        tipos[9] = Boolean.class;
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultado.getTableHeader().setReorderingAllowed(false);
         tbl_Resultado.getTableHeader().setResizingAllowed(true);        
@@ -91,20 +130,21 @@ public class UsuariosGUI extends JInternalFrame {
         tbl_Resultado.getColumnModel().getColumn(2).setMinWidth(130);
         tbl_Resultado.getColumnModel().getColumn(3).setMinWidth(130);
         tbl_Resultado.getColumnModel().getColumn(4).setPreferredWidth(350);
-        tbl_Resultado.getColumnModel().getColumn(5).setPreferredWidth(130);
-        tbl_Resultado.getColumnModel().getColumn(5).setMaxWidth(130);
+        tbl_Resultado.getColumnModel().getColumn(5).setPreferredWidth(150);
+        tbl_Resultado.getColumnModel().getColumn(5).setMaxWidth(150);
         tbl_Resultado.getColumnModel().getColumn(6).setPreferredWidth(130);
-        tbl_Resultado.getColumnModel().getColumn(6).setMaxWidth(130);
+        tbl_Resultado.getColumnModel().getColumn(6).setMaxWidth(130);        
         tbl_Resultado.getColumnModel().getColumn(7).setPreferredWidth(130);
         tbl_Resultado.getColumnModel().getColumn(7).setMaxWidth(130);
         tbl_Resultado.getColumnModel().getColumn(8).setPreferredWidth(130);
         tbl_Resultado.getColumnModel().getColumn(8).setMaxWidth(130);
+        tbl_Resultado.getColumnModel().getColumn(9).setPreferredWidth(130);
+        tbl_Resultado.getColumnModel().getColumn(9).setMaxWidth(130);
     }
     
     private void cargarRenglonesAlTable() {
-        this.limpiarJTable();
-        usuarios.stream().map(u -> {
-            Object[] fila = new Object[9];
+        usuariosParcial.stream().map(u -> {
+            Object[] fila = new Object[10];
             fila[0] = u.isHabilitado();
             fila[1] = u.getUsername();
             fila[2] = u.getNombre();
@@ -114,14 +154,17 @@ public class UsuariosGUI extends JInternalFrame {
                 if (Rol.ADMINISTRADOR.equals(rol)) {
                     fila[5] = true;
                 }
-                if (Rol.VIAJANTE.equals(rol)) {
+                if (Rol.ENCARGADO.equals(rol)) {
                     fila[6] = true;
                 }
                 if (Rol.VENDEDOR.equals(rol)) {
                     fila[7] = true;
                 }
-                if (Rol.CLIENTE.equals(rol)) {
+                if (Rol.VIAJANTE.equals(rol)) {
                     fila[8] = true;
+                }
+                if (Rol.COMPRADOR.equals(rol)) {
+                    fila[9] = true;
                 }
             });
             return fila;
@@ -129,6 +172,7 @@ public class UsuariosGUI extends JInternalFrame {
             modeloTablaResultados.addRow(fila);
         });
         tbl_Resultado.setModel(modeloTablaResultados);
+        lblCantResultados.setText(totalElementosBusqueda + " usuarios encontrados");
     }
     
     private void limpiarJTable() {
@@ -140,7 +184,7 @@ public class UsuariosGUI extends JInternalFrame {
     private boolean existeUsuarioSeleccionado() {
         if (tbl_Resultado.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultado);
-            usuarioSeleccionado = usuarios.get(indexFilaSeleccionada);
+            usuarioSeleccionado = usuariosTotal.get(indexFilaSeleccionada);
             return true;
         }
         return false;
@@ -151,11 +195,16 @@ public class UsuariosGUI extends JInternalFrame {
     private void initComponents() {
 
         panelPrincipal = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        sp_resultados = new javax.swing.JScrollPane();
         tbl_Resultado = new javax.swing.JTable();
         btn_Agregar = new javax.swing.JButton();
         btn_Modificar = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
+        panelFiltros = new javax.swing.JPanel();
+        chkCriteria = new javax.swing.JCheckBox();
+        txtCriteria = new javax.swing.JTextField();
+        btn_Buscar = new javax.swing.JButton();
+        lblCantResultados = new javax.swing.JLabel();
 
         setClosable(true);
         setMaximizable(true);
@@ -180,7 +229,7 @@ public class UsuariosGUI extends JInternalFrame {
             }
         });
 
-        panelPrincipal.setBorder(javax.swing.BorderFactory.createTitledBorder("Usuarios"));
+        panelPrincipal.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados"));
 
         tbl_Resultado.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -191,18 +240,7 @@ public class UsuariosGUI extends JInternalFrame {
             }
         ));
         tbl_Resultado.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.setViewportView(tbl_Resultado);
-
-        javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
-        panelPrincipal.setLayout(panelPrincipalLayout);
-        panelPrincipalLayout.setHorizontalGroup(
-            panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
-        );
-        panelPrincipalLayout.setVerticalGroup(
-            panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
-        );
+        sp_resultados.setViewportView(tbl_Resultado);
 
         btn_Agregar.setForeground(java.awt.Color.blue);
         btn_Agregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddGroup_16x16.png"))); // NOI18N
@@ -231,77 +269,144 @@ public class UsuariosGUI extends JInternalFrame {
             }
         });
 
+        javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
+        panelPrincipal.setLayout(panelPrincipalLayout);
+        panelPrincipalLayout.setHorizontalGroup(
+            panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(sp_resultados)
+            .addGroup(panelPrincipalLayout.createSequentialGroup()
+                .addComponent(btn_Agregar, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(btn_Modificar, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(btn_Eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Agregar, btn_Eliminar, btn_Modificar});
+
+        panelPrincipalLayout.setVerticalGroup(
+            panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPrincipalLayout.createSequentialGroup()
+                .addComponent(sp_resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_Agregar)
+                    .addComponent(btn_Modificar)
+                    .addComponent(btn_Eliminar)))
+        );
+
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Agregar, btn_Eliminar, btn_Modificar});
+
+        panelFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
+
+        chkCriteria.setText("Usuario, Nombre, Apellido, Email:");
+        chkCriteria.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chkCriteriaItemStateChanged(evt);
+            }
+        });
+
+        txtCriteria.setEnabled(false);
+        txtCriteria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCriteriaActionPerformed(evt);
+            }
+        });
+
+        btn_Buscar.setForeground(java.awt.Color.blue);
+        btn_Buscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
+        btn_Buscar.setText("Buscar");
+        btn_Buscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_BuscarActionPerformed(evt);
+            }
+        });
+
+        lblCantResultados.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+
+        javax.swing.GroupLayout panelFiltrosLayout = new javax.swing.GroupLayout(panelFiltros);
+        panelFiltros.setLayout(panelFiltrosLayout);
+        panelFiltrosLayout.setHorizontalGroup(
+            panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelFiltrosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelFiltrosLayout.createSequentialGroup()
+                        .addComponent(btn_Buscar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblCantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelFiltrosLayout.createSequentialGroup()
+                        .addComponent(chkCriteria)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtCriteria, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        panelFiltrosLayout.setVerticalGroup(
+            panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelFiltrosLayout.createSequentialGroup()
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(chkCriteria)
+                    .addComponent(txtCriteria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblCantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_Buscar))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btn_Agregar, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_Modificar, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_Eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 114, Short.MAX_VALUE))
         );
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Agregar, btn_Eliminar, btn_Modificar});
-
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_Agregar)
-                    .addComponent(btn_Modificar)
-                    .addComponent(btn_Eliminar))
-                .addContainerGap())
+                .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Agregar, btn_Eliminar, btn_Modificar});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
         if (this.existeUsuarioSeleccionado()) {
-            try {
-                if (usuarioSeleccionado != null) {
-                    //Si el usuario activo corresponde con el usuario seleccionado para modificar
-                    int respuesta;
-                    if (UsuarioActivo.getInstance().getUsuario().getId_Usuario() == usuarioSeleccionado.getId_Usuario()) {
-                        respuesta = JOptionPane.showConfirmDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_eliminar_usuario_propio"),
-                                "Eliminar", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-                    } else {
-                        respuesta = JOptionPane.showConfirmDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_eliminar_usuario")
-                                + " " + usuarioSeleccionado.getNombre() + "?",
-                                "Eliminar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-                    }
-
-                    if (respuesta == JOptionPane.YES_OPTION) {
+            if (usuarioSeleccionado != null) {
+                //Si el usuario activo corresponde con el usuario seleccionado para modificar
+                int respuesta;
+                if (UsuarioActivo.getInstance().getUsuario().getId_Usuario() == usuarioSeleccionado.getId_Usuario()) {
+                    respuesta = JOptionPane.showConfirmDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_eliminar_usuario_propio"),
+                            "Eliminar", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                } else {
+                    respuesta = JOptionPane.showConfirmDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_eliminar_usuario")
+                            + " " + usuarioSeleccionado.getNombre() + "?",
+                            "Eliminar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                }
+                if (respuesta == JOptionPane.YES_OPTION) {
+                    try {
                         RestClient.getRestTemplate().delete("/usuarios/" + usuarioSeleccionado.getId_Usuario());
                         LOGGER.warn("El usuario " + usuarioSeleccionado.getNombre() + " se elimino correctamente.");
                         usuarioSeleccionado = null;
-                        this.cargarUsuarios();
-                        this.cargarRenglonesAlTable();
+                        this.resetScroll();
+                        this.limpiarJTable();
+                        this.buscar();
+                    } catch (RestClientResponseException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    } catch (ResourceAccessException ex) {
+                        LOGGER.error(ex.getMessage());
+                        JOptionPane.showMessageDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
-
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btn_EliminarActionPerformed
@@ -311,31 +416,34 @@ public class UsuariosGUI extends JInternalFrame {
         gui_DetalleUsuario.setModal(true);
         gui_DetalleUsuario.setLocationRelativeTo(this);
         gui_DetalleUsuario.setVisible(true);
-        this.cargarUsuarios();
-        this.cargarRenglonesAlTable();
+        this.resetScroll();
+        this.limpiarJTable();
+        this.buscar();
     }//GEN-LAST:event_btn_AgregarActionPerformed
 
     private void btn_ModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ModificarActionPerformed
         if (this.existeUsuarioSeleccionado()) {
             if (usuarioSeleccionado != null) {
                 //Si el usuario activo corresponde con el usuario seleccionado para modificar
-                int respuesta = JOptionPane.YES_OPTION;            
-                if (UsuarioActivo.getInstance().getUsuario().getNombre().equals(usuarioSeleccionado.getNombre())) {
+                int respuesta = JOptionPane.YES_OPTION;
+                boolean mismoUsuarioActivo = false;
+                if (UsuarioActivo.getInstance().getUsuario().getId_Usuario() == usuarioSeleccionado.getId_Usuario()) {
                     mismoUsuarioActivo = true;
                     respuesta = JOptionPane.showConfirmDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_modificar_el_usuario_propio"),
-                            "Atención", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);                
+                            "Atención", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
                 }
                 if (respuesta == JOptionPane.YES_OPTION) {
                     DetalleUsuarioGUI gui_DetalleUsuario = new DetalleUsuarioGUI(usuarioSeleccionado);
                     gui_DetalleUsuario.setModal(true);
                     gui_DetalleUsuario.setLocationRelativeTo(this);
-                    gui_DetalleUsuario.setVisible(true);                
+                    gui_DetalleUsuario.setVisible(true);
                     if (mismoUsuarioActivo == true) {
                         UsuarioActivo.getInstance().setUsuario(usuarioSeleccionado);
                     }
-                    this.cargarUsuarios();
-                    this.cargarRenglonesAlTable();
+                    this.resetScroll();
+                    this.limpiarJTable();
+                    this.buscar();
                 }
             }
         }
@@ -343,6 +451,7 @@ public class UsuariosGUI extends JInternalFrame {
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         this.setSize(sizeInternalFrame);
+        this.setColumnas();
         try {
             this.setMaximum(true);
         } catch (PropertyVetoException ex) {
@@ -350,16 +459,39 @@ public class UsuariosGUI extends JInternalFrame {
             LOGGER.error(mensaje + " - " + ex.getMessage());
             JOptionPane.showInternalMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();
-        }
-        this.comprobarPrivilegiosUsuarioActivo(); 
+        }        
     }//GEN-LAST:event_formInternalFrameOpened
+
+    private void chkCriteriaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkCriteriaItemStateChanged
+        if (chkCriteria.isSelected() == true) {
+            txtCriteria.setEnabled(true);
+            txtCriteria.requestFocus();
+        } else {
+            txtCriteria.setEnabled(false);
+        }
+    }//GEN-LAST:event_chkCriteriaItemStateChanged
+
+    private void btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarActionPerformed
+        this.resetScroll();
+        this.limpiarJTable();
+        this.buscar();
+    }//GEN-LAST:event_btn_BuscarActionPerformed
+
+    private void txtCriteriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCriteriaActionPerformed
+        btn_BuscarActionPerformed(null);
+    }//GEN-LAST:event_txtCriteriaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Agregar;
+    private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_Modificar;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JCheckBox chkCriteria;
+    private javax.swing.JLabel lblCantResultados;
+    private javax.swing.JPanel panelFiltros;
     private javax.swing.JPanel panelPrincipal;
+    private javax.swing.JScrollPane sp_resultados;
     private javax.swing.JTable tbl_Resultado;
+    private javax.swing.JTextField txtCriteria;
     // End of variables declaration//GEN-END:variables
 }

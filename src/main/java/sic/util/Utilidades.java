@@ -1,19 +1,19 @@
 package sic.util;
 
-import java.awt.Image;
+import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.security.CodeSource;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import javax.swing.ImageIcon;
+import java.util.List;
+import java.util.ResourceBundle;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import sic.modelo.Rol;
+import sic.modelo.UsuarioActivo;
 
 public class Utilidades {
 
@@ -33,19 +33,7 @@ public class Utilidades {
         }
         return null;
     }
-
-    /**
-     * Verifica si existen frames dentro de @desktop
-     * 
-     * @param desktop Contenenedor de frames donde debe buscar
-     * @return True si existen frames dentro del
-     * @desktop, false en caso contrario
-     */
-    public static boolean contieneVentanas(JDesktopPane desktop) {
-        JInternalFrame[] frames = desktop.getAllFrames();
-        return frames.length != 0;
-    }
-
+    
     public static void cerrarTodasVentanas(JDesktopPane desktop) {
         JInternalFrame[] frames = desktop.getAllFrames();
         for (JInternalFrame frame : frames) {
@@ -68,49 +56,6 @@ public class Utilidades {
     }
 
     /**
-     * Busca un archivo especificado en el directorio donde se encuentra el JAR
-     *
-     * @param archivo Nombre del archivo que se desea buscar
-     * @return archivo encontrado
-     * @throws java.io.FileNotFoundException
-     * @throws java.net.URISyntaxException
-     */
-    public static File getArchivoDelDirectorioDelJAR(String archivo) throws FileNotFoundException, URISyntaxException {
-        File fileBuscado = null;
-        CodeSource codeSource = Utilidades.class.getProtectionDomain().getCodeSource();
-        File jarFile = new File(codeSource.getLocation().toURI().getPath());
-        File jarDir = jarFile.getParentFile();
-
-        if (jarDir != null && jarDir.isDirectory()) {
-            File propFile = new File(jarDir, archivo);
-            fileBuscado = propFile.getAbsoluteFile();
-        }
-
-        return fileBuscado;
-    }
-
-    /**
-     * Encripta el password con MD5
-     *
-     * @param password String a ser encriptado.
-     * @return String encriptado con MD5.
-     */
-    public static String encriptarConMD5(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] array = md.digest(password.getBytes());
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < array.length; ++i) {
-                sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1, 3));
-            }
-            return sb.toString();
-
-        } catch (NoSuchAlgorithmException ex) {
-        }
-        return null;
-    }
-
-    /**
      * Devuelve los indices de las filas seleccionadas luego de que el JTable
      * haya sido ordenado. Al utilizar getSelectedRows() despues de un
      * ordenamiento, devuelve mal los indices.
@@ -119,17 +64,12 @@ public class Utilidades {
      * @return indices seleccionados
      */
     public static int[] getSelectedRowsModelIndices(JTable table) {
-        if (table == null) {
-            throw new NullPointerException("table == null");
-        }
-
+        if (table == null) throw new NullPointerException("table == null");
         int[] selectedRowIndices = table.getSelectedRows();
         int countSelected = selectedRowIndices.length;
-
         for (int i = 0; i < countSelected; i++) {
             selectedRowIndices[i] = table.convertRowIndexToModel(selectedRowIndices[i]);
         }
-
         return selectedRowIndices;
     }
 
@@ -142,10 +82,7 @@ public class Utilidades {
      * @return indice seleccionado
      */
     public static int getSelectedRowModelIndice(JTable table) {
-        if (table == null) {
-            throw new NullPointerException("table == null");
-        }
-
+        if (table == null) throw new NullPointerException("table == null");
         int selectedRowIndice = table.getSelectedRow();
         selectedRowIndice = table.convertRowIndexToModel(selectedRowIndice);
         return selectedRowIndice;
@@ -164,21 +101,6 @@ public class Utilidades {
         fileInputStream.read(bArchivo);
         fileInputStream.close();
         return bArchivo;
-    }
-
-    /**
-     * Convierte un array de bytes en una Image.
-     *
-     * @param bytesArray Array de byte a ser convertido.
-     * @return Array de bytes convertido en Image.
-     */
-    public static Image convertirByteArrayIntoImage(byte[] bytesArray) {
-        if (bytesArray == null) {
-            return null;
-        } else {
-            ImageIcon logoImageIcon = new ImageIcon(bytesArray);
-            return logoImageIcon.getImage();
-        }
     }
 
     /**
@@ -203,4 +125,19 @@ public class Utilidades {
         }
     }
     
+    public static boolean isUsuarioAutorizado(Component parentComponent, List<Rol> rolesRequeridos) {
+        boolean usuarioAutorizado = false;
+        for (Rol rolRequerido : rolesRequeridos) {
+            if (UsuarioActivo.getInstance().getUsuario().getRoles().contains(rolRequerido)) {
+                usuarioAutorizado = true;
+            }
+        }
+        if (!usuarioAutorizado) {
+            JOptionPane.showMessageDialog(parentComponent,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_privilegios_usuario"),
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+        }
+        return usuarioAutorizado;
+    }
+
 }

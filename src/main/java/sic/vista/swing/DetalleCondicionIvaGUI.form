@@ -31,9 +31,11 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="panel" alignment="1" max="32767" attributes="2"/>
-                  <Component id="lbl_MisCondicionesDeIVA" alignment="0" max="32767" attributes="0"/>
-                  <Component id="sp_ListaMedidas" alignment="0" pref="418" max="32767" attributes="2"/>
+                  <Component id="sp_ListaMedidas" max="32767" attributes="2"/>
+                  <Group type="102" attributes="0">
+                      <Component id="panel" min="-2" max="-2" attributes="2"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -43,9 +45,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="lbl_MisCondicionesDeIVA" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="sp_ListaMedidas" min="-2" pref="119" max="-2" attributes="2"/>
+              <Component id="sp_ListaMedidas" min="-2" pref="146" max="-2" attributes="2"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="panel" min="-2" max="-2" attributes="1"/>
               <EmptySpace max="32767" attributes="0"/>
@@ -77,8 +77,8 @@
     <Container class="javax.swing.JPanel" name="panel">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder/>
+          <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+            <EtchetBorder/>
           </Border>
         </Property>
       </Properties>
@@ -88,7 +88,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="lbl_Discrimina_IVA" pref="120" max="32767" attributes="0"/>
@@ -96,8 +96,8 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txt_Nombre" max="32767" attributes="3"/>
                               <Component id="chk_DiscriminaIVA" max="32767" attributes="0"/>
+                              <Component id="txt_Nombre" max="32767" attributes="3"/>
                           </Group>
                       </Group>
                       <Group type="102" attributes="0">
@@ -106,10 +106,9 @@
                           <Component id="btn_Actualizar" linkSize="3" min="-2" pref="130" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Component id="btn_Eliminar" linkSize="3" min="-2" pref="130" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="20" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -201,10 +200,5 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JLabel" name="lbl_MisCondicionesDeIVA">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Condiciones de IVA:"/>
-      </Properties>
-    </Component>
   </SubComponents>
 </Form>

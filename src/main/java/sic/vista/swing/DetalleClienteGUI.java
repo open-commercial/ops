@@ -10,6 +10,8 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
@@ -17,16 +19,19 @@ import sic.modelo.Cliente;
 import sic.modelo.CondicionIVA;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Localidad;
+import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Pais;
 import sic.modelo.Provincia;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeOperacion;
 import sic.modelo.Usuario;
+import sic.modelo.UsuarioActivo;
 
 public class DetalleClienteGUI extends JDialog {
 
     private Cliente cliente;
     private final TipoDeOperacion operacion;    
+    private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleClienteGUI() {
@@ -56,6 +61,7 @@ public class DetalleClienteGUI extends JDialog {
         cmb_Pais.setSelectedItem(cliente.getLocalidad().getProvincia().getPais());
         cmb_Provincia.setSelectedItem(cliente.getLocalidad().getProvincia());
         cmb_Localidad.setSelectedItem(cliente.getLocalidad());
+        cmb_UsuariosCompradores.setSelectedItem(cliente.getCredencial());
         cmb_Viajante.setSelectedItem(cliente.getViajante());
         txt_TelPrimario.setText(cliente.getTelPrimario());
         txt_TelSecundario.setText(cliente.getTelSecundario());
@@ -75,6 +81,7 @@ public class DetalleClienteGUI extends JDialog {
         dc_FechaAlta.setDate(new Date());        
         this.cargarComboBoxCondicionesIVA();
         this.cargarComboBoxPaises();
+        this.cargarComboBoxUsuarios();
         this.cargarComboBoxViajantes();
     }
 
@@ -118,9 +125,14 @@ public class DetalleClienteGUI extends JDialog {
         cmb_Viajante.removeAllItems();
         cmb_Viajante.addItem(null);
         try {
-            List<Usuario> usuarios = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/usuarios/roles?rol=" + Rol.VIAJANTE, Usuario[].class)));
-            usuarios.stream().forEach(u -> {
+            PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
+                    .exchange("/usuarios/busqueda/criteria?"
+                            + "roles=" + Rol.VIAJANTE
+                            + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
+                    })
+                    .getBody();
+            response.getContent().stream().forEach(u -> {
                 cmb_Viajante.addItem(u);
             });
         } catch (RestClientResponseException ex) {
@@ -130,6 +142,46 @@ public class DetalleClienteGUI extends JDialog {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
+                && !rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+            cmb_Viajante.setSelectedItem(UsuarioActivo.getInstance().getUsuario());
+            cmb_Viajante.setEnabled(false);
+        }
+    }
+    
+    private void cargarComboBoxUsuarios() {
+        cmb_UsuariosCompradores.removeAllItems();
+        cmb_UsuariosCompradores.addItem(null);
+        if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
+                && !rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR) 
+                && operacion == TipoDeOperacion.ACTUALIZACION) {
+            cmb_UsuariosCompradores.removeAllItems();
+            cmb_UsuariosCompradores.addItem(cliente.getCredencial());
+        } else {
+            try {
+                PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
+                        .exchange("/usuarios/busqueda/criteria?"
+                                + "roles=" + Rol.COMPRADOR
+                                + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
+                                new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
+                        })
+                        .getBody();
+                response.getContent().stream().forEach(u -> {
+                    cmb_UsuariosCompradores.addItem(u);
+                });
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -204,6 +256,9 @@ public class DetalleClienteGUI extends JDialog {
         lbl_FechaAlta = new javax.swing.JLabel();
         lbl_Viajante = new javax.swing.JLabel();
         cmb_Viajante = new javax.swing.JComboBox();
+        lbl_Credencial = new javax.swing.JLabel();
+        cmb_UsuariosCompradores = new javax.swing.JComboBox<>();
+        btn_NuevaCredencial = new javax.swing.JButton();
         panel1 = new javax.swing.JPanel();
         lbl_CondicionIVA = new javax.swing.JLabel();
         cmb_CondicionIVA = new javax.swing.JComboBox();
@@ -361,6 +416,18 @@ public class DetalleClienteGUI extends JDialog {
         lbl_Viajante.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Viajante.setText("Viajante:");
 
+        lbl_Credencial.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbl_Credencial.setText("Credencial:");
+
+        btn_NuevaCredencial.setForeground(java.awt.Color.blue);
+        btn_NuevaCredencial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Client_16x16.png"))); // NOI18N
+        btn_NuevaCredencial.setText("Nueva");
+        btn_NuevaCredencial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_NuevaCredencialActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panel3Layout = new javax.swing.GroupLayout(panel3);
         panel3.setLayout(panel3Layout);
         panel3Layout.setHorizontalGroup(
@@ -373,24 +440,34 @@ public class DetalleClienteGUI extends JDialog {
                     .addComponent(lbl_TelPrimario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_TelSecundario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_Contacto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_FechaAlta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE))
+                    .addComponent(lbl_FechaAlta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                    .addComponent(lbl_Credencial, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txt_Email, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txt_Contacto, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txt_TelSecundario, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(dc_FechaAlta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(dc_FechaAlta, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)
                     .addComponent(txt_TelPrimario, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(cmb_Viajante, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(cmb_Viajante, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panel3Layout.createSequentialGroup()
+                        .addComponent(cmb_UsuariosCompradores, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_NuevaCredencial)))
                 .addContainerGap())
         );
         panel3Layout.setVerticalGroup(
             panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel3Layout.createSequentialGroup()
+            .addGroup(panel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lbl_Credencial)
+                    .addComponent(cmb_UsuariosCompradores, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_NuevaCredencial))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_Viajante)
-                    .addComponent(cmb_Viajante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmb_Viajante, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txt_TelPrimario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -413,6 +490,8 @@ public class DetalleClienteGUI extends JDialog {
                     .addComponent(lbl_FechaAlta))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        panel3Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lbl_Credencial, lbl_TelPrimario, lbl_Viajante});
 
         panel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
@@ -455,7 +534,7 @@ public class DetalleClienteGUI extends JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panel1Layout.createSequentialGroup()
-                        .addComponent(cmb_CondicionIVA, 0, 349, Short.MAX_VALUE)
+                        .addComponent(cmb_CondicionIVA, 0, 348, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
                         .addComponent(btn_NuevaCondicionIVA))
                     .addComponent(txt_NombreFantasia)
@@ -521,9 +600,9 @@ public class DetalleClienteGUI extends JDialog {
                 .addComponent(panel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_Guardar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -578,6 +657,7 @@ public class DetalleClienteGUI extends JDialog {
 
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
         try {
+            Usuario usuarioSeleccionado;
             if (operacion == TipoDeOperacion.ALTA) {
                 cliente = new Cliente();
                 cliente.setIdFiscal(txt_Id_Fiscal.getText().trim());
@@ -595,7 +675,9 @@ public class DetalleClienteGUI extends JDialog {
                 cliente.setEmail(txt_Email.getText().trim());
                 cliente.setFechaAlta(dc_FechaAlta.getDate());
                 cliente.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
-                cliente = RestClient.getRestTemplate().postForObject("/clientes", cliente, Cliente.class);
+                usuarioSeleccionado = (Usuario) cmb_UsuariosCompradores.getSelectedItem();
+                cliente = RestClient.getRestTemplate().postForObject("/clientes?idUsuarioCredencial=" 
+                        + (usuarioSeleccionado != null? usuarioSeleccionado.getId_Usuario() : ""), cliente, Cliente.class);
                 int respuesta = JOptionPane.showConfirmDialog(this,
                         "El Cliente se guardó correctamente!\n¿Desea dar de alta otro Cliente?",
                         "Aviso", JOptionPane.YES_NO_OPTION);
@@ -623,7 +705,9 @@ public class DetalleClienteGUI extends JDialog {
                 cliente.setEmail(txt_Email.getText().trim());
                 cliente.setFechaAlta(dc_FechaAlta.getDate());
                 cliente.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
-                RestClient.getRestTemplate().put("/clientes", cliente);
+                usuarioSeleccionado = (Usuario) cmb_UsuariosCompradores.getSelectedItem();
+                RestClient.getRestTemplate().put("/clientes?idUsuarioCredencial=" 
+                        + (usuarioSeleccionado != null? usuarioSeleccionado.getId_Usuario() : ""), cliente);
                 JOptionPane.showMessageDialog(this, "El Cliente se modificó correctamente!",
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
@@ -642,7 +726,9 @@ public class DetalleClienteGUI extends JDialog {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cargarComboBoxCondicionesIVA();
         this.cargarComboBoxPaises();
+        this.cargarComboBoxUsuarios();
         this.cargarComboBoxViajantes();
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
         if (operacion == TipoDeOperacion.ACTUALIZACION) {
             this.setTitle("Modificar Cliente");
             this.cargarClienteParaModificar();
@@ -652,9 +738,32 @@ public class DetalleClienteGUI extends JDialog {
         }
     }//GEN-LAST:event_formWindowOpened
 
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_NuevaCondicionIVA.setEnabled(false);
+            btn_NuevaCredencial.setEnabled(false);
+            lbl_Credencial.setEnabled(false);
+            cmb_UsuariosCompradores.setEnabled(false);
+            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+                btn_NuevaLocalidad.setEnabled(false);
+                btn_NuevaProvincia.setEnabled(false);
+                btn_NuevoPais.setEnabled(false);
+            }
+        }
+    }
+        
+    private void btn_NuevaCredencialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevaCredencialActionPerformed
+        DetalleUsuarioGUI gui_DetalleUsuario = new DetalleUsuarioGUI();
+        gui_DetalleUsuario.setModal(true);
+        gui_DetalleUsuario.setLocationRelativeTo(this);
+        gui_DetalleUsuario.setVisible(true);
+        this.cargarComboBoxUsuarios();
+    }//GEN-LAST:event_btn_NuevaCredencialActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Guardar;
     private javax.swing.JButton btn_NuevaCondicionIVA;
+    private javax.swing.JButton btn_NuevaCredencial;
     private javax.swing.JButton btn_NuevaLocalidad;
     private javax.swing.JButton btn_NuevaProvincia;
     private javax.swing.JButton btn_NuevoPais;
@@ -662,10 +771,12 @@ public class DetalleClienteGUI extends JDialog {
     private javax.swing.JComboBox cmb_Localidad;
     private javax.swing.JComboBox cmb_Pais;
     private javax.swing.JComboBox cmb_Provincia;
+    private javax.swing.JComboBox<Usuario> cmb_UsuariosCompradores;
     private javax.swing.JComboBox cmb_Viajante;
     private com.toedter.calendar.JDateChooser dc_FechaAlta;
     private javax.swing.JLabel lbl_CondicionIVA;
     private javax.swing.JLabel lbl_Contacto;
+    private javax.swing.JLabel lbl_Credencial;
     private javax.swing.JLabel lbl_Direccion;
     private javax.swing.JLabel lbl_Email;
     private javax.swing.JLabel lbl_FechaAlta;

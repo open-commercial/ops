@@ -13,13 +13,16 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.EmpresaActiva;
+import sic.modelo.Rol;
 import sic.modelo.Rubro;
+import sic.modelo.UsuarioActivo;
 import sic.util.Utilidades;
 
 public class DetalleRubroGUI extends JDialog {
 
     private final DefaultListModel modeloList = new DefaultListModel();
     private Rubro rubroSeleccionado;  
+    private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleRubroGUI() {
@@ -258,6 +261,9 @@ public class DetalleRubroGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cargarListRubros();
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(false);
+        }
     }//GEN-LAST:event_formWindowOpened
 
     private void cargarListRubros() {

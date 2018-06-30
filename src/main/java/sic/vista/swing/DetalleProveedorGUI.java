@@ -18,7 +18,9 @@ import sic.modelo.Localidad;
 import sic.modelo.Pais;
 import sic.modelo.Proveedor;
 import sic.modelo.Provincia;
+import sic.modelo.Rol;
 import sic.modelo.TipoDeOperacion;
+import sic.modelo.UsuarioActivo;
 
 public class DetalleProveedorGUI extends JDialog {
 
@@ -590,13 +592,26 @@ public class DetalleProveedorGUI extends JDialog {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_GuardarActionPerformed
-
+            
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_NuevaCondicionIVA.setEnabled(false);
+            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+                btn_NuevaLocalidad.setEnabled(false);
+                btn_NuevaProvincia.setEnabled(false);
+                btn_NuevoPais.setEnabled(false);
+            }
+        }
+    }
+    
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cargarComboBoxCondicionesIVA();
         this.cargarComboBoxPaises();
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
         if (operacion == TipoDeOperacion.ACTUALIZACION) {
             this.cargarProveedorParaModificar();
-        }
+        }        
     }//GEN-LAST:event_formWindowOpened
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Guardar;

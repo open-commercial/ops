@@ -152,15 +152,15 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Component id="lbl_TotalFacturado" max="32767" attributes="1"/>
                           <Component id="lbl_TotalIVAVenta" alignment="0" max="32767" attributes="1"/>
                           <Component id="lbl_GananciaTotal" alignment="1" max="32767" attributes="1"/>
-                          <Component id="lbl_TotalFacturado" alignment="1" max="32767" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txt_ResultTotalIVAVenta" pref="172" max="32767" attributes="0"/>
-                          <Component id="txt_ResultGananciaTotal" max="32767" attributes="0"/>
-                          <Component id="txt_ResultTotalFacturado" alignment="1" max="32767" attributes="0"/>
+                          <Component id="txt_ResultTotalIVAVenta" min="-2" pref="178" max="-2" attributes="0"/>
+                          <Component id="txt_ResultGananciaTotal" min="-2" pref="178" max="-2" attributes="0"/>
+                          <Component id="txt_ResultTotalFacturado" alignment="0" min="-2" pref="178" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -169,11 +169,6 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="lbl_TotalFacturado" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txt_ResultTotalFacturado" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="lbl_GananciaTotal" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txt_ResultGananciaTotal" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -181,6 +176,11 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="lbl_TotalIVAVenta" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txt_ResultTotalIVAVenta" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lbl_TotalFacturado" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txt_ResultTotalFacturado" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>

@@ -14,11 +14,14 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Pais;
+import sic.modelo.Rol;
+import sic.modelo.UsuarioActivo;
 
 public class DetallePaisGUI extends JDialog {
 
     private final DefaultListModel modeloList = new DefaultListModel();
     private Pais paisSeleccionado;
+    private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetallePaisGUI() {
@@ -35,9 +38,8 @@ public class DetallePaisGUI extends JDialog {
         try {
             modeloList.clear();
             List<Pais> paises = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/paises",
-                    Pais[].class)));
-            paises.stream().forEach((p) -> {
+                    .getForObject("/paises", Pais[].class)));
+            paises.stream().forEach(p -> {
                 modeloList.addElement(p);
             });
             lst_Paises.setModel(modeloList);
@@ -55,21 +57,18 @@ public class DetallePaisGUI extends JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        separador1 = new javax.swing.JSeparator();
+        panelPrincipal = new javax.swing.JPanel();
         sp_ListaRubros = new javax.swing.JScrollPane();
         lst_Paises = new javax.swing.JList();
-        lbl_Paises = new javax.swing.JLabel();
-        lbl_Flechas1 = new javax.swing.JLabel();
-        btn_Actualizar = new javax.swing.JButton();
-        lbl_Flechas2 = new javax.swing.JLabel();
+        panelInferior = new javax.swing.JPanel();
+        lblNombre = new javax.swing.JLabel();
+        txtNombre = new javax.swing.JTextField();
         btn_Agregar = new javax.swing.JButton();
-        txt_Nuevo = new javax.swing.JTextField();
-        txt_ModicaElimina = new javax.swing.JTextField();
+        btn_Actualizar = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Paises");
+        setTitle("Administrar Paises");
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
@@ -77,8 +76,7 @@ public class DetallePaisGUI extends JDialog {
             }
         });
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        jPanel1.setPreferredSize(new java.awt.Dimension(530, 152));
+        panelPrincipal.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         lst_Paises.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         lst_Paises.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
@@ -88,20 +86,27 @@ public class DetallePaisGUI extends JDialog {
         });
         sp_ListaRubros.setViewportView(lst_Paises);
 
-        lbl_Paises.setText("Paises:");
+        javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
+        panelPrincipal.setLayout(panelPrincipalLayout);
+        panelPrincipalLayout.setHorizontalGroup(
+            panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPrincipalLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(sp_ListaRubros)
+                .addContainerGap())
+        );
+        panelPrincipalLayout.setVerticalGroup(
+            panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPrincipalLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(sp_ListaRubros, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
-        lbl_Flechas1.setText("<<");
+        panelInferior.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        btn_Actualizar.setForeground(java.awt.Color.blue);
-        btn_Actualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/EditMap_16x16.png"))); // NOI18N
-        btn_Actualizar.setText("Actualizar");
-        btn_Actualizar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_ActualizarActionPerformed(evt);
-            }
-        });
-
-        lbl_Flechas2.setText(">>");
+        lblNombre.setForeground(java.awt.Color.red);
+        lblNombre.setText("* Nombre:");
 
         btn_Agregar.setForeground(java.awt.Color.blue);
         btn_Agregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
@@ -109,6 +114,15 @@ public class DetallePaisGUI extends JDialog {
         btn_Agregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_AgregarActionPerformed(evt);
+            }
+        });
+
+        btn_Actualizar.setForeground(java.awt.Color.blue);
+        btn_Actualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/EditMap_16x16.png"))); // NOI18N
+        btn_Actualizar.setText("Actualizar");
+        btn_Actualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ActualizarActionPerformed(evt);
             }
         });
 
@@ -121,67 +135,62 @@ public class DetallePaisGUI extends JDialog {
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(lbl_Paises)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_ListaRubros, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lbl_Flechas1)
+        javax.swing.GroupLayout panelInferiorLayout = new javax.swing.GroupLayout(panelInferior);
+        panelInferior.setLayout(panelInferiorLayout);
+        panelInferiorLayout.setHorizontalGroup(
+            panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelInferiorLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(panelInferiorLayout.createSequentialGroup()
+                        .addComponent(lblNombre)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_Nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btn_Agregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(separador1)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lbl_Flechas2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_ModicaElimina, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(btn_Eliminar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btn_Actualizar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                        .addComponent(txtNombre))
+                    .addGroup(panelInferiorLayout.createSequentialGroup()
+                        .addComponent(btn_Agregar, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_Actualizar)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_Eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sp_ListaRubros, 0, 142, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(txt_Nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lbl_Flechas1)
-                                    .addComponent(btn_Agregar))
-                                .addGap(5, 5, 5)
-                                .addComponent(separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(3, 3, 3)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(txt_ModicaElimina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lbl_Flechas2)
-                                    .addComponent(btn_Actualizar)))
-                            .addComponent(lbl_Paises))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btn_Eliminar)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+
+        panelInferiorLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Actualizar, btn_Agregar, btn_Eliminar});
+
+        panelInferiorLayout.setVerticalGroup(
+            panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelInferiorLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNombre)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_Agregar)
+                    .addComponent(btn_Actualizar)
+                    .addComponent(btn_Eliminar))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 512, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(panelInferior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(panelPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelInferior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -190,9 +199,9 @@ public class DetallePaisGUI extends JDialog {
     private void btn_AgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AgregarActionPerformed
         try {
             Pais pais = new Pais();
-            pais.setNombre(txt_Nuevo.getText().trim());
+            pais.setNombre(txtNombre.getText().trim());
             RestClient.getRestTemplate().postForObject("/paises", pais, Pais.class);
-            txt_Nuevo.setText("");
+            txtNombre.setText("");
             this.cargarPaises();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -208,7 +217,7 @@ public class DetallePaisGUI extends JDialog {
         if (lst_Paises.getModel().getSize() != 0) {
             if (lst_Paises.getSelectedValue() != null) {
                 paisSeleccionado = (Pais) lst_Paises.getSelectedValue();
-                txt_ModicaElimina.setText(lst_Paises.getSelectedValue().toString());
+                txtNombre.setText(lst_Paises.getSelectedValue().toString());
             }
         }
     }//GEN-LAST:event_lst_PaisesValueChanged
@@ -222,9 +231,9 @@ public class DetallePaisGUI extends JDialog {
             } else {
                 Pais paisModificado = new Pais();
                 paisModificado.setId_Pais(paisSeleccionado.getId_Pais());
-                paisModificado.setNombre(txt_ModicaElimina.getText().trim());
+                paisModificado.setNombre(txtNombre.getText().trim());
                 RestClient.getRestTemplate().put("/paises", paisModificado);
-                txt_ModicaElimina.setText("");
+                txtNombre.setText("");
                 paisSeleccionado = null;
                 this.cargarPaises();
             }
@@ -246,7 +255,7 @@ public class DetallePaisGUI extends JDialog {
                         "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 RestClient.getRestTemplate().delete("/paises/" + paisSeleccionado.getId_Pais());
-                txt_ModicaElimina.setText("");
+                txtNombre.setText("");
                 this.cargarPaises();
             }
         } catch (RestClientResponseException ex) {
@@ -260,20 +269,20 @@ public class DetallePaisGUI extends JDialog {
     }//GEN-LAST:event_btn_EliminarActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-            this.cargarPaises();
+        this.cargarPaises();
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(false);
+        }
     }//GEN-LAST:event_formWindowOpened
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Actualizar;
     private javax.swing.JButton btn_Agregar;
     private javax.swing.JButton btn_Eliminar;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel lbl_Flechas1;
-    private javax.swing.JLabel lbl_Flechas2;
-    private javax.swing.JLabel lbl_Paises;
+    private javax.swing.JLabel lblNombre;
     private javax.swing.JList lst_Paises;
-    private javax.swing.JSeparator separador1;
+    private javax.swing.JPanel panelInferior;
+    private javax.swing.JPanel panelPrincipal;
     private javax.swing.JScrollPane sp_ListaRubros;
-    private javax.swing.JTextField txt_ModicaElimina;
-    private javax.swing.JTextField txt_Nuevo;
+    private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }

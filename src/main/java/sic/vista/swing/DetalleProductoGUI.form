@@ -84,11 +84,11 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="panel1" max="32767" attributes="2"/>
+                          <Component id="panelSuperior" max="32767" attributes="2"/>
                           <Group type="102" attributes="0">
-                              <Component id="panel2" min="-2" max="-2" attributes="2"/>
+                              <Component id="panelPrecios" min="-2" max="-2" attributes="2"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="panel3" min="-2" max="-2" attributes="0"/>
+                              <Component id="panelCantidades" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="55" max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -99,11 +99,11 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="panel1" min="-2" max="-2" attributes="1"/>
+                      <Component id="panelSuperior" min="-2" max="-2" attributes="1"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="panel2" max="32767" attributes="3"/>
-                          <Component id="panel3" max="32767" attributes="1"/>
+                          <Component id="panelPrecios" max="32767" attributes="3"/>
+                          <Component id="panelCantidades" max="32767" attributes="1"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -111,7 +111,7 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Container class="javax.swing.JPanel" name="panel1">
+            <Container class="javax.swing.JPanel" name="panelSuperior">
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -298,7 +298,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JPanel" name="panel2">
+            <Container class="javax.swing.JPanel" name="panelPrecios">
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -498,7 +498,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JPanel" name="panel3">
+            <Container class="javax.swing.JPanel" name="panelCantidades">
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">

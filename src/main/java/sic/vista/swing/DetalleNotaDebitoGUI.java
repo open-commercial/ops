@@ -607,7 +607,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
                         if (Desktop.isDesktopSupported()) {
                             try {
                                 byte[] reporte = RestClient.getRestTemplate()
-                                        .getForObject("/notas/" + notaDebitoCliente.getIdNota() + "/reporte",
+                                        .getForObject("/notas/" + nd.getIdNota() + "/reporte",
                                                 byte[].class);
                                 File f = new File(System.getProperty("user.home") + "/NotaDebito.pdf");
                                 Files.write(f.toPath(), reporte);

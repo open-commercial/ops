@@ -7,6 +7,7 @@ import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -26,7 +27,9 @@ import sic.modelo.Localidad;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Pais;
 import sic.modelo.Provincia;
+import sic.modelo.Rol;
 import sic.modelo.Usuario;
+import sic.modelo.UsuarioActivo;
 import sic.util.ColoresNumerosRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
@@ -37,8 +40,9 @@ public class ClientesGUI extends JInternalFrame {
     private List<Cliente> clientesTotal = new ArrayList<>();
     private List<Cliente> clientesParcial = new ArrayList<>();
     private ModeloTabla modeloTablaDeResultados = new ModeloTabla();
+    private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private final Dimension sizeInternalFrame =  new Dimension(880, 600);
+    private final Dimension sizeInternalFrame = new Dimension(880, 600);
     private static int totalElementosBusqueda;
     private static int NUMERO_PAGINA = 0;
     private static final int TAMANIO_PAGINA = 50;
@@ -81,9 +85,13 @@ public class ClientesGUI extends JInternalFrame {
     private void cargarComboBoxViajantes() {
         cmbViajante.removeAllItems();
         try {
-            List<Usuario> viajantes = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/usuarios/roles?rol=VIAJANTE", Usuario[].class)));
-            viajantes.stream().forEach(v -> {
+            PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
+                    .exchange("/usuarios/busqueda/criteria?"
+                            + "roles=" + Rol.VIAJANTE, HttpMethod.GET, null,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
+                    })
+                    .getBody();
+            response.getContent().stream().forEach(v -> {
                 cmbViajante.addItem(v);
             });
         } catch (RestClientResponseException ex) {
@@ -145,24 +153,25 @@ public class ClientesGUI extends JInternalFrame {
         // sorting
         // tbl_Resultados.setAutoCreateRowSorter(true);
         //nombres de columnas
-        String[] encabezados = new String[17];
+        String[] encabezados = new String[18];
         encabezados[0] = "Predeterminado";
         encabezados[1] = "ID Fiscal";
         encabezados[2] = "Razon Social";
         encabezados[3] = "Nombre Fantasia";
         encabezados[4] = "Saldo C/C";
         encabezados[5] = "Ultimo Movimiento C/C";
-        encabezados[6] = "Viajante";
-        encabezados[7] = "Direccion";
-        encabezados[8] = "Condicion IVA";
-        encabezados[9] = "Tel. Primario";
-        encabezados[10] = "Tel. Secundario";
-        encabezados[11] = "Contacto";
-        encabezados[12] = "Email";
-        encabezados[13] = "Fecha Alta";
-        encabezados[14] = "Localidad";
-        encabezados[15] = "Provincia";
-        encabezados[16] = "Pais";
+        encabezados[6] = "Credencial";
+        encabezados[7] = "Viajante";
+        encabezados[8] = "Direccion";
+        encabezados[9] = "Condicion IVA";
+        encabezados[10] = "Tel. Primario";
+        encabezados[11] = "Tel. Secundario";
+        encabezados[12] = "Contacto";
+        encabezados[13] = "Email";
+        encabezados[14] = "Fecha Alta";
+        encabezados[15] = "Localidad";
+        encabezados[16] = "Provincia";
+        encabezados[17] = "Pais";
         modeloTablaDeResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaDeResultados);
         //tipo de dato columnas
@@ -180,10 +189,11 @@ public class ClientesGUI extends JInternalFrame {
         tipos[10] = String.class;
         tipos[11] = String.class;
         tipos[12] = String.class;
-        tipos[13] = Date.class;
-        tipos[14] = String.class;
+        tipos[13] = String.class;
+        tipos[14] = Date.class;
         tipos[15] = String.class;
         tipos[16] = String.class;
+        tipos[17] = String.class;
         modeloTablaDeResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);        
@@ -197,14 +207,15 @@ public class ClientesGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(150);
-        tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(250);
+        tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(150);
         tbl_Resultados.getColumnModel().getColumn(11).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(12).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(13).setPreferredWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(14).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(12).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(13).setPreferredWidth(250);
+        tbl_Resultados.getColumnModel().getColumn(14).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(15).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(16).setPreferredWidth(200);        
+        tbl_Resultados.getColumnModel().getColumn(16).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(17).setPreferredWidth(200);        
         //renderers
         tbl_Resultados.getColumnModel().getColumn(4).setCellRenderer(new ColoresNumerosRenderer());
         tbl_Resultados.getColumnModel().getColumn(5).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
@@ -213,24 +224,25 @@ public class ClientesGUI extends JInternalFrame {
 
     private void cargarResultadosAlTable() {
         clientesParcial.stream().map(cliente -> {
-            Object[] fila = new Object[17];
+            Object[] fila = new Object[18];
             fila[0] = cliente.isPredeterminado();
             fila[1] = cliente.getIdFiscal();
             fila[2] = cliente.getRazonSocial();
             fila[3] = cliente.getNombreFantasia(); 
             fila[4] = cliente.getSaldoCuentaCorriente();
             fila[5] = cliente.getFechaUltimoMovimiento();
-            if (cliente.getViajante() != null) fila[6] = cliente.getViajante().toString();
-            fila[7] = cliente.getDireccion();
-            fila[8] = cliente.getCondicionIVA().getNombre();
-            fila[9] = cliente.getTelPrimario();
-            fila[10] = cliente.getTelSecundario();            
-            fila[11] = cliente.getContacto();
-            fila[12] = cliente.getEmail();
-            fila[13] = cliente.getFechaAlta();
-            fila[14] = cliente.getLocalidad().getNombre();
-            fila[15] = cliente.getLocalidad().getProvincia().getNombre();
-            fila[16] = cliente.getLocalidad().getProvincia().getPais().getNombre();
+            if (cliente.getCredencial() != null) fila[6] = cliente.getCredencial().toString();
+            if (cliente.getViajante() != null) fila[7] = cliente.getViajante().toString();
+            fila[8] = cliente.getDireccion();
+            fila[9] = cliente.getCondicionIVA().getNombre();
+            fila[10] = cliente.getTelPrimario();
+            fila[11] = cliente.getTelSecundario();            
+            fila[12] = cliente.getContacto();
+            fila[13] = cliente.getEmail();
+            fila[14] = cliente.getFechaAlta();
+            fila[15] = cliente.getLocalidad().getNombre();
+            fila[16] = cliente.getLocalidad().getProvincia().getNombre();
+            fila[17] = cliente.getLocalidad().getProvincia().getPais().getNombre();
             return fila;
         }).forEach(fila -> {
             modeloTablaDeResultados.addRow(fila);
@@ -323,6 +335,7 @@ public class ClientesGUI extends JInternalFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
         this.cambiarEstadoEnabledComponentes(true);
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
     }
 
     @SuppressWarnings("unchecked")
@@ -660,35 +673,40 @@ public class ClientesGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void btn_NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoActionPerformed
-        DetalleClienteGUI gui_DetalleCliente = new DetalleClienteGUI();
-        gui_DetalleCliente.setModal(true);
-        gui_DetalleCliente.setLocationRelativeTo(this);
-        gui_DetalleCliente.setVisible(true);
-        this.resetScroll();
-        this.limpiarJTable();
-        this.buscar();
+        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO,
+                Rol.VENDEDOR, Rol.VIAJANTE))) {
+            DetalleClienteGUI gui_DetalleCliente = new DetalleClienteGUI();
+            gui_DetalleCliente.setModal(true);
+            gui_DetalleCliente.setLocationRelativeTo(this);
+            gui_DetalleCliente.setVisible(true);
+            this.resetScroll();
+            this.limpiarJTable();
+            this.buscar();
+        }
     }//GEN-LAST:event_btn_NuevoActionPerformed
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1) {
-            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-            int respuesta = JOptionPane.showConfirmDialog(this,
-                    "¿Esta seguro que desea eliminar el cliente: "
-                    + clientesTotal.get(indexFilaSeleccionada) + "?",
-                    "Eliminar", JOptionPane.YES_NO_OPTION);
-            if (respuesta == JOptionPane.YES_OPTION) {
-                try {
-                    RestClient.getRestTemplate().delete("/clientes/" + clientesTotal.get(indexFilaSeleccionada).getId_Cliente());
-                    this.resetScroll();
-                    this.limpiarJTable();
-                    this.buscar();
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR))) {
+            if (tbl_Resultados.getSelectedRow() != -1) {
+                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+                int respuesta = JOptionPane.showConfirmDialog(this,
+                        "¿Esta seguro que desea eliminar el cliente: "
+                        + clientesTotal.get(indexFilaSeleccionada) + "?",
+                        "Eliminar", JOptionPane.YES_NO_OPTION);
+                if (respuesta == JOptionPane.YES_OPTION) {
+                    try {
+                        RestClient.getRestTemplate().delete("/clientes/" + clientesTotal.get(indexFilaSeleccionada).getId_Cliente());
+                        this.resetScroll();
+                        this.limpiarJTable();
+                        this.buscar();
+                    } catch (RestClientResponseException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    } catch (ResourceAccessException ex) {
+                        LOGGER.error(ex.getMessage());
+                        JOptionPane.showMessageDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         }
@@ -712,14 +730,19 @@ public class ClientesGUI extends JInternalFrame {
             this.setSize(sizeInternalFrame);
             this.setColumnas();
             this.setMaximum(true);
-            RestClient.getRestTemplate().getForObject("/clientes/predeterminado/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), Cliente.class);
-            if ((RestClient.getRestTemplate().getForObject("/clientes/predeterminado/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), Cliente.class)) == null) {
-                JOptionPane.showInternalMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_no_existe_cliente_predeterminado"),
-                    "Aviso", JOptionPane.WARNING_MESSAGE);
+            if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                    || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                    || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+                boolean existeClientePredeterminado = RestClient.getRestTemplate()
+                        .getForObject("/clientes/existe-predeterminado/empresas/"
+                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), boolean.class);
+                if (!existeClientePredeterminado) {
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_no_existe_cliente_predeterminado"),
+                            "Aviso", JOptionPane.WARNING_MESSAGE);
+                }
             }
+            this.cambiarEstadoDeComponentesSegunRolUsuario();
         } catch (PropertyVetoException ex) {
             String msjError = "Se produjo un error al intentar maximizar la ventana.";
             LOGGER.error(msjError + " - " + ex.getMessage());
@@ -737,53 +760,73 @@ public class ClientesGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_formInternalFrameOpened
 
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(false);
+            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+                btn_setPredeterminado.setEnabled(false);
+            }
+            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                    && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)
+                    && rolesDeUsuarioActivo.contains(Rol.VIAJANTE)) {
+                chkViajante.setEnabled(false);
+                cmbViajante.setEnabled(false);
+            }
+        }
+    }
+
     private void btn_setPredeterminadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_setPredeterminadoActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1) {
-            try {
-                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);                
-                Cliente cliente = RestClient.getRestTemplate()
-                        .getForObject("/clientes/" + clientesTotal.get(indexFilaSeleccionada).getId_Cliente(), Cliente.class);
-                if (cliente != null) {
-                    RestClient.getRestTemplate().put("/clientes/" + cliente.getId_Cliente() + "/predeterminado", null);
-                    btn_BuscarActionPerformed(evt);
-                } else {
-                    JOptionPane.showInternalMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_no_se_encontro_cliente_predeterminado"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
+            if (tbl_Resultados.getSelectedRow() != -1) {
+                try {
+                    int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+                    Cliente cliente = RestClient.getRestTemplate()
+                            .getForObject("/clientes/" + clientesTotal.get(indexFilaSeleccionada).getId_Cliente(), Cliente.class);
+                    if (cliente != null) {
+                        RestClient.getRestTemplate().put("/clientes/" + cliente.getId_Cliente() + "/predeterminado", null);
+                        btn_BuscarActionPerformed(evt);
+                    } else {
+                        JOptionPane.showInternalMessageDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_no_se_encontro_cliente_predeterminado"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+            } else {
+                JOptionPane.showInternalMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_seleccionar_cliente"),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } else {
-            JOptionPane.showInternalMessageDialog(this,
-                ResourceBundle.getBundle("Mensajes").getString("mensaje_seleccionar_cliente"),
-                "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_setPredeterminadoActionPerformed
 
     private void btnCuentaCorrienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaCorrienteActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1) {
-            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-            Cliente cliente = RestClient.getRestTemplate()
-                    .getForObject("/clientes/" + clientesTotal.get(indexFilaSeleccionada).getId_Cliente(), Cliente.class);
-            JInternalFrame gui;
-            if (cliente != null) {
-                gui = new CuentaCorrienteGUI(cliente);
-                gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                        getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-                getDesktopPane().add(gui);
-                gui.setVisible(true);
-                try {
-                    gui.setSelected(true);
-                } catch (PropertyVetoException ex) {
-                    String msjError = "No se pudo seleccionar la ventana requerida.";
-                    LOGGER.error(msjError + " - " + ex.getMessage());
-                    JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO,
+                Rol.VENDEDOR, Rol.VIAJANTE))) {
+            if (tbl_Resultados.getSelectedRow() != -1) {
+                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+                Cliente cliente = RestClient.getRestTemplate()
+                        .getForObject("/clientes/" + clientesTotal.get(indexFilaSeleccionada).getId_Cliente(), Cliente.class);
+                JInternalFrame gui;
+                if (cliente != null) {
+                    gui = new CuentaCorrienteGUI(cliente);
+                    gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                            getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+                    getDesktopPane().add(gui);
+                    gui.setVisible(true);
+                    try {
+                        gui.setSelected(true);
+                    } catch (PropertyVetoException ex) {
+                        String msjError = "No se pudo seleccionar la ventana requerida.";
+                        LOGGER.error(msjError + " - " + ex.getMessage());
+                        JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         }

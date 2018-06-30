@@ -25,7 +25,9 @@ import sic.modelo.EmpresaActiva;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
 import sic.modelo.Proveedor;
+import sic.modelo.Rol;
 import sic.modelo.Rubro;
+import sic.modelo.UsuarioActivo;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
@@ -335,7 +337,8 @@ public class ProductosGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-        this.cambiarEstadoEnabledComponentes(true);            
+        this.cambiarEstadoEnabledComponentes(true);   
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
     }
 
     private List<Producto> getSeleccionMultipleDeProductos(int[] indices) {
@@ -613,8 +616,7 @@ public class ProductosGUI extends JInternalFrame {
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btn_Nuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -674,13 +676,15 @@ public class ProductosGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void btn_NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoActionPerformed
-        DetalleProductoGUI gui_DetalleProducto = new DetalleProductoGUI();
-        gui_DetalleProducto.setModal(true);
-        gui_DetalleProducto.setLocationRelativeTo(this);
-        gui_DetalleProducto.setVisible(true);
-        this.resetScroll();
-        this.limpiarJTable();
-        this.buscar();
+        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
+            DetalleProductoGUI gui_DetalleProducto = new DetalleProductoGUI();
+            gui_DetalleProducto.setModal(true);
+            gui_DetalleProducto.setLocationRelativeTo(this);
+            gui_DetalleProducto.setVisible(true);
+            this.resetScroll();
+            this.limpiarJTable();
+            this.buscar();
+        }
     }//GEN-LAST:event_btn_NuevoActionPerformed
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
@@ -713,25 +717,27 @@ public class ProductosGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_EliminarActionPerformed
 
     private void btn_ModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ModificarActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1) {
-            if (tbl_Resultados.getSelectedRowCount() > 1) {
-                //seleccion multiple
-                ModificacionProductosBulkGUI gui_ModificacionProductosBulk = new ModificacionProductosBulkGUI(
-                        this.getSeleccionMultipleDeProductos(Utilidades.getSelectedRowsModelIndices(tbl_Resultados)));
-                gui_ModificacionProductosBulk.setModal(true);
-                gui_ModificacionProductosBulk.setLocationRelativeTo(this);
-                gui_ModificacionProductosBulk.setVisible(true);
-            } else {
-                //seleccion unica
-                DetalleProductoGUI gui_DetalleProducto = new DetalleProductoGUI(
-                        productosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)));
-                gui_DetalleProducto.setModal(true);
-                gui_DetalleProducto.setLocationRelativeTo(this);
-                gui_DetalleProducto.setVisible(true);
+        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
+            if (tbl_Resultados.getSelectedRow() != -1) {
+                if (tbl_Resultados.getSelectedRowCount() > 1) {
+                    //seleccion multiple
+                    ModificacionProductosBulkGUI gui_ModificacionProductosBulk = new ModificacionProductosBulkGUI(
+                            this.getSeleccionMultipleDeProductos(Utilidades.getSelectedRowsModelIndices(tbl_Resultados)));
+                    gui_ModificacionProductosBulk.setModal(true);
+                    gui_ModificacionProductosBulk.setLocationRelativeTo(this);
+                    gui_ModificacionProductosBulk.setVisible(true);
+                } else {
+                    //seleccion unica
+                    DetalleProductoGUI gui_DetalleProducto = new DetalleProductoGUI(
+                            productosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)));
+                    gui_DetalleProducto.setModal(true);
+                    gui_DetalleProducto.setLocationRelativeTo(this);
+                    gui_DetalleProducto.setVisible(true);
+                }
+                this.resetScroll();
+                this.limpiarJTable();
+                this.buscar();
             }
-            this.resetScroll();
-            this.limpiarJTable();
-            this.buscar();
         }
     }//GEN-LAST:event_btn_ModificarActionPerformed
 
@@ -759,6 +765,7 @@ public class ProductosGUI extends JInternalFrame {
         this.setSize(sizeInternalFrame);
         rb_Todos.setSelected(true);
         this.setColumnas();
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
         try {
             this.setMaximum(true);
         } catch (PropertyVetoException ex) {
@@ -768,7 +775,13 @@ public class ProductosGUI extends JInternalFrame {
             this.dispose();
         }
     }//GEN-LAST:event_formInternalFrameOpened
-    
+
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        if (!UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(false);
+        }
+    }
+
     private void chk_DisponibilidadItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_DisponibilidadItemStateChanged
         if (chk_Disponibilidad.isSelected() == true) {
             rb_Todos.setEnabled(true);
@@ -780,24 +793,26 @@ public class ProductosGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_DisponibilidadItemStateChanged
 
     private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
-        if (!productosTotal.isEmpty()) {
-            if (Desktop.isDesktopSupported()) {
-                String uriReporte = "/productos/reporte/criteria?"
+        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
+            if (!productosTotal.isEmpty()) {
+             if (Desktop.isDesktopSupported()) {
+                    String uriReporte = "/productos/reporte/criteria?"
                     + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
-                if (chk_Codigo.isSelected()) uriReporte += "&codigo=" + txt_Codigo.getText().trim();                    
-                if (chk_Descripcion.isSelected()) uriReporte += "&descripcion=" + txt_Descripcion.getText().trim();                    
-                if (chk_Rubro.isSelected()) uriReporte += "&idRubro=" + this.getIdRubroSeleccionado();
-                if (chk_Proveedor.isSelected()) uriReporte += "&idProveedor=" + this.getIdProveedorSeleccionado();
-                if (chk_Disponibilidad.isSelected()) uriReporte += "&soloFantantes=" + rb_Faltantes.isSelected();                
-                ExportGUI exportGUI = new ExportGUI(uriReporte + "&formato=xlsx", "ListaPrecios.xlsx",
-                    uriReporte + "&formato=pdf", "ListaPrecios.pdf");
-                exportGUI.setModal(true);
-                exportGUI.setLocationRelativeTo(this);
-                exportGUI.setVisible(true);
-            } else {
+                    if (chk_Codigo.isSelected()) uriReporte += "&codigo=" + txt_Codigo.getText().trim();                    
+                    if (chk_Descripcion.isSelected()) uriReporte += "&descripcion=" + txt_Descripcion.getText().trim();                    
+                    if (chk_Rubro.isSelected()) uriReporte += "&idRubro=" + this.getIdRubroSeleccionado();
+                    if (chk_Proveedor.isSelected()) uriReporte += "&idProveedor=" + this.getIdProveedorSeleccionado();
+                    if (chk_Disponibilidad.isSelected()) uriReporte += "&soloFantantes=" + rb_Faltantes.isSelected();                
+                    ExportGUI exportGUI = new ExportGUI(uriReporte + "&formato=xlsx", "ListaPrecios.xlsx",
+                       uriReporte + "&formato=pdf", "ListaPrecios.pdf");
+                    exportGUI.setModal(true);
+                    exportGUI.setLocationRelativeTo(this);
+                    exportGUI.setVisible(true);
+                } else {
                 JOptionPane.showMessageDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
                         "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }//GEN-LAST:event_btnExportarActionPerformed
