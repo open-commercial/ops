@@ -730,9 +730,11 @@ public class ClientesGUI extends JInternalFrame {
             this.setSize(sizeInternalFrame);
             this.setColumnas();
             this.setMaximum(true);
-            if (!UsuarioActivo.getInstance().getUsuario().getRoles().containsAll(Collections.singletonList(Rol.VIAJANTE))) {
-                if ((RestClient.getRestTemplate().getForObject("/clientes/predeterminado/empresas/"
-                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), Cliente.class)) == null) {
+            if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) 
+                    || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                    || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+                if (!RestClient.getRestTemplate().getForObject("/clientes/existe-predeterminado/empresas/"
+                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), boolean.class)) {
                     JOptionPane.showInternalMessageDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_no_existe_cliente_predeterminado"),
                             "Aviso", JOptionPane.WARNING_MESSAGE);
