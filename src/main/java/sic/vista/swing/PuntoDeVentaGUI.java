@@ -579,15 +579,16 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         }
         cmb_TipoComprobante.addItem(TipoDeComprobante.PEDIDO);
         if (this.pedido != null) {
-            if (this.pedido.getId_Pedido() == 0) {
-                cmb_TipoComprobante.setSelectedItem(TipoDeComprobante.PEDIDO);
+            if (this.pedido.getId_Pedido() == 0) {// nuevo pedido, desde la vista de pedido
+                cmb_TipoComprobante.removeAllItems();
+                cmb_TipoComprobante.addItem(TipoDeComprobante.PEDIDO);
                 txt_CodigoProducto.requestFocus();
-            } else if (this.modificandoPedido() == true) {
-                cmb_TipoComprobante.setSelectedItem(TipoDeComprobante.PEDIDO);
+            } else if (this.modificandoPedido() == true) { // modificar pedido
+                cmb_TipoComprobante.removeAllItems();
+                cmb_TipoComprobante.addItem(TipoDeComprobante.PEDIDO);
                 txt_CodigoProducto.requestFocus();
-                cmb_TipoComprobante.setEnabled(false);
             } else {
-                cmb_TipoComprobante.removeItem(TipoDeComprobante.PEDIDO);
+                cmb_TipoComprobante.removeItem(TipoDeComprobante.PEDIDO); // facturando pedido
             }
         }
     }
