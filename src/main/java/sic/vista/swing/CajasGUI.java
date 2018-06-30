@@ -130,6 +130,7 @@ public class CajasGUI extends JInternalFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
         this.cambiarEstadoEnabledComponentes(true);
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
     }
     
     private void cambiarEstadoEnabledComponentes(boolean status) {
@@ -631,11 +632,9 @@ public class CajasGUI extends JInternalFrame {
         this.setColumnasCaja();
         cmb_UsuariosApertura.setEnabled(false);
         cmb_UsuariosCierre.setEnabled(false);
-        if (!UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
-            btn_eliminarCaja.setEnabled(false);
-        }
         dc_FechaDesde.setDate(new Date());
         dc_FechaHasta.setDate(new Date());
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
         try {
             this.setMaximum(true);            
         } catch (PropertyVetoException ex) {
@@ -645,6 +644,12 @@ public class CajasGUI extends JInternalFrame {
             this.dispose();
         }
     }//GEN-LAST:event_internalFrameOpened
+
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        if (!UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
+            btn_eliminarCaja.setEnabled(false);
+        }
+    }
 
     private void chk_UsuarioCierreItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UsuarioCierreItemStateChanged
         try {

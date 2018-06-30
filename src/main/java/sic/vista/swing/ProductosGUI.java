@@ -337,7 +337,8 @@ public class ProductosGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-        this.cambiarEstadoEnabledComponentes(true);            
+        this.cambiarEstadoEnabledComponentes(true);   
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
     }
 
     private List<Producto> getSeleccionMultipleDeProductos(int[] indices) {
@@ -764,9 +765,7 @@ public class ProductosGUI extends JInternalFrame {
         this.setSize(sizeInternalFrame);
         rb_Todos.setSelected(true);
         this.setColumnas();
-        if (!UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
-            btn_Eliminar.setEnabled(false);
-        }
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
         try {
             this.setMaximum(true);
         } catch (PropertyVetoException ex) {
@@ -776,7 +775,13 @@ public class ProductosGUI extends JInternalFrame {
             this.dispose();
         }
     }//GEN-LAST:event_formInternalFrameOpened
-    
+
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        if (!UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(false);
+        }
+    }
+
     private void chk_DisponibilidadItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_DisponibilidadItemStateChanged
         if (chk_Disponibilidad.isSelected() == true) {
             rb_Todos.setEnabled(true);
