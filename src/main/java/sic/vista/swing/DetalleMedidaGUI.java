@@ -16,12 +16,14 @@ import sic.RestClient;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Medida;
 import sic.modelo.Rol;
+import sic.modelo.UsuarioActivo;
 import sic.util.Utilidades;
 
 public class DetalleMedidaGUI extends JDialog {
 
     private final DefaultListModel modeloList = new DefaultListModel();
     private Medida medidaSeleccionada;
+    private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleMedidaGUI() {
@@ -280,6 +282,9 @@ public class DetalleMedidaGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cargarListMedidas();
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(false);
+        }
     }//GEN-LAST:event_formWindowOpened
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
