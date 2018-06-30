@@ -27,6 +27,7 @@ import sic.modelo.Producto;
 import sic.modelo.Proveedor;
 import sic.modelo.Rol;
 import sic.modelo.Rubro;
+import sic.modelo.UsuarioActivo;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
@@ -763,6 +764,9 @@ public class ProductosGUI extends JInternalFrame {
         this.setSize(sizeInternalFrame);
         rb_Todos.setSelected(true);
         this.setColumnas();
+        if (!UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(false);
+        }
         try {
             this.setMaximum(true);
         } catch (PropertyVetoException ex) {
