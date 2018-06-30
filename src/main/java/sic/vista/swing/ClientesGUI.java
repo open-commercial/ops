@@ -40,8 +40,9 @@ public class ClientesGUI extends JInternalFrame {
     private List<Cliente> clientesTotal = new ArrayList<>();
     private List<Cliente> clientesParcial = new ArrayList<>();
     private ModeloTabla modeloTablaDeResultados = new ModeloTabla();
+    private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private final Dimension sizeInternalFrame =  new Dimension(880, 600);
+    private final Dimension sizeInternalFrame = new Dimension(880, 600);
     private static int totalElementosBusqueda;
     private static int NUMERO_PAGINA = 0;
     private static final int TAMANIO_PAGINA = 50;
@@ -756,11 +757,12 @@ public class ClientesGUI extends JInternalFrame {
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
         if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
             btn_Eliminar.setEnabled(false);
-            btn_setPredeterminado.setEnabled(false);
-            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO) 
+            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+                btn_setPredeterminado.setEnabled(false);
+            }
+            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
                     && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)
                     && rolesDeUsuarioActivo.contains(Rol.VIAJANTE)) {
                 chkViajante.setEnabled(false);
@@ -768,7 +770,7 @@ public class ClientesGUI extends JInternalFrame {
             }
         }
     }
-    
+
     private void btn_setPredeterminadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_setPredeterminadoActionPerformed
         if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
             if (tbl_Resultados.getSelectedRow() != -1) {

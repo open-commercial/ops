@@ -14,6 +14,8 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.FormaDePago;
+import sic.modelo.Rol;
+import sic.modelo.UsuarioActivo;
 
 public class FormasDePagoGUI extends JInternalFrame {
 
@@ -324,6 +326,9 @@ public class FormasDePagoGUI extends JInternalFrame {
             this.setColumnas();            
             this.cargarFormasDePago();
             this.verificarExistenciaPredeterminado();
+            if (!UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
+                btn_Eliminar.setEnabled(false);
+            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();

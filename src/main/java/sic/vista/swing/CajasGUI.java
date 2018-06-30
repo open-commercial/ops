@@ -544,8 +544,7 @@ public class CajasGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_buscarActionPerformed
     
     private void btn_verDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_verDetalleActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO,
-                Rol.VENDEDOR))) {
+        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
             if (tbl_Cajas.getSelectedRow() != -1) {
                 int indice = Utilidades.getSelectedRowModelIndice(tbl_Cajas);
                 try {
@@ -569,7 +568,7 @@ public class CajasGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_verDetalleActionPerformed
 
     private void btn_eliminarCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_eliminarCajaActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
+        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR))) {
             if (tbl_Cajas.getSelectedRow() != -1) {
                 int confirmacionEliminacion = JOptionPane.showConfirmDialog(this,
                         "¿Esta seguro que desea eliminar la caja seleccionada?",
@@ -622,8 +621,7 @@ public class CajasGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_UsuarioAperturaItemStateChanged
 
     private void btn_AbrirCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AbrirCajaActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO,
-                Rol.VENDEDOR))) {
+        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
             this.abrirNuevaCaja();
         }
     }//GEN-LAST:event_btn_AbrirCajaActionPerformed
@@ -633,6 +631,9 @@ public class CajasGUI extends JInternalFrame {
         this.setColumnasCaja();
         cmb_UsuariosApertura.setEnabled(false);
         cmb_UsuariosCierre.setEnabled(false);
+        if (!UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
+            btn_eliminarCaja.setEnabled(false);
+        }
         dc_FechaDesde.setDate(new Date());
         dc_FechaHasta.setDate(new Date());
         try {
@@ -673,8 +674,7 @@ public class CajasGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_UsuarioCierreItemStateChanged
 
     private void btn_ReabrirCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ReabrirCajaActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO,
-                Rol.VENDEDOR))) {
+        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
             if (tbl_Cajas.getSelectedRow() != -1) {
                 int indice = Utilidades.getSelectedRowModelIndice(tbl_Cajas);
                 String monto = JOptionPane.showInputDialog(this,

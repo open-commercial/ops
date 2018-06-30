@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.scene.input.KeyCode;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
@@ -523,6 +522,7 @@ public class TransportistasGUI extends JInternalFrame {
         gui_DetalleTransportista.setModal(true);
         gui_DetalleTransportista.setLocationRelativeTo(this);
         gui_DetalleTransportista.setVisible(true);
+        this.buscar(); 
     }//GEN-LAST:event_btn_NuevoActionPerformed
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
