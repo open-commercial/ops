@@ -14,7 +14,6 @@ import java.nio.file.Files;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -67,6 +66,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private BigDecimal iva_105_netoFactura;
     private BigDecimal iva_21_netoFactura;    
     private BigDecimal totalComprobante;    
+    private final List<Rol> rolesDeUsuario = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final static BigDecimal IVA_21 = new BigDecimal("21");
     private final static BigDecimal IVA_105 = new BigDecimal("10.5");
     private final static BigDecimal CIEN = new BigDecimal("100");
@@ -557,7 +557,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private void cargarTiposDeComprobantesDisponibles() {
         cmb_TipoComprobante.removeAllItems();
         TipoDeComprobante[] tiposDeComprobante = new TipoDeComprobante[0];
-        List<Rol> rolesDeUsuario = UsuarioActivo.getInstance().getUsuario().getRoles();
         if (rolesDeUsuario.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuario.contains(Rol.ENCARGADO)
                 || rolesDeUsuario.contains(Rol.VENDEDOR)) {
@@ -590,9 +589,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             } else {
                 cmb_TipoComprobante.removeItem(TipoDeComprobante.PEDIDO);
             }
-        }
-        if (cmb_TipoComprobante.getItemCount() == 1) {
-            cmb_TipoComprobante.setEnabled(false);
         }
     }
 
@@ -1683,7 +1679,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             cantidadMaximaRenglones = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
                     + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                     + "/cantidad-renglones", Integer.class); 
-            List<Rol> rolesDeUsuario = UsuarioActivo.getInstance().getUsuario().getRoles();
             if (rolesDeUsuario.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuario.contains(Rol.ENCARGADO)
                 || rolesDeUsuario.contains(Rol.VENDEDOR)) {
