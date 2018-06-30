@@ -45,7 +45,8 @@ public class PedidosGUI extends JInternalFrame {
     private List<Pedido> pedidosTotal = new ArrayList<>();    
     private List<Pedido> pedidosParcial = new ArrayList<>();
     private ModeloTabla modeloTablaPedidos;
-    private ModeloTabla modeloTablaRenglones;    
+    private ModeloTabla modeloTablaRenglones;  
+    private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame =  new Dimension(880, 600);
     private static int totalElementosBusqueda;
@@ -908,12 +909,10 @@ public class PedidosGUI extends JInternalFrame {
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
         if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
             btnEliminarPedido.setEnabled(false);
             if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)) {
                 btnFacturar.setEnabled(false);
-                btnNuevoPedido.setEnabled(false);
                 chk_Vendedor.setEnabled(false);
                 cmb_Vendedor.setEnabled(false);
             }
