@@ -39,27 +39,26 @@ public class DetalleRubroGUI extends JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panel1 = new javax.swing.JPanel();
+        panelSuperior = new javax.swing.JPanel();
         sp_ListaRubros = new javax.swing.JScrollPane();
         lst_Rubros = new javax.swing.JList();
-        lbl_Flechas1 = new javax.swing.JLabel();
+        panelInferior = new javax.swing.JPanel();
+        lblNombre = new javax.swing.JLabel();
         txt_Nuevo = new javax.swing.JTextField();
-        separador1 = new javax.swing.JSeparator();
-        lbl_Flechas2 = new javax.swing.JLabel();
-        txt_ModicaElimina = new javax.swing.JTextField();
-        btn_Actualizar = new javax.swing.JButton();
         btn_Agregar = new javax.swing.JButton();
+        btn_Actualizar = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Rubros");
+        setTitle("Administrar Rubros");
+        setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
             }
         });
 
-        panel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        panelSuperior.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         lst_Rubros.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         lst_Rubros.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
@@ -69,28 +68,31 @@ public class DetalleRubroGUI extends JDialog {
         });
         sp_ListaRubros.setViewportView(lst_Rubros);
 
-        lbl_Flechas1.setText("<<");
+        javax.swing.GroupLayout panelSuperiorLayout = new javax.swing.GroupLayout(panelSuperior);
+        panelSuperior.setLayout(panelSuperiorLayout);
+        panelSuperiorLayout.setHorizontalGroup(
+            panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelSuperiorLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(sp_ListaRubros)
+                .addContainerGap())
+        );
+        panelSuperiorLayout.setVerticalGroup(
+            panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelSuperiorLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(sp_ListaRubros, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        panelInferior.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        lblNombre.setForeground(java.awt.Color.red);
+        lblNombre.setText("* Nombre:");
 
         txt_Nuevo.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txt_NuevoKeyTyped(evt);
-            }
-        });
-
-        lbl_Flechas2.setText(">>");
-
-        txt_ModicaElimina.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txt_ModicaEliminaKeyTyped(evt);
-            }
-        });
-
-        btn_Actualizar.setForeground(java.awt.Color.blue);
-        btn_Actualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/EditBlock.png"))); // NOI18N
-        btn_Actualizar.setText("Actualizar");
-        btn_Actualizar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_ActualizarActionPerformed(evt);
             }
         });
 
@@ -103,6 +105,15 @@ public class DetalleRubroGUI extends JDialog {
             }
         });
 
+        btn_Actualizar.setForeground(java.awt.Color.blue);
+        btn_Actualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/EditBlock.png"))); // NOI18N
+        btn_Actualizar.setText("Actualizar");
+        btn_Actualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ActualizarActionPerformed(evt);
+            }
+        });
+
         btn_Eliminar.setForeground(java.awt.Color.blue);
         btn_Eliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/DeleteBlock.png"))); // NOI18N
         btn_Eliminar.setText("Eliminar");
@@ -112,50 +123,41 @@ public class DetalleRubroGUI extends JDialog {
             }
         });
 
-        javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
-        panel1.setLayout(panel1Layout);
-        panel1Layout.setHorizontalGroup(
-            panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel1Layout.createSequentialGroup()
-                .addComponent(sp_ListaRubros, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel1Layout.createSequentialGroup()
-                        .addComponent(lbl_Flechas1)
+        javax.swing.GroupLayout panelInferiorLayout = new javax.swing.GroupLayout(panelInferior);
+        panelInferior.setLayout(panelInferiorLayout);
+        panelInferiorLayout.setHorizontalGroup(
+            panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelInferiorLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(panelInferiorLayout.createSequentialGroup()
+                        .addComponent(lblNombre)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_Nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btn_Agregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(separador1, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel1Layout.createSequentialGroup()
-                            .addComponent(lbl_Flechas2)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(txt_ModicaElimina, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(btn_Eliminar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btn_Actualizar, javax.swing.GroupLayout.Alignment.LEADING)))))
-                .addContainerGap())
+                        .addComponent(txt_Nuevo))
+                    .addGroup(panelInferiorLayout.createSequentialGroup()
+                        .addComponent(btn_Agregar)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_Actualizar)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_Eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        panel1Layout.setVerticalGroup(
-            panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sp_ListaRubros)
-            .addGroup(panel1Layout.createSequentialGroup()
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_Nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Flechas1)
-                    .addComponent(btn_Agregar))
+
+        panelInferiorLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Actualizar, btn_Agregar, btn_Eliminar});
+
+        panelInferiorLayout.setVerticalGroup(
+            panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelInferiorLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblNombre)
+                    .addComponent(txt_Nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_ModicaElimina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Flechas2)
-                    .addComponent(btn_Actualizar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn_Eliminar)
-                .addContainerGap())
+                .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_Agregar)
+                    .addComponent(btn_Actualizar)
+                    .addComponent(btn_Eliminar))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -164,15 +166,19 @@ public class DetalleRubroGUI extends JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(panelInferior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addComponent(panelSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelInferior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -200,7 +206,7 @@ public class DetalleRubroGUI extends JDialog {
         if (lst_Rubros.getModel().getSize() != 0) {
             if (lst_Rubros.getSelectedValue() != null) {
                 rubroSeleccionado = (Rubro) lst_Rubros.getSelectedValue();
-                txt_ModicaElimina.setText(rubroSeleccionado.getNombre());
+                txt_Nuevo.setText(rubroSeleccionado.getNombre());
             }
         }
     }//GEN-LAST:event_lst_RubrosValueChanged
@@ -213,10 +219,10 @@ public class DetalleRubroGUI extends JDialog {
             } else {
                 Rubro rubroModificado = new Rubro();
                 rubroModificado.setId_Rubro(rubroSeleccionado.getId_Rubro());
-                rubroModificado.setNombre(txt_ModicaElimina.getText().trim());
+                rubroModificado.setNombre(txt_Nuevo.getText().trim());
                 rubroModificado.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
                 RestClient.getRestTemplate().put("/rubros", rubroModificado);
-                txt_ModicaElimina.setText("");
+                txt_Nuevo.setText("");
                 rubroSeleccionado = null;
                 this.cargarListRubros();
             }
@@ -237,7 +243,7 @@ public class DetalleRubroGUI extends JDialog {
                         "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 RestClient.getRestTemplate().delete("/rubros/" + rubroSeleccionado.getId_Rubro());
-                txt_ModicaElimina.setText("");
+                txt_Nuevo.setText("");
                 rubroSeleccionado = null;
                 cargarListRubros();
             }
@@ -255,10 +261,6 @@ public class DetalleRubroGUI extends JDialog {
         evt.setKeyChar(Utilidades.convertirAMayusculas(evt.getKeyChar()));
     }//GEN-LAST:event_txt_NuevoKeyTyped
 
-    private void txt_ModicaEliminaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_ModicaEliminaKeyTyped
-        evt.setKeyChar(Utilidades.convertirAMayusculas(evt.getKeyChar()));
-    }//GEN-LAST:event_txt_ModicaEliminaKeyTyped
-
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cargarListRubros();
         if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
@@ -271,7 +273,7 @@ public class DetalleRubroGUI extends JDialog {
         List<Rubro> rubros = Arrays.asList(RestClient.getRestTemplate()
                 .getForObject("/rubros/empresas/"  + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                 Rubro[].class));
-        rubros.stream().forEach((r) -> {
+        rubros.stream().forEach(r -> {
             modeloList.addElement(r);
         });
         lst_Rubros.setModel(modeloList);
@@ -280,13 +282,11 @@ public class DetalleRubroGUI extends JDialog {
     private javax.swing.JButton btn_Actualizar;
     private javax.swing.JButton btn_Agregar;
     private javax.swing.JButton btn_Eliminar;
-    private javax.swing.JLabel lbl_Flechas1;
-    private javax.swing.JLabel lbl_Flechas2;
+    private javax.swing.JLabel lblNombre;
     private javax.swing.JList lst_Rubros;
-    private javax.swing.JPanel panel1;
-    private javax.swing.JSeparator separador1;
+    private javax.swing.JPanel panelInferior;
+    private javax.swing.JPanel panelSuperior;
     private javax.swing.JScrollPane sp_ListaRubros;
-    private javax.swing.JTextField txt_ModicaElimina;
     private javax.swing.JTextField txt_Nuevo;
     // End of variables declaration//GEN-END:variables
 }
