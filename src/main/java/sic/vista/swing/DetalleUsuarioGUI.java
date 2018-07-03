@@ -334,8 +334,7 @@ public class DetalleUsuarioGUI extends JDialog {
                     if (chk_Viajante.isSelected()) roles.add(Rol.VIAJANTE);
                     if (chk_Comprador.isSelected()) roles.add(Rol.COMPRADOR);
                     usuario.setRoles(roles);
-                    RestClient.getRestTemplate().postForObject("/usuarios", usuario, Usuario.class);                 
-                    LOGGER.warn("El usuario " + usuario.getUsername() + " se creo correctamente.");
+                    RestClient.getRestTemplate().postForObject("/usuarios", usuario, Usuario.class);                                     
                     this.dispose();
                 } else {                    
                     JOptionPane.showMessageDialog(this, 
@@ -369,8 +368,7 @@ public class DetalleUsuarioGUI extends JDialog {
                     } else debeActualizar = true;                   
                     if (debeActualizar) {
                         usuarioParaModificar.setRoles(roles);
-                        RestClient.getRestTemplate().put("/usuarios", usuarioParaModificar);
-                        LOGGER.warn("El usuario " + usuarioParaModificar.getUsername() + " se modifico correctamente.");
+                        RestClient.getRestTemplate().put("/usuarios", usuarioParaModificar);                        
                         JOptionPane.showMessageDialog(this, "El Usuario se modificó correctamente!",
                                 "Aviso", JOptionPane.INFORMATION_MESSAGE);
                         this.dispose();
