@@ -14,13 +14,10 @@ public class Usuario implements Serializable {
     private String password;    
     private String nombre;   
     private String apellido;   
-    private String email;   
-    private String token;
-    private long idEmpresaPredeterminada;
-    private long passwordRecoveryKey;   
+    private String email;       
+    private long idEmpresaPredeterminada;    
     private List<Rol> roles;
-    private boolean habilitado;    
-    private boolean eliminado;
+    private boolean habilitado;        
 
     @Override
     public String toString() {
