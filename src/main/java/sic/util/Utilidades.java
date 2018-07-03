@@ -124,20 +124,5 @@ public class Utilidades {
             evt.consume();
         }
     }
-    
-    public static boolean isUsuarioAutorizado(Component parentComponent, List<Rol> rolesRequeridos) {
-        boolean usuarioAutorizado = false;
-        for (Rol rolRequerido : rolesRequeridos) {
-            if (UsuarioActivo.getInstance().getUsuario().getRoles().contains(rolRequerido)) {
-                usuarioAutorizado = true;
-            }
-        }
-        if (!usuarioAutorizado) {
-            JOptionPane.showMessageDialog(parentComponent,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_privilegios_usuario"),
-                    "Aviso", JOptionPane.WARNING_MESSAGE);
-        }
-        return usuarioAutorizado;
-    }
 
 }

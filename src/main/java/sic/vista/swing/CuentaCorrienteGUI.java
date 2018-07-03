@@ -739,206 +739,184 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     }
         
     private void btnCrearNotaCreditoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearNotaCreditoActionPerformed
-        List<Rol> rolesAVerificar = new ArrayList();
-        if (proveedor != null) {
-            rolesAVerificar.addAll(Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO));
-        } else if (cliente != null) {
-            rolesAVerificar.addAll(Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR));
-        }
-        if (Utilidades.isUsuarioAutorizado(this, rolesAVerificar)) {
-            if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
-                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
-                if (renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_A || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_B
-                        || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_C || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_X
-                        || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_Y || renglonCC.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
-                    SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(renglonCC.getIdMovimiento(), renglonCC.getTipoComprobante());
-                    seleccionDeProductosGUI.setModal(true);
-                    seleccionDeProductosGUI.setLocationRelativeTo(this);
-                    seleccionDeProductosGUI.setVisible(true);
-                    if (!seleccionDeProductosGUI.getRenglonesConCantidadNueva().isEmpty()) {
-                        if (cliente != null) {
-                            DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(
-                                    seleccionDeProductosGUI.getRenglonesConCantidadNueva(),
-                                    seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock(),
-                                    this.cliente);
-                            detalleNotaCredito.setModal(true);
-                            detalleNotaCredito.setLocationRelativeTo(this);
-                            detalleNotaCredito.setVisible(true);
-                            if (detalleNotaCredito.isNotaCreada()) {
-                                this.refrescarVista();
-                            }
-                        } else if (proveedor != null) {
-                            DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(
-                                    seleccionDeProductosGUI.getRenglonesConCantidadNueva(),
-                                    seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock(),
-                                    this.proveedor);
-                            detalleNotaCredito.setModal(true);
-                            detalleNotaCredito.setLocationRelativeTo(this);
-                            detalleNotaCredito.setVisible(true);
-                            if (detalleNotaCredito.isNotaCreada()) {
-                                this.refrescarVista();
-                            }
+        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
+            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+            RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
+            if (renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_A || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_B
+                    || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_C || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_X
+                    || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_Y || renglonCC.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
+                SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(renglonCC.getIdMovimiento(), renglonCC.getTipoComprobante());
+                seleccionDeProductosGUI.setModal(true);
+                seleccionDeProductosGUI.setLocationRelativeTo(this);
+                seleccionDeProductosGUI.setVisible(true);
+                if (!seleccionDeProductosGUI.getRenglonesConCantidadNueva().isEmpty()) {
+                    if (cliente != null) {
+                        DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(
+                                seleccionDeProductosGUI.getRenglonesConCantidadNueva(),
+                                seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock(),
+                                this.cliente);
+                        detalleNotaCredito.setModal(true);
+                        detalleNotaCredito.setLocationRelativeTo(this);
+                        detalleNotaCredito.setVisible(true);
+                        if (detalleNotaCredito.isNotaCreada()) {
+                            this.refrescarVista();
+                        }
+                    } else if (proveedor != null) {
+                        DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(
+                                seleccionDeProductosGUI.getRenglonesConCantidadNueva(),
+                                seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock(),
+                                this.proveedor);
+                        detalleNotaCredito.setModal(true);
+                        detalleNotaCredito.setLocationRelativeTo(this);
+                        detalleNotaCredito.setVisible(true);
+                        if (detalleNotaCredito.isNotaCreada()) {
+                            this.refrescarVista();
                         }
                     }
-                } else {
-                    JOptionPane.showInternalMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
+            } else {
+                JOptionPane.showInternalMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnCrearNotaCreditoActionPerformed
 
     private void btnCrearNotaDebitoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearNotaDebitoActionPerformed
-        List<Rol> rolesAVerificar = new ArrayList();
-        if (proveedor != null) {
-            rolesAVerificar.addAll(Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO));
-        } else if (cliente != null) {
-            rolesAVerificar.addAll(Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR));
-        }
-        if (Utilidades.isUsuarioAutorizado(this, rolesAVerificar)) {
-            if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
-                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
-                if (renglonCC.getTipoComprobante() == TipoDeComprobante.RECIBO) {
-                    if (RestClient.getRestTemplate().getForObject("/notas/debito/recibo/" + renglonCC.getIdMovimiento() + "/existe", boolean.class)) {
-                        JOptionPane.showInternalMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_recibo_con_nota_debito"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        if (cliente != null) {
-                            DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(cliente, renglonCC.getIdMovimiento());
-                            detalleNotaDebitoGUI.setLocationRelativeTo(this);
-                            detalleNotaDebitoGUI.setVisible(true);
-                            if (detalleNotaDebitoGUI.isNotaDebitoCreada()) {
-                                this.refrescarVista();
-                            }
-                        } else if (proveedor != null) {
-                            DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(proveedor, renglonCC.getIdMovimiento());
-                            detalleNotaDebitoGUI.setLocationRelativeTo(this);
-                            detalleNotaDebitoGUI.setVisible(true);
-                            if (detalleNotaDebitoGUI.isNotaDebitoCreada()) {
-                                this.refrescarVista();
-                            }
+        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
+            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+            RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
+            if (renglonCC.getTipoComprobante() == TipoDeComprobante.RECIBO) {
+                if (RestClient.getRestTemplate().getForObject("/notas/debito/recibo/" + renglonCC.getIdMovimiento() + "/existe", boolean.class)) {
+                    JOptionPane.showInternalMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_recibo_con_nota_debito"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    if (cliente != null) {
+                        DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(cliente, renglonCC.getIdMovimiento());
+                        detalleNotaDebitoGUI.setLocationRelativeTo(this);
+                        detalleNotaDebitoGUI.setVisible(true);
+                        if (detalleNotaDebitoGUI.isNotaDebitoCreada()) {
+                            this.refrescarVista();
+                        }
+                    } else if (proveedor != null) {
+                        DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(proveedor, renglonCC.getIdMovimiento());
+                        detalleNotaDebitoGUI.setLocationRelativeTo(this);
+                        detalleNotaDebitoGUI.setVisible(true);
+                        if (detalleNotaDebitoGUI.isNotaDebitoCreada()) {
+                            this.refrescarVista();
                         }
                     }
-                } else {
-                    JOptionPane.showInternalMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
+            } else {
+                JOptionPane.showInternalMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnCrearNotaDebitoActionPerformed
 
     private void btnVerDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerDetalleActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR))) {
-            if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
-                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
-                if (cuentaCorriente instanceof CuentaCorrienteCliente) {
-                    this.verDetalleCliente(renglonCC);
-                } else if (cuentaCorriente instanceof CuentaCorrienteProveedor) {
-                    this.verDetalleProveedor(renglonCC);
-                }
+        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
+            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+            RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
+            if (cuentaCorriente instanceof CuentaCorrienteCliente) {
+                this.verDetalleCliente(renglonCC);
+            } else if (cuentaCorriente instanceof CuentaCorrienteProveedor) {
+                this.verDetalleProveedor(renglonCC);
             }
         }
     }//GEN-LAST:event_btnVerDetalleActionPerformed
     
     private void btnAutorizarNotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAutorizarNotaActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR))) {
-            if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
-                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
-                if (renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_A || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B
-                        || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_PRESUPUESTO || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_X
-                        || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_Y || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_A
-                        || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_PRESUPUESTO
-                        || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_X || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_Y) {
-                    try {
-                        RestClient.getRestTemplate().postForObject("/notas/" + renglonCC.getIdMovimiento() + "/autorizacion",
-                                null, Nota.class);
-                        JOptionPane.showMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
-                                "Aviso", JOptionPane.INFORMATION_MESSAGE);
-                        this.refrescarVista();
-                    } catch (RestClientResponseException ex) {
-                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    } catch (ResourceAccessException ex) {
-                        LOGGER.error(ex.getMessage());
-                        JOptionPane.showMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                } else {
-                    JOptionPane.showInternalMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
+            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+            RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
+            if (renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_A || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B
+                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_PRESUPUESTO || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_X
+                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_Y || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_A
+                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_PRESUPUESTO
+                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_X || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_Y) {
+                try {
+                    RestClient.getRestTemplate().postForObject("/notas/" + renglonCC.getIdMovimiento() + "/autorizacion",
+                            null, Nota.class);
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
+                            "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                    this.refrescarVista();
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
+            } else {
+                JOptionPane.showInternalMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnAutorizarNotaActionPerformed
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR))) {
-            if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
-                int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
-                        .getString("mensaje_eliminar_movimientos"),
-                        "Eliminar", JOptionPane.YES_NO_OPTION);
-                if (respuesta == JOptionPane.YES_OPTION) {
-                    int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                    RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
-                    boolean refrescar = false;
-                    try {
-                        switch (renglonCC.getTipoComprobante()) {
-                            case FACTURA_A:
-                            case FACTURA_B:
-                            case FACTURA_C:
-                            case FACTURA_X:
-                            case FACTURA_Y:
-                            case PRESUPUESTO: {
-                                RestClient.getRestTemplate().delete("/facturas?idFactura=" + renglonCC.getIdMovimiento());
-                                refrescar = true;
-                            }
+        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
+            int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
+                    .getString("mensaje_eliminar_movimientos"),
+                    "Eliminar", JOptionPane.YES_NO_OPTION);
+            if (respuesta == JOptionPane.YES_OPTION) {
+                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+                RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
+                boolean refrescar = false;
+                try {
+                    switch (renglonCC.getTipoComprobante()) {
+                        case FACTURA_A:
+                        case FACTURA_B:
+                        case FACTURA_C:
+                        case FACTURA_X:
+                        case FACTURA_Y:
+                        case PRESUPUESTO: {
+                            RestClient.getRestTemplate().delete("/facturas?idFactura=" + renglonCC.getIdMovimiento());
+                            refrescar = true;
+                        }
+                        break;
+                        case RECIBO: {
+                            RestClient.getRestTemplate().delete("/recibos/" + renglonCC.getIdMovimiento());
+                            refrescar = true;
+                        }
+                        break;
+                        case NOTA_CREDITO_A:
+                        case NOTA_CREDITO_B:
+                        case NOTA_CREDITO_PRESUPUESTO:
+                        case NOTA_CREDITO_X:
+                        case NOTA_CREDITO_Y:
+                        case NOTA_DEBITO_A:
+                        case NOTA_DEBITO_B:
+                        case NOTA_DEBITO_PRESUPUESTO:
+                        case NOTA_DEBITO_X:
+                        case NOTA_DEBITO_Y: {
+                            RestClient.getRestTemplate().delete("/notas?idsNota=" + renglonCC.getIdMovimiento());
+                            refrescar = true;
+                        }
+                        break;
+                        default:
+                            JOptionPane.showInternalMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
                             break;
-                            case RECIBO: {
-                                RestClient.getRestTemplate().delete("/recibos/" + renglonCC.getIdMovimiento());
-                                refrescar = true;
-                            }
-                            break;
-                            case NOTA_CREDITO_A:
-                            case NOTA_CREDITO_B:
-                            case NOTA_CREDITO_PRESUPUESTO:
-                            case NOTA_CREDITO_X:
-                            case NOTA_CREDITO_Y:
-                            case NOTA_DEBITO_A:
-                            case NOTA_DEBITO_B:
-                            case NOTA_DEBITO_PRESUPUESTO:
-                            case NOTA_DEBITO_X:
-                            case NOTA_DEBITO_Y: {
-                                RestClient.getRestTemplate().delete("/notas?idsNota=" + renglonCC.getIdMovimiento());
-                                refrescar = true;
-                            }
-                            break;
-                            default:
-                                JOptionPane.showInternalMessageDialog(this,
-                                        ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
-                                        "Error", JOptionPane.ERROR_MESSAGE);
-                                break;
 
-                        }
-                        if (refrescar) {
-                            this.refrescarVista();
-                        }
-                    } catch (RestClientResponseException ex) {
-                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    } catch (ResourceAccessException ex) {
-                        LOGGER.error(ex.getMessage());
-                        JOptionPane.showMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
                     }
+                    if (refrescar) {
+                        this.refrescarVista();
+                    }
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -949,36 +927,31 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     }//GEN-LAST:event_btnRefreshActionPerformed
 
     private void btnCrearReciboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearReciboActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
-            DetalleReciboGUI detalleComprobante;
-            if (cliente != null) {
-                detalleComprobante = new DetalleReciboGUI(cliente);
-            } else {
-                detalleComprobante = new DetalleReciboGUI(proveedor);
-            }
-            detalleComprobante.setModal(true);
-            detalleComprobante.setLocationRelativeTo(this);
-            detalleComprobante.setVisible(true);
-            this.refrescarVista();
+        DetalleReciboGUI detalleComprobante;
+        if (cliente != null) {
+            detalleComprobante = new DetalleReciboGUI(cliente);
+        } else {
+            detalleComprobante = new DetalleReciboGUI(proveedor);
         }
+        detalleComprobante.setModal(true);
+        detalleComprobante.setLocationRelativeTo(this);
+        detalleComprobante.setVisible(true);
+        this.refrescarVista();
     }//GEN-LAST:event_btnCrearReciboActionPerformed
     
     private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO,
-                Rol.VENDEDOR, Rol.VIAJANTE))) {
-            if (Desktop.isDesktopSupported()) {
-                String uriReporte = "/cuentas-corrientes/clientes/" + this.cliente.getId_Cliente() + "/reporte?"
-                        + "pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
-                ExportGUI exportGUI = new ExportGUI(uriReporte + "&formato=xlsx", "CuentaCorriente.xlsx",
-                        uriReporte + "&formato=pdf", "CuentaCorriente.pdf");
-                exportGUI.setModal(true);
-                exportGUI.setLocationRelativeTo(this);
-                exportGUI.setVisible(true);
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
+        if (Desktop.isDesktopSupported()) {
+            String uriReporte = "/cuentas-corrientes/clientes/" + this.cliente.getId_Cliente() + "/reporte?"
+                    + "pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
+            ExportGUI exportGUI = new ExportGUI(uriReporte + "&formato=xlsx", "CuentaCorriente.xlsx",
+                    uriReporte + "&formato=pdf", "CuentaCorriente.pdf");
+            exportGUI.setModal(true);
+            exportGUI.setLocationRelativeTo(this);
+            exportGUI.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnExportarActionPerformed
 

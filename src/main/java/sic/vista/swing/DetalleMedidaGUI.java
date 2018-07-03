@@ -206,22 +206,20 @@ public class DetalleMedidaGUI extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_AgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AgregarActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
-            try {
-                Medida medida = new Medida();
-                medida.setNombre(txt_Nuevo.getText().trim());
-                medida.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
-                RestClient.getRestTemplate().postForObject("/medidas", medida, Medida.class);
-                txt_Nuevo.setText("");
-                this.cargarListMedidas();
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
+        try {
+            Medida medida = new Medida();
+            medida.setNombre(txt_Nuevo.getText().trim());
+            medida.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
+            RestClient.getRestTemplate().postForObject("/medidas", medida, Medida.class);
+            txt_Nuevo.setText("");
+            this.cargarListMedidas();
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_AgregarActionPerformed
 
@@ -235,52 +233,48 @@ public class DetalleMedidaGUI extends JDialog {
     }//GEN-LAST:event_lst_MedidasValueChanged
 
     private void btn_ActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ActualizarActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
-            try {
-                if (medidaSeleccionada == null) {
-                    JOptionPane.showMessageDialog(this, "Seleccione una medida de la lista para poder continuar",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    Medida medidaModificada = new Medida();
-                    medidaModificada.setId_Medida(medidaSeleccionada.getId_Medida());
-                    medidaModificada.setNombre(txt_Nuevo.getText().trim());
-                    medidaModificada.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
-                    RestClient.getRestTemplate().put("/medidas", medidaModificada);
-                    txt_Nuevo.setText("");
-                    medidaSeleccionada = null;
-                    this.cargarListMedidas();
-                }
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+        try {
+            if (medidaSeleccionada == null) {
+                JOptionPane.showMessageDialog(this, "Seleccione una medida de la lista para poder continuar",
                         "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                Medida medidaModificada = new Medida();
+                medidaModificada.setId_Medida(medidaSeleccionada.getId_Medida());
+                medidaModificada.setNombre(txt_Nuevo.getText().trim());
+                medidaModificada.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
+                RestClient.getRestTemplate().put("/medidas", medidaModificada);
+                txt_Nuevo.setText("");
+                medidaSeleccionada = null;
+                this.cargarListMedidas();
             }
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_ActualizarActionPerformed
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR))) {
-            try {
-                if (medidaSeleccionada == null) {
-                    JOptionPane.showMessageDialog(this, "Seleccione una Medida de la lista para poder continuar.",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    RestClient.getRestTemplate().delete("/medidas/" + medidaSeleccionada.getId_Medida());
-                    txt_Nuevo.setText("");
-                    medidaSeleccionada = null;
-                    this.cargarListMedidas();
-                }
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+        try {
+            if (medidaSeleccionada == null) {
+                JOptionPane.showMessageDialog(this, "Seleccione una Medida de la lista para poder continuar.",
                         "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                RestClient.getRestTemplate().delete("/medidas/" + medidaSeleccionada.getId_Medida());
+                txt_Nuevo.setText("");
+                medidaSeleccionada = null;
+                this.cargarListMedidas();
             }
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_EliminarActionPerformed
 

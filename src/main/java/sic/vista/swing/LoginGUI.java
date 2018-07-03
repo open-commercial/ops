@@ -63,12 +63,9 @@ public class LoginGUI extends JFrame {
     }
 
     private void ingresar() {
-        if (UsuarioActivo.getInstance().getUsuario() != null && 
-                Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR, Rol.VIAJANTE))) {
-            this.setVisible(false);
-            new PrincipalGUI().setVisible(true);
-            this.dispose();
-        }
+        this.setVisible(false);
+        new PrincipalGUI().setVisible(true);
+        this.dispose();
     }
 
     private void capturaTeclaEnter(KeyEvent evt) {

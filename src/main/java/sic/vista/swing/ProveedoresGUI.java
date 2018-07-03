@@ -633,50 +633,44 @@ public class ProveedoresGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void btn_NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
-            DetalleProveedorGUI gui_DetalleProveedor = new DetalleProveedorGUI();
-            gui_DetalleProveedor.setModal(true);
-            gui_DetalleProveedor.setLocationRelativeTo(this);
-            gui_DetalleProveedor.setVisible(true);
-            this.buscar();
-        }
+        DetalleProveedorGUI gui_DetalleProveedor = new DetalleProveedorGUI();
+        gui_DetalleProveedor.setModal(true);
+        gui_DetalleProveedor.setLocationRelativeTo(this);
+        gui_DetalleProveedor.setVisible(true);
+        this.buscar();
     }//GEN-LAST:event_btn_NuevoActionPerformed
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR))) {
-            if (tbl_Resultados.getSelectedRow() != -1) {
-                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                int respuesta = JOptionPane.showConfirmDialog(this,
-                        "¿Esta seguro que desea eliminar el proveedor: "
-                        + proveedores.get(indexFilaSeleccionada) + "?", "Eliminar",
-                        JOptionPane.YES_NO_OPTION);
-                if (respuesta == JOptionPane.YES_OPTION) {
-                    try {
-                        RestClient.getRestTemplate().delete("/proveedores/" + proveedores.get(indexFilaSeleccionada).getId_Proveedor());
-                        this.buscar();
-                    } catch (RestClientResponseException ex) {
-                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    } catch (ResourceAccessException ex) {
-                        LOGGER.error(ex.getMessage());
-                        JOptionPane.showMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    }
+        if (tbl_Resultados.getSelectedRow() != -1) {
+            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+            int respuesta = JOptionPane.showConfirmDialog(this,
+                    "¿Esta seguro que desea eliminar el proveedor: "
+                    + proveedores.get(indexFilaSeleccionada) + "?", "Eliminar",
+                    JOptionPane.YES_NO_OPTION);
+            if (respuesta == JOptionPane.YES_OPTION) {
+                try {
+                    RestClient.getRestTemplate().delete("/proveedores/" + proveedores.get(indexFilaSeleccionada).getId_Proveedor());
+                    this.buscar();
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
     }//GEN-LAST:event_btn_EliminarActionPerformed
 
     private void btn_ModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ModificarActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
-            if (tbl_Resultados.getSelectedRow() != -1) {
-                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                DetalleProveedorGUI gui_DetalleProveedor = new DetalleProveedorGUI(proveedores.get(indexFilaSeleccionada));
-                gui_DetalleProveedor.setModal(true);
-                gui_DetalleProveedor.setLocationRelativeTo(this);
-                gui_DetalleProveedor.setVisible(true);
-                this.buscar();
-            }
+        if (tbl_Resultados.getSelectedRow() != -1) {
+            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+            DetalleProveedorGUI gui_DetalleProveedor = new DetalleProveedorGUI(proveedores.get(indexFilaSeleccionada));
+            gui_DetalleProveedor.setModal(true);
+            gui_DetalleProveedor.setLocationRelativeTo(this);
+            gui_DetalleProveedor.setVisible(true);
+            this.buscar();
         }
     }//GEN-LAST:event_btn_ModificarActionPerformed
 
@@ -722,25 +716,23 @@ public class ProveedoresGUI extends JInternalFrame {
     }
  
     private void btnCuentaCorrienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaCorrienteActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
-            if (tbl_Resultados.getSelectedRow() != -1) {
-                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                Proveedor proveedor = RestClient.getRestTemplate()
-                        .getForObject("/proveedores/" + proveedores.get(indexFilaSeleccionada).getId_Proveedor(), Proveedor.class);
-                JInternalFrame gui;
-                if (proveedor != null) {
-                    gui = new CuentaCorrienteGUI(proveedor);
-                    gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                            getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-                    getDesktopPane().add(gui);
-                    gui.setVisible(true);
-                    try {
-                        gui.setSelected(true);
-                    } catch (PropertyVetoException ex) {
-                        String msjError = "No se pudo seleccionar la ventana requerida.";
-                        LOGGER.error(msjError + " - " + ex.getMessage());
-                        JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
-                    }
+        if (tbl_Resultados.getSelectedRow() != -1) {
+            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+            Proveedor proveedor = RestClient.getRestTemplate()
+                    .getForObject("/proveedores/" + proveedores.get(indexFilaSeleccionada).getId_Proveedor(), Proveedor.class);
+            JInternalFrame gui;
+            if (proveedor != null) {
+                gui = new CuentaCorrienteGUI(proveedor);
+                gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                        getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+                getDesktopPane().add(gui);
+                gui.setVisible(true);
+                try {
+                    gui.setSelected(true);
+                } catch (PropertyVetoException ex) {
+                    String msjError = "No se pudo seleccionar la ventana requerida.";
+                    LOGGER.error(msjError + " - " + ex.getMessage());
+                    JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }

@@ -1028,13 +1028,11 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_btn_MedidasActionPerformed
 
     private void btn_NuevoProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoProveedorActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
-            DetalleProveedorGUI gui_DetalleProveedor = new DetalleProveedorGUI();
-            gui_DetalleProveedor.setModal(true);
-            gui_DetalleProveedor.setLocationRelativeTo(this);
-            gui_DetalleProveedor.setVisible(true);
-            this.cargarProveedores();
-        }
+        DetalleProveedorGUI gui_DetalleProveedor = new DetalleProveedorGUI();
+        gui_DetalleProveedor.setModal(true);
+        gui_DetalleProveedor.setLocationRelativeTo(this);
+        gui_DetalleProveedor.setVisible(true);
+        this.cargarProveedores();
     }//GEN-LAST:event_btn_NuevoProveedorActionPerformed
 
     private void btn_RubrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_RubrosActionPerformed

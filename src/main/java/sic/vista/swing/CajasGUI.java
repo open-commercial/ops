@@ -545,50 +545,46 @@ public class CajasGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_buscarActionPerformed
     
     private void btn_verDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_verDetalleActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
-            if (tbl_Cajas.getSelectedRow() != -1) {
-                int indice = Utilidades.getSelectedRowModelIndice(tbl_Cajas);
-                try {
-                    Caja caja = RestClient.getRestTemplate()
-                            .getForObject("/cajas/ " + this.cajasTotal.get(indice).getId_Caja(), Caja.class);
-                    JInternalFrame iFrameCaja = new CajaGUI(caja);
-                    iFrameCaja.setLocation(getDesktopPane().getWidth() / 2 - iFrameCaja.getWidth() / 2,
-                            getDesktopPane().getHeight() / 2 - iFrameCaja.getHeight() / 2);
-                    getDesktopPane().add(iFrameCaja);
-                    iFrameCaja.setVisible(true);
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
+        if (tbl_Cajas.getSelectedRow() != -1) {
+            int indice = Utilidades.getSelectedRowModelIndice(tbl_Cajas);
+            try {
+                Caja caja = RestClient.getRestTemplate()
+                        .getForObject("/cajas/ " + this.cajasTotal.get(indice).getId_Caja(), Caja.class);
+                JInternalFrame iFrameCaja = new CajaGUI(caja);
+                iFrameCaja.setLocation(getDesktopPane().getWidth() / 2 - iFrameCaja.getWidth() / 2,
+                        getDesktopPane().getHeight() / 2 - iFrameCaja.getHeight() / 2);
+                getDesktopPane().add(iFrameCaja);
+                iFrameCaja.setVisible(true);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btn_verDetalleActionPerformed
 
     private void btn_eliminarCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_eliminarCajaActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR))) {
-            if (tbl_Cajas.getSelectedRow() != -1) {
-                int confirmacionEliminacion = JOptionPane.showConfirmDialog(this,
-                        "¿Esta seguro que desea eliminar la caja seleccionada?",
-                        "Eliminar", JOptionPane.YES_NO_OPTION);
-                try {
-                    if (confirmacionEliminacion == JOptionPane.YES_OPTION) {
-                        int indiceDelModel = Utilidades.getSelectedRowModelIndice(tbl_Cajas);
-                        RestClient.getRestTemplate().delete("/cajas/" + this.cajasTotal.get(indiceDelModel).getId_Caja());
-                    }
-                    this.limpiarResultados();
-                    this.buscar(true);
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+        if (tbl_Cajas.getSelectedRow() != -1) {
+            int confirmacionEliminacion = JOptionPane.showConfirmDialog(this,
+                    "¿Esta seguro que desea eliminar la caja seleccionada?",
+                    "Eliminar", JOptionPane.YES_NO_OPTION);
+            try {
+                if (confirmacionEliminacion == JOptionPane.YES_OPTION) {
+                    int indiceDelModel = Utilidades.getSelectedRowModelIndice(tbl_Cajas);
+                    RestClient.getRestTemplate().delete("/cajas/" + this.cajasTotal.get(indiceDelModel).getId_Caja());
                 }
+                this.limpiarResultados();
+                this.buscar(true);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btn_eliminarCajaActionPerformed
@@ -622,9 +618,7 @@ public class CajasGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_UsuarioAperturaItemStateChanged
 
     private void btn_AbrirCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AbrirCajaActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
-            this.abrirNuevaCaja();
-        }
+        this.abrirNuevaCaja();
     }//GEN-LAST:event_btn_AbrirCajaActionPerformed
 
     private void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_internalFrameOpened
@@ -679,30 +673,28 @@ public class CajasGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_UsuarioCierreItemStateChanged
 
     private void btn_ReabrirCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ReabrirCajaActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
-            if (tbl_Cajas.getSelectedRow() != -1) {
-                int indice = Utilidades.getSelectedRowModelIndice(tbl_Cajas);
-                String monto = JOptionPane.showInputDialog(this,
-                        "Saldo Apertura: \n", "Reabrir Caja", JOptionPane.QUESTION_MESSAGE);
-                if (monto != null) {
-                    try {
-                        RestClient.getRestTemplate().put("/cajas/" + this.cajasTotal.get(indice).getId_Caja() + "/reapertura?monto=" + new BigDecimal(monto), null);
-                    } catch (RestClientResponseException ex) {
-                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    } catch (ResourceAccessException ex) {
-                        LOGGER.error(ex.getMessage());
-                        JOptionPane.showMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    } catch (NumberFormatException ex) {
-                        LOGGER.error(ex.getMessage());
-                        JOptionPane.showMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_formato_numero"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                    this.limpiarResultados();
-                    this.buscar(true);
+        if (tbl_Cajas.getSelectedRow() != -1) {
+            int indice = Utilidades.getSelectedRowModelIndice(tbl_Cajas);
+            String monto = JOptionPane.showInputDialog(this,
+                    "Saldo Apertura: \n", "Reabrir Caja", JOptionPane.QUESTION_MESSAGE);
+            if (monto != null) {
+                try {
+                    RestClient.getRestTemplate().put("/cajas/" + this.cajasTotal.get(indice).getId_Caja() + "/reapertura?monto=" + new BigDecimal(monto), null);
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (NumberFormatException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_formato_numero"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
+                this.limpiarResultados();
+                this.buscar(true);
             }
         }
     }//GEN-LAST:event_btn_ReabrirCajaActionPerformed

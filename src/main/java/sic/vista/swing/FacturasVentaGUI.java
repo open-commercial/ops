@@ -975,33 +975,31 @@ public class FacturasVentaGUI extends JInternalFrame {
 }//GEN-LAST:event_btn_VerDetalleActionPerformed
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR))) {
-            if (tbl_Resultados.getSelectedRow() != -1) {
-                int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
-                        .getString("mensaje_eliminar_multiples_facturas"),
-                        "Eliminar", JOptionPane.YES_NO_OPTION);
-                if (respuesta == JOptionPane.YES_OPTION) {
-                    int[] indexFilasSeleccionadas = Utilidades.getSelectedRowsModelIndices(tbl_Resultados);
-                    long[] idsFacturas = new long[indexFilasSeleccionadas.length];
-                    int i = 0;
-                    for (int indice : indexFilasSeleccionadas) {
-                        idsFacturas[i] = facturasTotal.get(indice).getId_Factura();
-                        i++;
-                    }
-                    try {
-                        RestClient.getRestTemplate().delete("/facturas?idFactura="
-                                + Arrays.toString(idsFacturas).substring(1, Arrays.toString(idsFacturas).length() - 1));
-                        this.resetScroll();
-                        this.limpiarJTable();
-                        this.buscar(true);
-                    } catch (RestClientResponseException ex) {
-                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    } catch (ResourceAccessException ex) {
-                        LOGGER.error(ex.getMessage());
-                        JOptionPane.showMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    }
+        if (tbl_Resultados.getSelectedRow() != -1) {
+            int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
+                    .getString("mensaje_eliminar_multiples_facturas"),
+                    "Eliminar", JOptionPane.YES_NO_OPTION);
+            if (respuesta == JOptionPane.YES_OPTION) {
+                int[] indexFilasSeleccionadas = Utilidades.getSelectedRowsModelIndices(tbl_Resultados);
+                long[] idsFacturas = new long[indexFilasSeleccionadas.length];
+                int i = 0;
+                for (int indice : indexFilasSeleccionadas) {
+                    idsFacturas[i] = facturasTotal.get(indice).getId_Factura();
+                    i++;
+                }
+                try {
+                    RestClient.getRestTemplate().delete("/facturas?idFactura="
+                            + Arrays.toString(idsFacturas).substring(1, Arrays.toString(idsFacturas).length() - 1));
+                    this.resetScroll();
+                    this.limpiarJTable();
+                    this.buscar(true);
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -1071,32 +1069,30 @@ public class FacturasVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_TipoFacturaItemStateChanged
 
     private void btn_NuevaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevaActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR))) {
-            if (this.existeClienteDisponible()) {
-                JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), PuntoDeVentaGUI.class);
-                if (gui == null) {
-                    PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
-                    puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
-                            getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
-                    getDesktopPane().add(puntoDeVentaGUI);
-                    puntoDeVentaGUI.setMaximizable(true);
-                    puntoDeVentaGUI.setClosable(true);
-                    puntoDeVentaGUI.setVisible(true);
-                } else {
-                    //selecciona y trae al frente el internalframe
-                    try {
-                        gui.setSelected(true);
-                    } catch (PropertyVetoException ex) {
-                        String msjError = "No se pudo seleccionar la ventana requerida.";
-                        LOGGER.error(msjError + " - " + ex.getMessage());
-                        JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
+        if (this.existeClienteDisponible()) {
+            JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), PuntoDeVentaGUI.class);
+            if (gui == null) {
+                PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
+                puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
+                        getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
+                getDesktopPane().add(puntoDeVentaGUI);
+                puntoDeVentaGUI.setMaximizable(true);
+                puntoDeVentaGUI.setClosable(true);
+                puntoDeVentaGUI.setVisible(true);
             } else {
-                JOptionPane.showInternalMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+                //selecciona y trae al frente el internalframe
+                try {
+                    gui.setSelected(true);
+                } catch (PropertyVetoException ex) {
+                    String msjError = "No se pudo seleccionar la ventana requerida.";
+                    LOGGER.error(msjError + " - " + ex.getMessage());
+                    JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
+        } else {
+            JOptionPane.showInternalMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_NuevaActionPerformed
 
@@ -1121,28 +1117,25 @@ public class FacturasVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_VendedorItemStateChanged
 
     private void btn_AutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AutorizarActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO,
-                Rol.VENDEDOR))) {
-            if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
-                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                long idFacturaSeleccionada = facturasTotal.get(indexFilaSeleccionada).getId_Factura();
-                try {
-                    RestClient.getRestTemplate().postForObject("/facturas/" + idFacturaSeleccionada + "/autorizacion",
-                            null, FacturaVenta.class);
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_autorizada"),
-                            "Aviso", JOptionPane.INFORMATION_MESSAGE);
-                    this.resetScroll();
-                    this.limpiarJTable();
-                    this.buscar(false);
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
+        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
+            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+            long idFacturaSeleccionada = facturasTotal.get(indexFilaSeleccionada).getId_Factura();
+            try {
+                RestClient.getRestTemplate().postForObject("/facturas/" + idFacturaSeleccionada + "/autorizacion",
+                        null, FacturaVenta.class);
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_autorizada"),
+                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                this.resetScroll();
+                this.limpiarJTable();
+                this.buscar(false);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btn_AutorizarActionPerformed

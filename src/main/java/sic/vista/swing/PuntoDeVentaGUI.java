@@ -557,24 +557,26 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private void cargarTiposDeComprobantesDisponibles() {
         cmb_TipoComprobante.removeAllItems();
         TipoDeComprobante[] tiposDeComprobante = new TipoDeComprobante[0];
-        if (rolesDeUsuario.contains(Rol.ADMINISTRADOR)
-                || rolesDeUsuario.contains(Rol.ENCARGADO)
-                || rolesDeUsuario.contains(Rol.VENDEDOR)) {
-            try {
-                cmb_TipoComprobante.removeAllItems();
-                tiposDeComprobante = RestClient.getRestTemplate()
-                        .getForObject("/facturas/venta/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                                + "/clientes/" + cliente.getId_Cliente(), TipoDeComprobante[].class);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-            for (int i = 0; tiposDeComprobante.length > i; i++) {
-                cmb_TipoComprobante.addItem(tiposDeComprobante[i]);
+        if (cliente != null) {
+            if (rolesDeUsuario.contains(Rol.ADMINISTRADOR)
+                    || rolesDeUsuario.contains(Rol.ENCARGADO)
+                    || rolesDeUsuario.contains(Rol.VENDEDOR)) {
+                try {
+                    cmb_TipoComprobante.removeAllItems();
+                    tiposDeComprobante = RestClient.getRestTemplate()
+                            .getForObject("/facturas/venta/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                                    + "/clientes/" + cliente.getId_Cliente(), TipoDeComprobante[].class);
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                for (int i = 0; tiposDeComprobante.length > i; i++) {
+                    cmb_TipoComprobante.addItem(tiposDeComprobante[i]);
+                }
             }
         }
         cmb_TipoComprobante.addItem(TipoDeComprobante.PEDIDO);
@@ -1470,6 +1472,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         if (buscarClientesGUI.getClienteSeleccionado() != null) {
             this.cargarCliente(buscarClientesGUI.getClienteSeleccionado());
             this.cargarTiposDeComprobantesDisponibles();
+            cmb_TipoComprobante.setSelectedIndex(0);
         }
     }//GEN-LAST:event_btn_BuscarClienteActionPerformed
 
@@ -1687,9 +1690,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                             .getForObject("/clientes/predeterminado/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                                     Cliente.class);
                     this.cargarCliente(clientePredeterminado);
-                } else {
-                    this.dispose();
-                }
+                } 
             }
             if (!this.existeFormaDePagoPredeterminada() || !this.existeTransportistaCargado()) {
                 this.dispose();

@@ -676,15 +676,13 @@ public class ProductosGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void btn_NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
-            DetalleProductoGUI gui_DetalleProducto = new DetalleProductoGUI();
-            gui_DetalleProducto.setModal(true);
-            gui_DetalleProducto.setLocationRelativeTo(this);
-            gui_DetalleProducto.setVisible(true);
-            this.resetScroll();
-            this.limpiarJTable();
-            this.buscar();
-        }
+        DetalleProductoGUI gui_DetalleProducto = new DetalleProductoGUI();
+        gui_DetalleProducto.setModal(true);
+        gui_DetalleProducto.setLocationRelativeTo(this);
+        gui_DetalleProducto.setVisible(true);
+        this.resetScroll();
+        this.limpiarJTable();
+        this.buscar();
     }//GEN-LAST:event_btn_NuevoActionPerformed
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
@@ -717,27 +715,25 @@ public class ProductosGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_EliminarActionPerformed
 
     private void btn_ModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ModificarActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
-            if (tbl_Resultados.getSelectedRow() != -1) {
-                if (tbl_Resultados.getSelectedRowCount() > 1) {
-                    //seleccion multiple
-                    ModificacionProductosBulkGUI gui_ModificacionProductosBulk = new ModificacionProductosBulkGUI(
-                            this.getSeleccionMultipleDeProductos(Utilidades.getSelectedRowsModelIndices(tbl_Resultados)));
-                    gui_ModificacionProductosBulk.setModal(true);
-                    gui_ModificacionProductosBulk.setLocationRelativeTo(this);
-                    gui_ModificacionProductosBulk.setVisible(true);
-                } else {
-                    //seleccion unica
-                    DetalleProductoGUI gui_DetalleProducto = new DetalleProductoGUI(
-                            productosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)));
-                    gui_DetalleProducto.setModal(true);
-                    gui_DetalleProducto.setLocationRelativeTo(this);
-                    gui_DetalleProducto.setVisible(true);
-                }
-                this.resetScroll();
-                this.limpiarJTable();
-                this.buscar();
+        if (tbl_Resultados.getSelectedRow() != -1) {
+            if (tbl_Resultados.getSelectedRowCount() > 1) {
+                //seleccion multiple
+                ModificacionProductosBulkGUI gui_ModificacionProductosBulk = new ModificacionProductosBulkGUI(
+                        this.getSeleccionMultipleDeProductos(Utilidades.getSelectedRowsModelIndices(tbl_Resultados)));
+                gui_ModificacionProductosBulk.setModal(true);
+                gui_ModificacionProductosBulk.setLocationRelativeTo(this);
+                gui_ModificacionProductosBulk.setVisible(true);
+            } else {
+                //seleccion unica
+                DetalleProductoGUI gui_DetalleProducto = new DetalleProductoGUI(
+                        productosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)));
+                gui_DetalleProducto.setModal(true);
+                gui_DetalleProducto.setLocationRelativeTo(this);
+                gui_DetalleProducto.setVisible(true);
             }
+            this.resetScroll();
+            this.limpiarJTable();
+            this.buscar();
         }
     }//GEN-LAST:event_btn_ModificarActionPerformed
 
@@ -793,26 +789,34 @@ public class ProductosGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_DisponibilidadItemStateChanged
 
     private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
-        if (Utilidades.isUsuarioAutorizado(this, Arrays.asList(Rol.ADMINISTRADOR, Rol.ENCARGADO))) {
-            if (!productosTotal.isEmpty()) {
-             if (Desktop.isDesktopSupported()) {
-                    String uriReporte = "/productos/reporte/criteria?"
-                    + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
-                    if (chk_Codigo.isSelected()) uriReporte += "&codigo=" + txt_Codigo.getText().trim();                    
-                    if (chk_Descripcion.isSelected()) uriReporte += "&descripcion=" + txt_Descripcion.getText().trim();                    
-                    if (chk_Rubro.isSelected()) uriReporte += "&idRubro=" + this.getIdRubroSeleccionado();
-                    if (chk_Proveedor.isSelected()) uriReporte += "&idProveedor=" + this.getIdProveedorSeleccionado();
-                    if (chk_Disponibilidad.isSelected()) uriReporte += "&soloFantantes=" + rb_Faltantes.isSelected();                
-                    ExportGUI exportGUI = new ExportGUI(uriReporte + "&formato=xlsx", "ListaPrecios.xlsx",
-                       uriReporte + "&formato=pdf", "ListaPrecios.pdf");
-                    exportGUI.setModal(true);
-                    exportGUI.setLocationRelativeTo(this);
-                    exportGUI.setVisible(true);
-                } else {
+        if (!productosTotal.isEmpty()) {
+            if (Desktop.isDesktopSupported()) {
+                String uriReporte = "/productos/reporte/criteria?"
+                        + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
+                if (chk_Codigo.isSelected()) {
+                    uriReporte += "&codigo=" + txt_Codigo.getText().trim();
+                }
+                if (chk_Descripcion.isSelected()) {
+                    uriReporte += "&descripcion=" + txt_Descripcion.getText().trim();
+                }
+                if (chk_Rubro.isSelected()) {
+                    uriReporte += "&idRubro=" + this.getIdRubroSeleccionado();
+                }
+                if (chk_Proveedor.isSelected()) {
+                    uriReporte += "&idProveedor=" + this.getIdProveedorSeleccionado();
+                }
+                if (chk_Disponibilidad.isSelected()) {
+                    uriReporte += "&soloFantantes=" + rb_Faltantes.isSelected();
+                }
+                ExportGUI exportGUI = new ExportGUI(uriReporte + "&formato=xlsx", "ListaPrecios.xlsx",
+                        uriReporte + "&formato=pdf", "ListaPrecios.pdf");
+                exportGUI.setModal(true);
+                exportGUI.setLocationRelativeTo(this);
+                exportGUI.setVisible(true);
+            } else {
                 JOptionPane.showMessageDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
                         "Error", JOptionPane.ERROR_MESSAGE);
-                }
             }
         }
     }//GEN-LAST:event_btnExportarActionPerformed
