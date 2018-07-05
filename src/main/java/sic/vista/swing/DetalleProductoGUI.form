@@ -42,7 +42,7 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Component id="tp_Tabs" min="-2" max="-2" attributes="0"/>
+              <Component id="tp_Tabs" min="-2" pref="366" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
@@ -101,11 +101,11 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="panelSuperior" min="-2" max="-2" attributes="1"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="panelPrecios" max="32767" attributes="3"/>
                           <Component id="panelCantidades" max="32767" attributes="1"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -313,25 +313,33 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lbl_PVP" pref="153" max="32767" attributes="0"/>
-                              <Component id="lbl_IVA" alignment="0" max="32767" attributes="0"/>
-                              <Component id="lbl_Ganancia" alignment="0" max="32767" attributes="1"/>
-                              <Component id="lbl_PrecioCosto" max="32767" attributes="1"/>
-                              <Component id="lbl_PrecioLista" max="32767" attributes="1"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="cmbIVAPorcentaje" max="32767" attributes="0"/>
-                              <Component id="txtGananciaPorcentaje" max="32767" attributes="2"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="txtPrecioLista" linkSize="5" pref="102" max="32767" attributes="1"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="txtIVANeto" linkSize="5" alignment="1" max="32767" attributes="2"/>
-                                  <Component id="txtGananciaNeto" linkSize="5" alignment="0" max="32767" attributes="1"/>
-                                  <Component id="txtPrecioCosto" linkSize="5" alignment="0" max="32767" attributes="1"/>
-                                  <Component id="txtPVP" linkSize="5" alignment="0" pref="102" max="32767" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="lbl_PVP" pref="153" max="32767" attributes="0"/>
+                                      <Component id="lbl_IVA" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="lbl_Ganancia" alignment="0" max="32767" attributes="1"/>
+                                      <Component id="lbl_PrecioCosto" max="32767" attributes="1"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="cmbIVAPorcentaje" max="32767" attributes="0"/>
+                                      <Component id="txtGananciaPorcentaje" max="32767" attributes="2"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="txtIVANeto" linkSize="5" alignment="1" max="32767" attributes="2"/>
+                                      <Component id="txtGananciaNeto" linkSize="5" alignment="0" max="32767" attributes="1"/>
+                                      <Component id="txtPrecioCosto" linkSize="5" alignment="0" max="32767" attributes="1"/>
+                                      <Component id="txtPVP" linkSize="5" alignment="0" pref="102" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="lbl_PrecioLista" max="32767" attributes="1"/>
+                                  <EmptySpace min="46" pref="46" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="chkPublicable" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="txtPrecioLista" linkSize="5" alignment="1" pref="102" max="32767" attributes="1"/>
+                                  </Group>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -361,18 +369,16 @@
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="txtIVANeto" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="cmbIVAPorcentaje" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_IVA" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="lbl_PrecioLista" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="txtPrecioLista" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="2" attributes="0">
-                          <EmptySpace min="86" pref="86" max="-2" attributes="0"/>
-                          <Component id="lbl_IVA" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="36" pref="36" max="-2" attributes="0"/>
+                          <Component id="chkPublicable" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -495,6 +501,11 @@
                   <Events>
                     <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmbIVAPorcentajeItemStateChanged"/>
                   </Events>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="chkPublicable">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Publicable"/>
+                  </Properties>
                 </Component>
               </SubComponents>
             </Container>
@@ -730,7 +741,7 @@
                               <Component id="lbl_FA" alignment="2" min="-2" max="-2" attributes="1"/>
                               <Component id="lbl_FechaAlta" alignment="2" min="-2" pref="23" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="67" max="32767" attributes="0"/>
+                          <EmptySpace pref="92" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
