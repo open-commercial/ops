@@ -7,7 +7,6 @@ import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -223,26 +222,26 @@ public class ClientesGUI extends JInternalFrame {
     }
 
     private void cargarResultadosAlTable() {
-        clientesParcial.stream().map(cliente -> {
+        clientesParcial.stream().map(c -> {
             Object[] fila = new Object[18];
-            fila[0] = cliente.isPredeterminado();
-            fila[1] = cliente.getIdFiscal();
-            fila[2] = cliente.getRazonSocial();
-            fila[3] = cliente.getNombreFantasia(); 
-            fila[4] = cliente.getSaldoCuentaCorriente();
-            fila[5] = cliente.getFechaUltimoMovimiento();
-            if (cliente.getCredencial() != null) fila[6] = cliente.getCredencial().toString();
-            if (cliente.getViajante() != null) fila[7] = cliente.getViajante().toString();
-            fila[8] = cliente.getDireccion();
-            fila[9] = cliente.getCondicionIVA().getNombre();
-            fila[10] = cliente.getTelPrimario();
-            fila[11] = cliente.getTelSecundario();            
-            fila[12] = cliente.getContacto();
-            fila[13] = cliente.getEmail();
-            fila[14] = cliente.getFechaAlta();
-            fila[15] = cliente.getLocalidad().getNombre();
-            fila[16] = cliente.getLocalidad().getProvincia().getNombre();
-            fila[17] = cliente.getLocalidad().getProvincia().getPais().getNombre();
+            fila[0] = c.isPredeterminado();
+            fila[1] = c.getIdFiscal();
+            fila[2] = c.getRazonSocial();
+            fila[3] = c.getNombreFantasia(); 
+            fila[4] = c.getSaldoCuentaCorriente();
+            fila[5] = c.getFechaUltimoMovimiento();
+            fila[6] = c.getNombreCredencial();
+            fila[7] = c.getNombreViajante();
+            fila[8] = c.getDireccion();
+            fila[9] = c.getNombreCondicionIVA();
+            fila[10] = c.getTelPrimario();
+            fila[11] = c.getTelSecundario();            
+            fila[12] = c.getContacto();
+            fila[13] = c.getEmail();
+            fila[14] = c.getFechaAlta();
+            fila[15] = c.getNombreLocalidad();
+            fila[16] = c.getNombreProvincia();
+            fila[17] = c.getNombrePais();
             return fila;
         }).forEach(fila -> {
             modeloTablaDeResultados.addRow(fila);

@@ -215,10 +215,10 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         this.cliente = cliente;
         txt_NombreCliente.setText(cliente.getRazonSocial());
         txt_DomicilioCliente.setText(cliente.getDireccion() 
-                + " " + cliente.getLocalidad().getNombre() 
-                + " " + cliente.getLocalidad().getProvincia().getNombre() 
-                + " " + cliente.getLocalidad().getProvincia().getPais());
-        txt_CondicionIVACliente.setText(cliente.getCondicionIVA().toString());
+                + " " + cliente.getNombreLocalidad()
+                + " " + cliente.getNombreProvincia()
+                + " " + cliente.getNombrePais());
+        txt_CondicionIVACliente.setText(cliente.getNombreCondicionIVA());
         txt_IDFiscalCliente.setText(cliente.getIdFiscal());
     }
 

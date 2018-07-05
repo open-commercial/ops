@@ -7,25 +7,33 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = {"razonSocial", "idFiscal", "empresa"})
+@EqualsAndHashCode(of = {"razonSocial", "idFiscal", "nombreEmpresa"})
 public class Cliente implements Serializable {
 
     private long id_Cliente;
     private String razonSocial;
     private String nombreFantasia;
-    private String direccion;
-    private CondicionIVA condicionIVA;
+    private String direccion;  
+    private Long idCondicionIVA;
+    private String nombreCondicionIVA;
     private String idFiscal;
     private String email;
     private String telPrimario;
-    private String telSecundario;
-    private Localidad localidad;
+    private String telSecundario;    
+    private Long idLocalidad;
+    private String nombreLocalidad;
+    private Long idProvincia;
+    private String nombreProvincia;
+    private Long idPais;
+    private String nombrePais;
     private String contacto;
-    private Date fechaAlta;
-    private Empresa empresa;
-    private Usuario viajante;
-    private Usuario credencial;
-    private boolean eliminado;
+    private Date fechaAlta;    
+    private Long idEmpresa;
+    private String nombreEmpresa;    
+    private Long idViajante;
+    private String nombreViajante;    
+    private Long idCredencial;
+    private String nombreCredencial;    
     private boolean predeterminado;
     private BigDecimal saldoCuentaCorriente;
     private Date fechaUltimoMovimiento;
