@@ -109,6 +109,7 @@ public class ModificacionProductosBulkGUI extends JDialog {
         txtGananciaPorcentaje.setValue(BigDecimal.ZERO);
         txtGananciaNeto.setValue(BigDecimal.ZERO);
         txtPrecioLista.setValue(BigDecimal.ZERO);
+        jRadioButtonRecargo.setSelected(true);
     }
     
     private void setColumnas() {
