@@ -103,83 +103,86 @@ public class ProductosGUI extends JInternalFrame {
         // sorting
         // tbl_Resultados.setAutoCreateRowSorter(true);
         //nombres de columnas
-        String[] encabezados = new String[22];
-        encabezados[0] = "Codigo";
-        encabezados[1] = "Descripcion";
-        encabezados[2] = "Cantidad";
-        encabezados[3] = "Cant. Minima";
-        encabezados[4] = "Venta Minima";
-        encabezados[5] = "Sin Límite";
-        encabezados[6] = "Medida";
-        encabezados[7] = "Precio Costo";
-        encabezados[8] = "% Ganancia";
-        encabezados[9] = "Ganancia";
-        encabezados[10] = "PVP";
-        encabezados[11] = "% IVA";
-        encabezados[12] = "IVA";
-        encabezados[13] = "Precio Lista";
-        encabezados[14] = "Rubro";
-        encabezados[15] = "Fecha U. Modificacion";
-        encabezados[16] = "Estanteria";
-        encabezados[17] = "Estante";
-        encabezados[18] = "Proveedor";
-        encabezados[19] = "Fecha Alta";
-        encabezados[20] = "Fecha Vencimiento";
-        encabezados[21] = "Nota";
+        String[] encabezados = new String[23];
+        encabezados[0] = "Publicable";
+        encabezados[1] = "Codigo";
+        encabezados[2] = "Descripcion";
+        encabezados[3] = "Cantidad";
+        encabezados[4] = "Cant. Minima";
+        encabezados[5] = "Venta Minima";
+        encabezados[6] = "Sin Límite";
+        encabezados[7] = "Medida";
+        encabezados[8] = "Precio Costo";
+        encabezados[9] = "% Ganancia";
+        encabezados[10] = "Ganancia";
+        encabezados[11] = "PVP";
+        encabezados[12] = "% IVA";
+        encabezados[13] = "IVA";
+        encabezados[14] = "Precio Lista";
+        encabezados[15] = "Rubro";
+        encabezados[16] = "Fecha U. Modificacion";
+        encabezados[17] = "Estanteria";
+        encabezados[18] = "Estante";
+        encabezados[19] = "Proveedor";
+        encabezados[20] = "Fecha Alta";
+        encabezados[21] = "Fecha Vencimiento";
+        encabezados[22] = "Nota";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaResultados);
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
-        tipos[0] = String.class;
+        tipos[0] = Boolean.class;
         tipos[1] = String.class;
-        tipos[2] = BigDecimal.class;
+        tipos[2] = String.class;
         tipos[3] = BigDecimal.class;
         tipos[4] = BigDecimal.class;
-        tipos[5] = Boolean.class;
-        tipos[6] = String.class;
-        tipos[7] = BigDecimal.class;
+        tipos[5] = BigDecimal.class;
+        tipos[6] = Boolean.class;
+        tipos[7] = String.class;
         tipos[8] = BigDecimal.class;
         tipos[9] = BigDecimal.class;
         tipos[10] = BigDecimal.class;
         tipos[11] = BigDecimal.class;
         tipos[12] = BigDecimal.class;
         tipos[13] = BigDecimal.class;
-        tipos[14] = String.class;
-        tipos[15] = Date.class;
-        tipos[16] = String.class;
+        tipos[14] = BigDecimal.class;
+        tipos[15] = String.class;
+        tipos[16] = Date.class;
         tipos[17] = String.class;
         tipos[18] = String.class;
-        tipos[19] = Date.class;
+        tipos[19] = String.class;
         tipos[20] = Date.class;
-        tipos[21] = String.class;
+        tipos[21] = Date.class;
+        tipos[22] = String.class;
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         //tamanios de columnas
-        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(150);
-        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(400);
-        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(80);
+        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(150);
+        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(400);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(80);
-        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(150);
-        tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(80);
+        tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(150);
         tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(11).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(12).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(13).setPreferredWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(14).setPreferredWidth(180);
-        tbl_Resultados.getColumnModel().getColumn(15).setPreferredWidth(150);
-        tbl_Resultados.getColumnModel().getColumn(16).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(14).setPreferredWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(15).setPreferredWidth(180);
+        tbl_Resultados.getColumnModel().getColumn(16).setPreferredWidth(150);
         tbl_Resultados.getColumnModel().getColumn(17).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(18).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(19).setPreferredWidth(125);
+        tbl_Resultados.getColumnModel().getColumn(18).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(19).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(20).setPreferredWidth(125);
-        tbl_Resultados.getColumnModel().getColumn(21).setPreferredWidth(400);
+        tbl_Resultados.getColumnModel().getColumn(21).setPreferredWidth(125);
+        tbl_Resultados.getColumnModel().getColumn(22).setPreferredWidth(400);
         //renderers
         tbl_Resultados.getColumnModel().getColumn(15).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
         tbl_Resultados.getColumnModel().getColumn(19).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
@@ -188,29 +191,30 @@ public class ProductosGUI extends JInternalFrame {
 
     private void cargarResultadosAlTable() {
         productosParcial.stream().map(producto -> {
-            Object[] fila = new Object[22];
-            fila[0] = producto.getCodigo();
-            fila[1] = producto.getDescripcion();
-            fila[2] = producto.getCantidad();
-            fila[3] = producto.getCantMinima();
-            fila[4] = producto.getVentaMinima();
-            fila[5] = producto.isIlimitado();
-            fila[6] = producto.getNombreMedida();
-            fila[7] = producto.getPrecioCosto();
-            fila[8] = producto.getGanancia_porcentaje();
-            fila[9] = producto.getGanancia_neto();
-            fila[10] = producto.getPrecioVentaPublico();
-            fila[11] = producto.getIva_porcentaje();
-            fila[12] = producto.getIva_neto();
-            fila[13] = producto.getPrecioLista();
-            fila[14] = producto.getNombreRubro();
-            fila[15] = producto.getFechaUltimaModificacion();
-            fila[16] = producto.getEstanteria();
-            fila[17] = producto.getEstante();
-            fila[18] = producto.getRazonSocialProveedor();
-            fila[19] = producto.getFechaAlta();
-            fila[20] = producto.getFechaVencimiento();
-            fila[21] = producto.getNota();
+            Object[] fila = new Object[23];
+            fila[0] = producto.isPublicable();
+            fila[1] = producto.getCodigo();
+            fila[2] = producto.getDescripcion();
+            fila[3] = producto.getCantidad();
+            fila[4] = producto.getCantMinima();
+            fila[5] = producto.getVentaMinima();
+            fila[6] = producto.isIlimitado();
+            fila[7] = producto.getNombreMedida();
+            fila[8] = producto.getPrecioCosto();
+            fila[9] = producto.getGanancia_porcentaje();
+            fila[10] = producto.getGanancia_neto();
+            fila[11] = producto.getPrecioVentaPublico();
+            fila[12] = producto.getIva_porcentaje();
+            fila[13] = producto.getIva_neto();
+            fila[14] = producto.getPrecioLista();
+            fila[15] = producto.getNombreRubro();
+            fila[16] = producto.getFechaUltimaModificacion();
+            fila[17] = producto.getEstanteria();
+            fila[18] = producto.getEstante();
+            fila[19] = producto.getRazonSocialProveedor();
+            fila[20] = producto.getFechaAlta();
+            fila[21] = producto.getFechaVencimiento();
+            fila[22] = producto.getNota();
             return fila;
         }).forEach(fila -> {
             modeloTablaResultados.addRow(fila);
@@ -317,6 +321,10 @@ public class ProductosGUI extends JInternalFrame {
             criteriaBusqueda += "&soloFantantes=" + rb_Faltantes.isSelected();
             criteriaCosto += "&soloFantantes=" + rb_Faltantes.isSelected();
         }
+        if (chk_Publicable.isSelected()) {
+            criteriaBusqueda += "&soloPublicables=true";
+            criteriaCosto += "&soloPublicables=true";
+        }
         criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
         try {
             PaginaRespuestaRest<Producto> response = RestClient.getRestTemplate()
@@ -368,6 +376,7 @@ public class ProductosGUI extends JInternalFrame {
         chk_Disponibilidad = new javax.swing.JCheckBox();
         rb_Todos = new javax.swing.JRadioButton();
         rb_Faltantes = new javax.swing.JRadioButton();
+        chk_Publicable = new javax.swing.JCheckBox();
         panelResultados = new javax.swing.JPanel();
         sp_Resultados = new javax.swing.JScrollPane();
         tbl_Resultados = new javax.swing.JTable();
@@ -475,6 +484,8 @@ public class ProductosGUI extends JInternalFrame {
         rb_Faltantes.setText("Faltantes");
         rb_Faltantes.setEnabled(false);
 
+        chk_Publicable.setText("Publicable");
+
         javax.swing.GroupLayout panelFiltrosLayout = new javax.swing.GroupLayout(panelFiltros);
         panelFiltros.setLayout(panelFiltrosLayout);
         panelFiltrosLayout.setHorizontalGroup(
@@ -495,7 +506,9 @@ public class ProductosGUI extends JInternalFrame {
                             .addComponent(txt_Codigo, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cmb_Proveedor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addComponent(chk_Disponibilidad)
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(chk_Disponibilidad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(chk_Publicable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(rb_Faltantes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -523,7 +536,8 @@ public class ProductosGUI extends JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_Rubro)
-                    .addComponent(cmb_Rubro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmb_Rubro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chk_Publicable))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_Proveedor)
@@ -840,6 +854,7 @@ public class ProductosGUI extends JInternalFrame {
     private javax.swing.JCheckBox chk_Descripcion;
     private javax.swing.JCheckBox chk_Disponibilidad;
     private javax.swing.JCheckBox chk_Proveedor;
+    private javax.swing.JCheckBox chk_Publicable;
     private javax.swing.JCheckBox chk_Rubro;
     private javax.swing.JComboBox cmb_Proveedor;
     private javax.swing.JComboBox cmb_Rubro;

@@ -83,7 +83,10 @@
                               <Component id="cmb_Proveedor" alignment="0" min="-2" pref="319" max="-2" attributes="2"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="chk_Disponibilidad" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="chk_Disponibilidad" max="32767" attributes="0"/>
+                              <Component id="chk_Publicable" max="32767" attributes="0"/>
+                          </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="rb_Faltantes" max="32767" attributes="0"/>
@@ -120,6 +123,7 @@
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="chk_Rubro" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="cmb_Rubro" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="chk_Publicable" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -247,6 +251,11 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Faltantes"/>
             <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="chk_Publicable">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Publicable"/>
           </Properties>
         </Component>
       </SubComponents>

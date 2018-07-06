@@ -97,7 +97,6 @@ public class DetalleProductoGUI extends JDialog {
         lbl_PVP = new javax.swing.JLabel();
         txtPVP = new javax.swing.JFormattedTextField();
         cmbIVAPorcentaje = new javax.swing.JComboBox();
-        chkPublicable = new javax.swing.JCheckBox();
         panelCantidades = new javax.swing.JPanel();
         chk_Ilimitado = new javax.swing.JCheckBox();
         lbl_Cantidad = new javax.swing.JLabel();
@@ -121,6 +120,7 @@ public class DetalleProductoGUI extends JDialog {
         lbl_FechaAlta = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txt_Nota = new javax.swing.JTextArea();
+        chkPublicable = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -348,8 +348,6 @@ public class DetalleProductoGUI extends JDialog {
             }
         });
 
-        chkPublicable.setText("Publicable");
-
         javax.swing.GroupLayout panelPreciosLayout = new javax.swing.GroupLayout(panelPrecios);
         panelPrecios.setLayout(panelPreciosLayout);
         panelPreciosLayout.setHorizontalGroup(
@@ -376,9 +374,7 @@ public class DetalleProductoGUI extends JDialog {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPreciosLayout.createSequentialGroup()
                         .addComponent(lbl_PrecioLista, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(46, 46, 46)
-                        .addGroup(panelPreciosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(chkPublicable, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtPrecioLista, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE))))
+                        .addComponent(txtPrecioLista, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -409,8 +405,6 @@ public class DetalleProductoGUI extends JDialog {
                 .addGroup(panelPreciosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_PrecioLista)
                     .addComponent(txtPrecioLista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chkPublicable)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -528,10 +522,10 @@ public class DetalleProductoGUI extends JDialog {
             .addGroup(panelGeneralLayout.createSequentialGroup()
                 .addComponent(panelSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(panelPrecios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelCantidades, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tp_Tabs.addTab("General", panelGeneral);
@@ -567,12 +561,17 @@ public class DetalleProductoGUI extends JDialog {
         txt_Nota.setRows(5);
         jScrollPane1.setViewportView(txt_Nota);
 
+        chkPublicable.setText("Publicable");
+
         javax.swing.GroupLayout panel5Layout = new javax.swing.GroupLayout(panel5);
         panel5.setLayout(panel5Layout);
         panel5Layout.setHorizontalGroup(
             panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel5Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(154, 154, 154)
+                .addComponent(chkPublicable, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel5Layout.createSequentialGroup()
                 .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_Estante, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_Nota, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -588,13 +587,14 @@ public class DetalleProductoGUI extends JDialog {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txt_Estante, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txt_Estanteria)
-                    .addComponent(dc_Vencimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(dc_Vencimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         panel5Layout.setVerticalGroup(
             panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel5Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel5Layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(chkPublicable)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_Ven)
                     .addComponent(dc_Vencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -618,7 +618,7 @@ public class DetalleProductoGUI extends JDialog {
                 .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_FA)
                     .addComponent(lbl_FechaAlta, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(92, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout panelPropiedadesLayout = new javax.swing.GroupLayout(panelPropiedades);
@@ -634,8 +634,8 @@ public class DetalleProductoGUI extends JDialog {
             panelPropiedadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPropiedadesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(panel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tp_Tabs.addTab("Propiedades", panelPropiedades);
@@ -952,6 +952,12 @@ public class DetalleProductoGUI extends JDialog {
         }
     }//GEN-LAST:event_formWindowOpened
 
+    private void txt_VentaMinimaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_VentaMinimaFocusGained
+        SwingUtilities.invokeLater(() -> {
+            txt_VentaMinima.selectAll();
+        });
+    }//GEN-LAST:event_txt_VentaMinimaFocusGained
+
     private void txt_CantMinimaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_CantMinimaFocusGained
         SwingUtilities.invokeLater(() -> {
             txt_CantMinima.selectAll();
@@ -984,7 +990,7 @@ public class DetalleProductoGUI extends JDialog {
 
     private void cmbIVAPorcentajeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbIVAPorcentajeItemStateChanged
         this.calcularIVANeto();
-        this.calcularPrecioLista();        
+        this.calcularPrecioLista();
     }//GEN-LAST:event_cmbIVAPorcentajeItemStateChanged
 
     private void txtPVPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPVPActionPerformed
@@ -992,8 +998,19 @@ public class DetalleProductoGUI extends JDialog {
         this.calcularGananciaNeto();
         this.calcularPVP();
         this.calcularIVANeto();
-        this.calcularPrecioLista();        
+        this.calcularPrecioLista();
     }//GEN-LAST:event_txtPVPActionPerformed
+
+    private void txtPVPFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPVPFocusLost
+        try {
+            txtPVP.commitEdit();
+        } catch (ParseException ex) {}
+        this.calcularGananciaPorcentaje();
+        this.calcularGananciaNeto();
+        this.calcularPVP();
+        this.calcularIVANeto();
+        this.calcularPrecioLista();
+    }//GEN-LAST:event_txtPVPFocusLost
 
     private void txtPVPFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPVPFocusGained
         SwingUtilities.invokeLater(() -> {
@@ -1001,13 +1018,50 @@ public class DetalleProductoGUI extends JDialog {
         });
     }//GEN-LAST:event_txtPVPFocusGained
 
+    private void txtPrecioListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioListaActionPerformed
+        this.calcularGananciaPorcentajeSegunPrecioDeLista();
+        this.calcularGananciaNeto();
+        this.calcularPVP();
+        this.calcularIVANeto();
+        this.calcularPrecioLista();
+    }//GEN-LAST:event_txtPrecioListaActionPerformed
+
+    private void txtPrecioListaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioListaFocusLost
+        try {
+            txtPrecioLista.commitEdit();
+        } catch (ParseException ex) {}
+        this.calcularGananciaPorcentajeSegunPrecioDeLista();
+        this.calcularGananciaNeto();
+        this.calcularPVP();
+        this.calcularIVANeto();
+        this.calcularPrecioLista();
+    }//GEN-LAST:event_txtPrecioListaFocusLost
+
+    private void txtPrecioListaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioListaFocusGained
+        precioListaAnterior = new BigDecimal(txtPrecioLista.getValue().toString());
+        SwingUtilities.invokeLater(() -> {
+            txtPrecioLista.selectAll();
+        });
+    }//GEN-LAST:event_txtPrecioListaFocusGained
+
     private void txtGananciaPorcentajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGananciaPorcentajeActionPerformed
         this.calcularGananciaNeto();
         this.calcularPVP();
         this.calcularGananciaPorcentaje();
         this.calcularIVANeto();
-        this.calcularPrecioLista();                    
+        this.calcularPrecioLista();
     }//GEN-LAST:event_txtGananciaPorcentajeActionPerformed
+
+    private void txtGananciaPorcentajeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGananciaPorcentajeFocusLost
+        try {
+            txtGananciaPorcentaje.commitEdit();
+        } catch (ParseException ex) {}
+        this.calcularGananciaNeto();
+        this.calcularPVP();
+        this.calcularGananciaPorcentaje();
+        this.calcularIVANeto();
+        this.calcularPrecioLista();
+    }//GEN-LAST:event_txtGananciaPorcentajeFocusLost
 
     private void txtGananciaPorcentajeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGananciaPorcentajeFocusGained
         SwingUtilities.invokeLater(() -> {
@@ -1019,8 +1073,18 @@ public class DetalleProductoGUI extends JDialog {
         this.calcularGananciaNeto();
         this.calcularPVP();
         this.calcularIVANeto();
-        this.calcularPrecioLista();        
+        this.calcularPrecioLista();
     }//GEN-LAST:event_txtPrecioCostoActionPerformed
+
+    private void txtPrecioCostoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioCostoFocusLost
+        try {
+            txtPrecioCosto.commitEdit();
+        } catch (ParseException ex) {}
+        this.calcularGananciaNeto();
+        this.calcularPVP();
+        this.calcularIVANeto();
+        this.calcularPrecioLista();
+    }//GEN-LAST:event_txtPrecioCostoFocusLost
 
     private void txtPrecioCostoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioCostoFocusGained
         SwingUtilities.invokeLater(() -> {
@@ -1051,70 +1115,6 @@ public class DetalleProductoGUI extends JDialog {
         gui_DetalleRubro.setVisible(true);
         this.cargarRubros();
     }//GEN-LAST:event_btn_RubrosActionPerformed
-
-    private void txtPrecioListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioListaActionPerformed
-        this.calcularGananciaPorcentajeSegunPrecioDeLista();
-        this.calcularGananciaNeto();
-        this.calcularPVP();
-        this.calcularIVANeto();
-        this.calcularPrecioLista();        
-    }//GEN-LAST:event_txtPrecioListaActionPerformed
-
-    private void txtPrecioListaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioListaFocusGained
-        precioListaAnterior = new BigDecimal(txtPrecioLista.getValue().toString());
-        SwingUtilities.invokeLater(() -> {
-            txtPrecioLista.selectAll();
-        });
-    }//GEN-LAST:event_txtPrecioListaFocusGained
-
-    private void txt_VentaMinimaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_VentaMinimaFocusGained
-        SwingUtilities.invokeLater(() -> {
-            txt_VentaMinima.selectAll();
-        });
-    }//GEN-LAST:event_txt_VentaMinimaFocusGained
-
-    private void txtPrecioCostoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioCostoFocusLost
-        try {
-            txtPrecioCosto.commitEdit();
-        } catch (ParseException ex) {}                
-        this.calcularGananciaNeto();
-        this.calcularPVP();
-        this.calcularIVANeto();
-        this.calcularPrecioLista();
-    }//GEN-LAST:event_txtPrecioCostoFocusLost
-
-    private void txtPVPFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPVPFocusLost
-        try {
-            txtPVP.commitEdit();
-        } catch (ParseException ex) {}                
-        this.calcularGananciaPorcentaje();
-        this.calcularGananciaNeto();
-        this.calcularPVP();
-        this.calcularIVANeto();
-        this.calcularPrecioLista();
-    }//GEN-LAST:event_txtPVPFocusLost
-
-    private void txtGananciaPorcentajeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGananciaPorcentajeFocusLost
-        try {
-            txtGananciaPorcentaje.commitEdit();
-        } catch (ParseException ex) {}                
-        this.calcularGananciaNeto();
-        this.calcularPVP();
-        this.calcularGananciaPorcentaje();
-        this.calcularIVANeto();
-        this.calcularPrecioLista();
-    }//GEN-LAST:event_txtGananciaPorcentajeFocusLost
-
-    private void txtPrecioListaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioListaFocusLost
-        try {
-            txtPrecioLista.commitEdit();
-        } catch (ParseException ex) {}        
-        this.calcularGananciaPorcentajeSegunPrecioDeLista();
-        this.calcularGananciaNeto();
-        this.calcularPVP();
-        this.calcularIVANeto();
-        this.calcularPrecioLista();
-    }//GEN-LAST:event_txtPrecioListaFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Guardar;
