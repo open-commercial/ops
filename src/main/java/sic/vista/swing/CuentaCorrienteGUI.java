@@ -144,11 +144,19 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             renglonTabla[2] = r.getFechaVencimiento();
             renglonTabla[3] = r.getCAE() == 0 ? "" : r.getCAE();
             renglonTabla[4] = r.getDescripcion();
-            if (r.getMonto().compareTo(BigDecimal.ZERO) > 0) {
-                renglonTabla[5] = r.getMonto();
-            } else {
-                renglonTabla[6] = r.getMonto();
-            }
+            if (cliente != null) {
+                if (r.getMonto().compareTo(BigDecimal.ZERO) > 0) {
+                    renglonTabla[6] = r.getMonto();
+                } else {
+                    renglonTabla[5] = r.getMonto().abs();
+                }
+            } else if (proveedor != null) {
+                if (r.getMonto().compareTo(BigDecimal.ZERO) > 0) {
+                    renglonTabla[5] = r.getMonto();
+                } else {
+                    renglonTabla[6] = r.getMonto().abs();
+                }
+            }           
             renglonTabla[7] = r.getSaldo();
             return renglonTabla;
         }).forEachOrdered(renglonTabla -> {
