@@ -2,7 +2,7 @@
 
 <Form version="1.5" maxVersion="1.8" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
   <NonVisualComponents>
-    <Component class="javax.swing.ButtonGroup" name="buttonGroup1">
+    <Component class="javax.swing.ButtonGroup" name="bgRecargoDescuento">
     </Component>
   </NonVisualComponents>
   <Properties>
@@ -47,7 +47,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="panel2" min="-2" max="-2" attributes="2"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="pnlRecargoDescuento" max="32767" attributes="0"/>
+                      <Component id="panel3" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -60,17 +60,17 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="lbl_Indicaciones" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="sp_ProductosAModificar" pref="165" max="32767" attributes="0"/>
+              <Component id="sp_ProductosAModificar" pref="185" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="panel1" min="-2" max="-2" attributes="1"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="pnlRecargoDescuento" max="32767" attributes="0"/>
+                  <Component id="panel3" max="32767" attributes="0"/>
                   <Component id="panel2" max="32767" attributes="3"/>
               </Group>
-              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -516,7 +516,7 @@
         <Property name="text" type="java.lang.String" value="Productos que se van a modificar:"/>
       </Properties>
     </Component>
-    <Container class="javax.swing.JPanel" name="pnlRecargoDescuento">
+    <Container class="javax.swing.JPanel" name="panel3">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -531,10 +531,10 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="chkRecargoODescuento" min="-2" max="-2" attributes="0"/>
-                      <Component id="jRadioButtonRecargo" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="jRadioButtonDescuento" alignment="0" max="32767" attributes="0"/>
-                      <Component id="ftxtfPorcentaje" alignment="0" max="32767" attributes="0"/>
+                      <Component id="chkRecargoDescuento" min="-2" max="-2" attributes="0"/>
+                      <Component id="rbRecargo" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="rbDescuento" alignment="0" max="32767" attributes="0"/>
+                      <Component id="txtDescuentoRecargoPorcentaje" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -544,43 +544,43 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="chkRecargoODescuento" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jRadioButtonRecargo" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jRadioButtonDescuento" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="ftxtfPorcentaje" min="-2" max="-2" attributes="0"/>
+                  <Component id="chkRecargoDescuento" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="rbRecargo" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="rbDescuento" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="txtDescuentoRecargoPorcentaje" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JCheckBox" name="chkRecargoODescuento">
+        <Component class="javax.swing.JCheckBox" name="chkRecargoDescuento">
           <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkRecargoODescuentoItemStateChanged"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkRecargoDescuentoItemStateChanged"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JRadioButton" name="jRadioButtonRecargo">
+        <Component class="javax.swing.JRadioButton" name="rbRecargo">
           <Properties>
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="buttonGroup1"/>
+              <ComponentRef name="bgRecargoDescuento"/>
             </Property>
             <Property name="text" type="java.lang.String" value="% Recargo"/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JRadioButton" name="jRadioButtonDescuento">
+        <Component class="javax.swing.JRadioButton" name="rbDescuento">
           <Properties>
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="buttonGroup1"/>
+              <ComponentRef name="bgRecargoDescuento"/>
             </Property>
             <Property name="text" type="java.lang.String" value="% Descuento"/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="ftxtfPorcentaje">
+        <Component class="javax.swing.JFormattedTextField" name="txtDescuentoRecargoPorcentaje">
           <Properties>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
               <Format format="#,##0.##" subtype="-1" type="0"/>
@@ -590,8 +590,8 @@
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="ftxtfPorcentajeFocusGained"/>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="ftxtfPorcentajeFocusLost"/>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtDescuentoRecargoPorcentajeFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtDescuentoRecargoPorcentajeFocusLost"/>
           </Events>
         </Component>
       </SubComponents>
