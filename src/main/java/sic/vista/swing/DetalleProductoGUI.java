@@ -120,7 +120,7 @@ public class DetalleProductoGUI extends JDialog {
         lbl_FechaAlta = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txt_Nota = new javax.swing.JTextArea();
-        chkPublicable = new javax.swing.JCheckBox();
+        chkPublico = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -561,7 +561,7 @@ public class DetalleProductoGUI extends JDialog {
         txt_Nota.setRows(5);
         jScrollPane1.setViewportView(txt_Nota);
 
-        chkPublicable.setText("Publicable");
+        chkPublico.setText("Publico");
 
         javax.swing.GroupLayout panel5Layout = new javax.swing.GroupLayout(panel5);
         panel5.setLayout(panel5Layout);
@@ -569,7 +569,7 @@ public class DetalleProductoGUI extends JDialog {
             panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel5Layout.createSequentialGroup()
                 .addGap(154, 154, 154)
-                .addComponent(chkPublicable, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
+                .addComponent(chkPublico, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel5Layout.createSequentialGroup()
                 .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -593,7 +593,7 @@ public class DetalleProductoGUI extends JDialog {
             panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(chkPublicable)
+                .addComponent(chkPublico)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_Ven)
@@ -671,7 +671,7 @@ public class DetalleProductoGUI extends JDialog {
         txt_Nota.setText(productoParaModificar.getNota());
         cmb_Medida.setSelectedItem(productoParaModificar.getNombreMedida());
         chk_Ilimitado.setSelected(productoParaModificar.isIlimitado());
-        chkPublicable.setSelected(productoParaModificar.isPublicable());
+        chkPublico.setSelected(productoParaModificar.isPublico());
         txt_Cantidad.setValue(productoParaModificar.getCantidad());
         txt_CantMinima.setValue(productoParaModificar.getCantMinima());
         txt_VentaMinima.setValue(productoParaModificar.getVentaMinima());
@@ -867,7 +867,7 @@ public class DetalleProductoGUI extends JDialog {
                     producto.setImpuestoInterno_neto(BigDecimal.ZERO);
                     producto.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
                     producto.setIlimitado(chk_Ilimitado.isSelected());   
-                    producto.setPublicable(chkPublicable.isSelected());
+                    producto.setPublico(chkPublico.isSelected());
                     producto.setEstanteria(txt_Estanteria.getText().trim());
                     producto.setEstante(txt_Estante.getText().trim());
                     producto.setNota(txt_Nota.getText().trim());                    
@@ -903,7 +903,7 @@ public class DetalleProductoGUI extends JDialog {
                     productoParaModificar.setImpuestoInterno_neto(BigDecimal.ZERO);
                     productoParaModificar.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
                     productoParaModificar.setIlimitado(chk_Ilimitado.isSelected());   
-                    productoParaModificar.setPublicable(chkPublicable.isSelected());
+                    productoParaModificar.setPublico(chkPublico.isSelected());
                     productoParaModificar.setEstanteria(txt_Estanteria.getText().trim());
                     productoParaModificar.setEstante(txt_Estante.getText().trim());
                     productoParaModificar.setNota(txt_Nota.getText().trim());
@@ -1121,7 +1121,7 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JButton btn_Medidas;
     private javax.swing.JButton btn_NuevoProveedor;
     private javax.swing.JButton btn_Rubros;
-    private javax.swing.JCheckBox chkPublicable;
+    private javax.swing.JCheckBox chkPublico;
     private javax.swing.JCheckBox chk_Ilimitado;
     private javax.swing.JComboBox cmbIVAPorcentaje;
     private javax.swing.JComboBox cmb_Medida;

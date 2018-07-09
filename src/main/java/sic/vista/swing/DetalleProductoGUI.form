@@ -675,7 +675,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <EmptySpace min="-2" pref="154" max="-2" attributes="0"/>
-                          <Component id="chkPublicable" pref="290" max="32767" attributes="0"/>
+                          <Component id="chkPublico" pref="290" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
@@ -705,7 +705,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="chkPublicable" min="-2" max="-2" attributes="0"/>
+                          <Component id="chkPublico" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="lbl_Ven" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -821,9 +821,9 @@
                     </Component>
                   </SubComponents>
                 </Container>
-                <Component class="javax.swing.JCheckBox" name="chkPublicable">
+                <Component class="javax.swing.JCheckBox" name="chkPublico">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Publicable"/>
+                    <Property name="text" type="java.lang.String" value="Publico"/>
                   </Properties>
                 </Component>
               </SubComponents>
