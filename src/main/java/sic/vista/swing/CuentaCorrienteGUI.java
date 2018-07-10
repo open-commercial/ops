@@ -237,11 +237,11 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         this.setTitle("Cuenta Corriente del Cliente: " + cliente.getRazonSocial());
         txtNombreCliente.setText(cliente.getRazonSocial());
         txtDomicilioCliente.setText(cliente.getDireccion()
-                + " " + cliente.getLocalidad().getNombre()
-                + " " + cliente.getLocalidad().getProvincia().getNombre()
-                + " " + cliente.getLocalidad().getProvincia().getPais());
+                + " " + cliente.getNombreLocalidad()
+                + " " + cliente.getNombreProvincia()
+                + " " + cliente.getNombrePais());
         txtIDFiscalCliente.setText(cliente.getIdFiscal());
-        txtCondicionIVACliente.setText(cliente.getCondicionIVA().getNombre());
+        txtCondicionIVACliente.setText(cliente.getNombreCondicionIVA());
         try {
             cuentaCorriente = RestClient.getRestTemplate()
                     .getForObject("/cuentas-corrientes/clientes/" + cliente.getId_Cliente(), CuentaCorrienteCliente.class);
