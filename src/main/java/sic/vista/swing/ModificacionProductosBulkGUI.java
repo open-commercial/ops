@@ -109,6 +109,8 @@ public class ModificacionProductosBulkGUI extends JDialog {
         txtGananciaPorcentaje.setValue(BigDecimal.ZERO);
         txtGananciaNeto.setValue(BigDecimal.ZERO);
         txtPrecioLista.setValue(BigDecimal.ZERO);
+        rbRecargo.setSelected(true);
+        txtDescuentoRecargoPorcentaje.setValue(BigDecimal.ZERO);
     }
     
     private void setColumnas() {
@@ -153,7 +155,8 @@ public class ModificacionProductosBulkGUI extends JDialog {
         if (chk_Precios.isSelected() == true
                 || chk_Proveedor.isSelected() == true
                 || chk_Rubro.isSelected() == true
-                || chk_UnidadDeMedida.isSelected() == true) {
+                || chk_UnidadDeMedida.isSelected() == true
+                || chkRecargoDescuento.isSelected() == true) {
             btn_Guardar.setEnabled(true);
         } else {
             btn_Guardar.setEnabled(false);
@@ -205,6 +208,7 @@ public class ModificacionProductosBulkGUI extends JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        bgRecargoDescuento = new javax.swing.ButtonGroup();
         sp_ProductosAModificar = new javax.swing.JScrollPane();
         tbl_ProductosAModifcar = new javax.swing.JTable();
         panel1 = new javax.swing.JPanel();
@@ -233,6 +237,11 @@ public class ModificacionProductosBulkGUI extends JDialog {
         cmbIVAPorcentaje = new javax.swing.JComboBox();
         btn_Guardar = new javax.swing.JButton();
         lbl_Indicaciones = new javax.swing.JLabel();
+        panel3 = new javax.swing.JPanel();
+        chkRecargoDescuento = new javax.swing.JCheckBox();
+        rbRecargo = new javax.swing.JRadioButton();
+        rbDescuento = new javax.swing.JRadioButton();
+        txtDescuentoRecargoPorcentaje = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Modificar varios Productos");
@@ -565,6 +574,62 @@ public class ModificacionProductosBulkGUI extends JDialog {
 
         lbl_Indicaciones.setText("Productos que se van a modificar:");
 
+        panel3.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+
+        chkRecargoDescuento.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chkRecargoDescuentoItemStateChanged(evt);
+            }
+        });
+
+        bgRecargoDescuento.add(rbRecargo);
+        rbRecargo.setText("% Recargo");
+        rbRecargo.setEnabled(false);
+
+        bgRecargoDescuento.add(rbDescuento);
+        rbDescuento.setText("% Descuento");
+        rbDescuento.setEnabled(false);
+
+        txtDescuentoRecargoPorcentaje.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
+        txtDescuentoRecargoPorcentaje.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtDescuentoRecargoPorcentaje.setText("0");
+        txtDescuentoRecargoPorcentaje.setEnabled(false);
+        txtDescuentoRecargoPorcentaje.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtDescuentoRecargoPorcentajeFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtDescuentoRecargoPorcentajeFocusLost(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panel3Layout = new javax.swing.GroupLayout(panel3);
+        panel3.setLayout(panel3Layout);
+        panel3Layout.setHorizontalGroup(
+            panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(chkRecargoDescuento)
+                    .addComponent(rbRecargo)
+                    .addComponent(rbDescuento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtDescuentoRecargoPorcentaje))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        panel3Layout.setVerticalGroup(
+            panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(chkRecargoDescuento)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(rbRecargo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(rbDescuento)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtDescuentoRecargoPorcentaje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -578,10 +643,12 @@ public class ModificacionProductosBulkGUI extends JDialog {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btn_Guardar))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbl_Indicaciones)
-                            .addComponent(panel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(lbl_Indicaciones)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(panel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(panel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -590,12 +657,14 @@ public class ModificacionProductosBulkGUI extends JDialog {
                 .addContainerGap()
                 .addComponent(lbl_Indicaciones)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_ProductosAModificar, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
+                .addComponent(sp_ProductosAModificar, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(panel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_Guardar)
                 .addContainerGap())
         );
@@ -629,6 +698,7 @@ public class ModificacionProductosBulkGUI extends JDialog {
 
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
         boolean checkPrecios = false;
+        boolean checkDescuentoRecargo = false;
         boolean checkMedida = false;
         boolean checkRubro = false;
         boolean checkProveedor = false;
@@ -636,6 +706,7 @@ public class ModificacionProductosBulkGUI extends JDialog {
         Rubro rubro = new Rubro();
         Proveedor proveedor = new Proveedor();
         String preciosProducto = "";
+        String descuentoRecargoPorcentaje = "";
         if (chk_Precios.isSelected() == true) {
             checkPrecios = true;
             preciosProducto = "&precioCosto=" + new BigDecimal(txtPrecioCosto.getValue().toString())
@@ -645,6 +716,16 @@ public class ModificacionProductosBulkGUI extends JDialog {
                     + "&IVAPorcentaje=" + new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString())
                     + "&IVANeto=" + new BigDecimal(txtIVANeto.getValue().toString())
                     + "&precioLista=" + new BigDecimal(txtPrecioLista.getValue().toString());
+        }
+        if (chkRecargoDescuento.isSelected() == true) {
+            checkDescuentoRecargo = true;
+            descuentoRecargoPorcentaje = "&descuentoRecargoPorcentaje=";
+            if (rbRecargo.isSelected()) {
+                descuentoRecargoPorcentaje += new BigDecimal(txtDescuentoRecargoPorcentaje.getValue().toString());
+            } else if (rbDescuento.isSelected()) {
+                descuentoRecargoPorcentaje += (new BigDecimal(txtDescuentoRecargoPorcentaje.getValue().toString())
+                        .multiply(new BigDecimal(-1L)));
+            }
         }
         if (chk_UnidadDeMedida.isSelected() == true) {
             checkMedida = true;
@@ -666,19 +747,12 @@ public class ModificacionProductosBulkGUI extends JDialog {
                 i++;
             }
             String uri = "/productos/multiples?idProducto=" 
-                    + Arrays.toString(idsProductos).substring(1, Arrays.toString(idsProductos).length() - 1);            
-            if (checkMedida) {
-                uri += "&idMedida=" + medida.getId_Medida();
-            }
-            if (checkRubro) {
-                uri += "&idRubro=" + rubro.getId_Rubro();
-            }
-            if (checkProveedor) {
-                uri += "&idProveedor=" + proveedor.getId_Proveedor();
-            }         
-            if (checkPrecios) {
-                uri = uri.concat(preciosProducto);
-            }
+                    + Arrays.toString(idsProductos).substring(1, Arrays.toString(idsProductos).length() - 1);                                
+            if (checkMedida) uri += "&idMedida=" + medida.getId_Medida();            
+            if (checkRubro) uri += "&idRubro=" + rubro.getId_Rubro();            
+            if (checkProveedor) uri += "&idProveedor=" + proveedor.getId_Proveedor();
+            if (checkPrecios) uri += preciosProducto;
+            if (checkDescuentoRecargo) uri += descuentoRecargoPorcentaje;
             RestClient.getRestTemplate().put(uri , null);
             JOptionPane.showMessageDialog(this, "Los productos se modificaron correctamente.",
                     "Aviso", JOptionPane.INFORMATION_MESSAGE);
@@ -752,6 +826,10 @@ public class ModificacionProductosBulkGUI extends JDialog {
             txtIVANeto.setEnabled(true);
             lbl_PrecioLista.setForeground(Color.BLACK);
             txtPrecioLista.setEnabled(true);
+            rbRecargo.setEnabled(false);
+            rbDescuento.setEnabled(false);
+            txtDescuentoRecargoPorcentaje.setEnabled(false);
+            chkRecargoDescuento.setSelected(false);
         } else {
             lbl_PrecioCosto.setForeground(Color.LIGHT_GRAY);
             txtPrecioCosto.setEnabled(false);
@@ -868,11 +946,51 @@ public class ModificacionProductosBulkGUI extends JDialog {
         this.calcularPrecioLista();
     }//GEN-LAST:event_txtPrecioListaFocusLost
 
+    private void chkRecargoDescuentoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkRecargoDescuentoItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            lbl_PrecioCosto.setForeground(Color.LIGHT_GRAY);
+            txtPrecioCosto.setEnabled(false);
+            lbl_Ganancia.setForeground(Color.LIGHT_GRAY);
+            txtGananciaPorcentaje.setEnabled(false);
+            txtGananciaNeto.setEnabled(false);
+            lbl_PVP.setForeground(Color.LIGHT_GRAY);
+            txtPVP.setEnabled(false);
+            lbl_IVA.setForeground(Color.LIGHT_GRAY);
+            cmbIVAPorcentaje.setEnabled(false);
+            txtIVANeto.setEnabled(false);
+            lbl_PrecioLista.setForeground(Color.LIGHT_GRAY);
+            txtPrecioLista.setEnabled(false);
+            rbRecargo.setEnabled(true);
+            rbDescuento.setEnabled(true);
+            txtDescuentoRecargoPorcentaje.setEnabled(true);
+            chk_Precios.setSelected(false);
+        } else {
+            rbRecargo.setEnabled(false);
+            rbDescuento.setEnabled(false);
+            txtDescuentoRecargoPorcentaje.setEnabled(false);
+        }
+        this.habilitarBotonGuardar();
+    }//GEN-LAST:event_chkRecargoDescuentoItemStateChanged
+
+    private void txtDescuentoRecargoPorcentajeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDescuentoRecargoPorcentajeFocusGained
+        SwingUtilities.invokeLater(() -> {
+            txtDescuentoRecargoPorcentaje.selectAll();
+        });
+    }//GEN-LAST:event_txtDescuentoRecargoPorcentajeFocusGained
+
+    private void txtDescuentoRecargoPorcentajeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDescuentoRecargoPorcentajeFocusLost
+        try {
+            txtDescuentoRecargoPorcentaje.commitEdit();
+        } catch (ParseException ex) {}
+    }//GEN-LAST:event_txtDescuentoRecargoPorcentajeFocusLost
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup bgRecargoDescuento;
     private javax.swing.JButton btn_Guardar;
     private javax.swing.JButton btn_Medidas;
     private javax.swing.JButton btn_NuevoProveedor;
     private javax.swing.JButton btn_Rubros;
+    private javax.swing.JCheckBox chkRecargoDescuento;
     private javax.swing.JCheckBox chk_Precios;
     private javax.swing.JCheckBox chk_Proveedor;
     private javax.swing.JCheckBox chk_Rubro;
@@ -889,8 +1007,12 @@ public class ModificacionProductosBulkGUI extends JDialog {
     private javax.swing.JLabel lbl_PrecioLista;
     private javax.swing.JPanel panel1;
     private javax.swing.JPanel panel2;
+    private javax.swing.JPanel panel3;
+    private javax.swing.JRadioButton rbDescuento;
+    private javax.swing.JRadioButton rbRecargo;
     private javax.swing.JScrollPane sp_ProductosAModificar;
     private javax.swing.JTable tbl_ProductosAModifcar;
+    private javax.swing.JFormattedTextField txtDescuentoRecargoPorcentaje;
     private javax.swing.JFormattedTextField txtGananciaNeto;
     private javax.swing.JFormattedTextField txtGananciaPorcentaje;
     private javax.swing.JFormattedTextField txtIVANeto;
