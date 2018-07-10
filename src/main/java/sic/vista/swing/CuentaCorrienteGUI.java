@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -139,14 +138,26 @@ public class CuentaCorrienteGUI extends JInternalFrame {
 
     private void cargarResultadosAlTable() {
         movimientosParcial.stream().map(r -> {
-            Object[] renglonTabla = new Object[7];
+            Object[] renglonTabla = new Object[8];
             renglonTabla[0] = r.getFecha();
             renglonTabla[1] = r.getTipoComprobante() + " Nº " + r.getSerie() + " - " + r.getNumero();
             renglonTabla[2] = r.getFechaVencimiento();
             renglonTabla[3] = r.getCAE() == 0 ? "" : r.getCAE();
             renglonTabla[4] = r.getDescripcion();
-            renglonTabla[5] = r.getMonto();
-            renglonTabla[6] = r.getSaldo();
+            if (cliente != null) {
+                if (r.getMonto().compareTo(BigDecimal.ZERO) > 0) {
+                    renglonTabla[6] = r.getMonto();
+                } else {
+                    renglonTabla[5] = r.getMonto().abs();
+                }
+            } else if (proveedor != null) {
+                if (r.getMonto().compareTo(BigDecimal.ZERO) > 0) {
+                    renglonTabla[5] = r.getMonto();
+                } else {
+                    renglonTabla[6] = r.getMonto().abs();
+                }
+            }           
+            renglonTabla[7] = r.getSaldo();
             return renglonTabla;
         }).forEachOrdered(renglonTabla -> {
             modeloTablaResultados.addRow(renglonTabla);
@@ -161,14 +172,15 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     }
 
     private void setColumnas() {
-        String[] encabezados = new String[7];
+        String[] encabezados = new String[8];
         encabezados[0] = "Fecha";
         encabezados[1] = "Comprobante";
         encabezados[2] = "Vencimiento";
         encabezados[3] = "CAE";
         encabezados[4] = "Detalle";
-        encabezados[5] = "Monto";
-        encabezados[6] = "Saldo";
+        encabezados[5] = "Debe";
+        encabezados[6] = "Haber";
+        encabezados[7] = "Saldo";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaResultados);        
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
@@ -179,6 +191,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         tipos[4] = String.class;
         tipos[5] = BigDecimal.class;
         tipos[6] = BigDecimal.class;
+        tipos[7] = BigDecimal.class;
         modeloTablaResultados.setClaseColumnas(tipos);        
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);                                
         tbl_Resultados.getColumnModel().getColumn(0).setMinWidth(140);
@@ -193,10 +206,13 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(100);
         tbl_Resultados.getColumnModel().getColumn(6).setMinWidth(100);
         tbl_Resultados.getColumnModel().getColumn(6).setMaxWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(7).setMinWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(7).setMaxWidth(100);
         tbl_Resultados.getColumnModel().getColumn(0).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
         tbl_Resultados.getColumnModel().getColumn(2).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
         tbl_Resultados.getColumnModel().getColumn(5).setCellRenderer(new DecimalesRenderer());
-        tbl_Resultados.getColumnModel().getColumn(6).setCellRenderer(new ColoresNumerosRenderer());
+        tbl_Resultados.getColumnModel().getColumn(6).setCellRenderer(new DecimalesRenderer());
+        tbl_Resultados.getColumnModel().getColumn(7).setCellRenderer(new ColoresNumerosRenderer());
         
     }
 
