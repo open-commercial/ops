@@ -28,7 +28,7 @@ public class Producto implements Serializable {
     private BigDecimal precioLista;    
     private String nombreRubro;
     private boolean ilimitado;    
-    private boolean publicable;
+    private boolean publico;
     private Date fechaUltimaModificacion;    
     private String estanteria;    
     private String estante;    

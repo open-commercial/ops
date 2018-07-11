@@ -45,10 +45,7 @@ public class DetalleProductoGUI extends JDialog {
         this.initComponents();
         this.setIcon();                
         operacion = TipoDeOperacion.ALTA;
-        lbl_FUM.setVisible(false);
-        lbl_FechaUltimaModificacion.setVisible(false);
-        lbl_FA.setVisible(false);
-        lbl_FechaAlta.setVisible(false);        
+        panel6.setVisible(false);
     }       
 
     public DetalleProductoGUI(Producto producto) {
@@ -67,8 +64,8 @@ public class DetalleProductoGUI extends JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btn_Guardar = new javax.swing.JButton();
-        tp_Tabs = new javax.swing.JTabbedPane();
+        btnGuardar = new javax.swing.JButton();
+        tpTabs = new javax.swing.JTabbedPane();
         panelGeneral = new javax.swing.JPanel();
         panelSuperior = new javax.swing.JPanel();
         lbl_Codigo = new javax.swing.JLabel();
@@ -97,15 +94,15 @@ public class DetalleProductoGUI extends JDialog {
         lbl_PVP = new javax.swing.JLabel();
         txtPVP = new javax.swing.JFormattedTextField();
         cmbIVAPorcentaje = new javax.swing.JComboBox();
-        chkPublicable = new javax.swing.JCheckBox();
         panelCantidades = new javax.swing.JPanel();
-        chk_Ilimitado = new javax.swing.JCheckBox();
+        chkSinLimite = new javax.swing.JCheckBox();
         lbl_Cantidad = new javax.swing.JLabel();
         txt_Cantidad = new javax.swing.JFormattedTextField();
         txt_CantMinima = new javax.swing.JFormattedTextField();
         lbl_CantMinima = new javax.swing.JLabel();
         lbl_VentaMinima = new javax.swing.JLabel();
         txt_VentaMinima = new javax.swing.JFormattedTextField();
+        lblSinLimite = new javax.swing.JLabel();
         panelPropiedades = new javax.swing.JPanel();
         panel5 = new javax.swing.JPanel();
         lbl_Ven = new javax.swing.JLabel();
@@ -115,12 +112,15 @@ public class DetalleProductoGUI extends JDialog {
         txt_Estante = new javax.swing.JTextField();
         dc_Vencimiento = new com.toedter.calendar.JDateChooser();
         lbl_Nota = new javax.swing.JLabel();
-        lbl_FA = new javax.swing.JLabel();
-        lbl_FUM = new javax.swing.JLabel();
-        lbl_FechaUltimaModificacion = new javax.swing.JLabel();
-        lbl_FechaAlta = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txt_Nota = new javax.swing.JTextArea();
+        chkPublico = new javax.swing.JCheckBox();
+        lblPublico = new javax.swing.JLabel();
+        panel6 = new javax.swing.JPanel();
+        lbl_FUM = new javax.swing.JLabel();
+        lbl_FechaUltimaModificacion = new javax.swing.JLabel();
+        lbl_FA = new javax.swing.JLabel();
+        lbl_FechaAlta = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -130,16 +130,16 @@ public class DetalleProductoGUI extends JDialog {
             }
         });
 
-        btn_Guardar.setForeground(java.awt.Color.blue);
-        btn_Guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
-        btn_Guardar.setText("Guardar");
-        btn_Guardar.addActionListener(new java.awt.event.ActionListener() {
+        btnGuardar.setForeground(java.awt.Color.blue);
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
+        btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_GuardarActionPerformed(evt);
+                btnGuardarActionPerformed(evt);
             }
         });
 
-        panelSuperior.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        panelSuperior.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         lbl_Codigo.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Codigo.setText("Código:");
@@ -244,7 +244,7 @@ public class DetalleProductoGUI extends JDialog {
 
         panelSuperiorLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Medidas, btn_NuevoProveedor, btn_Rubros, cmb_Medida, cmb_Proveedor, cmb_Rubro});
 
-        panelPrecios.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        panelPrecios.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         lbl_PrecioCosto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_PrecioCosto.setText("Precio de Costo:");
@@ -348,8 +348,6 @@ public class DetalleProductoGUI extends JDialog {
             }
         });
 
-        chkPublicable.setText("Publicable");
-
         javax.swing.GroupLayout panelPreciosLayout = new javax.swing.GroupLayout(panelPrecios);
         panelPrecios.setLayout(panelPreciosLayout);
         panelPreciosLayout.setHorizontalGroup(
@@ -359,7 +357,7 @@ public class DetalleProductoGUI extends JDialog {
                 .addGroup(panelPreciosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelPreciosLayout.createSequentialGroup()
                         .addGroup(panelPreciosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbl_PVP, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
+                            .addComponent(lbl_PVP, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
                             .addComponent(lbl_IVA, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lbl_Ganancia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lbl_PrecioCosto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -376,9 +374,7 @@ public class DetalleProductoGUI extends JDialog {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPreciosLayout.createSequentialGroup()
                         .addComponent(lbl_PrecioLista, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(46, 46, 46)
-                        .addGroup(panelPreciosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(chkPublicable, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtPrecioLista, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE))))
+                        .addComponent(txtPrecioLista, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -409,20 +405,17 @@ public class DetalleProductoGUI extends JDialog {
                 .addGroup(panelPreciosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_PrecioLista)
                     .addComponent(txtPrecioLista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chkPublicable)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelPreciosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtGananciaNeto, txtGananciaPorcentaje, txtIVANeto, txtPVP, txtPrecioCosto, txtPrecioLista});
 
-        panelCantidades.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        panelCantidades.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        chk_Ilimitado.setText("Sin Límite");
-        chk_Ilimitado.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-        chk_Ilimitado.addItemListener(new java.awt.event.ItemListener() {
+        chkSinLimite.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        chkSinLimite.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                chk_IlimitadoItemStateChanged(evt);
+                chkSinLimiteItemStateChanged(evt);
             }
         });
 
@@ -460,6 +453,8 @@ public class DetalleProductoGUI extends JDialog {
             }
         });
 
+        lblSinLimite.setText("Sin Límite:");
+
         javax.swing.GroupLayout panelCantidadesLayout = new javax.swing.GroupLayout(panelCantidades);
         panelCantidades.setLayout(panelCantidadesLayout);
         panelCantidadesLayout.setHorizontalGroup(
@@ -468,31 +463,31 @@ public class DetalleProductoGUI extends JDialog {
                 .addContainerGap()
                 .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelCantidadesLayout.createSequentialGroup()
-                        .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(chk_Ilimitado)
-                            .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(lbl_CantMinima, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lbl_Cantidad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txt_Cantidad, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+                            .addComponent(lbl_CantMinima, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbl_Cantidad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblSinLimite, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(chkSinLimite, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
+                            .addComponent(txt_Cantidad)
                             .addComponent(txt_CantMinima)))
                     .addGroup(panelCantidadesLayout.createSequentialGroup()
                         .addComponent(lbl_VentaMinima, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_VentaMinima, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(txt_VentaMinima)))
+                .addContainerGap())
         );
 
         panelCantidadesLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lbl_CantMinima, lbl_Cantidad, lbl_VentaMinima});
-
-        panelCantidadesLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txt_CantMinima, txt_Cantidad, txt_VentaMinima});
 
         panelCantidadesLayout.setVerticalGroup(
             panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelCantidadesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(chk_Ilimitado)
+                .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblSinLimite)
+                    .addComponent(chkSinLimite))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txt_Cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -513,30 +508,30 @@ public class DetalleProductoGUI extends JDialog {
         panelGeneralLayout.setHorizontalGroup(
             panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelGeneralLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
+                .addContainerGap()
                 .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(panelSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panelGeneralLayout.createSequentialGroup()
                         .addComponent(panelPrecios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panelCantidades, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 55, Short.MAX_VALUE)))
+                        .addComponent(panelCantidades, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panelGeneralLayout.setVerticalGroup(
             panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelGeneralLayout.createSequentialGroup()
-                .addComponent(panelSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(panelSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(panelPrecios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelCantidades, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGap(10, 10, 10))
         );
 
-        tp_Tabs.addTab("General", panelGeneral);
+        tpTabs.addTab("General", panelGeneral);
 
-        panel5.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        panel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         lbl_Ven.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Ven.setText("Vencimiento:");
@@ -552,20 +547,15 @@ public class DetalleProductoGUI extends JDialog {
         lbl_Nota.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Nota.setText("Nota:");
 
-        lbl_FA.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_FA.setText("Fecha de Alta:");
-
-        lbl_FUM.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_FUM.setText("Última Modificación:");
-
-        lbl_FechaUltimaModificacion.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-
-        lbl_FechaAlta.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-
         txt_Nota.setColumns(20);
         txt_Nota.setLineWrap(true);
         txt_Nota.setRows(5);
         jScrollPane1.setViewportView(txt_Nota);
+
+        chkPublico.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+
+        lblPublico.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblPublico.setText("Público:");
 
         javax.swing.GroupLayout panel5Layout = new javax.swing.GroupLayout(panel5);
         panel5.setLayout(panel5Layout);
@@ -573,28 +563,29 @@ public class DetalleProductoGUI extends JDialog {
             panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_Estante, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Nota, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Ven, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Estanteria, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(lbl_FA, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lbl_FUM)))
+                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(lbl_Estante, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblPublico, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_Estanteria, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_Ven, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
+                    .addComponent(lbl_Nota, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_FechaAlta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_FechaUltimaModificacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txt_Estante, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txt_Estanteria)
-                    .addComponent(dc_Vencimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(dc_Vencimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(chkPublico, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+                    .addComponent(txt_Estante, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txt_Estanteria, javax.swing.GroupLayout.Alignment.LEADING))
                 .addContainerGap())
         );
         panel5Layout.setVerticalGroup(
             panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel5Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel5Layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblPublico)
+                    .addComponent(chkPublico))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_Ven)
                     .addComponent(dc_Vencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -603,22 +594,55 @@ public class DetalleProductoGUI extends JDialog {
                     .addComponent(lbl_Estanteria)
                     .addComponent(txt_Estanteria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_Estante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Estante))
+                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lbl_Estante)
+                    .addComponent(txt_Estante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_Nota)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        panel6.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        lbl_FUM.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbl_FUM.setText("Última Modificación:");
+
+        lbl_FechaUltimaModificacion.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+
+        lbl_FA.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbl_FA.setText("Fecha de Alta:");
+
+        lbl_FechaAlta.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+
+        javax.swing.GroupLayout panel6Layout = new javax.swing.GroupLayout(panel6);
+        panel6.setLayout(panel6Layout);
+        panel6Layout.setHorizontalGroup(
+            panel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lbl_FA, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_FUM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(panel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_FechaUltimaModificacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_FechaAlta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(7, 7, 7))
+        );
+        panel6Layout.setVerticalGroup(
+            panel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_FUM)
                     .addComponent(lbl_FechaUltimaModificacion, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(panel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_FA)
                     .addComponent(lbl_FechaAlta, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(92, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout panelPropiedadesLayout = new javax.swing.GroupLayout(panelPropiedades);
@@ -627,39 +651,45 @@ public class DetalleProductoGUI extends JDialog {
             panelPropiedadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPropiedadesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(132, Short.MAX_VALUE))
+                .addGroup(panelPropiedadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(panel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelPropiedadesLayout.setVerticalGroup(
             panelPropiedadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPropiedadesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(panel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
-        tp_Tabs.addTab("Propiedades", panelPropiedades);
+        tpTabs.addTab("Propiedades", panelPropiedades);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(tp_Tabs, javax.swing.GroupLayout.PREFERRED_SIZE, 592, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btn_Guardar)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnGuardar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(tpTabs)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(tp_Tabs, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(tpTabs)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn_Guardar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(btnGuardar)
+                .addContainerGap())
         );
 
         pack();
@@ -670,8 +700,8 @@ public class DetalleProductoGUI extends JDialog {
         txt_Descripcion.setText(productoParaModificar.getDescripcion());
         txt_Nota.setText(productoParaModificar.getNota());
         cmb_Medida.setSelectedItem(productoParaModificar.getNombreMedida());
-        chk_Ilimitado.setSelected(productoParaModificar.isIlimitado());
-        chkPublicable.setSelected(productoParaModificar.isPublicable());
+        chkSinLimite.setSelected(productoParaModificar.isIlimitado());
+        chkPublico.setSelected(productoParaModificar.isPublico());
         txt_Cantidad.setValue(productoParaModificar.getCantidad());
         txt_CantMinima.setValue(productoParaModificar.getCantMinima());
         txt_VentaMinima.setValue(productoParaModificar.getVentaMinima());
@@ -761,7 +791,7 @@ public class DetalleProductoGUI extends JDialog {
         txt_Cantidad.setValue(BigDecimal.ZERO);
         txt_CantMinima.setValue(BigDecimal.ZERO);
         txt_VentaMinima.setValue(BigDecimal.ZERO);
-        chk_Ilimitado.setSelected(false);
+        chkSinLimite.setSelected(false);
         txtPrecioCosto.setValue(BigDecimal.ZERO);
         txtPVP.setValue(BigDecimal.ZERO);
         txtIVANeto.setValue(BigDecimal.ZERO);
@@ -815,7 +845,7 @@ public class DetalleProductoGUI extends JDialog {
         precioListaAnterior = new BigDecimal(txtPrecioLista.getValue().toString());
     }
     
-    private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         Long idMedida = null;
         Long idRubro = null;
         Long idProveedor = null;
@@ -866,8 +896,8 @@ public class DetalleProductoGUI extends JDialog {
                     producto.setImpuestoInterno_porcentaje(BigDecimal.ZERO);
                     producto.setImpuestoInterno_neto(BigDecimal.ZERO);
                     producto.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
-                    producto.setIlimitado(chk_Ilimitado.isSelected());   
-                    producto.setPublicable(chkPublicable.isSelected());
+                    producto.setIlimitado(chkSinLimite.isSelected());   
+                    producto.setPublico(chkPublico.isSelected());
                     producto.setEstanteria(txt_Estanteria.getText().trim());
                     producto.setEstante(txt_Estante.getText().trim());
                     producto.setNota(txt_Nota.getText().trim());                    
@@ -902,8 +932,8 @@ public class DetalleProductoGUI extends JDialog {
                     productoParaModificar.setImpuestoInterno_porcentaje(BigDecimal.ZERO);
                     productoParaModificar.setImpuestoInterno_neto(BigDecimal.ZERO);
                     productoParaModificar.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
-                    productoParaModificar.setIlimitado(chk_Ilimitado.isSelected());   
-                    productoParaModificar.setPublicable(chkPublicable.isSelected());
+                    productoParaModificar.setIlimitado(chkSinLimite.isSelected());   
+                    productoParaModificar.setPublico(chkPublico.isSelected());
                     productoParaModificar.setEstanteria(txt_Estanteria.getText().trim());
                     productoParaModificar.setEstante(txt_Estante.getText().trim());
                     productoParaModificar.setNota(txt_Nota.getText().trim());
@@ -927,7 +957,7 @@ public class DetalleProductoGUI extends JDialog {
         } else {
             JOptionPane.showMessageDialog(this, mensajeError, "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_btn_GuardarActionPerformed
+    }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.prepararComponentes();
@@ -942,7 +972,7 @@ public class DetalleProductoGUI extends JDialog {
         }
         if (!UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR) 
                 && operacion == TipoDeOperacion.ACTUALIZACION) {
-            chk_Ilimitado.setEnabled(false);
+            chkSinLimite.setEnabled(false);
             lbl_Cantidad.setEnabled(false);
             txt_Cantidad.setEnabled(false);
             lbl_CantMinima.setEnabled(false);
@@ -951,6 +981,12 @@ public class DetalleProductoGUI extends JDialog {
             txt_VentaMinima.setEnabled(false);
         }
     }//GEN-LAST:event_formWindowOpened
+
+    private void txt_VentaMinimaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_VentaMinimaFocusGained
+        SwingUtilities.invokeLater(() -> {
+            txt_VentaMinima.selectAll();
+        });
+    }//GEN-LAST:event_txt_VentaMinimaFocusGained
 
     private void txt_CantMinimaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_CantMinimaFocusGained
         SwingUtilities.invokeLater(() -> {
@@ -964,7 +1000,7 @@ public class DetalleProductoGUI extends JDialog {
         });
     }//GEN-LAST:event_txt_CantidadFocusGained
 
-    private void chk_IlimitadoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_IlimitadoItemStateChanged
+    private void chkSinLimiteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkSinLimiteItemStateChanged
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             txt_Cantidad.setEnabled(false);
             lbl_Cantidad.setForeground(Color.LIGHT_GRAY);
@@ -980,11 +1016,11 @@ public class DetalleProductoGUI extends JDialog {
             txt_VentaMinima.setEnabled(true);
             lbl_VentaMinima.setForeground(Color.BLACK);
         }
-    }//GEN-LAST:event_chk_IlimitadoItemStateChanged
+    }//GEN-LAST:event_chkSinLimiteItemStateChanged
 
     private void cmbIVAPorcentajeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbIVAPorcentajeItemStateChanged
         this.calcularIVANeto();
-        this.calcularPrecioLista();        
+        this.calcularPrecioLista();
     }//GEN-LAST:event_cmbIVAPorcentajeItemStateChanged
 
     private void txtPVPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPVPActionPerformed
@@ -992,8 +1028,19 @@ public class DetalleProductoGUI extends JDialog {
         this.calcularGananciaNeto();
         this.calcularPVP();
         this.calcularIVANeto();
-        this.calcularPrecioLista();        
+        this.calcularPrecioLista();
     }//GEN-LAST:event_txtPVPActionPerformed
+
+    private void txtPVPFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPVPFocusLost
+        try {
+            txtPVP.commitEdit();
+        } catch (ParseException ex) {}
+        this.calcularGananciaPorcentaje();
+        this.calcularGananciaNeto();
+        this.calcularPVP();
+        this.calcularIVANeto();
+        this.calcularPrecioLista();
+    }//GEN-LAST:event_txtPVPFocusLost
 
     private void txtPVPFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPVPFocusGained
         SwingUtilities.invokeLater(() -> {
@@ -1001,13 +1048,50 @@ public class DetalleProductoGUI extends JDialog {
         });
     }//GEN-LAST:event_txtPVPFocusGained
 
+    private void txtPrecioListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioListaActionPerformed
+        this.calcularGananciaPorcentajeSegunPrecioDeLista();
+        this.calcularGananciaNeto();
+        this.calcularPVP();
+        this.calcularIVANeto();
+        this.calcularPrecioLista();
+    }//GEN-LAST:event_txtPrecioListaActionPerformed
+
+    private void txtPrecioListaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioListaFocusLost
+        try {
+            txtPrecioLista.commitEdit();
+        } catch (ParseException ex) {}
+        this.calcularGananciaPorcentajeSegunPrecioDeLista();
+        this.calcularGananciaNeto();
+        this.calcularPVP();
+        this.calcularIVANeto();
+        this.calcularPrecioLista();
+    }//GEN-LAST:event_txtPrecioListaFocusLost
+
+    private void txtPrecioListaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioListaFocusGained
+        precioListaAnterior = new BigDecimal(txtPrecioLista.getValue().toString());
+        SwingUtilities.invokeLater(() -> {
+            txtPrecioLista.selectAll();
+        });
+    }//GEN-LAST:event_txtPrecioListaFocusGained
+
     private void txtGananciaPorcentajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGananciaPorcentajeActionPerformed
         this.calcularGananciaNeto();
         this.calcularPVP();
         this.calcularGananciaPorcentaje();
         this.calcularIVANeto();
-        this.calcularPrecioLista();                    
+        this.calcularPrecioLista();
     }//GEN-LAST:event_txtGananciaPorcentajeActionPerformed
+
+    private void txtGananciaPorcentajeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGananciaPorcentajeFocusLost
+        try {
+            txtGananciaPorcentaje.commitEdit();
+        } catch (ParseException ex) {}
+        this.calcularGananciaNeto();
+        this.calcularPVP();
+        this.calcularGananciaPorcentaje();
+        this.calcularIVANeto();
+        this.calcularPrecioLista();
+    }//GEN-LAST:event_txtGananciaPorcentajeFocusLost
 
     private void txtGananciaPorcentajeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGananciaPorcentajeFocusGained
         SwingUtilities.invokeLater(() -> {
@@ -1019,8 +1103,18 @@ public class DetalleProductoGUI extends JDialog {
         this.calcularGananciaNeto();
         this.calcularPVP();
         this.calcularIVANeto();
-        this.calcularPrecioLista();        
+        this.calcularPrecioLista();
     }//GEN-LAST:event_txtPrecioCostoActionPerformed
+
+    private void txtPrecioCostoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioCostoFocusLost
+        try {
+            txtPrecioCosto.commitEdit();
+        } catch (ParseException ex) {}
+        this.calcularGananciaNeto();
+        this.calcularPVP();
+        this.calcularIVANeto();
+        this.calcularPrecioLista();
+    }//GEN-LAST:event_txtPrecioCostoFocusLost
 
     private void txtPrecioCostoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioCostoFocusGained
         SwingUtilities.invokeLater(() -> {
@@ -1052,83 +1146,21 @@ public class DetalleProductoGUI extends JDialog {
         this.cargarRubros();
     }//GEN-LAST:event_btn_RubrosActionPerformed
 
-    private void txtPrecioListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioListaActionPerformed
-        this.calcularGananciaPorcentajeSegunPrecioDeLista();
-        this.calcularGananciaNeto();
-        this.calcularPVP();
-        this.calcularIVANeto();
-        this.calcularPrecioLista();        
-    }//GEN-LAST:event_txtPrecioListaActionPerformed
-
-    private void txtPrecioListaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioListaFocusGained
-        precioListaAnterior = new BigDecimal(txtPrecioLista.getValue().toString());
-        SwingUtilities.invokeLater(() -> {
-            txtPrecioLista.selectAll();
-        });
-    }//GEN-LAST:event_txtPrecioListaFocusGained
-
-    private void txt_VentaMinimaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_VentaMinimaFocusGained
-        SwingUtilities.invokeLater(() -> {
-            txt_VentaMinima.selectAll();
-        });
-    }//GEN-LAST:event_txt_VentaMinimaFocusGained
-
-    private void txtPrecioCostoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioCostoFocusLost
-        try {
-            txtPrecioCosto.commitEdit();
-        } catch (ParseException ex) {}                
-        this.calcularGananciaNeto();
-        this.calcularPVP();
-        this.calcularIVANeto();
-        this.calcularPrecioLista();
-    }//GEN-LAST:event_txtPrecioCostoFocusLost
-
-    private void txtPVPFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPVPFocusLost
-        try {
-            txtPVP.commitEdit();
-        } catch (ParseException ex) {}                
-        this.calcularGananciaPorcentaje();
-        this.calcularGananciaNeto();
-        this.calcularPVP();
-        this.calcularIVANeto();
-        this.calcularPrecioLista();
-    }//GEN-LAST:event_txtPVPFocusLost
-
-    private void txtGananciaPorcentajeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGananciaPorcentajeFocusLost
-        try {
-            txtGananciaPorcentaje.commitEdit();
-        } catch (ParseException ex) {}                
-        this.calcularGananciaNeto();
-        this.calcularPVP();
-        this.calcularGananciaPorcentaje();
-        this.calcularIVANeto();
-        this.calcularPrecioLista();
-    }//GEN-LAST:event_txtGananciaPorcentajeFocusLost
-
-    private void txtPrecioListaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioListaFocusLost
-        try {
-            txtPrecioLista.commitEdit();
-        } catch (ParseException ex) {}        
-        this.calcularGananciaPorcentajeSegunPrecioDeLista();
-        this.calcularGananciaNeto();
-        this.calcularPVP();
-        this.calcularIVANeto();
-        this.calcularPrecioLista();
-    }//GEN-LAST:event_txtPrecioListaFocusLost
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_Guardar;
+    private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btn_Medidas;
     private javax.swing.JButton btn_NuevoProveedor;
     private javax.swing.JButton btn_Rubros;
-    private javax.swing.JCheckBox chkPublicable;
-    private javax.swing.JCheckBox chk_Ilimitado;
+    private javax.swing.JCheckBox chkPublico;
+    private javax.swing.JCheckBox chkSinLimite;
     private javax.swing.JComboBox cmbIVAPorcentaje;
     private javax.swing.JComboBox cmb_Medida;
     private javax.swing.JComboBox cmb_Proveedor;
     private javax.swing.JComboBox cmb_Rubro;
     private com.toedter.calendar.JDateChooser dc_Vencimiento;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblPublico;
+    private javax.swing.JLabel lblSinLimite;
     private javax.swing.JLabel lbl_CantMinima;
     private javax.swing.JLabel lbl_Cantidad;
     private javax.swing.JLabel lbl_Codigo;
@@ -1151,12 +1183,13 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JLabel lbl_Ven;
     private javax.swing.JLabel lbl_VentaMinima;
     private javax.swing.JPanel panel5;
+    private javax.swing.JPanel panel6;
     private javax.swing.JPanel panelCantidades;
     private javax.swing.JPanel panelGeneral;
     private javax.swing.JPanel panelPrecios;
     private javax.swing.JPanel panelPropiedades;
     private javax.swing.JPanel panelSuperior;
-    private javax.swing.JTabbedPane tp_Tabs;
+    private javax.swing.JTabbedPane tpTabs;
     private javax.swing.JFormattedTextField txtGananciaNeto;
     private javax.swing.JFormattedTextField txtGananciaPorcentaje;
     private javax.swing.JFormattedTextField txtIVANeto;
