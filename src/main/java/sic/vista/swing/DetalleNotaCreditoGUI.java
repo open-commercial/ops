@@ -222,11 +222,11 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private void cargarDetalleCliente() {
         txtNombre.setText(((FacturaVenta) factura).getRazonSocialCliente());
         txtDomicilio.setText(cliente.getDireccion()
-                + " " + cliente.getLocalidad().getNombre()
-                + " " + cliente.getLocalidad().getProvincia().getNombre()
-                + " " + cliente.getLocalidad().getProvincia().getPais());
+                + " " + cliente.getNombreLocalidad()
+                + " " + cliente.getNombreProvincia()
+                + " " + cliente.getNombrePais());
         txtIDFiscal.setText(cliente.getIdFiscal());
-        txtCondicionIVA.setText(cliente.getCondicionIVA().getNombre());
+        txtCondicionIVA.setText(cliente.getNombreCondicionIVA());
         lbl_NumComprobante.setVisible(false);
         txt_Serie.setVisible(false);
         lbl_separador.setVisible(false);
