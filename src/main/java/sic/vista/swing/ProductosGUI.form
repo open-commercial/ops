@@ -2,9 +2,9 @@
 
 <Form version="1.6" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
   <NonVisualComponents>
-    <Component class="javax.swing.ButtonGroup" name="bg_TiposDeListados">
+    <Component class="javax.swing.ButtonGroup" name="bgDisponibilidad">
     </Component>
-    <Component class="javax.swing.ButtonGroup" name="bg_TiposDeVisibilidad">
+    <Component class="javax.swing.ButtonGroup" name="bgVisibilidad">
     </Component>
   </NonVisualComponents>
   <Properties>
@@ -97,14 +97,12 @@
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="rb_Faltantes" linkSize="3" max="32767" attributes="0"/>
-                                  <Component id="rb_Todos" linkSize="3" max="32767" attributes="0"/>
-                              </Group>
-                              <Component id="rb_publico" linkSize="3" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
-                              <Component id="rb_privado" linkSize="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="rb_privado" alignment="0" max="32767" attributes="0"/>
+                              <Component id="rb_Todos" alignment="0" max="32767" attributes="0"/>
+                              <Component id="rb_Faltantes" alignment="0" max="32767" attributes="0"/>
+                              <Component id="rb_publico" alignment="0" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace min="0" pref="8" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -246,7 +244,7 @@
         <Component class="javax.swing.JRadioButton" name="rb_Todos">
           <Properties>
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="bg_TiposDeListados"/>
+              <ComponentRef name="bgDisponibilidad"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Todos"/>
             <Property name="enabled" type="boolean" value="false"/>
@@ -255,7 +253,7 @@
         <Component class="javax.swing.JRadioButton" name="rb_Faltantes">
           <Properties>
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="bg_TiposDeListados"/>
+              <ComponentRef name="bgDisponibilidad"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Faltantes"/>
             <Property name="enabled" type="boolean" value="false"/>
@@ -272,7 +270,7 @@
         <Component class="javax.swing.JRadioButton" name="rb_publico">
           <Properties>
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="bg_TiposDeVisibilidad"/>
+              <ComponentRef name="bgVisibilidad"/>
             </Property>
             <Property name="text" type="java.lang.String" value="P&#xfa;blicos"/>
             <Property name="enabled" type="boolean" value="false"/>
@@ -281,7 +279,7 @@
         <Component class="javax.swing.JRadioButton" name="rb_privado">
           <Properties>
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="bg_TiposDeVisibilidad"/>
+              <ComponentRef name="bgVisibilidad"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Privados"/>
             <Property name="enabled" type="boolean" value="false"/>
@@ -314,7 +312,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="txt_ValorStock" min="-2" pref="170" max="-2" attributes="0"/>
               </Group>
-              <Component id="sp_Resultados" pref="1004" max="32767" attributes="0"/>
+              <Component id="sp_Resultados" pref="818" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">

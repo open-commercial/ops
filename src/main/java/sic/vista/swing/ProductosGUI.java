@@ -160,7 +160,7 @@ public class ProductosGUI extends JInternalFrame {
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         //tamanios de columnas
-        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(80);
+        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(70);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(150);
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(400);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(100);
@@ -366,8 +366,8 @@ public class ProductosGUI extends JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        bg_TiposDeListados = new javax.swing.ButtonGroup();
-        bg_TiposDeVisibilidad = new javax.swing.ButtonGroup();
+        bgDisponibilidad = new javax.swing.ButtonGroup();
+        bgVisibilidad = new javax.swing.ButtonGroup();
         panelFiltros = new javax.swing.JPanel();
         chk_Codigo = new javax.swing.JCheckBox();
         txt_Codigo = new javax.swing.JTextField();
@@ -484,11 +484,11 @@ public class ProductosGUI extends JInternalFrame {
             }
         });
 
-        bg_TiposDeListados.add(rb_Todos);
+        bgDisponibilidad.add(rb_Todos);
         rb_Todos.setText("Todos");
         rb_Todos.setEnabled(false);
 
-        bg_TiposDeListados.add(rb_Faltantes);
+        bgDisponibilidad.add(rb_Faltantes);
         rb_Faltantes.setText("Faltantes");
         rb_Faltantes.setEnabled(false);
 
@@ -499,11 +499,11 @@ public class ProductosGUI extends JInternalFrame {
             }
         });
 
-        bg_TiposDeVisibilidad.add(rb_publico);
+        bgVisibilidad.add(rb_publico);
         rb_publico.setText("Públicos");
         rb_publico.setEnabled(false);
 
-        bg_TiposDeVisibilidad.add(rb_privado);
+        bgVisibilidad.add(rb_privado);
         rb_privado.setText("Privados");
         rb_privado.setEnabled(false);
 
@@ -537,16 +537,12 @@ public class ProductosGUI extends JInternalFrame {
                             .addComponent(chk_visibilidad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(rb_Faltantes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(rb_Todos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(rb_publico, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(rb_privado))
-                        .addGap(0, 8, Short.MAX_VALUE))))
+                            .addComponent(rb_privado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(rb_Todos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(rb_Faltantes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(rb_publico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(6, 6, 6))))
         );
-
-        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {rb_Faltantes, rb_Todos, rb_privado, rb_publico});
-
         panelFiltrosLayout.setVerticalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFiltrosLayout.createSequentialGroup()
@@ -651,7 +647,7 @@ public class ProductosGUI extends JInternalFrame {
                 .addComponent(lbl_ValorStock)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txt_ValorStock, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 1004, Short.MAX_VALUE)
+            .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 818, Short.MAX_VALUE)
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnExportar, btn_Eliminar, btn_Modificar, btn_Nuevo});
@@ -884,8 +880,8 @@ public class ProductosGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_visibilidadItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup bg_TiposDeListados;
-    private javax.swing.ButtonGroup bg_TiposDeVisibilidad;
+    private javax.swing.ButtonGroup bgDisponibilidad;
+    private javax.swing.ButtonGroup bgVisibilidad;
     private javax.swing.JButton btnExportar;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;

@@ -28,13 +28,16 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="tp_Tabs" min="-2" pref="592" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace max="32767" attributes="0"/>
-              <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="btnGuardar" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="tpTabs" max="32767" attributes="0"/>
+                  </Group>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -42,16 +45,17 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Component id="tp_Tabs" min="-2" pref="366" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <Component id="tpTabs" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="btnGuardar" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JButton" name="btn_Guardar">
+    <Component class="javax.swing.JButton" name="btnGuardar">
       <Properties>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
@@ -62,10 +66,10 @@
         <Property name="text" type="java.lang.String" value="Guardar"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_GuardarActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGuardarActionPerformed"/>
       </Events>
     </Component>
-    <Container class="javax.swing.JTabbedPane" name="tp_Tabs">
+    <Container class="javax.swing.JTabbedPane" name="tpTabs">
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
       <SubComponents>
@@ -82,30 +86,30 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="panelSuperior" max="32767" attributes="2"/>
                           <Group type="102" attributes="0">
                               <Component id="panelPrecios" min="-2" max="-2" attributes="2"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="panelCantidades" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="55" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Component id="panelCantidades" max="32767" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="panelSuperior" min="-2" max="-2" attributes="1"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="panelSuperior" max="32767" attributes="1"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="panelPrecios" max="32767" attributes="3"/>
                           <Component id="panelCantidades" max="32767" attributes="1"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -114,8 +118,8 @@
             <Container class="javax.swing.JPanel" name="panelSuperior">
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder/>
+                  <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                    <EtchetBorder/>
                   </Border>
                 </Property>
               </Properties>
@@ -301,8 +305,8 @@
             <Container class="javax.swing.JPanel" name="panelPrecios">
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder/>
+                  <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                    <EtchetBorder/>
                   </Border>
                 </Property>
               </Properties>
@@ -315,7 +319,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="lbl_PVP" pref="153" max="32767" attributes="0"/>
+                                      <Component id="lbl_PVP" pref="182" max="32767" attributes="0"/>
                                       <Component id="lbl_IVA" alignment="0" max="32767" attributes="0"/>
                                       <Component id="lbl_Ganancia" alignment="0" max="32767" attributes="1"/>
                                       <Component id="lbl_PrecioCosto" max="32767" attributes="1"/>
@@ -502,8 +506,8 @@
             <Container class="javax.swing.JPanel" name="panelCantidades">
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder/>
+                  <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                    <EtchetBorder/>
                   </Border>
                 </Property>
               </Properties>
@@ -512,29 +516,28 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="chk_Ilimitado" min="-2" max="-2" attributes="2"/>
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="lbl_CantMinima" linkSize="10" max="32767" attributes="0"/>
-                                          <Component id="lbl_Cantidad" linkSize="10" max="32767" attributes="1"/>
-                                      </Group>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="txt_Cantidad" linkSize="11" pref="65" max="32767" attributes="1"/>
-                                      <Component id="txt_CantMinima" linkSize="11" max="32767" attributes="1"/>
+                                      <Component id="lbl_CantMinima" linkSize="10" max="32767" attributes="0"/>
+                                      <Component id="lbl_Cantidad" linkSize="10" max="32767" attributes="1"/>
+                                      <Component id="lblSinLimite" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="chkSinLimite" alignment="0" pref="57" max="32767" attributes="2"/>
+                                      <Component id="txt_Cantidad" alignment="0" max="32767" attributes="1"/>
+                                      <Component id="txt_CantMinima" alignment="0" max="32767" attributes="1"/>
                                   </Group>
                               </Group>
                               <Group type="102" attributes="0">
                                   <Component id="lbl_VentaMinima" linkSize="10" min="-2" pref="120" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="txt_VentaMinima" linkSize="11" min="-2" pref="57" max="-2" attributes="0"/>
+                                  <Component id="txt_VentaMinima" max="32767" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -542,7 +545,10 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="chk_Ilimitado" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="lblSinLimite" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="chkSinLimite" alignment="2" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="txt_Cantidad" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -564,13 +570,12 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JCheckBox" name="chk_Ilimitado">
+                <Component class="javax.swing.JCheckBox" name="chkSinLimite">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Sin L&#xed;mite"/>
                     <Property name="horizontalTextPosition" type="int" value="2"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_IlimitadoItemStateChanged"/>
+                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkSinLimiteItemStateChanged"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lbl_Cantidad">
@@ -627,6 +632,11 @@
                     <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txt_VentaMinimaFocusGained"/>
                   </Events>
                 </Component>
+                <Component class="javax.swing.JLabel" name="lblSinLimite">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Sin L&#xed;mite:"/>
+                  </Properties>
+                </Component>
               </SubComponents>
             </Container>
           </SubComponents>
@@ -643,10 +653,13 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="panel5" min="-2" max="-2" attributes="2"/>
-                      <EmptySpace pref="132" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="panel5" max="32767" attributes="2"/>
+                          <Component id="panel6" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -655,7 +668,9 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="panel5" min="-2" max="-2" attributes="1"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="panel6" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="33" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -664,8 +679,8 @@
             <Container class="javax.swing.JPanel" name="panel5">
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder/>
+                  <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                    <EtchetBorder/>
                   </Border>
                 </Property>
               </Properties>
@@ -674,30 +689,23 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <EmptySpace min="-2" pref="154" max="-2" attributes="0"/>
-                          <Component id="chkPublico" pref="290" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
                               <Component id="lbl_Estante" alignment="0" max="32767" attributes="1"/>
-                              <Component id="lbl_Nota" alignment="1" max="32767" attributes="1"/>
-                              <Component id="lbl_Ven" max="32767" attributes="1"/>
-                              <Component id="lbl_Estanteria" alignment="1" max="32767" attributes="1"/>
-                              <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="lbl_FA" max="32767" attributes="1"/>
-                                  <Component id="lbl_FUM" alignment="1" min="-2" max="-2" attributes="1"/>
-                              </Group>
+                              <Component id="lblPublico" alignment="0" max="32767" attributes="0"/>
+                              <Component id="lbl_Estanteria" alignment="0" max="32767" attributes="1"/>
+                              <Component id="lbl_Ven" alignment="0" pref="142" max="32767" attributes="1"/>
+                              <Component id="lbl_Nota" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lbl_FechaAlta" alignment="0" max="32767" attributes="1"/>
-                              <Component id="lbl_FechaUltimaModificacion" alignment="0" max="32767" attributes="1"/>
-                              <Component id="jScrollPane1" alignment="0" min="-2" pref="290" max="-2" attributes="0"/>
-                              <Component id="txt_Estante" alignment="0" min="-2" pref="290" max="-2" attributes="3"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="dc_Vencimiento" alignment="1" max="32767" attributes="1"/>
+                              <Component id="chkPublico" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jScrollPane1" alignment="1" pref="318" max="32767" attributes="0"/>
+                              <Component id="txt_Estante" alignment="0" max="32767" attributes="3"/>
                               <Component id="txt_Estanteria" alignment="0" max="32767" attributes="3"/>
-                              <Component id="dc_Vencimiento" alignment="0" max="32767" attributes="1"/>
                           </Group>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -705,7 +713,10 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="chkPublico" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="lblPublico" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="chkPublico" alignment="2" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="lbl_Ven" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -717,24 +728,14 @@
                               <Component id="txt_Estanteria" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txt_Estante" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbl_Estante" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="lbl_Estante" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="txt_Estante" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lbl_Nota" min="-2" max="-2" attributes="0"/>
-                              <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="lbl_FUM" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbl_FechaUltimaModificacion" alignment="2" min="-2" pref="23" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="lbl_FA" alignment="2" min="-2" max="-2" attributes="1"/>
-                              <Component id="lbl_FechaAlta" alignment="2" min="-2" pref="23" max="-2" attributes="0"/>
+                              <Component id="lbl_Nota" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jScrollPane1" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
@@ -775,36 +776,6 @@
                     <Property name="text" type="java.lang.String" value="Nota:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbl_FA">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="Fecha de Alta:"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lbl_FUM">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="&#xda;ltima Modificaci&#xf3;n:"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lbl_FechaUltimaModificacion">
-                  <Properties>
-                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                      <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder/>
-                      </Border>
-                    </Property>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lbl_FechaAlta">
-                  <Properties>
-                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                      <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder/>
-                      </Border>
-                    </Property>
-                  </Properties>
-                </Component>
                 <Container class="javax.swing.JScrollPane" name="jScrollPane1">
                   <AuxValues>
                     <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
@@ -823,7 +794,83 @@
                 </Container>
                 <Component class="javax.swing.JCheckBox" name="chkPublico">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Publico"/>
+                    <Property name="horizontalTextPosition" type="int" value="2"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblPublico">
+                  <Properties>
+                    <Property name="horizontalAlignment" type="int" value="4"/>
+                    <Property name="text" type="java.lang.String" value="P&#xfa;blico:"/>
+                  </Properties>
+                </Component>
+              </SubComponents>
+            </Container>
+            <Container class="javax.swing.JPanel" name="panel6">
+              <Properties>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                    <EtchetBorder/>
+                  </Border>
+                </Property>
+              </Properties>
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="lbl_FA" max="32767" attributes="1"/>
+                              <Component id="lbl_FUM" max="32767" attributes="1"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="lbl_FechaUltimaModificacion" max="32767" attributes="1"/>
+                              <Component id="lbl_FechaAlta" max="32767" attributes="1"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="lbl_FUM" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_FechaUltimaModificacion" alignment="2" min="-2" pref="23" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="lbl_FA" alignment="2" min="-2" max="-2" attributes="1"/>
+                              <Component id="lbl_FechaAlta" alignment="2" min="-2" pref="23" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JLabel" name="lbl_FUM">
+                  <Properties>
+                    <Property name="horizontalAlignment" type="int" value="4"/>
+                    <Property name="text" type="java.lang.String" value="&#xda;ltima Modificaci&#xf3;n:"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl_FechaUltimaModificacion">
+                  <Properties>
+                    <Property name="horizontalAlignment" type="int" value="2"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl_FA">
+                  <Properties>
+                    <Property name="horizontalAlignment" type="int" value="4"/>
+                    <Property name="text" type="java.lang.String" value="Fecha de Alta:"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl_FechaAlta">
+                  <Properties>
+                    <Property name="horizontalAlignment" type="int" value="2"/>
                   </Properties>
                 </Component>
               </SubComponents>
