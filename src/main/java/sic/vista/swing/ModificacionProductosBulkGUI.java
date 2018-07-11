@@ -110,6 +110,7 @@ public class ModificacionProductosBulkGUI extends JDialog {
         txtGananciaNeto.setValue(BigDecimal.ZERO);
         txtPrecioLista.setValue(BigDecimal.ZERO);
         rbRecargo.setSelected(true);
+        rbPrivado.setSelected(true);
         txtDescuentoRecargoPorcentaje.setValue(BigDecimal.ZERO);
     }
     
@@ -152,11 +153,12 @@ public class ModificacionProductosBulkGUI extends JDialog {
     }
 
     private void habilitarBotonGuardar() {
-        if (chk_Precios.isSelected() == true
-                || chk_Proveedor.isSelected() == true
-                || chk_Rubro.isSelected() == true
-                || chk_UnidadDeMedida.isSelected() == true
-                || chkRecargoDescuento.isSelected() == true) {
+        if (chk_Precios.isSelected()
+                || chk_Proveedor.isSelected()
+                || chk_Rubro.isSelected()
+                || chk_UnidadDeMedida.isSelected()
+                || chkRecargoDescuento.isSelected()
+                || chkVisibilidad.isSelected()) {
             btn_Guardar.setEnabled(true);
         } else {
             btn_Guardar.setEnabled(false);
@@ -209,6 +211,7 @@ public class ModificacionProductosBulkGUI extends JDialog {
     private void initComponents() {
 
         bgRecargoDescuento = new javax.swing.ButtonGroup();
+        bgVisibilidad = new javax.swing.ButtonGroup();
         sp_ProductosAModificar = new javax.swing.JScrollPane();
         tbl_ProductosAModifcar = new javax.swing.JTable();
         panel1 = new javax.swing.JPanel();
@@ -221,6 +224,9 @@ public class ModificacionProductosBulkGUI extends JDialog {
         chk_Rubro = new javax.swing.JCheckBox();
         chk_Proveedor = new javax.swing.JCheckBox();
         chk_UnidadDeMedida = new javax.swing.JCheckBox();
+        chkVisibilidad = new javax.swing.JCheckBox();
+        rbPublico = new javax.swing.JRadioButton();
+        rbPrivado = new javax.swing.JRadioButton();
         panel2 = new javax.swing.JPanel();
         lbl_PrecioCosto = new javax.swing.JLabel();
         lbl_Ganancia = new javax.swing.JLabel();
@@ -262,7 +268,7 @@ public class ModificacionProductosBulkGUI extends JDialog {
         tbl_ProductosAModifcar.setFocusable(false);
         sp_ProductosAModificar.setViewportView(tbl_ProductosAModifcar);
 
-        panel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        panel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         cmb_Rubro.setEnabled(false);
 
@@ -321,6 +327,21 @@ public class ModificacionProductosBulkGUI extends JDialog {
             }
         });
 
+        chkVisibilidad.setText("Visibilidad:");
+        chkVisibilidad.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chkVisibilidadItemStateChanged(evt);
+            }
+        });
+
+        bgVisibilidad.add(rbPublico);
+        rbPublico.setText("Público");
+        rbPublico.setEnabled(false);
+
+        bgVisibilidad.add(rbPrivado);
+        rbPrivado.setText("Privado");
+        rbPrivado.setEnabled(false);
+
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
         panel1.setLayout(panel1Layout);
         panel1Layout.setHorizontalGroup(
@@ -328,25 +349,33 @@ public class ModificacionProductosBulkGUI extends JDialog {
             .addGroup(panel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(chkVisibilidad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(chk_UnidadDeMedida, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(chk_Proveedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(chk_Rubro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cmb_Medida, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cmb_Proveedor, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cmb_Rubro, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 0, 0)
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btn_NuevoProveedor)
-                    .addComponent(btn_Medidas)
-                    .addComponent(btn_Rubros))
+                    .addGroup(panel1Layout.createSequentialGroup()
+                        .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmb_Medida, javax.swing.GroupLayout.Alignment.TRAILING, 0, 314, Short.MAX_VALUE)
+                            .addComponent(cmb_Proveedor, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cmb_Rubro, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, 0)
+                        .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btn_NuevoProveedor)
+                            .addComponent(btn_Medidas)
+                            .addComponent(btn_Rubros)))
+                    .addGroup(panel1Layout.createSequentialGroup()
+                        .addComponent(rbPublico)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(rbPrivado)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panel1Layout.setVerticalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_Rubro)
                     .addComponent(cmb_Rubro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -361,7 +390,11 @@ public class ModificacionProductosBulkGUI extends JDialog {
                     .addComponent(chk_UnidadDeMedida)
                     .addComponent(cmb_Medida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_Medidas, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(chkVisibilidad)
+                    .addComponent(rbPublico)
+                    .addComponent(rbPrivado)))
         );
 
         panel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Rubros, cmb_Rubro});
@@ -370,7 +403,7 @@ public class ModificacionProductosBulkGUI extends JDialog {
 
         panel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Medidas, cmb_Medida});
 
-        panel2.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        panel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         lbl_PrecioCosto.setForeground(new java.awt.Color(192, 192, 192));
         lbl_PrecioCosto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -574,7 +607,7 @@ public class ModificacionProductosBulkGUI extends JDialog {
 
         lbl_Indicaciones.setText("Productos que se van a modificar:");
 
-        panel3.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        panel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         chkRecargoDescuento.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -657,13 +690,13 @@ public class ModificacionProductosBulkGUI extends JDialog {
                 .addContainerGap()
                 .addComponent(lbl_Indicaciones)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_ProductosAModificar, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sp_ProductosAModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(panel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(panel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_Guardar)
                 .addContainerGap())
@@ -698,6 +731,7 @@ public class ModificacionProductosBulkGUI extends JDialog {
 
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
         boolean checkPrecios = false;
+        boolean checkVisibilidad = false;
         boolean checkDescuentoRecargo = false;
         boolean checkMedida = false;
         boolean checkRubro = false;
@@ -707,6 +741,7 @@ public class ModificacionProductosBulkGUI extends JDialog {
         Proveedor proveedor = new Proveedor();
         String preciosProducto = "";
         String descuentoRecargoPorcentaje = "";
+        String visibilidad = "";
         if (chk_Precios.isSelected() == true) {
             checkPrecios = true;
             preciosProducto = "&precioCosto=" + new BigDecimal(txtPrecioCosto.getValue().toString())
@@ -716,6 +751,10 @@ public class ModificacionProductosBulkGUI extends JDialog {
                     + "&IVAPorcentaje=" + new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString())
                     + "&IVANeto=" + new BigDecimal(txtIVANeto.getValue().toString())
                     + "&precioLista=" + new BigDecimal(txtPrecioLista.getValue().toString());
+        }
+        if (chkVisibilidad.isSelected() == true) {
+            checkVisibilidad = true;
+            visibilidad = "&publicos=" + rbPublico.isSelected();
         }
         if (chkRecargoDescuento.isSelected() == true) {
             checkDescuentoRecargo = true;
@@ -752,6 +791,7 @@ public class ModificacionProductosBulkGUI extends JDialog {
             if (checkRubro) uri += "&idRubro=" + rubro.getId_Rubro();            
             if (checkProveedor) uri += "&idProveedor=" + proveedor.getId_Proveedor();
             if (checkPrecios) uri += preciosProducto;
+            if (checkVisibilidad) uri += visibilidad;
             if (checkDescuentoRecargo) uri += descuentoRecargoPorcentaje;
             RestClient.getRestTemplate().put(uri , null);
             JOptionPane.showMessageDialog(this, "Los productos se modificaron correctamente.",
@@ -984,13 +1024,26 @@ public class ModificacionProductosBulkGUI extends JDialog {
         } catch (ParseException ex) {}
     }//GEN-LAST:event_txtDescuentoRecargoPorcentajeFocusLost
 
+    private void chkVisibilidadItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkVisibilidadItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            rbPublico.setEnabled(true);
+            rbPrivado.setEnabled(true);
+        } else {
+            rbPublico.setEnabled(false);
+            rbPrivado.setEnabled(false);
+        }
+        this.habilitarBotonGuardar();
+    }//GEN-LAST:event_chkVisibilidadItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgRecargoDescuento;
+    private javax.swing.ButtonGroup bgVisibilidad;
     private javax.swing.JButton btn_Guardar;
     private javax.swing.JButton btn_Medidas;
     private javax.swing.JButton btn_NuevoProveedor;
     private javax.swing.JButton btn_Rubros;
     private javax.swing.JCheckBox chkRecargoDescuento;
+    private javax.swing.JCheckBox chkVisibilidad;
     private javax.swing.JCheckBox chk_Precios;
     private javax.swing.JCheckBox chk_Proveedor;
     private javax.swing.JCheckBox chk_Rubro;
@@ -1009,6 +1062,8 @@ public class ModificacionProductosBulkGUI extends JDialog {
     private javax.swing.JPanel panel2;
     private javax.swing.JPanel panel3;
     private javax.swing.JRadioButton rbDescuento;
+    private javax.swing.JRadioButton rbPrivado;
+    private javax.swing.JRadioButton rbPublico;
     private javax.swing.JRadioButton rbRecargo;
     private javax.swing.JScrollPane sp_ProductosAModificar;
     private javax.swing.JTable tbl_ProductosAModifcar;

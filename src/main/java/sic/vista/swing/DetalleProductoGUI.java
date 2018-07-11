@@ -64,6 +64,7 @@ public class DetalleProductoGUI extends JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        bgVisibilidad = new javax.swing.ButtonGroup();
         btnGuardar = new javax.swing.JButton();
         tpTabs = new javax.swing.JTabbedPane();
         panelGeneral = new javax.swing.JPanel();
@@ -114,8 +115,9 @@ public class DetalleProductoGUI extends JDialog {
         lbl_Nota = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txt_Nota = new javax.swing.JTextArea();
-        chkPublico = new javax.swing.JCheckBox();
         lblPublico = new javax.swing.JLabel();
+        rbPublico = new javax.swing.JRadioButton();
+        rbPrivado = new javax.swing.JRadioButton();
         panel6 = new javax.swing.JPanel();
         lbl_FUM = new javax.swing.JLabel();
         lbl_FechaUltimaModificacion = new javax.swing.JLabel();
@@ -552,10 +554,14 @@ public class DetalleProductoGUI extends JDialog {
         txt_Nota.setRows(5);
         jScrollPane1.setViewportView(txt_Nota);
 
-        chkPublico.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-
         lblPublico.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblPublico.setText("Público:");
+        lblPublico.setText("Visibilidad:");
+
+        bgVisibilidad.add(rbPublico);
+        rbPublico.setText("Público");
+
+        bgVisibilidad.add(rbPrivado);
+        rbPrivado.setText("Privado");
 
         javax.swing.GroupLayout panel5Layout = new javax.swing.GroupLayout(panel5);
         panel5.setLayout(panel5Layout);
@@ -570,21 +576,26 @@ public class DetalleProductoGUI extends JDialog {
                     .addComponent(lbl_Ven, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
                     .addComponent(lbl_Nota, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(dc_Vencimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(chkPublico, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
-                    .addComponent(txt_Estante, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txt_Estanteria, javax.swing.GroupLayout.Alignment.LEADING))
+                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(dc_Vencimiento, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+                    .addComponent(txt_Estante)
+                    .addComponent(txt_Estanteria)
+                    .addGroup(panel5Layout.createSequentialGroup()
+                        .addComponent(rbPublico)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(rbPrivado)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panel5Layout.setVerticalGroup(
             panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPublico)
-                    .addComponent(chkPublico))
+                    .addComponent(rbPublico)
+                    .addComponent(rbPrivado))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_Ven)
@@ -654,7 +665,7 @@ public class DetalleProductoGUI extends JDialog {
                 .addGroup(panelPropiedadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(panel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(78, Short.MAX_VALUE))
         );
         panelPropiedadesLayout.setVerticalGroup(
             panelPropiedadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -663,7 +674,7 @@ public class DetalleProductoGUI extends JDialog {
                 .addComponent(panel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         tpTabs.addTab("Propiedades", panelPropiedades);
@@ -701,7 +712,8 @@ public class DetalleProductoGUI extends JDialog {
         txt_Nota.setText(productoParaModificar.getNota());
         cmb_Medida.setSelectedItem(productoParaModificar.getNombreMedida());
         chkSinLimite.setSelected(productoParaModificar.isIlimitado());
-        chkPublico.setSelected(productoParaModificar.isPublico());
+        rbPublico.setSelected(productoParaModificar.isPublico());
+        rbPrivado.setSelected(!productoParaModificar.isPublico());
         txt_Cantidad.setValue(productoParaModificar.getCantidad());
         txt_CantMinima.setValue(productoParaModificar.getCantMinima());
         txt_VentaMinima.setValue(productoParaModificar.getVentaMinima());
@@ -897,7 +909,7 @@ public class DetalleProductoGUI extends JDialog {
                     producto.setImpuestoInterno_neto(BigDecimal.ZERO);
                     producto.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
                     producto.setIlimitado(chkSinLimite.isSelected());   
-                    producto.setPublico(chkPublico.isSelected());
+                    producto.setPublico(rbPublico.isSelected());
                     producto.setEstanteria(txt_Estanteria.getText().trim());
                     producto.setEstante(txt_Estante.getText().trim());
                     producto.setNota(txt_Nota.getText().trim());                    
@@ -933,7 +945,7 @@ public class DetalleProductoGUI extends JDialog {
                     productoParaModificar.setImpuestoInterno_neto(BigDecimal.ZERO);
                     productoParaModificar.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
                     productoParaModificar.setIlimitado(chkSinLimite.isSelected());   
-                    productoParaModificar.setPublico(chkPublico.isSelected());
+                    productoParaModificar.setPublico(rbPublico.isSelected());
                     productoParaModificar.setEstanteria(txt_Estanteria.getText().trim());
                     productoParaModificar.setEstante(txt_Estante.getText().trim());
                     productoParaModificar.setNota(txt_Nota.getText().trim());
@@ -1147,11 +1159,11 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_btn_RubrosActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup bgVisibilidad;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btn_Medidas;
     private javax.swing.JButton btn_NuevoProveedor;
     private javax.swing.JButton btn_Rubros;
-    private javax.swing.JCheckBox chkPublico;
     private javax.swing.JCheckBox chkSinLimite;
     private javax.swing.JComboBox cmbIVAPorcentaje;
     private javax.swing.JComboBox cmb_Medida;
@@ -1189,6 +1201,8 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JPanel panelPrecios;
     private javax.swing.JPanel panelPropiedades;
     private javax.swing.JPanel panelSuperior;
+    private javax.swing.JRadioButton rbPrivado;
+    private javax.swing.JRadioButton rbPublico;
     private javax.swing.JTabbedPane tpTabs;
     private javax.swing.JFormattedTextField txtGananciaNeto;
     private javax.swing.JFormattedTextField txtGananciaPorcentaje;
