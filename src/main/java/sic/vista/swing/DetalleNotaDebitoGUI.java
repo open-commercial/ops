@@ -84,11 +84,11 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private void cargarDetalleCliente() {
         txtNombre.setText(cliente.getRazonSocial());
         txtDomicilio.setText(cliente.getDireccion()
-                + " " + cliente.getLocalidad().getNombre()
-                + " " + cliente.getLocalidad().getProvincia().getNombre()
-                + " " + cliente.getLocalidad().getProvincia().getPais());
+                + " " + cliente.getNombreLocalidad()
+                + " " + cliente.getNombreProvincia()
+                + " " + cliente.getNombrePais());
         txtIDFiscal.setText(cliente.getIdFiscal());
-        txtCondicionIVA.setText(cliente.getCondicionIVA().getNombre());
+        txtCondicionIVA.setText(cliente.getNombreCondicionIVA());
     }
 
     private void cargarDetalleProveedor() {
