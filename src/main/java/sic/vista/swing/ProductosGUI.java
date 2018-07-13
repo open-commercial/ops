@@ -757,11 +757,11 @@ public class ProductosGUI extends JInternalFrame {
         if (tbl_Resultados.getSelectedRow() != -1) {
             if (tbl_Resultados.getSelectedRowCount() > 1) {
                 //seleccion multiple
-                ModificacionProductosBulkGUI gui_ModificacionProductosBulk = new ModificacionProductosBulkGUI(
+                ModificacionMultipleProductosGUI guiModificacionMultipleProductos = new ModificacionMultipleProductosGUI(
                         this.getSeleccionMultipleDeProductos(Utilidades.getSelectedRowsModelIndices(tbl_Resultados)));
-                gui_ModificacionProductosBulk.setModal(true);
-                gui_ModificacionProductosBulk.setLocationRelativeTo(this);
-                gui_ModificacionProductosBulk.setVisible(true);
+                guiModificacionMultipleProductos.setModal(true);
+                guiModificacionMultipleProductos.setLocationRelativeTo(this);
+                guiModificacionMultipleProductos.setVisible(true);
             } else {
                 //seleccion unica
                 DetalleProductoGUI gui_DetalleProducto = new DetalleProductoGUI(

@@ -744,6 +744,7 @@ public class DetalleProductoGUI extends JDialog {
         txtGananciaPorcentaje.setValue(BigDecimal.ZERO);
         txtGananciaNeto.setValue(BigDecimal.ZERO);
         txtPrecioLista.setValue(BigDecimal.ZERO);
+        rbPrivado.setSelected(true);
     }
     
     private void cargarMedidas() {
