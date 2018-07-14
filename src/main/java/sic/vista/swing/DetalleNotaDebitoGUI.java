@@ -28,6 +28,7 @@ import sic.modelo.NotaDebitoProveedor;
 import sic.modelo.Proveedor;
 import sic.modelo.Recibo;
 import sic.modelo.RenglonNotaDebito;
+import sic.modelo.TipoDeComprobante;
 import sic.modelo.UsuarioActivo;
 import sic.util.FormatosFechaHora;
 import sic.util.FormatterFechaHora;
@@ -584,6 +585,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
             notaDebitoCliente.setIva105Neto(BigDecimal.ZERO);
             notaDebitoCliente.setMontoNoGravado(recibo.getMonto());
             notaDebitoCliente.setMotivo(cmbDescripcionRenglon2.getSelectedItem().toString());
+            NotaDebito nd = null;
             try {
                 notaDebitoCliente.setRenglonesNotaDebito(Arrays.asList(RestClient.getRestTemplate().getForObject("/notas/renglon/debito/recibo/" + recibo.getIdRecibo()
                         + "?monto=" + new BigDecimal(txtSubTotalBruto.getValue().toString())
@@ -594,7 +596,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
                         + "&iva21Neto=" + notaDebitoCliente.getIva21Neto()
                         + "&montoNoGravado=" + notaDebitoCliente.getMontoNoGravado(), BigDecimal.class));
                 notaDebitoCliente.setUsuario(UsuarioActivo.getInstance().getUsuario());
-                NotaDebito nd  = RestClient.getRestTemplate().postForObject("/notas/debito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                nd  = RestClient.getRestTemplate().postForObject("/notas/debito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                         + "/cliente/" + cliente.getId_Cliente()
                         + "/usuario/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                         + "/recibo/" + recibo.getIdRecibo(), notaDebitoCliente, NotaDebito.class);
@@ -634,6 +636,11 @@ public class DetalleNotaDebitoGUI extends JDialog {
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
+            if (RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
+                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + "/factura-electronica", Boolean.class)) {
+                this.autorizarNotaDebito(nd);
+            }
         } else if (proveedor != null) {
             NotaDebitoProveedor notaDebitoProveedor = new NotaDebitoProveedor();
             notaDebitoProveedor.setFecha(new Date());
@@ -667,9 +674,28 @@ public class DetalleNotaDebitoGUI extends JDialog {
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
-        }
-        
+        }        
     }//GEN-LAST:event_btnGuardarActionPerformed
+    
+    private void autorizarNotaDebito(NotaDebito notaDebito) {
+        if (notaDebito != null && (notaDebito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_A
+                || notaDebito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B)) {
+            try {
+                RestClient.getRestTemplate().postForObject("/notas/" + notaDebito.getIdNota() + "/autorizacion",
+                        null, NotaDebito.class);
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
+                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
     
     private void txtMontoRenglon2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMontoRenglon2FocusGained
         SwingUtilities.invokeLater(() -> {

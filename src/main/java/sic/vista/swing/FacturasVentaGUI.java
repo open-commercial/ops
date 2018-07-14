@@ -1117,26 +1117,34 @@ public class FacturasVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_VendedorItemStateChanged
 
     private void btn_AutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AutorizarActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
-            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-            long idFacturaSeleccionada = facturasTotal.get(indexFilaSeleccionada).getId_Factura();
-            try {
-                RestClient.getRestTemplate().postForObject("/facturas/" + idFacturaSeleccionada + "/autorizacion",
-                        null, FacturaVenta.class);
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_autorizada"),
-                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
-                this.resetScroll();
-                this.limpiarJTable();
-                this.buscar(false);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+        if (RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
+                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                + "/factura-electronica", Boolean.class)) {
+            if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
+                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+                long idFacturaSeleccionada = facturasTotal.get(indexFilaSeleccionada).getId_Factura();
+                try {
+                    RestClient.getRestTemplate().postForObject("/facturas/" + idFacturaSeleccionada + "/autorizacion",
+                            null, FacturaVenta.class);
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_autorizada"),
+                            "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                    this.resetScroll();
+                    this.limpiarJTable();
+                    this.buscar(false);
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
+        } else {
+            JOptionPane.showInternalMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_cds_fe_habilitada"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_AutorizarActionPerformed
 

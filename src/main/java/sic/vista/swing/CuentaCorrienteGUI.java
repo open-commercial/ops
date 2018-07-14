@@ -30,8 +30,11 @@ import sic.modelo.Cliente;
 import sic.modelo.CuentaCorriente;
 import sic.modelo.CuentaCorrienteCliente;
 import sic.modelo.CuentaCorrienteProveedor;
+import sic.modelo.EmpresaActiva;
 import sic.modelo.FacturaCompra;
 import sic.modelo.Nota;
+import sic.modelo.NotaCredito;
+import sic.modelo.NotaDebito;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Proveedor;
 import sic.modelo.RenglonCuentaCorriente;
@@ -845,34 +848,51 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     }//GEN-LAST:event_btnVerDetalleActionPerformed
     
     private void btnAutorizarNotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAutorizarNotaActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
-            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-            RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
-            if (renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_A || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B
-                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_PRESUPUESTO || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_X
-                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_Y || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_A
-                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_PRESUPUESTO
-                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_X || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_Y) {
-                try {
-                    RestClient.getRestTemplate().postForObject("/notas/" + renglonCC.getIdMovimiento() + "/autorizacion",
-                            null, Nota.class);
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
-                            "Aviso", JOptionPane.INFORMATION_MESSAGE);
-                    this.refrescarVista();
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+        if (RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
+                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                + "/factura-electronica", Boolean.class)) {
+            if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
+                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+                RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
+                if (renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_A
+                        || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B
+                        || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_A
+                        || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B) {
+                    try {
+                        if (renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_A
+                                || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B) {
+                            RestClient.getRestTemplate().postForObject("/notas/" + renglonCC.getIdMovimiento() + "/autorizacion",
+                                    null, NotaCredito.class);
+                            JOptionPane.showMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
+                                    "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                        } else if (renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_A
+                                || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B) {
+                            RestClient.getRestTemplate().postForObject("/notas/" + renglonCC.getIdMovimiento() + "/autorizacion",
+                                    null, NotaDebito.class);
+                            JOptionPane.showMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
+                                    "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                        this.refrescarVista();
+                    } catch (RestClientResponseException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    } catch (ResourceAccessException ex) {
+                        LOGGER.error(ex.getMessage());
+                        JOptionPane.showMessageDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showInternalMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
-            } else {
-                JOptionPane.showInternalMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
             }
+        } else {
+            JOptionPane.showInternalMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_cds_fe_habilitada"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnAutorizarNotaActionPerformed
 
