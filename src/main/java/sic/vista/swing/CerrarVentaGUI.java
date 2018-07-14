@@ -222,9 +222,10 @@ public class CerrarVentaGUI extends JDialog {
                         }
                     }
                 }
-                if (RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
+                boolean usaFacturaElectronica = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
                         + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "/factura-electronica", Boolean.class)) {
+                        + "/factura-electronica", boolean.class);
+                if (usaFacturaElectronica) {
                     this.autorizarFacturas(facturasDivididas);
                 }
             } else {
@@ -238,9 +239,10 @@ public class CerrarVentaGUI extends JDialog {
                     }
                     exito = true;
                 }
-                if (RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
+                boolean usaFacturaElectronica = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
                         + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "/factura-electronica", Boolean.class)) {
+                        + "/factura-electronica", boolean.class);
+                if (usaFacturaElectronica) {
                     this.autorizarFacturas(Arrays.asList(f));
                 }
             }

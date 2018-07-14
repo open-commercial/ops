@@ -120,6 +120,26 @@ public class DetalleNotaDebitoGUI extends JDialog {
         txtNoGravado.setValue(recibo.getMonto());
         txtTotal.setValue(recibo.getMonto().add(new BigDecimal(txtMontoRenglon2.getValue().toString())).add(iva)); 
     }
+            
+    private void autorizarNotaDebito(NotaDebito notaDebito) {
+        if (notaDebito != null && (notaDebito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_A
+                || notaDebito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B)) {
+            try {
+                RestClient.getRestTemplate().postForObject("/notas/" + notaDebito.getIdNota() + "/autorizacion",
+                        null, NotaDebito.class);
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
+                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -636,9 +656,10 @@ public class DetalleNotaDebitoGUI extends JDialog {
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
-            if (RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
+            boolean usaFacturaElectronica = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
                     + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                    + "/factura-electronica", Boolean.class)) {
+                    + "/factura-electronica", boolean.class);
+            if (usaFacturaElectronica) {
                 this.autorizarNotaDebito(nd);
             }
         } else if (proveedor != null) {
@@ -676,26 +697,6 @@ public class DetalleNotaDebitoGUI extends JDialog {
             }
         }        
     }//GEN-LAST:event_btnGuardarActionPerformed
-    
-    private void autorizarNotaDebito(NotaDebito notaDebito) {
-        if (notaDebito != null && (notaDebito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_A
-                || notaDebito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B)) {
-            try {
-                RestClient.getRestTemplate().postForObject("/notas/" + notaDebito.getIdNota() + "/autorizacion",
-                        null, NotaDebito.class);
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
-                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
     
     private void txtMontoRenglon2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMontoRenglon2FocusGained
         SwingUtilities.invokeLater(() -> {
