@@ -475,6 +475,27 @@ public class FacturasVentaGUI extends JInternalFrame {
         return !response.getContent().isEmpty();
     }
 
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(false);
+            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+                txt_ResultGananciaTotal.setVisible(false);
+                lbl_GananciaTotal.setVisible(false);
+                lbl_TotalIVAVenta.setVisible(false);
+                txt_ResultTotalIVAVenta.setVisible(false);
+                if (!rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+                    btn_Nueva.setEnabled(false);
+                    btn_Autorizar.setEnabled(false);
+                    chk_Viajante.setEnabled(false);
+                    cmb_Viajante.setEnabled(false);
+                    chk_Vendedor.setEnabled(false);
+                    cmb_Vendedor.setEnabled(false);
+                }
+            }
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -1032,27 +1053,6 @@ public class FacturasVentaGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_formInternalFrameOpened
 
-    private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
-        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
-            btn_Eliminar.setEnabled(false);
-            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-                txt_ResultGananciaTotal.setVisible(false);
-                lbl_GananciaTotal.setVisible(false);
-                lbl_TotalIVAVenta.setVisible(false);
-                txt_ResultTotalIVAVenta.setVisible(false);
-                if (!rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-                    btn_Nueva.setEnabled(false);
-                    btn_Autorizar.setEnabled(false);
-                    chk_Viajante.setEnabled(false);
-                    cmb_Viajante.setEnabled(false);
-                    chk_Vendedor.setEnabled(false);
-                    cmb_Vendedor.setEnabled(false);
-                }
-            }
-        }
-    }
-
     private void chk_ViajanteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ViajanteItemStateChanged
         this.cargarUsuariosViajante();
     }//GEN-LAST:event_chk_ViajanteItemStateChanged
@@ -1117,9 +1117,10 @@ public class FacturasVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_VendedorItemStateChanged
 
     private void btn_AutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AutorizarActionPerformed
-        if (RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                + "/factura-electronica", Boolean.class)) {
+        boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
+                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        + "/factura-electronica-habilitada", Boolean.class);
+        if (FEHabilitada) {
             if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
                 long idFacturaSeleccionada = facturasTotal.get(indexFilaSeleccionada).getId_Factura();

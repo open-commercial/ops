@@ -334,6 +334,127 @@ public class DetalleNotaCreditoGUI extends JDialog {
         this.setIconImage(iconoVentana.getImage());
     }
     
+    private void guardarNotaCreditoCliente() {
+        NotaCreditoCliente notaCreditoCliente = new NotaCreditoCliente();
+        notaCreditoCliente.setFecha(new Date());
+        notaCreditoCliente.setMotivo(cmbMotivo.getSelectedItem().toString());
+        notaCreditoCliente.setFacturaVenta((FacturaVenta) factura);
+        notaCreditoCliente.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
+        notaCreditoCliente.setDescuentoPorcentaje(new BigDecimal(txt_Decuento_porcentaje.getValue().toString()));
+        notaCreditoCliente.setDescuentoNeto(new BigDecimal(txt_Decuento_neto.getValue().toString()));
+        notaCreditoCliente.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
+        notaCreditoCliente.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
+        notaCreditoCliente.setSubTotalBruto(subTotalBruto);
+        notaCreditoCliente.setIva105Neto(iva_105_netoFactura);
+        notaCreditoCliente.setIva21Neto(iva_21_netoFactura);
+        notaCreditoCliente.setTotal(new BigDecimal(txt_Total.getValue().toString()));
+        notaCreditoCliente.setRenglonesNotaCredito(renglones);
+        try {
+            NotaCredito nc = RestClient.getRestTemplate()
+                    .postForObject("/notas/credito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                            + "/cliente/" + cliente.getId_Cliente()
+                            + "/usuario/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
+                            + "/factura/" + factura.getId_Factura()
+                            + "?modificarStock=" + modificarStock,
+                            notaCreditoCliente, NotaCredito.class);
+            if (nc != null) {
+                notaCreada = true;
+                int reply = JOptionPane.showConfirmDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                        "Aviso", JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION) {
+                    if (Desktop.isDesktopSupported()) {
+                        byte[] reporte = RestClient.getRestTemplate()
+                                .getForObject("/notas/" + nc.getIdNota() + "/reporte", byte[].class);
+                        File f = new File(System.getProperty("user.home") + "/NotaCredito.pdf");
+                        Files.write(f.toPath(), reporte);
+                        Desktop.getDesktop().open(f);
+                    } else {
+                        JOptionPane.showMessageDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }            
+            boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
+                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + "/factura-electronica-habilitada", Boolean.class);
+            if (FEHabilitada) {
+                this.autorizarNotaCredito(nc);
+            }
+            this.dispose();
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void guardarNotaCreditoProveedor() {
+        NotaCreditoProveedor notaCreditoProveedor = new NotaCreditoProveedor();
+        notaCreditoProveedor.setFecha(new Date());
+        notaCreditoProveedor.setMotivo(cmbMotivo.getSelectedItem().toString());
+        notaCreditoProveedor.setFacturaCompra((FacturaCompra) factura);
+        notaCreditoProveedor.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
+        notaCreditoProveedor.setDescuentoPorcentaje(new BigDecimal(txt_Decuento_porcentaje.getValue().toString()));
+        notaCreditoProveedor.setDescuentoNeto(new BigDecimal(txt_Decuento_neto.getValue().toString()));
+        notaCreditoProveedor.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
+        notaCreditoProveedor.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
+        notaCreditoProveedor.setSubTotalBruto(subTotalBruto);
+        notaCreditoProveedor.setIva105Neto(iva_105_netoFactura);
+        notaCreditoProveedor.setIva21Neto(iva_21_netoFactura);
+        notaCreditoProveedor.setTotal(new BigDecimal(txt_Total.getValue().toString()));
+        notaCreditoProveedor.setRenglonesNotaCredito(renglones);
+        notaCreditoProveedor.setSerie(Long.parseLong(txt_Serie.getValue().toString()));
+        notaCreditoProveedor.setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
+        try {
+            NotaCredito nc = RestClient.getRestTemplate()
+                    .postForObject("/notas/credito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                            + "/proveedor/" + proveedor.getId_Proveedor()
+                            + "/usuario/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
+                            + "/factura/" + factura.getId_Factura()
+                            + "?modificarStock=" + modificarStock,
+                            notaCreditoProveedor, NotaCreditoProveedor.class);
+            notaCreada = (nc != null);
+            this.dispose();
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void autorizarNotaCredito(NotaCredito notaCredito) {
+        if (notaCredito != null && (notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_A
+                || notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B)) {
+            try {
+                RestClient.getRestTemplate().postForObject("/notas/" + notaCredito.getIdNota() + "/autorizacion",
+                        null, NotaCredito.class);
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
+                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -744,121 +865,11 @@ public class DetalleNotaCreditoGUI extends JDialog {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         if (cliente != null) {
-            NotaCreditoCliente notaCreditoCliente = new NotaCreditoCliente();
-            notaCreditoCliente.setFecha(new Date());
-            notaCreditoCliente.setMotivo(cmbMotivo.getSelectedItem().toString());
-            notaCreditoCliente.setFacturaVenta((FacturaVenta) factura);
-            notaCreditoCliente.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
-            notaCreditoCliente.setDescuentoPorcentaje(new BigDecimal(txt_Decuento_porcentaje.getValue().toString()));
-            notaCreditoCliente.setDescuentoNeto(new BigDecimal(txt_Decuento_neto.getValue().toString()));
-            notaCreditoCliente.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
-            notaCreditoCliente.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
-            notaCreditoCliente.setSubTotalBruto(subTotalBruto);
-            notaCreditoCliente.setIva105Neto(iva_105_netoFactura);
-            notaCreditoCliente.setIva21Neto(iva_21_netoFactura);
-            notaCreditoCliente.setTotal(new BigDecimal(txt_Total.getValue().toString()));
-            notaCreditoCliente.setRenglonesNotaCredito(renglones);
-            try {
-                NotaCredito nc = RestClient.getRestTemplate().postForObject("/notas/credito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "/cliente/" + cliente.getId_Cliente()
-                        + "/usuario/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                        + "/factura/" + factura.getId_Factura()
-                        + "?modificarStock=" + modificarStock,
-                        notaCreditoCliente, NotaCredito.class);
-                if (nc != null) {
-                    int reply = JOptionPane.showConfirmDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
-                            "Aviso", JOptionPane.YES_NO_OPTION);
-                    if (reply == JOptionPane.YES_OPTION) {
-                        if (Desktop.isDesktopSupported()) {
-                            byte[] reporte = RestClient.getRestTemplate()
-                                    .getForObject("/notas/" + nc.getIdNota() + "/reporte", byte[].class);
-                            File f = new File(System.getProperty("user.home") + "/NotaCredito.pdf");
-                            Files.write(f.toPath(), reporte);
-                            Desktop.getDesktop().open(f);
-                        }
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                notaCreada = true;
-                if (RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "/factura-electronica", Boolean.class)) {
-                    this.autorizarNotaCredito(nc);
-                }
-                this.dispose();
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (IOException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            this.guardarNotaCreditoCliente();
         } else if (proveedor != null) {
-            NotaCreditoProveedor notaCreditoProveedor = new NotaCreditoProveedor();
-            notaCreditoProveedor.setFecha(new Date());
-            notaCreditoProveedor.setMotivo(cmbMotivo.getSelectedItem().toString());
-            notaCreditoProveedor.setFacturaCompra((FacturaCompra) factura);
-            notaCreditoProveedor.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
-            notaCreditoProveedor.setDescuentoPorcentaje(new BigDecimal(txt_Decuento_porcentaje.getValue().toString()));
-            notaCreditoProveedor.setDescuentoNeto(new BigDecimal(txt_Decuento_neto.getValue().toString()));
-            notaCreditoProveedor.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
-            notaCreditoProveedor.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
-            notaCreditoProveedor.setSubTotalBruto(subTotalBruto);
-            notaCreditoProveedor.setIva105Neto(iva_105_netoFactura);
-            notaCreditoProveedor.setIva21Neto(iva_21_netoFactura);
-            notaCreditoProveedor.setTotal(new BigDecimal(txt_Total.getValue().toString()));
-            notaCreditoProveedor.setRenglonesNotaCredito(renglones);
-            notaCreditoProveedor.setSerie(Long.parseLong(txt_Serie.getValue().toString()));
-            notaCreditoProveedor.setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
-            try {
-                NotaCredito nc = RestClient.getRestTemplate().postForObject("/notas/credito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "/proveedor/" + proveedor.getId_Proveedor()
-                        + "/usuario/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                        + "/factura/" + factura.getId_Factura()
-                        + "?modificarStock=" + modificarStock,
-                        notaCreditoProveedor, NotaCreditoProveedor.class);
-                notaCreada = (nc != null);
-                this.dispose();
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            this.guardarNotaCreditoProveedor();
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
-
-    private void autorizarNotaCredito(NotaCredito notaCredito) {
-        if (notaCredito != null && (notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_A
-                || notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B)) {
-            try {
-                RestClient.getRestTemplate().postForObject("/notas/" + notaCredito.getIdNota() + "/autorizacion",
-                        null, NotaCredito.class);
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
-                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
     
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         if (cliente != null) {

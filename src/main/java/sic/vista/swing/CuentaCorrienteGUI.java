@@ -32,7 +32,6 @@ import sic.modelo.CuentaCorrienteCliente;
 import sic.modelo.CuentaCorrienteProveedor;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.FacturaCompra;
-import sic.modelo.Nota;
 import sic.modelo.NotaCredito;
 import sic.modelo.NotaDebito;
 import sic.modelo.PaginaRespuestaRest;
@@ -848,9 +847,10 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     }//GEN-LAST:event_btnVerDetalleActionPerformed
     
     private void btnAutorizarNotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAutorizarNotaActionPerformed
-        if (RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                + "/factura-electronica", Boolean.class)) {
+        boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
+                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        + "/factura-electronica-habilitada", Boolean.class);
+        if (FEHabilitada) {
             if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
                 RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);

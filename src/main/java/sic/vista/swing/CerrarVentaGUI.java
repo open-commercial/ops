@@ -222,9 +222,10 @@ public class CerrarVentaGUI extends JDialog {
                         }
                     }
                 }
-                if (RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
+                boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
                         + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "/factura-electronica", Boolean.class)) {
+                        + "/factura-electronica-habilitada", Boolean.class);
+                if (FEHabilitada) {
                     this.autorizarFacturas(facturasDivididas);
                 }
             } else {
@@ -238,9 +239,10 @@ public class CerrarVentaGUI extends JDialog {
                     }
                     exito = true;
                 }
-                if (RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
+                boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
                         + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "/factura-electronica", Boolean.class)) {
+                        + "/factura-electronica-habilitada", Boolean.class);
+                if (FEHabilitada) {
                     this.autorizarFacturas(Arrays.asList(f));
                 }
             }
@@ -261,23 +263,22 @@ public class CerrarVentaGUI extends JDialog {
     private void autorizarFacturas(List<Factura> facturas) {
         facturas.stream().filter(f -> (f.getTipoComprobante() == TipoDeComprobante.FACTURA_A
                 || f.getTipoComprobante() == TipoDeComprobante.FACTURA_B
-                || f.getTipoComprobante() == TipoDeComprobante.FACTURA_C))
-                .forEachOrdered(f -> {
-                    try {
-                        RestClient.getRestTemplate().postForObject("/facturas/" + f.getId_Factura() + "/autorizacion",
-                                null, FacturaVenta.class);
-                        JOptionPane.showMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_autorizada"),
-                                "Aviso", JOptionPane.INFORMATION_MESSAGE);
-                    } catch (RestClientResponseException ex) {
-                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    } catch (ResourceAccessException ex) {
-                        LOGGER.error(ex.getMessage());
-                        JOptionPane.showMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                });
+                || f.getTipoComprobante() == TipoDeComprobante.FACTURA_C)).forEachOrdered(f -> {
+            try {
+                RestClient.getRestTemplate().postForObject("/facturas/" + f.getId_Factura() + "/autorizacion",
+                        null, FacturaVenta.class);
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_autorizada"),
+                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
     }
 
     private void armarMontosConFormasDePago() {
