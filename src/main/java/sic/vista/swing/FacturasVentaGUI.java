@@ -1117,10 +1117,9 @@ public class FacturasVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_VendedorItemStateChanged
 
     private void btn_AutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AutorizarActionPerformed
-        boolean usaFacturaElectronica = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
+        if (RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
                 + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                + "/factura-electronica", boolean.class);
-        if (usaFacturaElectronica) {
+                + "/factura-electronica", Boolean.class)) {
             if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
                 long idFacturaSeleccionada = facturasTotal.get(indexFilaSeleccionada).getId_Factura();

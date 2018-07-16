@@ -333,26 +333,6 @@ public class DetalleNotaCreditoGUI extends JDialog {
         ImageIcon iconoVentana = new ImageIcon(DetalleNotaCreditoGUI.class.getResource("/sic/icons/SIC_24_square.png"));
         this.setIconImage(iconoVentana.getImage());
     }
-
-    private void autorizarNotaCredito(NotaCredito notaCredito) {
-        if (notaCredito != null && (notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_A
-                || notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B)) {
-            try {
-                RestClient.getRestTemplate().postForObject("/notas/" + notaCredito.getIdNota() + "/autorizacion",
-                        null, NotaCredito.class);
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
-                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -804,10 +784,9 @@ public class DetalleNotaCreditoGUI extends JDialog {
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
                 notaCreada = true;
-                boolean usaFacturaElectronica = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
+                if (RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
                         + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "/factura-electronica", boolean.class);
-                if (usaFacturaElectronica) {
+                        + "/factura-electronica", Boolean.class)) {
                     this.autorizarNotaCredito(nc);
                 }
                 this.dispose();
@@ -860,6 +839,26 @@ public class DetalleNotaCreditoGUI extends JDialog {
             }
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void autorizarNotaCredito(NotaCredito notaCredito) {
+        if (notaCredito != null && (notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_A
+                || notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B)) {
+            try {
+                RestClient.getRestTemplate().postForObject("/notas/" + notaCredito.getIdNota() + "/autorizacion",
+                        null, NotaCredito.class);
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
+                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
     
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         if (cliente != null) {
