@@ -43,6 +43,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private HashMap<Long,BigDecimal> idsRenglonesYCantidades = new HashMap<>();
     private List<RenglonNotaCredito> renglones;    
     private boolean notaCreada;    
+    private boolean notaAutorizada = false;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private BigDecimal subTotalBruto = BigDecimal.ZERO;
     private BigDecimal iva_105_netoFactura = BigDecimal.ZERO;
@@ -359,29 +360,31 @@ public class DetalleNotaCreditoGUI extends JDialog {
                             notaCreditoCliente, NotaCredito.class);
             if (nc != null) {
                 notaCreada = true;
-                int reply = JOptionPane.showConfirmDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
-                        "Aviso", JOptionPane.YES_NO_OPTION);
-                if (reply == JOptionPane.YES_OPTION) {
-                    if (Desktop.isDesktopSupported()) {
-                        byte[] reporte = RestClient.getRestTemplate()
-                                .getForObject("/notas/" + nc.getIdNota() + "/reporte", byte[].class);
-                        File f = new File(System.getProperty("user.home") + "/NotaCredito.pdf");
-                        Files.write(f.toPath(), reporte);
-                        Desktop.getDesktop().open(f);
-                    } else {
-                        JOptionPane.showMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
+                boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
+                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        + "/factura-electronica-habilitada", Boolean.class);
+                if (FEHabilitada) {
+                    this.autorizarNotaCredito(nc);
+                }
+                if (notaAutorizada) {
+                    int reply = JOptionPane.showConfirmDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                            "Aviso", JOptionPane.YES_NO_OPTION);
+                    if (reply == JOptionPane.YES_OPTION) {
+                        if (Desktop.isDesktopSupported()) {
+                            byte[] reporte = RestClient.getRestTemplate()
+                                    .getForObject("/notas/" + nc.getIdNota() + "/reporte", byte[].class);
+                            File f = new File(System.getProperty("user.home") + "/NotaCredito.pdf");
+                            Files.write(f.toPath(), reporte);
+                            Desktop.getDesktop().open(f);
+                        } else {
+                            JOptionPane.showMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 }
-            }            
-            boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                    + "/factura-electronica-habilitada", Boolean.class);
-            if (FEHabilitada) {
-                this.autorizarNotaCredito(nc);
-            }
+            }  
             this.dispose();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -439,7 +442,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
         if (notaCredito != null && (notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_A
                 || notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B)) {
             try {
-                RestClient.getRestTemplate().postForObject("/notas/" + notaCredito.getIdNota() + "/autorizacion",
+                notaCredito = RestClient.getRestTemplate().postForObject("/notas/" + notaCredito.getIdNota() + "/autorizacion",
                         null, NotaCredito.class);
                 JOptionPane.showMessageDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
@@ -453,6 +456,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
+        if (notaCredito.getCAE() != 0L) notaAutorizada = true;
     }
     
     @SuppressWarnings("unchecked")

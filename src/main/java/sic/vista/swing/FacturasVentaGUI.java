@@ -1117,14 +1117,14 @@ public class FacturasVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_VendedorItemStateChanged
 
     private void btn_AutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AutorizarActionPerformed
-        boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "/factura-electronica-habilitada", Boolean.class);
-        if (FEHabilitada) {
-            if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
-                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                long idFacturaSeleccionada = facturasTotal.get(indexFilaSeleccionada).getId_Factura();
-                try {
+        try {
+            boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
+                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + "/factura-electronica-habilitada", Boolean.class);
+            if (FEHabilitada) {
+                if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
+                    int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+                    long idFacturaSeleccionada = facturasTotal.get(indexFilaSeleccionada).getId_Factura();
                     RestClient.getRestTemplate().postForObject("/facturas/" + idFacturaSeleccionada + "/autorizacion",
                             null, FacturaVenta.class);
                     JOptionPane.showMessageDialog(this,
@@ -1133,18 +1133,19 @@ public class FacturasVentaGUI extends JInternalFrame {
                     this.resetScroll();
                     this.limpiarJTable();
                     this.buscar(false);
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+
                 }
+            } else {
+                JOptionPane.showInternalMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_cds_fe_habilitada"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } else {
-            JOptionPane.showInternalMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_cds_fe_habilitada"),
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_AutorizarActionPerformed

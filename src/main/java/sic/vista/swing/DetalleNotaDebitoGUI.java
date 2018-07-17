@@ -39,7 +39,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private Recibo recibo;
     private final Proveedor proveedor;
     private long idRecibo;
-    private boolean notaDebitoCreada;   
+    private boolean notaDebitoCreada;  
+    private boolean notaDebitoAutorizada = false;
     private long idNotaDebitoProveedor;
     private final FormatterFechaHora formatter = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO);
     private final static BigDecimal IVA_21 = new BigDecimal("21");
@@ -81,7 +82,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
         if (notaDebito != null && (notaDebito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_A
                 || notaDebito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B)) {
             try {
-                RestClient.getRestTemplate().postForObject("/notas/" + notaDebito.getIdNota() + "/autorizacion",
+                notaDebito = RestClient.getRestTemplate().postForObject("/notas/" + notaDebito.getIdNota() + "/autorizacion",
                         null, NotaDebito.class);
                 JOptionPane.showMessageDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
@@ -95,6 +96,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
+        if (notaDebito.getCAE() != 0L) notaDebitoAutorizada = true;
     }
     
     private void setIcon() {
@@ -167,29 +169,31 @@ public class DetalleNotaDebitoGUI extends JDialog {
                             + "/recibo/" + recibo.getIdRecibo(), notaDebitoCliente, NotaDebito.class);
             if (nd != null) {
                 notaDebitoCreada = true;
-                int reply = JOptionPane.showConfirmDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
-                        "Aviso", JOptionPane.YES_NO_OPTION);
-                if (reply == JOptionPane.YES_OPTION) {
-                    if (Desktop.isDesktopSupported()) {
-                        byte[] reporte = RestClient.getRestTemplate()
-                                .getForObject("/notas/" + nd.getIdNota() + "/reporte", byte[].class);
-                        File f = new File(System.getProperty("user.home") + "/NotaDebito.pdf");
-                        Files.write(f.toPath(), reporte);
-                        Desktop.getDesktop().open(f);
-                    } else {
-                        JOptionPane.showMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
+                boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
+                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        + "/factura-electronica-habilitada", Boolean.class);
+                if (FEHabilitada) {
+                    this.autorizarNotaDebito(nd);
+                }
+                if (notaDebitoAutorizada) {
+                    int reply = JOptionPane.showConfirmDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                            "Aviso", JOptionPane.YES_NO_OPTION);
+                    if (reply == JOptionPane.YES_OPTION) {
+                        if (Desktop.isDesktopSupported()) {
+                            byte[] reporte = RestClient.getRestTemplate()
+                                    .getForObject("/notas/" + nd.getIdNota() + "/reporte", byte[].class);
+                            File f = new File(System.getProperty("user.home") + "/NotaDebito.pdf");
+                            Files.write(f.toPath(), reporte);
+                            Desktop.getDesktop().open(f);
+                        } else {
+                            JOptionPane.showMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 }
                 this.dispose();
-            }
-            boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                    + "/factura-electronica-habilitada", Boolean.class);
-            if (FEHabilitada) {
-                this.autorizarNotaDebito(nd);
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

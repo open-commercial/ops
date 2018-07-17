@@ -35,6 +35,7 @@ import sic.modelo.UsuarioActivo;
 public class CerrarVentaGUI extends JDialog {
 
     private boolean exito;
+    private boolean facturaAutorizada = false;
     private final PuntoDeVentaGUI gui_puntoDeVenta;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int[] indicesParaDividir = null;
@@ -199,51 +200,69 @@ public class CerrarVentaGUI extends JDialog {
             }
             if (dividir) {
                 String indices = "&indices=" + Arrays.toString(indicesParaDividir).substring(1, Arrays.toString(indicesParaDividir).length() - 1);
-                List<Factura> facturasDivididas = Arrays.asList(RestClient.getRestTemplate()
-                        .postForObject(uri + indices, facturaVenta, Factura[].class));
+                List<FacturaVenta> facturasDivididas = Arrays.asList(RestClient.getRestTemplate()
+                        .postForObject(uri + indices, facturaVenta, FacturaVenta[].class));
+                facturasDivididas.forEach(fv -> {
+                    fv.setRenglones(Arrays.asList(RestClient.getRestTemplate()
+                            .getForObject("/facturas/" + fv.getId_Factura() + "/renglones",
+                                    RenglonFactura[].class)));
+                });
                 exito = true;
-                int reply = JOptionPane.showConfirmDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
-                        "Aviso", JOptionPane.YES_NO_OPTION);
-                if (reply == JOptionPane.YES_OPTION) {
-                    int indice = facturasDivididas.size();
-                    for (int i = 0; i < indice; i++) {
-                        facturasDivididas.get(i).setRenglones(Arrays.asList(RestClient.getRestTemplate()
-                                .getForObject("/facturas/" + facturasDivididas.get(i).getId_Factura() + "/renglones",
-                                        RenglonFactura[].class)));
-                        if (facturasDivididas.size() == 2 && !facturasDivididas.get(i).getRenglones().isEmpty()) {
-                            if (i == 0) {
-                                this.lanzarReporteFactura(facturasDivididas.get(i), "ComprobanteX");
-                            } else {
-                                this.lanzarReporteFactura(facturasDivididas.get(i), "Factura");
-                            }
-                        } else if (facturasDivididas.size() == 1 && !facturasDivididas.get(i).getRenglones().isEmpty()) {
-                            this.lanzarReporteFactura(facturasDivididas.get(i), "Factura");
-                        }
-                    }
-                }
                 boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
                         + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                         + "/factura-electronica-habilitada", Boolean.class);
                 if (FEHabilitada) {
-                    this.autorizarFacturas(facturasDivididas);
-                }
-            } else {
-                Factura f = Arrays.asList(RestClient.getRestTemplate().postForObject(uri, facturaVenta, FacturaVenta[].class)).get(0);
-                if (facturaVenta != null) {
+                    int indice = facturasDivididas.size();
+                    for (int i = 0; i < indice; i++) {
+                        if (facturasDivididas.size() == 2 && !facturasDivididas.get(i).getRenglones().isEmpty()) {
+                            if (i != 0) {
+                                this.autorizarFactura(facturasDivididas.get(i));
+                            }
+                        } else if (facturasDivididas.size() == 1 && !facturasDivididas.get(i).getRenglones().isEmpty()) {
+                            this.autorizarFactura(facturasDivididas.get(i));
+                        }
+                    }
+                }                 
+                if (facturaAutorizada) {
                     int reply = JOptionPane.showConfirmDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
                             "Aviso", JOptionPane.YES_NO_OPTION);
                     if (reply == JOptionPane.YES_OPTION) {
-                        this.lanzarReporteFactura(f, "Factura");
+                        int indice = facturasDivididas.size();
+                        for (int i = 0; i < indice; i++) {
+                            if (facturasDivididas.size() == 2 && !facturasDivididas.get(i).getRenglones().isEmpty()) {
+                                if (i == 0) {
+                                    this.lanzarReporteFactura(facturasDivididas.get(i), "ComprobanteX");
+                                } else {
+                                    this.lanzarReporteFactura(facturasDivididas.get(i), "Factura");
+                                }
+                            } else if (facturasDivididas.size() == 1 && !facturasDivididas.get(i).getRenglones().isEmpty()) {
+                                this.lanzarReporteFactura(facturasDivididas.get(i), "Factura");
+                            }
+                        }
+                    }
+                }
+            } else {
+                facturaVenta = Arrays.asList(RestClient.getRestTemplate().postForObject(uri, facturaVenta, FacturaVenta[].class)).get(0);
+                if (facturaVenta != null) {
+                    boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
+                            + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                            + "/factura-electronica-habilitada", Boolean.class);
+                    if (FEHabilitada) {
+                        this.autorizarFactura(facturaVenta);
+                    }
+                    if (facturaAutorizada 
+                            || facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_X
+                            || facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_Y
+                            || facturaVenta.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
+                        int reply = JOptionPane.showConfirmDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                                "Aviso", JOptionPane.YES_NO_OPTION);
+                        if (reply == JOptionPane.YES_OPTION) {
+                            this.lanzarReporteFactura(facturaVenta, "Factura");
+                        }
                     }
                     exito = true;
-                }
-                boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "/factura-electronica-habilitada", Boolean.class);
-                if (FEHabilitada) {
-                    this.autorizarFacturas(Arrays.asList(f));
                 }
             }
             if (gui_puntoDeVenta.getPedido() != null) {
@@ -260,12 +279,12 @@ public class CerrarVentaGUI extends JDialog {
         }
     }
     
-    private void autorizarFacturas(List<Factura> facturas) {
-        facturas.stream().filter(f -> (f.getTipoComprobante() == TipoDeComprobante.FACTURA_A
-                || f.getTipoComprobante() == TipoDeComprobante.FACTURA_B
-                || f.getTipoComprobante() == TipoDeComprobante.FACTURA_C)).forEachOrdered(f -> {
+    private void autorizarFactura(FacturaVenta facturaVenta) {
+        if (facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_A
+                || facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_B
+                || facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_C) {
             try {
-                RestClient.getRestTemplate().postForObject("/facturas/" + f.getId_Factura() + "/autorizacion",
+                facturaVenta = RestClient.getRestTemplate().postForObject("/facturas/" + facturaVenta.getId_Factura() + "/autorizacion",
                         null, FacturaVenta.class);
                 JOptionPane.showMessageDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_autorizada"),
@@ -278,7 +297,8 @@ public class CerrarVentaGUI extends JDialog {
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
-        });
+        }
+        if (facturaVenta.getCAE() != 0L) facturaAutorizada = true;
     }
 
     private void armarMontosConFormasDePago() {
