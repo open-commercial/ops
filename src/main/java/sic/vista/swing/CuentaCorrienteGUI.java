@@ -886,6 +886,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                             JOptionPane.showMessageDialog(this,
                                     ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_autorizada"),
                                     "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                            this.refrescarVista();
                             break;
                         default:
                             JOptionPane.showInternalMessageDialog(this,

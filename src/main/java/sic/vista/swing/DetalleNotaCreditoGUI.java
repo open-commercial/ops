@@ -444,9 +444,6 @@ public class DetalleNotaCreditoGUI extends JDialog {
             try {
                 notaCredito = RestClient.getRestTemplate().postForObject("/notas/" + notaCredito.getIdNota() + "/autorizacion",
                         null, NotaCredito.class);
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
-                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             } catch (ResourceAccessException ex) {

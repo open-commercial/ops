@@ -286,9 +286,6 @@ public class CerrarVentaGUI extends JDialog {
             try {
                 facturaVenta = RestClient.getRestTemplate().postForObject("/facturas/" + facturaVenta.getId_Factura() + "/autorizacion",
                         null, FacturaVenta.class);
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_autorizada"),
-                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             } catch (ResourceAccessException ex) {
