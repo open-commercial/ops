@@ -30,8 +30,11 @@ import sic.modelo.Cliente;
 import sic.modelo.CuentaCorriente;
 import sic.modelo.CuentaCorrienteCliente;
 import sic.modelo.CuentaCorrienteProveedor;
+import sic.modelo.EmpresaActiva;
 import sic.modelo.FacturaCompra;
-import sic.modelo.Nota;
+import sic.modelo.FacturaVenta;
+import sic.modelo.NotaCredito;
+import sic.modelo.NotaDebito;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Proveedor;
 import sic.modelo.RenglonCuentaCorriente;
@@ -100,7 +103,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         if (cliente != null) {
             btnCrearNotaCredito.setEnabled(status);
             btnCrearNotaDebito.setEnabled(status);
-            btnAutorizarNota.setEnabled(status);
+            btnAutorizar.setEnabled(status);
         }
         btnVerDetalle.setEnabled(status);
         tbl_Resultados.requestFocus();
@@ -455,7 +458,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         tbl_Resultados = new javax.swing.JTable();
         btnCrearNotaCredito = new javax.swing.JButton();
         btnVerDetalle = new javax.swing.JButton();
-        btnAutorizarNota = new javax.swing.JButton();
+        btnAutorizar = new javax.swing.JButton();
         lbl_saldoFinal = new javax.swing.JLabel();
         ftxtSaldoFinal = new javax.swing.JFormattedTextField();
         btnCrearNotaDebito = new javax.swing.JButton();
@@ -523,12 +526,12 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             }
         });
 
-        btnAutorizarNota.setForeground(java.awt.Color.blue);
-        btnAutorizarNota.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Certificate_16x16.png"))); // NOI18N
-        btnAutorizarNota.setText("Autorizar Nota");
-        btnAutorizarNota.addActionListener(new java.awt.event.ActionListener() {
+        btnAutorizar.setForeground(java.awt.Color.blue);
+        btnAutorizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Certificate_16x16.png"))); // NOI18N
+        btnAutorizar.setText("Autorizar ");
+        btnAutorizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAutorizarNotaActionPerformed(evt);
+                btnAutorizarActionPerformed(evt);
             }
         });
 
@@ -595,7 +598,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 .addComponent(btnExportar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap(295, Short.MAX_VALUE))
             .addGroup(pnlResultadosLayout.createSequentialGroup()
-                .addComponent(btnAutorizarNota)
+                .addComponent(btnAutorizar)
                 .addGap(0, 0, 0)
                 .addComponent(btnVerDetalle)
                 .addGap(0, 0, 0)
@@ -603,7 +606,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        pnlResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAutorizarNota, btnCrearNotaCredito, btnCrearNotaDebito, btnCrearRecibo, btnExportar, btnVerDetalle, btn_Eliminar});
+        pnlResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAutorizar, btnCrearNotaCredito, btnCrearNotaDebito, btnCrearRecibo, btnExportar, btnVerDetalle, btn_Eliminar});
 
         pnlResultadosLayout.setVerticalGroup(
             pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -615,7 +618,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 .addComponent(sp_Resultados)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAutorizarNota, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAutorizar, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnVerDetalle)
                     .addComponent(btn_Eliminar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -627,7 +630,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     .addComponent(btnCrearNotaCredito, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
 
-        pnlResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAutorizarNota, btnCrearNotaCredito, btnCrearNotaDebito, btnCrearRecibo, btnVerDetalle, btn_Eliminar});
+        pnlResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAutorizar, btnCrearNotaCredito, btnCrearNotaDebito, btnCrearRecibo, btnVerDetalle, btn_Eliminar});
 
         txtCondicionIVACliente.setEditable(false);
         txtCondicionIVACliente.setFocusable(false);
@@ -721,7 +724,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             this.cargarDetalleCliente();
         } else if (proveedor != null) {
             this.cargarDetalleProveedor();
-            this.btnAutorizarNota.setVisible(false);
+            this.btnAutorizar.setVisible(false);
             this.btnExportar.setVisible(false);
         }
         this.setColumnas();
@@ -748,7 +751,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     btnCrearNotaCredito.setEnabled(false);
                     btnCrearNotaDebito.setEnabled(false);
                     btnVerDetalle.setEnabled(false);
-                    btnAutorizarNota.setEnabled(false);
+                    btnAutorizar.setEnabled(false);
                 }
             }
         }
@@ -844,37 +847,68 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btnVerDetalleActionPerformed
     
-    private void btnAutorizarNotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAutorizarNotaActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
-            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-            RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
-            if (renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_A || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B
-                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_PRESUPUESTO || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_X
-                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_Y || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_A
-                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_PRESUPUESTO
-                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_X || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_Y) {
-                try {
-                    RestClient.getRestTemplate().postForObject("/notas/" + renglonCC.getIdMovimiento() + "/autorizacion",
-                            null, Nota.class);
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
-                            "Aviso", JOptionPane.INFORMATION_MESSAGE);
-                    this.refrescarVista();
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+    private void btnAutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAutorizarActionPerformed
+        try {
+            boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
+                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + "/factura-electronica-habilitada", Boolean.class);
+            if (FEHabilitada) {
+                if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
+                    int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+                    RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
+                    switch (renglonCC.getTipoComprobante()) {
+                        case NOTA_CREDITO_A:
+                        case NOTA_CREDITO_B:
+                        case NOTA_DEBITO_A:
+                        case NOTA_DEBITO_B:
+                            if (renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_A
+                                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B) {
+                                RestClient.getRestTemplate().postForObject("/notas/" + renglonCC.getIdMovimiento() + "/autorizacion",
+                                        null, NotaCredito.class);
+                                JOptionPane.showMessageDialog(this,
+                                        ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
+                                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                            } else if (renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_A
+                                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B) {
+                                RestClient.getRestTemplate().postForObject("/notas/" + renglonCC.getIdMovimiento() + "/autorizacion",
+                                        null, NotaDebito.class);
+                                JOptionPane.showMessageDialog(this,
+                                        ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
+                                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                            }
+                            this.refrescarVista();
+                            break;
+                        case FACTURA_A:
+                        case FACTURA_B:
+                        case FACTURA_C:
+                            RestClient.getRestTemplate().postForObject("/facturas/" + renglonCC.getIdMovimiento() + "/autorizacion",
+                                    null, FacturaVenta.class);
+                            JOptionPane.showMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_autorizada"),
+                                    "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                            this.refrescarVista();
+                            break;
+                        default:
+                            JOptionPane.showInternalMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                            break;
+                    }
                 }
             } else {
                 JOptionPane.showInternalMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_cds_fe_habilitada"),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_btnAutorizarNotaActionPerformed
+    }//GEN-LAST:event_btnAutorizarActionPerformed
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
@@ -972,7 +1006,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     }//GEN-LAST:event_btnExportarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAutorizarNota;
+    private javax.swing.JButton btnAutorizar;
     private javax.swing.JButton btnCrearNotaCredito;
     private javax.swing.JButton btnCrearNotaDebito;
     private javax.swing.JButton btnCrearRecibo;
