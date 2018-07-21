@@ -6,7 +6,6 @@ import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -595,7 +594,7 @@ public class CajasGUI extends JInternalFrame {
                 cmb_UsuariosApertura.setEnabled(true);
                 PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
                         .exchange("/usuarios/busqueda/criteria?"
-                                + "roles=" + Rol.ADMINISTRADOR
+                                + "roles=" + Rol.ADMINISTRADOR + "," + Rol.ENCARGADO
                                 + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
                                 new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
                         })
@@ -651,7 +650,8 @@ public class CajasGUI extends JInternalFrame {
                 cmb_UsuariosCierre.setEnabled(true);
                 PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
                         .exchange("/usuarios/busqueda/criteria?"
-                                + "roles=" + Rol.ADMINISTRADOR, HttpMethod.GET, null,
+                                + "roles=" + Rol.ADMINISTRADOR + "," + Rol.ENCARGADO,
+                                HttpMethod.GET, null,
                                 new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
                         })
                         .getBody();

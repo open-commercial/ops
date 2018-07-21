@@ -900,11 +900,11 @@ public class PedidosGUI extends JInternalFrame {
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        btnEliminarPedido.setEnabled(false);
         if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
                 && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
                 && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)
                 && rolesDeUsuarioActivo.contains(Rol.VIAJANTE)) {
+            btnEliminarPedido.setEnabled(false);
             btnFacturar.setEnabled(false);
             chk_Vendedor.setEnabled(false);
             cmb_Vendedor.setEnabled(false);
