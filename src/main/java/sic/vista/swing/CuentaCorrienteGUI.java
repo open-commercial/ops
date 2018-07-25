@@ -440,6 +440,11 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                                 "Error", JOptionPane.ERROR_MESSAGE);
                     }
                     break;
+                case RECIBO:
+                    DetalleReciboGUI detalleReciboGUI = new DetalleReciboGUI(renglonCC.getIdMovimiento());
+                    detalleReciboGUI.setLocationRelativeTo(this);
+                    detalleReciboGUI.setVisible(true);
+                    break;
                 default:
                     JOptionPane.showInternalMessageDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
