@@ -4,14 +4,10 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.nio.file.Files;
-import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -32,7 +28,6 @@ public class DetalleReciboGUI extends JDialog {
     
     private final Cliente cliente;
     private final Proveedor proveedor;
-    private final long idReciboParaMostrar;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleReciboGUI(Cliente cliente) {
@@ -40,7 +35,6 @@ public class DetalleReciboGUI extends JDialog {
         this.setIcon();
         this.cliente = cliente;
         this.proveedor = null;
-        this.idReciboParaMostrar = 0L;
     }
     
     public DetalleReciboGUI(Proveedor proveedor) {
@@ -48,18 +42,8 @@ public class DetalleReciboGUI extends JDialog {
         this.setIcon();
         this.proveedor = proveedor;
         this.cliente = null;
-        this.idReciboParaMostrar = 0L;
     }
-    
-    public DetalleReciboGUI(long idReciboParaMostrar) {
-        this.initComponents();
-        this.setIcon();
-        this.proveedor = null;
-        this.cliente = null;
-        this.idReciboParaMostrar = idReciboParaMostrar;
-    }
-    
-
+     
     private void setIcon() {
         ImageIcon iconoVentana = new ImageIcon(DetalleReciboGUI.class.getResource("/sic/icons/Stamp_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
@@ -272,32 +256,16 @@ public class DetalleReciboGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {
+            this.cargarFormasDePago();
+            this.txtObservaciones.setText("SALDO.");
             if (cliente != null) {
-                this.cargarFormasDePago();
-                this.txtObservaciones.setText("SALDO.");
                 BigDecimal saldoCC = RestClient.getRestTemplate()
                         .getForObject("/cuentas-corrientes/clientes/" + cliente.getId_Cliente() + "/saldo", BigDecimal.class);
                 txtMonto.setValue((saldoCC.compareTo(BigDecimal.ZERO) < 0) ? saldoCC.negate() : BigDecimal.ZERO);
             } else if (proveedor != null) {
-                this.cargarFormasDePago();
-                this.txtObservaciones.setText("SALDO.");
                 BigDecimal saldoCC = RestClient.getRestTemplate()
                         .getForObject("/cuentas-corrientes/proveedores/" + proveedor.getId_Proveedor() + "/saldo", BigDecimal.class);
                 txtMonto.setValue((saldoCC.compareTo(BigDecimal.ZERO) < 0) ? saldoCC.negate() : BigDecimal.ZERO);
-            } else if (idReciboParaMostrar != 0L) {
-                Recibo reciboRecuperado = RestClient.getRestTemplate()
-                        .getForObject("/recibos/" + idReciboParaMostrar,
-                                Recibo.class);
-                FormaDePago fdp = new FormaDePago();
-                fdp.setNombre(reciboRecuperado.getNombreFormaDePago());
-                cmbFormaDePago.setEnabled(false);
-                txtMonto.setEnabled(false);
-                txtObservaciones.setEnabled(false);
-                btnGuardar.setEnabled(false);
-                cmbFormaDePago.addItem(fdp);
-                DecimalFormat dFormat = new DecimalFormat("##,##0.00"); 
-                txtMonto.setText(dFormat.format(reciboRecuperado.getMonto().setScale(2, RoundingMode.HALF_UP)));
-                txtObservaciones.setText(reciboRecuperado.getConcepto());
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

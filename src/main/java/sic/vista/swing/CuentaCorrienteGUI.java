@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.Files;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +38,7 @@ import sic.modelo.NotaCredito;
 import sic.modelo.NotaDebito;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Proveedor;
+import sic.modelo.Recibo;
 import sic.modelo.RenglonCuentaCorriente;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
@@ -429,7 +431,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 case FACTURA_X:
                 case FACTURA_Y:
                     if (Desktop.isDesktopSupported()) {
-                        JInternalFrame gui = new DetalleFacturaCompraGUI(RestClient.getRestTemplate().getForObject("/facturas/" + renglonCC.getIdMovimiento(), FacturaCompra.class));
+                        JInternalFrame gui = new DetalleFacturaCompraGUI(RestClient
+                                .getRestTemplate().getForObject("/facturas/" + renglonCC.getIdMovimiento(), FacturaCompra.class));
                         gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
                                 getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
                         getDesktopPane().add(gui);
@@ -441,9 +444,13 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     }
                     break;
                 case RECIBO:
-                    DetalleReciboGUI detalleReciboGUI = new DetalleReciboGUI(renglonCC.getIdMovimiento());
-                    detalleReciboGUI.setLocationRelativeTo(this);
-                    detalleReciboGUI.setVisible(true);
+                    Recibo recibo = RestClient.getRestTemplate()
+                            .getForObject("/recibos/" + renglonCC.getIdMovimiento(), Recibo.class);
+                    DecimalFormat dFormat = new DecimalFormat("##,##0.00");
+                    String mensaje = "Forma De Pago: " + recibo.getNombreFormaDePago()
+                            + "\nMonto: " + dFormat.format(recibo.getMonto().setScale(2, RoundingMode.HALF_UP))
+                            + "\nConcepto: " + recibo.getConcepto();
+                    JOptionPane.showMessageDialog(this, mensaje, "Detalle del Recibo.", JOptionPane.INFORMATION_MESSAGE);
                     break;
                 default:
                     JOptionPane.showInternalMessageDialog(this,
