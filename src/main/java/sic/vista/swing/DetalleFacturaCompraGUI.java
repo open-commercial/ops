@@ -28,6 +28,7 @@ import sic.modelo.Proveedor;
 import sic.modelo.RenglonFactura;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.Transportista;
+import sic.modelo.UsuarioActivo;
 import sic.util.DecimalesRenderer;
 import sic.util.FormatosFechaHora;
 import sic.util.FormatterFechaHora;
@@ -213,6 +214,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
             RestClient.getRestTemplate().postForObject("/facturas/compra"
                     + "?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                     + "&idProveedor=" + ((Proveedor) cmb_Proveedor.getSelectedItem()).getId_Proveedor()
+                    + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                     + "&idTransportista=" + ((Transportista) cmb_Transportista.getSelectedItem()).getId_Transportista(),
                     facturaCompra, FacturaCompra[].class);
             return true;
