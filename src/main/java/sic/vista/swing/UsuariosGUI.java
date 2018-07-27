@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
@@ -393,16 +395,17 @@ public class UsuariosGUI extends JInternalFrame {
                 }
                 if (respuesta == JOptionPane.YES_OPTION) {
                     try {
-                        boolean usuarioPoseeClienteRelacionado
+                        Cliente clienteRelacionado
                                 = RestClient.getRestTemplate()
-                                        .getForObject("/clientes/existe-cliente-relacionado/usuario/"
+                                        .getForObject("/clientes/usuarios/"
                                                 + usuarioSeleccionado.getId_Usuario()
                                                 + "/empresas/"
-                                                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                                                , boolean.class);
-                        if (usuarioPoseeClienteRelacionado) {
+                                                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                                                 Cliente.class);
+                        if (clienteRelacionado != null) {
                             respuesta = JOptionPane.showConfirmDialog(this,
-                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_eliminar_usuario_con_cliente_asignado"),
+                                    MessageFormat.format(ResourceBundle.getBundle("Mensajes").getString(
+                                            "mensaje_eliminar_usuario_con_cliente_asignado"), clienteRelacionado.getRazonSocial()),
                                     "Eliminar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                         }
                         if (respuesta == JOptionPane.YES_OPTION) {
