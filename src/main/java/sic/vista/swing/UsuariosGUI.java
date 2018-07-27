@@ -17,6 +17,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.EmpresaActiva;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
@@ -392,12 +393,26 @@ public class UsuariosGUI extends JInternalFrame {
                 }
                 if (respuesta == JOptionPane.YES_OPTION) {
                     try {
-                        RestClient.getRestTemplate().delete("/usuarios/" + usuarioSeleccionado.getId_Usuario());
-                        LOGGER.warn("El usuario " + usuarioSeleccionado.getNombre() + " se elimino correctamente.");
-                        usuarioSeleccionado = null;
-                        this.resetScroll();
-                        this.limpiarJTable();
-                        this.buscar();
+                        boolean usuarioPoseeClienteRelacionado
+                                = RestClient.getRestTemplate()
+                                        .getForObject("/clientes/existe-cliente-relacionado/usuario/"
+                                                + usuarioSeleccionado.getId_Usuario()
+                                                + "/empresas/"
+                                                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                                                , boolean.class);
+                        if (usuarioPoseeClienteRelacionado) {
+                            respuesta = JOptionPane.showConfirmDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_eliminar_usuario_con_cliente_asignado"),
+                                    "Eliminar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                        }
+                        if (respuesta == JOptionPane.YES_OPTION) {
+                            RestClient.getRestTemplate().delete("/usuarios/" + usuarioSeleccionado.getId_Usuario());
+                            LOGGER.warn("El usuario " + usuarioSeleccionado.getNombre() + " se elimino correctamente.");
+                            usuarioSeleccionado = null;
+                            this.resetScroll();
+                            this.limpiarJTable();
+                            this.buscar();
+                        }
                     } catch (RestClientResponseException ex) {
                         JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     } catch (ResourceAccessException ex) {
