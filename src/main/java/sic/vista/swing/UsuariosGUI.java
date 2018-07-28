@@ -381,7 +381,6 @@ public class UsuariosGUI extends JInternalFrame {
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
         if (this.existeUsuarioSeleccionado()) {
             if (usuarioSeleccionado != null) {
-                //Si el usuario activo corresponde con el usuario seleccionado para modificar
                 int respuesta;
                 if (UsuarioActivo.getInstance().getUsuario().getId_Usuario() == usuarioSeleccionado.getId_Usuario()) {
                     respuesta = JOptionPane.showConfirmDialog(this,
@@ -389,28 +388,28 @@ public class UsuariosGUI extends JInternalFrame {
                             "Eliminar", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
                 } else {
                     respuesta = JOptionPane.showConfirmDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_eliminar_usuario")
-                            + " " + usuarioSeleccionado.getNombre() + "?",
+                            MessageFormat.format(ResourceBundle.getBundle("Mensajes")
+                                    .getString("mensaje_eliminar_usuario"),
+                                    usuarioSeleccionado.getUsername()),
                             "Eliminar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 }
                 if (respuesta == JOptionPane.YES_OPTION) {
                     try {
-                        Cliente clienteRelacionado
-                                = RestClient.getRestTemplate()
-                                        .getForObject("/clientes/usuarios/"
-                                                + usuarioSeleccionado.getId_Usuario()
-                                                + "/empresas/"
-                                                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                                                 Cliente.class);
+                        Cliente clienteRelacionado = RestClient.getRestTemplate()
+                                .getForObject("/clientes/usuarios/"
+                                        + usuarioSeleccionado.getId_Usuario()
+                                        + "/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                                        Cliente.class);
                         if (clienteRelacionado != null) {
                             respuesta = JOptionPane.showConfirmDialog(this,
-                                    MessageFormat.format(ResourceBundle.getBundle("Mensajes").getString(
-                                            "mensaje_eliminar_usuario_con_cliente_asignado"), clienteRelacionado.getRazonSocial()),
+                                    MessageFormat.format(ResourceBundle.getBundle("Mensajes")
+                                            .getString("mensaje_eliminar_usuario_con_cliente_asignado"),
+                                            clienteRelacionado.getRazonSocial()),
                                     "Eliminar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                         }
                         if (respuesta == JOptionPane.YES_OPTION) {
                             RestClient.getRestTemplate().delete("/usuarios/" + usuarioSeleccionado.getId_Usuario());
-                            LOGGER.warn("El usuario " + usuarioSeleccionado.getNombre() + " se elimino correctamente.");
+                            LOGGER.warn("El usuario " + usuarioSeleccionado.getUsername() + " se eliminó correctamente.");
                             usuarioSeleccionado = null;
                             this.resetScroll();
                             this.limpiarJTable();
