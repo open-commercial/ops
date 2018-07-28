@@ -142,19 +142,23 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cmb_Rubro" alignment="0" max="32767" attributes="2"/>
-                              <Component id="cmb_Proveedor" alignment="0" max="32767" attributes="2"/>
-                              <Component id="cmb_Medida" max="32767" attributes="0"/>
-                              <Component id="txt_Descripcion" max="32767" attributes="2"/>
-                              <Component id="txt_Codigo" alignment="0" max="32767" attributes="2"/>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="cmb_Rubro" alignment="0" pref="295" max="32767" attributes="2"/>
+                                      <Component id="cmb_Proveedor" alignment="0" max="32767" attributes="2"/>
+                                      <Component id="cmb_Medida" max="32767" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="btn_NuevoProveedor" min="-2" max="-2" attributes="1"/>
+                                      <Component id="btn_Medidas" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btn_Rubros" min="-2" max="-2" attributes="1"/>
+                                  </Group>
+                              </Group>
+                              <Component id="txt_Codigo" max="32767" attributes="2"/>
+                              <Component id="txt_Descripcion" alignment="0" max="32767" attributes="2"/>
                           </Group>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="btn_NuevoProveedor" min="-2" max="-2" attributes="1"/>
-                              <Component id="btn_Medidas" min="-2" max="-2" attributes="0"/>
-                              <Component id="btn_Rubros" min="-2" max="-2" attributes="1"/>
-                          </Group>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>

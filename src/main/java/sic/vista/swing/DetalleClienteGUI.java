@@ -2,7 +2,6 @@ package sic.vista.swing;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
@@ -123,20 +122,20 @@ public class DetalleClienteGUI extends JDialog {
     }
     
     private void cargarClienteParaModificar() {
-        txt_Id_Fiscal.setText(cliente.getIdFiscal());
-        txt_RazonSocial.setText(cliente.getRazonSocial());
-        txt_NombreFantasia.setText(cliente.getNombreFantasia());                
+        txtIdFiscal.setText(cliente.getIdFiscal());
+        txtRazonSocial.setText(cliente.getRazonSocial());
+        txtNombreFantasia.setText(cliente.getNombreFantasia());                
         this.seleccionarCondicionIVASegunId(cliente.getIdCondicionIVA());
-        txt_Direccion.setText(cliente.getDireccion());                
+        txtDireccion.setText(cliente.getDireccion());                
         this.seleccionarPaisSegunId(cliente.getIdPais());
         this.seleccionarProvinciaSegunId(cliente.getIdProvincia());
         this.seleccionarLocalidadSegunId(cliente.getIdLocalidad());
         this.seleccionarCredencialSegunId(cliente.getIdCredencial());
         this.seleccionarViajanteSegunId(cliente.getIdViajante());
-        txt_TelPrimario.setText(cliente.getTelPrimario());
-        txt_TelSecundario.setText(cliente.getTelSecundario());
-        txt_Contacto.setText(cliente.getContacto());
-        txt_Email.setText(cliente.getEmail());        
+        txtTelPrimario.setText(cliente.getTelPrimario());
+        txtTelSecundario.setText(cliente.getTelSecundario());
+        txtContacto.setText(cliente.getContacto());
+        txtEmail.setText(cliente.getEmail());        
     }
 
     private void cargarComboBoxCondicionesIVA() {
@@ -260,14 +259,14 @@ public class DetalleClienteGUI extends JDialog {
     
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
         if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
-            btn_NuevaCondicionIVA.setEnabled(false);
-            btn_NuevaCredencial.setEnabled(false);
-            lbl_Credencial.setEnabled(false);
+            btnNuevaCondicionIVA.setEnabled(false);
+            btnNuevaCredencial.setEnabled(false);
+            lblCredencial.setEnabled(false);
             cmbCredencial.setEnabled(false);
             if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-                btn_NuevaLocalidad.setEnabled(false);
-                btn_NuevaProvincia.setEnabled(false);
-                btn_NuevoPais.setEnabled(false);
+                btnNuevaLocalidad.setEnabled(false);
+                btnNuevaProvincia.setEnabled(false);
+                btnNuevoPais.setEnabled(false);
             }
         }
     }
@@ -280,43 +279,41 @@ public class DetalleClienteGUI extends JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panel2 = new javax.swing.JPanel();
-        lbl_Direccion = new javax.swing.JLabel();
-        txt_Direccion = new javax.swing.JTextField();
-        lbl_Provincia = new javax.swing.JLabel();
-        cmbProvincia = new javax.swing.JComboBox<>();
-        lbl_Localidad = new javax.swing.JLabel();
-        cmbPais = new javax.swing.JComboBox<>();
-        lbl_Pais = new javax.swing.JLabel();
-        btn_NuevoPais = new javax.swing.JButton();
-        btn_NuevaProvincia = new javax.swing.JButton();
-        btn_NuevaLocalidad = new javax.swing.JButton();
-        cmbLocalidad = new javax.swing.JComboBox<>();
-        panel3 = new javax.swing.JPanel();
-        lbl_Email = new javax.swing.JLabel();
-        txt_Email = new javax.swing.JTextField();
-        lbl_TelPrimario = new javax.swing.JLabel();
-        txt_TelPrimario = new javax.swing.JTextField();
-        lbl_TelSecundario = new javax.swing.JLabel();
-        txt_TelSecundario = new javax.swing.JTextField();
-        txt_Contacto = new javax.swing.JTextField();
-        lbl_Contacto = new javax.swing.JLabel();
-        lbl_Viajante = new javax.swing.JLabel();
-        cmbViajante = new javax.swing.JComboBox<>();
-        lbl_Credencial = new javax.swing.JLabel();
-        cmbCredencial = new javax.swing.JComboBox<>();
-        btn_NuevaCredencial = new javax.swing.JButton();
-        panel1 = new javax.swing.JPanel();
-        lbl_CondicionIVA = new javax.swing.JLabel();
-        cmbCondicionIVA = new javax.swing.JComboBox<>();
-        lbl_RazonSocial = new javax.swing.JLabel();
-        txt_RazonSocial = new javax.swing.JTextField();
-        lbl_Id_Fiscal = new javax.swing.JLabel();
-        txt_Id_Fiscal = new javax.swing.JTextField();
-        btn_NuevaCondicionIVA = new javax.swing.JButton();
-        lbl_NombreFantasia = new javax.swing.JLabel();
-        txt_NombreFantasia = new javax.swing.JTextField();
         btn_Guardar = new javax.swing.JButton();
+        panelPrincipal = new javax.swing.JPanel();
+        lblIdFiscal = new javax.swing.JLabel();
+        txtIdFiscal = new javax.swing.JTextField();
+        lblRazonSocial = new javax.swing.JLabel();
+        txtRazonSocial = new javax.swing.JTextField();
+        lblNombreFantasia = new javax.swing.JLabel();
+        txtNombreFantasia = new javax.swing.JTextField();
+        lblCondicionIVA = new javax.swing.JLabel();
+        cmbCondicionIVA = new javax.swing.JComboBox<>();
+        btnNuevaCondicionIVA = new javax.swing.JButton();
+        lblDireccion = new javax.swing.JLabel();
+        txtDireccion = new javax.swing.JTextField();
+        lblPais = new javax.swing.JLabel();
+        cmbPais = new javax.swing.JComboBox<>();
+        btnNuevoPais = new javax.swing.JButton();
+        lblProvincia = new javax.swing.JLabel();
+        cmbProvincia = new javax.swing.JComboBox<>();
+        btnNuevaProvincia = new javax.swing.JButton();
+        lblLocalidad = new javax.swing.JLabel();
+        cmbLocalidad = new javax.swing.JComboBox<>();
+        btnNuevaLocalidad = new javax.swing.JButton();
+        lblViajante = new javax.swing.JLabel();
+        cmbViajante = new javax.swing.JComboBox<>();
+        lblTelPrimario = new javax.swing.JLabel();
+        txtTelPrimario = new javax.swing.JTextField();
+        lblTelSecundario = new javax.swing.JLabel();
+        txtTelSecundario = new javax.swing.JTextField();
+        lblContacto = new javax.swing.JLabel();
+        txtContacto = new javax.swing.JTextField();
+        lblEmail = new javax.swing.JLabel();
+        txtEmail = new javax.swing.JTextField();
+        lblCredencial = new javax.swing.JLabel();
+        cmbCredencial = new javax.swing.JComboBox<>();
+        btnNuevaCredencial = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nuevo Cliente");
@@ -327,282 +324,6 @@ public class DetalleClienteGUI extends JDialog {
             }
         });
 
-        panel2.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-
-        lbl_Direccion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Direccion.setText("Dirección:");
-
-        lbl_Provincia.setForeground(java.awt.Color.red);
-        lbl_Provincia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Provincia.setText("* Provincia:");
-
-        cmbProvincia.setMaximumRowCount(5);
-        cmbProvincia.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cmbProvinciaItemStateChanged(evt);
-            }
-        });
-
-        lbl_Localidad.setForeground(java.awt.Color.red);
-        lbl_Localidad.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Localidad.setText("* Localidad:");
-
-        cmbPais.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cmbPaisItemStateChanged(evt);
-            }
-        });
-
-        lbl_Pais.setForeground(java.awt.Color.red);
-        lbl_Pais.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Pais.setText("* Pais:");
-
-        btn_NuevoPais.setForeground(java.awt.Color.blue);
-        btn_NuevoPais.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
-        btn_NuevoPais.setText("Nuevo");
-        btn_NuevoPais.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_NuevoPaisActionPerformed(evt);
-            }
-        });
-
-        btn_NuevaProvincia.setForeground(java.awt.Color.blue);
-        btn_NuevaProvincia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
-        btn_NuevaProvincia.setText("Nueva");
-        btn_NuevaProvincia.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_NuevaProvinciaActionPerformed(evt);
-            }
-        });
-
-        btn_NuevaLocalidad.setForeground(java.awt.Color.blue);
-        btn_NuevaLocalidad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
-        btn_NuevaLocalidad.setText("Nueva");
-        btn_NuevaLocalidad.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_NuevaLocalidadActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout panel2Layout = new javax.swing.GroupLayout(panel2);
-        panel2.setLayout(panel2Layout);
-        panel2Layout.setHorizontalGroup(
-            panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lbl_Provincia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Pais, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Direccion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Localidad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel2Layout.createSequentialGroup()
-                        .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmbPais, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmbProvincia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmbLocalidad, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(btn_NuevaLocalidad)
-                                .addComponent(btn_NuevaProvincia))
-                            .addComponent(btn_NuevoPais)))
-                    .addComponent(txt_Direccion))
-                .addContainerGap())
-        );
-        panel2Layout.setVerticalGroup(
-            panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_Direccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Direccion))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Pais)
-                    .addComponent(cmbPais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_NuevoPais))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Provincia)
-                    .addComponent(cmbProvincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_NuevaProvincia))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Localidad)
-                    .addComponent(cmbLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_NuevaLocalidad))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        panel2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_NuevoPais, cmbPais});
-
-        panel2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_NuevaProvincia, cmbProvincia});
-
-        panel2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_NuevaLocalidad, cmbLocalidad});
-
-        panel3.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-
-        lbl_Email.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Email.setText("Email:");
-
-        lbl_TelPrimario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_TelPrimario.setText("Teléfono #1:");
-
-        lbl_TelSecundario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_TelSecundario.setText("Teléfono #2:");
-
-        lbl_Contacto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Contacto.setText("Contacto:");
-
-        lbl_Viajante.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Viajante.setText("Viajante:");
-
-        lbl_Credencial.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Credencial.setText("Credencial:");
-
-        btn_NuevaCredencial.setForeground(java.awt.Color.blue);
-        btn_NuevaCredencial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Client_16x16.png"))); // NOI18N
-        btn_NuevaCredencial.setText("Nueva");
-        btn_NuevaCredencial.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_NuevaCredencialActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout panel3Layout = new javax.swing.GroupLayout(panel3);
-        panel3.setLayout(panel3Layout);
-        panel3Layout.setHorizontalGroup(
-            panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lbl_Viajante, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Email, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_TelPrimario, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-                    .addComponent(lbl_TelSecundario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Contacto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Credencial, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txt_Email, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txt_Contacto, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txt_TelSecundario, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txt_TelPrimario, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(cmbViajante, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(panel3Layout.createSequentialGroup()
-                        .addComponent(cmbCredencial, 0, 357, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_NuevaCredencial)))
-                .addContainerGap())
-        );
-        panel3Layout.setVerticalGroup(
-            panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Credencial)
-                    .addComponent(cmbCredencial, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_NuevaCredencial))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Viajante)
-                    .addComponent(cmbViajante, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_TelPrimario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_TelPrimario))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_TelSecundario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_TelSecundario))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_Contacto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Contacto))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_Email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Email))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        panel3Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lbl_Credencial, lbl_TelPrimario, lbl_Viajante});
-
-        panel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-
-        lbl_CondicionIVA.setForeground(java.awt.Color.red);
-        lbl_CondicionIVA.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_CondicionIVA.setText("* Condición IVA:");
-
-        cmbCondicionIVA.setMaximumRowCount(5);
-
-        lbl_RazonSocial.setForeground(java.awt.Color.red);
-        lbl_RazonSocial.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_RazonSocial.setText("* Razon Social:");
-
-        lbl_Id_Fiscal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Id_Fiscal.setText("ID Fiscal:");
-
-        btn_NuevaCondicionIVA.setForeground(java.awt.Color.blue);
-        btn_NuevaCondicionIVA.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMoney_16x16.png"))); // NOI18N
-        btn_NuevaCondicionIVA.setText("Nueva");
-        btn_NuevaCondicionIVA.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_NuevaCondicionIVAActionPerformed(evt);
-            }
-        });
-
-        lbl_NombreFantasia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_NombreFantasia.setText("Nombre Fantasia:");
-
-        javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
-        panel1.setLayout(panel1Layout);
-        panel1Layout.setHorizontalGroup(
-            panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(lbl_RazonSocial, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_CondicionIVA, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_NombreFantasia, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Id_Fiscal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(panel1Layout.createSequentialGroup()
-                        .addComponent(cmbCondicionIVA, 0, 348, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_NuevaCondicionIVA))
-                    .addComponent(txt_NombreFantasia)
-                    .addComponent(txt_RazonSocial)
-                    .addComponent(txt_Id_Fiscal, javax.swing.GroupLayout.Alignment.LEADING))
-                .addContainerGap())
-        );
-        panel1Layout.setVerticalGroup(
-            panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_Id_Fiscal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Id_Fiscal))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_RazonSocial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_RazonSocial))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_NombreFantasia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_NombreFantasia))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmbCondicionIVA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_CondicionIVA)
-                    .addComponent(btn_NuevaCondicionIVA))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        panel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_NuevaCondicionIVA, cmbCondicionIVA});
-
         btn_Guardar.setForeground(java.awt.Color.blue);
         btn_Guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
         btn_Guardar.setText("Guardar");
@@ -612,6 +333,249 @@ public class DetalleClienteGUI extends JDialog {
             }
         });
 
+        panelPrincipal.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        lblIdFiscal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblIdFiscal.setText("ID Fiscal:");
+
+        lblRazonSocial.setForeground(java.awt.Color.red);
+        lblRazonSocial.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblRazonSocial.setText("* Razon Social:");
+
+        lblNombreFantasia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblNombreFantasia.setText("Nombre Fantasia:");
+
+        lblCondicionIVA.setForeground(java.awt.Color.red);
+        lblCondicionIVA.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblCondicionIVA.setText("* Condición IVA:");
+
+        btnNuevaCondicionIVA.setForeground(java.awt.Color.blue);
+        btnNuevaCondicionIVA.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMoney_16x16.png"))); // NOI18N
+        btnNuevaCondicionIVA.setText("Nueva");
+        btnNuevaCondicionIVA.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevaCondicionIVAActionPerformed(evt);
+            }
+        });
+
+        lblDireccion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblDireccion.setText("Dirección:");
+
+        lblPais.setForeground(java.awt.Color.red);
+        lblPais.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblPais.setText("* Pais:");
+
+        cmbPais.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbPaisItemStateChanged(evt);
+            }
+        });
+
+        btnNuevoPais.setForeground(java.awt.Color.blue);
+        btnNuevoPais.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
+        btnNuevoPais.setText("Nuevo");
+        btnNuevoPais.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoPaisActionPerformed(evt);
+            }
+        });
+
+        lblProvincia.setForeground(java.awt.Color.red);
+        lblProvincia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblProvincia.setText("* Provincia:");
+
+        cmbProvincia.setMaximumRowCount(5);
+        cmbProvincia.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbProvinciaItemStateChanged(evt);
+            }
+        });
+
+        btnNuevaProvincia.setForeground(java.awt.Color.blue);
+        btnNuevaProvincia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
+        btnNuevaProvincia.setText("Nueva");
+        btnNuevaProvincia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevaProvinciaActionPerformed(evt);
+            }
+        });
+
+        lblLocalidad.setForeground(java.awt.Color.red);
+        lblLocalidad.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblLocalidad.setText("* Localidad:");
+
+        btnNuevaLocalidad.setForeground(java.awt.Color.blue);
+        btnNuevaLocalidad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
+        btnNuevaLocalidad.setText("Nueva");
+        btnNuevaLocalidad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevaLocalidadActionPerformed(evt);
+            }
+        });
+
+        lblViajante.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblViajante.setText("Viajante:");
+
+        lblTelPrimario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblTelPrimario.setText("Teléfono #1:");
+
+        lblTelSecundario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblTelSecundario.setText("Teléfono #2:");
+
+        lblContacto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblContacto.setText("Contacto:");
+
+        lblEmail.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblEmail.setText("Email:");
+
+        lblCredencial.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblCredencial.setText("Credencial:");
+
+        btnNuevaCredencial.setForeground(java.awt.Color.blue);
+        btnNuevaCredencial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Client_16x16.png"))); // NOI18N
+        btnNuevaCredencial.setText("Nueva");
+        btnNuevaCredencial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevaCredencialActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
+        panelPrincipal.setLayout(panelPrincipalLayout);
+        panelPrincipalLayout.setHorizontalGroup(
+            panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPrincipalLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(lblEmail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblContacto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTelSecundario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTelPrimario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblViajante, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblLocalidad, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblProvincia, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblPais, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblDireccion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblCondicionIVA, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblIdFiscal, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblRazonSocial, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblNombreFantasia, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblCredencial, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelPrincipalLayout.createSequentialGroup()
+                        .addComponent(cmbProvincia, 0, 326, Short.MAX_VALUE)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnNuevaProvincia))
+                    .addComponent(txtIdFiscal)
+                    .addComponent(txtRazonSocial)
+                    .addComponent(txtNombreFantasia)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
+                        .addComponent(cmbCondicionIVA, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnNuevaCondicionIVA))
+                    .addComponent(txtDireccion)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
+                        .addComponent(cmbPais, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnNuevoPais))
+                    .addGroup(panelPrincipalLayout.createSequentialGroup()
+                        .addComponent(cmbCredencial, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnNuevaCredencial))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
+                        .addComponent(cmbLocalidad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnNuevaLocalidad))
+                    .addComponent(cmbViajante, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtTelPrimario, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtTelSecundario, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtContacto, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtEmail, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap())
+        );
+
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnNuevaCondicionIVA, btnNuevaCredencial, btnNuevaLocalidad, btnNuevaProvincia, btnNuevoPais});
+
+        panelPrincipalLayout.setVerticalGroup(
+            panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPrincipalLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblIdFiscal)
+                    .addComponent(txtIdFiscal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblRazonSocial)
+                    .addComponent(txtRazonSocial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblNombreFantasia)
+                    .addComponent(txtNombreFantasia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblCondicionIVA)
+                    .addComponent(cmbCondicionIVA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNuevaCondicionIVA))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblDireccion)
+                    .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblPais)
+                    .addComponent(cmbPais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNuevoPais))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblProvincia)
+                    .addComponent(cmbProvincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNuevaProvincia))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblLocalidad)
+                    .addComponent(cmbLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNuevaLocalidad))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblViajante)
+                    .addComponent(cmbViajante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblTelPrimario)
+                    .addComponent(txtTelPrimario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblTelSecundario)
+                    .addComponent(txtTelSecundario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblContacto)
+                    .addComponent(txtContacto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblEmail)
+                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblCredencial)
+                    .addComponent(cmbCredencial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNuevaCredencial))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevoPais, cmbPais});
+
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevaProvincia, cmbProvincia});
+
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevaLocalidad, cmbLocalidad});
+
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblCredencial, lblTelPrimario, lblViajante});
+
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevaCredencial, cmbCredencial});
+
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevaCondicionIVA, cmbCondicionIVA});
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -619,9 +583,7 @@ public class DetalleClienteGUI extends JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btn_Guardar)))
@@ -631,43 +593,39 @@ public class DetalleClienteGUI extends JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_Guardar)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btn_NuevaCondicionIVAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevaCondicionIVAActionPerformed
+    private void btnNuevaCondicionIVAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaCondicionIVAActionPerformed
         DetalleCondicionIvaGUI gui_DetalleCondicionIVA = new DetalleCondicionIvaGUI();
         gui_DetalleCondicionIVA.setModal(true);
         gui_DetalleCondicionIVA.setLocationRelativeTo(this);
         gui_DetalleCondicionIVA.setVisible(true);        
         this.cargarComboBoxCondicionesIVA();        
-    }//GEN-LAST:event_btn_NuevaCondicionIVAActionPerformed
+    }//GEN-LAST:event_btnNuevaCondicionIVAActionPerformed
 
-    private void btn_NuevoPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoPaisActionPerformed
+    private void btnNuevoPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoPaisActionPerformed
         DetallePaisGUI gui_DetallePais = new DetallePaisGUI();
         gui_DetallePais.setModal(true);
         gui_DetallePais.setLocationRelativeTo(this);
         gui_DetallePais.setVisible(true);        
         this.cargarComboBoxPaises();
         this.cargarComboBoxProvinciasDelPais(cmbPais.getItemAt(cmbPais.getSelectedIndex()));        
-    }//GEN-LAST:event_btn_NuevoPaisActionPerformed
+    }//GEN-LAST:event_btnNuevoPaisActionPerformed
 
-    private void btn_NuevaProvinciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevaProvinciaActionPerformed
+    private void btnNuevaProvinciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaProvinciaActionPerformed
         DetalleProvinciaGUI gui_DetalleProvincia = new DetalleProvinciaGUI();
         gui_DetalleProvincia.setModal(true);
         gui_DetalleProvincia.setLocationRelativeTo(this);
         gui_DetalleProvincia.setVisible(true);        
         this.cargarComboBoxProvinciasDelPais(cmbPais.getItemAt(cmbPais.getSelectedIndex()));
-    }//GEN-LAST:event_btn_NuevaProvinciaActionPerformed
+    }//GEN-LAST:event_btnNuevaProvinciaActionPerformed
 
     private void cmbPaisItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbPaisItemStateChanged
         if (cmbPais.getItemCount() > 0) {
@@ -675,13 +633,13 @@ public class DetalleClienteGUI extends JDialog {
         }
     }//GEN-LAST:event_cmbPaisItemStateChanged
 
-    private void btn_NuevaLocalidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevaLocalidadActionPerformed
+    private void btnNuevaLocalidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaLocalidadActionPerformed
         DetalleLocalidadGUI gui_DetalleLocalidad = new DetalleLocalidadGUI();
         gui_DetalleLocalidad.setModal(true);
         gui_DetalleLocalidad.setLocationRelativeTo(this);
         gui_DetalleLocalidad.setVisible(true);      
         this.cargarComboBoxLocalidadesDeLaProvincia(cmbProvincia.getItemAt(cmbProvincia.getSelectedIndex()));      
-    }//GEN-LAST:event_btn_NuevaLocalidadActionPerformed
+    }//GEN-LAST:event_btnNuevaLocalidadActionPerformed
 
     private void cmbProvinciaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbProvinciaItemStateChanged
         if (cmbProvincia.getItemCount() > 0) {            
@@ -697,14 +655,14 @@ public class DetalleClienteGUI extends JDialog {
             String idLocalidad = "";
             String idViajante = "";
             String idCredencial = "";
-            cliente.setIdFiscal(txt_Id_Fiscal.getText().trim());
-            cliente.setRazonSocial(txt_RazonSocial.getText().trim());
-            cliente.setNombreFantasia(txt_NombreFantasia.getText().trim());
-            cliente.setDireccion(txt_Direccion.getText().trim());
-            cliente.setTelPrimario(txt_TelPrimario.getText().trim());
-            cliente.setTelSecundario(txt_TelSecundario.getText().trim());
-            cliente.setContacto(txt_Contacto.getText().trim());
-            cliente.setEmail(txt_Email.getText().trim());
+            cliente.setIdFiscal(txtIdFiscal.getText().trim());
+            cliente.setRazonSocial(txtRazonSocial.getText().trim());
+            cliente.setNombreFantasia(txtNombreFantasia.getText().trim());
+            cliente.setDireccion(txtDireccion.getText().trim());
+            cliente.setTelPrimario(txtTelPrimario.getText().trim());
+            cliente.setTelSecundario(txtTelSecundario.getText().trim());
+            cliente.setContacto(txtContacto.getText().trim());
+            cliente.setEmail(txtEmail.getText().trim());
             if (cmbCondicionIVA.getSelectedItem() != null) {
                 idCondicionIVA = String.valueOf(
                         ((CondicionIVA) cmbCondicionIVA.getSelectedItem()).getId_CondicionIVA());
@@ -769,51 +727,49 @@ public class DetalleClienteGUI extends JDialog {
         }
     }//GEN-LAST:event_formWindowOpened
         
-    private void btn_NuevaCredencialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevaCredencialActionPerformed
+    private void btnNuevaCredencialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaCredencialActionPerformed
         DetalleUsuarioGUI gui_DetalleUsuario = new DetalleUsuarioGUI();
         gui_DetalleUsuario.setModal(true);
         gui_DetalleUsuario.setLocationRelativeTo(this);
         gui_DetalleUsuario.setVisible(true);
         this.cargarComboBoxCredenciales();
-    }//GEN-LAST:event_btn_NuevaCredencialActionPerformed
+    }//GEN-LAST:event_btnNuevaCredencialActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnNuevaCondicionIVA;
+    private javax.swing.JButton btnNuevaCredencial;
+    private javax.swing.JButton btnNuevaLocalidad;
+    private javax.swing.JButton btnNuevaProvincia;
+    private javax.swing.JButton btnNuevoPais;
     private javax.swing.JButton btn_Guardar;
-    private javax.swing.JButton btn_NuevaCondicionIVA;
-    private javax.swing.JButton btn_NuevaCredencial;
-    private javax.swing.JButton btn_NuevaLocalidad;
-    private javax.swing.JButton btn_NuevaProvincia;
-    private javax.swing.JButton btn_NuevoPais;
     private javax.swing.JComboBox<CondicionIVA> cmbCondicionIVA;
     private javax.swing.JComboBox<Usuario> cmbCredencial;
     private javax.swing.JComboBox<Localidad> cmbLocalidad;
     private javax.swing.JComboBox<Pais> cmbPais;
     private javax.swing.JComboBox<Provincia> cmbProvincia;
     private javax.swing.JComboBox<Usuario> cmbViajante;
-    private javax.swing.JLabel lbl_CondicionIVA;
-    private javax.swing.JLabel lbl_Contacto;
-    private javax.swing.JLabel lbl_Credencial;
-    private javax.swing.JLabel lbl_Direccion;
-    private javax.swing.JLabel lbl_Email;
-    private javax.swing.JLabel lbl_Id_Fiscal;
-    private javax.swing.JLabel lbl_Localidad;
-    private javax.swing.JLabel lbl_NombreFantasia;
-    private javax.swing.JLabel lbl_Pais;
-    private javax.swing.JLabel lbl_Provincia;
-    private javax.swing.JLabel lbl_RazonSocial;
-    private javax.swing.JLabel lbl_TelPrimario;
-    private javax.swing.JLabel lbl_TelSecundario;
-    private javax.swing.JLabel lbl_Viajante;
-    private javax.swing.JPanel panel1;
-    private javax.swing.JPanel panel2;
-    private javax.swing.JPanel panel3;
-    private javax.swing.JTextField txt_Contacto;
-    private javax.swing.JTextField txt_Direccion;
-    private javax.swing.JTextField txt_Email;
-    private javax.swing.JTextField txt_Id_Fiscal;
-    private javax.swing.JTextField txt_NombreFantasia;
-    private javax.swing.JTextField txt_RazonSocial;
-    private javax.swing.JTextField txt_TelPrimario;
-    private javax.swing.JTextField txt_TelSecundario;
+    private javax.swing.JLabel lblCondicionIVA;
+    private javax.swing.JLabel lblContacto;
+    private javax.swing.JLabel lblCredencial;
+    private javax.swing.JLabel lblDireccion;
+    private javax.swing.JLabel lblEmail;
+    private javax.swing.JLabel lblIdFiscal;
+    private javax.swing.JLabel lblLocalidad;
+    private javax.swing.JLabel lblNombreFantasia;
+    private javax.swing.JLabel lblPais;
+    private javax.swing.JLabel lblProvincia;
+    private javax.swing.JLabel lblRazonSocial;
+    private javax.swing.JLabel lblTelPrimario;
+    private javax.swing.JLabel lblTelSecundario;
+    private javax.swing.JLabel lblViajante;
+    private javax.swing.JPanel panelPrincipal;
+    private javax.swing.JTextField txtContacto;
+    private javax.swing.JTextField txtDireccion;
+    private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtIdFiscal;
+    private javax.swing.JTextField txtNombreFantasia;
+    private javax.swing.JTextField txtRazonSocial;
+    private javax.swing.JTextField txtTelPrimario;
+    private javax.swing.JTextField txtTelSecundario;
     // End of variables declaration//GEN-END:variables
 }

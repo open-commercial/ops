@@ -49,42 +49,42 @@ public class DetalleProveedorGUI extends JDialog {
     }
 
     private void cargarProveedorParaModificar() {
-        txt_Codigo.setText(proveedorModificar.getCodigo());
-        txt_RazonSocial.setText(proveedorModificar.getRazonSocial());
+        txtCodigo.setText(proveedorModificar.getCodigo());
+        txtRazonSocial.setText(proveedorModificar.getRazonSocial());
         txt_Id_Fiscal.setText(String.valueOf(proveedorModificar.getIdFiscal()));
-        cmb_CondicionIVA.setSelectedItem(proveedorModificar.getCondicionIVA());
-        txt_Direccion.setText(proveedorModificar.getDireccion());
-        cmb_Pais.setSelectedItem(proveedorModificar.getLocalidad().getProvincia().getPais());
-        cmb_Provincia.setSelectedItem(proveedorModificar.getLocalidad().getProvincia());
-        cmb_Localidad.setSelectedItem(proveedorModificar.getLocalidad());
-        txt_TelPrimario.setText(proveedorModificar.getTelPrimario());
-        txt_TelSecundario.setText(proveedorModificar.getTelSecundario());
-        txt_Contacto.setText(proveedorModificar.getContacto());
-        txt_Email.setText(proveedorModificar.getEmail());
-        txt_Web.setText(proveedorModificar.getWeb());
+        cmbCondicionIVA.setSelectedItem(proveedorModificar.getCondicionIVA());
+        txtDireccion.setText(proveedorModificar.getDireccion());
+        cmbPais.setSelectedItem(proveedorModificar.getLocalidad().getProvincia().getPais());
+        cmbProvincia.setSelectedItem(proveedorModificar.getLocalidad().getProvincia());
+        cmbLocalidad.setSelectedItem(proveedorModificar.getLocalidad());
+        txtTelPrimario.setText(proveedorModificar.getTelPrimario());
+        txtTelSecundario.setText(proveedorModificar.getTelSecundario());
+        txtContacto.setText(proveedorModificar.getContacto());
+        txtEmail.setText(proveedorModificar.getEmail());
+        txtWeb.setText(proveedorModificar.getWeb());
     }
 
     private void limpiarYRecargarComponentes() {
-        txt_Codigo.setText("");
-        txt_RazonSocial.setText("");
+        txtCodigo.setText("");
+        txtRazonSocial.setText("");
         txt_Id_Fiscal.setText("");
-        txt_Direccion.setText("");
-        txt_TelPrimario.setText("");
-        txt_TelSecundario.setText("");
-        txt_Contacto.setText("");
-        txt_Email.setText("");
-        txt_Web.setText("");
+        txtDireccion.setText("");
+        txtTelPrimario.setText("");
+        txtTelSecundario.setText("");
+        txtContacto.setText("");
+        txtEmail.setText("");
+        txtWeb.setText("");
         this.cargarComboBoxCondicionesIVA();
         this.cargarComboBoxPaises();
     }
 
     public void cargarComboBoxCondicionesIVA() {
-        cmb_CondicionIVA.removeAllItems();
+        cmbCondicionIVA.removeAllItems();
         try {
             List<CondicionIVA> condicionesIVA = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/condiciones-iva", CondicionIVA[].class)));
             condicionesIVA.stream().forEach((c) -> {
-                cmb_CondicionIVA.addItem(c);
+                cmbCondicionIVA.addItem(c);
             });
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -97,12 +97,12 @@ public class DetalleProveedorGUI extends JDialog {
     }
 
     public void cargarComboBoxPaises() {
-        cmb_Pais.removeAllItems();
+        cmbPais.removeAllItems();
         try {
             List<Pais> paises = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/paises", Pais[].class)));
             paises.stream().forEach((pais) -> {
-                cmb_Pais.addItem(pais);
+                cmbPais.addItem(pais);
             });
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -115,13 +115,13 @@ public class DetalleProveedorGUI extends JDialog {
     }
 
     public void cargarComboBoxProvinciasDelPais(Pais paisSeleccionado) {
-        cmb_Provincia.removeAllItems();
+        cmbProvincia.removeAllItems();
         try {
             List<Provincia> provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/provincias/paises/" + paisSeleccionado.getId_Pais(),
                     Provincia[].class)));
             provincias.stream().forEach((p) -> {
-                cmb_Provincia.addItem(p);
+                cmbProvincia.addItem(p);
             });
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -134,13 +134,13 @@ public class DetalleProveedorGUI extends JDialog {
     }
 
     public void cargarComboBoxLocalidadesDeLaProvincia(Provincia provSeleccionada) {
-        cmb_Localidad.removeAllItems();
+        cmbLocalidad.removeAllItems();
         try {
             List<Localidad> Localidades = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/localidades/provincias/" + provSeleccionada.getId_Provincia(),
                     Localidad[].class)));
             Localidades.stream().forEach((l) -> {
-                cmb_Localidad.addItem(l);
+                cmbLocalidad.addItem(l);
             });
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -156,40 +156,38 @@ public class DetalleProveedorGUI extends JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panel2 = new javax.swing.JPanel();
-        lbl_Direccion = new javax.swing.JLabel();
-        txt_Direccion = new javax.swing.JTextField();
-        lbl_Provincia = new javax.swing.JLabel();
-        cmb_Provincia = new javax.swing.JComboBox();
-        lbl_Localidad = new javax.swing.JLabel();
-        cmb_Pais = new javax.swing.JComboBox();
-        lbl_Pais = new javax.swing.JLabel();
-        btn_NuevoPais = new javax.swing.JButton();
-        btn_NuevaProvincia = new javax.swing.JButton();
-        btn_NuevaLocalidad = new javax.swing.JButton();
-        cmb_Localidad = new javax.swing.JComboBox();
-        panel3 = new javax.swing.JPanel();
-        lbl_Email = new javax.swing.JLabel();
-        txt_Email = new javax.swing.JTextField();
-        lbl_Web = new javax.swing.JLabel();
-        txt_Web = new javax.swing.JTextField();
-        lbl_TelPrimario = new javax.swing.JLabel();
-        txt_TelPrimario = new javax.swing.JTextField();
-        lbl_TelSecundario = new javax.swing.JLabel();
-        txt_TelSecundario = new javax.swing.JTextField();
-        txt_Contacto = new javax.swing.JTextField();
-        lbl_Contacto = new javax.swing.JLabel();
-        panel1 = new javax.swing.JPanel();
-        lbl_CondicionIVA = new javax.swing.JLabel();
-        cmb_CondicionIVA = new javax.swing.JComboBox();
-        lbl_Id_Fiscal = new javax.swing.JLabel();
-        txt_Id_Fiscal = new javax.swing.JTextField();
-        lbl_RazonSocial = new javax.swing.JLabel();
-        txt_RazonSocial = new javax.swing.JTextField();
-        btn_NuevaCondicionIVA = new javax.swing.JButton();
-        txt_Codigo = new javax.swing.JTextField();
-        lbl_Codigo = new javax.swing.JLabel();
         btn_Guardar = new javax.swing.JButton();
+        panelPrincipal = new javax.swing.JPanel();
+        lblCodigo = new javax.swing.JLabel();
+        txtCodigo = new javax.swing.JTextField();
+        lblRazonSocial = new javax.swing.JLabel();
+        txtRazonSocial = new javax.swing.JTextField();
+        lblIdFiscal = new javax.swing.JLabel();
+        txt_Id_Fiscal = new javax.swing.JTextField();
+        lblCondicionIVA = new javax.swing.JLabel();
+        cmbCondicionIVA = new javax.swing.JComboBox();
+        btnNuevaCondicionIVA = new javax.swing.JButton();
+        lblDireccion = new javax.swing.JLabel();
+        txtDireccion = new javax.swing.JTextField();
+        lblPais = new javax.swing.JLabel();
+        cmbPais = new javax.swing.JComboBox();
+        btnNuevoPais = new javax.swing.JButton();
+        lblProvincia = new javax.swing.JLabel();
+        cmbProvincia = new javax.swing.JComboBox();
+        btnNuevaProvincia = new javax.swing.JButton();
+        lblLocalidad = new javax.swing.JLabel();
+        cmbLocalidad = new javax.swing.JComboBox();
+        btnNuevaLocalidad = new javax.swing.JButton();
+        lblTelPrimario = new javax.swing.JLabel();
+        txtTelPrimario = new javax.swing.JTextField();
+        txtTelSecundario = new javax.swing.JTextField();
+        lblTelSecundario = new javax.swing.JLabel();
+        lblContacto = new javax.swing.JLabel();
+        txtContacto = new javax.swing.JTextField();
+        lblEmail = new javax.swing.JLabel();
+        txtEmail = new javax.swing.JTextField();
+        lblWeb = new javax.swing.JLabel();
+        txtWeb = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nuevo Proveedor");
@@ -200,258 +198,6 @@ public class DetalleProveedorGUI extends JDialog {
             }
         });
 
-        panel2.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-
-        lbl_Direccion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Direccion.setText("Dirección:");
-
-        lbl_Provincia.setForeground(java.awt.Color.red);
-        lbl_Provincia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Provincia.setText("* Provincia:");
-
-        cmb_Provincia.setMaximumRowCount(5);
-        cmb_Provincia.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cmb_ProvinciaItemStateChanged(evt);
-            }
-        });
-
-        lbl_Localidad.setForeground(java.awt.Color.red);
-        lbl_Localidad.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Localidad.setText("* Localidad:");
-
-        cmb_Pais.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cmb_PaisItemStateChanged(evt);
-            }
-        });
-
-        lbl_Pais.setForeground(java.awt.Color.red);
-        lbl_Pais.setText("* Pais:");
-
-        btn_NuevoPais.setForeground(java.awt.Color.blue);
-        btn_NuevoPais.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
-        btn_NuevoPais.setText("Nuevo");
-        btn_NuevoPais.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_NuevoPaisActionPerformed(evt);
-            }
-        });
-
-        btn_NuevaProvincia.setForeground(java.awt.Color.blue);
-        btn_NuevaProvincia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
-        btn_NuevaProvincia.setText("Nueva");
-        btn_NuevaProvincia.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_NuevaProvinciaActionPerformed(evt);
-            }
-        });
-
-        btn_NuevaLocalidad.setForeground(java.awt.Color.blue);
-        btn_NuevaLocalidad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
-        btn_NuevaLocalidad.setText("Nueva");
-        btn_NuevaLocalidad.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_NuevaLocalidadActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout panel2Layout = new javax.swing.GroupLayout(panel2);
-        panel2.setLayout(panel2Layout);
-        panel2Layout.setHorizontalGroup(
-            panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel2Layout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lbl_Provincia)
-                    .addComponent(lbl_Direccion)
-                    .addComponent(lbl_Localidad)
-                    .addComponent(lbl_Pais))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel2Layout.createSequentialGroup()
-                        .addComponent(cmb_Localidad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_NuevaLocalidad))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel2Layout.createSequentialGroup()
-                        .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(cmb_Provincia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmb_Pais, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, 0)
-                        .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btn_NuevoPais, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btn_NuevaProvincia, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addComponent(txt_Direccion))
-                .addContainerGap())
-        );
-        panel2Layout.setVerticalGroup(
-            panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_Direccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Direccion))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Pais)
-                    .addComponent(cmb_Pais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_NuevoPais))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Provincia)
-                    .addComponent(cmb_Provincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_NuevaProvincia))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Localidad)
-                    .addComponent(cmb_Localidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_NuevaLocalidad))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        panel2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_NuevoPais, cmb_Pais});
-
-        panel2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_NuevaProvincia, cmb_Provincia});
-
-        panel2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_NuevaLocalidad, cmb_Localidad});
-
-        panel3.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-
-        lbl_Email.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Email.setText("Email:");
-
-        lbl_Web.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Web.setText("Página Web:");
-
-        lbl_TelPrimario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_TelPrimario.setText("Teléfono #1:");
-
-        lbl_TelSecundario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_TelSecundario.setText("Teléfono #2:");
-
-        lbl_Contacto.setText("Contacto:");
-
-        javax.swing.GroupLayout panel3Layout = new javax.swing.GroupLayout(panel3);
-        panel3.setLayout(panel3Layout);
-        panel3Layout.setHorizontalGroup(
-            panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel3Layout.createSequentialGroup()
-                .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(panel3Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(lbl_Web, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE))
-                    .addComponent(lbl_TelSecundario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_TelPrimario)
-                    .addComponent(lbl_Contacto)
-                    .addComponent(lbl_Email))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txt_TelPrimario, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE)
-                    .addComponent(txt_Web, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE)
-                    .addComponent(txt_Contacto, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE)
-                    .addComponent(txt_Email, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE)
-                    .addComponent(txt_TelSecundario, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE))
-                .addGap(12, 12, 12))
-        );
-        panel3Layout.setVerticalGroup(
-            panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_TelPrimario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_TelPrimario))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_TelSecundario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_TelSecundario))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_Contacto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Contacto))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_Email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Email))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_Web, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Web))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        panel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-
-        lbl_CondicionIVA.setForeground(java.awt.Color.red);
-        lbl_CondicionIVA.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_CondicionIVA.setText("* Condición IVA:");
-
-        cmb_CondicionIVA.setMaximumRowCount(5);
-
-        lbl_Id_Fiscal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Id_Fiscal.setText("ID Fiscal:");
-
-        lbl_RazonSocial.setForeground(java.awt.Color.red);
-        lbl_RazonSocial.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_RazonSocial.setText("* Razón Social:");
-
-        btn_NuevaCondicionIVA.setForeground(java.awt.Color.blue);
-        btn_NuevaCondicionIVA.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMoney_16x16.png"))); // NOI18N
-        btn_NuevaCondicionIVA.setText("Nueva");
-        btn_NuevaCondicionIVA.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_NuevaCondicionIVAActionPerformed(evt);
-            }
-        });
-
-        lbl_Codigo.setText("Código:");
-
-        javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
-        panel1.setLayout(panel1Layout);
-        panel1Layout.setHorizontalGroup(
-            panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lbl_RazonSocial)
-                    .addComponent(lbl_Codigo)
-                    .addComponent(lbl_Id_Fiscal)
-                    .addComponent(lbl_CondicionIVA))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(panel1Layout.createSequentialGroup()
-                        .addComponent(cmb_CondicionIVA, 0, 357, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_NuevaCondicionIVA))
-                    .addComponent(txt_Id_Fiscal, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
-                    .addComponent(txt_RazonSocial, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
-                    .addComponent(txt_Codigo, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        panel1Layout.setVerticalGroup(
-            panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_Codigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Codigo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_RazonSocial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_RazonSocial))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_Id_Fiscal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Id_Fiscal))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(cmb_CondicionIVA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_CondicionIVA)
-                    .addComponent(btn_NuevaCondicionIVA))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        panel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_NuevaCondicionIVA, cmb_CondicionIVA});
-
         btn_Guardar.setForeground(java.awt.Color.blue);
         btn_Guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
         btn_Guardar.setText("Guardar");
@@ -461,28 +207,241 @@ public class DetalleProveedorGUI extends JDialog {
             }
         });
 
+        panelPrincipal.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        lblCodigo.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblCodigo.setText("Código:");
+
+        lblRazonSocial.setForeground(java.awt.Color.red);
+        lblRazonSocial.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblRazonSocial.setText("* Razón Social:");
+
+        lblIdFiscal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblIdFiscal.setText("ID Fiscal:");
+
+        lblCondicionIVA.setForeground(java.awt.Color.red);
+        lblCondicionIVA.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblCondicionIVA.setText("* Condición IVA:");
+
+        cmbCondicionIVA.setMaximumRowCount(5);
+
+        btnNuevaCondicionIVA.setForeground(java.awt.Color.blue);
+        btnNuevaCondicionIVA.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMoney_16x16.png"))); // NOI18N
+        btnNuevaCondicionIVA.setText("Nueva");
+        btnNuevaCondicionIVA.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevaCondicionIVAActionPerformed(evt);
+            }
+        });
+
+        lblDireccion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblDireccion.setText("Dirección:");
+
+        lblPais.setForeground(java.awt.Color.red);
+        lblPais.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblPais.setText("* Pais:");
+
+        cmbPais.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbPaisItemStateChanged(evt);
+            }
+        });
+
+        btnNuevoPais.setForeground(java.awt.Color.blue);
+        btnNuevoPais.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
+        btnNuevoPais.setText("Nuevo");
+        btnNuevoPais.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoPaisActionPerformed(evt);
+            }
+        });
+
+        lblProvincia.setForeground(java.awt.Color.red);
+        lblProvincia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblProvincia.setText("* Provincia:");
+
+        cmbProvincia.setMaximumRowCount(5);
+        cmbProvincia.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbProvinciaItemStateChanged(evt);
+            }
+        });
+
+        btnNuevaProvincia.setForeground(java.awt.Color.blue);
+        btnNuevaProvincia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
+        btnNuevaProvincia.setText("Nueva");
+        btnNuevaProvincia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevaProvinciaActionPerformed(evt);
+            }
+        });
+
+        lblLocalidad.setForeground(java.awt.Color.red);
+        lblLocalidad.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblLocalidad.setText("* Localidad:");
+
+        btnNuevaLocalidad.setForeground(java.awt.Color.blue);
+        btnNuevaLocalidad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
+        btnNuevaLocalidad.setText("Nueva");
+        btnNuevaLocalidad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevaLocalidadActionPerformed(evt);
+            }
+        });
+
+        lblTelPrimario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblTelPrimario.setText("Teléfono #1:");
+
+        lblTelSecundario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblTelSecundario.setText("Teléfono #2:");
+
+        lblContacto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblContacto.setText("Contacto:");
+
+        lblEmail.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblEmail.setText("Email:");
+
+        lblWeb.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblWeb.setText("Página Web:");
+
+        javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
+        panelPrincipal.setLayout(panelPrincipalLayout);
+        panelPrincipalLayout.setHorizontalGroup(
+            panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPrincipalLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblCondicionIVA)
+                    .addComponent(lblIdFiscal, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblRazonSocial, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDireccion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblPais, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblProvincia, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblLocalidad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTelPrimario, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTelSecundario, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblContacto, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblEmail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblWeb, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelPrincipalLayout.createSequentialGroup()
+                        .addComponent(cmbLocalidad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnNuevaLocalidad))
+                    .addGroup(panelPrincipalLayout.createSequentialGroup()
+                        .addComponent(cmbPais, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnNuevoPais))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
+                        .addComponent(cmbProvincia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnNuevaProvincia))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
+                        .addComponent(cmbCondicionIVA, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnNuevaCondicionIVA))
+                    .addComponent(txt_Id_Fiscal, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtRazonSocial, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtDireccion, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtTelPrimario, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtTelSecundario, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtContacto, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtEmail, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtWeb, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtCodigo, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap())
+        );
+        panelPrincipalLayout.setVerticalGroup(
+            panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPrincipalLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblCodigo)
+                    .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblRazonSocial)
+                    .addComponent(txtRazonSocial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblIdFiscal)
+                    .addComponent(txt_Id_Fiscal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblCondicionIVA)
+                    .addComponent(cmbCondicionIVA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNuevaCondicionIVA))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblDireccion)
+                    .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblPais)
+                    .addComponent(cmbPais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNuevoPais))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblProvincia)
+                    .addComponent(cmbProvincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNuevaProvincia))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblLocalidad)
+                    .addComponent(cmbLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNuevaLocalidad))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblTelPrimario)
+                    .addComponent(txtTelPrimario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblTelSecundario)
+                    .addComponent(txtTelSecundario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblContacto)
+                    .addComponent(txtContacto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblEmail)
+                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblWeb)
+                    .addComponent(txtWeb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevoPais, cmbPais});
+
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevaProvincia, cmbProvincia});
+
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevaLocalidad, cmbLocalidad});
+
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevaCondicionIVA, cmbCondicionIVA});
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btn_Guardar)
-                    .addComponent(panel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 466, Short.MAX_VALUE)
+                        .addComponent(btn_Guardar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(panel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(panel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_Guardar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -491,69 +450,69 @@ public class DetalleProveedorGUI extends JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btn_NuevaCondicionIVAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevaCondicionIVAActionPerformed
+    private void btnNuevaCondicionIVAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaCondicionIVAActionPerformed
         DetalleCondicionIvaGUI gui_DetalleCondicionIVA = new DetalleCondicionIvaGUI();
         gui_DetalleCondicionIVA.setModal(true);
         gui_DetalleCondicionIVA.setLocationRelativeTo(this);
         gui_DetalleCondicionIVA.setVisible(true);
         this.cargarComboBoxCondicionesIVA();
-    }//GEN-LAST:event_btn_NuevaCondicionIVAActionPerformed
+    }//GEN-LAST:event_btnNuevaCondicionIVAActionPerformed
 
-    private void btn_NuevoPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoPaisActionPerformed
+    private void btnNuevoPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoPaisActionPerformed
         DetallePaisGUI gui_DetallePais = new DetallePaisGUI();
         gui_DetallePais.setModal(true);
         gui_DetallePais.setLocationRelativeTo(this);
         gui_DetallePais.setVisible(true);
         this.cargarComboBoxPaises();
-    }//GEN-LAST:event_btn_NuevoPaisActionPerformed
+    }//GEN-LAST:event_btnNuevoPaisActionPerformed
 
-    private void btn_NuevaProvinciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevaProvinciaActionPerformed
+    private void btnNuevaProvinciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaProvinciaActionPerformed
         DetalleProvinciaGUI gui_DetalleProvincia = new DetalleProvinciaGUI();
         gui_DetalleProvincia.setModal(true);
         gui_DetalleProvincia.setLocationRelativeTo(this);
         gui_DetalleProvincia.setVisible(true);
-        this.cargarComboBoxProvinciasDelPais((Pais) cmb_Pais.getSelectedItem());
-    }//GEN-LAST:event_btn_NuevaProvinciaActionPerformed
+        this.cargarComboBoxProvinciasDelPais((Pais) cmbPais.getSelectedItem());
+    }//GEN-LAST:event_btnNuevaProvinciaActionPerformed
 
-    private void cmb_PaisItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_PaisItemStateChanged
-        if (cmb_Pais.getItemCount() > 0) {
-            this.cargarComboBoxProvinciasDelPais((Pais) cmb_Pais.getSelectedItem());
+    private void cmbPaisItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbPaisItemStateChanged
+        if (cmbPais.getItemCount() > 0) {
+            this.cargarComboBoxProvinciasDelPais((Pais) cmbPais.getSelectedItem());
         } else {
-            cmb_Provincia.removeAllItems();
+            cmbProvincia.removeAllItems();
         }
-    }//GEN-LAST:event_cmb_PaisItemStateChanged
+    }//GEN-LAST:event_cmbPaisItemStateChanged
 
-    private void btn_NuevaLocalidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevaLocalidadActionPerformed
+    private void btnNuevaLocalidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaLocalidadActionPerformed
         DetalleLocalidadGUI gui_DetalleLocalidad = new DetalleLocalidadGUI();
         gui_DetalleLocalidad.setModal(true);
         gui_DetalleLocalidad.setLocationRelativeTo(this);
         gui_DetalleLocalidad.setVisible(true);
-        this.cargarComboBoxLocalidadesDeLaProvincia((Provincia) cmb_Provincia.getSelectedItem());
-    }//GEN-LAST:event_btn_NuevaLocalidadActionPerformed
+        this.cargarComboBoxLocalidadesDeLaProvincia((Provincia) cmbProvincia.getSelectedItem());
+    }//GEN-LAST:event_btnNuevaLocalidadActionPerformed
 
-    private void cmb_ProvinciaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_ProvinciaItemStateChanged
-        if (cmb_Provincia.getItemCount() > 0) {
-            this.cargarComboBoxLocalidadesDeLaProvincia((Provincia) cmb_Provincia.getSelectedItem());
+    private void cmbProvinciaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbProvinciaItemStateChanged
+        if (cmbProvincia.getItemCount() > 0) {
+            this.cargarComboBoxLocalidadesDeLaProvincia((Provincia) cmbProvincia.getSelectedItem());
         } else {
-            cmb_Localidad.removeAllItems();
+            cmbLocalidad.removeAllItems();
         }
-    }//GEN-LAST:event_cmb_ProvinciaItemStateChanged
+    }//GEN-LAST:event_cmbProvinciaItemStateChanged
 
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
         try {
             if (operacion == TipoDeOperacion.ALTA) {
                 Proveedor proveedor = new Proveedor();
-                proveedor.setCodigo(txt_Codigo.getText().trim());
-                proveedor.setRazonSocial(txt_RazonSocial.getText().trim());
+                proveedor.setCodigo(txtCodigo.getText().trim());
+                proveedor.setRazonSocial(txtRazonSocial.getText().trim());
                 proveedor.setIdFiscal(txt_Id_Fiscal.getText().trim());
-                proveedor.setCondicionIVA((CondicionIVA) cmb_CondicionIVA.getSelectedItem());
-                proveedor.setDireccion(txt_Direccion.getText().trim());
-                proveedor.setLocalidad((Localidad) cmb_Localidad.getSelectedItem());
-                proveedor.setTelPrimario(txt_TelPrimario.getText().trim());
-                proveedor.setTelSecundario(txt_TelSecundario.getText().trim());
-                proveedor.setContacto(txt_Contacto.getText().trim());
-                proveedor.setEmail(txt_Email.getText().trim());
-                proveedor.setWeb(txt_Web.getText().trim());
+                proveedor.setCondicionIVA((CondicionIVA) cmbCondicionIVA.getSelectedItem());
+                proveedor.setDireccion(txtDireccion.getText().trim());
+                proveedor.setLocalidad((Localidad) cmbLocalidad.getSelectedItem());
+                proveedor.setTelPrimario(txtTelPrimario.getText().trim());
+                proveedor.setTelSecundario(txtTelSecundario.getText().trim());
+                proveedor.setContacto(txtContacto.getText().trim());
+                proveedor.setEmail(txtEmail.getText().trim());
+                proveedor.setWeb(txtWeb.getText().trim());
                 proveedor.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
                 RestClient.getRestTemplate().postForObject("/proveedores", proveedor, Proveedor.class);
                 int respuesta = JOptionPane.showConfirmDialog(this,
@@ -566,17 +525,17 @@ public class DetalleProveedorGUI extends JDialog {
             }
 
             if (operacion == TipoDeOperacion.ACTUALIZACION) {
-                proveedorModificar.setCodigo(txt_Codigo.getText().trim());
-                proveedorModificar.setRazonSocial(txt_RazonSocial.getText().trim());
+                proveedorModificar.setCodigo(txtCodigo.getText().trim());
+                proveedorModificar.setRazonSocial(txtRazonSocial.getText().trim());
                 proveedorModificar.setIdFiscal(txt_Id_Fiscal.getText().trim());
-                proveedorModificar.setCondicionIVA((CondicionIVA) cmb_CondicionIVA.getSelectedItem());
-                proveedorModificar.setDireccion(txt_Direccion.getText().trim());
-                proveedorModificar.setLocalidad((Localidad) cmb_Localidad.getSelectedItem());
-                proveedorModificar.setTelPrimario(txt_TelPrimario.getText().trim());
-                proveedorModificar.setTelSecundario(txt_TelSecundario.getText().trim());
-                proveedorModificar.setContacto(txt_Contacto.getText().trim());
-                proveedorModificar.setEmail(txt_Email.getText().trim());
-                proveedorModificar.setWeb(txt_Web.getText().trim());
+                proveedorModificar.setCondicionIVA((CondicionIVA) cmbCondicionIVA.getSelectedItem());
+                proveedorModificar.setDireccion(txtDireccion.getText().trim());
+                proveedorModificar.setLocalidad((Localidad) cmbLocalidad.getSelectedItem());
+                proveedorModificar.setTelPrimario(txtTelPrimario.getText().trim());
+                proveedorModificar.setTelSecundario(txtTelSecundario.getText().trim());
+                proveedorModificar.setContacto(txtContacto.getText().trim());
+                proveedorModificar.setEmail(txtEmail.getText().trim());
+                proveedorModificar.setWeb(txtWeb.getText().trim());
                 proveedorModificar.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
                 RestClient.getRestTemplate().put("/proveedores", proveedorModificar);
                 JOptionPane.showMessageDialog(this, "El proveedor se modificó correctamente.",
@@ -596,11 +555,11 @@ public class DetalleProveedorGUI extends JDialog {
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
         if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
-            btn_NuevaCondicionIVA.setEnabled(false);
+            btnNuevaCondicionIVA.setEnabled(false);
             if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-                btn_NuevaLocalidad.setEnabled(false);
-                btn_NuevaProvincia.setEnabled(false);
-                btn_NuevoPais.setEnabled(false);
+                btnNuevaLocalidad.setEnabled(false);
+                btnNuevaProvincia.setEnabled(false);
+                btnNuevoPais.setEnabled(false);
             }
         }
     }
@@ -614,39 +573,37 @@ public class DetalleProveedorGUI extends JDialog {
         }        
     }//GEN-LAST:event_formWindowOpened
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnNuevaCondicionIVA;
+    private javax.swing.JButton btnNuevaLocalidad;
+    private javax.swing.JButton btnNuevaProvincia;
+    private javax.swing.JButton btnNuevoPais;
     private javax.swing.JButton btn_Guardar;
-    private javax.swing.JButton btn_NuevaCondicionIVA;
-    private javax.swing.JButton btn_NuevaLocalidad;
-    private javax.swing.JButton btn_NuevaProvincia;
-    private javax.swing.JButton btn_NuevoPais;
-    private javax.swing.JComboBox cmb_CondicionIVA;
-    private javax.swing.JComboBox cmb_Localidad;
-    private javax.swing.JComboBox cmb_Pais;
-    private javax.swing.JComboBox cmb_Provincia;
-    private javax.swing.JLabel lbl_Codigo;
-    private javax.swing.JLabel lbl_CondicionIVA;
-    private javax.swing.JLabel lbl_Contacto;
-    private javax.swing.JLabel lbl_Direccion;
-    private javax.swing.JLabel lbl_Email;
-    private javax.swing.JLabel lbl_Id_Fiscal;
-    private javax.swing.JLabel lbl_Localidad;
-    private javax.swing.JLabel lbl_Pais;
-    private javax.swing.JLabel lbl_Provincia;
-    private javax.swing.JLabel lbl_RazonSocial;
-    private javax.swing.JLabel lbl_TelPrimario;
-    private javax.swing.JLabel lbl_TelSecundario;
-    private javax.swing.JLabel lbl_Web;
-    private javax.swing.JPanel panel1;
-    private javax.swing.JPanel panel2;
-    private javax.swing.JPanel panel3;
-    private javax.swing.JTextField txt_Codigo;
-    private javax.swing.JTextField txt_Contacto;
-    private javax.swing.JTextField txt_Direccion;
-    private javax.swing.JTextField txt_Email;
+    private javax.swing.JComboBox cmbCondicionIVA;
+    private javax.swing.JComboBox cmbLocalidad;
+    private javax.swing.JComboBox cmbPais;
+    private javax.swing.JComboBox cmbProvincia;
+    private javax.swing.JLabel lblCodigo;
+    private javax.swing.JLabel lblCondicionIVA;
+    private javax.swing.JLabel lblContacto;
+    private javax.swing.JLabel lblDireccion;
+    private javax.swing.JLabel lblEmail;
+    private javax.swing.JLabel lblIdFiscal;
+    private javax.swing.JLabel lblLocalidad;
+    private javax.swing.JLabel lblPais;
+    private javax.swing.JLabel lblProvincia;
+    private javax.swing.JLabel lblRazonSocial;
+    private javax.swing.JLabel lblTelPrimario;
+    private javax.swing.JLabel lblTelSecundario;
+    private javax.swing.JLabel lblWeb;
+    private javax.swing.JPanel panelPrincipal;
+    private javax.swing.JTextField txtCodigo;
+    private javax.swing.JTextField txtContacto;
+    private javax.swing.JTextField txtDireccion;
+    private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtRazonSocial;
+    private javax.swing.JTextField txtTelPrimario;
+    private javax.swing.JTextField txtTelSecundario;
+    private javax.swing.JTextField txtWeb;
     private javax.swing.JTextField txt_Id_Fiscal;
-    private javax.swing.JTextField txt_RazonSocial;
-    private javax.swing.JTextField txt_TelPrimario;
-    private javax.swing.JTextField txt_TelSecundario;
-    private javax.swing.JTextField txt_Web;
     // End of variables declaration//GEN-END:variables
 }

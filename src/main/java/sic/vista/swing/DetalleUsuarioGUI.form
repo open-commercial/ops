@@ -31,8 +31,6 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="panelPrincipal" max="32767" attributes="0"/>
-                  <Component id="panelRoles" max="32767" attributes="0"/>
-                  <Component id="panelSeguridad" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="btn_Guardar" min="-2" max="-2" attributes="1"/>
@@ -46,11 +44,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="panelPrincipal" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="panelSeguridad" max="32767" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="panelRoles" min="-2" max="-2" attributes="0"/>
+              <Component id="panelPrincipal" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -85,22 +79,52 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                      <Component id="lbl_Username" max="32767" attributes="0"/>
-                      <Component id="lblHabilitado" max="32767" attributes="0"/>
-                      <Component id="lblNombre" alignment="0" max="32767" attributes="0"/>
-                      <Component id="lblApellido" alignment="0" max="32767" attributes="0"/>
-                      <Component id="lblEmail" alignment="0" max="32767" attributes="0"/>
-                  </Group>
+              <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="txtApellido" alignment="1" max="32767" attributes="0"/>
-                      <Component id="txtNombre" max="32767" attributes="0"/>
-                      <Component id="txtEmail" max="32767" attributes="0"/>
-                      <Component id="chkHabilitado" alignment="1" pref="248" max="32767" attributes="0"/>
-                      <Component id="txtUsername" max="32767" attributes="1"/>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="lbl_Username" linkSize="2" max="32767" attributes="0"/>
+                              <Component id="lblNombre" linkSize="2" alignment="1" max="32767" attributes="0"/>
+                              <Component id="lblApellido" linkSize="2" alignment="1" max="32767" attributes="0"/>
+                              <Component id="lblEmail" linkSize="2" alignment="1" max="32767" attributes="0"/>
+                              <Component id="lblHabilitado" linkSize="2" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="txtApellido" alignment="0" pref="228" max="32767" attributes="0"/>
+                              <Component id="txtNombre" pref="228" max="32767" attributes="0"/>
+                              <Component id="txtEmail" pref="228" max="32767" attributes="0"/>
+                              <Component id="txtUsername" pref="228" max="32767" attributes="1"/>
+                              <Component id="chkHabilitado" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Component id="separador1" alignment="0" max="32767" attributes="0"/>
+                      <Component id="lblAvisoSeguridad" alignment="0" pref="332" max="32767" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="lbl_RepetirContrasenia" linkSize="2" alignment="0" max="32767" attributes="0"/>
+                              <Component id="lbl_Contrasenia" linkSize="2" alignment="1" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="txt_Contrasenia" max="32767" attributes="1"/>
+                              <Component id="txt_RepetirContrasenia" max="32767" attributes="1"/>
+                          </Group>
+                      </Group>
+                      <Component id="separador2" alignment="0" max="32767" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="chk_Comprador" alignment="0" max="32767" attributes="0"/>
+                              <Component id="chk_Administrador" alignment="0" max="32767" attributes="0"/>
+                              <Component id="chk_Vendedor" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="chk_Viajante" max="32767" attributes="0"/>
+                              <Component id="chk_Encargado" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -109,7 +133,12 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="lblHabilitado" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="chkHabilitado" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lbl_Username" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="txtUsername" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -129,11 +158,34 @@
                       <Component id="lblEmail" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="txtEmail" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="separador1" min="-2" pref="10" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="lblAvisoSeguridad" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lblHabilitado" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="chkHabilitado" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbl_Contrasenia" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txt_Contrasenia" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="lbl_RepetirContrasenia" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txt_RepetirContrasenia" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+                  <Component id="separador2" min="-2" pref="10" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="chk_Administrador" linkSize="1" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="chk_Encargado" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="chk_Vendedor" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="chk_Viajante" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="chk_Comprador" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -195,149 +247,14 @@
             <Property name="text" type="java.lang.String" value="Habilitado:"/>
           </Properties>
         </Component>
-      </SubComponents>
-    </Container>
-    <Container class="javax.swing.JPanel" name="panelRoles">
-      <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
-            <EtchetBorder/>
-          </Border>
-        </Property>
-      </Properties>
-
-      <Layout>
-        <DimensionLayout dim="0">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="chk_Administrador" alignment="0" pref="165" max="32767" attributes="0"/>
-                      <Component id="chk_Vendedor" alignment="0" max="32767" attributes="0"/>
-                      <Component id="chk_Comprador" alignment="0" max="32767" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="32767" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="chk_Viajante" max="32767" attributes="0"/>
-                      <Component id="chk_Encargado" pref="161" max="32767" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-              </Group>
-          </Group>
-        </DimensionLayout>
-        <DimensionLayout dim="1">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="chk_Administrador" linkSize="1" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="chk_Encargado" alignment="2" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="chk_Vendedor" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="chk_Viajante" alignment="2" min="-2" pref="24" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="chk_Comprador" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
-              </Group>
-          </Group>
-        </DimensionLayout>
-      </Layout>
-      <SubComponents>
-        <Component class="javax.swing.JCheckBox" name="chk_Administrador">
+        <Component class="javax.swing.JSeparator" name="separador1">
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblAvisoSeguridad">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Administrador"/>
-            <Property name="horizontalTextPosition" type="int" value="4"/>
-            <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
-              <Insets value="[2, -2, 2, 2]"/>
-            </Property>
+            <Property name="horizontalAlignment" type="int" value="0"/>
+            <Property name="text" type="java.lang.String" value="(Dejar en blanco para mantener la actual)"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="chk_Viajante">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Viajante"/>
-            <Property name="horizontalTextPosition" type="int" value="4"/>
-            <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
-              <Insets value="[2, -2, 2, 2]"/>
-            </Property>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JCheckBox" name="chk_Vendedor">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Vendedor"/>
-            <Property name="horizontalTextPosition" type="int" value="4"/>
-            <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
-              <Insets value="[2, -2, 2, 2]"/>
-            </Property>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JCheckBox" name="chk_Comprador">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Comprador"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JCheckBox" name="chk_Encargado">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Encargado"/>
-          </Properties>
-        </Component>
-      </SubComponents>
-    </Container>
-    <Container class="javax.swing.JPanel" name="panelSeguridad">
-      <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
-            <EtchetBorder/>
-          </Border>
-        </Property>
-      </Properties>
-
-      <Layout>
-        <DimensionLayout dim="0">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="lblAvisoSeguridad" max="32767" attributes="0"/>
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="lbl_RepetirContrasenia" alignment="0" max="32767" attributes="0"/>
-                              <Component id="lbl_Contrasenia" alignment="1" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txt_Contrasenia" max="32767" attributes="1"/>
-                              <Component id="txt_RepetirContrasenia" max="32767" attributes="1"/>
-                          </Group>
-                      </Group>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-              </Group>
-          </Group>
-        </DimensionLayout>
-        <DimensionLayout dim="1">
-          <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="lblAvisoSeguridad" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lbl_Contrasenia" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txt_Contrasenia" alignment="2" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lbl_RepetirContrasenia" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txt_RepetirContrasenia" alignment="2" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="32767" attributes="0"/>
-              </Group>
-          </Group>
-        </DimensionLayout>
-      </Layout>
-      <SubComponents>
         <Component class="javax.swing.JLabel" name="lbl_Contrasenia">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -370,9 +287,31 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="lblAvisoSeguridad">
+        <Component class="javax.swing.JSeparator" name="separador2">
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="chk_Administrador">
           <Properties>
-            <Property name="text" type="java.lang.String" value="(Dejar en blanco para mantener la actual)"/>
+            <Property name="text" type="java.lang.String" value="Administrador"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="chk_Encargado">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Encargado"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="chk_Vendedor">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Vendedor"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="chk_Viajante">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Viajante"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="chk_Comprador">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Comprador"/>
           </Properties>
         </Component>
       </SubComponents>
