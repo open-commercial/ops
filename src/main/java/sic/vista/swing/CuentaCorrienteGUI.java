@@ -447,10 +447,12 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     Recibo recibo = RestClient.getRestTemplate()
                             .getForObject("/recibos/" + renglonCC.getIdMovimiento(), Recibo.class);
                     DecimalFormat dFormat = new DecimalFormat("##,##0.00");
-                    String mensaje = "Forma De Pago: " + recibo.getNombreFormaDePago()
+                    String mensaje = "Forma de Pago: " + recibo.getNombreFormaDePago()
                             + "\nMonto: " + dFormat.format(recibo.getMonto().setScale(2, RoundingMode.HALF_UP))
                             + "\nConcepto: " + recibo.getConcepto();
-                    JOptionPane.showMessageDialog(this, mensaje, "Detalle del Recibo.", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, mensaje,
+                            "Detalle Recibo Nº " + recibo.getNumSerie() + " - " + recibo.getNumRecibo(),
+                            JOptionPane.INFORMATION_MESSAGE);
                     break;
                 default:
                     JOptionPane.showInternalMessageDialog(this,
