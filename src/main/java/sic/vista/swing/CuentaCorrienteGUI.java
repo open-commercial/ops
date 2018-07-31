@@ -430,6 +430,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 case FACTURA_C:
                 case FACTURA_X:
                 case FACTURA_Y:
+                case PRESUPUESTO:    
                     if (Desktop.isDesktopSupported()) {
                         JInternalFrame gui = new DetalleFacturaCompraGUI(RestClient
                                 .getRestTemplate().getForObject("/facturas/" + renglonCC.getIdMovimiento(), FacturaCompra.class));
