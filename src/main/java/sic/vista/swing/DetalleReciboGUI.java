@@ -43,7 +43,7 @@ public class DetalleReciboGUI extends JDialog {
         this.proveedor = proveedor;
         this.cliente = null;
     }
-
+     
     private void setIcon() {
         ImageIcon iconoVentana = new ImageIcon(DetalleReciboGUI.class.getResource("/sic/icons/Stamp_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
@@ -255,14 +255,16 @@ public class DetalleReciboGUI extends JDialog {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        this.cargarFormasDePago();
-        this.txtObservaciones.setText("SALDO.");
         try {
+            this.cargarFormasDePago();
+            this.txtObservaciones.setText("SALDO.");
             if (cliente != null) {
-                BigDecimal saldoCC = RestClient.getRestTemplate().getForObject("/cuentas-corrientes/clientes/" + cliente.getId_Cliente() + "/saldo", BigDecimal.class);
+                BigDecimal saldoCC = RestClient.getRestTemplate()
+                        .getForObject("/cuentas-corrientes/clientes/" + cliente.getId_Cliente() + "/saldo", BigDecimal.class);
                 txtMonto.setValue((saldoCC.compareTo(BigDecimal.ZERO) < 0) ? saldoCC.negate() : BigDecimal.ZERO);
-            } else {
-                BigDecimal saldoCC = RestClient.getRestTemplate().getForObject("/cuentas-corrientes/proveedores/" + proveedor.getId_Proveedor() + "/saldo", BigDecimal.class);
+            } else if (proveedor != null) {
+                BigDecimal saldoCC = RestClient.getRestTemplate()
+                        .getForObject("/cuentas-corrientes/proveedores/" + proveedor.getId_Proveedor() + "/saldo", BigDecimal.class);
                 txtMonto.setValue((saldoCC.compareTo(BigDecimal.ZERO) < 0) ? saldoCC.negate() : BigDecimal.ZERO);
             }
         } catch (RestClientResponseException ex) {
