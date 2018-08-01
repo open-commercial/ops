@@ -152,36 +152,37 @@ public class ClientesGUI extends JInternalFrame {
         // sorting
         // tbl_Resultados.setAutoCreateRowSorter(true);
         //nombres de columnas
-        String[] encabezados = new String[18];
+        String[] encabezados = new String[19];
         encabezados[0] = "Predeterminado";
-        encabezados[1] = "ID Fiscal";
-        encabezados[2] = "Razon Social";
-        encabezados[3] = "Nombre Fantasia";
-        encabezados[4] = "Saldo C/C";
-        encabezados[5] = "Ultimo Movimiento C/C";
-        encabezados[6] = "Credencial";
-        encabezados[7] = "Viajante";
-        encabezados[8] = "Direccion";
-        encabezados[9] = "Condicion IVA";
-        encabezados[10] = "Tel. Primario";
-        encabezados[11] = "Tel. Secundario";
-        encabezados[12] = "Contacto";
-        encabezados[13] = "Email";
-        encabezados[14] = "Fecha Alta";
-        encabezados[15] = "Localidad";
-        encabezados[16] = "Provincia";
-        encabezados[17] = "Pais";
+        encabezados[1] = "Nº Cliente";
+        encabezados[2] = "ID Fiscal";
+        encabezados[3] = "Razon Social";
+        encabezados[4] = "Nombre Fantasia";
+        encabezados[5] = "Saldo C/C";
+        encabezados[6] = "Ultimo Movimiento C/C";
+        encabezados[7] = "Credencial";
+        encabezados[8] = "Viajante";
+        encabezados[9] = "Direccion";
+        encabezados[10] = "Condicion IVA";
+        encabezados[11] = "Tel. Primario";
+        encabezados[12] = "Tel. Secundario";
+        encabezados[13] = "Contacto";
+        encabezados[14] = "Email";
+        encabezados[15] = "Fecha Alta";
+        encabezados[16] = "Localidad";
+        encabezados[17] = "Provincia";
+        encabezados[18] = "Pais";
         modeloTablaDeResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaDeResultados);
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaDeResultados.getColumnCount()];
         tipos[0] = Boolean.class;
-        tipos[1] = String.class;
+        tipos[1] = long.class;
         tipos[2] = String.class;
         tipos[3] = String.class;
-        tipos[4] = BigDecimal.class;
-        tipos[5] = Date.class;
-        tipos[6] = String.class;
+        tipos[4] = String.class;
+        tipos[5] = BigDecimal.class;
+        tipos[6] = Date.class;
         tipos[7] = String.class;
         tipos[8] = String.class;
         tipos[9] = String.class;
@@ -189,59 +190,62 @@ public class ClientesGUI extends JInternalFrame {
         tipos[11] = String.class;
         tipos[12] = String.class;
         tipos[13] = String.class;
-        tipos[14] = Date.class;
-        tipos[15] = String.class;
+        tipos[14] = String.class;
+        tipos[15] = Date.class;
         tipos[16] = String.class;
         tipos[17] = String.class;
+        tipos[18] = String.class;
         modeloTablaDeResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);        
         //tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(120);
-        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(110);
-        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(250);
+        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(80);
+        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(110);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(110);
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(150);
-        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(250);
+        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(250);
+        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(110);
+        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(150);
         tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(150);
-        tbl_Resultados.getColumnModel().getColumn(11).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(250);
+        tbl_Resultados.getColumnModel().getColumn(11).setPreferredWidth(150);
         tbl_Resultados.getColumnModel().getColumn(12).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(13).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(14).setPreferredWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(15).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(13).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(14).setPreferredWidth(250);
+        tbl_Resultados.getColumnModel().getColumn(15).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(16).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(17).setPreferredWidth(200);        
+        tbl_Resultados.getColumnModel().getColumn(17).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(18).setPreferredWidth(200);        
         //renderers
-        tbl_Resultados.getColumnModel().getColumn(4).setCellRenderer(new ColoresNumerosRenderer());
-        tbl_Resultados.getColumnModel().getColumn(5).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
-        tbl_Resultados.getColumnModel().getColumn(13).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(5).setCellRenderer(new ColoresNumerosRenderer());
+        tbl_Resultados.getColumnModel().getColumn(6).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(14).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 
     private void cargarResultadosAlTable() {
         clientesParcial.stream().map(c -> {
-            Object[] fila = new Object[18];
+            Object[] fila = new Object[19];
             fila[0] = c.isPredeterminado();
-            fila[1] = c.getIdFiscal();
-            fila[2] = c.getRazonSocial();
-            fila[3] = c.getNombreFantasia(); 
-            fila[4] = c.getSaldoCuentaCorriente();
-            fila[5] = c.getFechaUltimoMovimiento();
-            fila[6] = c.getNombreCredencial();
-            fila[7] = c.getNombreViajante();
-            fila[8] = c.getDireccion();
-            fila[9] = c.getNombreCondicionIVA();
-            fila[10] = c.getTelPrimario();
-            fila[11] = c.getTelSecundario();            
-            fila[12] = c.getContacto();
-            fila[13] = c.getEmail();
-            fila[14] = c.getFechaAlta();
-            fila[15] = c.getNombreLocalidad();
-            fila[16] = c.getNombreProvincia();
-            fila[17] = c.getNombrePais();
+            fila[1] = c.getNroCliente();
+            fila[2] = c.getIdFiscal();
+            fila[3] = c.getRazonSocial();
+            fila[4] = c.getNombreFantasia(); 
+            fila[5] = c.getSaldoCuentaCorriente();
+            fila[6] = c.getFechaUltimoMovimiento();
+            fila[7] = c.getNombreCredencial();
+            fila[8] = c.getNombreViajante();
+            fila[9] = c.getDireccion();
+            fila[10] = c.getNombreCondicionIVA();
+            fila[11] = c.getTelPrimario();
+            fila[12] = c.getTelSecundario();            
+            fila[13] = c.getContacto();
+            fila[14] = c.getEmail();
+            fila[15] = c.getFechaAlta();
+            fila[16] = c.getNombreLocalidad();
+            fila[17] = c.getNombreProvincia();
+            fila[18] = c.getNombrePais();
             return fila;
         }).forEach(fila -> {
             modeloTablaDeResultados.addRow(fila);
@@ -299,6 +303,9 @@ public class ClientesGUI extends JInternalFrame {
             criteriaBusqueda += "razonSocial=" + txtCriteria.getText().trim() + "&";
             criteriaBusqueda += "nombreFantasia=" + txtCriteria.getText().trim() + "&";
             criteriaBusqueda += "idFiscal=" + txtCriteria.getText().trim() + "&";
+            if (Utilidades.esUnNumero(txtCriteria.getText().trim())) {
+                criteriaBusqueda += "nroCliente=" + txtCriteria.getText().trim() + "&";
+            }
         }
         if (chkViajante.isSelected()) {
             criteriaBusqueda += "idViajante=" + ((Usuario) cmbViajante.getSelectedItem()).getId_Usuario() + "&";
@@ -351,7 +358,7 @@ public class ClientesGUI extends JInternalFrame {
         btn_Buscar = new javax.swing.JButton();
         lbl_cantResultados = new javax.swing.JLabel();
         chkViajante = new javax.swing.JCheckBox();
-        cmbViajante = new javax.swing.JComboBox();
+        cmbViajante = new javax.swing.JComboBox<Usuario>();
         panelResultados = new javax.swing.JPanel();
         sp_Resultados = new javax.swing.JScrollPane();
         tbl_Resultados = new javax.swing.JTable();
@@ -386,7 +393,7 @@ public class ClientesGUI extends JInternalFrame {
 
         panelFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
 
-        chkCriteria.setText("ID Fiscal, Razon Social, Nombre Fantasia:");
+        chkCriteria.setText("Nº Cliente, ID Fiscal, Razon Social, Nombre Fantasia:");
         chkCriteria.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 chkCriteriaItemStateChanged(evt);
@@ -849,7 +856,7 @@ public class ClientesGUI extends JInternalFrame {
     private javax.swing.JComboBox cmbLocalidad;
     private javax.swing.JComboBox cmbPais;
     private javax.swing.JComboBox cmbProvincia;
-    private javax.swing.JComboBox cmbViajante;
+    private javax.swing.JComboBox<Usuario> cmbViajante;
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;
     private javax.swing.JPanel panelResultados;
