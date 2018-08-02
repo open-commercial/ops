@@ -118,14 +118,5 @@ public class Utilidades {
             evt.consume();
         }
     }
-    
-    public static boolean esUnNumero(String strNum) {
-        try {
-            Double.parseDouble(strNum);
-        } catch (NumberFormatException | NullPointerException nfe) {
-            return false;
-        }
-        return true;
-    }
 
 }

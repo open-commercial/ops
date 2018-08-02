@@ -97,12 +97,10 @@ public class BuscarClientesGUI extends JDialog {
                         + "razonSocial=" + txtCriteriaBusqueda.getText().trim()
                         + "&nombreFantasia=" + txtCriteriaBusqueda.getText().trim()
                         + "&idFiscal=" + txtCriteriaBusqueda.getText().trim()
+                        + "&nroCliente=" + txtCriteriaBusqueda.getText().trim()
                         + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                         + "&pagina=" + NUMERO_PAGINA
                         + "&tamanio=" + TAMANIO_PAGINA;
-                if (Utilidades.esUnNumero(txtCriteriaBusqueda.getText().trim())) {
-                    uri += "&nroCliente=" + txtCriteriaBusqueda.getText().trim();
-                }
                 PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
                         .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {})
                         .getBody();

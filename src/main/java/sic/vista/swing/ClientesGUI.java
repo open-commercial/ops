@@ -177,7 +177,7 @@ public class ClientesGUI extends JInternalFrame {
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaDeResultados.getColumnCount()];
         tipos[0] = Boolean.class;
-        tipos[1] = long.class;
+        tipos[1] = String.class;
         tipos[2] = String.class;
         tipos[3] = String.class;
         tipos[4] = String.class;
@@ -303,9 +303,7 @@ public class ClientesGUI extends JInternalFrame {
             criteriaBusqueda += "razonSocial=" + txtCriteria.getText().trim() + "&";
             criteriaBusqueda += "nombreFantasia=" + txtCriteria.getText().trim() + "&";
             criteriaBusqueda += "idFiscal=" + txtCriteria.getText().trim() + "&";
-            if (Utilidades.esUnNumero(txtCriteria.getText().trim())) {
-                criteriaBusqueda += "nroCliente=" + txtCriteria.getText().trim() + "&";
-            }
+            criteriaBusqueda += "nroCliente=" + txtCriteria.getText().trim() + "&";
         }
         if (chkViajante.isSelected()) {
             criteriaBusqueda += "idViajante=" + ((Usuario) cmbViajante.getSelectedItem()).getId_Usuario() + "&";
