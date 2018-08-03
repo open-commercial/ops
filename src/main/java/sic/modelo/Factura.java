@@ -29,6 +29,7 @@ public abstract class Factura implements Serializable {
     }
 
     private long id_Factura;
+    private String nombreUsuario;
     private Date fecha;
     private TipoDeComprobante tipoComprobante;
     private long numSerie;
