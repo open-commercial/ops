@@ -130,12 +130,16 @@ public class DetalleClienteGUI extends JDialog {
         this.seleccionarPaisSegunId(cliente.getIdPais());
         this.seleccionarProvinciaSegunId(cliente.getIdProvincia());
         this.seleccionarLocalidadSegunId(cliente.getIdLocalidad());
-        this.seleccionarCredencialSegunId(cliente.getIdCredencial());
-        this.seleccionarViajanteSegunId(cliente.getIdViajante());
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+            this.seleccionarCredencialSegunId(cliente.getIdCredencial());
+            this.seleccionarViajanteSegunId(cliente.getIdViajante());
+        }
         txtTelPrimario.setText(cliente.getTelPrimario());
         txtTelSecundario.setText(cliente.getTelSecundario());
         txtContacto.setText(cliente.getContacto());
-        txtEmail.setText(cliente.getEmail());        
+        txtEmail.setText(cliente.getEmail());
     }
 
     private void cargarComboBoxCondicionesIVA() {
@@ -172,17 +176,33 @@ public class DetalleClienteGUI extends JDialog {
     
     private void cargarComboBoxViajantes() {
         cmbViajante.removeAllItems();
-        cmbViajante.addItem(null);
         try {
-            PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                    .exchange("/usuarios/busqueda/criteria?"
-                            + "roles=" + Rol.VIAJANTE
-                            + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
-                            new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
-                    })
-                    .getBody();
-            viajantes = response.getContent();
-            viajantes.stream().forEach(v -> cmbViajante.addItem(v));
+            if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
+                    && !rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                    && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                    && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+                Usuario usuario = RestClient.getRestTemplate().getForObject("/usuarios/"
+                        + UsuarioActivo.getInstance().getUsuario().getId_Usuario(), Usuario.class);
+                cmbViajante.addItem(usuario);
+            } else {
+                cmbViajante.addItem(null);
+                PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
+                        .exchange("/usuarios/busqueda/criteria?"
+                                + "roles=" + Rol.VIAJANTE
+                                + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
+                                new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
+                        })
+                        .getBody();
+                viajantes = response.getContent();
+                viajantes.stream().forEach(v -> cmbViajante.addItem(v));
+                if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
+                        && !rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                        && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                        && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+                    cmbViajante.setSelectedItem(UsuarioActivo.getInstance().getUsuario());
+                    cmbViajante.setEnabled(false);
+                }
+            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -191,28 +211,32 @@ public class DetalleClienteGUI extends JDialog {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-        if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
-                && !rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
-                && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
-                && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-            cmbViajante.setSelectedItem(UsuarioActivo.getInstance().getUsuario());
-            cmbViajante.setEnabled(false);
-        }
     }
     
     private void cargarComboBoxCredenciales() {
         cmbCredencial.removeAllItems();
-        cmbCredencial.addItem(null);
         try {
-            PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                    .exchange("/usuarios/busqueda/criteria?"
-                            + "roles=" + Rol.COMPRADOR
-                            + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
-                            new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
-                    })
-                    .getBody();
-            credenciales = response.getContent();
-            credenciales.stream().forEach(c -> cmbCredencial.addItem(c));
+            if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
+                    && !rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                    && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                    && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+                if (this.cliente.getIdCredencial() != null) {
+                    Usuario usuario = RestClient.getRestTemplate().getForObject("/usuarios/"
+                            + this.cliente.getIdCredencial(), Usuario.class);
+                    cmbCredencial.addItem(usuario);
+                }
+            } else {
+                cmbCredencial.addItem(null);
+                PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
+                        .exchange("/usuarios/busqueda/criteria?"
+                                + "roles=" + Rol.COMPRADOR
+                                + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
+                                new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
+                        })
+                        .getBody();
+                credenciales = response.getContent();
+                credenciales.stream().forEach(c -> cmbCredencial.addItem(c));
+            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -267,6 +291,8 @@ public class DetalleClienteGUI extends JDialog {
                 btnNuevaLocalidad.setEnabled(false);
                 btnNuevaProvincia.setEnabled(false);
                 btnNuevoPais.setEnabled(false);
+                lblViajante.setEnabled(false);
+                cmbViajante.setEnabled(false);
             }
         }
     }
