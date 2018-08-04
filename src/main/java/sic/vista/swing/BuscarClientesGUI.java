@@ -121,34 +121,38 @@ public class BuscarClientesGUI extends JDialog {
     }
 
     private void setColumnas() {        
-        String[] encabezados = new String[4];
-        encabezados[0] = "ID Fiscal";
-        encabezados[1] = "Razon Social";
-        encabezados[2] = "Nombre Fantasia";
-        encabezados[3] = "Direccion";        
+        String[] encabezados = new String[5];
+        encabezados[0] = "Nº Cliente";
+        encabezados[1] = "ID Fiscal";
+        encabezados[2] = "Razon Social";
+        encabezados[3] = "Nombre Fantasia";
+        encabezados[4] = "Direccion";        
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tblResultados.setModel(modeloTablaResultados);        
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
         tipos[0] = String.class;
         tipos[1] = String.class;
         tipos[2] = String.class;
-        tipos[3] = String.class;        
+        tipos[3] = String.class;
+        tipos[4] = String.class;        
         modeloTablaResultados.setClaseColumnas(tipos);
         tblResultados.getTableHeader().setReorderingAllowed(false);
-        tblResultados.getTableHeader().setResizingAllowed(true);        
-        tblResultados.getColumnModel().getColumn(0).setPreferredWidth(110);
-        tblResultados.getColumnModel().getColumn(1).setPreferredWidth(250);
+        tblResultados.getTableHeader().setResizingAllowed(true);     
+        tblResultados.getColumnModel().getColumn(0).setPreferredWidth(90);
+        tblResultados.getColumnModel().getColumn(1).setPreferredWidth(110);
         tblResultados.getColumnModel().getColumn(2).setPreferredWidth(250);
-        tblResultados.getColumnModel().getColumn(3).setPreferredWidth(400);        
+        tblResultados.getColumnModel().getColumn(3).setPreferredWidth(250);
+        tblResultados.getColumnModel().getColumn(4).setPreferredWidth(400);        
     }
 
     private void cargarResultadosAlTable() {
         clientesParcial.stream().map(cliente -> {
-            Object[] fila = new Object[4];
-            fila[0] = cliente.getIdFiscal();
-            fila[1] = cliente.getRazonSocial();
-            fila[2] = cliente.getNombreFantasia();
-            fila[3] = cliente.getDireccion();            
+            Object[] fila = new Object[5];
+            fila[0] = cliente.getNroCliente();
+            fila[1] = cliente.getIdFiscal();
+            fila[2] = cliente.getRazonSocial();
+            fila[3] = cliente.getNombreFantasia();
+            fila[4] = cliente.getDireccion();            
             return fila;
         }).forEachOrdered(fila -> {
             modeloTablaResultados.addRow(fila);
