@@ -740,7 +740,7 @@ public class DetalleClienteGUI extends JDialog {
         this.cargarComboBoxPaises();
         this.cambiarEstadoDeComponentesSegunRolUsuario();
         if (operacion == TipoDeOperacion.ACTUALIZACION) {
-            this.setTitle("Modificar Cliente");
+            this.setTitle("Modificar Cliente Nº " + cliente.getNroCliente());
             this.cargarClienteParaModificar();
         } else if (operacion == TipoDeOperacion.ALTA) {
             this.setTitle("Nuevo Cliente");            
