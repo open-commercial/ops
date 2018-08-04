@@ -122,9 +122,9 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="cmbCredencial" max="32767" attributes="1"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="btnBuscarUsuarioComprador" linkSize="14" min="-2" pref="34" max="-2" attributes="0"/>
+                          <Component id="btnBuscarUsuarioComprador" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="btnNuevaCredencial" linkSize="14" min="-2" pref="26" max="-2" attributes="0"/>
+                          <Component id="btnNuevaCredencial" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="cmbLocalidad" max="32767" attributes="1"/>
@@ -138,9 +138,9 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="cmbViajante" max="32767" attributes="1"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="btnBuscarUsuarioViajante" linkSize="14" min="-2" pref="42" max="-2" attributes="0"/>
+                          <Component id="btnBuscarUsuarioViajante" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="btnNuevoUsuarioViajante" linkSize="14" min="-2" pref="47" max="-2" attributes="0"/>
+                          <Component id="btnNuevoUsuarioViajante" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -198,8 +198,8 @@
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lblViajante" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="cmbViajante" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnBuscarUsuarioViajante" linkSize="15" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnNuevoUsuarioViajante" linkSize="15" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnBuscarUsuarioViajante" linkSize="15" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnNuevoUsuarioViajante" linkSize="15" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">

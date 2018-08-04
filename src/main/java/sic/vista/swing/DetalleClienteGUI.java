@@ -492,9 +492,9 @@ public class DetalleClienteGUI extends JDialog {
                     .addGroup(panelPrincipalLayout.createSequentialGroup()
                         .addComponent(cmbCredencial, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
-                        .addComponent(btnBuscarUsuarioComprador, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnBuscarUsuarioComprador)
                         .addGap(0, 0, 0)
-                        .addComponent(btnNuevaCredencial, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnNuevaCredencial))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
                         .addComponent(cmbLocalidad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
@@ -506,15 +506,13 @@ public class DetalleClienteGUI extends JDialog {
                     .addGroup(panelPrincipalLayout.createSequentialGroup()
                         .addComponent(cmbViajante, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
-                        .addComponent(btnBuscarUsuarioViajante, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnBuscarUsuarioViajante)
                         .addGap(0, 0, 0)
-                        .addComponent(btnNuevoUsuarioViajante, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnNuevoUsuarioViajante)))
                 .addContainerGap())
         );
 
         panelPrincipalLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnNuevaCondicionIVA, btnNuevaLocalidad, btnNuevaProvincia, btnNuevoPais});
-
-        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnBuscarUsuarioComprador, btnBuscarUsuarioViajante, btnNuevaCredencial, btnNuevoUsuarioViajante});
 
         panelPrincipalLayout.setVerticalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -559,8 +557,8 @@ public class DetalleClienteGUI extends JDialog {
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblViajante)
                     .addComponent(cmbViajante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscarUsuarioViajante, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnNuevoUsuarioViajante, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addComponent(btnBuscarUsuarioViajante)
+                    .addComponent(btnNuevoUsuarioViajante))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblTelPrimario)

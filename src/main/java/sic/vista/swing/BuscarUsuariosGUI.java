@@ -25,8 +25,8 @@ import sic.modelo.Usuario;
 import sic.util.Utilidades;
 
 public class BuscarUsuariosGUI extends JDialog {
-    
-    private ModeloTabla modeloTablaResultados = new ModeloTabla();    
+
+    private ModeloTabla modeloTablaResultados = new ModeloTabla();
     private List<Usuario> usuariosTotal = new ArrayList<>();
     private List<Usuario> usuariosParcial = new ArrayList<>();
     private Usuario usuarioSeleccionado;
@@ -39,8 +39,8 @@ public class BuscarUsuariosGUI extends JDialog {
 
     public BuscarUsuariosGUI(Rol rolParaFiltrar) {
         this.initComponents();
-        this.setIcon();        
-        this.setColumnas();        
+        this.setIcon();
+        this.setColumnas();
         txtCriteriaBusqueda.addKeyListener(keyHandler);
         tblResultados.addKeyListener(keyHandler);
         this.rolParaFiltrar = rolParaFiltrar;
@@ -55,7 +55,7 @@ public class BuscarUsuariosGUI extends JDialog {
             }
         });
     }
-   
+
     public Usuario getUsuarioSeleccionado() {
         return usuarioSeleccionado;
     }
@@ -67,8 +67,8 @@ public class BuscarUsuariosGUI extends JDialog {
     private void setIcon() {
         ImageIcon iconoVentana = new ImageIcon(BuscarClientesGUI.class.getResource("/sic/icons/Client_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
-    }     
-    
+    }
+
     private void buscar() {
         try {
             if (txtCriteriaBusqueda.getText().equals("")) {
@@ -83,8 +83,8 @@ public class BuscarUsuariosGUI extends JDialog {
                 criteriaBusqueda += "roles=" + rolParaFiltrar + "&";
                 criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
                 PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                        .exchange(criteriaBusqueda, HttpMethod.GET, null, new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
-                        })
+                        .exchange(criteriaBusqueda, HttpMethod.GET, null,
+                                new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {})
                         .getBody();
                 usuariosParcial = response.getContent();
                 usuariosTotal.addAll(usuariosParcial);
@@ -101,7 +101,6 @@ public class BuscarUsuariosGUI extends JDialog {
             this.dispose();
         }
     }
-
 
     private void setColumnas() {
         String[] encabezados = new String[5];
@@ -120,14 +119,13 @@ public class BuscarUsuariosGUI extends JDialog {
         tipos[4] = String.class;
         modeloTablaResultados.setClaseColumnas(tipos);
         tblResultados.getTableHeader().setReorderingAllowed(false);
-        tblResultados.getTableHeader().setResizingAllowed(true);
-        //tamanios de columnas
+        tblResultados.getTableHeader().setResizingAllowed(true);        
         tblResultados.getColumnModel().getColumn(0).setMinWidth(90);
         tblResultados.getColumnModel().getColumn(0).setMaxWidth(90);
         tblResultados.getColumnModel().getColumn(1).setMinWidth(130);
         tblResultados.getColumnModel().getColumn(2).setMinWidth(130);
         tblResultados.getColumnModel().getColumn(3).setMinWidth(130);
-        tblResultados.getColumnModel().getColumn(4).setPreferredWidth(350);  
+        tblResultados.getColumnModel().getColumn(4).setPreferredWidth(350);
     }
 
     private void cargarResultadosAlTable() {
@@ -146,12 +144,12 @@ public class BuscarUsuariosGUI extends JDialog {
 
     private void resetScroll() {
         NUMERO_PAGINA = 0;
-       usuariosTotal.clear();
+        usuariosTotal.clear();
         usuariosParcial.clear();
         Point p = new Point(0, 0);
         sp_Resultados.getViewport().setViewPosition(p);
     }
-    
+
     private void limpiarJTable() {
         modeloTablaResultados = new ModeloTabla();
         tblResultados.setModel(modeloTablaResultados);
@@ -168,12 +166,10 @@ public class BuscarUsuariosGUI extends JDialog {
         this.dispose();
     }
 
-
     /**
      * Clase interna para manejar las hotkeys
      */
     class HotKeysHandler extends KeyAdapter {
-
         @Override
         public void keyPressed(KeyEvent evt) {
             if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
@@ -340,7 +336,7 @@ public class BuscarUsuariosGUI extends JDialog {
                 this.setTitle("Buscar Viajante");
                 break;
             case COMPRADOR:
-                this.setTitle("Buscar Comprador");
+                this.setTitle("Buscar Credencial");
                 break;
             default:
                 this.setTitle("Buscar Usuario");
@@ -349,7 +345,6 @@ public class BuscarUsuariosGUI extends JDialog {
     }//GEN-LAST:event_formWindowOpened
 
     private void tblResultadosFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tblResultadosFocusGained
-        //Si no hay nada seleccionado y NO esta vacio el table, selecciona la primer fila
         if ((tblResultados.getSelectedRow() == -1) && (tblResultados.getRowCount() != 0)) {
             tblResultados.setRowSelectionInterval(0, 0);
         }
