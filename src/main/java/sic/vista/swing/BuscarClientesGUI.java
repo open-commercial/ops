@@ -120,7 +120,7 @@ public class BuscarClientesGUI extends JDialog {
         }
     }
 
-    private void setColumnas() {        
+    private void setColumnas() {
         String[] encabezados = new String[5];
         encabezados[0] = "Nº Cliente";
         encabezados[1] = "ID Fiscal";
@@ -139,7 +139,7 @@ public class BuscarClientesGUI extends JDialog {
         tblResultados.getTableHeader().setReorderingAllowed(false);
         tblResultados.getTableHeader().setResizingAllowed(true);     
         tblResultados.getColumnModel().getColumn(0).setPreferredWidth(90);
-        tblResultados.getColumnModel().getColumn(1).setPreferredWidth(110);
+        tblResultados.getColumnModel().getColumn(1).setPreferredWidth(120);
         tblResultados.getColumnModel().getColumn(2).setPreferredWidth(250);
         tblResultados.getColumnModel().getColumn(3).setPreferredWidth(250);
         tblResultados.getColumnModel().getColumn(4).setPreferredWidth(400);        
