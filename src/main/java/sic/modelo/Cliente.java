@@ -11,6 +11,7 @@ import lombok.EqualsAndHashCode;
 public class Cliente implements Serializable {
 
     private long id_Cliente;
+    private String nroCliente;
     private String razonSocial;
     private String nombreFantasia;
     private String direccion;  

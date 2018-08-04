@@ -1,19 +1,13 @@
 package sic.util;
 
-import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
-import java.util.ResourceBundle;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import sic.modelo.Rol;
-import sic.modelo.UsuarioActivo;
 
 public class Utilidades {
 
