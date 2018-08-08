@@ -65,7 +65,7 @@ public class BuscarUsuariosGUI extends JDialog {
     }
 
     private void setIcon() {
-        ImageIcon iconoVentana = new ImageIcon(BuscarClientesGUI.class.getResource("/sic/icons/Client_16x16.png"));
+        ImageIcon iconoVentana = new ImageIcon(BuscarClientesGUI.class.getResource("/sic/icons/Group_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
     }
 

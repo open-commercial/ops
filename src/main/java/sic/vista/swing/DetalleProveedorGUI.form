@@ -85,10 +85,10 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="lblCondicionIVA" alignment="0" min="-2" max="-2" attributes="1"/>
-                      <Component id="lblIdFiscal" alignment="0" min="-2" pref="110" max="-2" attributes="1"/>
-                      <Component id="lblRazonSocial" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
-                      <Component id="lblCodigo" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
+                      <Component id="lblCodigo" alignment="1" min="-2" pref="110" max="-2" attributes="0"/>
+                      <Component id="lblRazonSocial" alignment="1" min="-2" pref="110" max="-2" attributes="0"/>
+                      <Component id="lblIdFiscal" alignment="1" min="-2" pref="110" max="-2" attributes="1"/>
+                      <Component id="lblCondicionIVA" alignment="1" min="-2" pref="110" max="-2" attributes="1"/>
                       <Component id="lblDireccion" alignment="1" min="-2" pref="110" max="-2" attributes="0"/>
                       <Component id="lblPais" alignment="1" min="-2" pref="110" max="-2" attributes="0"/>
                       <Component id="lblProvincia" alignment="1" min="-2" pref="110" max="-2" attributes="0"/>
@@ -97,12 +97,12 @@
                       <Component id="lblTelSecundario" alignment="1" min="-2" pref="110" max="-2" attributes="1"/>
                       <Component id="lblContacto" alignment="1" min="-2" pref="110" max="-2" attributes="0"/>
                       <Component id="lblEmail" alignment="1" min="-2" pref="110" max="-2" attributes="0"/>
-                      <Component id="lblWeb" min="-2" pref="110" max="-2" attributes="0"/>
+                      <Component id="lblWeb" alignment="1" min="-2" pref="110" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="cmbLocalidad" max="32767" attributes="1"/>
+                          <Component id="cmbLocalidad" pref="342" max="32767" attributes="1"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Component id="btnNuevaLocalidad" min="-2" max="-2" attributes="0"/>
                       </Group>
