@@ -6,6 +6,7 @@ import java.awt.event.AdjustmentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
@@ -33,17 +34,17 @@ public class BuscarUsuariosGUI extends JDialog {
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int NUMERO_PAGINA = 0;
     private static final int TAMANIO_PAGINA = 50;
-    private final Rol rolParaFiltrar;
+    private final Rol[] rolesParaFiltrar;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeDialog = new Dimension(1000, 600);
 
-    public BuscarUsuariosGUI(Rol rolParaFiltrar) {
+    public BuscarUsuariosGUI(Rol[] rolesParaFiltrar) {
         this.initComponents();
         this.setIcon();
         this.setColumnas();
         txtCriteriaBusqueda.addKeyListener(keyHandler);
         tblResultados.addKeyListener(keyHandler);
-        this.rolParaFiltrar = rolParaFiltrar;
+        this.rolesParaFiltrar = rolesParaFiltrar;
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
             int va = scrollBar.getVisibleAmount() + 50;
@@ -76,11 +77,12 @@ public class BuscarUsuariosGUI extends JDialog {
                 this.limpiarJTable();
             } else {
                 String criteriaBusqueda = "/usuarios/busqueda/criteria?";
-                criteriaBusqueda += "username=" + txtCriteriaBusqueda.getText().trim() + "&";
-                criteriaBusqueda += "nombre=" + txtCriteriaBusqueda.getText().trim() + "&";
-                criteriaBusqueda += "apellido=" + txtCriteriaBusqueda.getText().trim() + "&";
-                criteriaBusqueda += "email=" + txtCriteriaBusqueda.getText().trim() + "&";
-                criteriaBusqueda += "roles=" + rolParaFiltrar + "&";
+                criteriaBusqueda += "username=" + txtCriteriaBusqueda.getText().trim();
+                criteriaBusqueda += "&nombre=" + txtCriteriaBusqueda.getText().trim();
+                criteriaBusqueda += "&apellido=" + txtCriteriaBusqueda.getText().trim();
+                criteriaBusqueda += "&email=" + txtCriteriaBusqueda.getText().trim();                
+                criteriaBusqueda += "&roles=" + Arrays.toString(rolesParaFiltrar)
+                        .substring(1, Arrays.toString(rolesParaFiltrar).length() - 1);
                 criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
                 PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
                         .exchange(criteriaBusqueda, HttpMethod.GET, null,
@@ -322,25 +324,7 @@ public class BuscarUsuariosGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.setSize(sizeDialog);
-        switch (rolParaFiltrar) {
-            case ADMINISTRADOR:
-                this.setTitle("Buscar Administrador");
-                break;
-            case ENCARGADO:
-                this.setTitle("Buscar Encargado");
-                break;
-            case VENDEDOR:
-                this.setTitle("Buscar Vendedor");
-                break;
-            case VIAJANTE:
-                this.setTitle("Buscar Viajante");
-                break;
-            case COMPRADOR:
-                this.setTitle("Buscar Credencial");
-                break;
-            default:
-                this.setTitle("Buscar Usuario");
-        }
+        this.setTitle("Buscar Usuario");
         this.setColumnas();
     }//GEN-LAST:event_formWindowOpened
 

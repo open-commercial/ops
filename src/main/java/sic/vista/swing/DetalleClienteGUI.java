@@ -227,6 +227,7 @@ public class DetalleClienteGUI extends JDialog {
         if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
             btnNuevaCondicionIVA.setEnabled(false);
             btnNuevaCredencial.setEnabled(false);
+            btnBuscarCredencial.setEnabled(false);
             btnNuevoUsuarioViajante.setEnabled(false);
             lblCredencial.setEnabled(false);
             cmbCredencial.setEnabled(false);
@@ -236,7 +237,7 @@ public class DetalleClienteGUI extends JDialog {
                 btnNuevoPais.setEnabled(false);
                 lblViajante.setEnabled(false);
                 cmbViajante.setEnabled(false);
-                btnBuscarUsuarioComprador.setEnabled(false);
+                btnBuscarCredencial.setEnabled(false);
                 btnBuscarUsuarioViajante.setEnabled(false);
                 if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
                         && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
@@ -291,7 +292,7 @@ public class DetalleClienteGUI extends JDialog {
         btnNuevaCredencial = new javax.swing.JButton();
         btnBuscarUsuarioViajante = new javax.swing.JButton();
         btnNuevoUsuarioViajante = new javax.swing.JButton();
-        btnBuscarUsuarioComprador = new javax.swing.JButton();
+        btnBuscarCredencial = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nuevo Cliente");
@@ -443,10 +444,10 @@ public class DetalleClienteGUI extends JDialog {
             }
         });
 
-        btnBuscarUsuarioComprador.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
-        btnBuscarUsuarioComprador.addActionListener(new java.awt.event.ActionListener() {
+        btnBuscarCredencial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
+        btnBuscarCredencial.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarUsuarioCompradorActionPerformed(evt);
+                btnBuscarCredencialActionPerformed(evt);
             }
         });
 
@@ -492,7 +493,7 @@ public class DetalleClienteGUI extends JDialog {
                     .addGroup(panelPrincipalLayout.createSequentialGroup()
                         .addComponent(cmbCredencial, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
-                        .addComponent(btnBuscarUsuarioComprador)
+                        .addComponent(btnBuscarCredencial)
                         .addGap(0, 0, 0)
                         .addComponent(btnNuevaCredencial))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
@@ -580,7 +581,7 @@ public class DetalleClienteGUI extends JDialog {
                     .addComponent(lblCredencial)
                     .addComponent(cmbCredencial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnNuevaCredencial)
-                    .addComponent(btnBuscarUsuarioComprador))
+                    .addComponent(btnBuscarCredencial))
                 .addContainerGap())
         );
 
@@ -592,7 +593,7 @@ public class DetalleClienteGUI extends JDialog {
 
         panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblCredencial, lblTelPrimario, lblViajante});
 
-        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarUsuarioComprador, btnNuevaCredencial, cmbCredencial});
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarCredencial, btnNuevaCredencial, cmbCredencial});
 
         panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevaCondicionIVA, cmbCondicionIVA});
 
@@ -706,8 +707,8 @@ public class DetalleClienteGUI extends JDialog {
                         "/clientes?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                         + "&idCondicionIVA=" + idCondicionIVA
                         + "&idLocalidad=" + idLocalidad
-                        + "&idUsuarioViajante=" + idViajante
-                        + "&idUsuarioCredencial=" + idCredencial,
+                        + "&idViajante=" + idViajante
+                        + "&idCredencial=" + idCredencial,
                         cliente, Cliente.class);
                 JOptionPane.showMessageDialog(this, "El Cliente se guardó correctamente!",
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);                
@@ -717,8 +718,8 @@ public class DetalleClienteGUI extends JDialog {
                         "/clientes?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                         + "&idCondicionIVA=" + idCondicionIVA
                         + "&idLocalidad=" + idLocalidad
-                        + "&idUsuarioViajante=" + idViajante
-                        + "&idUsuarioCredencial=" + idCredencial,
+                        + "&idViajante=" + idViajante
+                        + "&idCredencial=" + idCredencial,
                         cliente);
                 JOptionPane.showMessageDialog(this, "El Cliente se modificó correctamente!",
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);
@@ -755,7 +756,7 @@ public class DetalleClienteGUI extends JDialog {
     }//GEN-LAST:event_btnNuevaCredencialActionPerformed
 
     private void btnBuscarUsuarioViajanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarUsuarioViajanteActionPerformed
-        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(Rol.VIAJANTE);
+        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(new Rol[]{Rol.VIAJANTE});
         buscarUsuariosGUI.setModal(true);
         buscarUsuariosGUI.setLocationRelativeTo(this);
         buscarUsuariosGUI.setVisible(true);
@@ -778,8 +779,9 @@ public class DetalleClienteGUI extends JDialog {
         }
     }//GEN-LAST:event_cmbCredencialItemStateChanged
 
-    private void btnBuscarUsuarioCompradorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarUsuarioCompradorActionPerformed
-        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(Rol.COMPRADOR);
+    private void btnBuscarCredencialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarCredencialActionPerformed
+        Rol[] rolesParaFiltrar = new Rol[]{Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR, Rol.VIAJANTE, Rol.COMPRADOR};
+        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar);
         buscarUsuariosGUI.setModal(true);
         buscarUsuariosGUI.setLocationRelativeTo(this);
         buscarUsuariosGUI.setVisible(true);
@@ -788,7 +790,7 @@ public class DetalleClienteGUI extends JDialog {
             cmbCredencial.addItem(buscarUsuariosGUI.getUsuarioSeleccionado());
             cmbCredencial.addItem(null);
         }
-    }//GEN-LAST:event_btnBuscarUsuarioCompradorActionPerformed
+    }//GEN-LAST:event_btnBuscarCredencialActionPerformed
 
     private void btnNuevoUsuarioViajanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoUsuarioViajanteActionPerformed
         DetalleUsuarioGUI gui_DetalleUsuario = new DetalleUsuarioGUI();
@@ -798,7 +800,7 @@ public class DetalleClienteGUI extends JDialog {
     }//GEN-LAST:event_btnNuevoUsuarioViajanteActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBuscarUsuarioComprador;
+    private javax.swing.JButton btnBuscarCredencial;
     private javax.swing.JButton btnBuscarUsuarioViajante;
     private javax.swing.JButton btnNuevaCondicionIVA;
     private javax.swing.JButton btnNuevaCredencial;

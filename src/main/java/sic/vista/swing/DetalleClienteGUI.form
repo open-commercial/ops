@@ -122,7 +122,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="cmbCredencial" max="32767" attributes="1"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="btnBuscarUsuarioComprador" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnBuscarCredencial" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Component id="btnNuevaCredencial" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -226,7 +226,7 @@
                       <Component id="lblCredencial" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="cmbCredencial" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="btnNuevaCredencial" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnBuscarUsuarioComprador" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnBuscarCredencial" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -511,14 +511,14 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNuevoUsuarioViajanteActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btnBuscarUsuarioComprador">
+        <Component class="javax.swing.JButton" name="btnBuscarCredencial">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/sic/icons/Search_16x16.png"/>
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarUsuarioCompradorActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarCredencialActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
