@@ -649,9 +649,10 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         pedido.setTotalEstimado(subTotalEstimado);
         pedido.setEstado(EstadoPedido.ABIERTO);
         List<RenglonPedido> renglonesPedido = new ArrayList<>();
-        renglones.stream().forEach(r -> {
-            renglonesPedido.add(this.convertirRenglonFacturaARenglonPedido(r));
-        });
+        Arrays.asList(RestClient.getRestTemplate().postForObject("/pedidos/renglones",
+                renglones, RenglonPedido[].class)).stream().forEach(r -> {
+                    renglonesPedido.add(r);
+                });
         pedido.setRenglones(renglonesPedido);
     }
     
@@ -719,13 +720,12 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     
     public RenglonPedido convertirRenglonFacturaARenglonPedido(RenglonFactura renglonFactura) {
         RenglonPedido nuevoRenglon = new RenglonPedido();
-        nuevoRenglon.setCantidad(renglonFactura.getCantidad());
-        nuevoRenglon.setDescuento_porcentaje(renglonFactura.getDescuento_porcentaje());
-        nuevoRenglon.setDescuento_neto(renglonFactura.getDescuento_neto());
         try {
-            Producto producto = RestClient.getRestTemplate()
-                    .getForObject("/productos/" + renglonFactura.getId_ProductoItem(), Producto.class);
-            nuevoRenglon.setProducto(producto);
+            nuevoRenglon= RestClient.getRestTemplate()
+                    .getForObject("/pedidos/renglon?"
+                            + "idProducto=" + renglonFactura.getId_ProductoItem()
+                            + "&cantidad=" + renglonFactura.getCantidad()
+                            + "&descuentoPorcentaje=" + renglonFactura.getDescuento_porcentaje(), RenglonPedido.class);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -734,7 +734,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-        nuevoRenglon.setSubTotal(renglonFactura.getImporte());
         return nuevoRenglon;
     }
     

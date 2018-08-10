@@ -9,10 +9,15 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(of = "producto")
 public class RenglonPedido implements Serializable {
 
-    private long id_RenglonPedido;
+    private long id_RenglonPedido;   
     private Producto producto;
     private BigDecimal cantidad;
     private BigDecimal descuento_porcentaje;
     private BigDecimal descuento_neto;
     private BigDecimal subTotal;
+    private long idProducto;
+    private String codigo;
+    private String descripcion;
+    private BigDecimal precioDeLista;
+    
 }
