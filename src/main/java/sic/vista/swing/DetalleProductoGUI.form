@@ -325,14 +325,15 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="lbl_PVP" pref="182" max="32767" attributes="0"/>
-                                      <Component id="lbl_IVA" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="lbl_Ganancia" alignment="0" max="32767" attributes="1"/>
-                                      <Component id="lbl_PrecioCosto" max="32767" attributes="1"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lbl_PrecioLista" max="32767" attributes="1"/>
+                              <Component id="lbl_PVP" pref="182" max="32767" attributes="0"/>
+                              <Component id="lbl_IVA" alignment="0" max="32767" attributes="0"/>
+                              <Component id="lbl_Ganancia" alignment="0" max="32767" attributes="1"/>
+                              <Component id="lbl_PrecioCosto" alignment="0" max="32767" attributes="1"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Component id="cmbIVAPorcentaje" max="32767" attributes="0"/>
                                       <Component id="txtGananciaPorcentaje" max="32767" attributes="2"/>
@@ -345,11 +346,7 @@
                                       <Component id="txtPVP" linkSize="5" alignment="0" pref="102" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="lbl_PrecioLista" max="32767" attributes="1"/>
-                                  <EmptySpace min="46" pref="46" max="-2" attributes="0"/>
-                                  <Component id="txtPrecioLista" linkSize="5" pref="102" max="32767" attributes="1"/>
-                              </Group>
+                              <Component id="txtPrecioLista" linkSize="5" alignment="1" pref="30" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>

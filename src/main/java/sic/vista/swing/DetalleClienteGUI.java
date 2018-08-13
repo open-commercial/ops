@@ -9,8 +9,6 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
@@ -18,7 +16,6 @@ import sic.modelo.Cliente;
 import sic.modelo.CondicionIVA;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Localidad;
-import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Pais;
 import sic.modelo.Provincia;
 import sic.modelo.Rol;
@@ -33,8 +30,6 @@ public class DetalleClienteGUI extends JDialog {
     private List<Pais> paises;
     private List<Provincia> provincias;
     private List<Localidad> localidades;
-    private List<Usuario> credenciales;
-    private List<Usuario> viajantes;
     private final TipoDeOperacion operacion;    
     private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -69,28 +64,52 @@ public class DetalleClienteGUI extends JDialog {
     
     private void seleccionarCredencialSegunId(Long idCredencial) {
         if (idCredencial != null) {
-            int indice = 0;
-            for (int i=0; i<credenciales.size(); i++) {
-                if (credenciales.get(i).getId_Usuario() == idCredencial) {
-                    indice = i;
-                }
+            try {
+                Usuario usuario = RestClient.getRestTemplate().getForObject("/usuarios/"
+                        + idCredencial, Usuario.class);
+                cmbCredencial.addItem(usuario);
+                cmbCredencial.addItem(null);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
-            cmbCredencial.setSelectedItem(credenciales.get(indice));
+        }
+        if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
+                && !rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+            cmbCredencial.setEnabled(false);
         }
     }
     
     private void seleccionarViajanteSegunId(Long idViajante) {
         if (idViajante != null) {
-            int indice = 0;
-            for (int i=0; i<viajantes.size(); i++) {
-                if (viajantes.get(i).getId_Usuario() == idViajante) {
-                    indice = i;
-                }
+            try {
+                Usuario usuario = RestClient.getRestTemplate().getForObject("/usuarios/"
+                        + idViajante, Usuario.class);
+                cmbViajante.addItem(usuario);
+                cmbViajante.addItem(null);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
-            cmbViajante.setSelectedItem(viajantes.get(indice));
         }
-    }  
-    
+        if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
+                && !rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+            cmbViajante.setEnabled(false);
+        }
+    }
+
     private void seleccionarPaisSegunId(Long idPais) {
         int indice = 0;
         for (int i=0; i<paises.size(); i++) {
@@ -130,12 +149,8 @@ public class DetalleClienteGUI extends JDialog {
         this.seleccionarPaisSegunId(cliente.getIdPais());
         this.seleccionarProvinciaSegunId(cliente.getIdProvincia());
         this.seleccionarLocalidadSegunId(cliente.getIdLocalidad());
-        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
-                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
-                || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-            this.seleccionarCredencialSegunId(cliente.getIdCredencial());
-            this.seleccionarViajanteSegunId(cliente.getIdViajante());
-        }
+        this.seleccionarCredencialSegunId(cliente.getIdCredencial());
+        this.seleccionarViajanteSegunId(cliente.getIdViajante());
         txtTelPrimario.setText(cliente.getTelPrimario());
         txtTelSecundario.setText(cliente.getTelSecundario());
         txtContacto.setText(cliente.getContacto());
@@ -164,79 +179,6 @@ public class DetalleClienteGUI extends JDialog {
             paises = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/paises", Pais[].class)));
             paises.stream().forEach(p -> cmbPais.addItem(p));
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
-    private void cargarComboBoxViajantes() {
-        cmbViajante.removeAllItems();
-        try {
-            if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
-                    && !rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
-                    && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
-                    && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-                Usuario usuario = RestClient.getRestTemplate().getForObject("/usuarios/"
-                        + UsuarioActivo.getInstance().getUsuario().getId_Usuario(), Usuario.class);
-                cmbViajante.addItem(usuario);
-            } else {
-                cmbViajante.addItem(null);
-                PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                        .exchange("/usuarios/busqueda/criteria?"
-                                + "roles=" + Rol.VIAJANTE
-                                + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
-                                new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
-                        })
-                        .getBody();
-                viajantes = response.getContent();
-                viajantes.stream().forEach(v -> cmbViajante.addItem(v));
-                if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
-                        && !rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
-                        && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
-                        && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-                    cmbViajante.setSelectedItem(UsuarioActivo.getInstance().getUsuario());
-                    cmbViajante.setEnabled(false);
-                }
-            }
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
-    private void cargarComboBoxCredenciales() {
-        cmbCredencial.removeAllItems();
-        try {
-            if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
-                    && !rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
-                    && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
-                    && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-                if (this.cliente.getIdCredencial() != null) {
-                    Usuario usuario = RestClient.getRestTemplate().getForObject("/usuarios/"
-                            + this.cliente.getIdCredencial(), Usuario.class);
-                    cmbCredencial.addItem(usuario);
-                }
-            } else {
-                cmbCredencial.addItem(null);
-                PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                        .exchange("/usuarios/busqueda/criteria?"
-                                + "roles=" + Rol.COMPRADOR
-                                + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
-                                new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
-                        })
-                        .getBody();
-                credenciales = response.getContent();
-                credenciales.stream().forEach(c -> cmbCredencial.addItem(c));
-            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -285,6 +227,8 @@ public class DetalleClienteGUI extends JDialog {
         if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
             btnNuevaCondicionIVA.setEnabled(false);
             btnNuevaCredencial.setEnabled(false);
+            btnBuscarCredencial.setEnabled(false);
+            btnNuevoUsuarioViajante.setEnabled(false);
             lblCredencial.setEnabled(false);
             cmbCredencial.setEnabled(false);
             if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
@@ -293,6 +237,12 @@ public class DetalleClienteGUI extends JDialog {
                 btnNuevoPais.setEnabled(false);
                 lblViajante.setEnabled(false);
                 cmbViajante.setEnabled(false);
+                btnBuscarCredencial.setEnabled(false);
+                btnBuscarUsuarioViajante.setEnabled(false);
+                if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
+                        && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+                    this.seleccionarViajanteSegunId(UsuarioActivo.getInstance().getUsuario().getId_Usuario());
+                }
             }
         }
     }
@@ -340,6 +290,9 @@ public class DetalleClienteGUI extends JDialog {
         lblCredencial = new javax.swing.JLabel();
         cmbCredencial = new javax.swing.JComboBox<>();
         btnNuevaCredencial = new javax.swing.JButton();
+        btnBuscarUsuarioViajante = new javax.swing.JButton();
+        btnNuevoUsuarioViajante = new javax.swing.JButton();
+        btnBuscarCredencial = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nuevo Cliente");
@@ -442,6 +395,12 @@ public class DetalleClienteGUI extends JDialog {
         lblViajante.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblViajante.setText("Viajante:");
 
+        cmbViajante.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbViajanteItemStateChanged(evt);
+            }
+        });
+
         lblTelPrimario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblTelPrimario.setText("Teléfono #1:");
 
@@ -457,12 +416,38 @@ public class DetalleClienteGUI extends JDialog {
         lblCredencial.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblCredencial.setText("Credencial:");
 
+        cmbCredencial.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbCredencialItemStateChanged(evt);
+            }
+        });
+
         btnNuevaCredencial.setForeground(java.awt.Color.blue);
-        btnNuevaCredencial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Client_16x16.png"))); // NOI18N
-        btnNuevaCredencial.setText("Nueva");
+        btnNuevaCredencial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddGroup_16x16.png"))); // NOI18N
         btnNuevaCredencial.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNuevaCredencialActionPerformed(evt);
+            }
+        });
+
+        btnBuscarUsuarioViajante.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
+        btnBuscarUsuarioViajante.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarUsuarioViajanteActionPerformed(evt);
+            }
+        });
+
+        btnNuevoUsuarioViajante.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddGroup_16x16.png"))); // NOI18N
+        btnNuevoUsuarioViajante.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoUsuarioViajanteActionPerformed(evt);
+            }
+        });
+
+        btnBuscarCredencial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
+        btnBuscarCredencial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarCredencialActionPerformed(evt);
             }
         });
 
@@ -508,20 +493,27 @@ public class DetalleClienteGUI extends JDialog {
                     .addGroup(panelPrincipalLayout.createSequentialGroup()
                         .addComponent(cmbCredencial, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
+                        .addComponent(btnBuscarCredencial)
+                        .addGap(0, 0, 0)
                         .addComponent(btnNuevaCredencial))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
                         .addComponent(cmbLocalidad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
                         .addComponent(btnNuevaLocalidad))
-                    .addComponent(cmbViajante, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtTelPrimario, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtTelSecundario, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtContacto, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtEmail, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(txtEmail, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelPrincipalLayout.createSequentialGroup()
+                        .addComponent(cmbViajante, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnBuscarUsuarioViajante)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnNuevoUsuarioViajante)))
                 .addContainerGap())
         );
 
-        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnNuevaCondicionIVA, btnNuevaCredencial, btnNuevaLocalidad, btnNuevaProvincia, btnNuevoPais});
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnNuevaCondicionIVA, btnNuevaLocalidad, btnNuevaProvincia, btnNuevoPais});
 
         panelPrincipalLayout.setVerticalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -565,7 +557,9 @@ public class DetalleClienteGUI extends JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblViajante)
-                    .addComponent(cmbViajante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbViajante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarUsuarioViajante)
+                    .addComponent(btnNuevoUsuarioViajante))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblTelPrimario)
@@ -586,21 +580,24 @@ public class DetalleClienteGUI extends JDialog {
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblCredencial)
                     .addComponent(cmbCredencial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnNuevaCredencial))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnNuevaCredencial)
+                    .addComponent(btnBuscarCredencial))
+                .addContainerGap())
         );
 
         panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevoPais, cmbPais});
 
         panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevaProvincia, cmbProvincia});
 
-        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevaLocalidad, cmbLocalidad});
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevaLocalidad, cmbLocalidad, cmbViajante});
 
         panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblCredencial, lblTelPrimario, lblViajante});
 
-        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevaCredencial, cmbCredencial});
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarCredencial, btnNuevaCredencial, cmbCredencial});
 
         panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevaCondicionIVA, cmbCondicionIVA});
+
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarUsuarioViajante, btnNuevoUsuarioViajante});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -710,8 +707,8 @@ public class DetalleClienteGUI extends JDialog {
                         "/clientes?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                         + "&idCondicionIVA=" + idCondicionIVA
                         + "&idLocalidad=" + idLocalidad
-                        + "&idUsuarioViajante=" + idViajante
-                        + "&idUsuarioCredencial=" + idCredencial,
+                        + "&idViajante=" + idViajante
+                        + "&idCredencial=" + idCredencial,
                         cliente, Cliente.class);
                 JOptionPane.showMessageDialog(this, "El Cliente se guardó correctamente!",
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);                
@@ -721,8 +718,8 @@ public class DetalleClienteGUI extends JDialog {
                         "/clientes?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                         + "&idCondicionIVA=" + idCondicionIVA
                         + "&idLocalidad=" + idLocalidad
-                        + "&idUsuarioViajante=" + idViajante
-                        + "&idUsuarioCredencial=" + idCredencial,
+                        + "&idViajante=" + idViajante
+                        + "&idCredencial=" + idCredencial,
                         cliente);
                 JOptionPane.showMessageDialog(this, "El Cliente se modificó correctamente!",
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);
@@ -742,11 +739,9 @@ public class DetalleClienteGUI extends JDialog {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cargarComboBoxCondicionesIVA();
         this.cargarComboBoxPaises();
-        this.cargarComboBoxCredenciales();
-        this.cargarComboBoxViajantes();
         this.cambiarEstadoDeComponentesSegunRolUsuario();
         if (operacion == TipoDeOperacion.ACTUALIZACION) {
-            this.setTitle("Modificar Cliente");
+            this.setTitle("Modificar Cliente Nº " + cliente.getNroCliente());
             this.cargarClienteParaModificar();
         } else if (operacion == TipoDeOperacion.ALTA) {
             this.setTitle("Nuevo Cliente");            
@@ -758,15 +753,61 @@ public class DetalleClienteGUI extends JDialog {
         gui_DetalleUsuario.setModal(true);
         gui_DetalleUsuario.setLocationRelativeTo(this);
         gui_DetalleUsuario.setVisible(true);
-        this.cargarComboBoxCredenciales();
     }//GEN-LAST:event_btnNuevaCredencialActionPerformed
 
+    private void btnBuscarUsuarioViajanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarUsuarioViajanteActionPerformed
+        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(new Rol[]{Rol.VIAJANTE});
+        buscarUsuariosGUI.setModal(true);
+        buscarUsuariosGUI.setLocationRelativeTo(this);
+        buscarUsuariosGUI.setVisible(true);
+        if (buscarUsuariosGUI.getUsuarioSeleccionado() != null) {
+            cmbViajante.removeAllItems();
+            cmbViajante.addItem(buscarUsuariosGUI.getUsuarioSeleccionado());
+            cmbViajante.addItem(null);
+        }
+    }//GEN-LAST:event_btnBuscarUsuarioViajanteActionPerformed
+
+    private void cmbViajanteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbViajanteItemStateChanged
+        if (cmbViajante.getSelectedItem() == null) {
+            cmbViajante.removeAllItems();
+        }
+    }//GEN-LAST:event_cmbViajanteItemStateChanged
+
+    private void cmbCredencialItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbCredencialItemStateChanged
+        if (cmbCredencial.getSelectedItem() == null) {
+            cmbCredencial.removeAllItems();
+        }
+    }//GEN-LAST:event_cmbCredencialItemStateChanged
+
+    private void btnBuscarCredencialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarCredencialActionPerformed
+        Rol[] rolesParaFiltrar = new Rol[]{Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR, Rol.VIAJANTE, Rol.COMPRADOR};
+        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar);
+        buscarUsuariosGUI.setModal(true);
+        buscarUsuariosGUI.setLocationRelativeTo(this);
+        buscarUsuariosGUI.setVisible(true);
+        if (buscarUsuariosGUI.getUsuarioSeleccionado() != null) {
+            cmbCredencial.removeAllItems();
+            cmbCredencial.addItem(buscarUsuariosGUI.getUsuarioSeleccionado());
+            cmbCredencial.addItem(null);
+        }
+    }//GEN-LAST:event_btnBuscarCredencialActionPerformed
+
+    private void btnNuevoUsuarioViajanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoUsuarioViajanteActionPerformed
+        DetalleUsuarioGUI gui_DetalleUsuario = new DetalleUsuarioGUI();
+        gui_DetalleUsuario.setModal(true);
+        gui_DetalleUsuario.setLocationRelativeTo(this);
+        gui_DetalleUsuario.setVisible(true);
+    }//GEN-LAST:event_btnNuevoUsuarioViajanteActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuscarCredencial;
+    private javax.swing.JButton btnBuscarUsuarioViajante;
     private javax.swing.JButton btnNuevaCondicionIVA;
     private javax.swing.JButton btnNuevaCredencial;
     private javax.swing.JButton btnNuevaLocalidad;
     private javax.swing.JButton btnNuevaProvincia;
     private javax.swing.JButton btnNuevoPais;
+    private javax.swing.JButton btnNuevoUsuarioViajante;
     private javax.swing.JButton btn_Guardar;
     private javax.swing.JComboBox<CondicionIVA> cmbCondicionIVA;
     private javax.swing.JComboBox<Usuario> cmbCredencial;

@@ -123,7 +123,7 @@
       <SubComponents>
         <Component class="javax.swing.JCheckBox" name="chkCriteria">
           <Properties>
-            <Property name="text" type="java.lang.String" value="ID Fiscal, Razon Social, Nombre Fantasia:"/>
+            <Property name="text" type="java.lang.String" value="N&#xba; Cliente, ID Fiscal, Razon Social, Nombre Fantasia:"/>
           </Properties>
           <Events>
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkCriteriaItemStateChanged"/>
@@ -211,7 +211,7 @@
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JComboBox&lt;Usuario&gt;()"/>
-            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Usuario&gt;"/>
           </AuxValues>
         </Component>
       </SubComponents>
