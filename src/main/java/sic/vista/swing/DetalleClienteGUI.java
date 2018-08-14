@@ -25,7 +25,7 @@ import sic.modelo.UsuarioActivo;
 
 public class DetalleClienteGUI extends JDialog {
 
-    private Cliente cliente = new Cliente();
+    private Cliente cliente;
     private List<CondicionIVA> condicionesIVA;
     private List<Pais> paises;
     private List<Provincia> provincias;
@@ -77,12 +77,6 @@ public class DetalleClienteGUI extends JDialog {
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
-        }
-        if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
-                && !rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
-                && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
-                && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-            cmbCredencial.setEnabled(false);
         }
     }
     
@@ -242,9 +236,11 @@ public class DetalleClienteGUI extends JDialog {
                 if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
                         && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
                     this.seleccionarViajanteSegunId(UsuarioActivo.getInstance().getUsuario().getId_Usuario());
+                    cmbViajante.setEnabled(false);
+                    cmbCredencial.setEnabled(false);
                 }
             }
-        }
+        }        
     }
         
     public Cliente getClienteDadoDeAlta() {
