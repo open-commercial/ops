@@ -25,7 +25,7 @@ import sic.modelo.UsuarioActivo;
 
 public class DetalleClienteGUI extends JDialog {
 
-    private Cliente cliente;
+    private Cliente cliente = new Cliente();
     private List<CondicionIVA> condicionesIVA;
     private List<Pais> paises;
     private List<Provincia> provincias;
@@ -236,7 +236,7 @@ public class DetalleClienteGUI extends JDialog {
     }
         
     public Cliente getClienteDadoDeAlta() {
-        return cliente;
+        return (cliente.getId_Cliente() != 0L? cliente : null);
     }
        
     @SuppressWarnings("unchecked")
