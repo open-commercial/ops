@@ -650,7 +650,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         pedido.setEstado(EstadoPedido.ABIERTO);
         List<RenglonPedido> renglonesPedido = new ArrayList<>();
         Arrays.asList(RestClient.getRestTemplate().postForObject("/pedidos/renglones",
-                renglones, RenglonPedido[].class)).stream().forEach(r -> {
+                renglones, RenglonPedido[].class)).forEach(r -> {
                     renglonesPedido.add(r);
                 });
         pedido.setRenglones(renglonesPedido);
@@ -774,7 +774,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
     public List<RenglonPedido> convertirRenglonesFacturaARenglonesPedido(List<RenglonFactura> renglonesDeFactura) {
         List<RenglonPedido> renglonesPedido = new ArrayList();
-        renglonesDeFactura.stream().forEach(r -> {
+        renglonesDeFactura.forEach(r -> {
             renglonesPedido.add(this.convertirRenglonFacturaARenglonPedido(r));
         });
         return renglonesPedido;
