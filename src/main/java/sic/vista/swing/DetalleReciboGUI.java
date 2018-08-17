@@ -260,11 +260,11 @@ public class DetalleReciboGUI extends JDialog {
             this.txtObservaciones.setText("SALDO.");
             if (cliente != null) {
                 BigDecimal saldoCC = RestClient.getRestTemplate()
-                        .getForObject("/cuentas-corrientes/clientes/" + cliente.getId_Cliente() + "/saldo", BigDecimal.class);
+                        .getForObject("/cuentas-corriente/clientes/" + cliente.getId_Cliente() + "/saldo", BigDecimal.class);
                 txtMonto.setValue((saldoCC.compareTo(BigDecimal.ZERO) < 0) ? saldoCC.negate() : BigDecimal.ZERO);
             } else if (proveedor != null) {
                 BigDecimal saldoCC = RestClient.getRestTemplate()
-                        .getForObject("/cuentas-corrientes/proveedores/" + proveedor.getId_Proveedor() + "/saldo", BigDecimal.class);
+                        .getForObject("/cuentas-corriente/proveedores/" + proveedor.getId_Proveedor() + "/saldo", BigDecimal.class);
                 txtMonto.setValue((saldoCC.compareTo(BigDecimal.ZERO) < 0) ? saldoCC.negate() : BigDecimal.ZERO);
             }
         } catch (RestClientResponseException ex) {

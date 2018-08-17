@@ -118,7 +118,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         this.cambiarEstadoEnabledComponentes(false);
         try {
             PaginaRespuestaRest<RenglonCuentaCorriente> response = RestClient.getRestTemplate()
-                    .exchange("/cuentas-corrientes/" + cuentaCorriente.getIdCuentaCorriente() + "/renglones"
+                    .exchange("/cuentas-corriente/" + cuentaCorriente.getIdCuentaCorriente() + "/renglones"
                             + "?pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA, HttpMethod.GET, null,
                             new ParameterizedTypeReference<PaginaRespuestaRest<RenglonCuentaCorriente>>() {
                     })
@@ -239,10 +239,10 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         try {
             if (cliente != null) {
                 ftxtSaldoFinal.setValue(RestClient.getRestTemplate()
-                        .getForObject("/cuentas-corrientes/clientes/" + cliente.getId_Cliente() + "/saldo", BigDecimal.class));
+                        .getForObject("/cuentas-corriente/clientes/" + cliente.getId_Cliente() + "/saldo", BigDecimal.class));
             } else if (proveedor != null) {
                 ftxtSaldoFinal.setValue(RestClient.getRestTemplate()
-                        .getForObject("/cuentas-corrientes/proveedores/" + proveedor.getId_Proveedor() + "/saldo", BigDecimal.class));
+                        .getForObject("/cuentas-corriente/proveedores/" + proveedor.getId_Proveedor() + "/saldo", BigDecimal.class));
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -265,7 +265,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         txtCondicionIVACliente.setText(cliente.getNombreCondicionIVA());
         try {
             cuentaCorriente = RestClient.getRestTemplate()
-                    .getForObject("/cuentas-corrientes/clientes/" + cliente.getId_Cliente(), CuentaCorrienteCliente.class);
+                    .getForObject("/cuentas-corriente/clientes/" + cliente.getId_Cliente(), CuentaCorrienteCliente.class);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -287,7 +287,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         txtCondicionIVACliente.setText(proveedor.getCondicionIVA().getNombre());
         try {
             cuentaCorriente = RestClient.getRestTemplate()
-                    .getForObject("/cuentas-corrientes/proveedores/" + proveedor.getId_Proveedor(), CuentaCorrienteProveedor.class);
+                    .getForObject("/cuentas-corriente/proveedores/" + proveedor.getId_Proveedor(), CuentaCorrienteProveedor.class);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -1006,7 +1006,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     
     private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
         if (Desktop.isDesktopSupported()) {
-            String uriReporte = "/cuentas-corrientes/clientes/" + this.cliente.getId_Cliente() + "/reporte?"
+            String uriReporte = "/cuentas-corriente/clientes/" + this.cliente.getId_Cliente() + "/reporte?"
                     + "pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
             ExportGUI exportGUI = new ExportGUI(uriReporte + "&formato=xlsx", "CuentaCorriente.xlsx",
                     uriReporte + "&formato=pdf", "CuentaCorriente.pdf");
