@@ -595,8 +595,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }
 
     private void recargarRenglonesSegunTipoDeFactura() {
-        try {
-            //resguardo de renglones
+        try {            
             List<RenglonFactura> resguardoRenglones = renglones;
             renglones = new ArrayList<>();
             resguardoRenglones.stream().map(renglonFactura -> {
@@ -610,9 +609,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         + "&descuentoPorcentaje=" + renglonFactura.getDescuento_porcentaje(),
                         RenglonFactura.class);
                 return renglon;
-            }).forEachOrdered(renglon -> {
-                this.agregarRenglon(renglon);
-            });
+            }).forEachOrdered(renglon -> this.agregarRenglon(renglon));
             EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglones.size()];
             if (!renglones.isEmpty()) {
                 if (tbl_Resultado.getRowCount() == 0) {
@@ -687,13 +684,13 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }
     
     private void finalizarPedido() {
-        PaginaRespuestaRest<Pedido> response = RestClient.getRestTemplate()
+        if (cliente != null) {
+            PaginaRespuestaRest<Pedido> response = RestClient.getRestTemplate() 
                 .exchange("/pedidos/busqueda/criteria?"
                         + "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                         + "&nroPedido=" + pedido.getNroPedido(), HttpMethod.GET, null,
                         new ParameterizedTypeReference<PaginaRespuestaRest<Pedido>>() {
-                }).getBody();
-        if (cliente != null) {
+                }).getBody();                                   
             if (response.getContent().isEmpty()) {
                 Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?idEmpresa="
                         + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
@@ -716,25 +713,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_seleccionar_cliente"),
                     "Aviso", JOptionPane.ERROR_MESSAGE);
         }
-    }
-    
-    public RenglonPedido convertirRenglonFacturaARenglonPedido(RenglonFactura renglonFactura) {
-        RenglonPedido nuevoRenglon = new RenglonPedido();
-        try {
-            nuevoRenglon= RestClient.getRestTemplate()
-                    .getForObject("/pedidos/renglon?"
-                            + "idProducto=" + renglonFactura.getId_ProductoItem()
-                            + "&cantidad=" + renglonFactura.getCantidad()
-                            + "&descuentoPorcentaje=" + renglonFactura.getDescuento_porcentaje(), RenglonPedido.class);
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        return nuevoRenglon;
     }
     
     private void lanzarReportePedido(Pedido pedido) {
@@ -775,7 +753,13 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     public List<RenglonPedido> convertirRenglonesFacturaARenglonesPedido(List<RenglonFactura> renglonesDeFactura) {
         List<RenglonPedido> renglonesPedido = new ArrayList();
         renglonesDeFactura.forEach(r -> {
-            renglonesPedido.add(this.convertirRenglonFacturaARenglonPedido(r));
+            RenglonPedido rp = RestClient.getRestTemplate()
+                .getForObject("/pedidos/renglon?"
+                        + "idProducto=" + r.getId_ProductoItem()
+                        + "&cantidad=" + r.getCantidad()
+                        + "&descuentoPorcentaje=" + r.getDescuento_porcentaje(),
+                        RenglonPedido.class);
+            renglonesPedido.add(rp);
         });
         return renglonesPedido;
     }
@@ -1597,9 +1581,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         for (int i = 0; i < indicesParaEliminar.length; i++) {
             estadoDeRenglones[indicesParaEliminar[i]] = EstadoRenglon.ELIMINADO;
         }
-        renglonesParaBorrar.stream().forEach((renglon) -> {
-            renglones.remove(renglon);
-        });
+        renglonesParaBorrar.forEach((renglon) -> renglones.remove(renglon));
         this.cargarRenglonesAlTable(estadoDeRenglones);
         this.calcularResultados();
     }//GEN-LAST:event_btn_QuitarProductoActionPerformed
