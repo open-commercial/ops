@@ -42,6 +42,7 @@ import sic.modelo.EstadoPedido;
 import sic.modelo.FacturaVenta;
 import sic.modelo.FormaDePago;
 import sic.modelo.Movimiento;
+import sic.modelo.NuevoRenglonPedido;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
 import sic.modelo.Rol;
@@ -645,12 +646,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         }
         pedido.setTotalEstimado(subTotalEstimado);
         pedido.setEstado(EstadoPedido.ABIERTO);
-        List<RenglonPedido> renglonesPedido = new ArrayList<>();
-        Arrays.asList(RestClient.getRestTemplate().postForObject("/pedidos/renglones",
-                renglones, RenglonPedido[].class)).forEach(r -> {
-                    renglonesPedido.add(r);
-                });
-        pedido.setRenglones(renglonesPedido);
+        pedido.setRenglones(this.calcularRenglonesPedido());
     }
     
     private Map<Long, BigDecimal> getProductosSinStockDisponible(List<RenglonFactura> renglonesFactura) {
@@ -738,7 +734,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
     private void actualizarPedido(Pedido pedido) {
         pedido = RestClient.getRestTemplate().getForObject("/pedidos/" + pedido.getId_Pedido(), Pedido.class);
-        pedido.setRenglones(this.convertirRenglonesFacturaARenglonesPedido(this.renglones));
+        pedido.setRenglones(this.calcularRenglonesPedido());
         BigDecimal subTotal = BigDecimal.ZERO;
         for (RenglonFactura r : renglones) {
             subTotal = subTotal.add(r.getImporte());
@@ -750,18 +746,15 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 + "&idCliente=" + cliente.getId_Cliente(), pedido);
     }
 
-    public List<RenglonPedido> convertirRenglonesFacturaARenglonesPedido(List<RenglonFactura> renglonesDeFactura) {
-        List<RenglonPedido> renglonesPedido = new ArrayList();
-        renglonesDeFactura.forEach(r -> {
-            RenglonPedido rp = RestClient.getRestTemplate()
-                .getForObject("/pedidos/renglon?"
-                        + "idProducto=" + r.getId_ProductoItem()
-                        + "&cantidad=" + r.getCantidad()
-                        + "&descuentoPorcentaje=" + r.getDescuento_porcentaje(),
-                        RenglonPedido.class);
-            renglonesPedido.add(rp);
-        });
-        return renglonesPedido;
+    public List<RenglonPedido> calcularRenglonesPedido() {
+        List<NuevoRenglonPedido> nuevosRenglonesPedido = new ArrayList();
+        this.renglones.forEach(r -> nuevosRenglonesPedido.add(NuevoRenglonPedido.builder()
+                .idProductoItem(r.getId_ProductoItem())
+                .cantidad(r.getCantidad())
+                .descuentoPorcentaje(r.getDescuento_porcentaje())
+                .build()));
+        return Arrays.asList(RestClient.getRestTemplate().postForObject("/pedidos/renglones",
+                nuevosRenglonesPedido, RenglonPedido[].class));
     }
 
     // Clase interna para manejar las hotkeys del TPV     
