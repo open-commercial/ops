@@ -342,7 +342,7 @@ public class DetalleUsuarioGUI extends JDialog {
                             roles.remove(Rol.VIAJANTE);
                             debeActualizar = true;
                         } else {
-                            chk_Comprador.setSelected(true);
+                            chk_Viajante.setSelected(true);
                             debeActualizar = false;
                         }
                     }
