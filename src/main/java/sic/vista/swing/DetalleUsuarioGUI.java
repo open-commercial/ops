@@ -333,7 +333,19 @@ public class DetalleUsuarioGUI extends JDialog {
                             roles.remove(Rol.COMPRADOR);
                             debeActualizar = true;
                         } else chk_Comprador.setSelected(true);
-                    } else debeActualizar = true;                   
+                    } else debeActualizar = true; 
+                    if (usuarioParaModificar.getRoles().contains(Rol.VIAJANTE) && !chk_Viajante.isSelected()) {
+                        int reply = JOptionPane.showConfirmDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_quitar_rol_viajante"),
+                                "Aviso", JOptionPane.YES_NO_OPTION);
+                        if (reply == JOptionPane.YES_OPTION) {
+                            roles.remove(Rol.VIAJANTE);
+                            debeActualizar = true;
+                        } else {
+                            chk_Viajante.setSelected(true);
+                            debeActualizar = false;
+                        }
+                    }
                     if (debeActualizar) {
                         usuarioParaModificar.setRoles(roles);
                         RestClient.getRestTemplate().put("/usuarios", usuarioParaModificar);                        
