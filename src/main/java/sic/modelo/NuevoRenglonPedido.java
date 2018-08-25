@@ -1,14 +1,16 @@
 package sic.modelo;
 
 import java.math.BigDecimal;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class NuevoRenglonPedido {
 
-    long idProductoItem;
+    private long idProductoItem;
     private BigDecimal cantidad;
     private BigDecimal descuentoPorcentaje;
 
