@@ -78,12 +78,6 @@ public class DetalleClienteGUI extends JDialog {
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-        if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
-                && !rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
-                && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
-                && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-            cmbCredencial.setEnabled(false);
-        }
     }
     
     private void seleccionarViajanteSegunId(Long idViajante) {
@@ -101,12 +95,6 @@ public class DetalleClienteGUI extends JDialog {
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
-        }
-        if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
-                && !rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
-                && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
-                && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-            cmbViajante.setEnabled(false);
         }
     }
 
@@ -244,11 +232,11 @@ public class DetalleClienteGUI extends JDialog {
                     this.seleccionarViajanteSegunId(UsuarioActivo.getInstance().getUsuario().getId_Usuario());
                 }
             }
-        }
+        }        
     }
         
     public Cliente getClienteDadoDeAlta() {
-        return cliente;
+        return (cliente.getId_Cliente() != 0L? cliente : null);
     }
        
     @SuppressWarnings("unchecked")

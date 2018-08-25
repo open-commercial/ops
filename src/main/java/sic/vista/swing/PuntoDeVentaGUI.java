@@ -42,6 +42,7 @@ import sic.modelo.EstadoPedido;
 import sic.modelo.FacturaVenta;
 import sic.modelo.FormaDePago;
 import sic.modelo.Movimiento;
+import sic.modelo.NuevoRenglonPedido;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
 import sic.modelo.Rol;
@@ -595,8 +596,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }
 
     private void recargarRenglonesSegunTipoDeFactura() {
-        try {
-            //resguardo de renglones
+        try {            
             List<RenglonFactura> resguardoRenglones = renglones;
             renglones = new ArrayList<>();
             resguardoRenglones.stream().map(renglonFactura -> {
@@ -610,9 +610,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         + "&descuentoPorcentaje=" + renglonFactura.getDescuento_porcentaje(),
                         RenglonFactura.class);
                 return renglon;
-            }).forEachOrdered(renglon -> {
-                this.agregarRenglon(renglon);
-            });
+            }).forEachOrdered(renglon -> this.agregarRenglon(renglon));
             EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglones.size()];
             if (!renglones.isEmpty()) {
                 if (tbl_Resultado.getRowCount() == 0) {
@@ -648,11 +646,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         }
         pedido.setTotalEstimado(subTotalEstimado);
         pedido.setEstado(EstadoPedido.ABIERTO);
-        List<RenglonPedido> renglonesPedido = new ArrayList<>();
-        renglones.stream().forEach(r -> {
-            renglonesPedido.add(this.convertirRenglonFacturaARenglonPedido(r));
-        });
-        pedido.setRenglones(renglonesPedido);
+        pedido.setRenglones(this.calcularRenglonesPedido());
     }
     
     private Map<Long, BigDecimal> getProductosSinStockDisponible(List<RenglonFactura> renglonesFactura) {
@@ -686,13 +680,13 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }
     
     private void finalizarPedido() {
-        PaginaRespuestaRest<Pedido> response = RestClient.getRestTemplate()
+        if (cliente != null) {
+            PaginaRespuestaRest<Pedido> response = RestClient.getRestTemplate() 
                 .exchange("/pedidos/busqueda/criteria?"
                         + "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                         + "&nroPedido=" + pedido.getNroPedido(), HttpMethod.GET, null,
                         new ParameterizedTypeReference<PaginaRespuestaRest<Pedido>>() {
-                }).getBody();
-        if (cliente != null) {
+                }).getBody();                                   
             if (response.getContent().isEmpty()) {
                 Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?idEmpresa="
                         + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
@@ -715,27 +709,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_seleccionar_cliente"),
                     "Aviso", JOptionPane.ERROR_MESSAGE);
         }
-    }
-    
-    public RenglonPedido convertirRenglonFacturaARenglonPedido(RenglonFactura renglonFactura) {
-        RenglonPedido nuevoRenglon = new RenglonPedido();
-        nuevoRenglon.setCantidad(renglonFactura.getCantidad());
-        nuevoRenglon.setDescuento_porcentaje(renglonFactura.getDescuento_porcentaje());
-        nuevoRenglon.setDescuento_neto(renglonFactura.getDescuento_neto());
-        try {
-            Producto producto = RestClient.getRestTemplate()
-                    .getForObject("/productos/" + renglonFactura.getId_ProductoItem(), Producto.class);
-            nuevoRenglon.setProducto(producto);
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        nuevoRenglon.setSubTotal(renglonFactura.getImporte());
-        return nuevoRenglon;
     }
     
     private void lanzarReportePedido(Pedido pedido) {
@@ -761,7 +734,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
     private void actualizarPedido(Pedido pedido) {
         pedido = RestClient.getRestTemplate().getForObject("/pedidos/" + pedido.getId_Pedido(), Pedido.class);
-        pedido.setRenglones(this.convertirRenglonesFacturaARenglonesPedido(this.renglones));
+        pedido.setRenglones(this.calcularRenglonesPedido());
         BigDecimal subTotal = BigDecimal.ZERO;
         for (RenglonFactura r : renglones) {
             subTotal = subTotal.add(r.getImporte());
@@ -773,12 +746,12 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 + "&idCliente=" + cliente.getId_Cliente(), pedido);
     }
 
-    public List<RenglonPedido> convertirRenglonesFacturaARenglonesPedido(List<RenglonFactura> renglonesDeFactura) {
-        List<RenglonPedido> renglonesPedido = new ArrayList();
-        renglonesDeFactura.stream().forEach(r -> {
-            renglonesPedido.add(this.convertirRenglonFacturaARenglonPedido(r));
-        });
-        return renglonesPedido;
+    public List<RenglonPedido> calcularRenglonesPedido() {
+        List<NuevoRenglonPedido> nuevosRenglonesPedido = new ArrayList();
+        this.renglones.forEach(r -> nuevosRenglonesPedido.add(
+                new NuevoRenglonPedido(r.getId_ProductoItem(), r.getCantidad(), r.getDescuento_porcentaje())));
+        return Arrays.asList(RestClient.getRestTemplate().postForObject("/pedidos/renglones",
+                nuevosRenglonesPedido, RenglonPedido[].class));
     }
 
     // Clase interna para manejar las hotkeys del TPV     
@@ -1598,9 +1571,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         for (int i = 0; i < indicesParaEliminar.length; i++) {
             estadoDeRenglones[indicesParaEliminar[i]] = EstadoRenglon.ELIMINADO;
         }
-        renglonesParaBorrar.stream().forEach((renglon) -> {
-            renglones.remove(renglon);
-        });
+        renglonesParaBorrar.forEach((renglon) -> renglones.remove(renglon));
         this.cargarRenglonesAlTable(estadoDeRenglones);
         this.calcularResultados();
     }//GEN-LAST:event_btn_QuitarProductoActionPerformed

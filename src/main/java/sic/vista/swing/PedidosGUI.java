@@ -359,10 +359,10 @@ public class PedidosGUI extends JInternalFrame {
                     .getForObject("/pedidos/" + pedidosTotal.get(row).getId_Pedido() + "/renglones", RenglonPedido[].class));
             renglones.stream().map(r -> {
                 Object[] fila = new Object[6];
-                fila[0] = r.getProducto().getCodigo();
-                fila[1] = r.getProducto().getDescripcion();
+                fila[0] = r.getCodigoProducto();
+                fila[1] = r.getDescripcionProducto();
                 fila[2] = r.getCantidad();
-                fila[3] = r.getProducto().getPrecioLista();
+                fila[3] = r.getPrecioDeListaProducto();
                 fila[4] = r.getDescuento_porcentaje();
                 fila[5] = r.getSubTotal();
                 return fila;
