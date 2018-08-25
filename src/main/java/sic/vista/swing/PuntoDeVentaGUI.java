@@ -748,8 +748,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
     public List<RenglonPedido> calcularRenglonesPedido() {
         List<NuevoRenglonPedido> nuevosRenglonesPedido = new ArrayList();
-        this.renglones.forEach(r -> 
-                new NuevoRenglonPedido(r.getId_ProductoItem(), r.getCantidad(), r.getDescuento_porcentaje()));
+        this.renglones.forEach(r -> nuevosRenglonesPedido.add(
+                new NuevoRenglonPedido(r.getId_ProductoItem(), r.getCantidad(), r.getDescuento_porcentaje())));
         return Arrays.asList(RestClient.getRestTemplate().postForObject("/pedidos/renglones",
                 nuevosRenglonesPedido, RenglonPedido[].class));
     }
