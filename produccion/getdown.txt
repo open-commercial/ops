@@ -1,5 +1,5 @@
 # The URL from which the client is downloaded
-appbase = https://github.com/globo-technology/sic-ops/releases/download/v46/
+appbase = https://globo-sic-ops-production.herokuapp.com/
 
 # UI Configuration
 ui.name = SIC-OPS
