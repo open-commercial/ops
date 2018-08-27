@@ -8,4 +8,4 @@ ui.name = SIC-OPS
 code = SIC-OPS-46.jar
 
 # The main entry point for the application
-class = sic.App
+class = manifest
