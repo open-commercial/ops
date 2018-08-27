@@ -1,0 +1,11 @@
+# The URL from which the client is downloaded
+appbase = https://github.com/globo-technology/sic-ops/releases/download/v46/
+
+# UI Configuration
+ui.name = SIC-OPS
+
+# Application jar files
+code = SIC-OPS-46.jar
+
+# The main entry point for the application
+class = sic.App

@@ -1,0 +1,3 @@
+getdown.txt = 15c39b11ece48e989ea32f2ed086ddcc
+SIC-OPS-46.jar = d0505f4428c07dbbaae9250c56b8f6d0
+digest.txt = 15f6c7d1b77f66d604ba6c22cf908977
