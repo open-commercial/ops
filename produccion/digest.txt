@@ -1,3 +1,3 @@
-getdown.txt = fb8526df9d1912ae968a0e84c8a91e75
-SIC-OPS-46.jar = d0505f4428c07dbbaae9250c56b8f6d0
-digest.txt = ff7fa5d9cd94c62df0fe05465affc7b1
+getdown.txt = c8e652b9bd0dd3d67675a7fb4db1de8b
+SIC-OPS.jar = d0505f4428c07dbbaae9250c56b8f6d0
+digest.txt = 2b1e6fee21251cf63b946a2f66f00875
