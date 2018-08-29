@@ -177,7 +177,25 @@ public class FacturasCompraGUI extends JInternalFrame {
             }
             criteria += "&nroSerie=" + Integer.valueOf(txt_SerieFactura.getValue().toString())
                     + "&nroFactura=" + Integer.valueOf(txt_NroFactura.getValue().toString());
-        }     
+        }
+        int seleccionOrden = cmbOrden.getSelectedIndex();
+        switch (seleccionOrden) {
+            case 0:
+                criteria += "&ordenarPor=fecha";
+                break;
+            case 1:
+                criteria += "&ordenarPor=total";
+                break;
+        }
+        int seleccionDireccion = cmbSentido.getSelectedIndex();
+        switch (seleccionDireccion) {
+            case 0:
+                criteria += "&sentido=DESC";
+                break;
+            case 1:
+                criteria += "&sentido=ASC";
+                break;
+        }
         String criteriaBusqueda = "/facturas/compra/busqueda/criteria?" + criteria;
         criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
         try {
@@ -322,6 +340,9 @@ public class FacturasCompraGUI extends JInternalFrame {
         txt_ResultTotalIVACompra = new javax.swing.JFormattedTextField();
         txt_ResultGastoTotal = new javax.swing.JFormattedTextField();
         lbl_TotalFacturado = new javax.swing.JLabel();
+        panelOrden = new javax.swing.JPanel();
+        cmbOrden = new javax.swing.JComboBox<>();
+        cmbSentido = new javax.swing.JComboBox<>();
 
         setClosable(true);
         setMaximizable(true);
@@ -568,7 +589,7 @@ public class FacturasCompraGUI extends JInternalFrame {
                 .addComponent(btn_Eliminar)
                 .addGap(0, 0, 0)
                 .addComponent(btn_VerDetalle)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 292, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_TotalFacturado, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lbl_TotalIVACompra, javax.swing.GroupLayout.Alignment.TRAILING))
@@ -603,6 +624,33 @@ public class FacturasCompraGUI extends JInternalFrame {
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Eliminar, btn_Nuevo, btn_VerDetalle});
 
+        panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
+
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha", "Total" }));
+
+        cmbSentido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descendente", "Ascendente" }));
+
+        javax.swing.GroupLayout panelOrdenLayout = new javax.swing.GroupLayout(panelOrden);
+        panelOrden.setLayout(panelOrdenLayout);
+        panelOrdenLayout.setHorizontalGroup(
+            panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOrdenLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cmbOrden, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbSentido, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        panelOrdenLayout.setVerticalGroup(
+            panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOrdenLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(cmbOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cmbSentido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -610,12 +658,15 @@ public class FacturasCompraGUI extends JInternalFrame {
             .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -786,6 +837,8 @@ public class FacturasCompraGUI extends JInternalFrame {
     private javax.swing.JCheckBox chk_NumFactura;
     private javax.swing.JCheckBox chk_Proveedor;
     private javax.swing.JCheckBox chk_TipoFactura;
+    private javax.swing.JComboBox<String> cmbOrden;
+    private javax.swing.JComboBox<String> cmbSentido;
     private javax.swing.JComboBox cmb_Proveedor;
     private javax.swing.JComboBox cmb_TipoFactura;
     private com.toedter.calendar.JDateChooser dc_FechaDesde;
@@ -797,6 +850,7 @@ public class FacturasCompraGUI extends JInternalFrame {
     private javax.swing.JLabel lbl_TotalFacturado;
     private javax.swing.JLabel lbl_TotalIVACompra;
     private javax.swing.JPanel panelFiltros;
+    private javax.swing.JPanel panelOrden;
     private javax.swing.JPanel panelResultados;
     private javax.swing.JScrollPane sp_Resultados;
     private javax.swing.JTable tbl_Resultados;

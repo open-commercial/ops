@@ -330,6 +330,36 @@ public class ProductosGUI extends JInternalFrame {
                 criteriaCosto += "&publicos=false";
             }
         }
+        int seleccionOrden = cmbOrden.getSelectedIndex();
+        switch (seleccionOrden) {
+            case 0:
+                criteriaBusqueda += "&ordenarPor=descripcion";
+                break;
+            case 1:
+                criteriaBusqueda += "&ordenarPor=codigo";
+                break;
+            case 2:
+                criteriaBusqueda += "&ordenarPor=cantidad";
+                break;
+            case 3:
+                criteriaBusqueda += "&ordenarPor=precioCosto";
+                break;
+            case 4:
+                criteriaBusqueda += "&ordenarPor=ganancia_porcentaje";
+                break;
+            case 5:
+                criteriaBusqueda += "&ordenarPor=precioLista";
+                break;
+        }
+        int seleccionDireccion = cmbSentido.getSelectedIndex();
+        switch (seleccionDireccion) {
+            case 0:
+                criteriaBusqueda += "&sentido=DESC";
+                break;
+            case 1:
+                criteriaBusqueda += "&sentido=ASC";
+                break;
+        }
         criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
         try {
             PaginaRespuestaRest<Producto> response = RestClient.getRestTemplate()
@@ -394,6 +424,9 @@ public class ProductosGUI extends JInternalFrame {
         txt_ValorStock = new javax.swing.JFormattedTextField();
         lbl_ValorStock = new javax.swing.JLabel();
         btnExportar = new javax.swing.JButton();
+        panelOrden = new javax.swing.JPanel();
+        cmbOrden = new javax.swing.JComboBox<>();
+        cmbSentido = new javax.swing.JComboBox<>();
 
         setClosable(true);
         setMaximizable(true);
@@ -647,7 +680,7 @@ public class ProductosGUI extends JInternalFrame {
                 .addComponent(lbl_ValorStock)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txt_ValorStock, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 818, Short.MAX_VALUE)
+            .addComponent(sp_Resultados)
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnExportar, btn_Eliminar, btn_Modificar, btn_Nuevo});
@@ -668,6 +701,33 @@ public class ProductosGUI extends JInternalFrame {
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Eliminar, btn_Modificar, btn_Nuevo});
 
+        panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
+
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descripción", "Código", "Cantidad", "Precio de Costo", "Ganancia Porcentaje", "Precio de Lista" }));
+
+        cmbSentido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descendente", "Ascendente" }));
+
+        javax.swing.GroupLayout panelOrdenLayout = new javax.swing.GroupLayout(panelOrden);
+        panelOrden.setLayout(panelOrdenLayout);
+        panelOrdenLayout.setHorizontalGroup(
+            panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelOrdenLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cmbSentido, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cmbOrden, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(62, 62, 62))
+        );
+        panelOrdenLayout.setVerticalGroup(
+            panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOrdenLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(cmbOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmbSentido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -675,12 +735,15 @@ public class ProductosGUI extends JInternalFrame {
             .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -893,11 +956,14 @@ public class ProductosGUI extends JInternalFrame {
     private javax.swing.JCheckBox chk_Proveedor;
     private javax.swing.JCheckBox chk_Rubro;
     private javax.swing.JCheckBox chk_visibilidad;
+    private javax.swing.JComboBox<String> cmbOrden;
+    private javax.swing.JComboBox<String> cmbSentido;
     private javax.swing.JComboBox cmb_Proveedor;
     private javax.swing.JComboBox cmb_Rubro;
     private javax.swing.JLabel lbl_ValorStock;
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;
+    private javax.swing.JPanel panelOrden;
     private javax.swing.JPanel panelResultados;
     private javax.swing.JRadioButton rb_Faltantes;
     private javax.swing.JRadioButton rb_Todos;

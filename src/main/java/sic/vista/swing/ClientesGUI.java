@@ -319,6 +319,24 @@ public class ClientesGUI extends JInternalFrame {
                 criteriaBusqueda += "idLocalidad=" + String.valueOf((((Localidad) cmbLocalidad.getSelectedItem()).getId_Localidad())) + "&";
             }
         }
+        int seleccionOrden = cmbOrden.getSelectedIndex();
+        switch (seleccionOrden) {
+            case 0:
+                criteriaBusqueda += "ordenarPor=razonSocial&";
+                break;
+            case 1:
+                criteriaBusqueda += "ordenarPor=fechaAlta&";
+                break;
+        }
+        int seleccionDireccion = cmbSentido.getSelectedIndex();
+        switch (seleccionDireccion) {
+            case 0:
+                criteriaBusqueda += "sentido=DESC&";
+                break;
+            case 1:
+                criteriaBusqueda += "sentido=ASC&";
+                break;
+        }
         criteriaBusqueda += "idEmpresa=" + String.valueOf(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
         criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
         try {
@@ -365,6 +383,9 @@ public class ClientesGUI extends JInternalFrame {
         btn_Eliminar = new javax.swing.JButton();
         btn_setPredeterminado = new javax.swing.JButton();
         btnCuentaCorriente = new javax.swing.JButton();
+        panelOrden = new javax.swing.JPanel();
+        cmbOrden = new javax.swing.JComboBox<>();
+        cmbSentido = new javax.swing.JComboBox<>();
 
         setClosable(true);
         setMaximizable(true);
@@ -572,7 +593,7 @@ public class ClientesGUI extends JInternalFrame {
                 .addComponent(btn_setPredeterminado)
                 .addGap(0, 0, 0)
                 .addComponent(btnCuentaCorriente)
-                .addGap(0, 148, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Eliminar, btn_Modificar, btn_Nuevo});
@@ -592,6 +613,33 @@ public class ClientesGUI extends JInternalFrame {
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCuentaCorriente, btn_Eliminar, btn_Modificar, btn_Nuevo, btn_setPredeterminado});
 
+        panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar"));
+
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Razón social", "Fecha de alta" }));
+
+        cmbSentido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descendente", "Ascendente" }));
+
+        javax.swing.GroupLayout panelOrdenLayout = new javax.swing.GroupLayout(panelOrden);
+        panelOrden.setLayout(panelOrdenLayout);
+        panelOrdenLayout.setHorizontalGroup(
+            panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOrdenLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cmbOrden, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbSentido, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        panelOrdenLayout.setVerticalGroup(
+            panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOrdenLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(cmbOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cmbSentido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -599,12 +647,15 @@ public class ClientesGUI extends JInternalFrame {
             .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -852,11 +903,14 @@ public class ClientesGUI extends JInternalFrame {
     private javax.swing.JCheckBox chkViajante;
     private javax.swing.JCheckBox chk_Ubicacion;
     private javax.swing.JComboBox cmbLocalidad;
+    private javax.swing.JComboBox<String> cmbOrden;
     private javax.swing.JComboBox cmbPais;
     private javax.swing.JComboBox cmbProvincia;
+    private javax.swing.JComboBox<String> cmbSentido;
     private javax.swing.JComboBox<Usuario> cmbViajante;
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;
+    private javax.swing.JPanel panelOrden;
     private javax.swing.JPanel panelResultados;
     private javax.swing.JScrollPane sp_Resultados;
     private javax.swing.JTable tbl_Resultados;

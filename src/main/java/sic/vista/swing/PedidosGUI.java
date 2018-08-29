@@ -46,6 +46,8 @@ public class PedidosGUI extends JInternalFrame {
     private List<Pedido> pedidosParcial = new ArrayList<>();
     private ModeloTabla modeloTablaPedidos;
     private ModeloTabla modeloTablaRenglones;  
+    private Cliente clienteSeleccionado;
+    private Usuario usuarioSeleccionado;
     private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame =  new Dimension(880, 600);
@@ -80,11 +82,11 @@ public class PedidosGUI extends JInternalFrame {
         if (chkEstado.isSelected()) {
             criteria += "&estadoPedido=" + cmbEstado.getSelectedItem().toString();
         }
-        if (chk_Cliente.isSelected()) {
-            criteria += "&idCliente=" + ((Cliente) cmb_Cliente.getSelectedItem()).getId_Cliente();
+        if (chk_Cliente.isSelected() && clienteSeleccionado != null) {
+            criteria += "&idCliente=" + clienteSeleccionado.getId_Cliente();
         }
-        if (chk_Vendedor.isSelected()) {
-            criteria += "&idUsuario=" + ((Usuario) cmb_Vendedor.getSelectedItem()).getId_Usuario();
+        if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
+            criteria += "&idUsuario=" + usuarioSeleccionado.getId_Usuario();
         }
         criteria += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
         try {
@@ -145,15 +147,15 @@ public class PedidosGUI extends JInternalFrame {
         }
         chk_Cliente.setEnabled(status);
         if (status == true && chk_Cliente.isSelected() == true) {
-            cmb_Cliente.setEnabled(true);
+            btnBuscarCliente.setEnabled(true);
         } else {
-            cmb_Cliente.setEnabled(false);
+            btnBuscarCliente.setEnabled(false);
         }        
-        chk_Vendedor.setEnabled(status);
-        if (status == true && chk_Vendedor.isSelected() == true) {
-            cmb_Vendedor.setEnabled(true);
+        chk_Usuario.setEnabled(status);
+        if (status == true && chk_Usuario.isSelected() == true) {
+            btnBuscarUsuarios.setEnabled(true);
         } else {
-            cmb_Vendedor.setEnabled(false);
+            btnBuscarUsuarios.setEnabled(false);
         }        
         btn_Buscar.setEnabled(status);        
         btnNuevoPedido.setEnabled(status);
@@ -285,52 +287,6 @@ public class PedidosGUI extends JInternalFrame {
         tbl_Pedidos.getColumnModel().getColumn(1).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
     }
 
-    private void cargarClientes() {
-        try {
-            cmb_Cliente.removeAllItems();
-            String criteriaBusqueda = "/clientes/busqueda/criteria?idEmpresa="
-                    + String.valueOf(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())
-                    + "&pagina=0&tamanio=" + Integer.MAX_VALUE
-                    + "&conSaldo=false";
-            PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
-                    .exchange(criteriaBusqueda, HttpMethod.GET, null,
-                            new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {
-                    })
-                    .getBody();
-            response.getContent().stream().forEach((c) -> {
-                cmb_Cliente.addItem(c);
-            });
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void cargarUsuarios() {
-        try {
-            PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                    .exchange("/usuarios/busqueda/criteria?"
-                            + "pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
-                            new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
-                    })
-                    .getBody();
-            response.getContent().stream().forEach(u -> {
-                cmb_Vendedor.addItem(u);
-            });
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
     private boolean existeClienteDisponible() {
         PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
                 .exchange("/clientes/busqueda/criteria?idEmpresa="
@@ -419,14 +375,16 @@ public class PedidosGUI extends JInternalFrame {
         dc_FechaHasta = new com.toedter.calendar.JDateChooser();
         lbl_Hasta = new javax.swing.JLabel();
         chk_Cliente = new javax.swing.JCheckBox();
-        cmb_Cliente = new javax.swing.JComboBox();
-        cmb_Vendedor = new javax.swing.JComboBox();
-        chk_Vendedor = new javax.swing.JCheckBox();
+        chk_Usuario = new javax.swing.JCheckBox();
         btn_Buscar = new javax.swing.JButton();
         txt_NumeroPedido = new javax.swing.JFormattedTextField();
         lbl_cantResultados = new javax.swing.JLabel();
         chkEstado = new javax.swing.JCheckBox();
         cmbEstado = new javax.swing.JComboBox<>();
+        txtCliente = new javax.swing.JTextField();
+        btnBuscarCliente = new javax.swing.JButton();
+        txtUsuario = new javax.swing.JTextField();
+        btnBuscarUsuarios = new javax.swing.JButton();
         panel_resultados = new javax.swing.JPanel();
         sp_RenglonesPedido = new javax.swing.JScrollPane();
         tbl_RenglonesPedido = new javax.swing.JTable();
@@ -494,15 +452,10 @@ public class PedidosGUI extends JInternalFrame {
             }
         });
 
-        cmb_Cliente.setToolTipText("");
-        cmb_Cliente.setEnabled(false);
-
-        cmb_Vendedor.setEnabled(false);
-
-        chk_Vendedor.setText("Usuario:");
-        chk_Vendedor.addItemListener(new java.awt.event.ItemListener() {
+        chk_Usuario.setText("Usuario:");
+        chk_Usuario.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                chk_VendedorItemStateChanged(evt);
+                chk_UsuarioItemStateChanged(evt);
             }
         });
 
@@ -540,51 +493,82 @@ public class PedidosGUI extends JInternalFrame {
 
         cmbEstado.setEnabled(false);
 
+        txtCliente.setEditable(false);
+        txtCliente.setBackground(new java.awt.Color(69, 73, 74));
+        txtCliente.setEnabled(false);
+        txtCliente.setOpaque(false);
+
+        btnBuscarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
+        btnBuscarCliente.setEnabled(false);
+        btnBuscarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarClienteActionPerformed(evt);
+            }
+        });
+
+        txtUsuario.setEditable(false);
+        txtUsuario.setEnabled(false);
+        txtUsuario.setOpaque(false);
+
+        btnBuscarUsuarios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
+        btnBuscarUsuarios.setEnabled(false);
+        btnBuscarUsuarios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarUsuariosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panel_FiltrosLayout = new javax.swing.GroupLayout(panel_Filtros);
         panel_Filtros.setLayout(panel_FiltrosLayout);
         panel_FiltrosLayout.setHorizontalGroup(
             panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_FiltrosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_FiltrosLayout.createSequentialGroup()
                         .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(chk_Cliente, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(chk_Fecha, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(chk_Vendedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(cmb_Cliente, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_FiltrosLayout.createSequentialGroup()
-                                .addComponent(lbl_Desde)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(chk_Usuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, 0)
+                        .addComponent(lbl_Desde)
+                        .addGap(0, 0, 0)
+                        .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(panel_FiltrosLayout.createSequentialGroup()
                                 .addComponent(dc_FechaDesde, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lbl_Hasta)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(dc_FechaHasta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(cmb_Vendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addGroup(panel_FiltrosLayout.createSequentialGroup()
+                                .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, 0)
+                                .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnBuscarCliente, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(btnBuscarUsuarios, javax.swing.GroupLayout.Alignment.TRAILING)))))
+                    .addComponent(btn_Buscar))
+                .addGap(0, 0, 0)
+                .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panel_FiltrosLayout.createSequentialGroup()
                         .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(chkEstado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(chk_NumeroPedido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(cmbEstado, 0, 200, Short.MAX_VALUE)
-                            .addComponent(txt_NumeroPedido)))
-                    .addGroup(panel_FiltrosLayout.createSequentialGroup()
-                        .addComponent(btn_Buscar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(txt_NumeroPedido))))
+                .addContainerGap())
         );
         panel_FiltrosLayout.setVerticalGroup(
             panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_FiltrosLayout.createSequentialGroup()
                 .addGap(2, 2, 2)
                 .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(chk_Fecha)
                     .addComponent(lbl_Desde)
+                    .addComponent(chk_Fecha)
                     .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_Hasta)
                     .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -592,22 +576,22 @@ public class PedidosGUI extends JInternalFrame {
                     .addComponent(txt_NumeroPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(btnBuscarCliente)
+                    .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chk_Cliente)
-                    .addComponent(cmb_Cliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chkEstado)
-                    .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chkEstado))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(chk_Vendedor)
-                    .addComponent(cmb_Vendedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnBuscarUsuarios)
+                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chk_Usuario))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_Buscar))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btn_Buscar)
+                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
-
-        panel_FiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmb_Cliente, cmb_Vendedor, txt_NumeroPedido});
 
         panel_resultados.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados"));
 
@@ -718,9 +702,9 @@ public class PedidosGUI extends JInternalFrame {
         panel_resultadosLayout.setVerticalGroup(
             panel_resultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_resultadosLayout.createSequentialGroup()
-                .addComponent(sp_Pedidos, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+                .addComponent(sp_Pedidos, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_RenglonesPedido, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+                .addComponent(sp_RenglonesPedido, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel_resultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNuevoPedido)
@@ -740,7 +724,7 @@ public class PedidosGUI extends JInternalFrame {
             .addComponent(panel_resultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panel_Filtros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 80, Short.MAX_VALUE))
+                .addGap(0, 36, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -761,25 +745,25 @@ public class PedidosGUI extends JInternalFrame {
 
     private void chk_ClienteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ClienteItemStateChanged
         if (chk_Cliente.isSelected() == true) {
-            cmb_Cliente.setEnabled(true);
-            this.cargarClientes();
-            cmb_Cliente.requestFocus();
+            btnBuscarCliente.setEnabled(true);
+            btnBuscarCliente.requestFocus();
+            txtCliente.setEnabled(true);
         } else {
-            cmb_Cliente.removeAllItems();
-            cmb_Cliente.setEnabled(false);
+            btnBuscarCliente.setEnabled(false);
+            txtCliente.setEnabled(false);
         }
     }//GEN-LAST:event_chk_ClienteItemStateChanged
 
-    private void chk_VendedorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_VendedorItemStateChanged
-        if (chk_Vendedor.isSelected() == true) {
-            cmb_Vendedor.setEnabled(true);
-            this.cargarUsuarios();
-            cmb_Vendedor.requestFocus();
+    private void chk_UsuarioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UsuarioItemStateChanged
+        if (chk_Usuario.isSelected() == true) {
+            btnBuscarUsuarios.setEnabled(true);
+            btnBuscarUsuarios.requestFocus();
+            txtUsuario.setEnabled(true);
         } else {
-            cmb_Vendedor.removeAllItems();
-            cmb_Vendedor.setEnabled(false);
+            btnBuscarUsuarios.setEnabled(false);
+            txtUsuario.setEnabled(false);
         }
-    }//GEN-LAST:event_chk_VendedorItemStateChanged
+    }//GEN-LAST:event_chk_UsuarioItemStateChanged
 
     private void chk_NumeroPedidoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_NumeroPedidoItemStateChanged
         if (chk_NumeroPedido.isSelected() == true) {
@@ -906,8 +890,7 @@ public class PedidosGUI extends JInternalFrame {
                 && rolesDeUsuarioActivo.contains(Rol.VIAJANTE)) {
             btnEliminarPedido.setEnabled(false);
             btnFacturar.setEnabled(false);
-            chk_Vendedor.setEnabled(false);
-            cmb_Vendedor.setEnabled(false);
+            chk_Usuario.setEnabled(false);
         }
     }
         
@@ -1018,7 +1001,32 @@ public class PedidosGUI extends JInternalFrame {
         btn_BuscarActionPerformed(null);
     }//GEN-LAST:event_txt_NumeroPedidoActionPerformed
 
+    private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarClienteActionPerformed
+        BuscarClientesGUI buscarClientesGUI = new BuscarClientesGUI();
+        buscarClientesGUI.setModal(true);
+        buscarClientesGUI.setLocationRelativeTo(this);
+        buscarClientesGUI.setVisible(true);
+        if (buscarClientesGUI.getClienteSeleccionado() != null) {
+            clienteSeleccionado = buscarClientesGUI.getClienteSeleccionado();
+            txtCliente.setText(clienteSeleccionado.getRazonSocial());
+        }
+    }//GEN-LAST:event_btnBuscarClienteActionPerformed
+
+    private void btnBuscarUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarUsuariosActionPerformed
+        Rol[] rolesParaFiltrar = new Rol[]{Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR, Rol.VIAJANTE, Rol.COMPRADOR};
+        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar);
+        buscarUsuariosGUI.setModal(true);
+        buscarUsuariosGUI.setLocationRelativeTo(this);
+        buscarUsuariosGUI.setVisible(true);
+        if (buscarUsuariosGUI.getUsuarioSeleccionado() != null) {
+            usuarioSeleccionado = buscarUsuariosGUI.getUsuarioSeleccionado();
+            txtUsuario.setText(usuarioSeleccionado.toString());
+        }
+    }//GEN-LAST:event_btnBuscarUsuariosActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuscarCliente;
+    private javax.swing.JButton btnBuscarUsuarios;
     private javax.swing.JButton btnEliminarPedido;
     private javax.swing.JButton btnFacturar;
     private javax.swing.JButton btnImprimirPedido;
@@ -1030,10 +1038,8 @@ public class PedidosGUI extends JInternalFrame {
     private javax.swing.JCheckBox chk_Cliente;
     private javax.swing.JCheckBox chk_Fecha;
     private javax.swing.JCheckBox chk_NumeroPedido;
-    private javax.swing.JCheckBox chk_Vendedor;
+    private javax.swing.JCheckBox chk_Usuario;
     private javax.swing.JComboBox<String> cmbEstado;
-    private javax.swing.JComboBox cmb_Cliente;
-    private javax.swing.JComboBox cmb_Vendedor;
     private com.toedter.calendar.JDateChooser dc_FechaDesde;
     private com.toedter.calendar.JDateChooser dc_FechaHasta;
     private javax.swing.JLabel lbl_Desde;
@@ -1045,6 +1051,8 @@ public class PedidosGUI extends JInternalFrame {
     private javax.swing.JScrollPane sp_RenglonesPedido;
     private javax.swing.JTable tbl_Pedidos;
     private javax.swing.JTable tbl_RenglonesPedido;
+    private javax.swing.JTextField txtCliente;
+    private javax.swing.JTextField txtUsuario;
     private javax.swing.JFormattedTextField txt_NumeroPedido;
     // End of variables declaration//GEN-END:variables
 }
