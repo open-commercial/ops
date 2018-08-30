@@ -201,11 +201,11 @@ public class ProductosGUI extends JInternalFrame {
             fila[6] = producto.isIlimitado();
             fila[7] = producto.getNombreMedida();
             fila[8] = producto.getPrecioCosto();
-            fila[9] = producto.getGanancia_porcentaje();
-            fila[10] = producto.getGanancia_neto();
+            fila[9] = producto.getGananciaPorcentaje();
+            fila[10] = producto.getGananciaNeto();
             fila[11] = producto.getPrecioVentaPublico();
-            fila[12] = producto.getIva_porcentaje();
-            fila[13] = producto.getIva_neto();
+            fila[12] = producto.getIvaPorcentaje();
+            fila[13] = producto.getIvaNeto();
             fila[14] = producto.getPrecioLista();
             fila[15] = producto.getNombreRubro();
             fila[16] = producto.getFechaUltimaModificacion();
@@ -345,7 +345,7 @@ public class ProductosGUI extends JInternalFrame {
                 criteriaBusqueda += "&ordenarPor=precioCosto";
                 break;
             case 4:
-                criteriaBusqueda += "&ordenarPor=ganancia_porcentaje";
+                criteriaBusqueda += "&ordenarPor=gananciaPorcentaje";
                 break;
             case 5:
                 criteriaBusqueda += "&ordenarPor=precioLista";
@@ -354,10 +354,10 @@ public class ProductosGUI extends JInternalFrame {
         int seleccionDireccion = cmbSentido.getSelectedIndex();
         switch (seleccionDireccion) {
             case 0:
-                criteriaBusqueda += "&sentido=DESC";
+                criteriaBusqueda += "&sentido=ASC";
                 break;
             case 1:
-                criteriaBusqueda += "&sentido=ASC";
+                criteriaBusqueda += "&sentido=DESC";
                 break;
         }
         criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
@@ -705,7 +705,7 @@ public class ProductosGUI extends JInternalFrame {
 
         cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descripción", "Código", "Cantidad", "Precio de Costo", "Ganancia Porcentaje", "Precio de Lista" }));
 
-        cmbSentido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descendente", "Ascendente" }));
+        cmbSentido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ascendente", "Descendente" }));
 
         javax.swing.GroupLayout panelOrdenLayout = new javax.swing.GroupLayout(panelOrden);
         panelOrden.setLayout(panelOrdenLayout);
@@ -736,7 +736,7 @@ public class ProductosGUI extends JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

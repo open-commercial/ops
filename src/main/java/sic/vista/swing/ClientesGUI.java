@@ -331,10 +331,10 @@ public class ClientesGUI extends JInternalFrame {
         int seleccionDireccion = cmbSentido.getSelectedIndex();
         switch (seleccionDireccion) {
             case 0:
-                criteriaBusqueda += "sentido=DESC&";
+                criteriaBusqueda += "sentido=ASC&";
                 break;
             case 1:
-                criteriaBusqueda += "sentido=ASC&";
+                criteriaBusqueda += "sentido=DESC&";
                 break;
         }
         criteriaBusqueda += "idEmpresa=" + String.valueOf(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
@@ -617,7 +617,7 @@ public class ClientesGUI extends JInternalFrame {
 
         cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Razón social", "Fecha de alta" }));
 
-        cmbSentido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descendente", "Ascendente" }));
+        cmbSentido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ascendente", "Descendente" }));
 
         javax.swing.GroupLayout panelOrdenLayout = new javax.swing.GroupLayout(panelOrden);
         panelOrden.setLayout(panelOrdenLayout);

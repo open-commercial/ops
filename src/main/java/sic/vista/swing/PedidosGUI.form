@@ -33,7 +33,7 @@
           <Component id="panel_resultados" max="32767" attributes="0"/>
           <Group type="102" alignment="0" attributes="0">
               <Component id="panel_Filtros" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="36" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="30" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -70,22 +70,22 @@
                               <Component id="chk_Usuario" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="lbl_Desde" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Component id="dc_FechaDesde" max="32767" attributes="0"/>
+                                  <Component id="lbl_Desde" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                  <Component id="dc_FechaDesde" pref="165" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="lbl_Hasta" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="dc_FechaHasta" max="32767" attributes="0"/>
+                                  <Component id="dc_FechaHasta" pref="165" max="32767" attributes="0"/>
                               </Group>
-                              <Group type="102" attributes="0">
+                              <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="txtUsuario" min="-2" pref="337" max="-2" attributes="0"/>
-                                      <Component id="txtCliente" min="-2" pref="337" max="-2" attributes="0"/>
+                                      <Component id="txtCliente" max="32767" attributes="0"/>
+                                      <Component id="txtUsuario" max="32767" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="btnBuscarCliente" alignment="1" min="-2" max="-2" attributes="0"/>
                                       <Component id="btnBuscarUsuarios" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -129,16 +129,16 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="btnBuscarCliente" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtCliente" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnBuscarCliente" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtCliente" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="chk_Cliente" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="cmbEstado" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="chkEstado" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="btnBuscarUsuarios" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtUsuario" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnBuscarUsuarios" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtUsuario" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="chk_Usuario" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>

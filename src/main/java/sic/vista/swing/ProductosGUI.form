@@ -41,7 +41,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="panelFiltros" min="-2" max="-2" attributes="2"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="panelOrden" min="-2" pref="197" max="-2" attributes="0"/>
+              <Component id="panelOrden" min="-2" pref="212" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -492,8 +492,8 @@
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="2">
-                <StringItem index="0" value="Descendente"/>
-                <StringItem index="1" value="Ascendente"/>
+                <StringItem index="0" value="Ascendente"/>
+                <StringItem index="1" value="Descendente"/>
               </StringArray>
             </Property>
           </Properties>
