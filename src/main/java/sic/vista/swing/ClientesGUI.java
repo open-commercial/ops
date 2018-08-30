@@ -613,7 +613,7 @@ public class ClientesGUI extends JInternalFrame {
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCuentaCorriente, btn_Eliminar, btn_Modificar, btn_Nuevo, btn_setPredeterminado});
 
-        panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar"));
+        panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar Por"));
 
         cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Razón social", "Fecha de alta" }));
 
