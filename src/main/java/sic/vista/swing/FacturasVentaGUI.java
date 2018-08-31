@@ -897,7 +897,7 @@ public class FacturasVentaGUI extends JInternalFrame {
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
 
-        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha", "Cliente", "Total" }));
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha Factura", "Cliente", "Total" }));
 
         cmbSentido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descendente", "Ascendente" }));
 
@@ -907,9 +907,9 @@ public class FacturasVentaGUI extends JInternalFrame {
             panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelOrdenLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cmbOrden, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmbSentido, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cmbOrden, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cmbSentido, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelOrdenLayout.setVerticalGroup(

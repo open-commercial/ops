@@ -440,11 +440,11 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="cmbOrden" alignment="1" min="-2" pref="166" max="-2" attributes="0"/>
-                      <Component id="cmbSentido" alignment="1" min="-2" pref="166" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="cmbOrden" max="32767" attributes="0"/>
+                      <Component id="cmbSentido" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -467,7 +467,7 @@
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="2">
-                <StringItem index="0" value="Fecha"/>
+                <StringItem index="0" value="Fecha Factura"/>
                 <StringItem index="1" value="Total"/>
               </StringArray>
             </Property>

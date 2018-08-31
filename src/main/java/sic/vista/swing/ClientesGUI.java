@@ -38,6 +38,7 @@ public class ClientesGUI extends JInternalFrame {
 
     private List<Cliente> clientesTotal = new ArrayList<>();
     private List<Cliente> clientesParcial = new ArrayList<>();
+    private Usuario viajanteSeleccionado;
     private ModeloTabla modeloTablaDeResultados = new ModeloTabla();
     private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -70,28 +71,6 @@ public class ClientesGUI extends JInternalFrame {
             cmbPais.addItem(paisTodos);
             paises.stream().forEach(p -> {
                 cmbPais.addItem(p);
-            });
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
-    private void cargarComboBoxViajantes() {
-        cmbViajante.removeAllItems();
-        try {
-            PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                    .exchange("/usuarios/busqueda/criteria?"
-                            + "roles=" + Rol.VIAJANTE, HttpMethod.GET, null,
-                            new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
-                    })
-                    .getBody();
-            response.getContent().stream().forEach(v -> {
-                cmbViajante.addItem(v);
             });
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -305,8 +284,8 @@ public class ClientesGUI extends JInternalFrame {
             criteriaBusqueda += "idFiscal=" + txtCriteria.getText().trim() + "&";
             criteriaBusqueda += "nroCliente=" + txtCriteria.getText().trim() + "&";
         }
-        if (chkViajante.isSelected()) {
-            criteriaBusqueda += "idViajante=" + ((Usuario) cmbViajante.getSelectedItem()).getId_Usuario() + "&";
+        if (chkViajante.isSelected() && viajanteSeleccionado != null) {
+            criteriaBusqueda += "idViajante=" + viajanteSeleccionado.getId_Usuario() + "&";
         }
         if (chk_Ubicacion.isSelected()) {
             if (!((Pais) cmbPais.getSelectedItem()).getNombre().equals("Todos")) {
@@ -374,7 +353,8 @@ public class ClientesGUI extends JInternalFrame {
         btn_Buscar = new javax.swing.JButton();
         lbl_cantResultados = new javax.swing.JLabel();
         chkViajante = new javax.swing.JCheckBox();
-        cmbViajante = new javax.swing.JComboBox<Usuario>();
+        txtViajante = new javax.swing.JTextField();
+        btnBuscarViajante = new javax.swing.JButton();
         panelResultados = new javax.swing.JPanel();
         sp_Resultados = new javax.swing.JScrollPane();
         tbl_Resultados = new javax.swing.JTable();
@@ -467,7 +447,17 @@ public class ClientesGUI extends JInternalFrame {
             }
         });
 
-        cmbViajante.setEnabled(false);
+        txtViajante.setEditable(false);
+        txtViajante.setEnabled(false);
+        txtViajante.setOpaque(false);
+
+        btnBuscarViajante.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
+        btnBuscarViajante.setEnabled(false);
+        btnBuscarViajante.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarViajanteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelFiltrosLayout = new javax.swing.GroupLayout(panelFiltros);
         panelFiltros.setLayout(panelFiltrosLayout);
@@ -487,11 +477,14 @@ public class ClientesGUI extends JInternalFrame {
                             .addComponent(chk_Ubicacion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmbLocalidad, 0, 302, Short.MAX_VALUE)
+                            .addComponent(cmbLocalidad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cmbProvincia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmbPais, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(panelFiltrosLayout.createSequentialGroup()
+                                .addComponent(txtViajante, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnBuscarViajante))
                             .addComponent(txtCriteria)
-                            .addComponent(cmbViajante, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(cmbPais, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         panelFiltrosLayout.setVerticalGroup(
@@ -501,11 +494,12 @@ public class ClientesGUI extends JInternalFrame {
                     .addComponent(chkCriteria)
                     .addComponent(txtCriteria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(chkViajante)
-                    .addComponent(cmbViajante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(txtViajante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chkViajante)
+                    .addComponent(btnBuscarViajante))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(chk_Ubicacion)
                     .addComponent(cmbPais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -518,6 +512,8 @@ public class ClientesGUI extends JInternalFrame {
                     .addComponent(btn_Buscar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmbLocalidad, cmbPais, cmbProvincia});
 
         panelResultados.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados"));
 
@@ -601,7 +597,7 @@ public class ClientesGUI extends JInternalFrame {
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btn_setPredeterminado)
@@ -615,7 +611,7 @@ public class ClientesGUI extends JInternalFrame {
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar Por"));
 
-        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Razón social", "Fecha de alta" }));
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Razón social", "Fecha alta" }));
 
         cmbSentido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ascendente", "Descendente" }));
 
@@ -625,9 +621,9 @@ public class ClientesGUI extends JInternalFrame {
             panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelOrdenLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cmbOrden, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmbSentido, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cmbOrden, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cmbSentido, 0, 0, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelOrdenLayout.setVerticalGroup(
@@ -820,7 +816,7 @@ public class ClientesGUI extends JInternalFrame {
                     && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)
                     && rolesDeUsuarioActivo.contains(Rol.VIAJANTE)) {
                 chkViajante.setEnabled(false);
-                cmbViajante.setEnabled(false);
+                btnBuscarViajante.setEnabled(false);
             }
         }
     }
@@ -879,12 +875,10 @@ public class ClientesGUI extends JInternalFrame {
 
     private void chkViajanteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkViajanteItemStateChanged
         if (chkViajante.isSelected()) {
-            this.cargarComboBoxViajantes();
-            cmbViajante.setEnabled(true);            
-            cmbViajante.requestFocus();
+            btnBuscarViajante.setEnabled(true);
+            btnBuscarViajante.requestFocus();
         } else {
-            cmbViajante.removeAllItems();
-            cmbViajante.setEnabled(false);            
+            btnBuscarViajante.setEnabled(false);
         }
     }//GEN-LAST:event_chkViajanteItemStateChanged
 
@@ -892,7 +886,20 @@ public class ClientesGUI extends JInternalFrame {
         btn_BuscarActionPerformed(null);
     }//GEN-LAST:event_txtCriteriaActionPerformed
 
+    private void btnBuscarViajanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarViajanteActionPerformed
+        Rol[] rolesParaFiltrar = new Rol[]{Rol.VIAJANTE};
+        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar);
+        buscarUsuariosGUI.setModal(true);
+        buscarUsuariosGUI.setLocationRelativeTo(this);
+        buscarUsuariosGUI.setVisible(true);
+        if (buscarUsuariosGUI.getUsuarioSeleccionado() != null) {
+            viajanteSeleccionado = buscarUsuariosGUI.getUsuarioSeleccionado();
+            txtViajante.setText(viajanteSeleccionado.toString());
+        }
+    }//GEN-LAST:event_btnBuscarViajanteActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuscarViajante;
     private javax.swing.JButton btnCuentaCorriente;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;
@@ -907,7 +914,6 @@ public class ClientesGUI extends JInternalFrame {
     private javax.swing.JComboBox cmbPais;
     private javax.swing.JComboBox cmbProvincia;
     private javax.swing.JComboBox<String> cmbSentido;
-    private javax.swing.JComboBox<Usuario> cmbViajante;
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;
     private javax.swing.JPanel panelOrden;
@@ -915,5 +921,6 @@ public class ClientesGUI extends JInternalFrame {
     private javax.swing.JScrollPane sp_Resultados;
     private javax.swing.JTable tbl_Resultados;
     private javax.swing.JTextField txtCriteria;
+    private javax.swing.JTextField txtViajante;
     // End of variables declaration//GEN-END:variables
 }
