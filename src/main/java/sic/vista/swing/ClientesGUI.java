@@ -612,8 +612,18 @@ public class ClientesGUI extends JInternalFrame {
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar Por"));
 
         cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Razón social", "Fecha alta" }));
+        cmbOrden.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbOrdenItemStateChanged(evt);
+            }
+        });
 
         cmbSentido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ascendente", "Descendente" }));
+        cmbSentido.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbSentidoItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelOrdenLayout = new javax.swing.GroupLayout(panelOrden);
         panelOrden.setLayout(panelOrdenLayout);
@@ -622,8 +632,8 @@ public class ClientesGUI extends JInternalFrame {
             .addGroup(panelOrdenLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cmbOrden, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cmbSentido, 0, 0, Short.MAX_VALUE))
+                    .addComponent(cmbSentido, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cmbOrden, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelOrdenLayout.setVerticalGroup(
@@ -644,7 +654,8 @@ public class ClientesGUI extends JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -718,9 +729,7 @@ public class ClientesGUI extends JInternalFrame {
     }//GEN-LAST:event_cmbProvinciaItemStateChanged
 
     private void btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarActionPerformed
-        this.resetScroll();
-        this.limpiarJTable();
-        this.buscar();
+        this.limpiarYBuscar();
     }//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void btn_NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoActionPerformed
@@ -728,9 +737,7 @@ public class ClientesGUI extends JInternalFrame {
         gui_DetalleCliente.setModal(true);
         gui_DetalleCliente.setLocationRelativeTo(this);
         gui_DetalleCliente.setVisible(true);
-        this.resetScroll();
-        this.limpiarJTable();
-        this.buscar();
+        this.limpiarYBuscar();
     }//GEN-LAST:event_btn_NuevoActionPerformed
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
@@ -765,9 +772,7 @@ public class ClientesGUI extends JInternalFrame {
             gui_DetalleCliente.setModal(true);
             gui_DetalleCliente.setLocationRelativeTo(this);
             gui_DetalleCliente.setVisible(true);
-            this.resetScroll();
-            this.limpiarJTable();
-            this.buscar();
+            this.limpiarYBuscar();
         }
     }//GEN-LAST:event_btn_ModificarActionPerformed
 
@@ -898,6 +903,19 @@ public class ClientesGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btnBuscarViajanteActionPerformed
 
+    private void cmbSentidoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbSentidoItemStateChanged
+        this.limpiarYBuscar();
+    }//GEN-LAST:event_cmbSentidoItemStateChanged
+
+    private void cmbOrdenItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbOrdenItemStateChanged
+        this.limpiarYBuscar();
+    }//GEN-LAST:event_cmbOrdenItemStateChanged
+
+    private void limpiarYBuscar() {
+        this.resetScroll();
+        this.limpiarJTable();
+        this.buscar();
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarViajante;
     private javax.swing.JButton btnCuentaCorriente;

@@ -627,8 +627,18 @@ public class FacturasCompraGUI extends JInternalFrame {
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
 
         cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha Factura", "Total" }));
+        cmbOrden.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbOrdenItemStateChanged(evt);
+            }
+        });
 
         cmbSentido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descendente", "Ascendente" }));
+        cmbSentido.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbSentidoItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelOrdenLayout = new javax.swing.GroupLayout(panelOrden);
         panelOrden.setLayout(panelOrdenLayout);
@@ -706,8 +716,7 @@ public class FacturasCompraGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_NumFacturaItemStateChanged
 
     private void btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarActionPerformed
-        this.limpiarJTable();
-        this.buscar(true);
+        this.limpiarYBuscar(true);
     }//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void chk_ProveedorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ProveedorItemStateChanged
@@ -760,8 +769,7 @@ public class FacturasCompraGUI extends JInternalFrame {
                 try {
                     RestClient.getRestTemplate().delete("/facturas?idFactura="
                             + Arrays.toString(idsFacturas).substring(1, Arrays.toString(idsFacturas).length() - 1));
-                    this.limpiarJTable();
-                    this.buscar(true);
+                    this.limpiarYBuscar(true);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (ResourceAccessException ex) {
@@ -828,6 +836,18 @@ public class FacturasCompraGUI extends JInternalFrame {
         btn_BuscarActionPerformed(null);
     }//GEN-LAST:event_txt_NroFacturaActionPerformed
 
+    private void cmbOrdenItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbOrdenItemStateChanged
+        this.limpiarYBuscar(true);
+    }//GEN-LAST:event_cmbOrdenItemStateChanged
+
+    private void cmbSentidoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbSentidoItemStateChanged
+        this.limpiarYBuscar(true);
+    }//GEN-LAST:event_cmbSentidoItemStateChanged
+
+    private void limpiarYBuscar(boolean calcularResultados) {
+        this.limpiarJTable();
+        this.buscar(calcularResultados);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;

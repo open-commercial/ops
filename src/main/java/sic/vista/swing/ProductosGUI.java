@@ -704,8 +704,18 @@ public class ProductosGUI extends JInternalFrame {
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
 
         cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descripción", "Código", "Cantidad", "Precio Costo", "% Ganancia", "Precio Lista" }));
+        cmbOrden.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbOrdenItemStateChanged(evt);
+            }
+        });
 
         cmbSentido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ascendente", "Descendente" }));
+        cmbSentido.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbSentidoItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelOrdenLayout = new javax.swing.GroupLayout(panelOrden);
         panelOrden.setLayout(panelOrdenLayout);
@@ -773,9 +783,7 @@ public class ProductosGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_ProveedorItemStateChanged
 
     private void btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarActionPerformed
-        this.resetScroll();
-        this.limpiarJTable();
-        this.buscar();
+        this.limpiarYBuscar();
     }//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void btn_NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoActionPerformed
@@ -783,9 +791,7 @@ public class ProductosGUI extends JInternalFrame {
         gui_DetalleProducto.setModal(true);
         gui_DetalleProducto.setLocationRelativeTo(this);
         gui_DetalleProducto.setVisible(true);
-        this.resetScroll();
-        this.limpiarJTable();
-        this.buscar();
+        this.limpiarYBuscar();
     }//GEN-LAST:event_btn_NuevoActionPerformed
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
@@ -834,9 +840,7 @@ public class ProductosGUI extends JInternalFrame {
                 gui_DetalleProducto.setLocationRelativeTo(this);
                 gui_DetalleProducto.setVisible(true);
             }
-            this.resetScroll();
-            this.limpiarJTable();
-            this.buscar();
+            this.limpiarYBuscar();
         }
     }//GEN-LAST:event_btn_ModificarActionPerformed
 
@@ -943,6 +947,19 @@ public class ProductosGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_chk_visibilidadItemStateChanged
 
+    private void cmbOrdenItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbOrdenItemStateChanged
+        this.limpiarYBuscar();
+    }//GEN-LAST:event_cmbOrdenItemStateChanged
+
+    private void cmbSentidoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbSentidoItemStateChanged
+        this.limpiarYBuscar();
+    }//GEN-LAST:event_cmbSentidoItemStateChanged
+
+    private void limpiarYBuscar() {
+        resetScroll();
+        limpiarJTable();
+        this.buscar();
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgDisponibilidad;
     private javax.swing.ButtonGroup bgVisibilidad;
