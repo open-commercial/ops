@@ -726,11 +726,11 @@ public class DetalleProductoGUI extends JDialog {
         txt_Estanteria.setText(productoParaModificar.getEstanteria());
         txt_Estante.setText(productoParaModificar.getEstante());        
         txtPrecioCosto.setValue(productoParaModificar.getPrecioCosto());        
-        txtGananciaPorcentaje.setValue(productoParaModificar.getGanancia_porcentaje());        
-        txtGananciaNeto.setValue(productoParaModificar.getGanancia_neto());        
+        txtGananciaPorcentaje.setValue(productoParaModificar.getGananciaPorcentaje());        
+        txtGananciaNeto.setValue(productoParaModificar.getGananciaNeto());        
         txtPVP.setValue(productoParaModificar.getPrecioVentaPublico());        
-        cmbIVAPorcentaje.setSelectedItem(productoParaModificar.getIva_porcentaje().stripTrailingZeros());        
-        txtIVANeto.setValue(productoParaModificar.getIva_neto());        
+        cmbIVAPorcentaje.setSelectedItem(productoParaModificar.getIvaPorcentaje().stripTrailingZeros());        
+        txtIVANeto.setValue(productoParaModificar.getIvaNeto());        
         txtPrecioLista.setValue(productoParaModificar.getPrecioLista());
     }
 
@@ -901,13 +901,13 @@ public class DetalleProductoGUI extends JDialog {
                     producto.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
                     producto.setVentaMinima(new BigDecimal(txt_VentaMinima.getValue().toString()));
                     producto.setPrecioCosto(new BigDecimal(txtPrecioCosto.getValue().toString()));
-                    producto.setGanancia_porcentaje(new BigDecimal(txtGananciaPorcentaje.getValue().toString()));
-                    producto.setGanancia_neto(new BigDecimal(txtGananciaNeto.getValue().toString()));
+                    producto.setGananciaPorcentaje(new BigDecimal(txtGananciaPorcentaje.getValue().toString()));
+                    producto.setGananciaNeto(new BigDecimal(txtGananciaNeto.getValue().toString()));
                     producto.setPrecioVentaPublico(new BigDecimal(txtPVP.getValue().toString()));
-                    producto.setIva_porcentaje(new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()));
-                    producto.setIva_neto(new BigDecimal(txtIVANeto.getValue().toString()));
-                    producto.setImpuestoInterno_porcentaje(BigDecimal.ZERO);
-                    producto.setImpuestoInterno_neto(BigDecimal.ZERO);
+                    producto.setIvaPorcentaje(new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()));
+                    producto.setIvaNeto(new BigDecimal(txtIVANeto.getValue().toString()));
+                    producto.setImpuestoInternoPorcentaje(BigDecimal.ZERO);
+                    producto.setImpuestoInternoNeto(BigDecimal.ZERO);
                     producto.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
                     producto.setIlimitado(chkSinLimite.isSelected());   
                     producto.setPublico(rbPublico.isSelected());
@@ -937,13 +937,13 @@ public class DetalleProductoGUI extends JDialog {
                     productoParaModificar.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
                     productoParaModificar.setVentaMinima(new BigDecimal(txt_VentaMinima.getValue().toString()));
                     productoParaModificar.setPrecioCosto(new BigDecimal(txtPrecioCosto.getValue().toString()));
-                    productoParaModificar.setGanancia_porcentaje(new BigDecimal(txtGananciaPorcentaje.getValue().toString()));
-                    productoParaModificar.setGanancia_neto(new BigDecimal(txtGananciaNeto.getValue().toString()));
+                    productoParaModificar.setGananciaPorcentaje(new BigDecimal(txtGananciaPorcentaje.getValue().toString()));
+                    productoParaModificar.setGananciaNeto(new BigDecimal(txtGananciaNeto.getValue().toString()));
                     productoParaModificar.setPrecioVentaPublico(new BigDecimal(txtPVP.getValue().toString()));
-                    productoParaModificar.setIva_porcentaje(new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()));
-                    productoParaModificar.setIva_neto(new BigDecimal(txtIVANeto.getValue().toString()));
-                    productoParaModificar.setImpuestoInterno_porcentaje(BigDecimal.ZERO);
-                    productoParaModificar.setImpuestoInterno_neto(BigDecimal.ZERO);
+                    productoParaModificar.setIvaPorcentaje(new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()));
+                    productoParaModificar.setIvaNeto(new BigDecimal(txtIVANeto.getValue().toString()));
+                    productoParaModificar.setImpuestoInternoPorcentaje(BigDecimal.ZERO);
+                    productoParaModificar.setImpuestoInternoNeto(BigDecimal.ZERO);
                     productoParaModificar.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
                     productoParaModificar.setIlimitado(chkSinLimite.isSelected());   
                     productoParaModificar.setPublico(rbPublico.isSelected());

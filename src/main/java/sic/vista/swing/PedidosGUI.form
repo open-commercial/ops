@@ -30,25 +30,22 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="panel_resultados" max="32767" attributes="0"/>
-          <Group type="102" alignment="0" attributes="0">
-              <Component id="panel_Filtros" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="80" max="32767" attributes="0"/>
-          </Group>
+          <Component id="panelResultados" max="32767" attributes="0"/>
+          <Component id="panelFiltros" min="-2" max="-2" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <Component id="panel_Filtros" min="-2" max="-2" attributes="0"/>
+              <Component id="panelFiltros" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="panel_resultados" max="32767" attributes="0"/>
+              <Component id="panelResultados" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JPanel" name="panel_Filtros">
+    <Container class="javax.swing.JPanel" name="panelFiltros">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -61,40 +58,51 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="chk_Cliente" alignment="0" max="32767" attributes="0"/>
-                              <Component id="chk_Fecha" alignment="0" max="32767" attributes="0"/>
-                              <Component id="chk_Vendedor" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="chk_Usuario" alignment="0" min="-2" pref="128" max="-2" attributes="0"/>
+                              <Component id="chk_Cliente" alignment="0" min="-2" pref="128" max="-2" attributes="0"/>
+                              <Component id="chk_Fecha" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="cmb_Cliente" alignment="0" min="-2" pref="383" max="-2" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="txtUsuario" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                  <Component id="btnBuscarUsuarios" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="txtCliente" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                  <Component id="btnBuscarCliente" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
                                   <Component id="lbl_Desde" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="dc_FechaDesde" max="32767" attributes="0"/>
+                                  <Component id="dc_FechaDesde" linkSize="10" min="-2" pref="150" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="lbl_Hasta" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="dc_FechaHasta" max="32767" attributes="0"/>
+                                  <Component id="dc_FechaHasta" linkSize="10" min="-2" pref="150" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="cmb_Vendedor" min="-2" pref="383" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="chkEstado" max="32767" attributes="0"/>
-                              <Component id="chk_NumeroPedido" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="cmbEstado" pref="200" max="32767" attributes="0"/>
-                              <Component id="txt_NumeroPedido" max="32767" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="chkEstado" pref="109" max="32767" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="cmbEstado" min="-2" pref="140" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="chk_NumeroPedido" min="-2" pref="109" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="txt_NumeroPedido" max="32767" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
-                      <Group type="102" alignment="0" attributes="0">
+                      <Group type="102" attributes="0">
                           <Component id="btn_Buscar" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="lbl_cantResultados" max="32767" attributes="0"/>
@@ -114,22 +122,24 @@
                       <Component id="dc_FechaDesde" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lbl_Hasta" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="dc_FechaHasta" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="chk_NumeroPedido" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txt_NumeroPedido" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="chk_Cliente" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmb_Cliente" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="chkEstado" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="cmbEstado" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="chk_Vendedor" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmb_Vendedor" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="chk_Cliente" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtCliente" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnBuscarCliente" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="chk_NumeroPedido" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txt_NumeroPedido" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="chk_Usuario" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtUsuario" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnBuscarUsuarios" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lbl_cantResultados" alignment="2" min="-2" pref="22" max="-2" attributes="0"/>
                       <Component id="btn_Buscar" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -189,29 +199,12 @@
             <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="GUI_Pedidos_jCheckBox2"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JComboBox" name="cmb_Cliente">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-            <Property name="toolTipText" type="java.lang.String" value=""/>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cmb_Vendedor">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JCheckBox" name="chk_Vendedor">
+        <Component class="javax.swing.JCheckBox" name="chk_Usuario">
           <Properties>
             <Property name="text" type="java.lang.String" value="Usuario:"/>
           </Properties>
           <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_VendedorItemStateChanged"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_UsuarioItemStateChanged"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btn_Buscar">
@@ -265,9 +258,48 @@
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
         </Component>
+        <Component class="javax.swing.JTextField" name="txtCliente">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="4a" green="49" red="45" type="rgb"/>
+            </Property>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="opaque" type="boolean" value="false"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnBuscarCliente">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/sic/icons/Search_16x16.png"/>
+            </Property>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarClienteActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtUsuario">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="opaque" type="boolean" value="false"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnBuscarUsuarios">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/sic/icons/Search_16x16.png"/>
+            </Property>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarUsuariosActionPerformed"/>
+          </Events>
+        </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JPanel" name="panel_resultados">
+    <Container class="javax.swing.JPanel" name="panelResultados">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -300,9 +332,9 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="sp_Pedidos" pref="164" max="32767" attributes="0"/>
+                  <Component id="sp_Pedidos" pref="154" max="32767" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="sp_RenglonesPedido" pref="164" max="32767" attributes="0"/>
+                  <Component id="sp_RenglonesPedido" pref="154" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnNuevoPedido" linkSize="7" alignment="3" min="-2" max="-2" attributes="0"/>

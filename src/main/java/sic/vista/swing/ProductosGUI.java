@@ -201,11 +201,11 @@ public class ProductosGUI extends JInternalFrame {
             fila[6] = producto.isIlimitado();
             fila[7] = producto.getNombreMedida();
             fila[8] = producto.getPrecioCosto();
-            fila[9] = producto.getGanancia_porcentaje();
-            fila[10] = producto.getGanancia_neto();
+            fila[9] = producto.getGananciaPorcentaje();
+            fila[10] = producto.getGananciaNeto();
             fila[11] = producto.getPrecioVentaPublico();
-            fila[12] = producto.getIva_porcentaje();
-            fila[13] = producto.getIva_neto();
+            fila[12] = producto.getIvaPorcentaje();
+            fila[13] = producto.getIvaNeto();
             fila[14] = producto.getPrecioLista();
             fila[15] = producto.getNombreRubro();
             fila[16] = producto.getFechaUltimaModificacion();
@@ -330,6 +330,36 @@ public class ProductosGUI extends JInternalFrame {
                 criteriaCosto += "&publicos=false";
             }
         }
+        int seleccionOrden = cmbOrden.getSelectedIndex();
+        switch (seleccionOrden) {
+            case 0:
+                criteriaBusqueda += "&ordenarPor=descripcion";
+                break;
+            case 1:
+                criteriaBusqueda += "&ordenarPor=codigo";
+                break;
+            case 2:
+                criteriaBusqueda += "&ordenarPor=cantidad";
+                break;
+            case 3:
+                criteriaBusqueda += "&ordenarPor=precioCosto";
+                break;
+            case 4:
+                criteriaBusqueda += "&ordenarPor=gananciaPorcentaje";
+                break;
+            case 5:
+                criteriaBusqueda += "&ordenarPor=precioLista";
+                break;
+        }
+        int seleccionDireccion = cmbSentido.getSelectedIndex();
+        switch (seleccionDireccion) {
+            case 0:
+                criteriaBusqueda += "&sentido=ASC";
+                break;
+            case 1:
+                criteriaBusqueda += "&sentido=DESC";
+                break;
+        }
         criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
         try {
             PaginaRespuestaRest<Producto> response = RestClient.getRestTemplate()
@@ -360,6 +390,12 @@ public class ProductosGUI extends JInternalFrame {
             productosSeleccionados.add(productosTotal.get(indices[i]));
         }
         return productosSeleccionados;
+    }
+    
+    private void limpiarYBuscar() {
+        resetScroll();
+        limpiarJTable();
+        this.buscar();
     }
     
     @SuppressWarnings("unchecked")
@@ -394,6 +430,9 @@ public class ProductosGUI extends JInternalFrame {
         txt_ValorStock = new javax.swing.JFormattedTextField();
         lbl_ValorStock = new javax.swing.JLabel();
         btnExportar = new javax.swing.JButton();
+        panelOrden = new javax.swing.JPanel();
+        cmbOrden = new javax.swing.JComboBox<>();
+        cmbSentido = new javax.swing.JComboBox<>();
 
         setClosable(true);
         setMaximizable(true);
@@ -569,8 +608,8 @@ public class ProductosGUI extends JInternalFrame {
                     .addComponent(rb_privado))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btn_Buscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_Buscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -647,7 +686,7 @@ public class ProductosGUI extends JInternalFrame {
                 .addComponent(lbl_ValorStock)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txt_ValorStock, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 818, Short.MAX_VALUE)
+            .addComponent(sp_Resultados)
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnExportar, btn_Eliminar, btn_Modificar, btn_Nuevo});
@@ -668,6 +707,43 @@ public class ProductosGUI extends JInternalFrame {
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Eliminar, btn_Modificar, btn_Nuevo});
 
+        panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
+
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descripción", "Código", "Cantidad", "Precio Costo", "% Ganancia", "Precio Lista" }));
+        cmbOrden.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbOrdenItemStateChanged(evt);
+            }
+        });
+
+        cmbSentido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ascendente", "Descendente" }));
+        cmbSentido.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbSentidoItemStateChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelOrdenLayout = new javax.swing.GroupLayout(panelOrden);
+        panelOrden.setLayout(panelOrdenLayout);
+        panelOrdenLayout.setHorizontalGroup(
+            panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOrdenLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cmbOrden, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cmbSentido, 0, 158, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        panelOrdenLayout.setVerticalGroup(
+            panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOrdenLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(cmbOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmbSentido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -675,12 +751,16 @@ public class ProductosGUI extends JInternalFrame {
             .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -709,9 +789,7 @@ public class ProductosGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_ProveedorItemStateChanged
 
     private void btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarActionPerformed
-        this.resetScroll();
-        this.limpiarJTable();
-        this.buscar();
+        this.limpiarYBuscar();
     }//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void btn_NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoActionPerformed
@@ -719,9 +797,7 @@ public class ProductosGUI extends JInternalFrame {
         gui_DetalleProducto.setModal(true);
         gui_DetalleProducto.setLocationRelativeTo(this);
         gui_DetalleProducto.setVisible(true);
-        this.resetScroll();
-        this.limpiarJTable();
-        this.buscar();
+        this.limpiarYBuscar();
     }//GEN-LAST:event_btn_NuevoActionPerformed
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
@@ -770,9 +846,7 @@ public class ProductosGUI extends JInternalFrame {
                 gui_DetalleProducto.setLocationRelativeTo(this);
                 gui_DetalleProducto.setVisible(true);
             }
-            this.resetScroll();
-            this.limpiarJTable();
-            this.buscar();
+            this.limpiarYBuscar();
         }
     }//GEN-LAST:event_btn_ModificarActionPerformed
 
@@ -879,6 +953,14 @@ public class ProductosGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_chk_visibilidadItemStateChanged
 
+    private void cmbOrdenItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbOrdenItemStateChanged
+        this.limpiarYBuscar();
+    }//GEN-LAST:event_cmbOrdenItemStateChanged
+
+    private void cmbSentidoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbSentidoItemStateChanged
+        this.limpiarYBuscar();
+    }//GEN-LAST:event_cmbSentidoItemStateChanged
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgDisponibilidad;
     private javax.swing.ButtonGroup bgVisibilidad;
@@ -893,11 +975,14 @@ public class ProductosGUI extends JInternalFrame {
     private javax.swing.JCheckBox chk_Proveedor;
     private javax.swing.JCheckBox chk_Rubro;
     private javax.swing.JCheckBox chk_visibilidad;
+    private javax.swing.JComboBox<String> cmbOrden;
+    private javax.swing.JComboBox<String> cmbSentido;
     private javax.swing.JComboBox cmb_Proveedor;
     private javax.swing.JComboBox cmb_Rubro;
     private javax.swing.JLabel lbl_ValorStock;
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;
+    private javax.swing.JPanel panelOrden;
     private javax.swing.JPanel panelResultados;
     private javax.swing.JRadioButton rb_Faltantes;
     private javax.swing.JRadioButton rb_Todos;
