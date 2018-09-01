@@ -86,7 +86,7 @@
                               <Component id="cmbProvincia" alignment="0" max="32767" attributes="2"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="txtViajante" pref="267" max="32767" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Component id="btnBuscarViajante" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="txtCriteria" max="32767" attributes="2"/>
@@ -94,7 +94,7 @@
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -107,14 +107,14 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="txtViajante" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="chkViajante" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnBuscarViajante" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtViajante" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnBuscarViajante" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="chk_Ubicacion" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmbPais" linkSize="7" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="chk_Ubicacion" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="cmbPais" linkSize="7" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="cmbProvincia" linkSize="7" min="-2" max="-2" attributes="0"/>
@@ -122,8 +122,8 @@
                   <Component id="cmbLocalidad" linkSize="7" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lbl_cantResultados" alignment="2" min="-2" pref="25" max="-2" attributes="0"/>
                       <Component id="btn_Buscar" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbl_cantResultados" alignment="2" min="-2" pref="25" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -262,7 +262,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="sp_Resultados" pref="408" max="32767" attributes="0"/>
+                  <Component id="sp_Resultados" pref="221" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="btn_setPredeterminado" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -388,11 +388,11 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="cmbSentido" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="cmbOrden" max="32767" attributes="0"/>
+                      <Component id="cmbSentido" pref="158" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -413,8 +413,8 @@
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="2">
-                <StringItem index="0" value="Raz&#xf3;n social"/>
-                <StringItem index="1" value="Fecha alta"/>
+                <StringItem index="0" value="Raz&#xf3;n Social"/>
+                <StringItem index="1" value="Fecha Alta"/>
               </StringArray>
             </Property>
           </Properties>

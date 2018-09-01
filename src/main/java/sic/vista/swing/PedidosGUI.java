@@ -363,11 +363,22 @@ public class PedidosGUI extends JInternalFrame {
         }
     }
 
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)
+                && rolesDeUsuarioActivo.contains(Rol.VIAJANTE)) {
+            btnEliminarPedido.setEnabled(false);
+            btnFacturar.setEnabled(false);
+            chk_Usuario.setEnabled(false);
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panel_Filtros = new javax.swing.JPanel();
+        panelFiltros = new javax.swing.JPanel();
         chk_NumeroPedido = new javax.swing.JCheckBox();
         chk_Fecha = new javax.swing.JCheckBox();
         lbl_Desde = new javax.swing.JLabel();
@@ -385,7 +396,7 @@ public class PedidosGUI extends JInternalFrame {
         btnBuscarCliente = new javax.swing.JButton();
         txtUsuario = new javax.swing.JTextField();
         btnBuscarUsuarios = new javax.swing.JButton();
-        panel_resultados = new javax.swing.JPanel();
+        panelResultados = new javax.swing.JPanel();
         sp_RenglonesPedido = new javax.swing.JScrollPane();
         tbl_RenglonesPedido = new javax.swing.JTable();
         sp_Pedidos = new javax.swing.JScrollPane();
@@ -419,7 +430,7 @@ public class PedidosGUI extends JInternalFrame {
             }
         });
 
-        panel_Filtros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
+        panelFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
 
         chk_NumeroPedido.setText("Nº Pedido:");
         chk_NumeroPedido.addItemListener(new java.awt.event.ItemListener() {
@@ -518,84 +529,89 @@ public class PedidosGUI extends JInternalFrame {
             }
         });
 
-        javax.swing.GroupLayout panel_FiltrosLayout = new javax.swing.GroupLayout(panel_Filtros);
-        panel_Filtros.setLayout(panel_FiltrosLayout);
-        panel_FiltrosLayout.setHorizontalGroup(
-            panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_FiltrosLayout.createSequentialGroup()
+        javax.swing.GroupLayout panelFiltrosLayout = new javax.swing.GroupLayout(panelFiltros);
+        panelFiltros.setLayout(panelFiltrosLayout);
+        panelFiltrosLayout.setHorizontalGroup(
+            panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelFiltrosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_FiltrosLayout.createSequentialGroup()
-                        .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(chk_Cliente, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(chk_Fecha, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(chk_Usuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, 0)
-                        .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panel_FiltrosLayout.createSequentialGroup()
-                                .addComponent(lbl_Desde)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(panelFiltrosLayout.createSequentialGroup()
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(chk_Usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(chk_Cliente, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(chk_Fecha))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFiltrosLayout.createSequentialGroup()
+                                .addComponent(txtUsuario)
                                 .addGap(0, 0, 0)
-                                .addComponent(dc_FechaDesde, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
+                                .addComponent(btnBuscarUsuarios))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFiltrosLayout.createSequentialGroup()
+                                .addComponent(txtCliente)
+                                .addGap(0, 0, 0)
+                                .addComponent(btnBuscarCliente))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFiltrosLayout.createSequentialGroup()
+                                .addComponent(lbl_Desde)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lbl_Hasta)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dc_FechaHasta, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_FiltrosLayout.createSequentialGroup()
-                                .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtCliente)
-                                    .addComponent(txtUsuario))
+                                .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(panelFiltrosLayout.createSequentialGroup()
+                                .addComponent(chkEstado, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnBuscarCliente, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(btnBuscarUsuarios, javax.swing.GroupLayout.Alignment.TRAILING)))))
-                    .addComponent(btn_Buscar))
-                .addGap(0, 0, 0)
-                .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(panel_FiltrosLayout.createSequentialGroup()
-                        .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(chkEstado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(chk_NumeroPedido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFiltrosLayout.createSequentialGroup()
+                                .addComponent(chk_NumeroPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txt_NumeroPedido))))
+                    .addGroup(panelFiltrosLayout.createSequentialGroup()
+                        .addComponent(btn_Buscar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cmbEstado, 0, 200, Short.MAX_VALUE)
-                            .addComponent(txt_NumeroPedido))))
-                .addContainerGap())
+                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        panel_FiltrosLayout.setVerticalGroup(
-            panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_FiltrosLayout.createSequentialGroup()
+
+        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {dc_FechaDesde, dc_FechaHasta});
+
+        panelFiltrosLayout.setVerticalGroup(
+            panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelFiltrosLayout.createSequentialGroup()
                 .addGap(2, 2, 2)
-                .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Desde)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_Fecha)
+                    .addComponent(lbl_Desde)
                     .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_Hasta)
                     .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chkEstado)
+                    .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(chk_Cliente)
+                    .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarCliente)
                     .addComponent(chk_NumeroPedido)
                     .addComponent(txt_NumeroPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btnBuscarCliente)
-                    .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chk_Cliente)
-                    .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chkEstado))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btnBuscarUsuarios)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(chk_Usuario)
                     .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chk_Usuario))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btn_Buscar)
-                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addComponent(btnBuscarUsuarios))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_Buscar))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panel_FiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarCliente, btnBuscarUsuarios, txtCliente, txtUsuario});
+        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarCliente, btnBuscarUsuarios, txtCliente, txtUsuario});
 
-        panel_resultados.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados"));
+        panelResultados.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados"));
 
         tbl_RenglonesPedido.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -681,13 +697,13 @@ public class PedidosGUI extends JInternalFrame {
             }
         });
 
-        javax.swing.GroupLayout panel_resultadosLayout = new javax.swing.GroupLayout(panel_resultados);
-        panel_resultados.setLayout(panel_resultadosLayout);
-        panel_resultadosLayout.setHorizontalGroup(
-            panel_resultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
+        panelResultados.setLayout(panelResultadosLayout);
+        panelResultadosLayout.setHorizontalGroup(
+            panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(sp_Pedidos)
             .addComponent(sp_RenglonesPedido)
-            .addGroup(panel_resultadosLayout.createSequentialGroup()
+            .addGroup(panelResultadosLayout.createSequentialGroup()
                 .addComponent(btnNuevoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(btnModificarPedido)
@@ -701,14 +717,14 @@ public class PedidosGUI extends JInternalFrame {
                 .addComponent(btnImprimirPedido)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
-        panel_resultadosLayout.setVerticalGroup(
-            panel_resultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_resultadosLayout.createSequentialGroup()
-                .addComponent(sp_Pedidos, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
+        panelResultadosLayout.setVerticalGroup(
+            panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelResultadosLayout.createSequentialGroup()
+                .addComponent(sp_Pedidos, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_RenglonesPedido, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
+                .addComponent(sp_RenglonesPedido, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel_resultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNuevoPedido)
                     .addComponent(btnVerFacturas, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnFacturar)
@@ -717,23 +733,21 @@ public class PedidosGUI extends JInternalFrame {
                     .addComponent(btnEliminarPedido)))
         );
 
-        panel_resultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnFacturar, btnImprimirPedido, btnModificarPedido, btnNuevoPedido, btnVerFacturas});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnFacturar, btnImprimirPedido, btnModificarPedido, btnNuevoPedido, btnVerFacturas});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel_resultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(panel_Filtros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 30, Short.MAX_VALUE))
+            .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(panel_Filtros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panel_resultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -884,17 +898,6 @@ public class PedidosGUI extends JInternalFrame {
         }
         this.cambiarEstadoDeComponentesSegunRolUsuario();
     }//GEN-LAST:event_formInternalFrameOpened
-
-    private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
-                && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
-                && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)
-                && rolesDeUsuarioActivo.contains(Rol.VIAJANTE)) {
-            btnEliminarPedido.setEnabled(false);
-            btnFacturar.setEnabled(false);
-            chk_Usuario.setEnabled(false);
-        }
-    }
         
     private void tbl_PedidosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbl_PedidosKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_UP || evt.getKeyCode() == KeyEvent.VK_DOWN) {
@@ -1047,8 +1050,8 @@ public class PedidosGUI extends JInternalFrame {
     private javax.swing.JLabel lbl_Desde;
     private javax.swing.JLabel lbl_Hasta;
     private javax.swing.JLabel lbl_cantResultados;
-    private javax.swing.JPanel panel_Filtros;
-    private javax.swing.JPanel panel_resultados;
+    private javax.swing.JPanel panelFiltros;
+    private javax.swing.JPanel panelResultados;
     private javax.swing.JScrollPane sp_Pedidos;
     private javax.swing.JScrollPane sp_RenglonesPedido;
     private javax.swing.JTable tbl_Pedidos;

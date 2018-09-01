@@ -275,6 +275,12 @@ public class ClientesGUI extends JInternalFrame {
         tbl_Resultados.requestFocus();
     }
     
+    private void limpiarYBuscar() {
+        this.resetScroll();
+        this.limpiarJTable();
+        this.buscar();
+    }
+    
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
         String criteriaBusqueda = "/clientes/busqueda/criteria?";
@@ -481,7 +487,7 @@ public class ClientesGUI extends JInternalFrame {
                             .addComponent(cmbProvincia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(panelFiltrosLayout.createSequentialGroup()
                                 .addComponent(txtViajante, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGap(0, 0, 0)
                                 .addComponent(btnBuscarViajante))
                             .addComponent(txtCriteria)
                             .addComponent(cmbPais, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
@@ -495,11 +501,11 @@ public class ClientesGUI extends JInternalFrame {
                     .addComponent(txtCriteria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(txtViajante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chkViajante)
+                    .addComponent(txtViajante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscarViajante))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_Ubicacion)
                     .addComponent(cmbPais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -508,12 +514,14 @@ public class ClientesGUI extends JInternalFrame {
                 .addComponent(cmbLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_Buscar))
+                    .addComponent(btn_Buscar)
+                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmbLocalidad, cmbPais, cmbProvincia});
+
+        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarViajante, txtViajante});
 
         panelResultados.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados"));
 
@@ -597,7 +605,7 @@ public class ClientesGUI extends JInternalFrame {
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btn_setPredeterminado)
@@ -611,7 +619,7 @@ public class ClientesGUI extends JInternalFrame {
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar Por"));
 
-        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Razón social", "Fecha alta" }));
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Razón Social", "Fecha Alta" }));
         cmbOrden.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbOrdenItemStateChanged(evt);
@@ -631,10 +639,10 @@ public class ClientesGUI extends JInternalFrame {
             panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelOrdenLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cmbSentido, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cmbOrden, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cmbOrden, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cmbSentido, 0, 158, Short.MAX_VALUE))
+                .addContainerGap())
         );
         panelOrdenLayout.setVerticalGroup(
             panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -882,8 +890,10 @@ public class ClientesGUI extends JInternalFrame {
         if (chkViajante.isSelected()) {
             btnBuscarViajante.setEnabled(true);
             btnBuscarViajante.requestFocus();
+            txtViajante.setEnabled(true);
         } else {
             btnBuscarViajante.setEnabled(false);
+            txtViajante.setEnabled(false);
         }
     }//GEN-LAST:event_chkViajanteItemStateChanged
 
@@ -910,12 +920,7 @@ public class ClientesGUI extends JInternalFrame {
     private void cmbOrdenItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbOrdenItemStateChanged
         this.limpiarYBuscar();
     }//GEN-LAST:event_cmbOrdenItemStateChanged
-
-    private void limpiarYBuscar() {
-        this.resetScroll();
-        this.limpiarJTable();
-        this.buscar();
-    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarViajante;
     private javax.swing.JButton btnCuentaCorriente;

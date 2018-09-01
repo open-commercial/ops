@@ -32,7 +32,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="panelResultados" max="32767" attributes="0"/>
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" attributes="0">
               <Component id="panelFiltros" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="panelOrden" min="-2" max="-2" attributes="0"/>
@@ -82,7 +82,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <Component id="sp_Resultados" pref="289" max="32767" attributes="0"/>
+                  <Component id="sp_Resultados" pref="197" max="32767" attributes="0"/>
                   <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="panelNumeros" min="-2" max="-2" attributes="0"/>
@@ -277,19 +277,19 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <Group type="103" groupAlignment="1" attributes="0">
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Component id="btn_Buscar" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="lbl_cantResultados" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           <Component id="subPanelFiltros1" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="subPanelFiltros2" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -298,14 +298,17 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="subPanelFiltros2" min="-2" max="-2" attributes="0"/>
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="subPanelFiltros1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="btn_Buscar" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbl_cantResultados" min="-2" pref="27" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="subPanelFiltros2" min="-2" max="-2" attributes="0"/>
+                      <Component id="subPanelFiltros1" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="btn_Buscar" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbl_cantResultados" alignment="2" min="-2" pref="27" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -317,49 +320,40 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="chk_Fecha" alignment="1" pref="139" max="32767" attributes="0"/>
+                          <Component id="chk_Cliente" alignment="1" max="32767" attributes="0"/>
+                          <Component id="chk_Usuario" alignment="1" max="32767" attributes="0"/>
+                          <Component id="chk_NumFactura" alignment="1" max="32767" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="chk_Usuario" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="chk_Fecha" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="chk_Cliente" alignment="0" max="32767" attributes="0"/>
-                              </Group>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="lbl_Desde" min="-2" max="-2" attributes="1"/>
-                                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                                      <Component id="dc_FechaDesde" max="32767" attributes="0"/>
-                                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbl_Hasta" min="-2" max="-2" attributes="1"/>
-                                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                                      <Component id="dc_FechaHasta" max="32767" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <Component id="txtCliente" linkSize="4" min="-2" pref="421" max="-2" attributes="0"/>
-                                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                                              <Component id="btnBuscarCliente" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <Component id="txtUsuario" linkSize="4" min="-2" pref="421" max="-2" attributes="0"/>
-                                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                                              <Component id="btnBuscarUsuarios" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                      </Group>
-                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                  </Group>
-                              </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="lbl_Desde" min="-2" max="-2" attributes="1"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Component id="dc_FechaDesde" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_Hasta" min="-2" max="-2" attributes="1"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Component id="dc_FechaHasta" pref="0" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="chk_NumFactura" max="32767" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                              <Component id="txt_SerieFactura" max="32767" attributes="0"/>
+                              <Component id="txt_SerieFactura" min="-2" pref="80" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="separador" min="-2" pref="20" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="txt_NroFactura" min="-2" pref="190" max="-2" attributes="0"/>
+                              <Component id="txt_NroFactura" pref="253" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="txtCliente" max="32767" attributes="0"/>
+                                  <Component id="txtUsuario" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="btnBuscarUsuarios" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnBuscarCliente" alignment="1" min="-2" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
                   </Group>
@@ -369,10 +363,10 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="dc_FechaDesde" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="dc_FechaHasta" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="lbl_Hasta" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="lbl_Desde" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="dc_FechaDesde" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbl_Hasta" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="dc_FechaHasta" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="chk_Fecha" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -542,8 +536,8 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txt_NumeroPedido" alignment="1" max="32767" attributes="0"/>
-                          <Component id="cmb_TipoFactura" alignment="0" pref="129" max="32767" attributes="0"/>
+                          <Component id="cmb_TipoFactura" pref="151" max="32767" attributes="0"/>
+                          <Component id="txt_NumeroPedido" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -560,7 +554,6 @@
                           <Component id="chk_NumeroPedido" alignment="2" min="-2" pref="23" max="-2" attributes="0"/>
                           <Component id="txt_NumeroPedido" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="0" pref="104" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -639,12 +632,12 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="cmbOrden" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="cmbOrden" pref="158" max="32767" attributes="0"/>
                       <Component id="cmbSentido" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
