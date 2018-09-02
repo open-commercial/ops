@@ -35,14 +35,14 @@ public abstract class Nota implements Serializable {
     private long CAE;
     private Date vencimientoCAE;
     private long numSerieAfip;
-    private long numFacturaAfip;
+    private long numNotaAfip;
     
     public Nota() {}
 
     public Nota(long idNota, long serie, long nroNota, boolean eliminada,
             TipoDeComprobante tipoDeComprobante, Date fecha, Empresa empresa, Usuario usuario,
             String motivo, BigDecimal subTotalBruto, BigDecimal iva21Neto, BigDecimal iva105Neto,
-            BigDecimal total, long CAE, Date vencimientoCAE, long numSerieAfip, long numFacturaAfip) {
+            BigDecimal total, long CAE, Date vencimientoCAE, long numSerieAfip, long numNotaAfip) {
 
         this.idNota = idNota;
         this.serie = serie;
@@ -60,6 +60,6 @@ public abstract class Nota implements Serializable {
         this.CAE = CAE;
         this.vencimientoCAE = vencimientoCAE;
         this.numSerieAfip = numSerieAfip;
-        this.numFacturaAfip = numFacturaAfip;
+        this.numNotaAfip = numNotaAfip;
     }
 }

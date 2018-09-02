@@ -2,9 +2,10 @@ package sic.modelo;
 
 public enum Movimiento {
 
-    COMPRA,
+    COMPRA,    
+    VENTA,    
+    PEDIDO,    
+    NOTA_PROVEEDOR,    
+    NOTA_CLIENTE;
     
-    VENTA,
-    
-    PEDIDO;
 }
