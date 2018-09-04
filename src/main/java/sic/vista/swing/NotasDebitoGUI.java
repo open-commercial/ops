@@ -27,8 +27,9 @@ import sic.RestClient;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.FacturaVenta;
 import sic.modelo.Movimiento;
-import sic.modelo.NotaCreditoCliente;
-import sic.modelo.NotaCreditoProveedor;
+import sic.modelo.NotaDebito;
+import sic.modelo.NotaDebitoCliente;
+import sic.modelo.NotaDebitoProveedor;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
@@ -38,13 +39,13 @@ import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
 import sic.util.Utilidades;
 
-public class NotasCreditoGUI extends JInternalFrame {
+public class NotasDebitoGUI extends JInternalFrame {
 
     private ModeloTabla modeloTablaNotas = new ModeloTabla();
-    private List<NotaCreditoCliente> notasClienteTotal = new ArrayList<>();
-    private List<NotaCreditoCliente> notasClienteParcial = new ArrayList<>();
-    private List<NotaCreditoProveedor> notasProveedorTotal = new ArrayList<>();
-    private List<NotaCreditoProveedor> notasProveedorParcial = new ArrayList<>();
+    private List<NotaDebitoCliente> notasClienteTotal = new ArrayList<>();
+    private List<NotaDebitoCliente> notasClienteParcial = new ArrayList<>();
+    private List<NotaDebitoProveedor> notasProveedorTotal = new ArrayList<>();
+    private List<NotaDebitoProveedor> notasProveedorParcial = new ArrayList<>();
     private Movimiento movimiento;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(970, 600);
@@ -52,7 +53,7 @@ public class NotasCreditoGUI extends JInternalFrame {
     private static int NUMERO_PAGINA = 0;
     private static final int TAMANIO_PAGINA = 50;
 
-    public NotasCreditoGUI(Movimiento movimiento) {
+    public NotasDebitoGUI(Movimiento movimiento) {
         this.initComponents();
         this.movimiento = movimiento;
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
@@ -165,18 +166,18 @@ public class NotasCreditoGUI extends JInternalFrame {
         String uriCriteria = getUriCriteria();
         try {
             if (movimiento.equals(Movimiento.NOTA_CLIENTE)) {
-                PaginaRespuestaRest<NotaCreditoCliente> response = RestClient.getRestTemplate()
-                        .exchange("/notas/credito/clientes/busqueda/criteria?" + uriCriteria, HttpMethod.GET, null, 
-                                new ParameterizedTypeReference<PaginaRespuestaRest<NotaCreditoCliente>>() {
+                PaginaRespuestaRest<NotaDebitoCliente> response = RestClient.getRestTemplate()
+                        .exchange("/notas/debito/clientes/busqueda/criteria?" + uriCriteria, HttpMethod.GET, null,
+                                new ParameterizedTypeReference<PaginaRespuestaRest<NotaDebitoCliente>>() {
                         })
                         .getBody();
                 totalElementosBusqueda = response.getTotalElements();
                 notasClienteParcial = response.getContent();
                 notasClienteTotal.addAll(notasClienteParcial);
             } else if (movimiento.equals(Movimiento.NOTA_PROVEEDOR)) {
-                PaginaRespuestaRest<NotaCreditoProveedor> response = RestClient.getRestTemplate()
-                        .exchange("/notas/credito/proveedores/busqueda/criteria?" + uriCriteria, HttpMethod.GET, null,
-                                new ParameterizedTypeReference<PaginaRespuestaRest<NotaCreditoProveedor>>() {
+                PaginaRespuestaRest<NotaDebitoProveedor> response = RestClient.getRestTemplate()
+                        .exchange("/notas/debito/proveedores/busqueda/criteria?" + uriCriteria, HttpMethod.GET, null,
+                                new ParameterizedTypeReference<PaginaRespuestaRest<NotaDebitoProveedor>>() {
                         })
                         .getBody();
                 totalElementosBusqueda = response.getTotalElements();
@@ -299,7 +300,7 @@ public class NotasCreditoGUI extends JInternalFrame {
     private void cargarTiposDeNota() {
         try {
             TipoDeComprobante[] tiposDeComprobantes = RestClient.getRestTemplate()
-                    .getForObject("/notas/credito/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                    .getForObject("/notas/debito/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                             TipoDeComprobante[].class);
             for (int i = 0; tiposDeComprobantes.length > i; i++) {
                 cmb_TipoNota.addItem(tiposDeComprobantes[i]);
@@ -393,7 +394,7 @@ public class NotasCreditoGUI extends JInternalFrame {
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
-        setTitle("Administrar Notas de Credito");
+        setTitle("Administrar Notas de Debito");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/SIC_16_square.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
@@ -826,9 +827,9 @@ public class NotasCreditoGUI extends JInternalFrame {
                 if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
                     int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
                     long idNota = ((notasClienteTotal.size() > 0) ? notasClienteTotal.get(indexFilaSeleccionada).getIdNota() : notasProveedorTotal.get(indexFilaSeleccionada).getIdNota());
-                    DetalleNotaCreditoGUI detalleNotaCreditoGUI = new DetalleNotaCreditoGUI(idNota);
-                    detalleNotaCreditoGUI.setLocationRelativeTo(this);
-                    detalleNotaCreditoGUI.setVisible(true);
+                    DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(idNota);
+                    detalleNotaDebitoGUI.setLocationRelativeTo(this);
+                    detalleNotaDebitoGUI.setVisible(true);
                 }
             }
         }
