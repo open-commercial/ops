@@ -62,25 +62,16 @@ public class NotasCreditoGUI extends JInternalFrame {
                 if (movimiento.equals(movimiento.NOTA_CLIENTE)) {
                     if (notasClienteTotal.size() >= TAMANIO_PAGINA) {
                         NUMERO_PAGINA += 1;
-                        buscar();
+                        buscar(false);
                     }
                 } else if (movimiento.equals(movimiento.NOTA_PROVEEDOR)) {
                     if (notasProveedorTotal.size() >= TAMANIO_PAGINA) {
                         NUMERO_PAGINA += 1;
-                        buscar();
+                        buscar(false);
                     }
                 }
             }
         });
-    }
-
-    public void buscarPorNroNota(long nroPedido) {
-        chk_NumNota.setSelected(true);
-        txt_NroNota.setEnabled(true);
-        txt_SerieNota.setText(String.valueOf(nroPedido));
-        this.resetScroll();
-        this.limpiarJTable();
-        this.buscar(); 
     }
 
     private String getUriCriteria() {
@@ -160,7 +151,7 @@ public class NotasCreditoGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(7).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 
-    private void buscar() {
+    private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
         String uriCriteria = getUriCriteria();
         try {
@@ -184,6 +175,9 @@ public class NotasCreditoGUI extends JInternalFrame {
                 notasProveedorTotal.addAll(notasProveedorParcial);
             }
             this.cargarResultadosAlTable();
+            if (calcularResultados) {
+                this.calcularResultados(uriCriteria);
+            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -363,6 +357,21 @@ public class NotasCreditoGUI extends JInternalFrame {
         }
     }
     
+    
+    private void calcularResultados(String uriCriteria) {
+        if (movimiento.equals(Movimiento.NOTA_CLIENTE)) {
+            txt_ResultTotalIVANotaCredito.setValue(RestClient.getRestTemplate()
+                    .getForObject("/notas/credito/clientes/busqueda/total-iva/criteria?" + uriCriteria, BigDecimal.class));
+            txt_ResultTotalNotasCredito.setValue(RestClient.getRestTemplate()
+                    .getForObject("/notas/credito/clientes/busqueda/total/criteria?" + uriCriteria, BigDecimal.class));
+        } else if (movimiento.equals(Movimiento.NOTA_PROVEEDOR)) {
+            txt_ResultTotalIVANotaCredito.setValue(RestClient.getRestTemplate()
+                    .getForObject("/notas/credito/proveedores/busqueda/total-iva/criteria?" + uriCriteria, BigDecimal.class));
+            txt_ResultTotalNotasCredito.setValue(RestClient.getRestTemplate()
+                    .getForObject("/notas/credito/proveedores/busqueda/total/criteria?" + uriCriteria, BigDecimal.class));
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -373,6 +382,10 @@ public class NotasCreditoGUI extends JInternalFrame {
         btn_VerDetalle = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
         btn_Autorizar = new javax.swing.JButton();
+        txt_ResultTotalNotasCredito = new javax.swing.JFormattedTextField();
+        txt_ResultTotalIVANotaCredito = new javax.swing.JFormattedTextField();
+        lbl_TotalIVANotasCredito = new javax.swing.JLabel();
+        lbl_TotalNotasCredito = new javax.swing.JLabel();
         panelFiltros = new javax.swing.JPanel();
         subPanelFiltros1 = new javax.swing.JPanel();
         chk_Fecha = new javax.swing.JCheckBox();
@@ -453,35 +466,70 @@ public class NotasCreditoGUI extends JInternalFrame {
             }
         });
 
+        txt_ResultTotalNotasCredito.setEditable(false);
+        txt_ResultTotalNotasCredito.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        txt_ResultTotalNotasCredito.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        txt_ResultTotalIVANotaCredito.setEditable(false);
+        txt_ResultTotalIVANotaCredito.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        txt_ResultTotalIVANotaCredito.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        lbl_TotalIVANotasCredito.setText("Total IVA Credito:");
+
+        lbl_TotalNotasCredito.setText("Total Acumulado:");
+
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
                 .addComponent(btn_Eliminar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(btn_Autorizar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(btn_VerDetalle)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
+                        .addComponent(lbl_TotalIVANotasCredito)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txt_ResultTotalIVANotaCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
+                        .addComponent(lbl_TotalNotasCredito)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txt_ResultTotalNotasCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
             .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 938, Short.MAX_VALUE)
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Autorizar, btn_Eliminar, btn_VerDetalle});
 
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lbl_TotalIVANotasCredito, lbl_TotalNotasCredito});
+
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 344, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_VerDetalle)
-                    .addComponent(btn_Autorizar)
-                    .addComponent(btn_Eliminar)))
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btn_VerDetalle)
+                        .addComponent(btn_Autorizar)
+                        .addComponent(btn_Eliminar))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
+                        .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbl_TotalIVANotasCredito)
+                            .addComponent(txt_ResultTotalIVANotaCredito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbl_TotalNotasCredito)
+                            .addComponent(txt_ResultTotalNotasCredito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Autorizar, btn_Eliminar, btn_VerDetalle});
+
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lbl_TotalIVANotasCredito, lbl_TotalNotasCredito});
 
         panelFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
 
@@ -695,7 +743,7 @@ public class NotasCreditoGUI extends JInternalFrame {
     private void btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarActionPerformed
         this.resetScroll();
         this.limpiarJTable();
-        this.buscar();
+        this.buscar(true);
 }//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void chk_NumNotaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_NumNotaItemStateChanged
@@ -768,7 +816,7 @@ public class NotasCreditoGUI extends JInternalFrame {
                             "Aviso", JOptionPane.INFORMATION_MESSAGE);
                     this.resetScroll();
                     this.limpiarJTable();
-                    this.buscar();
+                    this.buscar(true);
 
                 }
             } else {
@@ -805,7 +853,7 @@ public class NotasCreditoGUI extends JInternalFrame {
                             + Arrays.toString(idsNotas).substring(1, Arrays.toString(idsNotas).length() - 1));
                     this.resetScroll();
                     this.limpiarJTable();
-                    this.buscar();
+                    this.buscar(true);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (ResourceAccessException ex) {
@@ -847,6 +895,8 @@ public class NotasCreditoGUI extends JInternalFrame {
     private com.toedter.calendar.JDateChooser dc_FechaHasta;
     private javax.swing.JLabel lbl_Desde;
     private javax.swing.JLabel lbl_Hasta;
+    private javax.swing.JLabel lbl_TotalIVANotasCredito;
+    private javax.swing.JLabel lbl_TotalNotasCredito;
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;
     private javax.swing.JPanel panelResultados;
@@ -856,6 +906,8 @@ public class NotasCreditoGUI extends JInternalFrame {
     private javax.swing.JPanel subPanelFiltros2;
     private javax.swing.JTable tbl_Resultados;
     private javax.swing.JFormattedTextField txt_NroNota;
+    private javax.swing.JFormattedTextField txt_ResultTotalIVANotaCredito;
+    private javax.swing.JFormattedTextField txt_ResultTotalNotasCredito;
     private javax.swing.JFormattedTextField txt_SerieNota;
     // End of variables declaration//GEN-END:variables
 }
