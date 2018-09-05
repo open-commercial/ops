@@ -176,7 +176,7 @@ public class PrincipalGUI extends JFrame {
 
         mnuItm_NotasCompras.setText("Notas");
 
-        mnuItm_NotasCreditoProveedor.setText("Notas Credito");
+        mnuItm_NotasCreditoProveedor.setText("Credito");
         mnuItm_NotasCreditoProveedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuItm_NotasCreditoProveedorActionPerformed(evt);
@@ -184,7 +184,7 @@ public class PrincipalGUI extends JFrame {
         });
         mnuItm_NotasCompras.add(mnuItm_NotasCreditoProveedor);
 
-        mnuItm_NotasDebitoProveedor.setText("Notas Debito");
+        mnuItm_NotasDebitoProveedor.setText("Debito");
         mnuItm_NotasDebitoProveedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuItm_NotasDebitoProveedorActionPerformed(evt);
@@ -217,7 +217,7 @@ public class PrincipalGUI extends JFrame {
 
         mnuItm_NotasVentas.setText("Notas");
 
-        mnuItm_NotasCreditoCliente.setText("Notas Credito");
+        mnuItm_NotasCreditoCliente.setText("Credito");
         mnuItm_NotasCreditoCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuItm_NotasCreditoClienteActionPerformed(evt);
@@ -225,7 +225,7 @@ public class PrincipalGUI extends JFrame {
         });
         mnuItm_NotasVentas.add(mnuItm_NotasCreditoCliente);
 
-        mnuItm_NotasDebitoCliente.setText("Notas Debito");
+        mnuItm_NotasDebitoCliente.setText("Debito");
         mnuItm_NotasDebitoCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuItm_NotasDebitoClienteActionPerformed(evt);
@@ -654,79 +654,35 @@ public class PrincipalGUI extends JFrame {
     }//GEN-LAST:event_mnu_CajasActionPerformed
 
     private void mnuItm_NotasCreditoClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_NotasCreditoClienteActionPerformed
-        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), NotasCreditoGUI.class);
-        if (gui == null) {
-            gui = new NotasCreditoGUI(Movimiento.NOTA_CLIENTE);
-            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-            getDesktopPane().add(gui);
-            gui.setVisible(true);
-        } else {
-            try {
-                gui.setSelected(true);
-            } catch (PropertyVetoException ex) {
-                String msjError = "No se pudo seleccionar la ventana requerida.";
-                LOGGER.error(msjError + " - " + ex.getMessage());
-                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
+        JInternalFrame gui = new NotasCreditoGUI(Movimiento.NOTA_CLIENTE);
+        gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+        getDesktopPane().add(gui);
+        gui.setVisible(true);
     }//GEN-LAST:event_mnuItm_NotasCreditoClienteActionPerformed
 
     private void mnuItm_NotasCreditoProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_NotasCreditoProveedorActionPerformed
-        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), NotasCreditoGUI.class);
-        if (gui == null) {
-            gui = new NotasCreditoGUI(Movimiento.NOTA_PROVEEDOR);
-            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-            getDesktopPane().add(gui);
-            gui.setVisible(true);
-        } else {
-            try {
-                gui.setSelected(true);
-            } catch (PropertyVetoException ex) {
-                String msjError = "No se pudo seleccionar la ventana requerida.";
-                LOGGER.error(msjError + " - " + ex.getMessage());
-                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
+        JInternalFrame gui = new NotasCreditoGUI(Movimiento.NOTA_PROVEEDOR);
+        gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+        getDesktopPane().add(gui);
+        gui.setVisible(true);
     }//GEN-LAST:event_mnuItm_NotasCreditoProveedorActionPerformed
 
     private void mnuItm_NotasDebitoClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_NotasDebitoClienteActionPerformed
-        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), NotasDebitoGUI.class);
-        if (gui == null) {
-            gui = new NotasDebitoGUI(Movimiento.NOTA_CLIENTE);
-            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-            getDesktopPane().add(gui);
-            gui.setVisible(true);
-        } else {
-            try {
-                gui.setSelected(true);
-            } catch (PropertyVetoException ex) {
-                String msjError = "No se pudo seleccionar la ventana requerida.";
-                LOGGER.error(msjError + " - " + ex.getMessage());
-                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
+        JInternalFrame gui = new NotasDebitoGUI(Movimiento.NOTA_CLIENTE);
+        gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+        getDesktopPane().add(gui);
+        gui.setVisible(true);
     }//GEN-LAST:event_mnuItm_NotasDebitoClienteActionPerformed
 
     private void mnuItm_NotasDebitoProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_NotasDebitoProveedorActionPerformed
-        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), NotasDebitoGUI.class);
-        if (gui == null) {
-            gui = new NotasDebitoGUI(Movimiento.NOTA_PROVEEDOR);
-            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-            getDesktopPane().add(gui);
-            gui.setVisible(true);
-        } else {
-            try {
-                gui.setSelected(true);
-            } catch (PropertyVetoException ex) {
-                String msjError = "No se pudo seleccionar la ventana requerida.";
-                LOGGER.error(msjError + " - " + ex.getMessage());
-                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
+        JInternalFrame gui = new NotasDebitoGUI(Movimiento.NOTA_PROVEEDOR);
+        gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+        getDesktopPane().add(gui);
+        gui.setVisible(true);
     }//GEN-LAST:event_mnuItm_NotasDebitoProveedorActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

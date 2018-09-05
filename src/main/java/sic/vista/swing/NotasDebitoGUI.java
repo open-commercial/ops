@@ -63,25 +63,16 @@ public class NotasDebitoGUI extends JInternalFrame {
                 if (movimiento.equals(movimiento.NOTA_CLIENTE)) {
                     if (notasClienteTotal.size() >= TAMANIO_PAGINA) {
                         NUMERO_PAGINA += 1;
-                        buscar();
+                        buscar(false);
                     }
                 } else if (movimiento.equals(movimiento.NOTA_PROVEEDOR)) {
                     if (notasProveedorTotal.size() >= TAMANIO_PAGINA) {
                         NUMERO_PAGINA += 1;
-                        buscar();
+                        buscar(false);
                     }
                 }
             }
         });
-    }
-
-    public void buscarPorNroNota(long nroPedido) {
-        chk_NumNota.setSelected(true);
-        txt_NroNota.setEnabled(true);
-        txt_SerieNota.setText(String.valueOf(nroPedido));
-        this.resetScroll();
-        this.limpiarJTable();
-        this.buscar(); 
     }
 
     private String getUriCriteria() {
@@ -161,7 +152,7 @@ public class NotasDebitoGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(7).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 
-    private void buscar() {
+    private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
         String uriCriteria = getUriCriteria();
         try {
@@ -185,6 +176,9 @@ public class NotasDebitoGUI extends JInternalFrame {
                 notasProveedorTotal.addAll(notasProveedorParcial);
             }
             this.cargarResultadosAlTable();
+            if (calcularResultados) {
+                this.calcularResultados(uriCriteria);
+            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -195,6 +189,20 @@ public class NotasDebitoGUI extends JInternalFrame {
         }
         this.cambiarEstadoEnabledComponentes(true);
         this.cambiarEstadoDeComponentesSegunRolUsuario();
+    }
+    
+    private void calcularResultados(String uriCriteria) {
+        if (movimiento.equals(Movimiento.NOTA_CLIENTE)) {
+            txt_ResultTotalIVANotaDebito.setValue(RestClient.getRestTemplate()
+                    .getForObject("/notas/debito/clientes/total-iva/criteria?" + uriCriteria, BigDecimal.class));
+            txt_ResultTotalNotasDebito.setValue(RestClient.getRestTemplate()
+                    .getForObject("/notas/debito/clientes/total/criteria?" + uriCriteria, BigDecimal.class));
+        } else if (movimiento.equals(Movimiento.NOTA_PROVEEDOR)) {
+            txt_ResultTotalIVANotaDebito.setValue(RestClient.getRestTemplate()
+                    .getForObject("/notas/debito/proveedores/total-iva/criteria?" + uriCriteria, BigDecimal.class));
+            txt_ResultTotalNotasDebito.setValue(RestClient.getRestTemplate()
+                    .getForObject("/notas/debito/proveedores/total/criteria?" + uriCriteria, BigDecimal.class));
+        }
     }
 
     private void cambiarEstadoEnabledComponentes(boolean status) {
@@ -374,6 +382,10 @@ public class NotasDebitoGUI extends JInternalFrame {
         btn_VerDetalle = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
         btn_Autorizar = new javax.swing.JButton();
+        lbl_TotalIVANotasDebito = new javax.swing.JLabel();
+        txt_ResultTotalIVANotaDebito = new javax.swing.JFormattedTextField();
+        lbl_TotalNotasDebito = new javax.swing.JLabel();
+        txt_ResultTotalNotasDebito = new javax.swing.JFormattedTextField();
         panelFiltros = new javax.swing.JPanel();
         subPanelFiltros1 = new javax.swing.JPanel();
         chk_Fecha = new javax.swing.JCheckBox();
@@ -394,7 +406,6 @@ public class NotasDebitoGUI extends JInternalFrame {
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
-        setTitle("Administrar Notas de Debito");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/SIC_16_square.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
@@ -454,6 +465,18 @@ public class NotasDebitoGUI extends JInternalFrame {
             }
         });
 
+        lbl_TotalIVANotasDebito.setText("Total IVA Debito:");
+
+        txt_ResultTotalIVANotaDebito.setEditable(false);
+        txt_ResultTotalIVANotaDebito.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        txt_ResultTotalIVANotaDebito.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        lbl_TotalNotasDebito.setText("Total Acumulado:");
+
+        txt_ResultTotalNotasDebito.setEditable(false);
+        txt_ResultTotalNotasDebito.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        txt_ResultTotalNotasDebito.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
@@ -464,7 +487,16 @@ public class NotasDebitoGUI extends JInternalFrame {
                 .addComponent(btn_Autorizar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_VerDetalle)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
+                        .addComponent(lbl_TotalIVANotasDebito)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txt_ResultTotalIVANotaDebito, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
+                        .addComponent(lbl_TotalNotasDebito)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txt_ResultTotalNotasDebito, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))))
             .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 938, Short.MAX_VALUE)
         );
 
@@ -474,12 +506,21 @@ public class NotasDebitoGUI extends JInternalFrame {
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 344, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_VerDetalle)
-                    .addComponent(btn_Autorizar)
-                    .addComponent(btn_Eliminar)))
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btn_VerDetalle)
+                        .addComponent(btn_Autorizar)
+                        .addComponent(btn_Eliminar))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
+                        .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbl_TotalIVANotasDebito)
+                            .addComponent(txt_ResultTotalIVANotaDebito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbl_TotalNotasDebito)
+                            .addComponent(txt_ResultTotalNotasDebito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Autorizar, btn_Eliminar, btn_VerDetalle});
@@ -696,7 +737,7 @@ public class NotasDebitoGUI extends JInternalFrame {
     private void btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarActionPerformed
         this.resetScroll();
         this.limpiarJTable();
-        this.buscar();
+        this.buscar(true);
 }//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void chk_NumNotaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_NumNotaItemStateChanged
@@ -718,6 +759,11 @@ public class NotasDebitoGUI extends JInternalFrame {
             dc_FechaDesde.setDate(new Date());
             dc_FechaHasta.setDate(new Date());
             this.cambiarEstadoDeComponentesSegunRolUsuario();
+            if (movimiento.equals(Movimiento.NOTA_CLIENTE)) {
+                this.setTitle("Administrar Notas de Debito Cliente");
+            } else if (movimiento.equals(Movimiento.NOTA_PROVEEDOR)) {
+                this.setTitle("Administrar Notas de Debito Proveedor");
+            }
         } catch (PropertyVetoException ex) {
             String mensaje = "Se produjo un error al intentar maximizar la ventana.";
             LOGGER.error(mensaje + " - " + ex.getMessage());
@@ -769,8 +815,7 @@ public class NotasDebitoGUI extends JInternalFrame {
                             "Aviso", JOptionPane.INFORMATION_MESSAGE);
                     this.resetScroll();
                     this.limpiarJTable();
-                    this.buscar();
-
+                    this.buscar(true);
                 }
             } else {
                 JOptionPane.showInternalMessageDialog(this,
@@ -802,11 +847,11 @@ public class NotasDebitoGUI extends JInternalFrame {
                     i++;
                 }
                 try {
-                    RestClient.getRestTemplate().delete("/notas?idsNotas="
+                    RestClient.getRestTemplate().delete("/notas?idsNota="
                             + Arrays.toString(idsNotas).substring(1, Arrays.toString(idsNotas).length() - 1));
                     this.resetScroll();
                     this.limpiarJTable();
-                    this.buscar();
+                    this.buscar(true);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (ResourceAccessException ex) {
@@ -848,6 +893,8 @@ public class NotasDebitoGUI extends JInternalFrame {
     private com.toedter.calendar.JDateChooser dc_FechaHasta;
     private javax.swing.JLabel lbl_Desde;
     private javax.swing.JLabel lbl_Hasta;
+    private javax.swing.JLabel lbl_TotalIVANotasDebito;
+    private javax.swing.JLabel lbl_TotalNotasDebito;
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;
     private javax.swing.JPanel panelResultados;
@@ -857,6 +904,8 @@ public class NotasDebitoGUI extends JInternalFrame {
     private javax.swing.JPanel subPanelFiltros2;
     private javax.swing.JTable tbl_Resultados;
     private javax.swing.JFormattedTextField txt_NroNota;
+    private javax.swing.JFormattedTextField txt_ResultTotalIVANotaDebito;
+    private javax.swing.JFormattedTextField txt_ResultTotalNotasDebito;
     private javax.swing.JFormattedTextField txt_SerieNota;
     // End of variables declaration//GEN-END:variables
 }

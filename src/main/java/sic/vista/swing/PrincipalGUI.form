@@ -105,7 +105,7 @@
               <SubComponents>
                 <MenuItem class="javax.swing.JMenuItem" name="mnuItm_NotasCreditoProveedor">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Notas Credito"/>
+                    <Property name="text" type="java.lang.String" value="Credito"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuItm_NotasCreditoProveedorActionPerformed"/>
@@ -113,7 +113,7 @@
                 </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="mnuItm_NotasDebitoProveedor">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Notas Debito"/>
+                    <Property name="text" type="java.lang.String" value="Debito"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuItm_NotasDebitoProveedorActionPerformed"/>
@@ -154,7 +154,7 @@
               <SubComponents>
                 <MenuItem class="javax.swing.JMenuItem" name="mnuItm_NotasCreditoCliente">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Notas Credito"/>
+                    <Property name="text" type="java.lang.String" value="Credito"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuItm_NotasCreditoClienteActionPerformed"/>
@@ -162,7 +162,7 @@
                 </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="mnuItm_NotasDebitoCliente">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Notas Debito"/>
+                    <Property name="text" type="java.lang.String" value="Debito"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuItm_NotasDebitoClienteActionPerformed"/>

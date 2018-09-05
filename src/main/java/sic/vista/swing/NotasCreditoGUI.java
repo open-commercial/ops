@@ -356,19 +356,18 @@ public class NotasCreditoGUI extends JInternalFrame {
             }
         }
     }
-    
-    
+        
     private void calcularResultados(String uriCriteria) {
         if (movimiento.equals(Movimiento.NOTA_CLIENTE)) {
             txt_ResultTotalIVANotaCredito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/credito/clientes/busqueda/total-iva/criteria?" + uriCriteria, BigDecimal.class));
+                    .getForObject("/notas/credito/clientes/total-iva/criteria?" + uriCriteria, BigDecimal.class));
             txt_ResultTotalNotasCredito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/credito/clientes/busqueda/total/criteria?" + uriCriteria, BigDecimal.class));
+                    .getForObject("/notas/credito/clientes/total/criteria?" + uriCriteria, BigDecimal.class));
         } else if (movimiento.equals(Movimiento.NOTA_PROVEEDOR)) {
             txt_ResultTotalIVANotaCredito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/credito/proveedores/busqueda/total-iva/criteria?" + uriCriteria, BigDecimal.class));
+                    .getForObject("/notas/credito/proveedores/total-iva/criteria?" + uriCriteria, BigDecimal.class));
             txt_ResultTotalNotasCredito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/credito/proveedores/busqueda/total/criteria?" + uriCriteria, BigDecimal.class));
+                    .getForObject("/notas/credito/proveedores/total/criteria?" + uriCriteria, BigDecimal.class));
         }
     }
     
@@ -406,7 +405,6 @@ public class NotasCreditoGUI extends JInternalFrame {
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
-        setTitle("Administrar Notas de Credito");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/SIC_16_square.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
@@ -765,6 +763,11 @@ public class NotasCreditoGUI extends JInternalFrame {
             dc_FechaDesde.setDate(new Date());
             dc_FechaHasta.setDate(new Date());
             this.cambiarEstadoDeComponentesSegunRolUsuario();
+            if (movimiento.equals(Movimiento.NOTA_CLIENTE)) {
+                this.setTitle("Administrar Notas de Credito Cliente");
+            } else if (movimiento.equals(Movimiento.NOTA_PROVEEDOR)) {
+                this.setTitle("Administrar Notas de Credito Proveedor");
+            }
         } catch (PropertyVetoException ex) {
             String mensaje = "Se produjo un error al intentar maximizar la ventana.";
             LOGGER.error(mensaje + " - " + ex.getMessage());
@@ -849,7 +852,7 @@ public class NotasCreditoGUI extends JInternalFrame {
                     i++;
                 }
                 try {
-                    RestClient.getRestTemplate().delete("/notas?idsNotas="
+                    RestClient.getRestTemplate().delete("/notas?idsNota="
                             + Arrays.toString(idsNotas).substring(1, Arrays.toString(idsNotas).length() - 1));
                     this.resetScroll();
                     this.limpiarJTable();
