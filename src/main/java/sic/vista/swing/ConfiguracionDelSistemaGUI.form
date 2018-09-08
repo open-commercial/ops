@@ -32,7 +32,7 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -41,7 +41,7 @@
                           <Component id="lbl_Leyenda" min="-2" max="-2" attributes="1"/>
                           <Component id="panelGeneral" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="0" pref="16" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -79,10 +79,8 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
                       <Component id="panelEmail" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="panelReportes" max="32767" attributes="0"/>
-                          <Component id="panelFE" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="panelReportes" max="32767" attributes="0"/>
+                      <Component id="panelFE" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -118,15 +116,20 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="lbl_CantMaxRenglones" pref="325" max="32767" attributes="0"/>
+                          <Component id="lbl_CantMaxRenglones" pref="300" max="32767" attributes="0"/>
                           <Component id="lbl_PreImpresas" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="chk_PreImpresas" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="txt_CantMaximaRenglones" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="chk_PreImpresas" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Component id="txt_CantMaximaRenglones" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -134,16 +137,14 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="chk_PreImpresas" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" attributes="0">
-                              <Component id="lbl_PreImpresas" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="lbl_CantMaxRenglones" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="txt_CantMaximaRenglones" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
+                      <Group type="103" groupAlignment="2" attributes="0">
+                          <Component id="lbl_PreImpresas" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="chk_PreImpresas" alignment="2" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="2" attributes="0">
+                          <Component id="lbl_CantMaxRenglones" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txt_CantMaximaRenglones" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -185,31 +186,32 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="lbl_UsarFE" alignment="0" pref="325" max="32767" attributes="0"/>
-                              <Component id="lbl_Certificado" alignment="0" max="32767" attributes="0"/>
-                              <Component id="lbl_Firmante" alignment="0" max="32767" attributes="0"/>
-                              <Component id="lbl_Contrasenia" alignment="0" max="32767" attributes="0"/>
-                          </Group>
-                          <Component id="lbl_PuntoDeVenta" alignment="0" min="-2" pref="326" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="txt_FirmanteCert" alignment="0" max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="chk_UsarFE" min="-2" max="-2" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="btn_BuscarCertificado" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbl_certEstado" min="-2" pref="95" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Component id="txt_contraseniaCert" max="32767" attributes="0"/>
-                          <Component id="txt_PuntoDeVentaNro" alignment="0" max="32767" attributes="0"/>
+                          <Component id="lbl_Contrasenia" alignment="0" max="32767" attributes="0"/>
+                          <Component id="lbl_Firmante" alignment="0" max="32767" attributes="0"/>
+                          <Component id="lbl_Certificado" alignment="0" max="32767" attributes="0"/>
+                          <Component id="lbl_UsarFE" alignment="0" pref="300" max="32767" attributes="0"/>
+                          <Component id="lbl_PuntoDeVenta" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="txt_contraseniaCert" max="32767" attributes="0"/>
+                          <Component id="txt_FirmanteCert" alignment="1" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="btn_BuscarCertificado" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lbl_certEstado" pref="122" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="txt_PuntoDeVentaNro" max="32767" attributes="0"/>
+                                  <Component id="chk_UsarFE" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -218,14 +220,14 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="lbl_UsarFE" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="chk_UsarFE" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbl_UsarFE" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="lbl_Certificado" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="btn_BuscarCertificado" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="lbl_certEstado" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbl_Certificado" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
@@ -326,19 +328,19 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Component id="lbl_CorreoElectronico" alignment="0" pref="300" max="32767" attributes="0"/>
+                          <Component id="lbl_Email" alignment="0" max="32767" attributes="0"/>
                           <Component id="lbl_password" max="32767" attributes="0"/>
-                          <Component id="lbl_CorreoElectronico" alignment="1" pref="332" max="32767" attributes="0"/>
-                          <Component id="lbl_Email" alignment="1" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txt_CorreoElectronico" alignment="1" max="32767" attributes="0"/>
+                          <Component id="txtEmailPassword" alignment="1" max="32767" attributes="0"/>
+                          <Component id="txtCorreoElectronico" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
-                              <Component id="chk_Email" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="176" max="32767" attributes="0"/>
+                              <Component id="chkEmail" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="txt_emailPassword" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -348,21 +350,21 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lbl_Email" min="-2" max="-2" attributes="0"/>
-                          <Component id="chk_Email" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="2" attributes="0">
+                          <Component id="chkEmail" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbl_Email" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="lbl_CorreoElectronico" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txt_CorreoElectronico" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="2" attributes="0">
+                          <Component id="lbl_CorreoElectronico" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtCorreoElectronico" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
                           <Component id="lbl_password" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="txt_emailPassword" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtEmailPassword" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="10" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -373,9 +375,9 @@
                 <Property name="text" type="java.lang.String" value="Usar Email:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JCheckBox" name="chk_Email">
+            <Component class="javax.swing.JCheckBox" name="chkEmail">
               <Events>
-                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_EmailItemStateChanged"/>
+                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkEmailItemStateChanged"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="lbl_CorreoElectronico">
@@ -383,7 +385,7 @@
                 <Property name="text" type="java.lang.String" value="Correo Electronico:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="txt_CorreoElectronico">
+            <Component class="javax.swing.JTextField" name="txtCorreoElectronico">
               <Properties>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
@@ -393,7 +395,7 @@
                 <Property name="text" type="java.lang.String" value="Password:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JPasswordField" name="txt_emailPassword">
+            <Component class="javax.swing.JPasswordField" name="txtEmailPassword">
             </Component>
           </SubComponents>
         </Container>
