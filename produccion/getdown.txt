@@ -5,7 +5,7 @@ appbase = https://globo-sic-ops-production.herokuapp.com/
 ui.name = SIC-OPS
 
 # Application jar files
-code = SIC-OPS.jar
+code = SIC-OPS-Andromeda.jar
 
 # The main entry point for the application
 class = manifest
