@@ -312,6 +312,9 @@ public class ClientesGUI extends JInternalFrame {
             case 1:
                 criteriaBusqueda += "ordenarPor=fechaAlta&";
                 break;
+            case 2:
+                criteriaBusqueda += "ordenarPor=nombreFantasia&";
+                break;
         }
         int seleccionDireccion = cmbSentido.getSelectedIndex();
         switch (seleccionDireccion) {
@@ -619,7 +622,7 @@ public class ClientesGUI extends JInternalFrame {
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar Por"));
 
-        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Razón Social", "Fecha Alta" }));
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Razón Social", "Fecha Alta", "Nombre Fantasia" }));
         cmbOrden.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbOrdenItemStateChanged(evt);
