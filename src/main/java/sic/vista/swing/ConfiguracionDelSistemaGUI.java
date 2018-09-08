@@ -24,16 +24,22 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
     
     public ConfiguracionDelSistemaGUI() {
         this.initComponents();    
-        this.setEstadoComponentes(false);
+        this.setEstadoComponentesAfip(false);
+        this.setEstadoComponentesEmail(false);
     }
 
-    private void setEstadoComponentes(boolean estado) {
+    private void setEstadoComponentesAfip(boolean estado) {
         btn_BuscarCertificado.setEnabled(estado);
         lbl_certEstado.setEnabled(estado);
         txt_FirmanteCert.setEnabled(estado);
         txt_contraseniaCert.setEnabled(estado);
         txt_PuntoDeVentaNro.setEnabled(estado);
         txt_PuntoDeVentaNro.setEnabled(estado);
+    }
+    
+    private void setEstadoComponentesEmail(boolean estado) {
+       txtCorreoElectronico.setEnabled(estado);
+       txtEmailPassword.setEnabled(estado);
     }
 
     private void cargarConfiguracionParaModificar() {
@@ -45,6 +51,10 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
               lbl_certEstado.setForeground(Color.GREEN);
               txt_FirmanteCert.setText(cdsModificar.getFirmanteCertificadoAfip());
               txt_PuntoDeVentaNro.setText("" + cdsModificar.getNroPuntoDeVentaAfip());
+        }
+        if (cdsModificar.isEmailSenderHabilitado() && (cdsModificar.getEmailUsername() != null)) {
+            chkEmail.setSelected(true);
+            txtCorreoElectronico.setText(cdsModificar.getEmailUsername());
         }
     }
 
@@ -67,6 +77,15 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
             cdsModificar.setFirmanteCertificadoAfip(null);
             cdsModificar.setPasswordCertificadoAfip(null);
             cdsModificar.setNroPuntoDeVentaAfip(0);
+        }
+        if (chkEmail.isSelected()) {
+            cdsModificar.setEmailSenderHabilitado(chkEmail.isSelected());
+            cdsModificar.setEmailUsername(txtCorreoElectronico.getText());
+            cdsModificar.setEmailPassword(new String(txtEmailPassword.getPassword()));
+        } else {
+            cdsModificar.setEmailSenderHabilitado(false);
+            cdsModificar.setEmailUsername(null);
+            cdsModificar.setEmailPassword(null);
         }
         return cdsModificar;
     }
@@ -93,6 +112,13 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
         lbl_certEstado = new javax.swing.JLabel();
         lbl_PuntoDeVenta = new javax.swing.JLabel();
         txt_PuntoDeVentaNro = new javax.swing.JTextField();
+        panelEmail = new javax.swing.JPanel();
+        lbl_Email = new javax.swing.JLabel();
+        chkEmail = new javax.swing.JCheckBox();
+        lbl_CorreoElectronico = new javax.swing.JLabel();
+        txtCorreoElectronico = new javax.swing.JTextField();
+        lbl_password = new javax.swing.JLabel();
+        txtEmailPassword = new javax.swing.JPasswordField();
         lbl_Leyenda = new javax.swing.JLabel();
         btn_Guardar = new javax.swing.JButton();
 
@@ -134,26 +160,28 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
             .addGroup(panelReportesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lbl_CantMaxRenglones, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
+                    .addComponent(lbl_CantMaxRenglones, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
                     .addComponent(lbl_PreImpresas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(chk_PreImpresas)
-                    .addComponent(txt_CantMaximaRenglones, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelReportesLayout.createSequentialGroup()
+                        .addComponent(chk_PreImpresas)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(panelReportesLayout.createSequentialGroup()
+                        .addComponent(txt_CantMaximaRenglones)
+                        .addContainerGap())))
         );
         panelReportesLayout.setVerticalGroup(
             panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelReportesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(chk_PreImpresas)
-                    .addGroup(panelReportesLayout.createSequentialGroup()
-                        .addComponent(lbl_PreImpresas)
-                        .addGap(18, 18, 18)
-                        .addGroup(panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lbl_CantMaxRenglones)
-                            .addComponent(txt_CantMaximaRenglones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGroup(panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lbl_PreImpresas)
+                    .addComponent(chk_PreImpresas))
+                .addGap(18, 18, 18)
+                .addGroup(panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lbl_CantMaxRenglones)
+                    .addComponent(txt_CantMaximaRenglones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -200,38 +228,39 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
             panelFELayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFELayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelFELayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelFELayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(lbl_UsarFE, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
-                        .addComponent(lbl_Certificado, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lbl_Firmante, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lbl_Contrasenia, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(lbl_PuntoDeVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFELayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(txt_FirmanteCert, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelFELayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(chk_UsarFE)
-                        .addGroup(panelFELayout.createSequentialGroup()
-                            .addComponent(btn_BuscarCertificado)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(lbl_certEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(lbl_Contrasenia, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_Firmante, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_Certificado, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_UsarFE, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                    .addComponent(lbl_PuntoDeVenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelFELayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txt_contraseniaCert)
-                    .addComponent(txt_PuntoDeVentaNro, javax.swing.GroupLayout.Alignment.LEADING))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(txt_FirmanteCert, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelFELayout.createSequentialGroup()
+                        .addComponent(btn_BuscarCertificado)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbl_certEstado, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))
+                    .addGroup(panelFELayout.createSequentialGroup()
+                        .addGroup(panelFELayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txt_PuntoDeVentaNro)
+                            .addComponent(chk_UsarFE))
+                        .addGap(1, 1, 1)))
+                .addContainerGap())
         );
         panelFELayout.setVerticalGroup(
             panelFELayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFELayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelFELayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_UsarFE)
-                    .addComponent(chk_UsarFE))
+                    .addComponent(chk_UsarFE)
+                    .addComponent(lbl_UsarFE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelFELayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Certificado)
                     .addComponent(btn_BuscarCertificado)
-                    .addComponent(lbl_certEstado))
+                    .addComponent(lbl_certEstado)
+                    .addComponent(lbl_Certificado))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelFELayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_Firmante)
@@ -244,7 +273,60 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
                 .addGroup(panelFELayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_PuntoDeVenta)
                     .addComponent(txt_PuntoDeVentaNro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(9, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        panelEmail.setBorder(javax.swing.BorderFactory.createTitledBorder("Email"));
+
+        lbl_Email.setText("Usar Email:");
+
+        chkEmail.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chkEmailItemStateChanged(evt);
+            }
+        });
+
+        lbl_CorreoElectronico.setText("Correo Electronico:");
+
+        txtCorreoElectronico.setEnabled(false);
+
+        lbl_password.setText("Password:");
+
+        javax.swing.GroupLayout panelEmailLayout = new javax.swing.GroupLayout(panelEmail);
+        panelEmail.setLayout(panelEmailLayout);
+        panelEmailLayout.setHorizontalGroup(
+            panelEmailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelEmailLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelEmailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(lbl_CorreoElectronico, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                    .addComponent(lbl_Email, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_password, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelEmailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtEmailPassword, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtCorreoElectronico)
+                    .addGroup(panelEmailLayout.createSequentialGroup()
+                        .addComponent(chkEmail)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        panelEmailLayout.setVerticalGroup(
+            panelEmailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelEmailLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelEmailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(chkEmail)
+                    .addComponent(lbl_Email))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelEmailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lbl_CorreoElectronico)
+                    .addComponent(txtCorreoElectronico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelEmailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lbl_password)
+                    .addComponent(txtEmailPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout panelGeneralLayout = new javax.swing.GroupLayout(panelGeneral);
@@ -254,8 +336,9 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
             .addGroup(panelGeneralLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(panelEmail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelReportes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelFE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(panelFE, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelGeneralLayout.setVerticalGroup(
@@ -265,6 +348,8 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
                 .addComponent(panelReportes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelFE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -288,12 +373,13 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lbl_Leyenda)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(panelGeneral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btn_Guardar)))
+                        .addComponent(btn_Guardar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbl_Leyenda)
+                            .addComponent(panelGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -352,9 +438,9 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
 
     private void chk_UsarFEItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UsarFEItemStateChanged
         if (chk_UsarFE.isSelected()) {
-            this.setEstadoComponentes(true);
+            this.setEstadoComponentesAfip(true);
         } else {                       
-            this.setEstadoComponentes(false);
+            this.setEstadoComponentesAfip(false);
         }
     }//GEN-LAST:event_chk_UsarFEItemStateChanged
 
@@ -382,23 +468,38 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
         }        
     }//GEN-LAST:event_formInternalFrameOpened
 
+    private void chkEmailItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkEmailItemStateChanged
+        if (chkEmail.isSelected()) {
+            this.setEstadoComponentesEmail(true);
+        } else {
+            this.setEstadoComponentesEmail(false);
+        }
+    }//GEN-LAST:event_chkEmailItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_BuscarCertificado;
     private javax.swing.JButton btn_Guardar;
+    private javax.swing.JCheckBox chkEmail;
     private javax.swing.JCheckBox chk_PreImpresas;
     private javax.swing.JCheckBox chk_UsarFE;
     private javax.swing.JLabel lbl_CantMaxRenglones;
     private javax.swing.JLabel lbl_Certificado;
     private javax.swing.JLabel lbl_Contrasenia;
+    private javax.swing.JLabel lbl_CorreoElectronico;
+    private javax.swing.JLabel lbl_Email;
     private javax.swing.JLabel lbl_Firmante;
     private javax.swing.JLabel lbl_Leyenda;
     private javax.swing.JLabel lbl_PreImpresas;
     private javax.swing.JLabel lbl_PuntoDeVenta;
     private javax.swing.JLabel lbl_UsarFE;
     private javax.swing.JLabel lbl_certEstado;
+    private javax.swing.JLabel lbl_password;
+    private javax.swing.JPanel panelEmail;
     private javax.swing.JPanel panelFE;
     private javax.swing.JPanel panelGeneral;
     private javax.swing.JPanel panelReportes;
+    private javax.swing.JTextField txtCorreoElectronico;
+    private javax.swing.JPasswordField txtEmailPassword;
     private javax.swing.JFormattedTextField txt_CantMaximaRenglones;
     private javax.swing.JTextField txt_FirmanteCert;
     private javax.swing.JTextField txt_PuntoDeVentaNro;

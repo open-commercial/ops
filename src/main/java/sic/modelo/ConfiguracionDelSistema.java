@@ -14,5 +14,9 @@ public class ConfiguracionDelSistema implements Serializable {
     private String firmanteCertificadoAfip;    
     private String passwordCertificadoAfip;
     private int nroPuntoDeVentaAfip;
+    private boolean emailSenderHabilitado;
+    private String emailUsername;
+    private String emailPassword;
     private Empresa empresa;
+    
 }
