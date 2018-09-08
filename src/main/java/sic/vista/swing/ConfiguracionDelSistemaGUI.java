@@ -24,16 +24,22 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
     
     public ConfiguracionDelSistemaGUI() {
         this.initComponents();    
-        this.setEstadoComponentes(false);
+        this.setEstadoComponentesAfip(false);
+        this.setEstadoComponentesEmail(false);
     }
 
-    private void setEstadoComponentes(boolean estado) {
+    private void setEstadoComponentesAfip(boolean estado) {
         btn_BuscarCertificado.setEnabled(estado);
         lbl_certEstado.setEnabled(estado);
         txt_FirmanteCert.setEnabled(estado);
         txt_contraseniaCert.setEnabled(estado);
         txt_PuntoDeVentaNro.setEnabled(estado);
         txt_PuntoDeVentaNro.setEnabled(estado);
+    }
+    
+    private void setEstadoComponentesEmail(boolean estado) {
+       txt_CorreoElectronico.setEnabled(estado);
+       txt_emailPassword.setEnabled(estado);
     }
 
     private void cargarConfiguracionParaModificar() {
@@ -45,6 +51,10 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
               lbl_certEstado.setForeground(Color.GREEN);
               txt_FirmanteCert.setText(cdsModificar.getFirmanteCertificadoAfip());
               txt_PuntoDeVentaNro.setText("" + cdsModificar.getNroPuntoDeVentaAfip());
+        }
+        if (cdsModificar.isEmailSenderHabilitado() && (cdsModificar.getEmailUsername() != null)) {
+            chk_Email.setSelected(true);
+            txt_CorreoElectronico.setText(cdsModificar.getEmailUsername());
         }
     }
 
@@ -67,6 +77,15 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
             cdsModificar.setFirmanteCertificadoAfip(null);
             cdsModificar.setPasswordCertificadoAfip(null);
             cdsModificar.setNroPuntoDeVentaAfip(0);
+        }
+        if (chk_Email.isSelected()) {
+            cdsModificar.setEmailSenderHabilitado(chk_Email.isSelected());
+            cdsModificar.setEmailUsername(txt_CorreoElectronico.getText());
+            cdsModificar.setEmailPassword(txt_emailPassword.getText());
+        } else {
+            cdsModificar.setEmailSenderHabilitado(false);
+            cdsModificar.setEmailUsername(null);
+            cdsModificar.setEmailPassword(null);
         }
         return cdsModificar;
     }
@@ -93,6 +112,13 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
         lbl_certEstado = new javax.swing.JLabel();
         lbl_PuntoDeVenta = new javax.swing.JLabel();
         txt_PuntoDeVentaNro = new javax.swing.JTextField();
+        panelEmail = new javax.swing.JPanel();
+        lbl_Email = new javax.swing.JLabel();
+        chk_Email = new javax.swing.JCheckBox();
+        lbl_CorreoElectronico = new javax.swing.JLabel();
+        txt_CorreoElectronico = new javax.swing.JTextField();
+        lbl_password = new javax.swing.JLabel();
+        txt_emailPassword = new javax.swing.JPasswordField();
         lbl_Leyenda = new javax.swing.JLabel();
         btn_Guardar = new javax.swing.JButton();
 
@@ -244,7 +270,60 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
                 .addGroup(panelFELayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_PuntoDeVenta)
                     .addComponent(txt_PuntoDeVentaNro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(9, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        panelEmail.setBorder(javax.swing.BorderFactory.createTitledBorder("Email"));
+
+        lbl_Email.setText("Usar Email:");
+
+        chk_Email.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chk_EmailItemStateChanged(evt);
+            }
+        });
+
+        lbl_CorreoElectronico.setText("Correo Electronico:");
+
+        txt_CorreoElectronico.setEnabled(false);
+
+        lbl_password.setText("Password:");
+
+        javax.swing.GroupLayout panelEmailLayout = new javax.swing.GroupLayout(panelEmail);
+        panelEmail.setLayout(panelEmailLayout);
+        panelEmailLayout.setHorizontalGroup(
+            panelEmailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelEmailLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelEmailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lbl_password, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_CorreoElectronico, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
+                    .addComponent(lbl_Email, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelEmailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txt_CorreoElectronico, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelEmailLayout.createSequentialGroup()
+                        .addComponent(chk_Email)
+                        .addGap(0, 176, Short.MAX_VALUE))
+                    .addComponent(txt_emailPassword))
+                .addContainerGap())
+        );
+        panelEmailLayout.setVerticalGroup(
+            panelEmailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelEmailLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelEmailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_Email)
+                    .addComponent(chk_Email))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelEmailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_CorreoElectronico)
+                    .addComponent(txt_CorreoElectronico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelEmailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lbl_password)
+                    .addComponent(txt_emailPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout panelGeneralLayout = new javax.swing.GroupLayout(panelGeneral);
@@ -254,8 +333,10 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
             .addGroup(panelGeneralLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(panelReportes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelFE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(panelEmail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(panelReportes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(panelFE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelGeneralLayout.setVerticalGroup(
@@ -265,6 +346,8 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
                 .addComponent(panelReportes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelFE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -287,13 +370,14 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lbl_Leyenda)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(panelGeneral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btn_Guardar)))
+                        .addComponent(btn_Guardar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbl_Leyenda)
+                            .addComponent(panelGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 16, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -352,9 +436,9 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
 
     private void chk_UsarFEItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UsarFEItemStateChanged
         if (chk_UsarFE.isSelected()) {
-            this.setEstadoComponentes(true);
+            this.setEstadoComponentesAfip(true);
         } else {                       
-            this.setEstadoComponentes(false);
+            this.setEstadoComponentesAfip(false);
         }
     }//GEN-LAST:event_chk_UsarFEItemStateChanged
 
@@ -382,26 +466,41 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
         }        
     }//GEN-LAST:event_formInternalFrameOpened
 
+    private void chk_EmailItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_EmailItemStateChanged
+        if (chk_Email.isSelected()) {
+            this.setEstadoComponentesEmail(true);
+        } else {
+            this.setEstadoComponentesEmail(false);
+        }
+    }//GEN-LAST:event_chk_EmailItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_BuscarCertificado;
     private javax.swing.JButton btn_Guardar;
+    private javax.swing.JCheckBox chk_Email;
     private javax.swing.JCheckBox chk_PreImpresas;
     private javax.swing.JCheckBox chk_UsarFE;
     private javax.swing.JLabel lbl_CantMaxRenglones;
     private javax.swing.JLabel lbl_Certificado;
     private javax.swing.JLabel lbl_Contrasenia;
+    private javax.swing.JLabel lbl_CorreoElectronico;
+    private javax.swing.JLabel lbl_Email;
     private javax.swing.JLabel lbl_Firmante;
     private javax.swing.JLabel lbl_Leyenda;
     private javax.swing.JLabel lbl_PreImpresas;
     private javax.swing.JLabel lbl_PuntoDeVenta;
     private javax.swing.JLabel lbl_UsarFE;
     private javax.swing.JLabel lbl_certEstado;
+    private javax.swing.JLabel lbl_password;
+    private javax.swing.JPanel panelEmail;
     private javax.swing.JPanel panelFE;
     private javax.swing.JPanel panelGeneral;
     private javax.swing.JPanel panelReportes;
     private javax.swing.JFormattedTextField txt_CantMaximaRenglones;
+    private javax.swing.JTextField txt_CorreoElectronico;
     private javax.swing.JTextField txt_FirmanteCert;
     private javax.swing.JTextField txt_PuntoDeVentaNro;
     private javax.swing.JPasswordField txt_contraseniaCert;
+    private javax.swing.JPasswordField txt_emailPassword;
     // End of variables declaration//GEN-END:variables
 }
