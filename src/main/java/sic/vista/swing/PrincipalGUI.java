@@ -67,16 +67,12 @@ public class PrincipalGUI extends JFrame {
         mnuItm_Salir = new javax.swing.JMenuItem();
         mnu_Compras = new javax.swing.JMenu();
         mnuItm_FacturasCompra = new javax.swing.JMenuItem();
-        mnuItm_NotasCompras = new javax.swing.JMenu();
-        mnuItm_NotasCreditoProveedor = new javax.swing.JMenuItem();
-        mnuItm_NotasDebitoProveedor = new javax.swing.JMenuItem();
+        mnuItm_NotasCompra = new javax.swing.JMenuItem();
         mnuItm_Proveedores = new javax.swing.JMenuItem();
         mnu_Ventas = new javax.swing.JMenu();
         mnuItm_FacturasVenta = new javax.swing.JMenuItem();
-        mnuItm_NotasVentas = new javax.swing.JMenu();
-        mnuItm_NotasCreditoCliente = new javax.swing.JMenuItem();
-        mnuItm_NotasDebitoCliente = new javax.swing.JMenuItem();
         mnuItm_Pedidos = new javax.swing.JMenuItem();
+        mnuItm_NotasVenta = new javax.swing.JMenuItem();
         mnuItm_Clientes = new javax.swing.JMenuItem();
         mnu_Administracion = new javax.swing.JMenu();
         mnuItm_Transportistas = new javax.swing.JMenuItem();
@@ -174,25 +170,13 @@ public class PrincipalGUI extends JFrame {
         });
         mnu_Compras.add(mnuItm_FacturasCompra);
 
-        mnuItm_NotasCompras.setText("Notas");
-
-        mnuItm_NotasCreditoProveedor.setText("Credito");
-        mnuItm_NotasCreditoProveedor.addActionListener(new java.awt.event.ActionListener() {
+        mnuItm_NotasCompra.setText("Notas");
+        mnuItm_NotasCompra.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuItm_NotasCreditoProveedorActionPerformed(evt);
+                mnuItm_NotasCompraActionPerformed(evt);
             }
         });
-        mnuItm_NotasCompras.add(mnuItm_NotasCreditoProveedor);
-
-        mnuItm_NotasDebitoProveedor.setText("Debito");
-        mnuItm_NotasDebitoProveedor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuItm_NotasDebitoProveedorActionPerformed(evt);
-            }
-        });
-        mnuItm_NotasCompras.add(mnuItm_NotasDebitoProveedor);
-
-        mnu_Compras.add(mnuItm_NotasCompras);
+        mnu_Compras.add(mnuItm_NotasCompra);
 
         mnuItm_Proveedores.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/ProviderBag_16x16.png"))); // NOI18N
         mnuItm_Proveedores.setText("Proveedores");
@@ -215,26 +199,6 @@ public class PrincipalGUI extends JFrame {
         });
         mnu_Ventas.add(mnuItm_FacturasVenta);
 
-        mnuItm_NotasVentas.setText("Notas");
-
-        mnuItm_NotasCreditoCliente.setText("Credito");
-        mnuItm_NotasCreditoCliente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuItm_NotasCreditoClienteActionPerformed(evt);
-            }
-        });
-        mnuItm_NotasVentas.add(mnuItm_NotasCreditoCliente);
-
-        mnuItm_NotasDebitoCliente.setText("Debito");
-        mnuItm_NotasDebitoCliente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuItm_NotasDebitoClienteActionPerformed(evt);
-            }
-        });
-        mnuItm_NotasVentas.add(mnuItm_NotasDebitoCliente);
-
-        mnu_Ventas.add(mnuItm_NotasVentas);
-
         mnuItm_Pedidos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/PedidoFacturar_16x16.png"))); // NOI18N
         mnuItm_Pedidos.setText("Pedidos");
         mnuItm_Pedidos.addActionListener(new java.awt.event.ActionListener() {
@@ -243,6 +207,14 @@ public class PrincipalGUI extends JFrame {
             }
         });
         mnu_Ventas.add(mnuItm_Pedidos);
+
+        mnuItm_NotasVenta.setText("Notas");
+        mnuItm_NotasVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuItm_NotasVentaActionPerformed(evt);
+            }
+        });
+        mnu_Ventas.add(mnuItm_NotasVenta);
 
         mnuItm_Clientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Client_16x16.png"))); // NOI18N
         mnuItm_Clientes.setText("Clientes");
@@ -653,37 +625,43 @@ public class PrincipalGUI extends JFrame {
         }
     }//GEN-LAST:event_mnu_CajasActionPerformed
 
-    private void mnuItm_NotasCreditoClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_NotasCreditoClienteActionPerformed
-        JInternalFrame gui = new NotasCreditoGUI(Movimiento.NOTA_CLIENTE);
-        gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-        getDesktopPane().add(gui);
-        gui.setVisible(true);
-    }//GEN-LAST:event_mnuItm_NotasCreditoClienteActionPerformed
+    private void mnuItm_NotasVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_NotasVentaActionPerformed
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), NotasCompraGUI.class);
+        if (gui == null) {
+            gui = new NotasVentaGUI();
+            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+            getDesktopPane().add(gui);
+            gui.setVisible(true);
+        } else {
+            try {
+                gui.setSelected(true);
+            } catch (PropertyVetoException ex) {
+                String msjError = "No se pudo seleccionar la ventana requerida.";
+                LOGGER.error(msjError + " - " + ex.getMessage());
+                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_mnuItm_NotasVentaActionPerformed
 
-    private void mnuItm_NotasCreditoProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_NotasCreditoProveedorActionPerformed
-        JInternalFrame gui = new NotasCreditoGUI(Movimiento.NOTA_PROVEEDOR);
-        gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-        getDesktopPane().add(gui);
-        gui.setVisible(true);
-    }//GEN-LAST:event_mnuItm_NotasCreditoProveedorActionPerformed
-
-    private void mnuItm_NotasDebitoClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_NotasDebitoClienteActionPerformed
-        JInternalFrame gui = new NotasDebitoGUI(Movimiento.NOTA_CLIENTE);
-        gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-        getDesktopPane().add(gui);
-        gui.setVisible(true);
-    }//GEN-LAST:event_mnuItm_NotasDebitoClienteActionPerformed
-
-    private void mnuItm_NotasDebitoProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_NotasDebitoProveedorActionPerformed
-        JInternalFrame gui = new NotasDebitoGUI(Movimiento.NOTA_PROVEEDOR);
-        gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
-                getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
-        getDesktopPane().add(gui);
-        gui.setVisible(true);
-    }//GEN-LAST:event_mnuItm_NotasDebitoProveedorActionPerformed
+    private void mnuItm_NotasCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_NotasCompraActionPerformed
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), NotasCompraGUI.class);
+        if (gui == null) {
+            gui = new NotasCompraGUI();
+            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+            getDesktopPane().add(gui);
+            gui.setVisible(true);
+        } else {
+            try {
+                gui.setSelected(true);
+            } catch (PropertyVetoException ex) {
+                String msjError = "No se pudo seleccionar la ventana requerida.";
+                LOGGER.error(msjError + " - " + ex.getMessage());
+                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_mnuItm_NotasCompraActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane dp_Escritorio;
@@ -697,12 +675,8 @@ public class PrincipalGUI extends JFrame {
     private javax.swing.JMenuItem mnuItm_FacturasVenta;
     private javax.swing.JMenuItem mnuItm_FormasDePago;
     private javax.swing.JMenuItem mnuItm_IrTPV;
-    private javax.swing.JMenu mnuItm_NotasCompras;
-    private javax.swing.JMenuItem mnuItm_NotasCreditoCliente;
-    private javax.swing.JMenuItem mnuItm_NotasCreditoProveedor;
-    private javax.swing.JMenuItem mnuItm_NotasDebitoCliente;
-    private javax.swing.JMenuItem mnuItm_NotasDebitoProveedor;
-    private javax.swing.JMenu mnuItm_NotasVentas;
+    private javax.swing.JMenuItem mnuItm_NotasCompra;
+    private javax.swing.JMenuItem mnuItm_NotasVenta;
     private javax.swing.JMenuItem mnuItm_Pedidos;
     private javax.swing.JMenuItem mnuItm_Productos;
     private javax.swing.JMenuItem mnuItm_Proveedores;

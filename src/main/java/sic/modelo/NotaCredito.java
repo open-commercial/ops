@@ -1,6 +1,5 @@
 package sic.modelo;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,11 +11,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonSubTypes({
-  @JsonSubTypes.Type(value = NotaCreditoCliente.class),
-  @JsonSubTypes.Type(value = NotaCreditoProveedor.class), 
-})
-public abstract class NotaCredito extends Nota implements Serializable {
+public class NotaCredito extends Nota implements Serializable {
     
     private List<RenglonNotaCredito> renglonesNotaCredito;
     
@@ -33,14 +28,14 @@ public abstract class NotaCredito extends Nota implements Serializable {
     public NotaCredito() {}
 
     public NotaCredito(long idNota, long serie, long nroNota, boolean eliminada,
-            TipoDeComprobante tipoDeComprobante, Date fecha, Empresa empresa,
-            Usuario usuario, String motivo, List<RenglonNotaCredito> renglones, BigDecimal subTotalBruto, 
+            TipoDeComprobante tipoDeComprobante, Date fecha, Usuario usuario,
+            String motivo, List<RenglonNotaCredito> renglones, BigDecimal subTotalBruto,
             BigDecimal iva21Neto, BigDecimal iva105Neto, BigDecimal total, long CAE, Date vencimientoCAE,
             long numSerieAfip, long numFacturaAfip) {
-        
-        super(idNota, serie, nroNota, eliminada, tipoDeComprobante, fecha, empresa, usuario,
+
+        super(idNota, serie, nroNota, eliminada, tipoDeComprobante, fecha, usuario,
                 motivo, subTotalBruto, iva21Neto, iva105Neto, total, CAE, vencimientoCAE, numSerieAfip, numFacturaAfip);
         this.renglonesNotaCredito = renglones;
     }
-    
+
 }

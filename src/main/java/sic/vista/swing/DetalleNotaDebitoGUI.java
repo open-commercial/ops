@@ -23,8 +23,6 @@ import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.NotaDebito;
-import sic.modelo.NotaDebitoCliente;
-import sic.modelo.NotaDebitoProveedor;
 import sic.modelo.Proveedor;
 import sic.modelo.Recibo;
 import sic.modelo.RenglonNotaDebito;
@@ -141,7 +139,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
     }
     
     private void guardarNotaDebitoCliente() {
-        NotaDebitoCliente notaDebitoCliente = new NotaDebitoCliente();
+        NotaDebito notaDebitoCliente = new NotaDebito();
         notaDebitoCliente.setFecha(new Date());
         notaDebitoCliente.setIva21Neto(new BigDecimal(txtIVA21Neto.getValue().toString()));
         notaDebitoCliente.setIva105Neto(BigDecimal.ZERO);
@@ -208,7 +206,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
     }
     
     private void guardarNotaDebitoProveedor() {
-        NotaDebitoProveedor notaDebitoProveedor = new NotaDebitoProveedor();
+        NotaDebito notaDebitoProveedor = new NotaDebito();
         notaDebitoProveedor.setFecha(new Date());
         notaDebitoProveedor.setIva21Neto(new BigDecimal(txtIVA21Neto.getValue().toString()));
         notaDebitoProveedor.setIva105Neto(BigDecimal.ZERO);
@@ -246,20 +244,22 @@ public class DetalleNotaDebitoGUI extends JDialog {
     
     private void cargarDetalleNotaDebitoProveedor() {
         try {
-            NotaDebitoProveedor notaDebitoProveedor = RestClient.getRestTemplate().getForObject("/notas/" + idNotaDebitoProveedor, NotaDebitoProveedor.class);
+            NotaDebito notaDebitoProveedor = RestClient.getRestTemplate().getForObject("/notas/" + idNotaDebitoProveedor, NotaDebito.class);
+            Proveedor proveedorDeNota = RestClient.getRestTemplate()
+                .getForObject("/proveedores/" + notaDebitoProveedor.getIdProveedor(), Proveedor.class);
             this.setTitle(notaDebitoProveedor.getTipoComprobante() + " Nº " + notaDebitoProveedor.getSerie() + " - " + notaDebitoProveedor.getNroNota()
-                    + " con fecha " + formatter.format(notaDebitoProveedor.getFecha()) + " del Proveedor: " + notaDebitoProveedor.getProveedor().getRazonSocial());
+                    + " con fecha " + formatter.format(notaDebitoProveedor.getFecha()) + " del Proveedor: " + proveedorDeNota.getRazonSocial());
             txt_Serie.setEnabled(false);
             txt_Numero.setEnabled(false);
             txt_Serie.setText(String.valueOf(notaDebitoProveedor.getSerie()));
             txt_Numero.setText(String.valueOf(notaDebitoProveedor.getNroNota()));
-            txtNombre.setText(notaDebitoProveedor.getProveedor().getRazonSocial());
-            txtDomicilio.setText(notaDebitoProveedor.getProveedor().getDireccion()
-                    + " " + notaDebitoProveedor.getProveedor().getLocalidad().getNombre()
-                    + " " + notaDebitoProveedor.getProveedor().getLocalidad().getProvincia().getNombre()
-                    + " " + notaDebitoProveedor.getProveedor().getLocalidad().getProvincia().getPais());
-            txtCondicionIVA.setText(notaDebitoProveedor.getProveedor().getCondicionIVA().getNombre());
-            txtIDFiscal.setText(notaDebitoProveedor.getProveedor().getIdFiscal());
+            txtNombre.setText(proveedorDeNota.getRazonSocial());
+            txtDomicilio.setText(proveedorDeNota.getDireccion()
+                    + " " + proveedorDeNota.getLocalidad().getNombre()
+                    + " " + proveedorDeNota.getLocalidad().getProvincia().getNombre()
+                    + " " + proveedorDeNota.getLocalidad().getProvincia().getPais());
+            txtCondicionIVA.setText(proveedorDeNota.getCondicionIVA().getNombre());
+            txtIDFiscal.setText(proveedorDeNota.getIdFiscal());
             lblDetallePago.setText("Nº Recibo: " + notaDebitoProveedor.getRecibo().getNumSerie() + " - " + notaDebitoProveedor.getRecibo().getNumRecibo() + " - " + notaDebitoProveedor.getRecibo().getConcepto());
             lblMontoPago.setText("$" + FormatterNumero.formatConRedondeo(notaDebitoProveedor.getRecibo().getMonto()));
             lblImportePago.setText("$" + FormatterNumero.formatConRedondeo(notaDebitoProveedor.getRecibo().getMonto()));

@@ -27,9 +27,7 @@ import sic.RestClient;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.FacturaVenta;
 import sic.modelo.Movimiento;
-import sic.modelo.NotaDebito;
-import sic.modelo.NotaDebitoCliente;
-import sic.modelo.NotaDebitoProveedor;
+import sic.modelo.Nota;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
@@ -39,37 +37,26 @@ import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
 import sic.util.Utilidades;
 
-public class NotasDebitoGUI extends JInternalFrame {
+public class NotasVentaGUI extends JInternalFrame {
 
     private ModeloTabla modeloTablaNotas = new ModeloTabla();
-    private List<NotaDebitoCliente> notasClienteTotal = new ArrayList<>();
-    private List<NotaDebitoCliente> notasClienteParcial = new ArrayList<>();
-    private List<NotaDebitoProveedor> notasProveedorTotal = new ArrayList<>();
-    private List<NotaDebitoProveedor> notasProveedorParcial = new ArrayList<>();
-    private Movimiento movimiento;
+    private List<Nota> notasTotal = new ArrayList<>();
+    private List<Nota> notasParcial = new ArrayList<>();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(970, 600);
     private static int totalElementosBusqueda;
     private static int NUMERO_PAGINA = 0;
     private static final int TAMANIO_PAGINA = 50;
 
-    public NotasDebitoGUI(Movimiento movimiento) {
+    public NotasVentaGUI() {
         this.initComponents();
-        this.movimiento = movimiento;
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
             int va = scrollBar.getVisibleAmount() + 50;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (movimiento.equals(movimiento.NOTA_CLIENTE)) {
-                    if (notasClienteTotal.size() >= TAMANIO_PAGINA) {
-                        NUMERO_PAGINA += 1;
-                        buscar(false);
-                    }
-                } else if (movimiento.equals(movimiento.NOTA_PROVEEDOR)) {
-                    if (notasProveedorTotal.size() >= TAMANIO_PAGINA) {
-                        NUMERO_PAGINA += 1;
-                        buscar(false);
-                    }
+                if (notasTotal.size() >= TAMANIO_PAGINA) {
+                    NUMERO_PAGINA += 1;
+                    buscar(false);
                 }
             }
         });
@@ -102,7 +89,7 @@ public class NotasDebitoGUI extends JInternalFrame {
         encabezados[1] = "Fecha Nota";
         encabezados[2] = "Tipo";
         encabezados[3] = "Nº Nota";
-        encabezados[4] = (movimiento.equals(Movimiento.NOTA_CLIENTE) ? "Cliente" : "Proveedor");
+        encabezados[4] = "Cliente";
         encabezados[5] = "Total";
         encabezados[6] = "Nº Nota Afip";
         encabezados[7] = "Vencimiento CAE";
@@ -156,25 +143,14 @@ public class NotasDebitoGUI extends JInternalFrame {
         this.cambiarEstadoEnabledComponentes(false);
         String uriCriteria = getUriCriteria();
         try {
-            if (movimiento.equals(Movimiento.NOTA_CLIENTE)) {
-                PaginaRespuestaRest<NotaDebitoCliente> response = RestClient.getRestTemplate()
-                        .exchange("/notas/debito/clientes/busqueda/criteria?" + uriCriteria, HttpMethod.GET, null,
-                                new ParameterizedTypeReference<PaginaRespuestaRest<NotaDebitoCliente>>() {
-                        })
-                        .getBody();
-                totalElementosBusqueda = response.getTotalElements();
-                notasClienteParcial = response.getContent();
-                notasClienteTotal.addAll(notasClienteParcial);
-            } else if (movimiento.equals(Movimiento.NOTA_PROVEEDOR)) {
-                PaginaRespuestaRest<NotaDebitoProveedor> response = RestClient.getRestTemplate()
-                        .exchange("/notas/debito/proveedores/busqueda/criteria?" + uriCriteria, HttpMethod.GET, null,
-                                new ParameterizedTypeReference<PaginaRespuestaRest<NotaDebitoProveedor>>() {
-                        })
-                        .getBody();
-                totalElementosBusqueda = response.getTotalElements();
-                notasProveedorParcial = response.getContent();
-                notasProveedorTotal.addAll(notasProveedorParcial);
-            }
+            PaginaRespuestaRest<Nota> response = RestClient.getRestTemplate()
+                    .exchange("/notas/ventas/busqueda/criteria?" + uriCriteria, HttpMethod.GET, null,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<Nota>>() {
+                    })
+                    .getBody();
+            totalElementosBusqueda = response.getTotalElements();
+            notasParcial = response.getContent();
+            notasTotal.addAll(notasParcial);
             this.cargarResultadosAlTable();
             if (calcularResultados) {
                 this.calcularResultados(uriCriteria);
@@ -189,20 +165,6 @@ public class NotasDebitoGUI extends JInternalFrame {
         }
         this.cambiarEstadoEnabledComponentes(true);
         this.cambiarEstadoDeComponentesSegunRolUsuario();
-    }
-    
-    private void calcularResultados(String uriCriteria) {
-        if (movimiento.equals(Movimiento.NOTA_CLIENTE)) {
-            txt_ResultTotalIVANotaDebito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/debito/clientes/total-iva/criteria?" + uriCriteria, BigDecimal.class));
-            txt_ResultTotalNotasDebito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/debito/clientes/total/criteria?" + uriCriteria, BigDecimal.class));
-        } else if (movimiento.equals(Movimiento.NOTA_PROVEEDOR)) {
-            txt_ResultTotalIVANotaDebito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/debito/proveedores/total-iva/criteria?" + uriCriteria, BigDecimal.class));
-            txt_ResultTotalNotasDebito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/debito/proveedores/total/criteria?" + uriCriteria, BigDecimal.class));
-        }
     }
 
     private void cambiarEstadoEnabledComponentes(boolean status) {
@@ -244,57 +206,35 @@ public class NotasDebitoGUI extends JInternalFrame {
     }
 
     private void cargarResultadosAlTable() {
-        if (movimiento.equals(Movimiento.NOTA_CLIENTE)) {
-            notasClienteParcial.stream().map(notaCliente -> {
-                Object[] fila = new Object[9];
-                fila[0] = notaCliente.getCAE() == 0 ? "" : notaCliente.getCAE();
-                fila[1] = notaCliente.getFecha();
-                fila[2] = notaCliente.getTipoComprobante();
-                fila[3] = notaCliente.getSerie() + " - " + notaCliente.getNroNota();
-                fila[4] = notaCliente.getCliente().getRazonSocial();
-                fila[5] = notaCliente.getTotal();
-                fila[6] = notaCliente.getNumSerieAfip() + "-" + notaCliente.getNumNotaAfip();
-                fila[7] = notaCliente.getVencimientoCAE();
-                if (notaCliente.getNumSerieAfip() == 0 && notaCliente.getNumNotaAfip() == 0) {
-                    fila[8] = "";
-                } else {
-                    fila[8] = notaCliente.getNumSerieAfip() + " - " + notaCliente.getNumNotaAfip();
-                }
-                return fila;
-            }).forEach(fila -> {
-                modeloTablaNotas.addRow(fila);
-            });
-        } else if (movimiento.equals(Movimiento.NOTA_PROVEEDOR)) {
-            notasProveedorParcial.stream().map(notaproveedor -> {
-                Object[] fila = new Object[9];
-                fila[0] = notaproveedor.getCAE() == 0 ? "" : notaproveedor.getCAE();
-                fila[1] = notaproveedor.getFecha();
-                fila[2] = notaproveedor.getTipoComprobante();
-                fila[3] = notaproveedor.getSerie() + " - " + notaproveedor.getNroNota();
-                fila[4] = notaproveedor.getProveedor().getRazonSocial();
-                fila[5] = notaproveedor.getTotal();
-                fila[6] = notaproveedor.getNumSerieAfip() + "-" + notaproveedor.getNumNotaAfip();
-                fila[7] = notaproveedor.getVencimientoCAE();
-                if (notaproveedor.getNumSerieAfip() == 0 && notaproveedor.getNumNotaAfip() == 0) {
-                    fila[8] = "";
-                } else {
-                    fila[8] = notaproveedor.getNumSerieAfip() + " - " + notaproveedor.getNumNotaAfip();
-                }
-                return fila;
-            }).forEach(fila -> {
-                modeloTablaNotas.addRow(fila);
-            });
-        }        
+        notasParcial.stream().map(nota -> {
+            Object[] fila = new Object[9];
+            fila[0] = nota.getCAE() == 0 ? "" : nota.getCAE();
+            fila[1] = nota.getFecha();
+            fila[2] = nota.getTipoComprobante();
+            fila[3] = nota.getSerie() + " - " + nota.getNroNota();
+            fila[4] = nota.getRazonSocialCliente();
+            nota.getRazonSocialCliente();
+            fila[5] = nota.getTotal();
+            if (nota.getNumSerieAfip() == 0 && nota.getNumNotaAfip() == 0) {
+                fila[6] = "";
+            } else {
+                fila[6] = nota.getNumSerieAfip() + " - " + nota.getNumNotaAfip();
+            }
+            fila[7] = nota.getVencimientoCAE();
+            return fila;
+        }).forEach(fila -> {
+            modeloTablaNotas.addRow(fila);
+        });
         tbl_Resultados.setModel(modeloTablaNotas);
         lbl_cantResultados.setText(totalElementosBusqueda + " notas encontradas");
     }
 
     private void resetScroll() {
         NUMERO_PAGINA = 0;
-        notasClienteTotal.clear();
-        notasClienteParcial.clear();
-        notasProveedorTotal.clear();
-        notasProveedorParcial.clear();
+        notasTotal.clear();
+        notasParcial.clear();
+        notasTotal.clear();
+        notasParcial.clear();
         Point p = new Point(0, 0);
         sp_Resultados.getViewport().setViewPosition(p);
     }
@@ -308,7 +248,7 @@ public class NotasDebitoGUI extends JInternalFrame {
     private void cargarTiposDeNota() {
         try {
             TipoDeComprobante[] tiposDeComprobantes = RestClient.getRestTemplate()
-                    .getForObject("/notas/debito/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                    .getForObject("/notas/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                             TipoDeComprobante[].class);
             for (int i = 0; tiposDeComprobantes.length > i; i++) {
                 cmb_TipoNota.addItem(tiposDeComprobantes[i]);
@@ -330,8 +270,8 @@ public class NotasDebitoGUI extends JInternalFrame {
                 if (Desktop.isDesktopSupported()) {
                     byte[] reporte = RestClient.getRestTemplate() 
                             .getForObject("/notas/"
-                                    + ((notasClienteTotal.size() > 0)
-                                    ? notasClienteTotal.get(indexFilaSeleccionada).getIdNota() : notasProveedorTotal.get(indexFilaSeleccionada).getIdNota())
+                                    + ((notasTotal.size() > 0)
+                                    ? notasTotal.get(indexFilaSeleccionada).getIdNota() : notasTotal.get(indexFilaSeleccionada).getIdNota())
                                     + "/reporte", byte[].class);
                     File f = new File(System.getProperty("user.home") + "/NotaCredito.pdf");
                     Files.write(f.toPath(), reporte);
@@ -365,11 +305,24 @@ public class NotasDebitoGUI extends JInternalFrame {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
         if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
             btn_Eliminar.setEnabled(false);
-            if ((!rolesDeUsuarioActivo.contains(Rol.ENCARGADO) && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR))
-                    || movimiento.equals(Movimiento.NOTA_PROVEEDOR)) {
+            if ((!rolesDeUsuarioActivo.contains(Rol.ENCARGADO) && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR))) {
                 btn_Autorizar.setEnabled(false);
             }
         }
+    }
+        
+    private void calcularResultados(String uriCriteria) {
+//        if (movimiento.equals(Movimiento.NOTA_CLIENTE)) {
+//            txt_ResultTotalIVANotaCredito.setValue(RestClient.getRestTemplate()
+//                    .getForObject("/notas/credito/clientes/total-iva/criteria?" + uriCriteria, BigDecimal.class));
+//            txt_ResultTotalNotasCredito.setValue(RestClient.getRestTemplate()
+//                    .getForObject("/notas/credito/clientes/total/criteria?" + uriCriteria, BigDecimal.class));
+//        } else if (movimiento.equals(Movimiento.NOTA_PROVEEDOR)) {
+//            txt_ResultTotalIVANotaCredito.setValue(RestClient.getRestTemplate()
+//                    .getForObject("/notas/credito/proveedores/total-iva/criteria?" + uriCriteria, BigDecimal.class));
+//            txt_ResultTotalNotasCredito.setValue(RestClient.getRestTemplate()
+//                    .getForObject("/notas/credito/proveedores/total/criteria?" + uriCriteria, BigDecimal.class));
+//        }
     }
     
     @SuppressWarnings("unchecked")
@@ -382,10 +335,10 @@ public class NotasDebitoGUI extends JInternalFrame {
         btn_VerDetalle = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
         btn_Autorizar = new javax.swing.JButton();
-        lbl_TotalIVANotasDebito = new javax.swing.JLabel();
-        txt_ResultTotalIVANotaDebito = new javax.swing.JFormattedTextField();
-        lbl_TotalNotasDebito = new javax.swing.JLabel();
-        txt_ResultTotalNotasDebito = new javax.swing.JFormattedTextField();
+        txt_ResultTotalNotasCredito = new javax.swing.JFormattedTextField();
+        txt_ResultTotalIVANotaCredito = new javax.swing.JFormattedTextField();
+        lbl_TotalIVANotasCredito = new javax.swing.JLabel();
+        lbl_TotalNotasCredito = new javax.swing.JLabel();
         panelFiltros = new javax.swing.JPanel();
         subPanelFiltros1 = new javax.swing.JPanel();
         chk_Fecha = new javax.swing.JCheckBox();
@@ -465,17 +418,17 @@ public class NotasDebitoGUI extends JInternalFrame {
             }
         });
 
-        lbl_TotalIVANotasDebito.setText("Total IVA Debito:");
+        txt_ResultTotalNotasCredito.setEditable(false);
+        txt_ResultTotalNotasCredito.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        txt_ResultTotalNotasCredito.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
-        txt_ResultTotalIVANotaDebito.setEditable(false);
-        txt_ResultTotalIVANotaDebito.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
-        txt_ResultTotalIVANotaDebito.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txt_ResultTotalIVANotaCredito.setEditable(false);
+        txt_ResultTotalIVANotaCredito.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        txt_ResultTotalIVANotaCredito.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
-        lbl_TotalNotasDebito.setText("Total Acumulado:");
+        lbl_TotalIVANotasCredito.setText("Total IVA Credito:");
 
-        txt_ResultTotalNotasDebito.setEditable(false);
-        txt_ResultTotalNotasDebito.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
-        txt_ResultTotalNotasDebito.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        lbl_TotalNotasCredito.setText("Total Acumulado:");
 
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
@@ -483,24 +436,27 @@ public class NotasDebitoGUI extends JInternalFrame {
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
                 .addComponent(btn_Eliminar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(btn_Autorizar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(btn_VerDetalle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
-                        .addComponent(lbl_TotalIVANotasDebito)
+                        .addComponent(lbl_TotalIVANotasCredito)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_ResultTotalIVANotaDebito, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txt_ResultTotalIVANotaCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
-                        .addComponent(lbl_TotalNotasDebito)
+                        .addComponent(lbl_TotalNotasCredito)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_ResultTotalNotasDebito, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(txt_ResultTotalNotasCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
             .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 938, Short.MAX_VALUE)
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Autorizar, btn_Eliminar, btn_VerDetalle});
+
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lbl_TotalIVANotasCredito, lbl_TotalNotasCredito});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -515,15 +471,17 @@ public class NotasDebitoGUI extends JInternalFrame {
                         .addComponent(btn_Eliminar))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
                         .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lbl_TotalIVANotasDebito)
-                            .addComponent(txt_ResultTotalIVANotaDebito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lbl_TotalIVANotasCredito)
+                            .addComponent(txt_ResultTotalIVANotaCredito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lbl_TotalNotasDebito)
-                            .addComponent(txt_ResultTotalNotasDebito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addComponent(lbl_TotalNotasCredito)
+                            .addComponent(txt_ResultTotalNotasCredito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Autorizar, btn_Eliminar, btn_VerDetalle});
+
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lbl_TotalIVANotasCredito, lbl_TotalNotasCredito});
 
         panelFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
 
@@ -759,11 +717,7 @@ public class NotasDebitoGUI extends JInternalFrame {
             dc_FechaDesde.setDate(new Date());
             dc_FechaHasta.setDate(new Date());
             this.cambiarEstadoDeComponentesSegunRolUsuario();
-            if (movimiento.equals(Movimiento.NOTA_CLIENTE)) {
-                this.setTitle("Administrar Notas de Debito Cliente");
-            } else if (movimiento.equals(Movimiento.NOTA_PROVEEDOR)) {
-                this.setTitle("Administrar Notas de Debito Proveedor");
-            }
+            this.setTitle("Administrar Notas de Venta");
         } catch (PropertyVetoException ex) {
             String mensaje = "Se produjo un error al intentar maximizar la ventana.";
             LOGGER.error(mensaje + " - " + ex.getMessage());
@@ -807,7 +761,7 @@ public class NotasDebitoGUI extends JInternalFrame {
             if (FEHabilitada) {
                 if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
                     int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados); 
-                    long idNota = ((notasClienteTotal.size() > 0) ? notasClienteTotal.get(indexFilaSeleccionada).getIdNota() : notasProveedorTotal.get(indexFilaSeleccionada).getIdNota());
+                    long idNota = ((notasTotal.size() > 0) ? notasTotal.get(indexFilaSeleccionada).getIdNota() : notasTotal.get(indexFilaSeleccionada).getIdNota());
                     RestClient.getRestTemplate().postForObject("/notas/" + idNota + "/autorizacion",
                             null, FacturaVenta.class);
                     JOptionPane.showMessageDialog(this,
@@ -816,6 +770,7 @@ public class NotasDebitoGUI extends JInternalFrame {
                     this.resetScroll();
                     this.limpiarJTable();
                     this.buscar(true);
+
                 }
             } else {
                 JOptionPane.showInternalMessageDialog(this,
@@ -842,8 +797,8 @@ public class NotasDebitoGUI extends JInternalFrame {
                 long[] idsNotas = new long[indexFilasSeleccionadas.length];
                 int i = 0;
                 for (int indice : indexFilasSeleccionadas) {
-                    idsNotas[i] = ((notasClienteTotal.size() > 0)
-                            ? notasClienteTotal.get(indice).getIdNota() : notasProveedorTotal.get(indice).getIdNota());
+                    idsNotas[i] = ((notasTotal.size() > 0)
+                            ? notasTotal.get(indice).getIdNota() : notasTotal.get(indice).getIdNota());
                     i++;
                 }
                 try {
@@ -866,17 +821,7 @@ public class NotasDebitoGUI extends JInternalFrame {
 
     private void btn_VerDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VerDetalleActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1) {
-            if (movimiento.equals(Movimiento.NOTA_CLIENTE)) {
-                this.lanzarReporteNota();
-            } else if (movimiento.equals(Movimiento.NOTA_PROVEEDOR)) {
-                if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
-                    int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                    long idNota = ((notasClienteTotal.size() > 0) ? notasClienteTotal.get(indexFilaSeleccionada).getIdNota() : notasProveedorTotal.get(indexFilaSeleccionada).getIdNota());
-                    DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(idNota);
-                    detalleNotaDebitoGUI.setLocationRelativeTo(this);
-                    detalleNotaDebitoGUI.setVisible(true);
-                }
-            }
+            this.lanzarReporteNota();
         }
     }//GEN-LAST:event_btn_VerDetalleActionPerformed
 
@@ -893,8 +838,8 @@ public class NotasDebitoGUI extends JInternalFrame {
     private com.toedter.calendar.JDateChooser dc_FechaHasta;
     private javax.swing.JLabel lbl_Desde;
     private javax.swing.JLabel lbl_Hasta;
-    private javax.swing.JLabel lbl_TotalIVANotasDebito;
-    private javax.swing.JLabel lbl_TotalNotasDebito;
+    private javax.swing.JLabel lbl_TotalIVANotasCredito;
+    private javax.swing.JLabel lbl_TotalNotasCredito;
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;
     private javax.swing.JPanel panelResultados;
@@ -904,8 +849,8 @@ public class NotasDebitoGUI extends JInternalFrame {
     private javax.swing.JPanel subPanelFiltros2;
     private javax.swing.JTable tbl_Resultados;
     private javax.swing.JFormattedTextField txt_NroNota;
-    private javax.swing.JFormattedTextField txt_ResultTotalIVANotaDebito;
-    private javax.swing.JFormattedTextField txt_ResultTotalNotasDebito;
+    private javax.swing.JFormattedTextField txt_ResultTotalIVANotaCredito;
+    private javax.swing.JFormattedTextField txt_ResultTotalNotasCredito;
     private javax.swing.JFormattedTextField txt_SerieNota;
     // End of variables declaration//GEN-END:variables
 }

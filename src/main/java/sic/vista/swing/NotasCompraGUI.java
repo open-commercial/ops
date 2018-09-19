@@ -27,8 +27,7 @@ import sic.RestClient;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.FacturaVenta;
 import sic.modelo.Movimiento;
-import sic.modelo.NotaCreditoCliente;
-import sic.modelo.NotaCreditoProveedor;
+import sic.modelo.Nota;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
@@ -38,37 +37,26 @@ import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
 import sic.util.Utilidades;
 
-public class NotasCreditoGUI extends JInternalFrame {
+public class NotasCompraGUI extends JInternalFrame {
 
     private ModeloTabla modeloTablaNotas = new ModeloTabla();
-    private List<NotaCreditoCliente> notasClienteTotal = new ArrayList<>();
-    private List<NotaCreditoCliente> notasClienteParcial = new ArrayList<>();
-    private List<NotaCreditoProveedor> notasProveedorTotal = new ArrayList<>();
-    private List<NotaCreditoProveedor> notasProveedorParcial = new ArrayList<>();
-    private Movimiento movimiento;
+    private List<Nota> notasTotal = new ArrayList<>();
+    private List<Nota> notasParcial = new ArrayList<>();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(970, 600);
     private static int totalElementosBusqueda;
     private static int NUMERO_PAGINA = 0;
     private static final int TAMANIO_PAGINA = 50;
 
-    public NotasCreditoGUI(Movimiento movimiento) {
+    public NotasCompraGUI() {
         this.initComponents();
-        this.movimiento = movimiento;
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
             int va = scrollBar.getVisibleAmount() + 50;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (movimiento.equals(movimiento.NOTA_CLIENTE)) {
-                    if (notasClienteTotal.size() >= TAMANIO_PAGINA) {
-                        NUMERO_PAGINA += 1;
-                        buscar(false);
-                    }
-                } else if (movimiento.equals(movimiento.NOTA_PROVEEDOR)) {
-                    if (notasProveedorTotal.size() >= TAMANIO_PAGINA) {
-                        NUMERO_PAGINA += 1;
-                        buscar(false);
-                    }
+                if (notasTotal.size() >= TAMANIO_PAGINA) {
+                    NUMERO_PAGINA += 1;
+                    buscar(false);
                 }
             }
         });
@@ -101,7 +89,7 @@ public class NotasCreditoGUI extends JInternalFrame {
         encabezados[1] = "Fecha Nota";
         encabezados[2] = "Tipo";
         encabezados[3] = "Nº Nota";
-        encabezados[4] = (movimiento.equals(Movimiento.NOTA_CLIENTE) ? "Cliente" : "Proveedor");
+        encabezados[4] = "Proveedor";
         encabezados[5] = "Total";
         encabezados[6] = "Nº Nota Afip";
         encabezados[7] = "Vencimiento CAE";
@@ -155,25 +143,14 @@ public class NotasCreditoGUI extends JInternalFrame {
         this.cambiarEstadoEnabledComponentes(false);
         String uriCriteria = getUriCriteria();
         try {
-            if (movimiento.equals(Movimiento.NOTA_CLIENTE)) {
-                PaginaRespuestaRest<NotaCreditoCliente> response = RestClient.getRestTemplate()
-                        .exchange("/notas/credito/clientes/busqueda/criteria?" + uriCriteria, HttpMethod.GET, null, 
-                                new ParameterizedTypeReference<PaginaRespuestaRest<NotaCreditoCliente>>() {
-                        })
-                        .getBody();
-                totalElementosBusqueda = response.getTotalElements();
-                notasClienteParcial = response.getContent();
-                notasClienteTotal.addAll(notasClienteParcial);
-            } else if (movimiento.equals(Movimiento.NOTA_PROVEEDOR)) {
-                PaginaRespuestaRest<NotaCreditoProveedor> response = RestClient.getRestTemplate()
-                        .exchange("/notas/credito/proveedores/busqueda/criteria?" + uriCriteria, HttpMethod.GET, null,
-                                new ParameterizedTypeReference<PaginaRespuestaRest<NotaCreditoProveedor>>() {
-                        })
-                        .getBody();
-                totalElementosBusqueda = response.getTotalElements();
-                notasProveedorParcial = response.getContent();
-                notasProveedorTotal.addAll(notasProveedorParcial);
-            }
+            PaginaRespuestaRest<Nota> response = RestClient.getRestTemplate()
+                    .exchange("/notas/compras/busqueda/criteria?" + uriCriteria, HttpMethod.GET, null,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<Nota>>() {
+                    })
+                    .getBody();
+            totalElementosBusqueda = response.getTotalElements();
+            notasParcial = response.getContent();
+            notasTotal.addAll(notasParcial);
             this.cargarResultadosAlTable();
             if (calcularResultados) {
                 this.calcularResultados(uriCriteria);
@@ -222,64 +199,40 @@ public class NotasCreditoGUI extends JInternalFrame {
         btn_Buscar.setEnabled(status);        
         btn_Eliminar.setEnabled(status);
         btn_VerDetalle.setEnabled(status);
-        btn_Autorizar.setEnabled(status);
         tbl_Resultados.setEnabled(status);
         sp_Resultados.setEnabled(status);
         tbl_Resultados.requestFocus();
     }
 
     private void cargarResultadosAlTable() {
-        if (movimiento.equals(Movimiento.NOTA_CLIENTE)) {
-            notasClienteParcial.stream().map(notaCliente -> {
-                Object[] fila = new Object[9];
-                fila[0] = notaCliente.getCAE() == 0 ? "" : notaCliente.getCAE();
-                fila[1] = notaCliente.getFecha();
-                fila[2] = notaCliente.getTipoComprobante();
-                fila[3] = notaCliente.getSerie() + " - " + notaCliente.getNroNota();
-                fila[4] = notaCliente.getCliente().getRazonSocial();
-                fila[5] = notaCliente.getTotal();
-                fila[6] = notaCliente.getNumSerieAfip() + "-" + notaCliente.getNumNotaAfip();
-                fila[7] = notaCliente.getVencimientoCAE();
-                if (notaCliente.getNumSerieAfip() == 0 && notaCliente.getNumNotaAfip() == 0) {
-                    fila[8] = "";
-                } else {
-                    fila[8] = notaCliente.getNumSerieAfip() + " - " + notaCliente.getNumNotaAfip();
-                }
-                return fila;
-            }).forEach(fila -> {
-                modeloTablaNotas.addRow(fila);
-            });
-        } else if (movimiento.equals(Movimiento.NOTA_PROVEEDOR)) {
-            notasProveedorParcial.stream().map(notaproveedor -> {
-                Object[] fila = new Object[9];
-                fila[0] = notaproveedor.getCAE() == 0 ? "" : notaproveedor.getCAE();
-                fila[1] = notaproveedor.getFecha();
-                fila[2] = notaproveedor.getTipoComprobante();
-                fila[3] = notaproveedor.getSerie() + " - " + notaproveedor.getNroNota();
-                fila[4] = notaproveedor.getProveedor().getRazonSocial();
-                fila[5] = notaproveedor.getTotal();
-                fila[6] = notaproveedor.getNumSerieAfip() + "-" + notaproveedor.getNumNotaAfip();
-                fila[7] = notaproveedor.getVencimientoCAE();
-                if (notaproveedor.getNumSerieAfip() == 0 && notaproveedor.getNumNotaAfip() == 0) {
-                    fila[8] = "";
-                } else {
-                    fila[8] = notaproveedor.getNumSerieAfip() + " - " + notaproveedor.getNumNotaAfip();
-                }
-                return fila;
-            }).forEach(fila -> {
-                modeloTablaNotas.addRow(fila);
-            });
-        }        
+        notasParcial.stream().map(nota -> {
+            Object[] fila = new Object[9];
+            fila[0] = nota.getCAE() == 0 ? "" : nota.getCAE();
+            fila[1] = nota.getFecha();
+            fila[2] = nota.getTipoComprobante();
+            fila[3] = nota.getSerie() + " - " + nota.getNroNota();
+            fila[4] = nota.getRazonSocialProveedor();
+            fila[5] = nota.getTotal();
+            if (nota.getNumSerieAfip() == 0 && nota.getNumNotaAfip() == 0) {
+                fila[6] = "";
+            } else {
+                fila[6] = nota.getNumSerieAfip() + " - " + nota.getNumNotaAfip();
+            }
+            fila[7] = nota.getVencimientoCAE();
+            return fila;
+        }).forEach(fila -> {
+            modeloTablaNotas.addRow(fila);
+        });
         tbl_Resultados.setModel(modeloTablaNotas);
         lbl_cantResultados.setText(totalElementosBusqueda + " notas encontradas");
     }
 
     private void resetScroll() {
         NUMERO_PAGINA = 0;
-        notasClienteTotal.clear();
-        notasClienteParcial.clear();
-        notasProveedorTotal.clear();
-        notasProveedorParcial.clear();
+        notasTotal.clear();
+        notasParcial.clear();
+        notasTotal.clear();
+        notasParcial.clear();
         Point p = new Point(0, 0);
         sp_Resultados.getViewport().setViewPosition(p);
     }
@@ -293,7 +246,7 @@ public class NotasCreditoGUI extends JInternalFrame {
     private void cargarTiposDeNota() {
         try {
             TipoDeComprobante[] tiposDeComprobantes = RestClient.getRestTemplate()
-                    .getForObject("/notas/credito/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                    .getForObject("/notas/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                             TipoDeComprobante[].class);
             for (int i = 0; tiposDeComprobantes.length > i; i++) {
                 cmb_TipoNota.addItem(tiposDeComprobantes[i]);
@@ -315,8 +268,8 @@ public class NotasCreditoGUI extends JInternalFrame {
                 if (Desktop.isDesktopSupported()) {
                     byte[] reporte = RestClient.getRestTemplate() 
                             .getForObject("/notas/"
-                                    + ((notasClienteTotal.size() > 0)
-                                    ? notasClienteTotal.get(indexFilaSeleccionada).getIdNota() : notasProveedorTotal.get(indexFilaSeleccionada).getIdNota())
+                                    + ((notasTotal.size() > 0)
+                                    ? notasTotal.get(indexFilaSeleccionada).getIdNota() : notasTotal.get(indexFilaSeleccionada).getIdNota())
                                     + "/reporte", byte[].class);
                     File f = new File(System.getProperty("user.home") + "/NotaCredito.pdf");
                     Files.write(f.toPath(), reporte);
@@ -350,25 +303,21 @@ public class NotasCreditoGUI extends JInternalFrame {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
         if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
             btn_Eliminar.setEnabled(false);
-            if ((!rolesDeUsuarioActivo.contains(Rol.ENCARGADO) && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR))
-                    || movimiento.equals(Movimiento.NOTA_PROVEEDOR)) {
-                btn_Autorizar.setEnabled(false);
-            }
         }
     }
         
     private void calcularResultados(String uriCriteria) {
-        if (movimiento.equals(Movimiento.NOTA_CLIENTE)) {
-            txt_ResultTotalIVANotaCredito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/credito/clientes/total-iva/criteria?" + uriCriteria, BigDecimal.class));
-            txt_ResultTotalNotasCredito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/credito/clientes/total/criteria?" + uriCriteria, BigDecimal.class));
-        } else if (movimiento.equals(Movimiento.NOTA_PROVEEDOR)) {
-            txt_ResultTotalIVANotaCredito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/credito/proveedores/total-iva/criteria?" + uriCriteria, BigDecimal.class));
-            txt_ResultTotalNotasCredito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/credito/proveedores/total/criteria?" + uriCriteria, BigDecimal.class));
-        }
+//        if (movimiento.equals(Movimiento.NOTA_CLIENTE)) {
+//            txt_ResultTotalIVANotaCredito.setValue(RestClient.getRestTemplate()
+//                    .getForObject("/notas/credito/clientes/total-iva/criteria?" + uriCriteria, BigDecimal.class));
+//            txt_ResultTotalNotasCredito.setValue(RestClient.getRestTemplate()
+//                    .getForObject("/notas/credito/clientes/total/criteria?" + uriCriteria, BigDecimal.class));
+//        } else if (movimiento.equals(Movimiento.NOTA_PROVEEDOR)) {
+//            txt_ResultTotalIVANotaCredito.setValue(RestClient.getRestTemplate()
+//                    .getForObject("/notas/credito/proveedores/total-iva/criteria?" + uriCriteria, BigDecimal.class));
+//            txt_ResultTotalNotasCredito.setValue(RestClient.getRestTemplate()
+//                    .getForObject("/notas/credito/proveedores/total/criteria?" + uriCriteria, BigDecimal.class));
+//        }
     }
     
     @SuppressWarnings("unchecked")
@@ -380,7 +329,6 @@ public class NotasCreditoGUI extends JInternalFrame {
         tbl_Resultados = new javax.swing.JTable();
         btn_VerDetalle = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
-        btn_Autorizar = new javax.swing.JButton();
         txt_ResultTotalNotasCredito = new javax.swing.JFormattedTextField();
         txt_ResultTotalIVANotaCredito = new javax.swing.JFormattedTextField();
         lbl_TotalIVANotasCredito = new javax.swing.JLabel();
@@ -455,15 +403,6 @@ public class NotasCreditoGUI extends JInternalFrame {
             }
         });
 
-        btn_Autorizar.setForeground(java.awt.Color.blue);
-        btn_Autorizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Certificate_16x16.png"))); // NOI18N
-        btn_Autorizar.setText("Autorizar");
-        btn_Autorizar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_AutorizarActionPerformed(evt);
-            }
-        });
-
         txt_ResultTotalNotasCredito.setEditable(false);
         txt_ResultTotalNotasCredito.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
         txt_ResultTotalNotasCredito.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -483,8 +422,6 @@ public class NotasCreditoGUI extends JInternalFrame {
             .addGroup(panelResultadosLayout.createSequentialGroup()
                 .addComponent(btn_Eliminar)
                 .addGap(0, 0, 0)
-                .addComponent(btn_Autorizar)
-                .addGap(0, 0, 0)
                 .addComponent(btn_VerDetalle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -500,7 +437,7 @@ public class NotasCreditoGUI extends JInternalFrame {
             .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 938, Short.MAX_VALUE)
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Autorizar, btn_Eliminar, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Eliminar, btn_VerDetalle});
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lbl_TotalIVANotasCredito, lbl_TotalNotasCredito});
 
@@ -513,7 +450,6 @@ public class NotasCreditoGUI extends JInternalFrame {
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btn_VerDetalle)
-                        .addComponent(btn_Autorizar)
                         .addComponent(btn_Eliminar))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
                         .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -525,7 +461,7 @@ public class NotasCreditoGUI extends JInternalFrame {
                             .addComponent(txt_ResultTotalNotasCredito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Autorizar, btn_Eliminar, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Eliminar, btn_VerDetalle});
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lbl_TotalIVANotasCredito, lbl_TotalNotasCredito});
 
@@ -763,11 +699,7 @@ public class NotasCreditoGUI extends JInternalFrame {
             dc_FechaDesde.setDate(new Date());
             dc_FechaHasta.setDate(new Date());
             this.cambiarEstadoDeComponentesSegunRolUsuario();
-            if (movimiento.equals(Movimiento.NOTA_CLIENTE)) {
-                this.setTitle("Administrar Notas de Credito Cliente");
-            } else if (movimiento.equals(Movimiento.NOTA_PROVEEDOR)) {
-                this.setTitle("Administrar Notas de Credito Proveedor");
-            }
+            this.setTitle("Administrar Notas de Compra");
         } catch (PropertyVetoException ex) {
             String mensaje = "Se produjo un error al intentar maximizar la ventana.";
             LOGGER.error(mensaje + " - " + ex.getMessage());
@@ -803,40 +735,6 @@ public class NotasCreditoGUI extends JInternalFrame {
         btn_BuscarActionPerformed(null);
     }//GEN-LAST:event_txt_NroNotaActionPerformed
 
-    private void btn_AutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AutorizarActionPerformed
-        try {
-            boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                    + "/factura-electronica-habilitada", Boolean.class);
-            if (FEHabilitada) {
-                if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
-                    int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados); 
-                    long idNota = ((notasClienteTotal.size() > 0) ? notasClienteTotal.get(indexFilaSeleccionada).getIdNota() : notasProveedorTotal.get(indexFilaSeleccionada).getIdNota());
-                    RestClient.getRestTemplate().postForObject("/notas/" + idNota + "/autorizacion",
-                            null, FacturaVenta.class);
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
-                            "Aviso", JOptionPane.INFORMATION_MESSAGE);
-                    this.resetScroll();
-                    this.limpiarJTable();
-                    this.buscar(true);
-
-                }
-            } else {
-                JOptionPane.showInternalMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_cds_fe_habilitada"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_btn_AutorizarActionPerformed
-
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1) {
             int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
@@ -847,8 +745,8 @@ public class NotasCreditoGUI extends JInternalFrame {
                 long[] idsNotas = new long[indexFilasSeleccionadas.length];
                 int i = 0;
                 for (int indice : indexFilasSeleccionadas) {
-                    idsNotas[i] = ((notasClienteTotal.size() > 0)
-                            ? notasClienteTotal.get(indice).getIdNota() : notasProveedorTotal.get(indice).getIdNota());
+                    idsNotas[i] = ((notasTotal.size() > 0)
+                            ? notasTotal.get(indice).getIdNota() : notasTotal.get(indice).getIdNota());
                     i++;
                 }
                 try {
@@ -871,22 +769,17 @@ public class NotasCreditoGUI extends JInternalFrame {
 
     private void btn_VerDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VerDetalleActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1) {
-            if (movimiento.equals(Movimiento.NOTA_CLIENTE)) {
-                this.lanzarReporteNota();
-            } else if (movimiento.equals(Movimiento.NOTA_PROVEEDOR)) {
-                if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
-                    int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                    long idNota = ((notasClienteTotal.size() > 0) ? notasClienteTotal.get(indexFilaSeleccionada).getIdNota() : notasProveedorTotal.get(indexFilaSeleccionada).getIdNota());
-                    DetalleNotaCreditoGUI detalleNotaCreditoGUI = new DetalleNotaCreditoGUI(idNota);
-                    detalleNotaCreditoGUI.setLocationRelativeTo(this);
-                    detalleNotaCreditoGUI.setVisible(true);
-                }
+            if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
+                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+                long idNota = ((notasTotal.size() > 0) ? notasTotal.get(indexFilaSeleccionada).getIdNota() : notasTotal.get(indexFilaSeleccionada).getIdNota());
+                DetalleNotaCreditoGUI detalleNotaCreditoGUI = new DetalleNotaCreditoGUI(idNota);
+                detalleNotaCreditoGUI.setLocationRelativeTo(this);
+                detalleNotaCreditoGUI.setVisible(true);
             }
         }
     }//GEN-LAST:event_btn_VerDetalleActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_Autorizar;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_VerDetalle;

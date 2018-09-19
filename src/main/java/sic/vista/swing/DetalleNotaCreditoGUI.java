@@ -24,8 +24,6 @@ import sic.modelo.Factura;
 import sic.modelo.FacturaCompra;
 import sic.modelo.FacturaVenta;
 import sic.modelo.NotaCredito;
-import sic.modelo.NotaCreditoCliente;
-import sic.modelo.NotaCreditoProveedor;
 import sic.modelo.Proveedor;
 import sic.modelo.RenglonNotaCredito;
 import sic.modelo.TipoDeComprobante;
@@ -39,7 +37,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private Factura factura;
     private Cliente cliente;
     private Proveedor proveedor;
-    private NotaCreditoProveedor notaCreditoProveedorAMostrar;
+    private NotaCredito notaCreditoProveedorAMostrar;
     private HashMap<Long,BigDecimal> idsRenglonesYCantidades = new HashMap<>();
     private List<RenglonNotaCredito> renglones;    
     private boolean notaCreada;    
@@ -122,7 +120,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
     
     private void recuperarNotaCreditoProveedor(long idNotaCreditoProvedor) {
         try {
-            notaCreditoProveedorAMostrar = RestClient.getRestTemplate().getForObject("/notas/" + idNotaCreditoProvedor, NotaCreditoProveedor.class);
+            notaCreditoProveedorAMostrar = RestClient.getRestTemplate().getForObject("/notas/" + idNotaCreditoProvedor, NotaCredito.class);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -245,13 +243,15 @@ public class DetalleNotaCreditoGUI extends JDialog {
     }
     
     private void cargarDetalleNotaCreditoProveedor() {
-        txtNombre.setText(notaCreditoProveedorAMostrar.getProveedor().getRazonSocial());
-        txtDomicilio.setText(notaCreditoProveedorAMostrar.getProveedor().getDireccion()
-                + " " + notaCreditoProveedorAMostrar.getProveedor().getLocalidad().getNombre()
-                + " " + notaCreditoProveedorAMostrar.getProveedor().getLocalidad().getProvincia().getNombre()
-                + " " + notaCreditoProveedorAMostrar.getProveedor().getLocalidad().getProvincia().getPais());
-        txtIDFiscal.setText(notaCreditoProveedorAMostrar.getProveedor().getIdFiscal());
-        txtCondicionIVA.setText(notaCreditoProveedorAMostrar.getProveedor().getCondicionIVA().getNombre());
+        Proveedor proveedorDeNota = RestClient.getRestTemplate()
+                .getForObject("/proveedores/" + notaCreditoProveedorAMostrar.getIdProveedor(), Proveedor.class);
+        txtNombre.setText(proveedorDeNota.getRazonSocial());
+        txtDomicilio.setText(proveedorDeNota.getDireccion()
+                + " " + proveedorDeNota.getLocalidad().getNombre()
+                + " " + proveedorDeNota.getLocalidad().getProvincia().getNombre()
+                + " " + proveedorDeNota.getLocalidad().getProvincia().getPais());
+        txtIDFiscal.setText(proveedorDeNota.getIdFiscal());
+        txtCondicionIVA.setText(proveedorDeNota.getCondicionIVA().getNombre());
         txt_Serie.setEnabled(false);
         txt_Numero.setEnabled(false);
         cmbMotivo.setEnabled(false);
@@ -336,10 +336,9 @@ public class DetalleNotaCreditoGUI extends JDialog {
     }
     
     private void guardarNotaCreditoCliente() {
-        NotaCreditoCliente notaCreditoCliente = new NotaCreditoCliente();
+        NotaCredito notaCreditoCliente = new NotaCredito();
         notaCreditoCliente.setFecha(new Date());
         notaCreditoCliente.setMotivo(cmbMotivo.getSelectedItem().toString());
-        notaCreditoCliente.setFacturaVenta((FacturaVenta) factura);
         notaCreditoCliente.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
         notaCreditoCliente.setDescuentoPorcentaje(new BigDecimal(txt_Decuento_porcentaje.getValue().toString()));
         notaCreditoCliente.setDescuentoNeto(new BigDecimal(txt_Decuento_neto.getValue().toString()));
@@ -402,10 +401,9 @@ public class DetalleNotaCreditoGUI extends JDialog {
     }
     
     private void guardarNotaCreditoProveedor() {
-        NotaCreditoProveedor notaCreditoProveedor = new NotaCreditoProveedor();
+        NotaCredito notaCreditoProveedor = new NotaCredito();
         notaCreditoProveedor.setFecha(new Date());
         notaCreditoProveedor.setMotivo(cmbMotivo.getSelectedItem().toString());
-        notaCreditoProveedor.setFacturaCompra((FacturaCompra) factura);
         notaCreditoProveedor.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
         notaCreditoProveedor.setDescuentoPorcentaje(new BigDecimal(txt_Decuento_porcentaje.getValue().toString()));
         notaCreditoProveedor.setDescuentoNeto(new BigDecimal(txt_Decuento_neto.getValue().toString()));
@@ -425,7 +423,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
                             + "/usuario/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                             + "/factura/" + factura.getId_Factura()
                             + "?modificarStock=" + modificarStock,
-                            notaCreditoProveedor, NotaCreditoProveedor.class);
+                            notaCreditoProveedor, NotaCredito.class);
             notaCreada = (nc != null);
             this.dispose();
         } catch (RestClientResponseException ex) {

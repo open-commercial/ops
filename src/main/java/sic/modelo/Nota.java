@@ -2,6 +2,7 @@ package sic.modelo;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,7 +13,11 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(of = {"fecha", "tipoComprobante", "serie", "nroNota", "empresa"})
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idNota", scope = Nota.class)
-public abstract class Nota implements Serializable {
+@JsonSubTypes({
+  @JsonSubTypes.Type(value = NotaCredito.class),
+  @JsonSubTypes.Type(value = NotaDebito.class), 
+})
+public class Nota implements Serializable {
 
     @JsonGetter(value = "type")
     public String getType() {
@@ -25,8 +30,15 @@ public abstract class Nota implements Serializable {
     private boolean eliminada;
     private TipoDeComprobante tipoComprobante;
     private Date fecha; 
-    private Empresa empresa;  
-    private Usuario usuario;    
+    private long idEmpresa;
+    private String nombreEmpresa;  
+    private Usuario usuario;  
+    private long idCliente;
+    private String razonSocialCliente;
+    private long idProveedor;
+    private String razonSocialProveedor;
+    private long idFacturaVenta;
+    private long idFacturaCompra;
     private String motivo;
     private BigDecimal subTotalBruto;
     private BigDecimal iva21Neto;      
@@ -40,7 +52,7 @@ public abstract class Nota implements Serializable {
     public Nota() {}
 
     public Nota(long idNota, long serie, long nroNota, boolean eliminada,
-            TipoDeComprobante tipoDeComprobante, Date fecha, Empresa empresa, Usuario usuario,
+            TipoDeComprobante tipoDeComprobante, Date fecha, Usuario usuario,
             String motivo, BigDecimal subTotalBruto, BigDecimal iva21Neto, BigDecimal iva105Neto,
             BigDecimal total, long CAE, Date vencimientoCAE, long numSerieAfip, long numNotaAfip) {
 
@@ -50,7 +62,6 @@ public abstract class Nota implements Serializable {
         this.eliminada = eliminada;
         this.tipoComprobante = tipoDeComprobante;
         this.fecha = fecha;
-        this.empresa = empresa;
         this.usuario = usuario;
         this.motivo = motivo;
         this.subTotalBruto = subTotalBruto;
