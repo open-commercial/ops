@@ -25,6 +25,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.EmpresaActiva;
+import sic.modelo.Factura;
 import sic.modelo.FacturaVenta;
 import sic.modelo.Movimiento;
 import sic.modelo.Nota;
@@ -339,6 +340,7 @@ public class NotasVentaGUI extends JInternalFrame {
         txt_ResultTotalIVANotaCredito = new javax.swing.JFormattedTextField();
         lbl_TotalIVANotasCredito = new javax.swing.JLabel();
         lbl_TotalNotasCredito = new javax.swing.JLabel();
+        btnVerFactura = new javax.swing.JButton();
         panelFiltros = new javax.swing.JPanel();
         subPanelFiltros1 = new javax.swing.JPanel();
         chk_Fecha = new javax.swing.JCheckBox();
@@ -430,6 +432,15 @@ public class NotasVentaGUI extends JInternalFrame {
 
         lbl_TotalNotasCredito.setText("Total Acumulado:");
 
+        btnVerFactura.setForeground(java.awt.Color.blue);
+        btnVerFactura.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/PedidoFacturas_16x16.png"))); // NOI18N
+        btnVerFactura.setText("Ver Factura");
+        btnVerFactura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerFacturaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
@@ -440,6 +451,8 @@ public class NotasVentaGUI extends JInternalFrame {
                 .addComponent(btn_Autorizar)
                 .addGap(0, 0, 0)
                 .addComponent(btn_VerDetalle)
+                .addGap(0, 0, 0)
+                .addComponent(btnVerFactura)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
@@ -454,7 +467,7 @@ public class NotasVentaGUI extends JInternalFrame {
             .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 938, Short.MAX_VALUE)
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Autorizar, btn_Eliminar, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnVerFactura, btn_Autorizar, btn_Eliminar, btn_VerDetalle});
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lbl_TotalIVANotasCredito, lbl_TotalNotasCredito});
 
@@ -468,7 +481,8 @@ public class NotasVentaGUI extends JInternalFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btn_VerDetalle)
                         .addComponent(btn_Autorizar)
-                        .addComponent(btn_Eliminar))
+                        .addComponent(btn_Eliminar)
+                        .addComponent(btnVerFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
                         .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbl_TotalIVANotasCredito)
@@ -479,7 +493,7 @@ public class NotasVentaGUI extends JInternalFrame {
                             .addComponent(txt_ResultTotalNotasCredito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Autorizar, btn_Eliminar, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnVerFactura, btn_Autorizar, btn_Eliminar, btn_VerDetalle});
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lbl_TotalIVANotasCredito, lbl_TotalNotasCredito});
 
@@ -825,7 +839,50 @@ public class NotasVentaGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btn_VerDetalleActionPerformed
 
+    private void btnVerFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerFacturaActionPerformed
+        this.verFacturaVenta();
+    }//GEN-LAST:event_btnVerFacturaActionPerformed
+
+    private void verFacturaVenta() {
+        int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+        if (tbl_Resultados.getSelectedRow() != -1 && isNotaCredito(notasTotal.get(indexFilaSeleccionada).getTipoComprobante())) {
+            FacturasVentaGUI gui_facturaVenta = new FacturasVentaGUI();
+            gui_facturaVenta.setLocation(getDesktopPane().getWidth() / 2 - gui_facturaVenta.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - gui_facturaVenta.getHeight() / 2);
+            getDesktopPane().add(gui_facturaVenta);
+            Factura factura = RestClient.getRestTemplate() 
+                            .getForObject("/facturas/" + notasTotal.get(indexFilaSeleccionada).getIdFacturaVenta(), Factura.class);
+            gui_facturaVenta.setVisible(true);
+            gui_facturaVenta.buscarPorSerieNroTipo(factura.getNumSerie(), factura.getNumFactura(), factura.getTipoComprobante());
+            try {
+                gui_facturaVenta.setSelected(true);
+            } catch (PropertyVetoException ex) {
+                String mensaje = "No se pudo seleccionar la ventana requerida.";
+                LOGGER.error(mensaje + " - " + ex.getMessage());
+                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    
+    private boolean isNotaCredito(TipoDeComprobante tipoDeComprobante) {
+        switch (tipoDeComprobante) {
+            case NOTA_CREDITO_A:
+                return true;
+            case NOTA_CREDITO_B:
+                return true;
+            case NOTA_CREDITO_PRESUPUESTO:
+                return true;
+            case NOTA_CREDITO_X:
+                return true;
+            case NOTA_CREDITO_Y:
+                return true;
+            default:
+                return false;
+        }
+    }
+        
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnVerFactura;
     private javax.swing.JButton btn_Autorizar;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;

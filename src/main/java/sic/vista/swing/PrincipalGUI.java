@@ -16,7 +16,6 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Empresa;
 import sic.modelo.EmpresaActiva;
-import sic.modelo.Movimiento;
 import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
 import sic.util.Utilidades;
@@ -626,7 +625,7 @@ public class PrincipalGUI extends JFrame {
     }//GEN-LAST:event_mnu_CajasActionPerformed
 
     private void mnuItm_NotasVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_NotasVentaActionPerformed
-        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), NotasCompraGUI.class);
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), NotasVentaGUI.class);
         if (gui == null) {
             gui = new NotasVentaGUI();
             gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,

@@ -58,6 +58,16 @@ public class FacturasCompraGUI extends JInternalFrame {
             }
         });
     }
+    
+    public void buscarPorSerieYNroFactura(long nroSerie, long nroFactura) {
+        chk_NumFactura.setSelected(true);
+        txt_SerieFactura.setEnabled(true);
+        txt_NroFactura.setEnabled(true);
+        txt_SerieFactura.setText(String.valueOf(nroSerie));
+        txt_NroFactura.setText(String.valueOf(nroFactura));
+        this.limpiarJTable();
+        this.buscar(true);
+    }
 
     private void setColumnas() {
         //nombres de columnas

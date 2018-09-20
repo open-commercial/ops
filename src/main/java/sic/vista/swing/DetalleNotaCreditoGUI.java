@@ -304,7 +304,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
                         + "&idRenglonFactura=" + idsRenglonesYCantidades.keySet().toString().substring(1, idsRenglonesYCantidades.keySet().toString().length() - 1);
                 renglones = Arrays.asList(RestClient.getRestTemplate().getForObject(uri, RenglonNotaCredito[].class));
             } else {
-                renglones = Arrays.asList(RestClient.getRestTemplate().getForObject("/notas/renglones/credito/proveedores/" + notaCreditoProveedorAMostrar.getIdNota(), RenglonNotaCredito[].class));
+                renglones = Arrays.asList(RestClient.getRestTemplate().getForObject("/notas/renglones/credito/" + notaCreditoProveedorAMostrar.getIdNota(), RenglonNotaCredito[].class));
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
