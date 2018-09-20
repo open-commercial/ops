@@ -11,13 +11,13 @@ import lombok.EqualsAndHashCode;
 public class Cliente implements Serializable {
 
     private long id_Cliente;
+    private TipoDeCliente tipoDeCliente;
     private String nroCliente;
     private String razonSocial;
     private String nombreFantasia;
     private String direccion;  
-    private Long idCondicionIVA;
-    private String nombreCondicionIVA;
-    private String idFiscal;
+    private CategoriaIVA categoriaIVA;
+    private Long idFiscal;
     private String email;
     private String telPrimario;
     private String telSecundario;    

@@ -105,7 +105,7 @@
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Component id="lblIDFiscalCliente" min="-2" max="-2" attributes="1"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="txtIDFiscal" max="32767" attributes="2"/>
+                          <Component id="txtIdFiscal" max="32767" attributes="2"/>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -128,7 +128,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="txtCondicionIVA" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="lblCondicionIVACliente" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtIDFiscal" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtIdFiscal" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="lblIDFiscalCliente" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -166,7 +166,7 @@
             <Property name="focusable" type="boolean" value="false"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtIDFiscal">
+        <Component class="javax.swing.JTextField" name="txtIdFiscal">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="focusable" type="boolean" value="false"/>

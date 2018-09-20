@@ -261,8 +261,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 + " " + cliente.getNombreLocalidad()
                 + " " + cliente.getNombreProvincia()
                 + " " + cliente.getNombrePais());
-        txtIDFiscalCliente.setText(cliente.getIdFiscal());
-        txtCondicionIVACliente.setText(cliente.getNombreCondicionIVA());
+        if (cliente.getIdFiscal() != null) txtIDFiscalCliente.setText(cliente.getIdFiscal().toString());
+        txtCondicionIVACliente.setText(cliente.getCategoriaIVA().name());
         try {
             cuentaCorriente = RestClient.getRestTemplate()
                     .getForObject("/cuentas-corriente/clientes/" + cliente.getId_Cliente(), CuentaCorrienteCliente.class);
@@ -282,9 +282,9 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         txtDomicilioCliente.setText(proveedor.getDireccion() 
                 + " " + proveedor.getLocalidad().getNombre() 
                 + " " + proveedor.getLocalidad().getProvincia().getNombre() 
-                + " " + proveedor.getLocalidad().getProvincia().getPais());
-        txtIDFiscalCliente.setText(proveedor.getIdFiscal());
-        txtCondicionIVACliente.setText(proveedor.getCondicionIVA().getNombre());
+                + " " + proveedor.getLocalidad().getProvincia().getPais());        
+        if (proveedor.getIdFiscal() != null) txtIDFiscalCliente.setText(proveedor.getIdFiscal().toString());
+        txtCondicionIVACliente.setText(proveedor.getCategoriaIVA().name());
         try {
             cuentaCorriente = RestClient.getRestTemplate()
                     .getForObject("/cuentas-corriente/proveedores/" + proveedor.getId_Proveedor(), CuentaCorrienteProveedor.class);

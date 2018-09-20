@@ -225,9 +225,9 @@ public class DetalleNotaCreditoGUI extends JDialog {
         txtDomicilio.setText(cliente.getDireccion()
                 + " " + cliente.getNombreLocalidad()
                 + " " + cliente.getNombreProvincia()
-                + " " + cliente.getNombrePais());
-        txtIDFiscal.setText(cliente.getIdFiscal());
-        txtCondicionIVA.setText(cliente.getNombreCondicionIVA());
+                + " " + cliente.getNombrePais());        
+        if (cliente.getIdFiscal() != null) txtIdFiscal.setText(cliente.getIdFiscal().toString());
+        txtCondicionIVA.setText(cliente.getCategoriaIVA().name());
         lbl_NumComprobante.setVisible(false);
         txt_Serie.setVisible(false);
         lbl_separador.setVisible(false);
@@ -239,9 +239,9 @@ public class DetalleNotaCreditoGUI extends JDialog {
         txtDomicilio.setText(proveedor.getDireccion()
                 + " " + proveedor.getLocalidad().getNombre()
                 + " " + proveedor.getLocalidad().getProvincia().getNombre()
-                + " " + proveedor.getLocalidad().getProvincia().getPais());
-        txtIDFiscal.setText(proveedor.getIdFiscal());
-        txtCondicionIVA.setText(proveedor.getCondicionIVA().getNombre());
+                + " " + proveedor.getLocalidad().getProvincia().getPais());        
+        if (proveedor.getIdFiscal() != null) txtIdFiscal.setText(proveedor.getIdFiscal().toString());
+        txtCondicionIVA.setText(proveedor.getCategoriaIVA().name());
     }
     
     private void cargarDetalleNotaCreditoProveedor() {
@@ -249,9 +249,10 @@ public class DetalleNotaCreditoGUI extends JDialog {
         txtDomicilio.setText(notaCreditoProveedorAMostrar.getProveedor().getDireccion()
                 + " " + notaCreditoProveedorAMostrar.getProveedor().getLocalidad().getNombre()
                 + " " + notaCreditoProveedorAMostrar.getProveedor().getLocalidad().getProvincia().getNombre()
-                + " " + notaCreditoProveedorAMostrar.getProveedor().getLocalidad().getProvincia().getPais());
-        txtIDFiscal.setText(notaCreditoProveedorAMostrar.getProveedor().getIdFiscal());
-        txtCondicionIVA.setText(notaCreditoProveedorAMostrar.getProveedor().getCondicionIVA().getNombre());
+                + " " + notaCreditoProveedorAMostrar.getProveedor().getLocalidad().getProvincia().getPais());              
+        if (notaCreditoProveedorAMostrar.getProveedor().getIdFiscal() != null)
+            txtIdFiscal.setText(notaCreditoProveedorAMostrar.getProveedor().getIdFiscal().toString());        
+        txtCondicionIVA.setText(notaCreditoProveedorAMostrar.getProveedor().getCategoriaIVA().name());
         txt_Serie.setEnabled(false);
         txt_Numero.setEnabled(false);
         cmbMotivo.setEnabled(false);
@@ -466,7 +467,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
         lblIDFiscalCliente = new javax.swing.JLabel();
         lblCondicionIVACliente = new javax.swing.JLabel();
         txtCondicionIVA = new javax.swing.JTextField();
-        txtIDFiscal = new javax.swing.JTextField();
+        txtIdFiscal = new javax.swing.JTextField();
         txtDomicilio = new javax.swing.JTextField();
         txtNombre = new javax.swing.JTextField();
         panelDetalle = new javax.swing.JPanel();
@@ -522,8 +523,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
         txtCondicionIVA.setEditable(false);
         txtCondicionIVA.setFocusable(false);
 
-        txtIDFiscal.setEditable(false);
-        txtIDFiscal.setFocusable(false);
+        txtIdFiscal.setEditable(false);
+        txtIdFiscal.setFocusable(false);
 
         txtDomicilio.setEditable(false);
         txtDomicilio.setFocusable(false);
@@ -550,7 +551,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblIDFiscalCliente)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtIDFiscal)))
+                        .addComponent(txtIdFiscal)))
                 .addContainerGap())
         );
         panelClienteLayout.setVerticalGroup(
@@ -567,7 +568,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCondicionIVA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblCondicionIVACliente)
-                    .addComponent(txtIDFiscal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtIdFiscal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblIDFiscalCliente)))
         );
 
@@ -798,14 +799,12 @@ public class DetalleNotaCreditoGUI extends JDialog {
         );
 
         txt_Serie.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        txt_Serie.setText("0");
         txt_Serie.setValue(0);
 
         lbl_NumComprobante.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_NumComprobante.setText("Nº de Nota:");
 
         txt_Numero.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        txt_Numero.setText("0");
         txt_Numero.setValue(0);
 
         lbl_separador.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -914,7 +913,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private javax.swing.JTable tblResultados;
     private javax.swing.JTextField txtCondicionIVA;
     private javax.swing.JTextField txtDomicilio;
-    private javax.swing.JTextField txtIDFiscal;
+    private javax.swing.JTextField txtIdFiscal;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JFormattedTextField txt_Decuento_neto;
     private javax.swing.JFormattedTextField txt_Decuento_porcentaje;

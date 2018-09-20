@@ -106,9 +106,9 @@ public class DetalleNotaDebitoGUI extends JDialog {
         txtDomicilio.setText(cliente.getDireccion()
                 + " " + cliente.getNombreLocalidad()
                 + " " + cliente.getNombreProvincia()
-                + " " + cliente.getNombrePais());
-        txtIDFiscal.setText(cliente.getIdFiscal());
-        txtCondicionIVA.setText(cliente.getNombreCondicionIVA());
+                + " " + cliente.getNombrePais());                
+        if (cliente.getIdFiscal() != null) txtIdFiscal.setText(cliente.getIdFiscal().toString());        
+        txtCondicionIVA.setText(cliente.getCategoriaIVA().name());
     }
 
     private void cargarDetalleProveedor() {
@@ -116,9 +116,9 @@ public class DetalleNotaDebitoGUI extends JDialog {
         txtDomicilio.setText(proveedor.getDireccion()
                 + " " + proveedor.getLocalidad().getNombre()
                 + " " + proveedor.getLocalidad().getProvincia().getNombre()
-                + " " + proveedor.getLocalidad().getProvincia().getPais());
-        txtIDFiscal.setText(proveedor.getIdFiscal());
-        txtCondicionIVA.setText(proveedor.getCondicionIVA().getNombre());
+                + " " + proveedor.getLocalidad().getProvincia().getPais());        
+        if (proveedor.getIdFiscal() != null) txtIdFiscal.setText(proveedor.getIdFiscal().toString());
+        txtCondicionIVA.setText(proveedor.getCategoriaIVA().name());
     }
     
     private void cargarDetalleRecibo() {
@@ -258,8 +258,9 @@ public class DetalleNotaDebitoGUI extends JDialog {
                     + " " + notaDebitoProveedor.getProveedor().getLocalidad().getNombre()
                     + " " + notaDebitoProveedor.getProveedor().getLocalidad().getProvincia().getNombre()
                     + " " + notaDebitoProveedor.getProveedor().getLocalidad().getProvincia().getPais());
-            txtCondicionIVA.setText(notaDebitoProveedor.getProveedor().getCondicionIVA().getNombre());
-            txtIDFiscal.setText(notaDebitoProveedor.getProveedor().getIdFiscal());
+            txtCondicionIVA.setText(notaDebitoProveedor.getProveedor().getCategoriaIVA().name());                        
+            if (notaDebitoProveedor.getProveedor().getIdFiscal() != null) 
+                txtIdFiscal.setText(notaDebitoProveedor.getProveedor().getIdFiscal().toString());                        
             lblDetallePago.setText("Nº Recibo: " + notaDebitoProveedor.getRecibo().getNumSerie() + " - " + notaDebitoProveedor.getRecibo().getNumRecibo() + " - " + notaDebitoProveedor.getRecibo().getConcepto());
             lblMontoPago.setText("$" + FormatterNumero.formatConRedondeo(notaDebitoProveedor.getRecibo().getMonto()));
             lblImportePago.setText("$" + FormatterNumero.formatConRedondeo(notaDebitoProveedor.getRecibo().getMonto()));
@@ -295,7 +296,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
         lblIDFiscalCliente = new javax.swing.JLabel();
         lblCondicionIVACliente = new javax.swing.JLabel();
         txtCondicionIVA = new javax.swing.JTextField();
-        txtIDFiscal = new javax.swing.JTextField();
+        txtIdFiscal = new javax.swing.JTextField();
         txtDomicilio = new javax.swing.JTextField();
         txtNombre = new javax.swing.JTextField();
         panelDetalle = new javax.swing.JPanel();
@@ -357,8 +358,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
         txtCondicionIVA.setEditable(false);
         txtCondicionIVA.setFocusable(false);
 
-        txtIDFiscal.setEditable(false);
-        txtIDFiscal.setFocusable(false);
+        txtIdFiscal.setEditable(false);
+        txtIdFiscal.setFocusable(false);
 
         txtDomicilio.setEditable(false);
         txtDomicilio.setFocusable(false);
@@ -385,7 +386,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblIDFiscalCliente)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtIDFiscal)))
+                        .addComponent(txtIdFiscal)))
                 .addContainerGap())
         );
         panelClienteLayout.setVerticalGroup(
@@ -402,7 +403,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCondicionIVA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblCondicionIVACliente)
-                    .addComponent(txtIDFiscal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtIdFiscal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblIDFiscalCliente)))
         );
 
@@ -540,7 +541,6 @@ public class DetalleNotaDebitoGUI extends JDialog {
         txtIVA21Neto.setForeground(new java.awt.Color(29, 156, 37));
         txtIVA21Neto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
         txtIVA21Neto.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtIVA21Neto.setText("0");
         txtIVA21Neto.setFocusable(false);
         txtIVA21Neto.setFont(new java.awt.Font("DejaVu Sans", 0, 15)); // NOI18N
         txtIVA21Neto.setValue(0);
@@ -552,7 +552,6 @@ public class DetalleNotaDebitoGUI extends JDialog {
         txtTotal.setForeground(new java.awt.Color(29, 156, 37));
         txtTotal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
         txtTotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtTotal.setText("0");
         txtTotal.setFocusable(false);
         txtTotal.setFont(new java.awt.Font("DejaVu Sans", 1, 30)); // NOI18N
         txtTotal.setValue(0);
@@ -561,7 +560,6 @@ public class DetalleNotaDebitoGUI extends JDialog {
         txtSubTotalBruto.setForeground(new java.awt.Color(29, 156, 37));
         txtSubTotalBruto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
         txtSubTotalBruto.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtSubTotalBruto.setText("0");
         txtSubTotalBruto.setFocusable(false);
         txtSubTotalBruto.setFont(new java.awt.Font("DejaVu Sans", 0, 15)); // NOI18N
         txtSubTotalBruto.setValue(0);
@@ -577,7 +575,6 @@ public class DetalleNotaDebitoGUI extends JDialog {
         txtNoGravado.setForeground(new java.awt.Color(29, 156, 37));
         txtNoGravado.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
         txtNoGravado.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtNoGravado.setText("0");
         txtNoGravado.setFocusable(false);
         txtNoGravado.setFont(new java.awt.Font("DejaVu Sans", 0, 15)); // NOI18N
         txtNoGravado.setValue(0);
@@ -833,8 +830,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private javax.swing.JPanel panelResultados;
     private javax.swing.JTextField txtCondicionIVA;
     private javax.swing.JTextField txtDomicilio;
-    private javax.swing.JTextField txtIDFiscal;
     private javax.swing.JFormattedTextField txtIVA21Neto;
+    private javax.swing.JTextField txtIdFiscal;
     private javax.swing.JFormattedTextField txtMontoRenglon2;
     private javax.swing.JFormattedTextField txtNoGravado;
     private javax.swing.JTextField txtNombre;
