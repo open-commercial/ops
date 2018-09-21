@@ -59,12 +59,14 @@ public class FacturasCompraGUI extends JInternalFrame {
         });
     }
     
-    public void buscarPorSerieYNroFactura(long nroSerie, long nroFactura) {
+    public void buscarPorSerieYNroFactura(long nroSerie, long nroFactura, TipoDeComprobante tipoDeComprobante) {
         chk_NumFactura.setSelected(true);
         txt_SerieFactura.setEnabled(true);
         txt_NroFactura.setEnabled(true);
         txt_SerieFactura.setText(String.valueOf(nroSerie));
         txt_NroFactura.setText(String.valueOf(nroFactura));
+        chk_TipoFactura.setSelected(true);
+        cmb_TipoFactura.setSelectedItem(tipoDeComprobante);
         this.limpiarJTable();
         this.buscar(true);
     }

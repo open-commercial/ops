@@ -311,11 +311,13 @@ public class NotasCompraGUI extends JInternalFrame {
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
                 || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
             txt_ResultTotalIVANotaDebito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/debito/ventas/total-iva/criteria?" + uriCriteria, BigDecimal.class));
+                    .getForObject("/notas/compras/total-iva-debito/criteria?" + uriCriteria, BigDecimal.class));
             txt_ResultTotalIVANotaCredito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/credito/ventas/total-iva/criteria?" + uriCriteria, BigDecimal.class));
-            txt_ResultTotalNotas.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/ventas/total/criteria?" + uriCriteria, BigDecimal.class));
+                    .getForObject("/notas/compras/total-iva-credito/criteria?" + uriCriteria, BigDecimal.class));
+            txt_ResultTotalDebito.setValue(RestClient.getRestTemplate()
+                    .getForObject("/notas/compras/total-debito/criteria?" + uriCriteria, BigDecimal.class));
+            txt_ResultTotalCredito.setValue(RestClient.getRestTemplate()
+                    .getForObject("/notas/compras/total-credito/criteria?" + uriCriteria, BigDecimal.class));
         }
     }
     
@@ -328,13 +330,15 @@ public class NotasCompraGUI extends JInternalFrame {
         tbl_Resultados = new javax.swing.JTable();
         btn_VerDetalle = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
-        txt_ResultTotalNotas = new javax.swing.JFormattedTextField();
+        txt_ResultTotalCredito = new javax.swing.JFormattedTextField();
         txt_ResultTotalIVANotaCredito = new javax.swing.JFormattedTextField();
         lbl_TotalIVANotasCredito = new javax.swing.JLabel();
         lbl_TotalNotasCredito = new javax.swing.JLabel();
         btnVerFactura = new javax.swing.JButton();
         txt_ResultTotalIVANotaDebito = new javax.swing.JFormattedTextField();
         lbl_TotalIVANotasDebito = new javax.swing.JLabel();
+        lbl_TotalNotasDebito = new javax.swing.JLabel();
+        txt_ResultTotalDebito = new javax.swing.JFormattedTextField();
         panelFiltros = new javax.swing.JPanel();
         subPanelFiltros1 = new javax.swing.JPanel();
         chk_Fecha = new javax.swing.JCheckBox();
@@ -405,9 +409,9 @@ public class NotasCompraGUI extends JInternalFrame {
             }
         });
 
-        txt_ResultTotalNotas.setEditable(false);
-        txt_ResultTotalNotas.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
-        txt_ResultTotalNotas.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txt_ResultTotalCredito.setEditable(false);
+        txt_ResultTotalCredito.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        txt_ResultTotalCredito.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         txt_ResultTotalIVANotaCredito.setEditable(false);
         txt_ResultTotalIVANotaCredito.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
@@ -415,7 +419,7 @@ public class NotasCompraGUI extends JInternalFrame {
 
         lbl_TotalIVANotasCredito.setText("Total IVA Credito:");
 
-        lbl_TotalNotasCredito.setText("Total Acumulado:");
+        lbl_TotalNotasCredito.setText("Total Credito:");
 
         btnVerFactura.setForeground(java.awt.Color.blue);
         btnVerFactura.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/PedidoFacturas_16x16.png"))); // NOI18N
@@ -432,11 +436,17 @@ public class NotasCompraGUI extends JInternalFrame {
 
         lbl_TotalIVANotasDebito.setText("Total IVA Debito:");
 
+        lbl_TotalNotasDebito.setText("Total Debito:");
+
+        txt_ResultTotalDebito.setEditable(false);
+        txt_ResultTotalDebito.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        txt_ResultTotalDebito.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 938, Short.MAX_VALUE)
+            .addComponent(sp_Resultados)
             .addGroup(panelResultadosLayout.createSequentialGroup()
                 .addComponent(btn_Eliminar)
                 .addGap(0, 0, 0)
@@ -450,13 +460,19 @@ public class NotasCompraGUI extends JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txt_ResultTotalIVANotaDebito, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
+                        .addComponent(lbl_TotalNotasDebito)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txt_ResultTotalDebito, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
                         .addComponent(lbl_TotalIVANotasCredito)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txt_ResultTotalIVANotaCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
                         .addComponent(lbl_TotalNotasCredito)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_ResultTotalNotas, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txt_ResultTotalCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -464,16 +480,14 @@ public class NotasCompraGUI extends JInternalFrame {
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnVerFactura, btn_Eliminar, btn_VerDetalle});
 
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lbl_TotalIVANotasDebito, lbl_TotalNotasDebito});
+
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_TotalIVANotasDebito)
-                    .addComponent(txt_ResultTotalIVANotaDebito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btn_VerDetalle)
@@ -486,7 +500,15 @@ public class NotasCompraGUI extends JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbl_TotalNotasCredito)
-                            .addComponent(txt_ResultTotalNotas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addComponent(txt_ResultTotalCredito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(panelResultadosLayout.createSequentialGroup()
+                        .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbl_TotalIVANotasDebito)
+                            .addComponent(txt_ResultTotalIVANotaDebito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbl_TotalNotasDebito)
+                            .addComponent(txt_ResultTotalDebito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnVerFactura, btn_Eliminar, btn_VerDetalle});
@@ -674,7 +696,7 @@ public class NotasCompraGUI extends JInternalFrame {
             .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 73, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -821,7 +843,7 @@ public class NotasCompraGUI extends JInternalFrame {
             Factura factura = RestClient.getRestTemplate()
                     .getForObject("/facturas/" + notasTotal.get(indexFilaSeleccionada).getIdFacturaCompra(), Factura.class);
             gui_facturaCompra.setVisible(true);
-            gui_facturaCompra.buscarPorSerieYNroFactura(factura.getNumSerie(), factura.getNumFactura());
+            gui_facturaCompra.buscarPorSerieYNroFactura(factura.getNumSerie(), factura.getNumFactura(), factura.getTipoComprobante());
             try {
                 gui_facturaCompra.setSelected(true);
             } catch (PropertyVetoException ex) {
@@ -865,6 +887,7 @@ public class NotasCompraGUI extends JInternalFrame {
     private javax.swing.JLabel lbl_TotalIVANotasCredito;
     private javax.swing.JLabel lbl_TotalIVANotasDebito;
     private javax.swing.JLabel lbl_TotalNotasCredito;
+    private javax.swing.JLabel lbl_TotalNotasDebito;
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;
     private javax.swing.JPanel panelResultados;
@@ -874,9 +897,10 @@ public class NotasCompraGUI extends JInternalFrame {
     private javax.swing.JPanel subPanelFiltros2;
     private javax.swing.JTable tbl_Resultados;
     private javax.swing.JFormattedTextField txt_NroNota;
+    private javax.swing.JFormattedTextField txt_ResultTotalCredito;
+    private javax.swing.JFormattedTextField txt_ResultTotalDebito;
     private javax.swing.JFormattedTextField txt_ResultTotalIVANotaCredito;
     private javax.swing.JFormattedTextField txt_ResultTotalIVANotaDebito;
-    private javax.swing.JFormattedTextField txt_ResultTotalNotas;
     private javax.swing.JFormattedTextField txt_SerieNota;
     // End of variables declaration//GEN-END:variables
 }
