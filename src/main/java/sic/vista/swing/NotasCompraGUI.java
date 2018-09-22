@@ -82,9 +82,9 @@ public class NotasCompraGUI extends JInternalFrame {
     }
 
     private void setColumnas() {
-        // Momentaneamente desactivado hasta terminar la paginacion.        
+        // Momentaneamente desactivado hasta terminar la paginacion.
         //sorting
-        // tbl_Resultados.setAutoCreateRowSorter(true);        
+        // tbl_Resultados.setAutoCreateRowSorter(true);
         //nombres de columnas
         String[] encabezados = new String[8];
         encabezados[0] = "CAE";
@@ -109,7 +109,7 @@ public class NotasCompraGUI extends JInternalFrame {
         tipos[7] = Date.class;
         modeloTablaNotas.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
-        tbl_Resultados.getTableHeader().setResizingAllowed(true);        
+        tbl_Resultados.getTableHeader().setResizingAllowed(true);
         //tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setMinWidth(120);
         tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(120);
@@ -198,7 +198,7 @@ public class NotasCompraGUI extends JInternalFrame {
         } else {
             txt_NroNota.setEnabled(false);
         }
-        btn_Buscar.setEnabled(status);        
+        btn_Buscar.setEnabled(status);
         btn_Eliminar.setEnabled(status);
         btn_VerDetalle.setEnabled(status);
         tbl_Resultados.setEnabled(status);
@@ -268,7 +268,7 @@ public class NotasCompraGUI extends JInternalFrame {
             try {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
                 if (Desktop.isDesktopSupported()) {
-                    byte[] reporte = RestClient.getRestTemplate() 
+                    byte[] reporte = RestClient.getRestTemplate()
                             .getForObject("/notas/"
                                     + ((notasTotal.size() > 0)
                                     ? notasTotal.get(indexFilaSeleccionada).getIdNota() : notasTotal.get(indexFilaSeleccionada).getIdNota())
@@ -307,7 +307,7 @@ public class NotasCompraGUI extends JInternalFrame {
             btn_Eliminar.setEnabled(false);
         }
     }
-        
+
     private void calcularResultados(String uriCriteria) {
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
@@ -322,7 +322,7 @@ public class NotasCompraGUI extends JInternalFrame {
                     .getForObject("/notas/total-credito/criteria?" + uriCriteria, BigDecimal.class));
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -823,10 +823,16 @@ public class NotasCompraGUI extends JInternalFrame {
         if (tbl_Resultados.getSelectedRow() != -1) {
             if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                long idNota = ((notasTotal.size() > 0) ? notasTotal.get(indexFilaSeleccionada).getIdNota() : notasTotal.get(indexFilaSeleccionada).getIdNota());
-                DetalleNotaCreditoGUI detalleNotaCreditoGUI = new DetalleNotaCreditoGUI(idNota);
-                detalleNotaCreditoGUI.setLocationRelativeTo(this);
-                detalleNotaCreditoGUI.setVisible(true);
+                long idNota = notasTotal.get(indexFilaSeleccionada).getIdNota();
+                if (isNotaCredito(notasTotal.get(indexFilaSeleccionada).getTipoComprobante())) {
+                    DetalleNotaCreditoGUI detalleNotaCreditoGUI = new DetalleNotaCreditoGUI(idNota);
+                    detalleNotaCreditoGUI.setLocationRelativeTo(this);
+                    detalleNotaCreditoGUI.setVisible(true);
+                } else {
+                    DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(idNota);
+                    detalleNotaDebitoGUI.setLocationRelativeTo(this);
+                    detalleNotaDebitoGUI.setVisible(true);
+                }
             }
         }
     }//GEN-LAST:event_btn_VerDetalleActionPerformed
@@ -855,7 +861,7 @@ public class NotasCompraGUI extends JInternalFrame {
             }
         }
     }
-    
+
     private boolean isNotaCredito(TipoDeComprobante tipoDeComprobante) {
         switch (tipoDeComprobante) {
             case NOTA_CREDITO_A:
@@ -872,7 +878,7 @@ public class NotasCompraGUI extends JInternalFrame {
                 return false;
         }
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnVerFactura;
     private javax.swing.JButton btn_Buscar;
