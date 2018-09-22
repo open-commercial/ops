@@ -38,8 +38,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private Recibo recibo;
     private final Proveedor proveedor;
     private long idRecibo;
-    private boolean notaDebitoCreada;  
-    private boolean notaDebitoAutorizada = false;
+    private boolean notaDebitoCreada;      
     private long idNotaDebito;
     private final FormatterFechaHora formatter = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO);
     private final static BigDecimal IVA_21 = new BigDecimal("21");
@@ -76,25 +75,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
     public boolean isNotaDebitoCreada() {
         return notaDebitoCreada;
     }
-    
-    private void autorizarNotaDebito(NotaDebito notaDebito) {
-        if (notaDebito != null && (notaDebito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_A
-                || notaDebito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B)) {
-            try {
-                notaDebito = RestClient.getRestTemplate().postForObject("/notas/" + notaDebito.getIdNota() + "/autorizacion",
-                        null, NotaDebito.class);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-        if (notaDebito.getCAE() != 0L) notaDebitoAutorizada = true;
-    }
-    
+        
     private void setIcon() {
         ImageIcon iconoVentana = new ImageIcon(DetalleNotaDebitoGUI.class.getResource("/sic/icons/SIC_24_square.png"));
         this.setIconImage(iconoVentana.getImage());
@@ -139,108 +120,69 @@ public class DetalleNotaDebitoGUI extends JDialog {
         txtTotal.setValue(recibo.getMonto().add(new BigDecimal(txtMontoRenglon2.getValue().toString())).add(iva)); 
     }
     
-    private void guardarNotaDebitoCliente() {
-        NotaDebito notaDebitoCliente = new NotaDebito();
-        notaDebitoCliente.setFecha(new Date());
-        notaDebitoCliente.setIva21Neto(new BigDecimal(txtIVA21Neto.getValue().toString()));
-        notaDebitoCliente.setIva105Neto(BigDecimal.ZERO);
-        notaDebitoCliente.setMontoNoGravado(recibo.getMonto());
-        notaDebitoCliente.setMotivo(cmbDescripcionRenglon2.getSelectedItem().toString());
-        NotaDebito nd;
-        try {
-            notaDebitoCliente.setRenglonesNotaDebito(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/notas/renglon/debito/recibo/" + recibo.getIdRecibo()
-                            + "?monto=" + new BigDecimal(txtSubTotalBruto.getValue().toString())
-                            + "&ivaPorcentaje=21", RenglonNotaDebito[].class)));
-            notaDebitoCliente.setSubTotalBruto(new BigDecimal(txtSubTotalBruto.getValue().toString()));
-            notaDebitoCliente.setTotal(RestClient.getRestTemplate().getForObject("/notas/debito/total"
-                    + "?subTotalBruto=" + new BigDecimal(txtSubTotalBruto.getValue().toString())
-                    + "&iva21Neto=" + notaDebitoCliente.getIva21Neto()
-                    + "&montoNoGravado=" + notaDebitoCliente.getMontoNoGravado(), BigDecimal.class));
-            nd = RestClient.getRestTemplate()
-                    .postForObject("/notas/debito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                            + "/usuario/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                            + "/recibo/" + recibo.getIdRecibo()
-                            + "?movimiento=" + Movimiento.VENTA
-                            + "&idCliente=" + cliente.getId_Cliente(), notaDebitoCliente, NotaDebito.class);
-            if (nd != null) {
-                notaDebitoCreada = true;
-                boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "/factura-electronica-habilitada", Boolean.class);
-                if (FEHabilitada) {
-                    this.autorizarNotaDebito(nd);
-                }
-                if (notaDebitoAutorizada) {
-                    int reply = JOptionPane.showConfirmDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
-                            "Aviso", JOptionPane.YES_NO_OPTION);
-                    if (reply == JOptionPane.YES_OPTION) {
-                        if (Desktop.isDesktopSupported()) {
-                            byte[] reporte = RestClient.getRestTemplate()
-                                    .getForObject("/notas/" + nd.getIdNota() + "/reporte", byte[].class);
-                            File f = new File(System.getProperty("user.home") + "/NotaDebito.pdf");
-                            Files.write(f.toPath(), reporte);
-                            Desktop.getDesktop().open(f);
-                        } else {
-                            JOptionPane.showMessageDialog(this,
-                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
-                                    "Error", JOptionPane.ERROR_MESSAGE);
-                        }
+    private void guardar() throws IOException {
+        NotaDebito notaDebitoNueva = new NotaDebito();
+        notaDebitoNueva.setFecha(new Date());
+        notaDebitoNueva.setIva21Neto(new BigDecimal(txtIVA21Neto.getValue().toString()));
+        notaDebitoNueva.setIva105Neto(BigDecimal.ZERO);
+        notaDebitoNueva.setMontoNoGravado(recibo.getMonto());
+        notaDebitoNueva.setMotivo(cmbDescripcionRenglon2.getSelectedItem().toString());
+        notaDebitoNueva.setRenglonesNotaDebito(Arrays.asList(RestClient.getRestTemplate()
+                .getForObject("/notas/renglon/debito/recibo/" + recibo.getIdRecibo()
+                        + "?monto=" + new BigDecimal(txtSubTotalBruto.getValue().toString())
+                        + "&ivaPorcentaje=21", RenglonNotaDebito[].class)));
+        notaDebitoNueva.setSubTotalBruto(new BigDecimal(txtSubTotalBruto.getValue().toString()));
+        notaDebitoNueva.setTotal(RestClient.getRestTemplate().getForObject("/notas/debito/total"
+                + "?subTotalBruto=" + new BigDecimal(txtSubTotalBruto.getValue().toString())
+                + "&iva21Neto=" + notaDebitoNueva.getIva21Neto()
+                + "&montoNoGravado=" + notaDebitoNueva.getMontoNoGravado(), BigDecimal.class));
+        String uri = "/notas/debito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                + "/usuario/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
+                + "/recibo/" + recibo.getIdRecibo();
+        if (cliente != null) {
+            uri += "?movimiento=" + Movimiento.VENTA
+                    + "&idCliente=" + cliente.getId_Cliente();
+        } else if (proveedor != null) {
+            uri += "?movimiento=" + Movimiento.COMPRA
+                    + "&idProveedor=" + proveedor.getId_Proveedor();
+        }
+        NotaDebito nd = RestClient.getRestTemplate()
+                .postForObject(uri, notaDebitoNueva, NotaDebito.class);
+        if (nd != null && cliente != null) {
+            notaDebitoCreada = true;
+            boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
+                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + "/factura-electronica-habilitada", Boolean.class);
+            if (notaDebitoCreada && FEHabilitada && this.autorizarNotaDebito(nd)) {
+                int reply = JOptionPane.showConfirmDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                        "Aviso", JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION) {
+                    if (Desktop.isDesktopSupported()) {
+                        byte[] reporte = RestClient.getRestTemplate()
+                                .getForObject("/notas/" + nd.getIdNota() + "/reporte", byte[].class);
+                        File f = new File(System.getProperty("user.home") + "/NotaDebito.pdf");
+                        Files.write(f.toPath(), reporte);
+                        Desktop.getDesktop().open(f);
+                    } else {
+                        JOptionPane.showMessageDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
-                this.dispose();
             }
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (IOException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
-    private void guardarNotaDebitoProveedor() {
-        NotaDebito notaDebitoProveedor = new NotaDebito();
-        notaDebitoProveedor.setFecha(new Date());
-        notaDebitoProveedor.setIva21Neto(new BigDecimal(txtIVA21Neto.getValue().toString()));
-        notaDebitoProveedor.setIva105Neto(BigDecimal.ZERO);
-        notaDebitoProveedor.setMontoNoGravado(recibo.getMonto());
-        notaDebitoProveedor.setMotivo(cmbDescripcionRenglon2.getSelectedItem().toString());
-        notaDebitoProveedor.setSerie(Long.parseLong(txt_Serie.getText()));
-        notaDebitoProveedor.setNroNota(Long.parseLong(txt_Numero.getText()));
-        try {
-            notaDebitoProveedor.setRenglonesNotaDebito(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/notas/renglon/debito/recibo/" + recibo.getIdRecibo()
-                    + "?monto=" + new BigDecimal(txtSubTotalBruto.getValue().toString())
-                    + "&ivaPorcentaje=21", RenglonNotaDebito[].class)));
-            notaDebitoProveedor.setSubTotalBruto(new BigDecimal(txtSubTotalBruto.getValue().toString()));
-            notaDebitoProveedor.setTotal(RestClient.getRestTemplate().getForObject("/notas/debito/total"
-                    + "?subTotalBruto=" + new BigDecimal(txtSubTotalBruto.getValue().toString())
-                    + "&iva21Neto=" + notaDebitoProveedor.getIva21Neto()
-                    + "&montoNoGravado=" + notaDebitoProveedor.getMontoNoGravado(), BigDecimal.class));
-            NotaDebito nd = RestClient.getRestTemplate()
-                    .postForObject("/notas/debito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                    + "/usuario/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                    + "/recibo/" + recibo.getIdRecibo()
-                    + "?movimiento=" + Movimiento.COMPRA
-                    + "&idProveedor=" + proveedor.getId_Proveedor(), notaDebitoProveedor, NotaDebito.class);
-            notaDebitoCreada = (nd != null);
-            this.dispose();
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+    private boolean autorizarNotaDebito(NotaDebito notaDebito) {
+        if (notaDebito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_A
+                || notaDebito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B) {
+            notaDebito = RestClient.getRestTemplate()
+                    .postForObject("/notas/" + notaDebito.getIdNota() + "/autorizacion",
+                            null, NotaDebito.class);
+            return notaDebito.getCAE() != 0L;
         }
+        return false;        
     }
     
     private void cargarDetalleNotaDebitoProveedor() {
@@ -744,11 +686,21 @@ public class DetalleNotaDebitoGUI extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        if (cliente != null) {
-            this.guardarNotaDebitoCliente();
-        } else if (proveedor != null) {
-            this.guardarNotaDebitoProveedor();
-        }        
+        try {
+            this.guardar();
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnGuardarActionPerformed
       
     private void txtMontoRenglon2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMontoRenglon2FocusGained
