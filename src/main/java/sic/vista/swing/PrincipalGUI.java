@@ -66,13 +66,13 @@ public class PrincipalGUI extends JFrame {
         mnuItm_Salir = new javax.swing.JMenuItem();
         mnu_Compras = new javax.swing.JMenu();
         mnuItm_FacturasCompra = new javax.swing.JMenuItem();
-        mnuItm_NotasCompra = new javax.swing.JMenuItem();
         mnuItm_Proveedores = new javax.swing.JMenuItem();
+        mnuItm_NotasCompra = new javax.swing.JMenuItem();
         mnu_Ventas = new javax.swing.JMenu();
         mnuItm_FacturasVenta = new javax.swing.JMenuItem();
-        mnuItm_NotasVenta = new javax.swing.JMenuItem();
         mnuItm_Pedidos = new javax.swing.JMenuItem();
         mnuItm_Clientes = new javax.swing.JMenuItem();
+        mnuItm_NotasVenta = new javax.swing.JMenuItem();
         mnu_Administracion = new javax.swing.JMenu();
         mnuItm_Transportistas = new javax.swing.JMenuItem();
         mnuItm_FormasDePago = new javax.swing.JMenuItem();
@@ -169,14 +169,6 @@ public class PrincipalGUI extends JFrame {
         });
         mnu_Compras.add(mnuItm_FacturasCompra);
 
-        mnuItm_NotasCompra.setText("Notas");
-        mnuItm_NotasCompra.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuItm_NotasCompraActionPerformed(evt);
-            }
-        });
-        mnu_Compras.add(mnuItm_NotasCompra);
-
         mnuItm_Proveedores.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/ProviderBag_16x16.png"))); // NOI18N
         mnuItm_Proveedores.setText("Proveedores");
         mnuItm_Proveedores.addActionListener(new java.awt.event.ActionListener() {
@@ -185,6 +177,14 @@ public class PrincipalGUI extends JFrame {
             }
         });
         mnu_Compras.add(mnuItm_Proveedores);
+
+        mnuItm_NotasCompra.setText("Notas");
+        mnuItm_NotasCompra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuItm_NotasCompraActionPerformed(evt);
+            }
+        });
+        mnu_Compras.add(mnuItm_NotasCompra);
 
         mb_BarraMenues.add(mnu_Compras);
 
@@ -197,14 +197,6 @@ public class PrincipalGUI extends JFrame {
             }
         });
         mnu_Ventas.add(mnuItm_FacturasVenta);
-
-        mnuItm_NotasVenta.setText("Notas");
-        mnuItm_NotasVenta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuItm_NotasVentaActionPerformed(evt);
-            }
-        });
-        mnu_Ventas.add(mnuItm_NotasVenta);
 
         mnuItm_Pedidos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/PedidoFacturar_16x16.png"))); // NOI18N
         mnuItm_Pedidos.setText("Pedidos");
@@ -223,6 +215,14 @@ public class PrincipalGUI extends JFrame {
             }
         });
         mnu_Ventas.add(mnuItm_Clientes);
+
+        mnuItm_NotasVenta.setText("Notas");
+        mnuItm_NotasVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuItm_NotasVentaActionPerformed(evt);
+            }
+        });
+        mnu_Ventas.add(mnuItm_NotasVenta);
 
         mb_BarraMenues.add(mnu_Ventas);
 
