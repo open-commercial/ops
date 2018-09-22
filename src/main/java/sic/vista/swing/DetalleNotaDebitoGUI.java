@@ -22,6 +22,7 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
+import sic.modelo.Movimiento;
 import sic.modelo.NotaDebito;
 import sic.modelo.Proveedor;
 import sic.modelo.Recibo;
@@ -39,7 +40,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private long idRecibo;
     private boolean notaDebitoCreada;  
     private boolean notaDebitoAutorizada = false;
-    private long idNotaDebitoProveedor;
+    private long idNotaDebito;
     private final FormatterFechaHora formatter = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO);
     private final static BigDecimal IVA_21 = new BigDecimal("21");
     private final static BigDecimal CIEN = new BigDecimal("100");
@@ -69,7 +70,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
         this.notaDebitoCreada = false;
         this.proveedor = null;
         this.cliente = null;
-        this.idNotaDebitoProveedor = idNotaDebitoProveedor;
+        this.idNotaDebito = idNotaDebitoProveedor;
     }
     
     public boolean isNotaDebitoCreada() {
@@ -156,12 +157,12 @@ public class DetalleNotaDebitoGUI extends JDialog {
                     + "?subTotalBruto=" + new BigDecimal(txtSubTotalBruto.getValue().toString())
                     + "&iva21Neto=" + notaDebitoCliente.getIva21Neto()
                     + "&montoNoGravado=" + notaDebitoCliente.getMontoNoGravado(), BigDecimal.class));
-            notaDebitoCliente.setUsuario(UsuarioActivo.getInstance().getUsuario());
             nd = RestClient.getRestTemplate()
                     .postForObject("/notas/debito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                            + "/cliente/" + cliente.getId_Cliente()
                             + "/usuario/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                            + "/recibo/" + recibo.getIdRecibo(), notaDebitoCliente, NotaDebito.class);
+                            + "/recibo/" + recibo.getIdRecibo()
+                            + "?movimiento=" + Movimiento.VENTA
+                            + "&idCliente=" + cliente.getId_Cliente(), notaDebitoCliente, NotaDebito.class);
             if (nd != null) {
                 notaDebitoCreada = true;
                 boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
@@ -224,12 +225,12 @@ public class DetalleNotaDebitoGUI extends JDialog {
                     + "?subTotalBruto=" + new BigDecimal(txtSubTotalBruto.getValue().toString())
                     + "&iva21Neto=" + notaDebitoProveedor.getIva21Neto()
                     + "&montoNoGravado=" + notaDebitoProveedor.getMontoNoGravado(), BigDecimal.class));
-            notaDebitoProveedor.setUsuario(UsuarioActivo.getInstance().getUsuario());
             NotaDebito nd = RestClient.getRestTemplate()
                     .postForObject("/notas/debito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                    + "/proveedor/" + proveedor.getId_Proveedor()
                     + "/usuario/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                    + "/recibo/" + recibo.getIdRecibo(), notaDebitoProveedor, NotaDebito.class);
+                    + "/recibo/" + recibo.getIdRecibo()
+                    + "?movimiento=" + Movimiento.COMPRA
+                    + "&idProveedor=" + proveedor.getId_Proveedor(), notaDebitoProveedor, NotaDebito.class);
             notaDebitoCreada = (nd != null);
             this.dispose();
         } catch (RestClientResponseException ex) {
@@ -244,7 +245,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
     
     private void cargarDetalleNotaDebitoProveedor() {
         try {
-            NotaDebito notaDebitoProveedor = RestClient.getRestTemplate().getForObject("/notas/" + idNotaDebitoProveedor, NotaDebito.class);
+            NotaDebito notaDebitoProveedor = RestClient.getRestTemplate().getForObject("/notas/" + idNotaDebito, NotaDebito.class);
             Proveedor proveedorDeNota = RestClient.getRestTemplate()
                 .getForObject("/proveedores/" + notaDebitoProveedor.getIdProveedor(), Proveedor.class);
             this.setTitle(notaDebitoProveedor.getTipoComprobante() + " Nº " + notaDebitoProveedor.getSerie() + " - " + notaDebitoProveedor.getNroNota()
@@ -260,10 +261,11 @@ public class DetalleNotaDebitoGUI extends JDialog {
                     + " " + proveedorDeNota.getLocalidad().getProvincia().getPais());
             txtCondicionIVA.setText(proveedorDeNota.getCondicionIVA().getNombre());
             txtIDFiscal.setText(proveedorDeNota.getIdFiscal());
-            lblDetallePago.setText("Nº Recibo: " + notaDebitoProveedor.getRecibo().getNumSerie() + " - " + notaDebitoProveedor.getRecibo().getNumRecibo() + " - " + notaDebitoProveedor.getRecibo().getConcepto());
-            lblMontoPago.setText("$" + FormatterNumero.formatConRedondeo(notaDebitoProveedor.getRecibo().getMonto()));
-            lblImportePago.setText("$" + FormatterNumero.formatConRedondeo(notaDebitoProveedor.getRecibo().getMonto()));
-            List<RenglonNotaDebito> renglonesNotaDebito = Arrays.asList(RestClient.getRestTemplate().getForObject("/notas/renglones/debito/" + idNotaDebitoProveedor, RenglonNotaDebito[].class));
+            Recibo reciboNotaDebitoProveedor = RestClient.getRestTemplate().getForObject("/recibos/" + notaDebitoProveedor.getIdRecibo(), Recibo.class);
+            lblDetallePago.setText("Nº Recibo: " + reciboNotaDebitoProveedor.getNumSerie() + " - " + reciboNotaDebitoProveedor.getNumRecibo() + " - " + reciboNotaDebitoProveedor.getConcepto());
+            lblMontoPago.setText("$" + FormatterNumero.formatConRedondeo(reciboNotaDebitoProveedor.getMonto()));
+            lblImportePago.setText("$" + FormatterNumero.formatConRedondeo(reciboNotaDebitoProveedor.getMonto()));
+            List<RenglonNotaDebito> renglonesNotaDebito = Arrays.asList(RestClient.getRestTemplate().getForObject("/notas/renglones/debito/" + idNotaDebito, RenglonNotaDebito[].class));
             txtMontoRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(1).getImporteBruto()));
             lblIvaNetoRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(1).getIvaNeto()));
             lblImporteRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(1).getImporteNeto()));

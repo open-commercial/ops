@@ -23,6 +23,7 @@ import sic.modelo.EmpresaActiva;
 import sic.modelo.Factura;
 import sic.modelo.FacturaCompra;
 import sic.modelo.FacturaVenta;
+import sic.modelo.Movimiento;
 import sic.modelo.NotaCredito;
 import sic.modelo.Proveedor;
 import sic.modelo.RenglonNotaCredito;
@@ -34,10 +35,12 @@ public class DetalleNotaCreditoGUI extends JDialog {
 
     private final ModeloTabla modeloTablaRenglones = new ModeloTabla();
     private boolean modificarStock;
+    private long idFactura;
     private Factura factura;
     private Cliente cliente;
     private Proveedor proveedor;
-    private NotaCredito notaCreditoProveedorAMostrar;
+    private long idNotaCredito;
+    private NotaCredito notaCredito;
     private HashMap<Long,BigDecimal> idsRenglonesYCantidades = new HashMap<>();
     private List<RenglonNotaCredito> renglones;    
     private boolean notaCreada;    
@@ -54,8 +57,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
         this.idsRenglonesYCantidades = idsRenglonesYCantidades;
         this.modificarStock = modificarStock;
         this.notaCreada = false;
-        this.recuperarFactura(idFactura);
-        this.recuperarCliente(cliente.getId_Cliente());
+        this.cliente = cliente;
+        this.idFactura = idFactura;
     }
     
     public DetalleNotaCreditoGUI(HashMap<Long,BigDecimal> idsRenglonesYCantidades, long idFactura,
@@ -65,14 +68,14 @@ public class DetalleNotaCreditoGUI extends JDialog {
         this.idsRenglonesYCantidades = idsRenglonesYCantidades;
         this.modificarStock = modificarStock;
         this.notaCreada = false;
-        this.recuperarFactura(idFactura);
-        this.recuperarProveedor(proveedor.getId_Proveedor());
+        this.proveedor = proveedor;
+        this.idFactura = idFactura;
     }
     
-    public DetalleNotaCreditoGUI(long idNotaCreditoProveedor) {
+    public DetalleNotaCreditoGUI(long idNotaCredito) {
         this.initComponents();
         this.setIcon();
-        this.recuperarNotaCreditoProveedor(idNotaCreditoProveedor);
+        this.idNotaCredito = idNotaCredito;
     }
 
     public boolean isNotaCreada() {
@@ -92,35 +95,9 @@ public class DetalleNotaCreditoGUI extends JDialog {
         }
     }
     
-    private void recuperarCliente(long idCliente) {
-        try {
-            cliente = RestClient.getRestTemplate().getForObject("/clientes/" + idCliente, Cliente.class);            
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
-    private void recuperarProveedor(long idProveedor) {
-        try {
-            proveedor = RestClient.getRestTemplate().getForObject("/proveedores/" + idProveedor, Proveedor.class);
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
     private void recuperarNotaCreditoProveedor(long idNotaCreditoProvedor) {
         try {
-            notaCreditoProveedorAMostrar = RestClient.getRestTemplate().getForObject("/notas/" + idNotaCreditoProvedor, NotaCredito.class);
+            notaCredito = RestClient.getRestTemplate().getForObject("/notas/" + idNotaCreditoProvedor, NotaCredito.class);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -132,7 +109,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
     }
     
     private void cargarResultados() {
-        if (notaCreditoProveedorAMostrar == null) {
+        if (notaCredito == null) {
             BigDecimal[] importes = new BigDecimal[renglones.size()];
             BigDecimal[] cantidades = new BigDecimal[renglones.size()];
             BigDecimal[] ivaPorcentajeRenglones = new BigDecimal[renglones.size()];
@@ -200,20 +177,20 @@ public class DetalleNotaCreditoGUI extends JDialog {
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"), "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            txt_Subtotal.setValue(notaCreditoProveedorAMostrar.getSubTotal());
-            txt_Decuento_porcentaje.setValue(notaCreditoProveedorAMostrar.getDescuentoPorcentaje());
-            txt_Decuento_neto.setValue(notaCreditoProveedorAMostrar.getDescuentoNeto());
-            txt_Recargo_porcentaje.setValue(notaCreditoProveedorAMostrar.getRecargoPorcentaje());
-            txt_Recargo_neto.setValue(notaCreditoProveedorAMostrar.getRecargoNeto());
-            txt_IVA105_neto.setValue(notaCreditoProveedorAMostrar.getIva105Neto());
-            txt_IVA21_neto.setValue(notaCreditoProveedorAMostrar.getIva21Neto());
-            txt_Total.setValue(notaCreditoProveedorAMostrar.getTotal());
-            if (notaCreditoProveedorAMostrar.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B || notaCreditoProveedorAMostrar.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_PRESUPUESTO) {
+            txt_Subtotal.setValue(notaCredito.getSubTotal());
+            txt_Decuento_porcentaje.setValue(notaCredito.getDescuentoPorcentaje());
+            txt_Decuento_neto.setValue(notaCredito.getDescuentoNeto());
+            txt_Recargo_porcentaje.setValue(notaCredito.getRecargoPorcentaje());
+            txt_Recargo_neto.setValue(notaCredito.getRecargoNeto());
+            txt_IVA105_neto.setValue(notaCredito.getIva105Neto());
+            txt_IVA21_neto.setValue(notaCredito.getIva21Neto());
+            txt_Total.setValue(notaCredito.getTotal());
+            if (notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B || notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_PRESUPUESTO) {
                 txt_IVA105_neto.setValue(BigDecimal.ZERO);
                 txt_IVA21_neto.setValue(BigDecimal.ZERO);
                 txt_SubTotalBruto.setValue(txt_Total.getValue());
             } else {
-                txt_SubTotalBruto.setValue(notaCreditoProveedorAMostrar.getSubTotalBruto());
+                txt_SubTotalBruto.setValue(notaCredito.getSubTotalBruto());
             }
         }
     }
@@ -244,7 +221,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
     
     private void cargarDetalleNotaCreditoProveedor() {
         Proveedor proveedorDeNota = RestClient.getRestTemplate()
-                .getForObject("/proveedores/" + notaCreditoProveedorAMostrar.getIdProveedor(), Proveedor.class);
+                .getForObject("/proveedores/" + notaCredito.getIdProveedor(), Proveedor.class);
         txtNombre.setText(proveedorDeNota.getRazonSocial());
         txtDomicilio.setText(proveedorDeNota.getDireccion()
                 + " " + proveedorDeNota.getLocalidad().getNombre()
@@ -255,8 +232,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
         txt_Serie.setEnabled(false);
         txt_Numero.setEnabled(false);
         cmbMotivo.setEnabled(false);
-        txt_Serie.setText(String.valueOf(notaCreditoProveedorAMostrar.getSerie()));
-        txt_Numero.setText(String.valueOf(notaCreditoProveedorAMostrar.getNroNota()));
+        txt_Serie.setText(String.valueOf(notaCredito.getSerie()));
+        txt_Numero.setText(String.valueOf(notaCredito.getNroNota()));
     }
 
     private void setColumnas() {
@@ -297,14 +274,14 @@ public class DetalleNotaCreditoGUI extends JDialog {
 
     private void cargarRenglonesAlTable() {
         try {
-            if (notaCreditoProveedorAMostrar == null) {
+            if (notaCredito == null) {
                 String uri = "/notas/renglon/credito/producto?"
                         + "tipoDeComprobante=" + factura.getTipoComprobante().name()
                         + "&cantidad=" + idsRenglonesYCantidades.values().toString().substring(1, idsRenglonesYCantidades.values().toString().length() - 1)
                         + "&idRenglonFactura=" + idsRenglonesYCantidades.keySet().toString().substring(1, idsRenglonesYCantidades.keySet().toString().length() - 1);
                 renglones = Arrays.asList(RestClient.getRestTemplate().getForObject(uri, RenglonNotaCredito[].class));
             } else {
-                renglones = Arrays.asList(RestClient.getRestTemplate().getForObject("/notas/renglones/credito/" + notaCreditoProveedorAMostrar.getIdNota(), RenglonNotaCredito[].class));
+                renglones = Arrays.asList(RestClient.getRestTemplate().getForObject("/notas/renglones/credito/" + notaCredito.getIdNota(), RenglonNotaCredito[].class));
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -352,10 +329,11 @@ public class DetalleNotaCreditoGUI extends JDialog {
         try {
             NotaCredito nc = RestClient.getRestTemplate()
                     .postForObject("/notas/credito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                            + "/cliente/" + cliente.getId_Cliente()
                             + "/usuario/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                             + "/factura/" + factura.getId_Factura()
-                            + "?modificarStock=" + modificarStock,
+                            + "?modificarStock=" + modificarStock
+                            + "&movimiento=" + Movimiento.VENTA
+                            + "&idCliente=" + cliente.getId_Cliente(),
                             notaCreditoCliente, NotaCredito.class);
             if (nc != null) {
                 notaCreada = true;
@@ -419,10 +397,11 @@ public class DetalleNotaCreditoGUI extends JDialog {
         try {
             NotaCredito nc = RestClient.getRestTemplate()
                     .postForObject("/notas/credito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                            + "/proveedor/" + proveedor.getId_Proveedor()
                             + "/usuario/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                             + "/factura/" + factura.getId_Factura()
-                            + "?modificarStock=" + modificarStock,
+                            + "?modificarStock=" + modificarStock
+                            + "&movimiento=" + Movimiento.COMPRA
+                            + "&idProveedor=" + proveedor.getId_Proveedor(),
                             notaCreditoProveedor, NotaCredito.class);
             notaCreada = (nc != null);
             this.dispose();
@@ -872,10 +851,13 @@ public class DetalleNotaCreditoGUI extends JDialog {
     
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         if (cliente != null) {
+            this.recuperarFactura(idFactura);
             this.cargarDetalleCliente();
         } else if (proveedor != null) {
+            this.recuperarFactura(idFactura);
             this.cargarDetalleProveedor();
-        } else if (notaCreditoProveedorAMostrar != null) {
+        } else if (notaCredito != null) {
+            this.recuperarNotaCreditoProveedor(idNotaCredito);
             btnGuardar.setVisible(false);
             this.cargarDetalleNotaCreditoProveedor();
         }

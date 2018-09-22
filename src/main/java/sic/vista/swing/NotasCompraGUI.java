@@ -26,6 +26,7 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Factura;
+import sic.modelo.Movimiento;
 import sic.modelo.Nota;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
@@ -63,7 +64,8 @@ public class NotasCompraGUI extends JInternalFrame {
     }
 
     private String getUriCriteria() {
-        String uriCriteria = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
+        String uriCriteria = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                + "&movimiento=" + Movimiento.COMPRA;;
         if (chk_Fecha.isSelected()) {
             uriCriteria += "&desde=" + dc_FechaDesde.getDate().getTime()
                     + "&hasta=" + dc_FechaHasta.getDate().getTime();
@@ -144,7 +146,7 @@ public class NotasCompraGUI extends JInternalFrame {
         String uriCriteria = getUriCriteria();
         try {
             PaginaRespuestaRest<Nota> response = RestClient.getRestTemplate()
-                    .exchange("/notas/compras/busqueda/criteria?" + uriCriteria, HttpMethod.GET, null,
+                    .exchange("/notas/busqueda/criteria?" + uriCriteria, HttpMethod.GET, null,
                             new ParameterizedTypeReference<PaginaRespuestaRest<Nota>>() {
                     })
                     .getBody();
@@ -311,13 +313,13 @@ public class NotasCompraGUI extends JInternalFrame {
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
                 || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
             txt_ResultTotalIVANotaDebito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/compras/total-iva-debito/criteria?" + uriCriteria, BigDecimal.class));
+                    .getForObject("/notas/total-iva-debito/criteria?" + uriCriteria, BigDecimal.class));
             txt_ResultTotalIVANotaCredito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/compras/total-iva-credito/criteria?" + uriCriteria, BigDecimal.class));
+                    .getForObject("/notas/total-iva-credito/criteria?" + uriCriteria, BigDecimal.class));
             txt_ResultTotalDebito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/compras/total-debito/criteria?" + uriCriteria, BigDecimal.class));
+                    .getForObject("/notas/total-debito/criteria?" + uriCriteria, BigDecimal.class));
             txt_ResultTotalCredito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/compras/total-credito/criteria?" + uriCriteria, BigDecimal.class));
+                    .getForObject("/notas/total-credito/criteria?" + uriCriteria, BigDecimal.class));
         }
     }
     

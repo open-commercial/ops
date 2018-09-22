@@ -16,25 +16,29 @@ public class NotaCredito extends Nota implements Serializable {
     private List<RenglonNotaCredito> renglonesNotaCredito;
     
     private BigDecimal subTotal;
-    
+
     private BigDecimal recargoPorcentaje;
-    
+
     private BigDecimal recargoNeto;
-    
+
     private BigDecimal descuentoPorcentaje;
-    
+
     private BigDecimal descuentoNeto;
 
-    public NotaCredito() {}
+    public NotaCredito() {
+    }
 
     public NotaCredito(long idNota, long serie, long nroNota, boolean eliminada,
-            TipoDeComprobante tipoDeComprobante, Date fecha, Usuario usuario,
+            TipoDeComprobante tipoDeComprobante, Date fecha, long idEmpresa, String nombreEmpresa, long idUsuario, String nombreUsuario,
+            long idCliente, String razonSocialCliente, long idProveedor, String razonSocialProveedor, long idFacturaVenta, long idFacturaCompra,
             String motivo, List<RenglonNotaCredito> renglones, BigDecimal subTotalBruto,
             BigDecimal iva21Neto, BigDecimal iva105Neto, BigDecimal total, long CAE, Date vencimientoCAE,
             long numSerieAfip, long numFacturaAfip) {
 
-        super(idNota, serie, nroNota, eliminada, tipoDeComprobante, fecha, usuario,
-                motivo, subTotalBruto, iva21Neto, iva105Neto, total, CAE, vencimientoCAE, numSerieAfip, numFacturaAfip);
+        super(idNota, serie, nroNota, eliminada, tipoDeComprobante, fecha, idEmpresa, nombreEmpresa,
+                idUsuario, nombreUsuario, idCliente, razonSocialCliente, idProveedor, razonSocialProveedor,
+                idFacturaVenta, idFacturaCompra, motivo, subTotalBruto, iva21Neto, iva105Neto, total, CAE,
+                vencimientoCAE, numSerieAfip, numFacturaAfip);
         this.renglonesNotaCredito = renglones;
     }
 

@@ -31,14 +31,16 @@ public class Nota implements Serializable {
     private TipoDeComprobante tipoComprobante;
     private Date fecha; 
     private long idEmpresa;
-    private String nombreEmpresa;  
-    private Usuario usuario;  
+    private String nombreEmpresa;    
+    private long idUsuario;
+    private String nombreUsuario;   
     private long idCliente;
     private String razonSocialCliente;
     private long idProveedor;
     private String razonSocialProveedor;
     private long idFacturaVenta;
     private long idFacturaCompra;
+    private Movimiento movimiento;
     private String motivo;
     private BigDecimal subTotalBruto;
     private BigDecimal iva21Neto;      
@@ -48,12 +50,15 @@ public class Nota implements Serializable {
     private Date vencimientoCAE;
     private long numSerieAfip;
     private long numNotaAfip;
-    
-    public Nota() {}
+
+    public Nota() {
+    }
 
     public Nota(long idNota, long serie, long nroNota, boolean eliminada,
-            TipoDeComprobante tipoDeComprobante, Date fecha, Usuario usuario,
-            String motivo, BigDecimal subTotalBruto, BigDecimal iva21Neto, BigDecimal iva105Neto,
+            TipoDeComprobante tipoDeComprobante, Date fecha, long idEmpresa, String nombreEmpresa, 
+            long idUsuario, String nombreUsuario, long idCliente, String razonSocialCliente,
+            long idProveedor, String razonSocialProveedor, long idFacturaVenta, long idFacturaCompra, 
+            String motivo, BigDecimal subTotalBruto, BigDecimal iva21Neto, BigDecimal iva105Neto, 
             BigDecimal total, long CAE, Date vencimientoCAE, long numSerieAfip, long numNotaAfip) {
 
         this.idNota = idNota;
@@ -62,7 +67,16 @@ public class Nota implements Serializable {
         this.eliminada = eliminada;
         this.tipoComprobante = tipoDeComprobante;
         this.fecha = fecha;
-        this.usuario = usuario;
+        this.idEmpresa = idEmpresa;
+        this.nombreEmpresa = nombreEmpresa;
+        this.idUsuario = idUsuario;
+        this.nombreUsuario = nombreUsuario;
+        this.idCliente = idCliente;
+        this.razonSocialCliente = razonSocialCliente;
+        this.idProveedor = idProveedor;
+        this.razonSocialProveedor = razonSocialProveedor;
+        this.idFacturaVenta = idFacturaVenta;
+        this.idFacturaCompra = idFacturaCompra;
         this.motivo = motivo;
         this.subTotalBruto = subTotalBruto;
         this.iva21Neto = iva21Neto;
