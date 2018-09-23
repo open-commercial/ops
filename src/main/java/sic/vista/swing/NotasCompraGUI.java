@@ -82,15 +82,16 @@ public class NotasCompraGUI extends JInternalFrame {
         //sorting
         // tbl_Resultados.setAutoCreateRowSorter(true);
         //nombres de columnas
-        String[] encabezados = new String[8];
+        String[] encabezados = new String[9];
         encabezados[0] = "CAE";
         encabezados[1] = "Fecha Nota";
         encabezados[2] = "Tipo";
         encabezados[3] = "Nº Nota";
         encabezados[4] = "Proveedor";
-        encabezados[5] = "Total";
-        encabezados[6] = "Nº Nota Afip";
-        encabezados[7] = "Vencimiento CAE";
+        encabezados[5] = "Usuario";
+        encabezados[6] = "Total";
+        encabezados[7] = "Nº Nota Afip";
+        encabezados[8] = "Vencimiento CAE";
         modeloTablaNotas.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaNotas);
         //tipo de dato columnas
@@ -100,9 +101,10 @@ public class NotasCompraGUI extends JInternalFrame {
         tipos[2] = TipoDeComprobante.class;
         tipos[3] = String.class;
         tipos[4] = String.class;
-        tipos[5] = BigDecimal.class;
-        tipos[6] = String.class;
-        tipos[7] = Date.class;
+        tipos[5] = String.class;
+        tipos[6] = BigDecimal.class;
+        tipos[7] = String.class;
+        tipos[8] = Date.class;
         modeloTablaNotas.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
@@ -118,21 +120,23 @@ public class NotasCompraGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(140);
         tbl_Resultados.getColumnModel().getColumn(3).setMinWidth(100);
         tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(100);        
+        tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(380);
-        tbl_Resultados.getColumnModel().getColumn(5).setMinWidth(120);
-        tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(120);
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(120);
-        tbl_Resultados.getColumnModel().getColumn(6).setMinWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(6).setMaxWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(7).setMinWidth(140);
-        tbl_Resultados.getColumnModel().getColumn(7).setMaxWidth(140);
-        tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(140);
+        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(380);
+        
+        tbl_Resultados.getColumnModel().getColumn(6).setMinWidth(120);
+        tbl_Resultados.getColumnModel().getColumn(6).setMaxWidth(120);
+        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(120);
+        tbl_Resultados.getColumnModel().getColumn(7).setMinWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(7).setMaxWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(8).setMinWidth(140);
+        tbl_Resultados.getColumnModel().getColumn(8).setMaxWidth(140);
+        tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(140);
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         tbl_Resultados.getColumnModel().getColumn(1).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
-        tbl_Resultados.getColumnModel().getColumn(7).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(8).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 
     private void buscar(boolean calcularResultados) {
@@ -208,13 +212,14 @@ public class NotasCompraGUI extends JInternalFrame {
             fila[2] = nota.getTipoComprobante();
             fila[3] = nota.getSerie() + " - " + nota.getNroNota();
             fila[4] = nota.getRazonSocialProveedor();
-            fila[5] = nota.getTotal();
+            fila[5] = nota.getNombreUsuario();            
+            fila[6] = nota.getTotal();
             if (nota.getNumSerieAfip() == 0 && nota.getNumNotaAfip() == 0) {
-                fila[6] = "";
+                fila[7] = "";
             } else {
-                fila[6] = nota.getNumSerieAfip() + " - " + nota.getNumNotaAfip();
+                fila[7] = nota.getNumSerieAfip() + " - " + nota.getNumNotaAfip();
             }
-            fila[7] = nota.getVencimientoCAE();
+            fila[8] = nota.getVencimientoCAE();
             return fila;
         }).forEach(fila -> {
             modeloTablaNotas.addRow(fila);
@@ -276,6 +281,44 @@ public class NotasCompraGUI extends JInternalFrame {
                     .getForObject("/notas/total-debito/criteria?" + uriCriteria, BigDecimal.class));
             txt_ResultTotalCredito.setValue(RestClient.getRestTemplate()
                     .getForObject("/notas/total-credito/criteria?" + uriCriteria, BigDecimal.class));
+        }
+    }
+
+    private void verFacturaCompra() {
+        int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+        if (tbl_Resultados.getSelectedRow() != -1 && isNotaCredito(notasTotal.get(indexFilaSeleccionada).getTipoComprobante())) {
+            FacturasCompraGUI gui_facturaCompra = new FacturasCompraGUI();
+            gui_facturaCompra.setLocation(getDesktopPane().getWidth() / 2 - gui_facturaCompra.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - gui_facturaCompra.getHeight() / 2);
+            getDesktopPane().add(gui_facturaCompra);
+            Factura factura = RestClient.getRestTemplate()
+                    .getForObject("/facturas/" + notasTotal.get(indexFilaSeleccionada).getIdFacturaCompra(), Factura.class);
+            gui_facturaCompra.setVisible(true);
+            gui_facturaCompra.buscarPorSerieYNroFactura(factura.getNumSerie(), factura.getNumFactura(), factura.getTipoComprobante());
+            try {
+                gui_facturaCompra.setSelected(true);
+            } catch (PropertyVetoException ex) {
+                String mensaje = "No se pudo seleccionar la ventana requerida.";
+                LOGGER.error(mensaje + " - " + ex.getMessage());
+                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private boolean isNotaCredito(TipoDeComprobante tipoDeComprobante) {
+        switch (tipoDeComprobante) {
+            case NOTA_CREDITO_A:
+                return true;
+            case NOTA_CREDITO_B:
+                return true;
+            case NOTA_CREDITO_PRESUPUESTO:
+                return true;
+            case NOTA_CREDITO_X:
+                return true;
+            case NOTA_CREDITO_Y:
+                return true;
+            default:
+                return false;
         }
     }
 
@@ -791,44 +834,6 @@ public class NotasCompraGUI extends JInternalFrame {
     private void btnVerFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerFacturaActionPerformed
         this.verFacturaCompra();
     }//GEN-LAST:event_btnVerFacturaActionPerformed
-
-    private void verFacturaCompra() {
-        int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-        if (tbl_Resultados.getSelectedRow() != -1 && isNotaCredito(notasTotal.get(indexFilaSeleccionada).getTipoComprobante())) {
-            FacturasCompraGUI gui_facturaCompra = new FacturasCompraGUI();
-            gui_facturaCompra.setLocation(getDesktopPane().getWidth() / 2 - gui_facturaCompra.getWidth() / 2,
-                    getDesktopPane().getHeight() / 2 - gui_facturaCompra.getHeight() / 2);
-            getDesktopPane().add(gui_facturaCompra);
-            Factura factura = RestClient.getRestTemplate()
-                    .getForObject("/facturas/" + notasTotal.get(indexFilaSeleccionada).getIdFacturaCompra(), Factura.class);
-            gui_facturaCompra.setVisible(true);
-            gui_facturaCompra.buscarPorSerieYNroFactura(factura.getNumSerie(), factura.getNumFactura(), factura.getTipoComprobante());
-            try {
-                gui_facturaCompra.setSelected(true);
-            } catch (PropertyVetoException ex) {
-                String mensaje = "No se pudo seleccionar la ventana requerida.";
-                LOGGER.error(mensaje + " - " + ex.getMessage());
-                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), mensaje, "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
-
-    private boolean isNotaCredito(TipoDeComprobante tipoDeComprobante) {
-        switch (tipoDeComprobante) {
-            case NOTA_CREDITO_A:
-                return true;
-            case NOTA_CREDITO_B:
-                return true;
-            case NOTA_CREDITO_PRESUPUESTO:
-                return true;
-            case NOTA_CREDITO_X:
-                return true;
-            case NOTA_CREDITO_Y:
-                return true;
-            default:
-                return false;
-        }
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnVerFactura;

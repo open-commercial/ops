@@ -30,6 +30,8 @@ import sic.modelo.RenglonNotaCredito;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.UsuarioActivo;
 import sic.util.DecimalesRenderer;
+import sic.util.FormatosFechaHora;
+import sic.util.FormatterFechaHora;
 
 public class DetalleNotaCreditoGUI extends JDialog {
     private final ModeloTabla modeloTablaRenglones = new ModeloTabla();
@@ -42,7 +44,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private NotaCredito notaCredito;
     private HashMap<Long,BigDecimal> idsRenglonesYCantidades = new HashMap<>();
     private List<RenglonNotaCredito> renglones;
-    private boolean notaCreada;
+    private boolean notaCreditoCreada;
+    private final FormatterFechaHora formatter = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO);
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private BigDecimal subTotalBruto = BigDecimal.ZERO;
     private BigDecimal iva_105_netoFactura = BigDecimal.ZERO;
@@ -54,7 +57,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
         this.setIcon();
         this.idsRenglonesYCantidades = idsRenglonesYCantidades;
         this.modificarStock = modificarStock;
-        this.notaCreada = false;
+        this.notaCreditoCreada = false;
         this.cliente = cliente;
         this.idFactura = idFactura;
     }
@@ -65,7 +68,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
         this.setIcon();
         this.idsRenglonesYCantidades = idsRenglonesYCantidades;
         this.modificarStock = modificarStock;
-        this.notaCreada = false;
+        this.notaCreditoCreada = false;
         this.proveedor = proveedor;
         this.idFactura = idFactura;
     }
@@ -77,7 +80,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
     }
 
     public boolean isNotaCreada() {
-        return notaCreada;
+        return notaCreditoCreada;
     }
 
     private void recuperarNotaCreditoProveedor(long idNotaCreditoProvedor) {
@@ -326,30 +329,35 @@ public class DetalleNotaCreditoGUI extends JDialog {
         }
         NotaCredito nc = RestClient.getRestTemplate()
                 .postForObject(uri, notaCreditoNueva, NotaCredito.class);
-        if (nc != null && cliente != null) {
-            notaCreada = true;
+        if (nc != null) {
+            notaCreditoCreada = true;
             boolean FEHabilitada = RestClient.getRestTemplate()
                     .getForObject("/configuraciones-del-sistema/empresas/"
                             + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                             + "/factura-electronica-habilitada", Boolean.class);
-            if (notaCreada && FEHabilitada && this.autorizarNotaCredito(nc)) {
-                int reply = JOptionPane.showConfirmDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
-                        "Aviso", JOptionPane.YES_NO_OPTION);
-                if (reply == JOptionPane.YES_OPTION) {
-                    if (Desktop.isDesktopSupported()) {
-                        byte[] reporte = RestClient.getRestTemplate()
-                                .getForObject("/notas/" + nc.getIdNota() + "/reporte", byte[].class);
-                        File f = new File(System.getProperty("user.home") + "/NotaCredito.pdf");
-                        Files.write(f.toPath(), reporte);
-                        Desktop.getDesktop().open(f);
-                    } else {
-                        JOptionPane.showMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes")
-                                        .getString("mensaje_error_plataforma_no_soportada"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
+            if (cliente != null && FEHabilitada) {
+                if (this.autorizarNotaCredito(nc)) {
+                    int reply = JOptionPane.showConfirmDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                            "Aviso", JOptionPane.YES_NO_OPTION);
+                    if (reply == JOptionPane.YES_OPTION) {
+                        if (Desktop.isDesktopSupported()) {
+                            byte[] reporte = RestClient.getRestTemplate()
+                                    .getForObject("/notas/" + nc.getIdNota() + "/reporte", byte[].class);
+                            File f = new File(System.getProperty("user.home") + "/NotaCredito.pdf");
+                            Files.write(f.toPath(), reporte);
+                            Desktop.getDesktop().open(f);
+                        } else {
+                            JOptionPane.showMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes")
+                                            .getString("mensaje_error_plataforma_no_soportada"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 }
+            } else {
+                JOptionPane.showMessageDialog(this, "La Nota se guardó correctamente!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                this.dispose();
             }
         }
     }
@@ -797,6 +805,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
                 this.recuperarNotaCreditoProveedor(idNotaCredito);
                 btnGuardar.setVisible(false);
                 this.cargarDetalleNotaCreditoProveedor();
+                this.setTitle(notaCredito.getTipoComprobante() + " Nº " + notaCredito.getSerie() + " - " + notaCredito.getNroNota()
+                        + " con fecha " + formatter.format(notaCredito.getFecha()) + " del Proveedor: " + notaCredito.getRazonSocialProveedor());
             } else {
                 factura = RestClient.getRestTemplate().getForObject("/facturas/" + idFactura, Factura.class);
                 if (cliente != null) {
@@ -804,11 +814,11 @@ public class DetalleNotaCreditoGUI extends JDialog {
                 } else if (proveedor != null) {
                     this.cargarDetalleProveedor();
                 }
+                this.setTitle("Nueva Nota de Credito");
             }
             this.setColumnas();
             this.cargarRenglonesAlTable();
             this.cargarResultados();
-            this.setTitle("Nueva Nota de Credito");
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
