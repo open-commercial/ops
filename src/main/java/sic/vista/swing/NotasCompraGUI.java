@@ -79,17 +79,15 @@ public class NotasCompraGUI extends JInternalFrame {
 
     private void setColumnas() {
         //nombres de columnas
-        String[] encabezados = new String[10];
+        String[] encabezados = new String[8];
         encabezados[0] = "CAE";
         encabezados[1] = "Fecha Nota";
         encabezados[2] = "Tipo";
         encabezados[3] = "Nº Nota";
         encabezados[4] = "Proveedor";
         encabezados[5] = "Usuario";
-        encabezados[6] = "Total";
-        encabezados[7] = "Nº Nota Afip";
-        encabezados[8] = "Vencimiento CAE";
-        encabezados[9] = "Motivo";
+        encabezados[6] = "Total";        
+        encabezados[7] = "Motivo";
         modeloTablaNotas.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaNotas);
         //tipo de dato columnas
@@ -100,10 +98,8 @@ public class NotasCompraGUI extends JInternalFrame {
         tipos[3] = String.class;
         tipos[4] = String.class;
         tipos[5] = String.class;
-        tipos[6] = BigDecimal.class;
+        tipos[6] = BigDecimal.class;        
         tipos[7] = String.class;
-        tipos[8] = Date.class;
-        tipos[9] = String.class;
         modeloTablaNotas.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
@@ -124,18 +120,11 @@ public class NotasCompraGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(250);        
         tbl_Resultados.getColumnModel().getColumn(6).setMinWidth(120);
         tbl_Resultados.getColumnModel().getColumn(6).setMaxWidth(120);
-        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(120);
-        tbl_Resultados.getColumnModel().getColumn(7).setMinWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(7).setMaxWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(8).setMinWidth(140);
-        tbl_Resultados.getColumnModel().getColumn(8).setMaxWidth(140);
-        tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(140);
-        tbl_Resultados.getColumnModel().getColumn(9).setMinWidth(500);
+        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(120);        
+        tbl_Resultados.getColumnModel().getColumn(7).setMinWidth(500);
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
-        tbl_Resultados.getColumnModel().getColumn(1).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
-        tbl_Resultados.getColumnModel().getColumn(8).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(1).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));        
     }
 
     private void buscar(boolean calcularResultados) {
@@ -205,21 +194,15 @@ public class NotasCompraGUI extends JInternalFrame {
 
     private void cargarResultadosAlTable() {
         notasParcial.stream().map(nota -> {
-            Object[] fila = new Object[10];
+            Object[] fila = new Object[8];
             fila[0] = nota.getCAE() == 0 ? "" : nota.getCAE();
             fila[1] = nota.getFecha();
             fila[2] = nota.getTipoComprobante();
             fila[3] = nota.getSerie() + " - " + nota.getNroNota();
             fila[4] = nota.getRazonSocialProveedor();
             fila[5] = nota.getNombreUsuario();            
-            fila[6] = nota.getTotal();
-            if (nota.getNumSerieAfip() == 0 && nota.getNumNotaAfip() == 0) {
-                fila[7] = "";
-            } else {
-                fila[7] = nota.getNumSerieAfip() + " - " + nota.getNumNotaAfip();
-            }
-            fila[8] = nota.getVencimientoCAE();
-            fila[9] = nota.getMotivo();
+            fila[6] = nota.getTotal();            
+            fila[7] = nota.getMotivo();
             return fila;
         }).forEach(fila -> {
             modeloTablaNotas.addRow(fila);
