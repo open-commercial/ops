@@ -90,6 +90,14 @@ public class DetalleNotaDebitoGUI extends JDialog {
                 + " " + cliente.getNombrePais());
         txtIDFiscal.setText(cliente.getIdFiscal());
         txtCondicionIVA.setText(cliente.getNombreCondicionIVA());
+        lbl_NumComprobante.setVisible(false);
+        txt_Serie.setVisible(false);
+        lbl_separador.setVisible(false);
+        txt_Numero.setVisible(false);
+        lbl_NumCAE.setVisible(false);
+        txt_CAE.setVisible(false);
+        lbl_Fecha.setVisible(false);
+        dc_FechaNota.setVisible(false);
     }
 
     private void cargarDetalleProveedor() {
@@ -100,6 +108,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
                 + " " + proveedor.getLocalidad().getProvincia().getPais());
         txtIDFiscal.setText(proveedor.getIdFiscal());
         txtCondicionIVA.setText(proveedor.getCondicionIVA().getNombre());
+        dc_FechaNota.setDate(new Date());
     }
     
     private void cargarDetalleRecibo() {
@@ -146,6 +155,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
         } else if (proveedor != null) {
             notaDebitoNueva.setSerie(Long.parseLong(txt_Serie.getValue().toString()));
             notaDebitoNueva.setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
+            notaDebitoNueva.setCAE(Long.parseLong(txt_CAE.getValue().toString()));
             uri += "?movimiento=" + Movimiento.COMPRA
                     + "&idProveedor=" + proveedor.getId_Proveedor();
         }
@@ -158,30 +168,37 @@ public class DetalleNotaDebitoGUI extends JDialog {
                     + "/factura-electronica-habilitada", Boolean.class);
             if (cliente != null && FEHabilitada) {
                 if (this.autorizarNotaDebito(nd)) {
-                    int reply = JOptionPane.showConfirmDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
-                            "Aviso", JOptionPane.YES_NO_OPTION);
-                    if (reply == JOptionPane.YES_OPTION) {
-                        if (Desktop.isDesktopSupported()) {
-                            byte[] reporte = RestClient.getRestTemplate()
-                                    .getForObject("/notas/" + nd.getIdNota() + "/reporte", byte[].class);
-                            File f = new File(System.getProperty("user.home") + "/NotaDebito.pdf");
-                            Files.write(f.toPath(), reporte);
-                            Desktop.getDesktop().open(f);
-                        } else {
-                            JOptionPane.showMessageDialog(this,
-                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
-                                    "Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
+                    this.lanzarReporteNotaCredito(nd.getIdNota());
                 }
+            } else if (cliente != null) {
+                this.lanzarReporteNotaCredito(nd.getIdNota());
             } else {
                 JOptionPane.showMessageDialog(this, "La Nota se guardó correctamente!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
-                this.dispose();
+            }
+            this.dispose();
+        }
+    }
+
+    private void lanzarReporteNotaCredito(long idNota) throws IOException {
+        int reply = JOptionPane.showConfirmDialog(this,
+                ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                "Aviso", JOptionPane.YES_NO_OPTION);
+        if (reply == JOptionPane.YES_OPTION) {
+            if (Desktop.isDesktopSupported()) {
+                byte[] reporte = RestClient.getRestTemplate()
+                        .getForObject("/notas/" + idNota + "/reporte", byte[].class);
+                File f = new File(System.getProperty("user.home") + "/NotaCredito.pdf");
+                Files.write(f.toPath(), reporte);
+                Desktop.getDesktop().open(f);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_error_plataforma_no_soportada"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
-    
+
     private boolean autorizarNotaDebito(NotaDebito notaDebito) {
         if (notaDebito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_A
                 || notaDebito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B) {
@@ -202,9 +219,13 @@ public class DetalleNotaDebitoGUI extends JDialog {
                     + " con fecha " + formatter.format(notaDebito.getFecha()) + " del Proveedor: " + proveedorDeNota.getRazonSocial());
             txt_Serie.setEnabled(false);
             txt_Numero.setEnabled(false);
+            txt_CAE.setEnabled(false);
             txt_Serie.setText(String.valueOf(notaDebito.getSerie()));
             txt_Numero.setText(String.valueOf(notaDebito.getNroNota()));
+            txt_CAE.setText(String.valueOf(notaDebito.getCAE()));
             txtNombre.setText(proveedorDeNota.getRazonSocial());
+            cmbDescripcionRenglon2.removeAllItems();
+            cmbDescripcionRenglon2.addItem(notaDebito.getMotivo());
             txtDomicilio.setText(proveedorDeNota.getDireccion()
                     + " " + proveedorDeNota.getLocalidad().getNombre()
                     + " " + proveedorDeNota.getLocalidad().getProvincia().getNombre()
@@ -219,14 +240,15 @@ public class DetalleNotaDebitoGUI extends JDialog {
             txtMontoRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(1).getImporteBruto()));
             lblIvaNetoRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(1).getIvaNeto()));
             lblImporteRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(1).getImporteNeto()));
-            cmbDescripcionRenglon2.addItem(notaDebito.getMotivo());
             txtSubTotalBruto.setValue(notaDebito.getSubTotalBruto());
             txtIVA21Neto.setValue(notaDebito.getIva21Neto());
             txtNoGravado.setValue(notaDebito.getMontoNoGravado());
             txtTotal.setValue(notaDebito.getTotal());
             txtMontoRenglon2.setEnabled(false);
             cmbDescripcionRenglon2.setEnabled(false);
-            btnGuardar.setEnabled(false);
+            lbl_Fecha.setVisible(false);
+            dc_FechaNota.setVisible(false);
+            btnGuardar.setVisible(false);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -284,6 +306,10 @@ public class DetalleNotaDebitoGUI extends JDialog {
         lbl_separador = new javax.swing.JLabel();
         txt_Numero = new javax.swing.JFormattedTextField();
         lbl_NumComprobante = new javax.swing.JLabel();
+        txt_CAE = new javax.swing.JFormattedTextField();
+        lbl_NumCAE = new javax.swing.JLabel();
+        lbl_Fecha = new javax.swing.JLabel();
+        dc_FechaNota = new com.toedter.calendar.JDateChooser();
 
         setModal(true);
         setResizable(false);
@@ -321,27 +347,27 @@ public class DetalleNotaDebitoGUI extends JDialog {
         panelCliente.setLayout(panelClienteLayout);
         panelClienteLayout.setHorizontalGroup(
             panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelClienteLayout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelClienteLayout.createSequentialGroup()
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblNombreCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblDomicilioCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblCondicionIVACliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtDomicilio, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtNombre)
                     .addGroup(panelClienteLayout.createSequentialGroup()
                         .addComponent(txtCondicionIVA)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblIDFiscalCliente)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtIDFiscal)))
+                        .addComponent(txtIDFiscal, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtDomicilio)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         panelClienteLayout.setVerticalGroup(
             panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelClienteLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblNombreCliente))
@@ -354,7 +380,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
                     .addComponent(txtCondicionIVA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblCondicionIVACliente)
                     .addComponent(txtIDFiscal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblIDFiscalCliente)))
+                    .addComponent(lblIDFiscalCliente))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelDetalle.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -631,45 +658,71 @@ public class DetalleNotaDebitoGUI extends JDialog {
         lbl_NumComprobante.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_NumComprobante.setText("Nº de Nota:");
 
+        txt_CAE.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        txt_CAE.setToolTipText("");
+        txt_CAE.setValue(0);
+
+        lbl_NumCAE.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbl_NumCAE.setText("CAE:");
+
+        lbl_Fecha.setForeground(java.awt.Color.red);
+        lbl_Fecha.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbl_Fecha.setText("* Fecha Nota:");
+
+        dc_FechaNota.setDateFormatString("dd/MM/yyyy");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(panelMotivo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelDetalle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
+                    .addComponent(panelDetalle, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelCliente, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(panelResultados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnGuardar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(lbl_NumCAE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lbl_Fecha, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dc_FechaNota, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(242, 242, 242)
+                                .addComponent(lbl_NumComprobante)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnGuardar)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(lbl_NumComprobante)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_Serie, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_separador, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txt_Numero, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(8, 8, 8)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(txt_Serie)
+                                .addGap(0, 0, 0)
+                                .addComponent(lbl_separador, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, 0)
+                                .addComponent(txt_Numero, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txt_CAE, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, 0)))
                 .addContainerGap())
         );
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txt_Numero, txt_Serie});
-
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(7, 7, 7)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_NumComprobante)
                     .addComponent(txt_Serie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_separador)
-                    .addComponent(txt_Numero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txt_Numero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_Fecha)
+                    .addComponent(dc_FechaNota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txt_CAE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_NumCAE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -677,13 +730,13 @@ public class DetalleNotaDebitoGUI extends JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelMotivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelResultados, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnGuardar, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(panelResultados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGuardar))
                 .addContainerGap())
         );
 
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txt_Numero, txt_Serie});
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txt_CAE, txt_Numero, txt_Serie});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -693,6 +746,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
             this.guardar();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
         } catch (ResourceAccessException ex) {
             LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this,
@@ -730,17 +784,12 @@ public class DetalleNotaDebitoGUI extends JDialog {
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
             if (cliente != null) {
-                lbl_NumComprobante.setVisible(false);
-                txt_Serie.setVisible(false);
-                lbl_separador.setVisible(false);
-                txt_Numero.setVisible(false);
                 this.cargarDetalleCliente();
-            } else if (proveedor != null) {                
+            } else if (proveedor != null) {
                 this.cargarDetalleProveedor();
             }
             this.cargarDetalleRecibo();
         } else {
-            btnGuardar.setVisible(false);
             this.cargarDetalleNotaDebitoProveedor();
             this.setTitle(notaDebito.getTipoComprobante() + " Nº " + notaDebito.getSerie() + " - " + notaDebito.getNroNota()
                     + " con fecha " + formatter.format(notaDebito.getFecha()) + " del Proveedor: " + notaDebito.getRazonSocialProveedor());
@@ -760,6 +809,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar;
     private javax.swing.JComboBox<String> cmbDescripcionRenglon2;
+    private com.toedter.calendar.JDateChooser dc_FechaNota;
     private javax.swing.JLabel lblCondicionIVACliente;
     private javax.swing.JLabel lblDescripcion;
     private javax.swing.JLabel lblDetallePago;
@@ -782,8 +832,10 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private javax.swing.JLabel lblNombreCliente;
     private javax.swing.JLabel lblSubTotalBruto;
     private javax.swing.JLabel lblTotal;
+    private javax.swing.JLabel lbl_Fecha;
     private javax.swing.JLabel lbl_IVA105;
     private javax.swing.JLabel lbl_Monto;
+    private javax.swing.JLabel lbl_NumCAE;
     private javax.swing.JLabel lbl_NumComprobante;
     private javax.swing.JLabel lbl_separador;
     private javax.swing.JPanel panelCliente;
@@ -799,6 +851,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private javax.swing.JTextField txtNombre;
     private javax.swing.JFormattedTextField txtSubTotalBruto;
     private javax.swing.JFormattedTextField txtTotal;
+    private javax.swing.JFormattedTextField txt_CAE;
     private javax.swing.JFormattedTextField txt_Numero;
     private javax.swing.JFormattedTextField txt_Serie;
     // End of variables declaration//GEN-END:variables

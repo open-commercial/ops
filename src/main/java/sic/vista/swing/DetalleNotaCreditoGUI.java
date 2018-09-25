@@ -193,8 +193,11 @@ public class DetalleNotaCreditoGUI extends JDialog {
         txtCondicionIVA.setText(cliente.getNombreCondicionIVA());
         lbl_NumComprobante.setVisible(false);
         txt_Serie.setVisible(false);
-        lbl_separador.setVisible(false);
         txt_Numero.setVisible(false);
+        lbl_NumCAE.setVisible(false);
+        txt_CAE.setVisible(false);
+        lbl_Fecha.setVisible(false);
+        dc_FechaNota.setVisible(false);
     }
 
     private void cargarDetalleProveedor() {
@@ -205,6 +208,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
                 + " " + proveedor.getLocalidad().getProvincia().getPais());
         txtIDFiscal.setText(proveedor.getIdFiscal());
         txtCondicionIVA.setText(proveedor.getCondicionIVA().getNombre());
+        dc_FechaNota.setDate(new Date());
     }
 
     private void cargarDetalleNotaCreditoProveedor() {
@@ -222,6 +226,13 @@ public class DetalleNotaCreditoGUI extends JDialog {
         cmbMotivo.setEnabled(false);
         txt_Serie.setText(String.valueOf(notaCredito.getSerie()));
         txt_Numero.setText(String.valueOf(notaCredito.getNroNota()));
+        txt_CAE.setEnabled(false);
+        txt_CAE.setText(String.valueOf(notaCredito.getCAE()));
+        cmbMotivo.removeAllItems();
+        cmbMotivo.addItem(notaCredito.getMotivo());
+        lbl_Fecha.setEnabled(false);
+        dc_FechaNota.setEnabled(false);
+        dc_FechaNota.setDate(notaCredito.getFecha());
     }
 
     private void setColumnas() {
@@ -302,7 +313,6 @@ public class DetalleNotaCreditoGUI extends JDialog {
 
     private void guardar() throws IOException {
         NotaCredito notaCreditoNueva = new NotaCredito();
-        notaCreditoNueva.setFecha(new Date());
         notaCreditoNueva.setMotivo(cmbMotivo.getSelectedItem().toString());
         notaCreditoNueva.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
         notaCreditoNueva.setDescuentoPorcentaje(new BigDecimal(txt_Decuento_porcentaje.getValue().toString()));
@@ -319,11 +329,14 @@ public class DetalleNotaCreditoGUI extends JDialog {
                 + "/factura/" + factura.getId_Factura()
                 + "?modificarStock=" + modificarStock;
         if (proveedor != null) {
+            notaCreditoNueva.setFecha(dc_FechaNota.getDate());
             notaCreditoNueva.setSerie(Long.parseLong(txt_Serie.getValue().toString()));
             notaCreditoNueva.setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
+            notaCreditoNueva.setCAE(Long.parseLong(txt_CAE.getValue().toString()));
             uri += "&movimiento=" + Movimiento.COMPRA
                     + "&idProveedor=" + proveedor.getId_Proveedor();
         } else if (cliente != null) {
+            notaCreditoNueva.setFecha(new Date());
             uri += "&movimiento=" + Movimiento.VENTA
                     + "&idCliente=" + cliente.getId_Cliente();
         }
@@ -337,27 +350,33 @@ public class DetalleNotaCreditoGUI extends JDialog {
                             + "/factura-electronica-habilitada", Boolean.class);
             if (cliente != null && FEHabilitada) {
                 if (this.autorizarNotaCredito(nc)) {
-                    int reply = JOptionPane.showConfirmDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
-                            "Aviso", JOptionPane.YES_NO_OPTION);
-                    if (reply == JOptionPane.YES_OPTION) {
-                        if (Desktop.isDesktopSupported()) {
-                            byte[] reporte = RestClient.getRestTemplate()
-                                    .getForObject("/notas/" + nc.getIdNota() + "/reporte", byte[].class);
-                            File f = new File(System.getProperty("user.home") + "/NotaCredito.pdf");
-                            Files.write(f.toPath(), reporte);
-                            Desktop.getDesktop().open(f);
-                        } else {
-                            JOptionPane.showMessageDialog(this,
-                                    ResourceBundle.getBundle("Mensajes")
-                                            .getString("mensaje_error_plataforma_no_soportada"),
-                                    "Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
+                    this.lanzarReporteNotaCredito(nc.getIdNota());
                 }
+            } else if (cliente != null) {
+                this.lanzarReporteNotaCredito(nc.getIdNota());
             } else {
                 JOptionPane.showMessageDialog(this, "La Nota se guardó correctamente!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
-                this.dispose();
+            }
+            this.dispose();
+        }
+    }
+    
+    private void lanzarReporteNotaCredito(long idNota) throws IOException {
+        int reply = JOptionPane.showConfirmDialog(this,
+                ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                "Aviso", JOptionPane.YES_NO_OPTION);
+        if (reply == JOptionPane.YES_OPTION) {
+            if (Desktop.isDesktopSupported()) {
+                byte[] reporte = RestClient.getRestTemplate()
+                        .getForObject("/notas/" + idNota + "/reporte", byte[].class);
+                File f = new File(System.getProperty("user.home") + "/NotaCredito.pdf");
+                Files.write(f.toPath(), reporte);
+                Desktop.getDesktop().open(f);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_error_plataforma_no_soportada"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -367,7 +386,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
                 || notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B) {
             notaCredito = RestClient.getRestTemplate()
                     .postForObject("/notas/" + notaCredito.getIdNota() + "/autorizacion",
-                    null, NotaCredito.class);
+                            null, NotaCredito.class);
             return (notaCredito.getCAE() != 0L);
         }
         return false;
@@ -416,6 +435,10 @@ public class DetalleNotaCreditoGUI extends JDialog {
         lbl_NumComprobante = new javax.swing.JLabel();
         txt_Numero = new javax.swing.JFormattedTextField();
         lbl_separador = new javax.swing.JLabel();
+        txt_CAE = new javax.swing.JFormattedTextField();
+        lbl_NumCAE = new javax.swing.JLabel();
+        lbl_Fecha = new javax.swing.JLabel();
+        dc_FechaNota = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -485,7 +508,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
                     .addComponent(txtCondicionIVA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblCondicionIVACliente)
                     .addComponent(txtIDFiscal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblIDFiscalCliente)))
+                    .addComponent(lblIDFiscalCliente))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelDetalle.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -509,8 +533,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
         panelDetalleLayout.setVerticalGroup(
             panelDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDetalleLayout.createSequentialGroup()
-                .addGap(1, 1, 1)
-                .addComponent(spResultados, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE))
+                .addGap(0, 0, 0)
+                .addComponent(spResultados))
         );
 
         panelMotivo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -715,18 +739,29 @@ public class DetalleNotaCreditoGUI extends JDialog {
         );
 
         txt_Serie.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        txt_Serie.setText("0");
         txt_Serie.setValue(0);
 
         lbl_NumComprobante.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_NumComprobante.setText("Nº de Nota:");
 
         txt_Numero.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        txt_Numero.setText("0");
         txt_Numero.setValue(0);
 
         lbl_separador.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_separador.setText("-");
+
+        txt_CAE.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        txt_CAE.setToolTipText("");
+        txt_CAE.setValue(0);
+
+        lbl_NumCAE.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbl_NumCAE.setText("CAE:");
+
+        lbl_Fecha.setForeground(java.awt.Color.red);
+        lbl_Fecha.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbl_Fecha.setText("* Fecha Nota:");
+
+        dc_FechaNota.setDateFormatString("dd/MM/yyyy");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -735,7 +770,6 @@ public class DetalleNotaCreditoGUI extends JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelDetalle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -745,15 +779,24 @@ public class DetalleNotaCreditoGUI extends JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnGuardar)))
                         .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(panelCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(lbl_NumComprobante)
+                        .addComponent(lbl_Fecha, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_Serie, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(dc_FechaNota, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(510, 510, 510)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbl_NumCAE, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lbl_NumComprobante, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_separador, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_Numero, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(txt_Serie)
+                                .addGap(0, 0, 0)
+                                .addComponent(lbl_separador, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, 0)
+                                .addComponent(txt_Numero, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txt_CAE, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -761,22 +804,33 @@ public class DetalleNotaCreditoGUI extends JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(4, 4, 4)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lbl_Fecha)
                     .addComponent(lbl_NumComprobante)
                     .addComponent(txt_Serie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_separador)
                     .addComponent(txt_Numero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txt_CAE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_NumCAE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelDetalle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panelDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(panelMotivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnGuardar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelResultados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(9, 9, 9))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(dc_FechaNota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txt_Numero, txt_Serie});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -786,6 +840,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
             this.guardar();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
         } catch (ResourceAccessException ex) {
             LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this,
@@ -832,6 +887,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar;
     private javax.swing.JComboBox<String> cmbMotivo;
+    private com.toedter.calendar.JDateChooser dc_FechaNota;
     private javax.swing.JLabel lblCondicionIVACliente;
     private javax.swing.JLabel lblDomicilioCliente;
     private javax.swing.JLabel lblIDFiscalCliente;
@@ -840,8 +896,10 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private javax.swing.JLabel lbl_105;
     private javax.swing.JLabel lbl_22;
     private javax.swing.JLabel lbl_DescuentoRecargo;
+    private javax.swing.JLabel lbl_Fecha;
     private javax.swing.JLabel lbl_IVA105;
     private javax.swing.JLabel lbl_IVA22;
+    private javax.swing.JLabel lbl_NumCAE;
     private javax.swing.JLabel lbl_NumComprobante;
     private javax.swing.JLabel lbl_SubTotal;
     private javax.swing.JLabel lbl_SubTotalBruto;
@@ -858,6 +916,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private javax.swing.JTextField txtDomicilio;
     private javax.swing.JTextField txtIDFiscal;
     private javax.swing.JTextField txtNombre;
+    private javax.swing.JFormattedTextField txt_CAE;
     private javax.swing.JFormattedTextField txt_Decuento_neto;
     private javax.swing.JFormattedTextField txt_Decuento_porcentaje;
     private javax.swing.JFormattedTextField txt_IVA105_neto;
