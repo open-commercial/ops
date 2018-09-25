@@ -1,6 +1,5 @@
 package sic.modelo;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,30 +11,31 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonSubTypes({
-  @JsonSubTypes.Type(value = NotaDebitoCliente.class), 
-  @JsonSubTypes.Type(value = NotaDebitoProveedor.class)
-})
-public abstract class NotaDebito extends Nota implements Serializable {
+public class NotaDebito extends Nota implements Serializable {
 
     private List<RenglonNotaDebito> renglonesNotaDebito;
 
     private BigDecimal montoNoGravado;
-    
-    private Recibo recibo;
-    
-    public NotaDebito() {}
+
+    private long idRecibo;
+
+    public NotaDebito() {
+    }
 
     public NotaDebito(long idNota, long serie, long nroNota, boolean eliminada,
-            TipoDeComprobante tipoDeComprobante, Date fecha, Empresa empresa, Usuario usuario, String motivo, List<RenglonNotaDebito> renglones, 
-            BigDecimal subTotalBruto, BigDecimal iva21Neto, BigDecimal iva105Neto, BigDecimal total, BigDecimal montoNoGravado, long CAE, 
-            Date vencimientoCAE, long numSerieAfip, long numNotaAfip, Recibo recibo) {
+            TipoDeComprobante tipoDeComprobante, Date fecha, long idEmpresa, String nombreEmpresa, long idUsuario, String nombreUsuario,
+            long idCliente, String razonSocialCliente, long idProveedor, String razonSocialProveedor,
+            String motivo, List<RenglonNotaDebito> renglones, BigDecimal subTotalBruto,
+            BigDecimal iva21Neto, BigDecimal iva105Neto, BigDecimal total, BigDecimal montoNoGravado, long CAE, Date vencimientoCAE,
+            long numSerieAfip, long numFacturaAfip, long idRecibo) {
 
-        super(idNota, serie, nroNota, eliminada, tipoDeComprobante, fecha, empresa, usuario,
-              motivo, subTotalBruto, iva21Neto, iva105Neto, total, CAE, vencimientoCAE, numSerieAfip, numNotaAfip);
+        super(idNota, serie, nroNota, eliminada, tipoDeComprobante, fecha, idEmpresa, nombreEmpresa,
+                idUsuario, nombreUsuario, idCliente, razonSocialCliente, idProveedor, razonSocialProveedor,
+                0, 0, motivo, subTotalBruto, iva21Neto, iva105Neto, total, CAE,
+                vencimientoCAE, numSerieAfip, numFacturaAfip);
         this.montoNoGravado = montoNoGravado;
         this.renglonesNotaDebito = renglones;
-        this.recibo = recibo;
+        this.idRecibo = idRecibo;
     }
 
 }

@@ -70,6 +70,19 @@ public class FacturasVentaGUI extends JInternalFrame {
         txt_NumeroPedido.setText(String.valueOf(nroPedido));
         this.limpiarYBuscar(true);
     }
+    
+    public void buscarPorSerieNroTipo(long nroSerie, long nroFactura, TipoDeComprobante tipoDeComprobante) {
+        chk_NumFactura.setSelected(true);
+        txt_SerieFactura.setEnabled(true);
+        txt_NroFactura.setEnabled(true);
+        txt_SerieFactura.setText(String.valueOf(nroSerie));
+        txt_NroFactura.setText(String.valueOf(nroFactura));
+        chk_TipoFactura.setSelected(true);
+        cmb_TipoFactura.setSelectedItem(tipoDeComprobante);
+        this.resetScroll();
+        this.limpiarJTable();
+        this.buscar(true);
+    }
 
     private String getUriCriteria() {
         String uriCriteria = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();

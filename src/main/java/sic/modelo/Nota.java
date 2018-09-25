@@ -2,6 +2,7 @@ package sic.modelo;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,7 +13,11 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(of = {"fecha", "tipoComprobante", "serie", "nroNota", "empresa"})
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idNota", scope = Nota.class)
-public abstract class Nota implements Serializable {
+@JsonSubTypes({
+  @JsonSubTypes.Type(value = NotaCredito.class),
+  @JsonSubTypes.Type(value = NotaDebito.class), 
+})
+public class Nota implements Serializable {
 
     @JsonGetter(value = "type")
     public String getType() {
@@ -25,8 +30,17 @@ public abstract class Nota implements Serializable {
     private boolean eliminada;
     private TipoDeComprobante tipoComprobante;
     private Date fecha; 
-    private Empresa empresa;  
-    private Usuario usuario;    
+    private long idEmpresa;
+    private String nombreEmpresa;    
+    private long idUsuario;
+    private String nombreUsuario;   
+    private long idCliente;
+    private String razonSocialCliente;
+    private long idProveedor;
+    private String razonSocialProveedor;
+    private long idFacturaVenta;
+    private long idFacturaCompra;
+    private Movimiento movimiento;
     private String motivo;
     private BigDecimal subTotalBruto;
     private BigDecimal iva21Neto;      
@@ -35,14 +49,17 @@ public abstract class Nota implements Serializable {
     private long CAE;
     private Date vencimientoCAE;
     private long numSerieAfip;
-    private long numFacturaAfip;
-    
-    public Nota() {}
+    private long numNotaAfip;
+
+    public Nota() {
+    }
 
     public Nota(long idNota, long serie, long nroNota, boolean eliminada,
-            TipoDeComprobante tipoDeComprobante, Date fecha, Empresa empresa, Usuario usuario,
-            String motivo, BigDecimal subTotalBruto, BigDecimal iva21Neto, BigDecimal iva105Neto,
-            BigDecimal total, long CAE, Date vencimientoCAE, long numSerieAfip, long numFacturaAfip) {
+            TipoDeComprobante tipoDeComprobante, Date fecha, long idEmpresa, String nombreEmpresa, 
+            long idUsuario, String nombreUsuario, long idCliente, String razonSocialCliente,
+            long idProveedor, String razonSocialProveedor, long idFacturaVenta, long idFacturaCompra, 
+            String motivo, BigDecimal subTotalBruto, BigDecimal iva21Neto, BigDecimal iva105Neto, 
+            BigDecimal total, long CAE, Date vencimientoCAE, long numSerieAfip, long numNotaAfip) {
 
         this.idNota = idNota;
         this.serie = serie;
@@ -50,8 +67,16 @@ public abstract class Nota implements Serializable {
         this.eliminada = eliminada;
         this.tipoComprobante = tipoDeComprobante;
         this.fecha = fecha;
-        this.empresa = empresa;
-        this.usuario = usuario;
+        this.idEmpresa = idEmpresa;
+        this.nombreEmpresa = nombreEmpresa;
+        this.idUsuario = idUsuario;
+        this.nombreUsuario = nombreUsuario;
+        this.idCliente = idCliente;
+        this.razonSocialCliente = razonSocialCliente;
+        this.idProveedor = idProveedor;
+        this.razonSocialProveedor = razonSocialProveedor;
+        this.idFacturaVenta = idFacturaVenta;
+        this.idFacturaCompra = idFacturaCompra;
         this.motivo = motivo;
         this.subTotalBruto = subTotalBruto;
         this.iva21Neto = iva21Neto;
@@ -60,6 +85,6 @@ public abstract class Nota implements Serializable {
         this.CAE = CAE;
         this.vencimientoCAE = vencimientoCAE;
         this.numSerieAfip = numSerieAfip;
-        this.numFacturaAfip = numFacturaAfip;
+        this.numNotaAfip = numNotaAfip;
     }
 }

@@ -23,106 +23,69 @@ import sic.modelo.EmpresaActiva;
 import sic.modelo.Factura;
 import sic.modelo.FacturaCompra;
 import sic.modelo.FacturaVenta;
+import sic.modelo.Movimiento;
 import sic.modelo.NotaCredito;
-import sic.modelo.NotaCreditoCliente;
-import sic.modelo.NotaCreditoProveedor;
 import sic.modelo.Proveedor;
 import sic.modelo.RenglonNotaCredito;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.UsuarioActivo;
 import sic.util.DecimalesRenderer;
+import sic.util.FormatosFechaHora;
+import sic.util.FormatterFechaHora;
 
 public class DetalleNotaCreditoGUI extends JDialog {
-
     private final ModeloTabla modeloTablaRenglones = new ModeloTabla();
     private boolean modificarStock;
+    private long idFactura;
     private Factura factura;
     private Cliente cliente;
     private Proveedor proveedor;
-    private NotaCreditoProveedor notaCreditoProveedorAMostrar;
+    private long idNotaCredito;
+    private NotaCredito notaCredito;
     private HashMap<Long,BigDecimal> idsRenglonesYCantidades = new HashMap<>();
-    private List<RenglonNotaCredito> renglones;    
-    private boolean notaCreada;    
-    private boolean notaAutorizada = false;
+    private List<RenglonNotaCredito> renglones;
+    private boolean notaCreditoCreada;
+    private final FormatterFechaHora formatter = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO);
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private BigDecimal subTotalBruto = BigDecimal.ZERO;
     private BigDecimal iva_105_netoFactura = BigDecimal.ZERO;
-    private BigDecimal iva_21_netoFactura = BigDecimal.ZERO;    
-    
+    private BigDecimal iva_21_netoFactura = BigDecimal.ZERO;
+
     public DetalleNotaCreditoGUI(HashMap<Long,BigDecimal> idsRenglonesYCantidades, long idFactura,
             boolean modificarStock, Cliente cliente) {
         this.initComponents();
         this.setIcon();
         this.idsRenglonesYCantidades = idsRenglonesYCantidades;
         this.modificarStock = modificarStock;
-        this.notaCreada = false;
-        this.recuperarFactura(idFactura);
-        this.recuperarCliente(cliente.getId_Cliente());
+        this.notaCreditoCreada = false;
+        this.cliente = cliente;
+        this.idFactura = idFactura;
     }
-    
+
     public DetalleNotaCreditoGUI(HashMap<Long,BigDecimal> idsRenglonesYCantidades, long idFactura,
             boolean modificarStock, Proveedor proveedor) {
         this.initComponents();
         this.setIcon();
         this.idsRenglonesYCantidades = idsRenglonesYCantidades;
         this.modificarStock = modificarStock;
-        this.notaCreada = false;
-        this.recuperarFactura(idFactura);
-        this.recuperarProveedor(proveedor.getId_Proveedor());
+        this.notaCreditoCreada = false;
+        this.proveedor = proveedor;
+        this.idFactura = idFactura;
     }
-    
-    public DetalleNotaCreditoGUI(long idNotaCreditoProveedor) {
+
+    public DetalleNotaCreditoGUI(long idNotaCredito) {
         this.initComponents();
         this.setIcon();
-        this.recuperarNotaCreditoProveedor(idNotaCreditoProveedor);
+        this.idNotaCredito = idNotaCredito;
     }
 
     public boolean isNotaCreada() {
-        return notaCreada;
+        return notaCreditoCreada;
     }
-    
-    private void recuperarFactura(long idFactura) {
-        try {
-            factura = RestClient.getRestTemplate().getForObject("/facturas/" + idFactura, Factura.class);            
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
-    private void recuperarCliente(long idCliente) {
-        try {
-            cliente = RestClient.getRestTemplate().getForObject("/clientes/" + idCliente, Cliente.class);            
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
-    private void recuperarProveedor(long idProveedor) {
-        try {
-            proveedor = RestClient.getRestTemplate().getForObject("/proveedores/" + idProveedor, Proveedor.class);
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
+
     private void recuperarNotaCreditoProveedor(long idNotaCreditoProvedor) {
         try {
-            notaCreditoProveedorAMostrar = RestClient.getRestTemplate().getForObject("/notas/" + idNotaCreditoProvedor, NotaCreditoProveedor.class);
+            notaCredito = RestClient.getRestTemplate().getForObject("/notas/" + idNotaCreditoProvedor, NotaCredito.class);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -132,9 +95,9 @@ public class DetalleNotaCreditoGUI extends JDialog {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     private void cargarResultados() {
-        if (notaCreditoProveedorAMostrar == null) {
+        if (notaCredito == null) {
             BigDecimal[] importes = new BigDecimal[renglones.size()];
             BigDecimal[] cantidades = new BigDecimal[renglones.size()];
             BigDecimal[] ivaPorcentajeRenglones = new BigDecimal[renglones.size()];
@@ -202,20 +165,20 @@ public class DetalleNotaCreditoGUI extends JDialog {
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"), "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            txt_Subtotal.setValue(notaCreditoProveedorAMostrar.getSubTotal());
-            txt_Decuento_porcentaje.setValue(notaCreditoProveedorAMostrar.getDescuentoPorcentaje());
-            txt_Decuento_neto.setValue(notaCreditoProveedorAMostrar.getDescuentoNeto());
-            txt_Recargo_porcentaje.setValue(notaCreditoProveedorAMostrar.getRecargoPorcentaje());
-            txt_Recargo_neto.setValue(notaCreditoProveedorAMostrar.getRecargoNeto());
-            txt_IVA105_neto.setValue(notaCreditoProveedorAMostrar.getIva105Neto());
-            txt_IVA21_neto.setValue(notaCreditoProveedorAMostrar.getIva21Neto());
-            txt_Total.setValue(notaCreditoProveedorAMostrar.getTotal());
-            if (notaCreditoProveedorAMostrar.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B || notaCreditoProveedorAMostrar.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_PRESUPUESTO) {
+            txt_Subtotal.setValue(notaCredito.getSubTotal());
+            txt_Decuento_porcentaje.setValue(notaCredito.getDescuentoPorcentaje());
+            txt_Decuento_neto.setValue(notaCredito.getDescuentoNeto());
+            txt_Recargo_porcentaje.setValue(notaCredito.getRecargoPorcentaje());
+            txt_Recargo_neto.setValue(notaCredito.getRecargoNeto());
+            txt_IVA105_neto.setValue(notaCredito.getIva105Neto());
+            txt_IVA21_neto.setValue(notaCredito.getIva21Neto());
+            txt_Total.setValue(notaCredito.getTotal());
+            if (notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B || notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_PRESUPUESTO) {
                 txt_IVA105_neto.setValue(BigDecimal.ZERO);
                 txt_IVA21_neto.setValue(BigDecimal.ZERO);
                 txt_SubTotalBruto.setValue(txt_Total.getValue());
             } else {
-                txt_SubTotalBruto.setValue(notaCreditoProveedorAMostrar.getSubTotalBruto());
+                txt_SubTotalBruto.setValue(notaCredito.getSubTotalBruto());
             }
         }
     }
@@ -230,8 +193,12 @@ public class DetalleNotaCreditoGUI extends JDialog {
         txtCondicionIVA.setText(cliente.getNombreCondicionIVA());
         lbl_NumComprobante.setVisible(false);
         txt_Serie.setVisible(false);
-        lbl_separador.setVisible(false);
         txt_Numero.setVisible(false);
+        lbl_NumCAE.setVisible(false);
+        lblSeparador.setVisible(false);
+        txt_CAE.setVisible(false);
+        lblFecha.setVisible(false);
+        dc_FechaNota.setVisible(false);
     }
 
     private void cargarDetalleProveedor() {
@@ -242,21 +209,30 @@ public class DetalleNotaCreditoGUI extends JDialog {
                 + " " + proveedor.getLocalidad().getProvincia().getPais());
         txtIDFiscal.setText(proveedor.getIdFiscal());
         txtCondicionIVA.setText(proveedor.getCondicionIVA().getNombre());
+        dc_FechaNota.setDate(new Date());
     }
-    
+
     private void cargarDetalleNotaCreditoProveedor() {
-        txtNombre.setText(notaCreditoProveedorAMostrar.getProveedor().getRazonSocial());
-        txtDomicilio.setText(notaCreditoProveedorAMostrar.getProveedor().getDireccion()
-                + " " + notaCreditoProveedorAMostrar.getProveedor().getLocalidad().getNombre()
-                + " " + notaCreditoProveedorAMostrar.getProveedor().getLocalidad().getProvincia().getNombre()
-                + " " + notaCreditoProveedorAMostrar.getProveedor().getLocalidad().getProvincia().getPais());
-        txtIDFiscal.setText(notaCreditoProveedorAMostrar.getProveedor().getIdFiscal());
-        txtCondicionIVA.setText(notaCreditoProveedorAMostrar.getProveedor().getCondicionIVA().getNombre());
+        Proveedor proveedorDeNota = RestClient.getRestTemplate()
+                .getForObject("/proveedores/" + notaCredito.getIdProveedor(), Proveedor.class);
+        txtNombre.setText(proveedorDeNota.getRazonSocial());
+        txtDomicilio.setText(proveedorDeNota.getDireccion()
+                + " " + proveedorDeNota.getLocalidad().getNombre()
+                + " " + proveedorDeNota.getLocalidad().getProvincia().getNombre()
+                + " " + proveedorDeNota.getLocalidad().getProvincia().getPais());
+        txtIDFiscal.setText(proveedorDeNota.getIdFiscal());
+        txtCondicionIVA.setText(proveedorDeNota.getCondicionIVA().getNombre());
         txt_Serie.setEnabled(false);
         txt_Numero.setEnabled(false);
         cmbMotivo.setEnabled(false);
-        txt_Serie.setText(String.valueOf(notaCreditoProveedorAMostrar.getSerie()));
-        txt_Numero.setText(String.valueOf(notaCreditoProveedorAMostrar.getNroNota()));
+        txt_Serie.setText(String.valueOf(notaCredito.getSerie()));
+        txt_Numero.setText(String.valueOf(notaCredito.getNroNota()));
+        txt_CAE.setEnabled(false);
+        txt_CAE.setText(String.valueOf(notaCredito.getCAE()));
+        cmbMotivo.removeAllItems();
+        cmbMotivo.addItem(notaCredito.getMotivo());        
+        dc_FechaNota.setEnabled(false);
+        dc_FechaNota.setDate(notaCredito.getFecha());
     }
 
     private void setColumnas() {
@@ -297,14 +273,14 @@ public class DetalleNotaCreditoGUI extends JDialog {
 
     private void cargarRenglonesAlTable() {
         try {
-            if (notaCreditoProveedorAMostrar == null) {
+            if (notaCredito == null) {
                 String uri = "/notas/renglon/credito/producto?"
                         + "tipoDeComprobante=" + factura.getTipoComprobante().name()
                         + "&cantidad=" + idsRenglonesYCantidades.values().toString().substring(1, idsRenglonesYCantidades.values().toString().length() - 1)
                         + "&idRenglonFactura=" + idsRenglonesYCantidades.keySet().toString().substring(1, idsRenglonesYCantidades.keySet().toString().length() - 1);
                 renglones = Arrays.asList(RestClient.getRestTemplate().getForObject(uri, RenglonNotaCredito[].class));
             } else {
-                renglones = Arrays.asList(RestClient.getRestTemplate().getForObject("/notas/renglones/credito/proveedores/" + notaCreditoProveedorAMostrar.getIdNota(), RenglonNotaCredito[].class));
+                renglones = Arrays.asList(RestClient.getRestTemplate().getForObject("/notas/renglones/credito/" + notaCredito.getIdNota(), RenglonNotaCredito[].class));
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -329,133 +305,93 @@ public class DetalleNotaCreditoGUI extends JDialog {
         });
         tblResultados.setModel(modeloTablaRenglones);
     }
-    
+
     private void setIcon() {
         ImageIcon iconoVentana = new ImageIcon(DetalleNotaCreditoGUI.class.getResource("/sic/icons/SIC_24_square.png"));
         this.setIconImage(iconoVentana.getImage());
     }
-    
-    private void guardarNotaCreditoCliente() {
-        NotaCreditoCliente notaCreditoCliente = new NotaCreditoCliente();
-        notaCreditoCliente.setFecha(new Date());
-        notaCreditoCliente.setMotivo(cmbMotivo.getSelectedItem().toString());
-        notaCreditoCliente.setFacturaVenta((FacturaVenta) factura);
-        notaCreditoCliente.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
-        notaCreditoCliente.setDescuentoPorcentaje(new BigDecimal(txt_Decuento_porcentaje.getValue().toString()));
-        notaCreditoCliente.setDescuentoNeto(new BigDecimal(txt_Decuento_neto.getValue().toString()));
-        notaCreditoCliente.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
-        notaCreditoCliente.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
-        notaCreditoCliente.setSubTotalBruto(subTotalBruto);
-        notaCreditoCliente.setIva105Neto(iva_105_netoFactura);
-        notaCreditoCliente.setIva21Neto(iva_21_netoFactura);
-        notaCreditoCliente.setTotal(new BigDecimal(txt_Total.getValue().toString()));
-        notaCreditoCliente.setRenglonesNotaCredito(renglones);
-        try {
-            NotaCredito nc = RestClient.getRestTemplate()
-                    .postForObject("/notas/credito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                            + "/cliente/" + cliente.getId_Cliente()
-                            + "/usuario/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                            + "/factura/" + factura.getId_Factura()
-                            + "?modificarStock=" + modificarStock,
-                            notaCreditoCliente, NotaCredito.class);
-            if (nc != null) {
-                notaCreada = true;
-                boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "/factura-electronica-habilitada", Boolean.class);
-                if (FEHabilitada) {
-                    this.autorizarNotaCredito(nc);
-                }
-                if (notaAutorizada) {
-                    int reply = JOptionPane.showConfirmDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
-                            "Aviso", JOptionPane.YES_NO_OPTION);
-                    if (reply == JOptionPane.YES_OPTION) {
-                        if (Desktop.isDesktopSupported()) {
-                            byte[] reporte = RestClient.getRestTemplate()
-                                    .getForObject("/notas/" + nc.getIdNota() + "/reporte", byte[].class);
-                            File f = new File(System.getProperty("user.home") + "/NotaCredito.pdf");
-                            Files.write(f.toPath(), reporte);
-                            Desktop.getDesktop().open(f);
-                        } else {
-                            JOptionPane.showMessageDialog(this,
-                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
-                                    "Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                }
-            }  
-            this.dispose();
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (IOException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
-    private void guardarNotaCreditoProveedor() {
-        NotaCreditoProveedor notaCreditoProveedor = new NotaCreditoProveedor();
-        notaCreditoProveedor.setFecha(new Date());
-        notaCreditoProveedor.setMotivo(cmbMotivo.getSelectedItem().toString());
-        notaCreditoProveedor.setFacturaCompra((FacturaCompra) factura);
-        notaCreditoProveedor.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
-        notaCreditoProveedor.setDescuentoPorcentaje(new BigDecimal(txt_Decuento_porcentaje.getValue().toString()));
-        notaCreditoProveedor.setDescuentoNeto(new BigDecimal(txt_Decuento_neto.getValue().toString()));
-        notaCreditoProveedor.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
-        notaCreditoProveedor.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
-        notaCreditoProveedor.setSubTotalBruto(subTotalBruto);
-        notaCreditoProveedor.setIva105Neto(iva_105_netoFactura);
-        notaCreditoProveedor.setIva21Neto(iva_21_netoFactura);
-        notaCreditoProveedor.setTotal(new BigDecimal(txt_Total.getValue().toString()));
-        notaCreditoProveedor.setRenglonesNotaCredito(renglones);
-        notaCreditoProveedor.setSerie(Long.parseLong(txt_Serie.getValue().toString()));
-        notaCreditoProveedor.setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
-        try {
-            NotaCredito nc = RestClient.getRestTemplate()
-                    .postForObject("/notas/credito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                            + "/proveedor/" + proveedor.getId_Proveedor()
-                            + "/usuario/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                            + "/factura/" + factura.getId_Factura()
-                            + "?modificarStock=" + modificarStock,
-                            notaCreditoProveedor, NotaCreditoProveedor.class);
-            notaCreada = (nc != null);
-            this.dispose();
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
 
-    private void autorizarNotaCredito(NotaCredito notaCredito) {
-        if (notaCredito != null && (notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_A
-                || notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B)) {
-            try {
-                notaCredito = RestClient.getRestTemplate().postForObject("/notas/" + notaCredito.getIdNota() + "/autorizacion",
-                        null, NotaCredito.class);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
+    private void guardar() throws IOException {
+        NotaCredito notaCreditoNueva = new NotaCredito();
+        notaCreditoNueva.setMotivo(cmbMotivo.getSelectedItem().toString());
+        notaCreditoNueva.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
+        notaCreditoNueva.setDescuentoPorcentaje(new BigDecimal(txt_Decuento_porcentaje.getValue().toString()));
+        notaCreditoNueva.setDescuentoNeto(new BigDecimal(txt_Decuento_neto.getValue().toString()));
+        notaCreditoNueva.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
+        notaCreditoNueva.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
+        notaCreditoNueva.setSubTotalBruto(subTotalBruto);
+        notaCreditoNueva.setIva105Neto(iva_105_netoFactura);
+        notaCreditoNueva.setIva21Neto(iva_21_netoFactura);
+        notaCreditoNueva.setTotal(new BigDecimal(txt_Total.getValue().toString()));
+        notaCreditoNueva.setRenglonesNotaCredito(renglones);
+        String uri = "/notas/credito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                + "/usuario/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
+                + "/factura/" + factura.getId_Factura()
+                + "?modificarStock=" + modificarStock;
+        if (proveedor != null) {
+            notaCreditoNueva.setFecha(dc_FechaNota.getDate());
+            notaCreditoNueva.setSerie(Long.parseLong(txt_Serie.getValue().toString()));
+            notaCreditoNueva.setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
+            notaCreditoNueva.setCAE(Long.parseLong(txt_CAE.getValue().toString()));
+            uri += "&movimiento=" + Movimiento.COMPRA
+                    + "&idProveedor=" + proveedor.getId_Proveedor();
+        } else if (cliente != null) {
+            notaCreditoNueva.setFecha(new Date());
+            uri += "&movimiento=" + Movimiento.VENTA
+                    + "&idCliente=" + cliente.getId_Cliente();
+        }
+        NotaCredito nc = RestClient.getRestTemplate()
+                .postForObject(uri, notaCreditoNueva, NotaCredito.class);
+        if (nc != null) {
+            notaCreditoCreada = true;
+            boolean FEHabilitada = RestClient.getRestTemplate()
+                    .getForObject("/configuraciones-del-sistema/empresas/"
+                            + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                            + "/factura-electronica-habilitada", Boolean.class);
+            if (cliente != null && FEHabilitada) {
+                if (this.autorizarNotaCredito(nc)) {
+                    this.lanzarReporteNotaCredito(nc.getIdNota());
+                }
+            } else if (cliente != null) {
+                this.lanzarReporteNotaCredito(nc.getIdNota());
+            } else {
+                JOptionPane.showMessageDialog(this, "La Nota se guardó correctamente!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            }
+            this.dispose();
+        }
+    }
+    
+    private void lanzarReporteNotaCredito(long idNota) throws IOException {
+        int reply = JOptionPane.showConfirmDialog(this,
+                ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                "Aviso", JOptionPane.YES_NO_OPTION);
+        if (reply == JOptionPane.YES_OPTION) {
+            if (Desktop.isDesktopSupported()) {
+                byte[] reporte = RestClient.getRestTemplate()
+                        .getForObject("/notas/" + idNota + "/reporte", byte[].class);
+                File f = new File(System.getProperty("user.home") + "/NotaCredito.pdf");
+                Files.write(f.toPath(), reporte);
+                Desktop.getDesktop().open(f);
+            } else {
                 JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_error_plataforma_no_soportada"),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-        if (notaCredito.getCAE() != 0L) notaAutorizada = true;
     }
-    
+
+    private boolean autorizarNotaCredito(NotaCredito notaCredito) {
+        if (notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_A
+                || notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B) {
+            notaCredito = RestClient.getRestTemplate()
+                    .postForObject("/notas/" + notaCredito.getIdNota() + "/autorizacion",
+                            null, NotaCredito.class);
+            return (notaCredito.getCAE() != 0L);
+        }
+        return false;
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -498,7 +434,11 @@ public class DetalleNotaCreditoGUI extends JDialog {
         txt_Serie = new javax.swing.JFormattedTextField();
         lbl_NumComprobante = new javax.swing.JLabel();
         txt_Numero = new javax.swing.JFormattedTextField();
-        lbl_separador = new javax.swing.JLabel();
+        lblSeparador = new javax.swing.JLabel();
+        txt_CAE = new javax.swing.JFormattedTextField();
+        lbl_NumCAE = new javax.swing.JLabel();
+        lblFecha = new javax.swing.JLabel();
+        dc_FechaNota = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -568,7 +508,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
                     .addComponent(txtCondicionIVA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblCondicionIVACliente)
                     .addComponent(txtIDFiscal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblIDFiscalCliente)))
+                    .addComponent(lblIDFiscalCliente))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelDetalle.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -592,8 +533,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
         panelDetalleLayout.setVerticalGroup(
             panelDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDetalleLayout.createSequentialGroup()
-                .addGap(1, 1, 1)
-                .addComponent(spResultados, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE))
+                .addGap(0, 0, 0)
+                .addComponent(spResultados, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))
         );
 
         panelMotivo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -798,18 +739,28 @@ public class DetalleNotaCreditoGUI extends JDialog {
         );
 
         txt_Serie.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        txt_Serie.setText("0");
         txt_Serie.setValue(0);
 
         lbl_NumComprobante.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_NumComprobante.setText("Nº de Nota:");
 
         txt_Numero.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        txt_Numero.setText("0");
         txt_Numero.setValue(0);
 
-        lbl_separador.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbl_separador.setText("-");
+        lblSeparador.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblSeparador.setText("-");
+
+        txt_CAE.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        txt_CAE.setToolTipText("");
+        txt_CAE.setValue(0);
+
+        lbl_NumCAE.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbl_NumCAE.setText("CAE:");
+
+        lblFecha.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblFecha.setText("Fecha:");
+
+        dc_FechaNota.setDateFormatString("dd/MM/yyyy");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -818,7 +769,6 @@ public class DetalleNotaCreditoGUI extends JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelDetalle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -828,26 +778,48 @@ public class DetalleNotaCreditoGUI extends JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnGuardar)))
                         .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(panelCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(lbl_NumComprobante)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(lblFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lbl_NumCAE, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lbl_NumComprobante, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_Serie, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_separador, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_Numero, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(txt_Serie)
+                                .addGap(0, 0, 0)
+                                .addComponent(lblSeparador, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, 0)
+                                .addComponent(txt_Numero, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txt_CAE)
+                            .addComponent(dc_FechaNota, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txt_Numero, txt_Serie});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(4, 4, 4)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblFecha)
+                    .addComponent(dc_FechaNota, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_NumComprobante)
                     .addComponent(txt_Serie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_separador)
+                    .addComponent(lblSeparador)
                     .addComponent(txt_Numero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lbl_NumCAE)
+                    .addComponent(txt_CAE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -857,55 +829,85 @@ public class DetalleNotaCreditoGUI extends JDialog {
                     .addComponent(panelMotivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnGuardar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelResultados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(9, 9, 9))
+                .addComponent(panelResultados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
+
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {dc_FechaNota, txt_CAE, txt_Numero, txt_Serie});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        if (cliente != null) {
-            this.guardarNotaCreditoCliente();
-        } else if (proveedor != null) {
-            this.guardarNotaCreditoProveedor();
+        try {
+            this.guardar();
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
-    
+
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        if (cliente != null) {
-            this.cargarDetalleCliente();
-        } else if (proveedor != null) {
-            this.cargarDetalleProveedor();
-        } else if (notaCreditoProveedorAMostrar != null) {
-            btnGuardar.setVisible(false);
-            this.cargarDetalleNotaCreditoProveedor();
+        try {
+            if (idNotaCredito != 0L) {
+                this.recuperarNotaCreditoProveedor(idNotaCredito);
+                btnGuardar.setVisible(false);
+                this.cargarDetalleNotaCreditoProveedor();
+                this.setTitle(notaCredito.getTipoComprobante() + " Nº " + notaCredito.getSerie() + " - " + notaCredito.getNroNota()
+                        + " con fecha " + formatter.format(notaCredito.getFecha()) + " del Proveedor: " + notaCredito.getRazonSocialProveedor());
+            } else {
+                factura = RestClient.getRestTemplate().getForObject("/facturas/" + idFactura, Factura.class);
+                if (cliente != null) {
+                    this.cargarDetalleCliente();
+                } else if (proveedor != null) {
+                    this.cargarDetalleProveedor();
+                }
+                this.setTitle("Nueva Nota de Credito");
+            }
+            this.setColumnas();
+            this.cargarRenglonesAlTable();
+            this.cargarResultados();
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
-        this.setColumnas();
-        this.cargarRenglonesAlTable();
-        this.cargarResultados();
-        this.setTitle("Nueva Nota de Credito");
     }//GEN-LAST:event_formWindowOpened
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar;
     private javax.swing.JComboBox<String> cmbMotivo;
+    private com.toedter.calendar.JDateChooser dc_FechaNota;
     private javax.swing.JLabel lblCondicionIVACliente;
     private javax.swing.JLabel lblDomicilioCliente;
+    private javax.swing.JLabel lblFecha;
     private javax.swing.JLabel lblIDFiscalCliente;
     private javax.swing.JLabel lblMotivo;
     private javax.swing.JLabel lblNombreCliente;
+    private javax.swing.JLabel lblSeparador;
     private javax.swing.JLabel lbl_105;
     private javax.swing.JLabel lbl_22;
     private javax.swing.JLabel lbl_DescuentoRecargo;
     private javax.swing.JLabel lbl_IVA105;
     private javax.swing.JLabel lbl_IVA22;
+    private javax.swing.JLabel lbl_NumCAE;
     private javax.swing.JLabel lbl_NumComprobante;
     private javax.swing.JLabel lbl_SubTotal;
     private javax.swing.JLabel lbl_SubTotalBruto;
     private javax.swing.JLabel lbl_Total;
     private javax.swing.JLabel lbl_recargoPorcentaje;
-    private javax.swing.JLabel lbl_separador;
     private javax.swing.JPanel panelCliente;
     private javax.swing.JPanel panelDetalle;
     private javax.swing.JPanel panelMotivo;
@@ -916,6 +918,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private javax.swing.JTextField txtDomicilio;
     private javax.swing.JTextField txtIDFiscal;
     private javax.swing.JTextField txtNombre;
+    private javax.swing.JFormattedTextField txt_CAE;
     private javax.swing.JFormattedTextField txt_Decuento_neto;
     private javax.swing.JFormattedTextField txt_Decuento_porcentaje;
     private javax.swing.JFormattedTextField txt_IVA105_neto;
