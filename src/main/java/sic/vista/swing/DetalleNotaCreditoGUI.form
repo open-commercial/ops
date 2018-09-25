@@ -43,24 +43,28 @@
                   </Group>
                   <Component id="panelCliente" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="lbl_Fecha" min="-2" pref="103" max="-2" attributes="1"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="dc_FechaNota" max="32767" attributes="1"/>
-                      <EmptySpace min="-2" pref="510" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lbl_NumCAE" alignment="1" min="-2" max="-2" attributes="1"/>
-                          <Component id="lbl_NumComprobante" alignment="1" min="-2" max="-2" attributes="1"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Component id="lblFecha" min="-2" pref="103" max="-2" attributes="1"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="lbl_NumCAE" alignment="1" max="32767" attributes="1"/>
+                                  <Component id="lbl_NumComprobante" max="32767" attributes="1"/>
+                              </Group>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="txt_Serie" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="txt_Serie" linkSize="3" max="32767" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                              <Component id="lbl_separador" min="-2" pref="20" max="-2" attributes="0"/>
+                              <Component id="lblSeparador" min="-2" pref="20" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                              <Component id="txt_Numero" min="-2" pref="75" max="-2" attributes="0"/>
+                              <Component id="txt_Numero" linkSize="3" min="-2" pref="75" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="txt_CAE" min="-2" pref="150" max="-2" attributes="0"/>
+                          <Component id="txt_CAE" max="32767" attributes="0"/>
+                          <Component id="dc_FechaNota" max="32767" attributes="1"/>
                       </Group>
                   </Group>
               </Group>
@@ -71,36 +75,34 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="2" attributes="0">
-                  <Component id="lbl_Fecha" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblFecha" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="dc_FechaNota" linkSize="2" alignment="2" min="-2" pref="17" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="2" attributes="0">
                   <Component id="lbl_NumComprobante" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="txt_Serie" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="lbl_separador" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblSeparador" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="txt_Numero" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="txt_CAE" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="lbl_NumCAE" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="2" attributes="0">
+                  <Component id="lbl_NumCAE" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="txt_CAE" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="panelCliente" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="panelDetalle" min="-2" max="-2" attributes="0"/>
+              <Component id="panelDetalle" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="2" attributes="0">
                   <Component id="panelMotivo" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="btnGuardar" alignment="2" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="panelResultados" max="32767" attributes="1"/>
-              <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="dc_FechaNota" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <Component id="panelResultados" min="-2" max="-2" attributes="1"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -228,7 +230,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                  <Component id="spResultados" max="32767" attributes="0"/>
+                  <Component id="spResultados" pref="277" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -645,7 +647,7 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="lbl_separador">
+    <Component class="javax.swing.JLabel" name="lblSeparador">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="text" type="java.lang.String" value="-"/>
@@ -668,13 +670,10 @@
         <Property name="text" type="java.lang.String" value="CAE:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="lbl_Fecha">
+    <Component class="javax.swing.JLabel" name="lblFecha">
       <Properties>
-        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
-        </Property>
         <Property name="horizontalAlignment" type="int" value="4"/>
-        <Property name="text" type="java.lang.String" value="* Fecha Nota:"/>
+        <Property name="text" type="java.lang.String" value="Fecha:"/>
       </Properties>
     </Component>
     <Component class="com.toedter.calendar.JDateChooser" name="dc_FechaNota">

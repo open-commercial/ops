@@ -195,8 +195,9 @@ public class DetalleNotaCreditoGUI extends JDialog {
         txt_Serie.setVisible(false);
         txt_Numero.setVisible(false);
         lbl_NumCAE.setVisible(false);
+        lblSeparador.setVisible(false);
         txt_CAE.setVisible(false);
-        lbl_Fecha.setVisible(false);
+        lblFecha.setVisible(false);
         dc_FechaNota.setVisible(false);
     }
 
@@ -229,8 +230,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
         txt_CAE.setEnabled(false);
         txt_CAE.setText(String.valueOf(notaCredito.getCAE()));
         cmbMotivo.removeAllItems();
-        cmbMotivo.addItem(notaCredito.getMotivo());
-        lbl_Fecha.setEnabled(false);
+        cmbMotivo.addItem(notaCredito.getMotivo());        
         dc_FechaNota.setEnabled(false);
         dc_FechaNota.setDate(notaCredito.getFecha());
     }
@@ -434,10 +434,10 @@ public class DetalleNotaCreditoGUI extends JDialog {
         txt_Serie = new javax.swing.JFormattedTextField();
         lbl_NumComprobante = new javax.swing.JLabel();
         txt_Numero = new javax.swing.JFormattedTextField();
-        lbl_separador = new javax.swing.JLabel();
+        lblSeparador = new javax.swing.JLabel();
         txt_CAE = new javax.swing.JFormattedTextField();
         lbl_NumCAE = new javax.swing.JLabel();
-        lbl_Fecha = new javax.swing.JLabel();
+        lblFecha = new javax.swing.JLabel();
         dc_FechaNota = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -534,7 +534,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
             panelDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDetalleLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(spResultados))
+                .addComponent(spResultados, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))
         );
 
         panelMotivo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -747,8 +747,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
         txt_Numero.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         txt_Numero.setValue(0);
 
-        lbl_separador.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbl_separador.setText("-");
+        lblSeparador.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblSeparador.setText("-");
 
         txt_CAE.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         txt_CAE.setToolTipText("");
@@ -757,9 +757,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
         lbl_NumCAE.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_NumCAE.setText("CAE:");
 
-        lbl_Fecha.setForeground(java.awt.Color.red);
-        lbl_Fecha.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Fecha.setText("* Fecha Nota:");
+        lblFecha.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblFecha.setText("Fecha:");
 
         dc_FechaNota.setDateFormatString("dd/MM/yyyy");
 
@@ -781,56 +780,59 @@ public class DetalleNotaCreditoGUI extends JDialog {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(panelCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(lbl_Fecha, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dc_FechaNota, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(510, 510, 510)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbl_NumCAE, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lbl_NumComprobante, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(lblFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lbl_NumCAE, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lbl_NumComprobante, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(txt_Serie)
                                 .addGap(0, 0, 0)
-                                .addComponent(lbl_separador, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblSeparador, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, 0)
                                 .addComponent(txt_Numero, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txt_CAE, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(txt_CAE)
+                            .addComponent(dc_FechaNota, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txt_Numero, txt_Serie});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(4, 4, 4)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Fecha)
+                    .addComponent(lblFecha)
+                    .addComponent(dc_FechaNota, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_NumComprobante)
                     .addComponent(txt_Serie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_separador)
+                    .addComponent(lblSeparador)
                     .addComponent(txt_Numero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_CAE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_NumCAE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lbl_NumCAE)
+                    .addComponent(txt_CAE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelDetalle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(panelMotivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnGuardar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(9, 9, 9))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(dc_FechaNota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(panelResultados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txt_Numero, txt_Serie});
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {dc_FechaNota, txt_CAE, txt_Numero, txt_Serie});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -890,13 +892,14 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private com.toedter.calendar.JDateChooser dc_FechaNota;
     private javax.swing.JLabel lblCondicionIVACliente;
     private javax.swing.JLabel lblDomicilioCliente;
+    private javax.swing.JLabel lblFecha;
     private javax.swing.JLabel lblIDFiscalCliente;
     private javax.swing.JLabel lblMotivo;
     private javax.swing.JLabel lblNombreCliente;
+    private javax.swing.JLabel lblSeparador;
     private javax.swing.JLabel lbl_105;
     private javax.swing.JLabel lbl_22;
     private javax.swing.JLabel lbl_DescuentoRecargo;
-    private javax.swing.JLabel lbl_Fecha;
     private javax.swing.JLabel lbl_IVA105;
     private javax.swing.JLabel lbl_IVA22;
     private javax.swing.JLabel lbl_NumCAE;
@@ -905,7 +908,6 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private javax.swing.JLabel lbl_SubTotalBruto;
     private javax.swing.JLabel lbl_Total;
     private javax.swing.JLabel lbl_recargoPorcentaje;
-    private javax.swing.JLabel lbl_separador;
     private javax.swing.JPanel panelCliente;
     private javax.swing.JPanel panelDetalle;
     private javax.swing.JPanel panelMotivo;
