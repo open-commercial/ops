@@ -71,7 +71,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         this.limpiarYBuscar(true);
     }
     
-    public void buscarPorSerieNroTipo(long nroSerie, long nroFactura, TipoDeComprobante tipoDeComprobante) {
+    public void buscarPorSerieNroTipo(long nroSerie, long nroFactura, TipoDeComprobante tipoDeComprobante, long idCliente) {
         chk_NumFactura.setSelected(true);
         txt_SerieFactura.setEnabled(true);
         txt_NroFactura.setEnabled(true);
@@ -79,6 +79,11 @@ public class FacturasVentaGUI extends JInternalFrame {
         txt_NroFactura.setText(String.valueOf(nroFactura));
         chk_TipoFactura.setSelected(true);
         cmb_TipoFactura.setSelectedItem(tipoDeComprobante);
+        clienteSeleccionado = RestClient.getRestTemplate()
+                .getForObject("/clientes/" + idCliente,
+                        Cliente.class);
+        txtCliente.setText(clienteSeleccionado.getRazonSocial());
+        chk_Cliente.setSelected(true);
         this.resetScroll();
         this.limpiarJTable();
         this.buscar(true);
