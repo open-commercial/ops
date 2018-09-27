@@ -124,14 +124,15 @@ public class DetalleClienteGUI extends JDialog {
         txtNombreFantasia.setText(cliente.getNombreFantasia());                        
         cmbTipoDeCliente.setSelectedItem(cliente.getTipoDeCliente());
         cmbCategoriaIVA.setSelectedItem(cliente.getCategoriaIVA());
-        txtDireccion.setText(cliente.getDireccion());                
-        this.seleccionarPaisSegunId(cliente.getIdPais());
-        this.seleccionarProvinciaSegunId(cliente.getIdProvincia());
-        this.seleccionarLocalidadSegunId(cliente.getIdLocalidad());
+        txtDireccion.setText(cliente.getDireccion());              
+        if (cliente.getIdLocalidad() != null) {
+            this.seleccionarPaisSegunId(cliente.getIdPais());
+            this.seleccionarProvinciaSegunId(cliente.getIdProvincia());
+            this.seleccionarLocalidadSegunId(cliente.getIdLocalidad());
+        }
         this.seleccionarCredencialSegunId(cliente.getIdCredencial());
         this.seleccionarViajanteSegunId(cliente.getIdViajante());
-        txtTelPrimario.setText(cliente.getTelPrimario());
-        txtTelSecundario.setText(cliente.getTelSecundario());
+        txtTelefono.setText(cliente.getTelefono());        
         txtContacto.setText(cliente.getContacto());
         txtEmail.setText(cliente.getEmail());
     }
@@ -155,6 +156,9 @@ public class DetalleClienteGUI extends JDialog {
         try {
             paises = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/paises", Pais[].class)));
+            Pais paisVacio = new Pais();    
+            paisVacio.setNombre("");
+            cmbPais.addItem(paisVacio);
             paises.stream().forEach(p -> cmbPais.addItem(p));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -169,10 +173,12 @@ public class DetalleClienteGUI extends JDialog {
     private void cargarComboBoxProvinciasDelPais(Pais pais) {
         cmbProvincia.removeAllItems();
         try {
-            provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/provincias/paises/" + pais.getId_Pais(),
-                            Provincia[].class)));
-            provincias.stream().forEach(p -> cmbProvincia.addItem(p));
+            if (!pais.getNombre().equals("")) {
+                provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
+                        .getForObject("/provincias/paises/" + pais.getId_Pais(),
+                                Provincia[].class)));
+                provincias.stream().forEach(p -> cmbProvincia.addItem(p));
+            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -186,10 +192,12 @@ public class DetalleClienteGUI extends JDialog {
     private void cargarComboBoxLocalidadesDeLaProvincia(Provincia provincia) {
         cmbLocalidad.removeAllItems();
         try {
-            localidades = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/localidades/provincias/" + provincia.getId_Provincia(),
-                    Localidad[].class)));
-            localidades.stream().forEach(l -> cmbLocalidad.addItem(l));
+            if (!provincia.getNombre().equals("")) {
+                localidades = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
+                        .getForObject("/localidades/provincias/" + provincia.getId_Provincia(),
+                        Localidad[].class)));
+                localidades.stream().forEach(l -> cmbLocalidad.addItem(l));
+            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -253,10 +261,8 @@ public class DetalleClienteGUI extends JDialog {
         btnNuevaLocalidad = new javax.swing.JButton();
         lblViajante = new javax.swing.JLabel();
         cmbViajante = new javax.swing.JComboBox<>();
-        lblTelPrimario = new javax.swing.JLabel();
-        txtTelPrimario = new javax.swing.JTextField();
-        lblTelSecundario = new javax.swing.JLabel();
-        txtTelSecundario = new javax.swing.JTextField();
+        lblTelefono = new javax.swing.JLabel();
+        txtTelefono = new javax.swing.JTextField();
         lblContacto = new javax.swing.JLabel();
         txtContacto = new javax.swing.JTextField();
         lblEmail = new javax.swing.JLabel();
@@ -292,7 +298,7 @@ public class DetalleClienteGUI extends JDialog {
         panelPrincipal.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         lblIdFiscal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblIdFiscal.setText("ID Fiscal:");
+        lblIdFiscal.setText("CUIL, CUIT o DNI:");
 
         lblRazonSocial.setForeground(java.awt.Color.red);
         lblRazonSocial.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -308,9 +314,8 @@ public class DetalleClienteGUI extends JDialog {
         lblDireccion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblDireccion.setText("Dirección:");
 
-        lblPais.setForeground(java.awt.Color.red);
         lblPais.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblPais.setText("* Pais:");
+        lblPais.setText("Pais:");
 
         cmbPais.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -327,9 +332,8 @@ public class DetalleClienteGUI extends JDialog {
             }
         });
 
-        lblProvincia.setForeground(java.awt.Color.red);
         lblProvincia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblProvincia.setText("* Provincia:");
+        lblProvincia.setText("Provincia:");
 
         cmbProvincia.setMaximumRowCount(5);
         cmbProvincia.addItemListener(new java.awt.event.ItemListener() {
@@ -347,9 +351,8 @@ public class DetalleClienteGUI extends JDialog {
             }
         });
 
-        lblLocalidad.setForeground(java.awt.Color.red);
         lblLocalidad.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblLocalidad.setText("* Localidad:");
+        lblLocalidad.setText("Localidad:");
 
         btnNuevaLocalidad.setForeground(java.awt.Color.blue);
         btnNuevaLocalidad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
@@ -369,11 +372,9 @@ public class DetalleClienteGUI extends JDialog {
             }
         });
 
-        lblTelPrimario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblTelPrimario.setText("Teléfono #1:");
-
-        lblTelSecundario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblTelSecundario.setText("Teléfono #2:");
+        lblTelefono.setForeground(java.awt.Color.red);
+        lblTelefono.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblTelefono.setText("* Teléfono:");
 
         lblContacto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblContacto.setText("Contacto:");
@@ -439,8 +440,7 @@ public class DetalleClienteGUI extends JDialog {
                     .addComponent(lblTipoDeCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblEmail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblContacto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblTelSecundario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblTelPrimario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTelefono, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblViajante, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblLocalidad, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblProvincia, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -474,8 +474,7 @@ public class DetalleClienteGUI extends JDialog {
                         .addComponent(cmbLocalidad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
                         .addComponent(btnNuevaLocalidad))
-                    .addComponent(txtTelPrimario, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtTelSecundario, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtTelefono, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtContacto, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtEmail, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panelPrincipalLayout.createSequentialGroup()
@@ -542,12 +541,8 @@ public class DetalleClienteGUI extends JDialog {
                     .addComponent(btnNuevoUsuarioViajante))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblTelPrimario)
-                    .addComponent(txtTelPrimario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblTelSecundario)
-                    .addComponent(txtTelSecundario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblTelefono)
+                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblContacto)
@@ -571,7 +566,7 @@ public class DetalleClienteGUI extends JDialog {
 
         panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevaLocalidad, cmbLocalidad, cmbViajante});
 
-        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblCredencial, lblTelPrimario, lblViajante});
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblCredencial, lblTelefono, lblViajante});
 
         panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarCredencial, btnNuevaCredencial, cmbCredencial});
 
@@ -653,8 +648,7 @@ public class DetalleClienteGUI extends JDialog {
             cliente.setTipoDeCliente((TipoDeCliente) cmbTipoDeCliente.getSelectedItem());
             cliente.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
             cliente.setDireccion(txtDireccion.getText().trim());
-            cliente.setTelPrimario(txtTelPrimario.getText().trim());
-            cliente.setTelSecundario(txtTelSecundario.getText().trim());
+            cliente.setTelefono(txtTelefono.getText().trim());            
             cliente.setContacto(txtContacto.getText().trim());
             cliente.setEmail(txtEmail.getText().trim());            
             if (cmbLocalidad.getSelectedItem() != null) {
@@ -796,8 +790,7 @@ public class DetalleClienteGUI extends JDialog {
     private javax.swing.JLabel lblPais;
     private javax.swing.JLabel lblProvincia;
     private javax.swing.JLabel lblRazonSocial;
-    private javax.swing.JLabel lblTelPrimario;
-    private javax.swing.JLabel lblTelSecundario;
+    private javax.swing.JLabel lblTelefono;
     private javax.swing.JLabel lblTipoDeCliente;
     private javax.swing.JLabel lblViajante;
     private javax.swing.JPanel panelPrincipal;
@@ -807,7 +800,6 @@ public class DetalleClienteGUI extends JDialog {
     private javax.swing.JFormattedTextField txtIdFiscal;
     private javax.swing.JTextField txtNombreFantasia;
     private javax.swing.JTextField txtRazonSocial;
-    private javax.swing.JTextField txtTelPrimario;
-    private javax.swing.JTextField txtTelSecundario;
+    private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
 }

@@ -257,12 +257,16 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     private void cargarDetalleCliente() {
         this.setTitle("Cuenta Corriente del Cliente: " + cliente.getRazonSocial());
         txtNombreCliente.setText(cliente.getRazonSocial());
-        txtDomicilioCliente.setText(cliente.getDireccion()
-                + " " + cliente.getNombreLocalidad()
-                + " " + cliente.getNombreProvincia()
-                + " " + cliente.getNombrePais());
+        String direccion = "";
+        if (cliente.getDireccion() != null) direccion = cliente.getDireccion() + " ";
+        if (cliente.getNombreLocalidad() != null) {
+            direccion += cliente.getNombreLocalidad() 
+                    + " " + cliente.getNombreProvincia()
+                    + " " + cliente.getNombrePais();
+        }
+        txtDomicilioCliente.setText(direccion);
         if (cliente.getIdFiscal() != null) txtIDFiscalCliente.setText(cliente.getIdFiscal().toString());
-        txtCondicionIVACliente.setText(cliente.getCategoriaIVA().name());
+        txtCondicionIVACliente.setText(cliente.getCategoriaIVA().toString());
         try {
             cuentaCorriente = RestClient.getRestTemplate()
                     .getForObject("/cuentas-corriente/clientes/" + cliente.getId_Cliente(), CuentaCorrienteCliente.class);
@@ -284,7 +288,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 + " " + proveedor.getLocalidad().getProvincia().getNombre() 
                 + " " + proveedor.getLocalidad().getProvincia().getPais());        
         if (proveedor.getIdFiscal() != null) txtIDFiscalCliente.setText(proveedor.getIdFiscal().toString());
-        txtCondicionIVACliente.setText(proveedor.getCategoriaIVA().name());
+        txtCondicionIVACliente.setText(proveedor.getCategoriaIVA().toString());
         try {
             cuentaCorriente = RestClient.getRestTemplate()
                     .getForObject("/cuentas-corriente/proveedores/" + proveedor.getId_Proveedor(), CuentaCorrienteProveedor.class);

@@ -19,8 +19,7 @@ public class Cliente implements Serializable {
     private CategoriaIVA categoriaIVA;
     private Long idFiscal;
     private String email;
-    private String telPrimario;
-    private String telSecundario;    
+    private String telefono;    
     private Long idLocalidad;
     private String nombreLocalidad;
     private Long idProvincia;

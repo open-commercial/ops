@@ -227,7 +227,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
                 + " " + cliente.getNombreProvincia()
                 + " " + cliente.getNombrePais());        
         if (cliente.getIdFiscal() != null) txtIdFiscal.setText(cliente.getIdFiscal().toString());
-        txtCondicionIVA.setText(cliente.getCategoriaIVA().name());
+        txtCondicionIVA.setText(cliente.getCategoriaIVA().toString());
         lbl_NumComprobante.setVisible(false);
         txt_Serie.setVisible(false);
         lbl_separador.setVisible(false);
@@ -241,7 +241,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
                 + " " + proveedor.getLocalidad().getProvincia().getNombre()
                 + " " + proveedor.getLocalidad().getProvincia().getPais());        
         if (proveedor.getIdFiscal() != null) txtIdFiscal.setText(proveedor.getIdFiscal().toString());
-        txtCondicionIVA.setText(proveedor.getCategoriaIVA().name());
+        txtCondicionIVA.setText(proveedor.getCategoriaIVA().toString());
     }
     
     private void cargarDetalleNotaCreditoProveedor() {
@@ -252,7 +252,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
                 + " " + notaCreditoProveedorAMostrar.getProveedor().getLocalidad().getProvincia().getPais());              
         if (notaCreditoProveedorAMostrar.getProveedor().getIdFiscal() != null)
             txtIdFiscal.setText(notaCreditoProveedorAMostrar.getProveedor().getIdFiscal().toString());        
-        txtCondicionIVA.setText(notaCreditoProveedorAMostrar.getProveedor().getCategoriaIVA().name());
+        txtCondicionIVA.setText(notaCreditoProveedorAMostrar.getProveedor().getCategoriaIVA().toString());
         txt_Serie.setEnabled(false);
         txt_Numero.setEnabled(false);
         cmbMotivo.setEnabled(false);

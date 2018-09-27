@@ -108,7 +108,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
                 + " " + cliente.getNombreProvincia()
                 + " " + cliente.getNombrePais());                
         if (cliente.getIdFiscal() != null) txtIdFiscal.setText(cliente.getIdFiscal().toString());        
-        txtCondicionIVA.setText(cliente.getCategoriaIVA().name());
+        txtCondicionIVA.setText(cliente.getCategoriaIVA().toString());
     }
 
     private void cargarDetalleProveedor() {
@@ -118,7 +118,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
                 + " " + proveedor.getLocalidad().getProvincia().getNombre()
                 + " " + proveedor.getLocalidad().getProvincia().getPais());        
         if (proveedor.getIdFiscal() != null) txtIdFiscal.setText(proveedor.getIdFiscal().toString());
-        txtCondicionIVA.setText(proveedor.getCategoriaIVA().name());
+        txtCondicionIVA.setText(proveedor.getCategoriaIVA().toString());
     }
     
     private void cargarDetalleRecibo() {
@@ -258,7 +258,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
                     + " " + notaDebitoProveedor.getProveedor().getLocalidad().getNombre()
                     + " " + notaDebitoProveedor.getProveedor().getLocalidad().getProvincia().getNombre()
                     + " " + notaDebitoProveedor.getProveedor().getLocalidad().getProvincia().getPais());
-            txtCondicionIVA.setText(notaDebitoProveedor.getProveedor().getCategoriaIVA().name());                        
+            txtCondicionIVA.setText(notaDebitoProveedor.getProveedor().getCategoriaIVA().toString());                        
             if (notaDebitoProveedor.getProveedor().getIdFiscal() != null) 
                 txtIdFiscal.setText(notaDebitoProveedor.getProveedor().getIdFiscal().toString());                        
             lblDetallePago.setText("Nº Recibo: " + notaDebitoProveedor.getRecibo().getNumSerie() + " - " + notaDebitoProveedor.getRecibo().getNumRecibo() + " - " + notaDebitoProveedor.getRecibo().getConcepto());

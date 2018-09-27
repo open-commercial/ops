@@ -86,8 +86,7 @@
                       <Component id="lblTipoDeCliente" max="32767" attributes="0"/>
                       <Component id="lblEmail" alignment="0" max="32767" attributes="1"/>
                       <Component id="lblContacto" alignment="0" max="32767" attributes="1"/>
-                      <Component id="lblTelSecundario" alignment="0" max="32767" attributes="1"/>
-                      <Component id="lblTelPrimario" alignment="0" max="32767" attributes="1"/>
+                      <Component id="lblTelefono" alignment="0" max="32767" attributes="1"/>
                       <Component id="lblViajante" alignment="0" max="32767" attributes="1"/>
                       <Component id="lblLocalidad" alignment="0" max="32767" attributes="0"/>
                       <Component id="lblProvincia" alignment="0" max="32767" attributes="0"/>
@@ -126,8 +125,7 @@
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Component id="btnNuevaLocalidad" linkSize="11" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="txtTelPrimario" alignment="1" max="32767" attributes="2"/>
-                      <Component id="txtTelSecundario" alignment="1" max="32767" attributes="2"/>
+                      <Component id="txtTelefono" alignment="1" max="32767" attributes="2"/>
                       <Component id="txtContacto" alignment="1" max="32767" attributes="2"/>
                       <Component id="txtEmail" alignment="1" max="32767" attributes="2"/>
                       <Group type="102" alignment="0" attributes="0">
@@ -205,13 +203,8 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lblTelPrimario" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtTelPrimario" alignment="2" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lblTelSecundario" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtTelSecundario" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblTelefono" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtTelefono" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -239,7 +232,7 @@
         <Component class="javax.swing.JLabel" name="lblIdFiscal">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="ID Fiscal:"/>
+            <Property name="text" type="java.lang.String" value="CUIL, CUIT o DNI:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblRazonSocial">
@@ -290,11 +283,8 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lblPais">
           <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
-            </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="* Pais:"/>
+            <Property name="text" type="java.lang.String" value="Pais:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="cmbPais">
@@ -326,11 +316,8 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lblProvincia">
           <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
-            </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="* Provincia:"/>
+            <Property name="text" type="java.lang.String" value="Provincia:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="cmbProvincia">
@@ -363,11 +350,8 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lblLocalidad">
           <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
-            </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="* Localidad:"/>
+            <Property name="text" type="java.lang.String" value="Localidad:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="cmbLocalidad">
@@ -413,21 +397,16 @@
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Usuario&gt;"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JLabel" name="lblTelPrimario">
+        <Component class="javax.swing.JLabel" name="lblTelefono">
           <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
+            </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Tel&#xe9;fono #1:"/>
+            <Property name="text" type="java.lang.String" value="* Tel&#xe9;fono:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtTelPrimario">
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblTelSecundario">
-          <Properties>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Tel&#xe9;fono #2:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtTelSecundario">
+        <Component class="javax.swing.JTextField" name="txtTelefono">
         </Component>
         <Component class="javax.swing.JLabel" name="lblContacto">
           <Properties>
