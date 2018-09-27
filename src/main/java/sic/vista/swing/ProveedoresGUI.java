@@ -1,6 +1,8 @@
 package sic.vista.swing;
 
 import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -10,13 +12,17 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Localidad;
+import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Pais;
 import sic.modelo.Proveedor;
 import sic.modelo.Provincia;
@@ -30,13 +36,27 @@ import sic.util.Utilidades;
 public class ProveedoresGUI extends JInternalFrame {
 
     private ModeloTabla modeloTablaResultados = new ModeloTabla();
-    private List<Proveedor> proveedores;
-    private Proveedor proveedorSeleccionado;    
+    private List<Proveedor> proveedoresTotal = new ArrayList<>();
+    private List<Proveedor> proveedoresParcial = new ArrayList<>();
+    private Proveedor proveedorSeleccionado;
+    private static int totalElementosBusqueda;
+    private static int NUMERO_PAGINA = 0;
+    private static final int TAMANIO_PAGINA = 50;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(880, 600);
 
     public ProveedoresGUI() {
-        this.initComponents();        
+        this.initComponents();
+        sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
+            JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
+            int va = scrollBar.getVisibleAmount() + 50;
+            if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
+                if (proveedoresTotal.size() >= TAMANIO_PAGINA) {
+                    NUMERO_PAGINA += 1;
+                    buscar();
+                }
+            }
+        });
     }
 
     public Proveedor getProvSeleccionado() {
@@ -175,8 +195,7 @@ public class ProveedoresGUI extends JInternalFrame {
     }
 
     private void cargarResultadosAlTable() {
-        limpiarJTable();
-        proveedores.stream().map(p -> {
+        proveedoresParcial.stream().map(p -> {
             Object[] fila = new Object[15];
             fila[0] = p.getCodigo();
             fila[1] = p.getIdFiscal();
@@ -199,10 +218,24 @@ public class ProveedoresGUI extends JInternalFrame {
         });
 
         tbl_Resultados.setModel(modeloTablaResultados);
-        String mensaje = proveedores.size() + " proveedores encontrados";
+        String mensaje = totalElementosBusqueda + " proveedores encontrados";
         lbl_cantResultados.setText(mensaje);
     }
     
+    private void resetScroll() {
+        NUMERO_PAGINA = 0;
+        proveedoresTotal.clear();
+        proveedoresParcial.clear();
+        Point p = new Point(0, 0);
+        sp_Resultados.getViewport().setViewPosition(p);
+    }    
+    
+    private void limpiarJTable() {       
+        modeloTablaResultados = new ModeloTabla();
+        tbl_Resultados.setModel(modeloTablaResultados);
+        this.setColumnas();
+    }
+
     private void cambiarEstadoEnabled(boolean status) {
         chk_Codigo.setEnabled(status);
         if (status == true && chk_Codigo.isSelected() == true) {
@@ -239,6 +272,12 @@ public class ProveedoresGUI extends JInternalFrame {
         btn_Eliminar.setEnabled(status);     
         tbl_Resultados.requestFocus();
     }
+    
+    private void limpiarYBuscar() {
+        this.resetScroll();
+        this.limpiarJTable();
+        this.buscar();
+    }
 
     private void buscar() {    
         this.cambiarEstadoEnabled(false);
@@ -264,8 +303,15 @@ public class ProveedoresGUI extends JInternalFrame {
             }
         }    
         criteria += "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
+        criteria += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
         try {
-            proveedores = new ArrayList(Arrays.asList(RestClient.getRestTemplate().getForObject(criteria, Proveedor[].class)));
+            PaginaRespuestaRest<Proveedor> response = RestClient.getRestTemplate()
+                    .exchange(criteria, HttpMethod.GET, null, new ParameterizedTypeReference<PaginaRespuestaRest<Proveedor>>() {
+                    })
+                    .getBody();
+            totalElementosBusqueda = response.getTotalElements();
+            proveedoresParcial = response.getContent();
+            proveedoresTotal.addAll(proveedoresParcial);
             this.cargarResultadosAlTable();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -279,12 +325,6 @@ public class ProveedoresGUI extends JInternalFrame {
         }
         this.cambiarEstadoEnabled(true);
         this.cambiarEstadoDeComponentesSegunRolUsuario();
-    }
-
-    private void limpiarJTable() {
-        modeloTablaResultados = new ModeloTabla();
-        tbl_Resultados.setModel(modeloTablaResultados);
-        setColumnas();
     }
 
     @SuppressWarnings("unchecked")
@@ -629,7 +669,7 @@ public class ProveedoresGUI extends JInternalFrame {
     }//GEN-LAST:event_cmb_ProvinciaItemStateChanged
 
     private void btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarActionPerformed
-        this.buscar();        
+        this.limpiarYBuscar();
     }//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void btn_NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoActionPerformed
@@ -637,7 +677,7 @@ public class ProveedoresGUI extends JInternalFrame {
         gui_DetalleProveedor.setModal(true);
         gui_DetalleProveedor.setLocationRelativeTo(this);
         gui_DetalleProveedor.setVisible(true);
-        this.buscar();
+        this.limpiarYBuscar();
     }//GEN-LAST:event_btn_NuevoActionPerformed
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
@@ -645,12 +685,12 @@ public class ProveedoresGUI extends JInternalFrame {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             int respuesta = JOptionPane.showConfirmDialog(this,
                     "¿Esta seguro que desea eliminar el proveedor: "
-                    + proveedores.get(indexFilaSeleccionada) + "?", "Eliminar",
+                    + proveedoresTotal.get(indexFilaSeleccionada) + "?", "Eliminar",
                     JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
                 try {
-                    RestClient.getRestTemplate().delete("/proveedores/" + proveedores.get(indexFilaSeleccionada).getId_Proveedor());
-                    this.buscar();
+                    RestClient.getRestTemplate().delete("/proveedores/" + proveedoresTotal.get(indexFilaSeleccionada).getId_Proveedor());
+                    this.limpiarYBuscar();
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (ResourceAccessException ex) {
@@ -666,11 +706,11 @@ public class ProveedoresGUI extends JInternalFrame {
     private void btn_ModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ModificarActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-            DetalleProveedorGUI gui_DetalleProveedor = new DetalleProveedorGUI(proveedores.get(indexFilaSeleccionada));
+            DetalleProveedorGUI gui_DetalleProveedor = new DetalleProveedorGUI(proveedoresTotal.get(indexFilaSeleccionada));
             gui_DetalleProveedor.setModal(true);
             gui_DetalleProveedor.setLocationRelativeTo(this);
             gui_DetalleProveedor.setVisible(true);
-            this.buscar();
+            this.limpiarYBuscar();
         }
     }//GEN-LAST:event_btn_ModificarActionPerformed
 
@@ -719,7 +759,7 @@ public class ProveedoresGUI extends JInternalFrame {
         if (tbl_Resultados.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             Proveedor proveedor = RestClient.getRestTemplate()
-                    .getForObject("/proveedores/" + proveedores.get(indexFilaSeleccionada).getId_Proveedor(), Proveedor.class);
+                    .getForObject("/proveedores/" + proveedoresTotal.get(indexFilaSeleccionada).getId_Proveedor(), Proveedor.class);
             JInternalFrame gui;
             if (proveedor != null) {
                 gui = new CuentaCorrienteGUI(proveedor);

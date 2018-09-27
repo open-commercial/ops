@@ -81,9 +81,15 @@ public class ProductosGUI extends JInternalFrame {
 
     private void cargarProveedores() {
         try {
-            proveedores = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/proveedores/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                            Proveedor[].class)));
+            String uri = "/proveedores/busqueda/criteria?"
+                    + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + "&conSaldo=false"
+                    + "&pagina=0&tamanio=" + Integer.MAX_VALUE;
+            PaginaRespuestaRest<Proveedor> response = RestClient.getRestTemplate()
+                    .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<PaginaRespuestaRest<Proveedor>>() {
+                    })
+                    .getBody();
+            proveedores = response.getContent();
             cmb_Proveedor.removeAllItems();
             proveedores.stream().forEach(p -> {
                 cmb_Proveedor.addItem(p.getRazonSocial());
