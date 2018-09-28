@@ -13,9 +13,9 @@ public class Empresa implements Serializable {
     private String nombre;
     private String lema;
     private String direccion;
-    private CondicionIVA condicionIVA;
-    private long cuip;
-    private long ingresosBrutos;
+    private CategoriaIVA categoriaIVA;
+    private Long idFiscal;
+    private Long ingresosBrutos;
     private Date fechaInicioActividad;
     private String email;
     private String telefono;

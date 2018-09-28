@@ -86,10 +86,10 @@ public class DetalleNotaDebitoGUI extends JDialog {
         txtNombre.setText(cliente.getRazonSocial());
         txtDomicilio.setText(cliente.getDireccion()
                 + " " + cliente.getNombreLocalidad()
-                + " " + cliente.getNombreProvincia()
+                + " " + cliente.getNombreProvincia()                
                 + " " + cliente.getNombrePais());
-        txtIDFiscal.setText(cliente.getIdFiscal());
-        txtCondicionIVA.setText(cliente.getNombreCondicionIVA());
+        if (cliente.getIdFiscal() != null) txtIdFiscal.setText(cliente.getIdFiscal().toString());        
+        txtCondicionIVA.setText(cliente.getCategoriaIVA().toString());
         lblFecha.setVisible(false);
         dcFechaNota.setVisible(false);
         lbl_NumComprobante.setVisible(false);
@@ -104,11 +104,10 @@ public class DetalleNotaDebitoGUI extends JDialog {
         txtNombre.setText(proveedor.getRazonSocial());
         txtDomicilio.setText(proveedor.getDireccion()
                 + " " + proveedor.getLocalidad().getNombre()
-                + " " + proveedor.getLocalidad().getProvincia().getNombre()
-                + " " + proveedor.getLocalidad().getProvincia().getPais());
-        txtIDFiscal.setText(proveedor.getIdFiscal());
-        txtCondicionIVA.setText(proveedor.getCondicionIVA().getNombre());
-        dcFechaNota.setDate(new Date());
+                + " " + proveedor.getLocalidad().getProvincia().getNombre()                                
+                + " " + proveedor.getLocalidad().getProvincia().getPais());        
+        if (proveedor.getIdFiscal() != null) txtIdFiscal.setText(proveedor.getIdFiscal().toString());
+        txtCondicionIVA.setText(proveedor.getCategoriaIVA().toString());
     }
     
     private void cargarDetalleRecibo() {
@@ -219,7 +218,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
                     + " con fecha " + formatter.format(notaDebito.getFecha()) + " del Proveedor: " + proveedorDeNota.getRazonSocial());
             dcFechaNota.setEnabled(false);
             txt_Serie.setEnabled(false);
-            txt_Numero.setEnabled(false);
+            txt_Numero.setEnabled(false);                        
             txt_CAE.setEnabled(false);
             dcFechaNota.setDate(notaDebito.getFecha());
             txt_Serie.setText(String.valueOf(notaDebito.getSerie()));
@@ -232,13 +231,15 @@ public class DetalleNotaDebitoGUI extends JDialog {
                     + " " + proveedorDeNota.getLocalidad().getNombre()
                     + " " + proveedorDeNota.getLocalidad().getProvincia().getNombre()
                     + " " + proveedorDeNota.getLocalidad().getProvincia().getPais());
-            txtCondicionIVA.setText(proveedorDeNota.getCondicionIVA().getNombre());
-            txtIDFiscal.setText(proveedorDeNota.getIdFiscal());
+            txtCondicionIVA.setText(proveedorDeNota.getCategoriaIVA().toString());
+            if (proveedorDeNota.getIdFiscal() != null) txtIdFiscal.setText(proveedorDeNota.getIdFiscal().toString());            
             Recibo reciboNotaDebitoProveedor = RestClient.getRestTemplate().getForObject("/recibos/" + notaDebito.getIdRecibo(), Recibo.class);
-            lblDetallePago.setText("Nº Recibo: " + reciboNotaDebitoProveedor.getNumSerie() + " - " + reciboNotaDebitoProveedor.getNumRecibo() + " - " + reciboNotaDebitoProveedor.getConcepto());
+            lblDetallePago.setText("Nº Recibo: " + reciboNotaDebitoProveedor.getNumSerie() + " - " + reciboNotaDebitoProveedor.getNumRecibo() 
+                    + " - " + reciboNotaDebitoProveedor.getConcepto());
             lblMontoPago.setText("$" + FormatterNumero.formatConRedondeo(reciboNotaDebitoProveedor.getMonto()));
             lblImportePago.setText("$" + FormatterNumero.formatConRedondeo(reciboNotaDebitoProveedor.getMonto()));
-            List<RenglonNotaDebito> renglonesNotaDebito = Arrays.asList(RestClient.getRestTemplate().getForObject("/notas/renglones/debito/" + idNotaDebito, RenglonNotaDebito[].class));
+            List<RenglonNotaDebito> renglonesNotaDebito = Arrays.asList(RestClient.getRestTemplate()
+                    .getForObject("/notas/renglones/debito/" + idNotaDebito, RenglonNotaDebito[].class));                                                            
             txtMontoRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(1).getImporteBruto()));
             lblIvaNetoRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(1).getIvaNeto()));
             lblImporteRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(1).getImporteNeto()));
@@ -269,7 +270,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
         lblIDFiscalCliente = new javax.swing.JLabel();
         lblCondicionIVACliente = new javax.swing.JLabel();
         txtCondicionIVA = new javax.swing.JTextField();
-        txtIDFiscal = new javax.swing.JTextField();
+        txtIdFiscal = new javax.swing.JTextField();
         txtDomicilio = new javax.swing.JTextField();
         txtNombre = new javax.swing.JTextField();
         panelDetalle = new javax.swing.JPanel();
@@ -334,8 +335,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
         txtCondicionIVA.setEditable(false);
         txtCondicionIVA.setFocusable(false);
 
-        txtIDFiscal.setEditable(false);
-        txtIDFiscal.setFocusable(false);
+        txtIdFiscal.setEditable(false);
+        txtIdFiscal.setFocusable(false);
 
         txtDomicilio.setEditable(false);
         txtDomicilio.setFocusable(false);
@@ -359,9 +360,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblIDFiscalCliente)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtIDFiscal, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txtDomicilio)
-                    .addComponent(txtNombre, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addComponent(txtIdFiscal)))
                 .addContainerGap())
         );
         panelClienteLayout.setVerticalGroup(
@@ -379,9 +378,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCondicionIVA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblCondicionIVACliente)
-                    .addComponent(txtIDFiscal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblIDFiscalCliente))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(txtIdFiscal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblIDFiscalCliente)))
         );
 
         panelDetalle.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -786,6 +784,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
                 this.cargarDetalleCliente();
             } else if (proveedor != null) {
                 this.cargarDetalleProveedor();
+                dcFechaNota.setDate(new Date());
             }
             this.cargarDetalleRecibo();
         } else {
@@ -843,8 +842,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private javax.swing.JPanel panelResultados;
     private javax.swing.JTextField txtCondicionIVA;
     private javax.swing.JTextField txtDomicilio;
-    private javax.swing.JTextField txtIDFiscal;
     private javax.swing.JFormattedTextField txtIVA21Neto;
+    private javax.swing.JTextField txtIdFiscal;
     private javax.swing.JFormattedTextField txtMontoRenglon2;
     private javax.swing.JFormattedTextField txtNoGravado;
     private javax.swing.JTextField txtNombre;
