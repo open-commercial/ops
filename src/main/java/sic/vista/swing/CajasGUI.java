@@ -639,7 +639,9 @@ public class CajasGUI extends JInternalFrame {
     }//GEN-LAST:event_internalFrameOpened
 
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        if (!UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
+        if (UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
+            btn_eliminarCaja.setEnabled(true);
+        } else {
             btn_eliminarCaja.setEnabled(false);
         }
     }

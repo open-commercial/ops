@@ -887,7 +887,9 @@ public class ProductosGUI extends JInternalFrame {
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        if (!UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
+        if (UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(true);
+        } else {
             btn_Eliminar.setEnabled(false);
         }
     }

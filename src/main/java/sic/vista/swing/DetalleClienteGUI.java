@@ -212,14 +212,29 @@ public class DetalleClienteGUI extends JDialog {
     }
     
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btnNuevaCondicionIVA.setEnabled(true);
+            btnNuevaCredencial.setEnabled(true);
+            btnBuscarCredencial.setEnabled(true);
+            btnNuevoUsuarioViajante.setEnabled(true);
+            lblCredencial.setEnabled(true);
+            cmbCredencial.setEnabled(true);
+        } else {
             btnNuevaCondicionIVA.setEnabled(false);
             btnNuevaCredencial.setEnabled(false);
             btnBuscarCredencial.setEnabled(false);
             btnNuevoUsuarioViajante.setEnabled(false);
             lblCredencial.setEnabled(false);
             cmbCredencial.setEnabled(false);
-            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+            if (rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+                btnNuevaLocalidad.setEnabled(true);
+                btnNuevaProvincia.setEnabled(true);
+                btnNuevoPais.setEnabled(true);
+                lblViajante.setEnabled(true);
+                cmbViajante.setEnabled(true);
+                btnBuscarCredencial.setEnabled(true);
+                btnBuscarUsuarioViajante.setEnabled(true);
+            } else {
                 btnNuevaLocalidad.setEnabled(false);
                 btnNuevaProvincia.setEnabled(false);
                 btnNuevoPais.setEnabled(false);
@@ -232,9 +247,9 @@ public class DetalleClienteGUI extends JDialog {
                     this.seleccionarViajanteSegunId(UsuarioActivo.getInstance().getUsuario().getId_Usuario());
                 }
             }
-        }        
+        }
     }
-        
+ 
     public Cliente getClienteDadoDeAlta() {
         return (cliente.getId_Cliente() != 0L? cliente : null);
     }

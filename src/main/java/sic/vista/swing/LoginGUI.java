@@ -17,6 +17,8 @@ import sic.RestClient;
 import sic.modelo.Credencial;
 import sic.modelo.Usuario;
 import sic.modelo.UsuarioActivo;
+import java.util.List;
+import sic.modelo.Rol;
 
 public class LoginGUI extends JFrame {
     
@@ -61,9 +63,18 @@ public class LoginGUI extends JFrame {
 
     private void ingresar() {
         if (UsuarioActivo.getInstance().getUsuario() != null) {
-            this.setVisible(false);
-            new PrincipalGUI().setVisible(true);
-            this.dispose();
+            List<Rol> rolesDeUsuario = UsuarioActivo.getInstance().getUsuario().getRoles();
+            if (rolesDeUsuario.contains(Rol.COMPRADOR) && !rolesDeUsuario.contains(Rol.ADMINISTRADOR)
+                    && !rolesDeUsuario.contains(Rol.ENCARGADO) && !rolesDeUsuario.contains(Rol.VENDEDOR)
+                    && !rolesDeUsuario.contains(Rol.VIAJANTE)) {
+                this.setVisible(false);
+                new PrincipalGUI().setVisible(true);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_privilegios_usuario"),
+                        "Aviso", JOptionPane.WARNING_MESSAGE);
+            }
         }
     }
 

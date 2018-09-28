@@ -823,14 +823,21 @@ public class ClientesGUI extends JInternalFrame {
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(true);
+        } else {
             btn_Eliminar.setEnabled(false);
-            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+            if (rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+                btn_setPredeterminado.setEnabled(true);
+            } else {
                 btn_setPredeterminado.setEnabled(false);
             }
-            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
-                    && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)
-                    && rolesDeUsuarioActivo.contains(Rol.VIAJANTE)) {
+            if (rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                    || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)
+                    || !rolesDeUsuarioActivo.contains(Rol.VIAJANTE)) {
+                chkViajante.setEnabled(true);
+                btnBuscarViajante.setEnabled(true);
+            } else {
                 chkViajante.setEnabled(false);
                 btnBuscarViajante.setEnabled(false);
             }
