@@ -75,8 +75,7 @@ public class BuscarProveedoresGUI extends JDialog {
             } else {
                 String uri = "/proveedores/busqueda/criteria?"
                         + "codigo=" + txtCriteriaBusqueda.getText().trim()
-                        + "&razonSocial=" + txtCriteriaBusqueda.getText().trim()
-                        + "&idFiscal=" + txtCriteriaBusqueda.getText().trim()
+                        + "&razonSocial=" + txtCriteriaBusqueda.getText().trim()                        
                         + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                         + "&conSaldo=false"
                         + "&pagina=" + NUMERO_PAGINA
