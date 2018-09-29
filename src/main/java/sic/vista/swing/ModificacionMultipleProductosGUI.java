@@ -14,11 +14,14 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Medida;
+import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
 import sic.modelo.Proveedor;
 import sic.modelo.Rubro;
@@ -86,10 +89,16 @@ public class ModificacionMultipleProductosGUI extends JDialog {
     private void cargarProveedores() {
         try {
             cmb_Proveedor.removeAllItems();
-            List<Proveedor> proveedores = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                .getForObject("/proveedores/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                Proveedor[].class)));
-            proveedores.stream().forEach((p) -> {
+            String uri = "/proveedores/busqueda/criteria?"
+                    + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + "&conSaldo=false"
+                    + "&pagina=0"
+                    + "&tamanio=" + Integer.MAX_VALUE;
+            PaginaRespuestaRest<Proveedor> response = RestClient.getRestTemplate()
+                    .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<PaginaRespuestaRest<Proveedor>>() {
+                    })
+                    .getBody();
+            response.getContent().stream().forEach((p) -> {
                 cmb_Proveedor.addItem(p);
             });
         } catch (RestClientResponseException ex) {

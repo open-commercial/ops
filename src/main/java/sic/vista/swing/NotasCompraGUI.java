@@ -277,7 +277,8 @@ public class NotasCompraGUI extends JInternalFrame {
             Factura factura = RestClient.getRestTemplate()
                     .getForObject("/facturas/" + notasTotal.get(indexFilaSeleccionada).getIdFacturaCompra(), Factura.class);
             gui_facturaCompra.setVisible(true);
-            gui_facturaCompra.buscarPorSerieYNroFactura(factura.getNumSerie(), factura.getNumFactura(), factura.getTipoComprobante());
+            gui_facturaCompra.buscarPorSerieYNroFactura(factura.getNumSerie(), factura.getNumFactura(),
+                    factura.getTipoComprobante(), notasTotal.get(indexFilaSeleccionada).getIdProveedor());
             try {
                 gui_facturaCompra.setSelected(true);
             } catch (PropertyVetoException ex) {

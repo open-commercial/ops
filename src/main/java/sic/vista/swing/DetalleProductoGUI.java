@@ -14,11 +14,14 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Medida;
+import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
 import sic.modelo.Proveedor;
 import sic.modelo.Rol;
@@ -784,17 +787,24 @@ public class DetalleProductoGUI extends JDialog {
     private void cargarProveedores() {
         cmb_Proveedor.removeAllItems();
         try {
-            proveedores = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                .getForObject("/proveedores/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                Proveedor[].class)));
+            String uri = "/proveedores/busqueda/criteria?"
+                    + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + "&conSaldo=false"
+                    + "&pagina=0"
+                    + "&tamanio=" + Integer.MAX_VALUE;
+            PaginaRespuestaRest<Proveedor> response = RestClient.getRestTemplate()
+                    .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<PaginaRespuestaRest<Proveedor>>() {
+                    })
+                    .getBody();
+            proveedores = response.getContent();
             proveedores.stream().forEach(p -> cmb_Proveedor.addItem(p.getRazonSocial()));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
             LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this,
-                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                "Error", JOptionPane.ERROR_MESSAGE);
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -880,15 +890,18 @@ public class DetalleProductoGUI extends JDialog {
             }
         }
         if (idMedida == null) {
-            mensajeError = mensajeError.concat(ResourceBundle.getBundle("Mensajes").getString("mensaje_producto_vacio_medida") + "\n");
+            mensajeError = mensajeError.concat(ResourceBundle.getBundle("Mensajes")
+                    .getString("mensaje_producto_vacio_medida") + "\n");
             ejecutarOperacion = false;
         }
         if (idRubro == null) {
-            mensajeError = mensajeError.concat(ResourceBundle.getBundle("Mensajes").getString("mensaje_producto_vacio_rubro") + "\n");
+            mensajeError = mensajeError.concat(ResourceBundle.getBundle("Mensajes")
+                    .getString("mensaje_producto_vacio_rubro") + "\n");
             ejecutarOperacion = false;
         }
         if (idProveedor == null) {
-            mensajeError = mensajeError.concat(ResourceBundle.getBundle("Mensajes").getString("mensaje_producto_vacio_proveedor") + "\n");
+            mensajeError = mensajeError.concat(ResourceBundle.getBundle("Mensajes")
+                    .getString("mensaje_producto_vacio_proveedor") + "\n");
             ejecutarOperacion = false;
         }
         if (ejecutarOperacion) {
@@ -915,8 +928,10 @@ public class DetalleProductoGUI extends JDialog {
                     producto.setEstante(txt_Estante.getText().trim());
                     producto.setNota(txt_Nota.getText().trim());                    
                     producto.setFechaVencimiento(dc_Vencimiento.getDate());
-                    RestClient.getRestTemplate().postForObject("/productos?idMedida=" + idMedida + "&idRubro=" + idRubro
-                            + "&idProveedor=" + idProveedor + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                    RestClient.getRestTemplate().postForObject("/productos?idMedida=" + idMedida 
+                            + "&idRubro=" + idRubro
+                            + "&idProveedor=" + idProveedor 
+                            + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                             producto, Producto.class);
                     LOGGER.warn("El producto " + producto + " se guardó correctamente");
                     int respuesta = JOptionPane.showConfirmDialog(this,
@@ -927,7 +942,6 @@ public class DetalleProductoGUI extends JDialog {
                         this.dispose();
                     }
                 }
-
                 if (operacion == TipoDeOperacion.ACTUALIZACION) {
                     productoParaModificar.setCodigo(txt_Codigo.getText());
                     productoParaModificar.setDescripcion(txt_Descripcion.getText().trim());
@@ -951,8 +965,10 @@ public class DetalleProductoGUI extends JDialog {
                     productoParaModificar.setEstante(txt_Estante.getText().trim());
                     productoParaModificar.setNota(txt_Nota.getText().trim());
                     productoParaModificar.setFechaVencimiento(dc_Vencimiento.getDate());
-                    RestClient.getRestTemplate().put("/productos?idMedida=" + idMedida + "&idRubro=" + idRubro
-                            + "&idProveedor=" + idProveedor + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                    RestClient.getRestTemplate().put("/productos?idMedida=" + idMedida 
+                            + "&idRubro=" + idRubro
+                            + "&idProveedor=" + idProveedor 
+                            + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                             productoParaModificar);
                     LOGGER.warn("El producto " + productoParaModificar + " se modificó correctamente");
                     JOptionPane.showMessageDialog(this, "El producto se modificó correctamente.",

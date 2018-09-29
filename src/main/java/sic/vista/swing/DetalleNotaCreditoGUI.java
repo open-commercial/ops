@@ -227,7 +227,11 @@ public class DetalleNotaCreditoGUI extends JDialog {
         txt_Serie.setText(String.valueOf(notaCredito.getSerie()));
         txt_Numero.setText(String.valueOf(notaCredito.getNroNota()));
         txt_CAE.setEnabled(false);
-        txt_CAE.setText(String.valueOf(notaCredito.getCAE()));
+        if (notaCredito.getCAE() == 0L) {
+            txt_CAE.setText("");
+        } else {
+            txt_CAE.setText(String.valueOf(notaCredito.getCAE()));
+        }
         cmbMotivo.removeAllItems();
         cmbMotivo.addItem(notaCredito.getMotivo());        
         dc_FechaNota.setEnabled(false);
@@ -440,6 +444,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
         dc_FechaNota = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setModal(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
