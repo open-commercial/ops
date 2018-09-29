@@ -136,8 +136,12 @@ public class BuscarProveedoresGUI extends JDialog {
         modeloTablaResultados.setClaseColumnas(tipos);
         tblResultados.getTableHeader().setReorderingAllowed(false);
         tblResultados.getTableHeader().setResizingAllowed(true);     
-        tblResultados.getColumnModel().getColumn(0).setPreferredWidth(90);
-        tblResultados.getColumnModel().getColumn(1).setPreferredWidth(120);
+        tblResultados.getColumnModel().getColumn(0).setPreferredWidth(80);
+        tblResultados.getColumnModel().getColumn(0).setMinWidth(80);
+        tblResultados.getColumnModel().getColumn(0).setMaxWidth(80);
+        tblResultados.getColumnModel().getColumn(1).setPreferredWidth(100);
+        tblResultados.getColumnModel().getColumn(1).setMinWidth(100);
+        tblResultados.getColumnModel().getColumn(1).setMaxWidth(100);
         tblResultados.getColumnModel().getColumn(2).setPreferredWidth(250);
         tblResultados.getColumnModel().getColumn(3).setPreferredWidth(250);      
     }
