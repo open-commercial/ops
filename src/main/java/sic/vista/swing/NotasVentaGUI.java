@@ -307,10 +307,13 @@ public class NotasVentaGUI extends JInternalFrame {
     }
 
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
-        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(true);
+        } else {
             btn_Eliminar.setEnabled(false);
-            if ((!rolesDeUsuarioActivo.contains(Rol.ENCARGADO) && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR))) {
+            if (rolesDeUsuarioActivo.contains(Rol.ENCARGADO) || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+                btn_Autorizar.setEnabled(true);
+            } else {
                 btn_Autorizar.setEnabled(false);
             }
         }

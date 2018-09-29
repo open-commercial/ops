@@ -231,6 +231,14 @@ public class TransportistasGUI extends JInternalFrame {
         this.cambiarEstadoEnabled(true);
         this.cambiarEstadoDeComponentesSegunRolUsuario();
     }
+    
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(true);
+        } else {
+            btn_Eliminar.setEnabled(false);
+        }
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -576,12 +584,6 @@ public class TransportistasGUI extends JInternalFrame {
             this.dispose();
         }
     }//GEN-LAST:event_formInternalFrameOpened
-
-    private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
-            btn_Eliminar.setEnabled(false);
-        }
-    }
     
     private void txt_NombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_NombreActionPerformed
         btn_BuscarActionPerformed(null);

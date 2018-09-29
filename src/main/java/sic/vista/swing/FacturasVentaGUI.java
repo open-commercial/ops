@@ -419,17 +419,31 @@ public class FacturasVentaGUI extends JInternalFrame {
                 .getBody();
         return !response.getContent().isEmpty();
     }
-
-    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+    
+     private void cambiarEstadoDeComponentesSegunRolUsuario() {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
-        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(true);
+        } else {
             btn_Eliminar.setEnabled(false);
-            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+            if (rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+                txt_ResultGananciaTotal.setVisible(true);
+                lbl_GananciaTotal.setVisible(true);
+                lbl_TotalIVAVenta.setVisible(true);
+                txt_ResultTotalIVAVenta.setVisible(true);
+            } else {
                 txt_ResultGananciaTotal.setVisible(false);
                 lbl_GananciaTotal.setVisible(false);
                 lbl_TotalIVAVenta.setVisible(false);
                 txt_ResultTotalIVAVenta.setVisible(false);
-                if (!rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+                if (rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+                    btn_Nueva.setEnabled(true);
+                    btn_Autorizar.setEnabled(true);
+                    chk_Usuario.setEnabled(true);
+                    btnBuscarUsuarios.setEnabled(true);
+                    chk_Usuario.setEnabled(true);
+                    btnBuscarUsuarios.setEnabled(true);
+                } else {
                     btn_Nueva.setEnabled(false);
                     btn_Autorizar.setEnabled(false);
                     chk_Usuario.setEnabled(false);

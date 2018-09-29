@@ -49,7 +49,29 @@ public class PrincipalGUI extends JFrame {
                 + " - Empresa: " + EmpresaActiva.getInstance().getEmpresa().getNombre()
                 + " - Usuario: " + UsuarioActivo.getInstance().getUsuario().getUsername());
     }
-    
+
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            mnuItm_Empresas.setVisible(true);
+            mnuItm_Configuracion.setVisible(true);
+            mnuItm_Usuarios.setVisible(true);
+        } else {
+            mnuItm_Empresas.setVisible(false);
+            mnuItm_Configuracion.setVisible(false);
+            mnuItm_Usuarios.setVisible(false);
+            if (rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+                mnu_Compras.setVisible(true);
+                mnu_Stock.setVisible(true);
+                mnu_Administracion.setVisible(true);
+            } else {
+                mnu_Compras.setVisible(false);
+                mnu_Stock.setVisible(false);
+                mnu_Administracion.setVisible(false);
+            }
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -359,23 +381,9 @@ public class PrincipalGUI extends JFrame {
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-        this.eliminarElementosDelMenuSegunRolDeUsuario();
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
         this.mostrarMensajeDeNingunaCajaAbierta();
     }//GEN-LAST:event_formWindowOpened
-    
-    private void eliminarElementosDelMenuSegunRolDeUsuario() {
-        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
-        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
-            mnuItm_Empresas.setVisible(false);
-            mnuItm_Configuracion.setVisible(false);
-            mnuItm_Usuarios.setVisible(false);
-            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-                mnu_Compras.setVisible(false);
-                mnu_Stock.setVisible(false);
-                mnu_Administracion.setVisible(false);
-            }
-        }
-    }
 
     private void mostrarMensajeDeNingunaCajaAbierta() {
         if (UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)

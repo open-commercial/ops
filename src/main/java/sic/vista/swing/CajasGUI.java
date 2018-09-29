@@ -224,6 +224,14 @@ public class CajasGUI extends JInternalFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        if (UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
+            btn_eliminarCaja.setEnabled(true);
+        } else {
+            btn_eliminarCaja.setEnabled(false);
+        }
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -637,14 +645,6 @@ public class CajasGUI extends JInternalFrame {
             this.dispose();
         }
     }//GEN-LAST:event_internalFrameOpened
-
-    private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        if (UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
-            btn_eliminarCaja.setEnabled(true);
-        } else {
-            btn_eliminarCaja.setEnabled(false);
-        }
-    }
 
     private void chk_UsuarioCierreItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UsuarioCierreItemStateChanged
         try {

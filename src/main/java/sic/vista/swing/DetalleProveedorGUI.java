@@ -152,6 +152,24 @@ public class DetalleProveedorGUI extends JDialog {
         }
     }
 
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btnNuevaCondicionIVA.setEnabled(true);
+        } else {
+            btnNuevaCondicionIVA.setEnabled(false);
+            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+                btnNuevaLocalidad.setEnabled(true);
+                btnNuevaProvincia.setEnabled(true);
+                btnNuevoPais.setEnabled(true);
+            } else {
+                btnNuevaLocalidad.setEnabled(false);
+                btnNuevaProvincia.setEnabled(false);
+                btnNuevoPais.setEnabled(false);
+            }
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -551,19 +569,7 @@ public class DetalleProveedorGUI extends JDialog {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_GuardarActionPerformed
-            
-    private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
-        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
-            btnNuevaCondicionIVA.setEnabled(false);
-            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-                btnNuevaLocalidad.setEnabled(false);
-                btnNuevaProvincia.setEnabled(false);
-                btnNuevoPais.setEnabled(false);
-            }
-        }
-    }
-    
+                
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cargarComboBoxCondicionesIVA();
         this.cargarComboBoxPaises();

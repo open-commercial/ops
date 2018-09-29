@@ -463,6 +463,31 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             }
         }
     }
+        
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(true);
+        } else {
+            btn_Eliminar.setEnabled(false);
+            if (rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+                btnCrearRecibo.setEnabled(true);
+            } else {
+                btnCrearRecibo.setEnabled(false);
+                if (rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+                    btnCrearNotaCredito.setEnabled(true);
+                    btnCrearNotaDebito.setEnabled(true);
+                    btnVerDetalle.setEnabled(true);
+                    btnAutorizar.setEnabled(true);
+                } else {
+                    btnCrearNotaCredito.setEnabled(false);
+                    btnCrearNotaDebito.setEnabled(false);
+                    btnVerDetalle.setEnabled(false);
+                    btnAutorizar.setEnabled(false);
+                }
+            }
+        }
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -755,31 +780,6 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             this.dispose();
         }
     }//GEN-LAST:event_formInternalFrameOpened
-
-    private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
-        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
-            btn_Eliminar.setEnabled(true);
-        } else {
-            btn_Eliminar.setEnabled(false);
-            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-                btnCrearRecibo.setEnabled(true);
-            } else {
-                btnCrearRecibo.setEnabled(false);
-                if (rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-                    btnCrearNotaCredito.setEnabled(true);
-                    btnCrearNotaDebito.setEnabled(true);
-                    btnVerDetalle.setEnabled(true);
-                    btnAutorizar.setEnabled(true);
-                } else {
-                    btnCrearNotaCredito.setEnabled(false);
-                    btnCrearNotaDebito.setEnabled(false);
-                    btnVerDetalle.setEnabled(false);
-                    btnAutorizar.setEnabled(false);
-                }
-            }
-        }
-    }
         
     private void btnCrearNotaCreditoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearNotaCreditoActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
