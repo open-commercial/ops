@@ -160,14 +160,13 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
             String uri = "/proveedores/busqueda/criteria?"
                     + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                     + "&conSaldo=false"
-                    + "&pagina=0&tamanio=" + Integer.MAX_VALUE;
+                    + "&pagina=0"
+                    + "&tamanio=" + Integer.MAX_VALUE;
             PaginaRespuestaRest<Proveedor> response = RestClient.getRestTemplate()
                     .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<PaginaRespuestaRest<Proveedor>>() {
                     })
                     .getBody();
-            response.getContent().stream().forEach((p) -> {
-                cmb_Proveedor.addItem(p);
-            });
+            response.getContent().stream().forEach(p -> cmb_Proveedor.addItem(p));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -184,9 +183,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
             List<Transportista> transportistas = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/transportistas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                     Transportista[].class)));
-            transportistas.stream().forEach((t) -> {
-                cmb_Transportista.addItem(t);
-            });
+            transportistas.stream().forEach(t -> cmb_Transportista.addItem(t));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {

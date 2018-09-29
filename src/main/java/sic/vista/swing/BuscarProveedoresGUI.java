@@ -42,26 +42,6 @@ public class BuscarProveedoresGUI extends JDialog {
         this.setColumnas();        
         txtCriteriaBusqueda.addKeyListener(keyHandler);
         tblResultados.addKeyListener(keyHandler);
-        // desactivado momentaneamente
-        /*Timer timer = new Timer(false);
-        txtCriteriaBusqueda.addKeyListener(new KeyAdapter() {
-            private TimerTask task;
-            @Override
-            public void keyTyped(KeyEvent e) {
-                if (task != null) {
-                    task.cancel();
-                }
-                task = new TimerTask() {
-                    @Override
-                    public void run() {
-                        resetScroll();
-                        limpiarJTable();
-                        buscar();
-                    }
-                };
-                timer.schedule(task, 450);
-            }
-        });*/
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
             int va = scrollBar.getVisibleAmount() + 50;

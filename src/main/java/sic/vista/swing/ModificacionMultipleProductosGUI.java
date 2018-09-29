@@ -92,7 +92,8 @@ public class ModificacionMultipleProductosGUI extends JDialog {
             String uri = "/proveedores/busqueda/criteria?"
                     + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                     + "&conSaldo=false"
-                    + "&pagina=0&tamanio=" + Integer.MAX_VALUE;
+                    + "&pagina=0"
+                    + "&tamanio=" + Integer.MAX_VALUE;
             PaginaRespuestaRest<Proveedor> response = RestClient.getRestTemplate()
                     .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<PaginaRespuestaRest<Proveedor>>() {
                     })

@@ -84,16 +84,15 @@ public class ProductosGUI extends JInternalFrame {
             String uri = "/proveedores/busqueda/criteria?"
                     + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                     + "&conSaldo=false"
-                    + "&pagina=0&tamanio=" + Integer.MAX_VALUE;
+                    + "&pagina=0"
+                    + "&tamanio=" + Integer.MAX_VALUE;
             PaginaRespuestaRest<Proveedor> response = RestClient.getRestTemplate()
                     .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<PaginaRespuestaRest<Proveedor>>() {
                     })
                     .getBody();
             proveedores = response.getContent();
             cmb_Proveedor.removeAllItems();
-            proveedores.stream().forEach(p -> {
-                cmb_Proveedor.addItem(p.getRazonSocial());
-            });
+            proveedores.stream().forEach(p -> cmb_Proveedor.addItem(p.getRazonSocial()));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
