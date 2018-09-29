@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.CondicionIVA;
+import sic.modelo.CategoriaIVA;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Localidad;
 import sic.modelo.Pais;
@@ -30,15 +30,13 @@ public class DetalleProveedorGUI extends JDialog {
 
     public DetalleProveedorGUI() {
         this.initComponents();
-        this.setIcon();
-        this.setTitle("Nuevo Proveedor");
+        this.setIcon();        
         operacion = TipoDeOperacion.ALTA;
     }
 
     public DetalleProveedorGUI(Proveedor prov) {
         this.initComponents();
-        this.setIcon();
-        this.setTitle("Modificar Proveedor");
+        this.setIcon();        
         operacion = TipoDeOperacion.ACTUALIZACION;
         proveedorModificar = prov;
     }
@@ -51,8 +49,8 @@ public class DetalleProveedorGUI extends JDialog {
     private void cargarProveedorParaModificar() {
         txtCodigo.setText(proveedorModificar.getCodigo());
         txtRazonSocial.setText(proveedorModificar.getRazonSocial());
-        txt_Id_Fiscal.setText(String.valueOf(proveedorModificar.getIdFiscal()));
-        cmbCondicionIVA.setSelectedItem(proveedorModificar.getCondicionIVA());
+        txtIdFiscal.setValue(proveedorModificar.getIdFiscal());
+        cmbCategoriaIVA.setSelectedItem(proveedorModificar.getCategoriaIVA());
         txtDireccion.setText(proveedorModificar.getDireccion());
         cmbPais.setSelectedItem(proveedorModificar.getLocalidad().getProvincia().getPais());
         cmbProvincia.setSelectedItem(proveedorModificar.getLocalidad().getProvincia());
@@ -67,7 +65,7 @@ public class DetalleProveedorGUI extends JDialog {
     private void limpiarYRecargarComponentes() {
         txtCodigo.setText("");
         txtRazonSocial.setText("");
-        txt_Id_Fiscal.setText("");
+        txtIdFiscal.setText("");
         txtDireccion.setText("");
         txtTelPrimario.setText("");
         txtTelSecundario.setText("");
@@ -79,21 +77,10 @@ public class DetalleProveedorGUI extends JDialog {
     }
 
     public void cargarComboBoxCondicionesIVA() {
-        cmbCondicionIVA.removeAllItems();
-        try {
-            List<CondicionIVA> condicionesIVA = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/condiciones-iva", CondicionIVA[].class)));
-            condicionesIVA.stream().forEach((c) -> {
-                cmbCondicionIVA.addItem(c);
-            });
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        cmbCategoriaIVA.removeAllItems();
+        for (CategoriaIVA c : CategoriaIVA.values()) {
+            cmbCategoriaIVA.addItem(c);
+        } 
     }
 
     public void cargarComboBoxPaises() {
@@ -163,10 +150,8 @@ public class DetalleProveedorGUI extends JDialog {
         lblRazonSocial = new javax.swing.JLabel();
         txtRazonSocial = new javax.swing.JTextField();
         lblIdFiscal = new javax.swing.JLabel();
-        txt_Id_Fiscal = new javax.swing.JTextField();
         lblCondicionIVA = new javax.swing.JLabel();
-        cmbCondicionIVA = new javax.swing.JComboBox();
-        btnNuevaCondicionIVA = new javax.swing.JButton();
+        cmbCategoriaIVA = new javax.swing.JComboBox();
         lblDireccion = new javax.swing.JLabel();
         txtDireccion = new javax.swing.JTextField();
         lblPais = new javax.swing.JLabel();
@@ -188,6 +173,7 @@ public class DetalleProveedorGUI extends JDialog {
         txtEmail = new javax.swing.JTextField();
         lblWeb = new javax.swing.JLabel();
         txtWeb = new javax.swing.JTextField();
+        txtIdFiscal = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nuevo Proveedor");
@@ -223,16 +209,7 @@ public class DetalleProveedorGUI extends JDialog {
         lblCondicionIVA.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblCondicionIVA.setText("* Condición IVA:");
 
-        cmbCondicionIVA.setMaximumRowCount(5);
-
-        btnNuevaCondicionIVA.setForeground(java.awt.Color.blue);
-        btnNuevaCondicionIVA.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMoney_16x16.png"))); // NOI18N
-        btnNuevaCondicionIVA.setText("Nueva");
-        btnNuevaCondicionIVA.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNuevaCondicionIVAActionPerformed(evt);
-            }
-        });
+        cmbCategoriaIVA.setMaximumRowCount(5);
 
         lblDireccion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblDireccion.setText("Dirección:");
@@ -304,6 +281,13 @@ public class DetalleProveedorGUI extends JDialog {
         lblWeb.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblWeb.setText("Página Web:");
 
+        txtIdFiscal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#"))));
+        txtIdFiscal.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtIdFiscalFocusLost(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
         panelPrincipal.setLayout(panelPrincipalLayout);
         panelPrincipalLayout.setHorizontalGroup(
@@ -338,11 +322,6 @@ public class DetalleProveedorGUI extends JDialog {
                         .addComponent(cmbProvincia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
                         .addComponent(btnNuevaProvincia))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
-                        .addComponent(cmbCondicionIVA, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btnNuevaCondicionIVA))
-                    .addComponent(txt_Id_Fiscal, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtRazonSocial, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtDireccion, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtTelPrimario, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -350,7 +329,9 @@ public class DetalleProveedorGUI extends JDialog {
                     .addComponent(txtContacto, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtEmail, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtWeb, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtCodigo, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(txtCodigo, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(cmbCategoriaIVA, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtIdFiscal))
                 .addContainerGap())
         );
         panelPrincipalLayout.setVerticalGroup(
@@ -367,12 +348,11 @@ public class DetalleProveedorGUI extends JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblIdFiscal)
-                    .addComponent(txt_Id_Fiscal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtIdFiscal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblCondicionIVA)
-                    .addComponent(cmbCondicionIVA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnNuevaCondicionIVA))
+                    .addComponent(cmbCategoriaIVA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblDireccion)
@@ -421,8 +401,6 @@ public class DetalleProveedorGUI extends JDialog {
 
         panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevaLocalidad, cmbLocalidad});
 
-        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevaCondicionIVA, cmbCondicionIVA});
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -449,14 +427,6 @@ public class DetalleProveedorGUI extends JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnNuevaCondicionIVAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaCondicionIVAActionPerformed
-        DetalleCondicionIvaGUI gui_DetalleCondicionIVA = new DetalleCondicionIvaGUI();
-        gui_DetalleCondicionIVA.setModal(true);
-        gui_DetalleCondicionIVA.setLocationRelativeTo(this);
-        gui_DetalleCondicionIVA.setVisible(true);
-        this.cargarComboBoxCondicionesIVA();
-    }//GEN-LAST:event_btnNuevaCondicionIVAActionPerformed
 
     private void btnNuevoPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoPaisActionPerformed
         DetallePaisGUI gui_DetallePais = new DetallePaisGUI();
@@ -504,8 +474,8 @@ public class DetalleProveedorGUI extends JDialog {
                 Proveedor proveedor = new Proveedor();
                 proveedor.setCodigo(txtCodigo.getText().trim());
                 proveedor.setRazonSocial(txtRazonSocial.getText().trim());
-                proveedor.setIdFiscal(txt_Id_Fiscal.getText().trim());
-                proveedor.setCondicionIVA((CondicionIVA) cmbCondicionIVA.getSelectedItem());
+                proveedor.setIdFiscal((Long) txtIdFiscal.getValue());
+                proveedor.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
                 proveedor.setDireccion(txtDireccion.getText().trim());
                 proveedor.setLocalidad((Localidad) cmbLocalidad.getSelectedItem());
                 proveedor.setTelPrimario(txtTelPrimario.getText().trim());
@@ -527,8 +497,8 @@ public class DetalleProveedorGUI extends JDialog {
             if (operacion == TipoDeOperacion.ACTUALIZACION) {
                 proveedorModificar.setCodigo(txtCodigo.getText().trim());
                 proveedorModificar.setRazonSocial(txtRazonSocial.getText().trim());
-                proveedorModificar.setIdFiscal(txt_Id_Fiscal.getText().trim());
-                proveedorModificar.setCondicionIVA((CondicionIVA) cmbCondicionIVA.getSelectedItem());
+                proveedorModificar.setIdFiscal((Long) txtIdFiscal.getValue());
+                proveedorModificar.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
                 proveedorModificar.setDireccion(txtDireccion.getText().trim());
                 proveedorModificar.setLocalidad((Localidad) cmbLocalidad.getSelectedItem());
                 proveedorModificar.setTelPrimario(txtTelPrimario.getText().trim());
@@ -554,8 +524,7 @@ public class DetalleProveedorGUI extends JDialog {
             
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
-        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
-            btnNuevaCondicionIVA.setEnabled(false);
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {            
             if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
                 btnNuevaLocalidad.setEnabled(false);
                 btnNuevaProvincia.setEnabled(false);
@@ -569,16 +538,23 @@ public class DetalleProveedorGUI extends JDialog {
         this.cargarComboBoxPaises();
         this.cambiarEstadoDeComponentesSegunRolUsuario();
         if (operacion == TipoDeOperacion.ACTUALIZACION) {
+            this.setTitle("Modificar Proveedor");
             this.cargarProveedorParaModificar();
-        }        
+        } else if (operacion == TipoDeOperacion.ALTA) {
+            this.setTitle("Nuevo Proveedor");
+        }
     }//GEN-LAST:event_formWindowOpened
+
+    private void txtIdFiscalFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtIdFiscalFocusLost
+        if (txtIdFiscal.getText().equals("")) txtIdFiscal.setValue(null);
+    }//GEN-LAST:event_txtIdFiscalFocusLost
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnNuevaCondicionIVA;
     private javax.swing.JButton btnNuevaLocalidad;
     private javax.swing.JButton btnNuevaProvincia;
     private javax.swing.JButton btnNuevoPais;
     private javax.swing.JButton btn_Guardar;
-    private javax.swing.JComboBox cmbCondicionIVA;
+    private javax.swing.JComboBox cmbCategoriaIVA;
     private javax.swing.JComboBox cmbLocalidad;
     private javax.swing.JComboBox cmbPais;
     private javax.swing.JComboBox cmbProvincia;
@@ -600,10 +576,10 @@ public class DetalleProveedorGUI extends JDialog {
     private javax.swing.JTextField txtContacto;
     private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtEmail;
+    private javax.swing.JFormattedTextField txtIdFiscal;
     private javax.swing.JTextField txtRazonSocial;
     private javax.swing.JTextField txtTelPrimario;
     private javax.swing.JTextField txtTelSecundario;
     private javax.swing.JTextField txtWeb;
-    private javax.swing.JTextField txt_Id_Fiscal;
     // End of variables declaration//GEN-END:variables
 }

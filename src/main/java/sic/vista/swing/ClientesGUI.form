@@ -133,7 +133,7 @@
       <SubComponents>
         <Component class="javax.swing.JCheckBox" name="chkCriteria">
           <Properties>
-            <Property name="text" type="java.lang.String" value="N&#xba; Cliente, ID Fiscal, Razon Social, Nombre Fantasia:"/>
+            <Property name="text" type="java.lang.String" value="N&#xba; Cliente, Razon Social, Nombre Fantasia:"/>
           </Properties>
           <Events>
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkCriteriaItemStateChanged"/>

@@ -106,14 +106,14 @@
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txt_DomicilioCliente" alignment="1" max="32767" attributes="2"/>
+                          <Component id="txtDomicilioCliente" alignment="1" max="32767" attributes="2"/>
                           <Component id="txt_NombreCliente" alignment="0" max="32767" attributes="2"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="txt_CondicionIVACliente" max="32767" attributes="2"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="lbl_IDFiscalCliente" min="-2" max="-2" attributes="1"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="txt_IDFiscalCliente" max="32767" attributes="2"/>
+                              <Component id="txtIdFiscalCliente" max="32767" attributes="2"/>
                           </Group>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -129,14 +129,14 @@
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="txt_DomicilioCliente" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtDomicilioCliente" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="lblDireccionCliente" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="txt_CondicionIVACliente" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="lbl_CondicionIVACliente" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txt_IDFiscalCliente" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtIdFiscalCliente" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="lbl_IDFiscalCliente" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="12" max="32767" attributes="0"/>
@@ -175,13 +175,13 @@
                 <Property name="focusable" type="boolean" value="false"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="txt_IDFiscalCliente">
+            <Component class="javax.swing.JTextField" name="txtIdFiscalCliente">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="focusable" type="boolean" value="false"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="txt_DomicilioCliente">
+            <Component class="javax.swing.JTextField" name="txtDomicilioCliente">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="focusable" type="boolean" value="false"/>

@@ -215,12 +215,16 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private void cargarCliente(Cliente cliente) {
         this.cliente = cliente;
         txt_NombreCliente.setText(cliente.getRazonSocial());
-        txt_DomicilioCliente.setText(cliente.getDireccion() 
-                + " " + cliente.getNombreLocalidad()
-                + " " + cliente.getNombreProvincia()
-                + " " + cliente.getNombrePais());
-        txt_CondicionIVACliente.setText(cliente.getNombreCondicionIVA());
-        txt_IDFiscalCliente.setText(cliente.getIdFiscal());
+        String direccion = "";
+        if (cliente.getDireccion() != null) direccion = cliente.getDireccion() + " ";
+        if (cliente.getNombreLocalidad() != null) {
+            direccion += cliente.getNombreLocalidad() 
+                    + " " + cliente.getNombreProvincia()
+                    + " " + cliente.getNombrePais();
+        }
+        txtDomicilioCliente.setText(direccion);        
+        txt_CondicionIVACliente.setText(cliente.getCategoriaIVA().toString());                                
+        if (cliente.getIdFiscal() != null) txtIdFiscalCliente.setText(cliente.getIdFiscal().toString());
     }
 
     private void setColumnas() {
@@ -796,8 +800,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         lbl_IDFiscalCliente = new javax.swing.JLabel();
         lbl_CondicionIVACliente = new javax.swing.JLabel();
         txt_CondicionIVACliente = new javax.swing.JTextField();
-        txt_IDFiscalCliente = new javax.swing.JTextField();
-        txt_DomicilioCliente = new javax.swing.JTextField();
+        txtIdFiscalCliente = new javax.swing.JTextField();
+        txtDomicilioCliente = new javax.swing.JTextField();
         txt_NombreCliente = new javax.swing.JTextField();
         panelRenglones = new javax.swing.JPanel();
         sp_Resultado = new javax.swing.JScrollPane();
@@ -880,11 +884,11 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         txt_CondicionIVACliente.setEditable(false);
         txt_CondicionIVACliente.setFocusable(false);
 
-        txt_IDFiscalCliente.setEditable(false);
-        txt_IDFiscalCliente.setFocusable(false);
+        txtIdFiscalCliente.setEditable(false);
+        txtIdFiscalCliente.setFocusable(false);
 
-        txt_DomicilioCliente.setEditable(false);
-        txt_DomicilioCliente.setFocusable(false);
+        txtDomicilioCliente.setEditable(false);
+        txtDomicilioCliente.setFocusable(false);
 
         txt_NombreCliente.setEditable(false);
         txt_NombreCliente.setFocusable(false);
@@ -901,14 +905,14 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                     .addComponent(lbl_CondicionIVACliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txt_DomicilioCliente, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtDomicilioCliente, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txt_NombreCliente)
                     .addGroup(panelClienteLayout.createSequentialGroup()
                         .addComponent(txt_CondicionIVACliente)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbl_IDFiscalCliente)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_IDFiscalCliente)))
+                        .addComponent(txtIdFiscalCliente)))
                 .addContainerGap())
         );
         panelClienteLayout.setVerticalGroup(
@@ -919,13 +923,13 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                     .addComponent(lblRazonSocialCliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_DomicilioCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtDomicilioCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblDireccionCliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txt_CondicionIVACliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_CondicionIVACliente)
-                    .addComponent(txt_IDFiscalCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtIdFiscalCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_IDFiscalCliente))
                 .addGap(0, 12, Short.MAX_VALUE))
         );
@@ -1731,12 +1735,12 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private javax.swing.JScrollPane sp_Resultado;
     private javax.swing.JTable tbl_Resultado;
     private javax.swing.JToggleButton tbtn_marcarDesmarcar;
+    private javax.swing.JTextField txtDomicilioCliente;
+    private javax.swing.JTextField txtIdFiscalCliente;
     private javax.swing.JTextField txt_CodigoProducto;
     private javax.swing.JTextField txt_CondicionIVACliente;
     private javax.swing.JFormattedTextField txt_Descuento_neto;
     private javax.swing.JFormattedTextField txt_Descuento_porcentaje;
-    private javax.swing.JTextField txt_DomicilioCliente;
-    private javax.swing.JTextField txt_IDFiscalCliente;
     private javax.swing.JFormattedTextField txt_IVA105_neto;
     private javax.swing.JFormattedTextField txt_IVA21_neto;
     private javax.swing.JTextField txt_NombreCliente;

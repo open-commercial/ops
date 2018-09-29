@@ -95,8 +95,7 @@ public class BuscarClientesGUI extends JDialog {
             } else {
                 String uri = "/clientes/busqueda/criteria?"
                         + "razonSocial=" + txtCriteriaBusqueda.getText().trim()
-                        + "&nombreFantasia=" + txtCriteriaBusqueda.getText().trim()
-                        + "&idFiscal=" + txtCriteriaBusqueda.getText().trim()
+                        + "&nombreFantasia=" + txtCriteriaBusqueda.getText().trim()                        
                         + "&nroCliente=" + txtCriteriaBusqueda.getText().trim()
                         + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                         + "&pagina=" + NUMERO_PAGINA

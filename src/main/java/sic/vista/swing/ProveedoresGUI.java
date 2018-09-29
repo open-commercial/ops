@@ -203,7 +203,7 @@ public class ProveedoresGUI extends JInternalFrame {
             fila[3] = p.getSaldoCuentaCorriente();
             fila[4] = p.getFechaUltimoMovimiento();
             fila[5] = p.getDireccion();
-            fila[6] = p.getCondicionIVA().getNombre();
+            fila[6] = p.getCategoriaIVA();
             fila[7] = p.getTelPrimario();
             fila[8] = p.getTelSecundario();
             fila[9] = p.getContacto();
