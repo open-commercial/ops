@@ -60,15 +60,15 @@ public class PrincipalGUI extends JFrame {
             mnuItm_Empresas.setVisible(false);
             mnuItm_Configuracion.setVisible(false);
             mnuItm_Usuarios.setVisible(false);
-            if (rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-                mnu_Compras.setVisible(true);
-                mnu_Stock.setVisible(true);
-                mnu_Administracion.setVisible(true);
-            } else {
-                mnu_Compras.setVisible(false);
-                mnu_Stock.setVisible(false);
-                mnu_Administracion.setVisible(false);
-            }
+        }
+        if (rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+            mnu_Compras.setVisible(true);
+            mnu_Stock.setVisible(true);
+            mnu_Administracion.setVisible(true);
+        } else {
+            mnu_Compras.setVisible(false);
+            mnu_Stock.setVisible(false);
+            mnu_Administracion.setVisible(false);
         }
     }
 
