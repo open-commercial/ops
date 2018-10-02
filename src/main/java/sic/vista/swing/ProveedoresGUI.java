@@ -132,8 +132,6 @@ public class ProveedoresGUI extends JInternalFrame {
     }
 
     private void setColumnas() {
-        //sorting
-        tbl_Resultados.setAutoCreateRowSorter(true);
         //nombres de columnas
         String[] encabezados = new String[15];
         encabezados[0] = "Codigo";

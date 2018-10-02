@@ -224,7 +224,11 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         }
         txtDomicilioCliente.setText(direccion);        
         txt_CondicionIVACliente.setText(cliente.getCategoriaIVA().toString());                                
-        if (cliente.getIdFiscal() != null) txtIdFiscalCliente.setText(cliente.getIdFiscal().toString());
+        if (cliente.getIdFiscal() != null) {
+            txtIdFiscalCliente.setText(cliente.getIdFiscal().toString());
+        } else {
+            txtIdFiscalCliente.setText("");
+        }
     }
 
     private void setColumnas() {
