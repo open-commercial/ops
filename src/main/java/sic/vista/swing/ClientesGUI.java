@@ -347,29 +347,28 @@ public class ClientesGUI extends JInternalFrame {
         this.cambiarEstadoEnabledComponentes(true);
         this.cambiarEstadoDeComponentesSegunRolUsuario();
     }
-    
+
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
             btn_Eliminar.setEnabled(true);
         } else {
             btn_Eliminar.setEnabled(false);
-            if (rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-                btn_setPredeterminado.setEnabled(true);
-            } else {
-                btn_setPredeterminado.setEnabled(false);
-            }
-            if (rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
-                    || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)
-                    || !rolesDeUsuarioActivo.contains(Rol.VIAJANTE)) {
-                chkViajante.setEnabled(true);
-                btnBuscarViajante.setEnabled(true);
-            } else {
-                chkViajante.setEnabled(false);
-                btnBuscarViajante.setEnabled(false);
-            }
+        }
+        if (rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+            btn_setPredeterminado.setEnabled(true);
+        } else {
+            btn_setPredeterminado.setEnabled(false);
+        }
+        if (rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)
+                || !rolesDeUsuarioActivo.contains(Rol.VIAJANTE)) {
+            chkViajante.setEnabled(true);
+            btnBuscarViajante.setEnabled(true);
+        } else {
+            chkViajante.setEnabled(false);
+            btnBuscarViajante.setEnabled(false);
         }
     }
-
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

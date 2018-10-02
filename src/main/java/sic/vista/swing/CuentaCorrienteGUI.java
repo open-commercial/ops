@@ -470,22 +470,22 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             btn_Eliminar.setEnabled(true);
         } else {
             btn_Eliminar.setEnabled(false);
-            if (rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-                btnCrearRecibo.setEnabled(true);
-            } else {
-                btnCrearRecibo.setEnabled(false);
-                if (rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-                    btnCrearNotaCredito.setEnabled(true);
-                    btnCrearNotaDebito.setEnabled(true);
-                    btnVerDetalle.setEnabled(true);
-                    btnAutorizar.setEnabled(true);
-                } else {
-                    btnCrearNotaCredito.setEnabled(false);
-                    btnCrearNotaDebito.setEnabled(false);
-                    btnVerDetalle.setEnabled(false);
-                    btnAutorizar.setEnabled(false);
-                }
-            }
+        }
+        if (rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+            btnCrearRecibo.setEnabled(true);
+        } else {
+            btnCrearRecibo.setEnabled(false);
+        }
+        if (rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+            btnCrearNotaCredito.setEnabled(true);
+            btnCrearNotaDebito.setEnabled(true);
+            btnVerDetalle.setEnabled(true);
+            btnAutorizar.setEnabled(true);
+        } else {
+            btnCrearNotaCredito.setEnabled(false);
+            btnCrearNotaDebito.setEnabled(false);
+            btnVerDetalle.setEnabled(false);
+            btnAutorizar.setEnabled(false);
         }
     }
     

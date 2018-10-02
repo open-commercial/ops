@@ -158,15 +158,15 @@ public class DetalleProveedorGUI extends JDialog {
             btnNuevaCondicionIVA.setEnabled(true);
         } else {
             btnNuevaCondicionIVA.setEnabled(false);
-            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-                btnNuevaLocalidad.setEnabled(true);
-                btnNuevaProvincia.setEnabled(true);
-                btnNuevoPais.setEnabled(true);
-            } else {
-                btnNuevaLocalidad.setEnabled(false);
-                btnNuevaProvincia.setEnabled(false);
-                btnNuevoPais.setEnabled(false);
-            }
+        }
+        if (rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+            btnNuevaLocalidad.setEnabled(true);
+            btnNuevaProvincia.setEnabled(true);
+            btnNuevoPais.setEnabled(true);
+        } else {
+            btnNuevaLocalidad.setEnabled(false);
+            btnNuevaProvincia.setEnabled(false);
+            btnNuevoPais.setEnabled(false);
         }
     }
 
@@ -569,7 +569,7 @@ public class DetalleProveedorGUI extends JDialog {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_GuardarActionPerformed
-                
+
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cargarComboBoxCondicionesIVA();
         this.cargarComboBoxPaises();

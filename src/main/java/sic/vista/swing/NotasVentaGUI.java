@@ -311,11 +311,11 @@ public class NotasVentaGUI extends JInternalFrame {
             btn_Eliminar.setEnabled(true);
         } else {
             btn_Eliminar.setEnabled(false);
-            if (rolesDeUsuarioActivo.contains(Rol.ENCARGADO) || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-                btn_Autorizar.setEnabled(true);
-            } else {
-                btn_Autorizar.setEnabled(false);
-            }
+        }
+        if (rolesDeUsuarioActivo.contains(Rol.ENCARGADO) || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+            btn_Autorizar.setEnabled(true);
+        } else {
+            btn_Autorizar.setEnabled(false);
         }
     }
 

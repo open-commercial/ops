@@ -722,7 +722,7 @@ public class FacturasCompraGUI extends JInternalFrame {
             LOGGER.error(ex.getMessage());
         }
     }//GEN-LAST:event_formInternalFrameOpened
-        
+
     private void chk_NumFacturaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_NumFacturaItemStateChanged
         if (chk_NumFactura.isSelected() == true) {
             txt_NroFactura.setEnabled(true);
