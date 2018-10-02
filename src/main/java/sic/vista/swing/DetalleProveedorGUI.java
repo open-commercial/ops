@@ -524,12 +524,15 @@ public class DetalleProveedorGUI extends JDialog {
             
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
-        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {            
-            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-                btnNuevaLocalidad.setEnabled(false);
-                btnNuevaProvincia.setEnabled(false);
-                btnNuevoPais.setEnabled(false);
-            }
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+            btnNuevaLocalidad.setEnabled(false);
+            btnNuevaProvincia.setEnabled(false);
+            btnNuevoPais.setEnabled(false);
+        } else {
+            btnNuevaLocalidad.setEnabled(false);
+            btnNuevaProvincia.setEnabled(false);
+            btnNuevoPais.setEnabled(false);
         }
     }
     

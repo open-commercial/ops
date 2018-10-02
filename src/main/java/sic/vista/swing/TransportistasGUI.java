@@ -578,7 +578,9 @@ public class TransportistasGUI extends JInternalFrame {
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(true);
+        } else {
             btn_Eliminar.setEnabled(false);
         }
     }

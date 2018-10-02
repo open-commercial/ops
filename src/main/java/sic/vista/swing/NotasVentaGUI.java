@@ -330,12 +330,18 @@ public class NotasVentaGUI extends JInternalFrame {
         }
     }
 
-    private void cambiarEstadoDeComponentesSegunRolUsuario() {        
-        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(true);
+        } else {
             btn_Eliminar.setEnabled(false);
-            if ((!rolesDeUsuarioActivo.contains(Rol.ENCARGADO) && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR))) {
-                btn_Autorizar.setEnabled(false);
-            }
+        }
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+            btn_Autorizar.setEnabled(true);
+        } else {
+            btn_Autorizar.setEnabled(false);
         }
     }
 

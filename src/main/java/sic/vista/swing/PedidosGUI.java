@@ -364,10 +364,13 @@ public class PedidosGUI extends JInternalFrame {
     }
 
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
-                && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
-                && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)
-                && rolesDeUsuarioActivo.contains(Rol.VIAJANTE)) {
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+            btnEliminarPedido.setEnabled(true);
+            btnFacturar.setEnabled(true);
+            chk_Usuario.setEnabled(true);
+        } else {
             btnEliminarPedido.setEnabled(false);
             btnFacturar.setEnabled(false);
             chk_Usuario.setEnabled(false);
