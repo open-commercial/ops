@@ -76,14 +76,14 @@ public class DetalleProveedorGUI extends JDialog {
         this.cargarComboBoxPaises();
     }
 
-    public void cargarComboBoxCondicionesIVA() {
+    private void cargarComboBoxCondicionesIVA() {
         cmbCategoriaIVA.removeAllItems();
         for (CategoriaIVA c : CategoriaIVA.values()) {
             cmbCategoriaIVA.addItem(c);
         } 
     }
 
-    public void cargarComboBoxPaises() {
+    private void cargarComboBoxPaises() {
         cmbPais.removeAllItems();
         try {
             List<Pais> paises = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
@@ -101,7 +101,7 @@ public class DetalleProveedorGUI extends JDialog {
         }
     }
 
-    public void cargarComboBoxProvinciasDelPais(Pais paisSeleccionado) {
+    private void cargarComboBoxProvinciasDelPais(Pais paisSeleccionado) {
         cmbProvincia.removeAllItems();
         try {
             List<Provincia> provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
@@ -120,7 +120,7 @@ public class DetalleProveedorGUI extends JDialog {
         }
     }
 
-    public void cargarComboBoxLocalidadesDeLaProvincia(Provincia provSeleccionada) {
+    private void cargarComboBoxLocalidadesDeLaProvincia(Provincia provSeleccionada) {
         cmbLocalidad.removeAllItems();
         try {
             List<Localidad> Localidades = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
@@ -139,6 +139,20 @@ public class DetalleProveedorGUI extends JDialog {
         }
     }
 
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) 
+                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+            btnNuevaLocalidad.setEnabled(false);
+            btnNuevaProvincia.setEnabled(false);
+            btnNuevoPais.setEnabled(false);
+        } else {
+            btnNuevaLocalidad.setEnabled(false);
+            btnNuevaProvincia.setEnabled(false);
+            btnNuevoPais.setEnabled(false);
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -521,18 +535,7 @@ public class DetalleProveedorGUI extends JDialog {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_GuardarActionPerformed
-            
-    private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
-        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {            
-            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-                btnNuevaLocalidad.setEnabled(false);
-                btnNuevaProvincia.setEnabled(false);
-                btnNuevoPais.setEnabled(false);
-            }
-        }
-    }
-    
+              
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cargarComboBoxCondicionesIVA();
         this.cargarComboBoxPaises();

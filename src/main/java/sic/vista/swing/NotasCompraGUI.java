@@ -37,8 +37,8 @@ public class NotasCompraGUI extends JInternalFrame {
 
     private ModeloTabla modeloTablaNotas = new ModeloTabla();
     private List<Nota> notasTotal = new ArrayList<>();
-    private List<Nota> notasParcial = new ArrayList<>();
-    private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+    private List<Nota> notasParcial = new ArrayList<>();    
+    private boolean tienePermisoSegunRoles;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(970, 600);
     private static int totalElementosBusqueda;
@@ -61,7 +61,7 @@ public class NotasCompraGUI extends JInternalFrame {
 
     private String getUriCriteria() {
         String uriCriteria = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                + "&movimiento=" + Movimiento.COMPRA;;
+                + "&movimiento=" + Movimiento.COMPRA;
         if (chk_Fecha.isSelected()) {
             uriCriteria += "&desde=" + dc_FechaDesde.getDate().getTime()
                     + "&hasta=" + dc_FechaHasta.getDate().getTime();
@@ -140,9 +140,7 @@ public class NotasCompraGUI extends JInternalFrame {
             notasParcial = response.getContent();
             notasTotal.addAll(notasParcial);
             this.cargarResultadosAlTable();
-            if (calcularResultados) {
-                this.calcularResultados(uriCriteria);
-            }
+            if (calcularResultados && tienePermisoSegunRoles) this.calcularResultados(uriCriteria);            
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -247,24 +245,45 @@ public class NotasCompraGUI extends JInternalFrame {
 
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
-        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(true);
+        } else {
             btn_Eliminar.setEnabled(false);
+        }
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+            tienePermisoSegunRoles = true;
+            lbl_TotalIVANotasDebito.setVisible(true);
+            lbl_TotalIVANotasCredito.setVisible(true);
+            lbl_TotalNotasDebito.setVisible(true);
+            lbl_TotalNotasCredito.setVisible(true);                   
+            txt_ResultTotalIVANotaDebito.setVisible(true);
+            txt_ResultTotalIVANotaCredito.setVisible(true);
+            txt_ResultTotalDebito.setVisible(true);
+            txt_ResultTotalCredito.setVisible(true);
+        } else {
+            tienePermisoSegunRoles = false;
+            lbl_TotalIVANotasDebito.setVisible(false);
+            lbl_TotalIVANotasCredito.setVisible(false);
+            lbl_TotalNotasDebito.setVisible(false);
+            lbl_TotalNotasCredito.setVisible(false);
+            txt_ResultTotalIVANotaDebito.setVisible(false);
+            txt_ResultTotalIVANotaCredito.setVisible(false);
+            txt_ResultTotalDebito.setVisible(false);
+            txt_ResultTotalCredito.setVisible(false);
         }
     }
 
     private void calcularResultados(String uriCriteria) {
-        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
-                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
-                || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-            txt_ResultTotalIVANotaDebito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/total-iva-debito/criteria?" + uriCriteria, BigDecimal.class));
-            txt_ResultTotalIVANotaCredito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/total-iva-credito/criteria?" + uriCriteria, BigDecimal.class));
-            txt_ResultTotalDebito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/total-debito/criteria?" + uriCriteria, BigDecimal.class));
-            txt_ResultTotalCredito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/total-credito/criteria?" + uriCriteria, BigDecimal.class));
-        }
+        txt_ResultTotalIVANotaDebito.setValue(RestClient.getRestTemplate()
+                .getForObject("/notas/total-iva-debito/criteria?" + uriCriteria, BigDecimal.class));
+        txt_ResultTotalIVANotaCredito.setValue(RestClient.getRestTemplate()
+                .getForObject("/notas/total-iva-credito/criteria?" + uriCriteria, BigDecimal.class));
+        txt_ResultTotalDebito.setValue(RestClient.getRestTemplate()
+                .getForObject("/notas/total-debito/criteria?" + uriCriteria, BigDecimal.class));
+        txt_ResultTotalCredito.setValue(RestClient.getRestTemplate()
+                .getForObject("/notas/total-credito/criteria?" + uriCriteria, BigDecimal.class));
     }
 
     private void verFacturaCompra() {

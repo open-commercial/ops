@@ -30,8 +30,7 @@ public class DetalleClienteGUI extends JDialog {
     private List<Pais> paises;
     private List<Provincia> provincias;
     private List<Localidad> localidades;
-    private final TipoDeOperacion operacion;    
-    private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+    private final TipoDeOperacion operacion;        
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleClienteGUI() {
@@ -47,6 +46,10 @@ public class DetalleClienteGUI extends JDialog {
         this.cliente = cliente;
     }
 
+    public Cliente getClienteDadoDeAlta() {
+        return (cliente.getId_Cliente() != 0L? cliente : null);
+    }
+    
     private void setIcon() {
         ImageIcon iconoVentana = new ImageIcon(DetalleClienteGUI.class.getResource("/sic/icons/Client_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
@@ -209,32 +212,50 @@ public class DetalleClienteGUI extends JDialog {
     }
     
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {            
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btnNuevaCredencial.setEnabled(true);
+            btnBuscarCredencial.setEnabled(true);
+            btnNuevoUsuarioViajante.setEnabled(true);
+            lblCredencial.setEnabled(true);
+            cmbCredencial.setEnabled(true);
+        } else {
             btnNuevaCredencial.setEnabled(false);
             btnBuscarCredencial.setEnabled(false);
             btnNuevoUsuarioViajante.setEnabled(false);
             lblCredencial.setEnabled(false);
             cmbCredencial.setEnabled(false);
-            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-                btnNuevaLocalidad.setEnabled(false);
-                btnNuevaProvincia.setEnabled(false);
-                btnNuevoPais.setEnabled(false);
-                lblViajante.setEnabled(false);
-                cmbViajante.setEnabled(false);
-                btnBuscarCredencial.setEnabled(false);
-                btnBuscarUsuarioViajante.setEnabled(false);
-                if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
-                        && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-                    this.seleccionarViajanteSegunId(UsuarioActivo.getInstance().getUsuario().getId_Usuario());
-                }
-            }
-        }        
+        }
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) 
+                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+            btnNuevaLocalidad.setEnabled(true);
+            btnNuevaProvincia.setEnabled(true);
+            btnNuevoPais.setEnabled(true);
+            lblViajante.setEnabled(true);
+            cmbViajante.setEnabled(true);
+            btnBuscarUsuarioViajante.setEnabled(true);
+            lblCredencial.setEnabled(true);
+            cmbCredencial.setEnabled(true);
+            btnBuscarCredencial.setEnabled(true);            
+        } else {
+            btnNuevaLocalidad.setEnabled(false);
+            btnNuevaProvincia.setEnabled(false);
+            btnNuevoPais.setEnabled(false);
+            lblViajante.setEnabled(false);            
+            cmbViajante.setEnabled(false);
+            btnBuscarUsuarioViajante.setEnabled(false);
+            lblCredencial.setEnabled(false);
+            cmbCredencial.setEnabled(false);
+            btnBuscarCredencial.setEnabled(false);            
+        }
+        if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
+                && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)
+                && !rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+            this.seleccionarViajanteSegunId(UsuarioActivo.getInstance().getUsuario().getId_Usuario());
+        }
     }
-        
-    public Cliente getClienteDadoDeAlta() {
-        return (cliente.getId_Cliente() != 0L? cliente : null);
-    }
-       
+               
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

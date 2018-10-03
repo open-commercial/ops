@@ -44,6 +44,7 @@ public class FacturasVentaGUI extends JInternalFrame {
     private List<FacturaVenta> facturasParcial = new ArrayList<>();
     private Cliente clienteSeleccionado;
     private Usuario usuarioSeleccionado;
+    private boolean tienePermisoSegunRoles;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(970, 600);
     private static int totalElementosBusqueda;
@@ -238,9 +239,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             totalElementosBusqueda = response.getTotalElements();
             facturasParcial = response.getContent();
             facturasTotal.addAll(facturasParcial);
-            if (calcularResultados) {
-                this.calcularResultados(getUriCriteria());
-            }
+            if (calcularResultados && tienePermisoSegunRoles) this.calcularResultados(getUriCriteria());            
             this.cargarResultadosAlTable();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -427,22 +426,35 @@ public class FacturasVentaGUI extends JInternalFrame {
 
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
-        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(true);
+        } else {
             btn_Eliminar.setEnabled(false);
-            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-                txt_ResultGananciaTotal.setVisible(false);
-                lbl_GananciaTotal.setVisible(false);
-                lbl_TotalIVAVenta.setVisible(false);
-                txt_ResultTotalIVAVenta.setVisible(false);
-                if (!rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-                    btn_Nueva.setEnabled(false);
-                    btn_Autorizar.setEnabled(false);
-                    chk_Usuario.setEnabled(false);
-                    btnBuscarUsuarios.setEnabled(false);
-                    chk_Usuario.setEnabled(false);
-                    btnBuscarUsuarios.setEnabled(false);
-                }
-            }
+        }
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) 
+                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+            txt_ResultGananciaTotal.setVisible(true);
+            lbl_GananciaTotal.setVisible(true);
+            lbl_TotalIVAVenta.setVisible(true);
+            txt_ResultTotalIVAVenta.setVisible(true);
+        } else {
+            txt_ResultGananciaTotal.setVisible(false);
+            lbl_GananciaTotal.setVisible(false);
+            lbl_TotalIVAVenta.setVisible(false);
+            txt_ResultTotalIVAVenta.setVisible(false);
+        }
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) 
+                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+            tienePermisoSegunRoles = true;
+            btn_Nueva.setEnabled(true);
+            btn_Autorizar.setEnabled(true);
+            chk_Usuario.setEnabled(true);
+        } else {
+            tienePermisoSegunRoles = false;
+            btn_Nueva.setEnabled(false);
+            btn_Autorizar.setEnabled(false);
+            chk_Usuario.setEnabled(false);
         }
     }
     

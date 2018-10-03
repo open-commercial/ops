@@ -48,6 +48,7 @@ public class LoginGUI extends JFrame {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_error_decode_jwt"),
                         "Error", JOptionPane.ERROR_MESSAGE);
             } catch (RestClientResponseException ex) {
+                UsuarioActivo.getInstance().setUsuario(null);
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             } catch (ResourceAccessException ex) {
                 LOGGER.error(ex.getMessage());
