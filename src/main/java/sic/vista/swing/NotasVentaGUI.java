@@ -350,7 +350,7 @@ public class NotasVentaGUI extends JInternalFrame {
             txt_ResultTotalIVANotaCredito.setVisible(true);
             txt_ResultTotalDebito.setVisible(true);
             txt_ResultTotalCredito.setVisible(true);
-            chk_Usuario.setEnabled(false);
+            chk_Usuario.setEnabled(true);
         } else {
             btn_Autorizar.setEnabled(false);
             tienePermisoSegunRoles = false;
@@ -362,7 +362,7 @@ public class NotasVentaGUI extends JInternalFrame {
             txt_ResultTotalIVANotaCredito.setVisible(false);
             txt_ResultTotalDebito.setVisible(false);
             txt_ResultTotalCredito.setVisible(false);
-            chk_Usuario.setEnabled(true);
+            chk_Usuario.setEnabled(false);
         }
     }
 
