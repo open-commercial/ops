@@ -53,23 +53,28 @@ public class PrincipalGUI extends JFrame {
     
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
-        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            mnuItm_Empresas.setVisible(true);
+            mnuItm_Configuracion.setVisible(true);
+            mnuItm_Usuarios.setVisible(true);
+        } else {
             mnuItm_Empresas.setVisible(false);
             mnuItm_Configuracion.setVisible(false);
             mnuItm_Usuarios.setVisible(false);
-            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-                mnu_Compras.setVisible(false);
-                mnu_Stock.setVisible(false);
-                mnu_Administracion.setVisible(false);
-            }
         }
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
-                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
-                || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-            tienePermisoSegunRoles = true;
+                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+            mnu_Compras.setVisible(true);
+            mnu_Stock.setVisible(true);
+            mnu_Administracion.setVisible(true);
         } else {
-            tienePermisoSegunRoles = false;
+            mnu_Compras.setVisible(false);
+            mnu_Stock.setVisible(false);
+            mnu_Administracion.setVisible(false);
         }
+        tienePermisoSegunRoles = rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                || rolesDeUsuarioActivo.contains(Rol.VENDEDOR);
     }
 
     private void checkCajaAbierta() {
