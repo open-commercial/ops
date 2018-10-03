@@ -8,6 +8,7 @@
     <artifactId>SIC-OPS</artifactId>
     <version>Andromeda</version>
     <packaging>jar</packaging>
+    <name>SIC-OPS</name>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -53,7 +54,18 @@
         </dependency>
     </dependencies>
 
-    <build>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>getdown-maven-plugin-mvn-repo</id>
+            <url>https://raw.github.com/rockfireredmoon/getdown-maven-plugin/mvn-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <build>                        
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -81,42 +93,25 @@
                             </resources>              
                         </configuration>            
                     </execution>
-                    <execution>
-                        <id>copy-getdown-file</id>                        
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${basedir}/target</outputDirectory>
-                            <resources>          
-                                <resource>                                    
-                                    <directory>${basedir}/</directory> 
-                                    <includes>
-                                        <include>getdown.txt</include>          
-                                    </includes>                                  
-                                </resource>
-                            </resources>              
-                        </configuration>            
-                    </execution>
                 </executions>
             </plugin>     
-            <plugin>
-                <groupId>org.bitbucket.joxley</groupId>
+            <!--plugin>
+                <groupId>org.icestuff</groupId>
                 <artifactId>getdown-maven-plugin</artifactId>
-                <version>1.0.0</version>
-                <configuration>
-                    <appdir>target</appdir>
-                </configuration>
+                <version>0.0.3-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
-                            <goal>digest</goal>
+                            <goal>updates</goal>                            
                         </goals>
+                        <configuration>                            
+                            <appbase>https://globo-sic-ops-production.herokuapp.com/</appbase>
+                            <mainClass>manifest</mainClass>                                                        
+                        </configuration>                        
                     </execution>
                 </executions>
-            </plugin>       
+            </plugin-->    
         </plugins>
     </build>    
 </project>
