@@ -233,16 +233,20 @@ public class DetalleClienteGUI extends JDialog {
             btnNuevoPais.setEnabled(true);
             lblViajante.setEnabled(true);
             cmbViajante.setEnabled(true);
-            btnBuscarCredencial.setEnabled(true);
             btnBuscarUsuarioViajante.setEnabled(true);
+            lblCredencial.setEnabled(true);
+            cmbCredencial.setEnabled(true);
+            btnBuscarCredencial.setEnabled(true);            
         } else {
             btnNuevaLocalidad.setEnabled(false);
             btnNuevaProvincia.setEnabled(false);
             btnNuevoPais.setEnabled(false);
-            lblViajante.setEnabled(false);
+            lblViajante.setEnabled(false);            
             cmbViajante.setEnabled(false);
-            btnBuscarCredencial.setEnabled(false);
             btnBuscarUsuarioViajante.setEnabled(false);
+            lblCredencial.setEnabled(false);
+            cmbCredencial.setEnabled(false);
+            btnBuscarCredencial.setEnabled(false);            
         }
         if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
                 && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)
