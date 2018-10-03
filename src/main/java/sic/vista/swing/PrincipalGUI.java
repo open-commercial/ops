@@ -22,6 +22,7 @@ import sic.util.Utilidades;
 
 public class PrincipalGUI extends JFrame {
     
+    private boolean tienePermisoSegunRoles;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeFrame = new Dimension(1200, 800);
     
@@ -48,6 +49,40 @@ public class PrincipalGUI extends JFrame {
                 + ResourceBundle.getBundle("Mensajes").getString("version")
                 + " - Empresa: " + EmpresaActiva.getInstance().getEmpresa().getNombre()
                 + " - Usuario: " + UsuarioActivo.getInstance().getUsuario().getUsername());
+    }
+    
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            mnuItm_Empresas.setVisible(false);
+            mnuItm_Configuracion.setVisible(false);
+            mnuItm_Usuarios.setVisible(false);
+            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+                mnu_Compras.setVisible(false);
+                mnu_Stock.setVisible(false);
+                mnu_Administracion.setVisible(false);
+            }
+        }
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+            tienePermisoSegunRoles = true;
+        } else {
+            tienePermisoSegunRoles = false;
+        }
+    }
+
+    private void checkCajaAbierta() {
+        if (tienePermisoSegunRoles) {
+            boolean existeCajaAbierta = RestClient.getRestTemplate()
+                    .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/estado-ultima-caja",
+                            boolean.class);
+            if (!existeCajaAbierta) {
+                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                        .getString("mensaje_caja_ninguna_abierta"),
+                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
     }
     
     @SuppressWarnings("unchecked")
@@ -359,36 +394,10 @@ public class PrincipalGUI extends JFrame {
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-        this.eliminarElementosDelMenuSegunRolDeUsuario();
-        this.mostrarMensajeDeNingunaCajaAbierta();
+        this.cambiarEstadoDeComponentesSegunRolUsuario();
+        this.checkCajaAbierta();
     }//GEN-LAST:event_formWindowOpened
-    
-    private void eliminarElementosDelMenuSegunRolDeUsuario() {
-        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
-        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
-            mnuItm_Empresas.setVisible(false);
-            mnuItm_Configuracion.setVisible(false);
-            mnuItm_Usuarios.setVisible(false);
-            if (!rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-                mnu_Compras.setVisible(false);
-                mnu_Stock.setVisible(false);
-                mnu_Administracion.setVisible(false);
-            }
-        }
-    }
-
-    private void mostrarMensajeDeNingunaCajaAbierta() {
-        if (UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)
-                || UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ENCARGADO)
-                || UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.VENDEDOR)) {
-            boolean existeCajaAbierta = RestClient.getRestTemplate().getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/estado-ultima-caja", boolean.class);
-            if (!existeCajaAbierta) {
-                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_caja_ninguna_abierta"),
-                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
-            }
-        }
-    }
-    
+        
     private void mnuItm_UsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_UsuariosActionPerformed
         JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), UsuariosGUI.class);
         if (gui == null) {

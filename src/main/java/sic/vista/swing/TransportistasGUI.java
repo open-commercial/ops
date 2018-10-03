@@ -26,8 +26,7 @@ public class TransportistasGUI extends JInternalFrame {
 
     private ModeloTabla modeloTablaResultados = new ModeloTabla();
     private List<Transportista> transportistas;
-    private Transportista transSeleccionado; 
-    private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+    private Transportista transSeleccionado;     
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(880, 600);
 
@@ -232,6 +231,15 @@ public class TransportistasGUI extends JInternalFrame {
         this.cambiarEstadoDeComponentesSegunRolUsuario();
     }
 
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(true);
+        } else {
+            btn_Eliminar.setEnabled(false);
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -576,15 +584,7 @@ public class TransportistasGUI extends JInternalFrame {
             this.dispose();
         }
     }//GEN-LAST:event_formInternalFrameOpened
-
-    private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
-            btn_Eliminar.setEnabled(true);
-        } else {
-            btn_Eliminar.setEnabled(false);
-        }
-    }
-    
+   
     private void txt_NombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_NombreActionPerformed
         btn_BuscarActionPerformed(null);
     }//GEN-LAST:event_txt_NombreActionPerformed

@@ -47,7 +47,7 @@ public class NotasVentaGUI extends JInternalFrame {
     private List<Nota> notasParcial = new ArrayList<>();
     private Cliente clienteSeleccionado;
     private Usuario usuarioSeleccionado;
-    private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+    private boolean tienePermisoSegunRoles;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(970, 600);
     private static int totalElementosBusqueda;
@@ -166,9 +166,7 @@ public class NotasVentaGUI extends JInternalFrame {
             notasParcial = response.getContent();
             notasTotal.addAll(notasParcial);
             this.cargarResultadosAlTable();
-            if (calcularResultados) {
-                this.calcularResultados(uriCriteria);
-            }
+            if (calcularResultados && tienePermisoSegunRoles) this.calcularResultados(uriCriteria);            
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -331,6 +329,7 @@ public class NotasVentaGUI extends JInternalFrame {
     }
 
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
             btn_Eliminar.setEnabled(true);
         } else {
@@ -340,24 +339,30 @@ public class NotasVentaGUI extends JInternalFrame {
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
                 || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
             btn_Autorizar.setEnabled(true);
+            tienePermisoSegunRoles = true;
+            txt_ResultTotalIVANotaDebito.setVisible(true);
+            txt_ResultTotalIVANotaCredito.setVisible(true);
+            txt_ResultTotalDebito.setVisible(true);
+            txt_ResultTotalCredito.setVisible(true);
         } else {
             btn_Autorizar.setEnabled(false);
+            tienePermisoSegunRoles = false;
+            txt_ResultTotalIVANotaDebito.setVisible(false);
+            txt_ResultTotalIVANotaCredito.setVisible(false);
+            txt_ResultTotalDebito.setVisible(false);
+            txt_ResultTotalCredito.setVisible(false);
         }
     }
 
     private void calcularResultados(String uriCriteria) {
-        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
-                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
-                || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-            txt_ResultTotalIVANotaDebito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/total-iva-debito/criteria?" + uriCriteria, BigDecimal.class));
-            txt_ResultTotalIVANotaCredito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/total-iva-credito/criteria?" + uriCriteria, BigDecimal.class));
-            txt_ResultTotalDebito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/total-debito/criteria?" + uriCriteria, BigDecimal.class));
-            txt_ResultTotalCredito.setValue(RestClient.getRestTemplate()
-                    .getForObject("/notas/total-credito/criteria?" + uriCriteria, BigDecimal.class));
-        }
+        txt_ResultTotalIVANotaDebito.setValue(RestClient.getRestTemplate()
+                .getForObject("/notas/total-iva-debito/criteria?" + uriCriteria, BigDecimal.class));
+        txt_ResultTotalIVANotaCredito.setValue(RestClient.getRestTemplate()
+                .getForObject("/notas/total-iva-credito/criteria?" + uriCriteria, BigDecimal.class));
+        txt_ResultTotalDebito.setValue(RestClient.getRestTemplate()
+                .getForObject("/notas/total-debito/criteria?" + uriCriteria, BigDecimal.class));
+        txt_ResultTotalCredito.setValue(RestClient.getRestTemplate()
+                .getForObject("/notas/total-credito/criteria?" + uriCriteria, BigDecimal.class));
     }
 
     private void verFacturaVenta() {

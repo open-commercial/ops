@@ -39,8 +39,8 @@ public class ClientesGUI extends JInternalFrame {
     private List<Cliente> clientesTotal = new ArrayList<>();
     private List<Cliente> clientesParcial = new ArrayList<>();
     private Usuario viajanteSeleccionado;
-    private ModeloTabla modeloTablaDeResultados = new ModeloTabla();
-    private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+    private boolean tienePermisoSegunRoles;
+    private ModeloTabla modeloTablaDeResultados = new ModeloTabla();    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(880, 600);
     private static int totalElementosBusqueda;
@@ -344,6 +344,32 @@ public class ClientesGUI extends JInternalFrame {
         this.cambiarEstadoDeComponentesSegunRolUsuario();
     }
 
+    private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(true);
+        } else {
+            btn_Eliminar.setEnabled(false);
+        }
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) 
+                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
+            btn_setPredeterminado.setEnabled(true);
+        } else {
+            btn_setPredeterminado.setEnabled(false);
+        }
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) 
+                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+            chkViajante.setEnabled(true);
+            btnBuscarViajante.setEnabled(true);
+            tienePermisoSegunRoles = true;
+        } else {
+            chkViajante.setEnabled(false);
+            btnBuscarViajante.setEnabled(false);
+            tienePermisoSegunRoles = false;
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -788,9 +814,7 @@ public class ClientesGUI extends JInternalFrame {
             this.setSize(sizeInternalFrame);
             this.setColumnas();
             this.setMaximum(true);
-            if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
-                    || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
-                    || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+            if (tienePermisoSegunRoles) {
                 boolean existeClientePredeterminado = RestClient.getRestTemplate()
                         .getForObject("/clientes/existe-predeterminado/empresas/"
                         + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), boolean.class);
@@ -817,27 +841,6 @@ public class ClientesGUI extends JInternalFrame {
             this.dispose();
         }
     }//GEN-LAST:event_formInternalFrameOpened
-
-    private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
-            btn_Eliminar.setEnabled(true);
-        } else {
-            btn_Eliminar.setEnabled(false);
-        }
-        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-            btn_setPredeterminado.setEnabled(true);
-        } else {
-            btn_setPredeterminado.setEnabled(false);
-        }
-        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
-                || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-            chkViajante.setEnabled(true);
-            btnBuscarViajante.setEnabled(true);
-        } else {
-            chkViajante.setEnabled(false);
-            btnBuscarViajante.setEnabled(false);
-        }
-    }
 
     private void btn_setPredeterminadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_setPredeterminadoActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1) {

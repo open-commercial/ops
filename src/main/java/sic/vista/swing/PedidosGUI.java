@@ -47,8 +47,7 @@ public class PedidosGUI extends JInternalFrame {
     private ModeloTabla modeloTablaPedidos;
     private ModeloTabla modeloTablaRenglones;  
     private Cliente clienteSeleccionado;
-    private Usuario usuarioSeleccionado;
-    private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+    private Usuario usuarioSeleccionado;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame =  new Dimension(880, 600);
     private static int totalElementosBusqueda;
@@ -364,6 +363,7 @@ public class PedidosGUI extends JInternalFrame {
     }
 
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
                 || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {

@@ -30,8 +30,7 @@ public class DetalleClienteGUI extends JDialog {
     private List<Pais> paises;
     private List<Provincia> provincias;
     private List<Localidad> localidades;
-    private final TipoDeOperacion operacion;    
-    private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+    private final TipoDeOperacion operacion;        
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleClienteGUI() {
@@ -47,6 +46,10 @@ public class DetalleClienteGUI extends JDialog {
         this.cliente = cliente;
     }
 
+    public Cliente getClienteDadoDeAlta() {
+        return (cliente.getId_Cliente() != 0L? cliente : null);
+    }
+    
     private void setIcon() {
         ImageIcon iconoVentana = new ImageIcon(DetalleClienteGUI.class.getResource("/sic/icons/Client_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
@@ -209,6 +212,7 @@ public class DetalleClienteGUI extends JDialog {
     }
     
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
+        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
             btnNuevaCredencial.setEnabled(true);
             btnBuscarCredencial.setEnabled(true);
@@ -222,7 +226,7 @@ public class DetalleClienteGUI extends JDialog {
             lblCredencial.setEnabled(false);
             cmbCredencial.setEnabled(false);
         }
-        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) 
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
             btnNuevaLocalidad.setEnabled(true);
             btnNuevaProvincia.setEnabled(true);
@@ -247,11 +251,7 @@ public class DetalleClienteGUI extends JDialog {
             this.seleccionarViajanteSegunId(UsuarioActivo.getInstance().getUsuario().getId_Usuario());
         }
     }
-        
-    public Cliente getClienteDadoDeAlta() {
-        return (cliente.getId_Cliente() != 0L? cliente : null);
-    }
-       
+               
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
