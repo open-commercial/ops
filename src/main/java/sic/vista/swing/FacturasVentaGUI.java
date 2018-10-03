@@ -446,19 +446,15 @@ public class FacturasVentaGUI extends JInternalFrame {
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) 
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
                 || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+            tienePermisoSegunRoles = true;
             btn_Nueva.setEnabled(true);
             btn_Autorizar.setEnabled(true);
             chk_Usuario.setEnabled(true);
-            btnBuscarUsuarios.setEnabled(true);
-            chk_Usuario.setEnabled(true);
-            btnBuscarUsuarios.setEnabled(true);
         } else {
+            tienePermisoSegunRoles = false;
             btn_Nueva.setEnabled(false);
             btn_Autorizar.setEnabled(false);
             chk_Usuario.setEnabled(false);
-            btnBuscarUsuarios.setEnabled(false);
-            chk_Usuario.setEnabled(false);
-            btnBuscarUsuarios.setEnabled(false);
         }
     }
     

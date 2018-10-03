@@ -340,17 +340,29 @@ public class NotasVentaGUI extends JInternalFrame {
                 || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
             btn_Autorizar.setEnabled(true);
             tienePermisoSegunRoles = true;
+            lbl_TotalIVANotasDebito.setVisible(true);
+            lbl_TotalIVANotasCredito.setVisible(true);
+            lbl_TotalNotasDebito.setVisible(true);
+            lbl_TotalNotasCredito.setVisible(true);
+            txt_ResultTotalIVANotaDebito.setVisible(true);
+            txt_ResultTotalIVANotaCredito.setVisible(true);
             txt_ResultTotalIVANotaDebito.setVisible(true);
             txt_ResultTotalIVANotaCredito.setVisible(true);
             txt_ResultTotalDebito.setVisible(true);
             txt_ResultTotalCredito.setVisible(true);
+            chk_Usuario.setEnabled(false);
         } else {
             btn_Autorizar.setEnabled(false);
             tienePermisoSegunRoles = false;
+            lbl_TotalIVANotasDebito.setVisible(false);
+            lbl_TotalIVANotasCredito.setVisible(false);
+            lbl_TotalNotasDebito.setVisible(false);
+            lbl_TotalNotasCredito.setVisible(false);
             txt_ResultTotalIVANotaDebito.setVisible(false);
             txt_ResultTotalIVANotaCredito.setVisible(false);
             txt_ResultTotalDebito.setVisible(false);
             txt_ResultTotalCredito.setVisible(false);
+            chk_Usuario.setEnabled(true);
         }
     }
 
