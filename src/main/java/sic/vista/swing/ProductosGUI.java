@@ -301,6 +301,44 @@ public class ProductosGUI extends JInternalFrame {
         return idProveedor;
     }
     
+    private void exportar() {
+        String uriReporte = "/productos/reporte/criteria?" 
+                + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
+        if (chk_Codigo.isSelected()) uriReporte += "&codigo=" + txt_Codigo.getText().trim();                
+        if (chk_Descripcion.isSelected()) uriReporte += "&descripcion=" + txt_Descripcion.getText().trim();                
+        if (chk_Rubro.isSelected()) uriReporte += "&idRubro=" + this.getIdRubroSeleccionado();
+        if (chk_Proveedor.isSelected()) uriReporte += "&idProveedor=" + this.getIdProveedorSeleccionado();                
+        if (chk_Disponibilidad.isSelected()) uriReporte += "&soloFantantes=" + rb_Faltantes.isSelected();                
+        if (chk_visibilidad.isSelected()) {
+            if (rb_publico.isSelected()) {
+                uriReporte += "&publicos=true";                        
+            } else if (rb_privado.isSelected()) {
+                uriReporte += "&publicos=false";                        
+            }
+        }
+        int seleccionOrden = cmbOrden.getSelectedIndex();
+        switch (seleccionOrden) {
+            case 0: uriReporte += "&ordenarPor=descripcion"; break;
+            case 1: uriReporte += "&ordenarPor=codigo"; break;
+            case 2: uriReporte += "&ordenarPor=cantidad"; break;
+            case 3: uriReporte += "&ordenarPor=precioCosto"; break;
+            case 4: uriReporte += "&ordenarPor=gananciaPorcentaje"; break;
+            case 5: uriReporte += "&ordenarPor=precioLista"; break;
+            case 6: uriReporte += "&ordenarPor=fechaAlta"; break;
+            case 7: uriReporte += "&ordenarPor=fechaUltimaModificacion"; break;
+        }
+        int seleccionDireccion = cmbSentido.getSelectedIndex();
+        switch (seleccionDireccion) {
+            case 0: uriReporte += "&sentido=ASC"; break;
+            case 1: uriReporte += "&sentido=DESC"; break;
+        }
+        ExportGUI exportGUI = new ExportGUI(uriReporte + "&formato=xlsx", "ListaPrecios.xlsx",
+                uriReporte + "&formato=pdf", "ListaPrecios.pdf");
+        exportGUI.setModal(true);
+        exportGUI.setLocationRelativeTo(this);
+        exportGUI.setVisible(true);
+    }
+    
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
         long idEmpresa = EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
@@ -337,39 +375,19 @@ public class ProductosGUI extends JInternalFrame {
         }
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
-            case 0:
-                criteriaBusqueda += "&ordenarPor=descripcion";
-                break;
-            case 1:
-                criteriaBusqueda += "&ordenarPor=codigo";
-                break;
-            case 2:
-                criteriaBusqueda += "&ordenarPor=cantidad";
-                break;
-            case 3:
-                criteriaBusqueda += "&ordenarPor=precioCosto";
-                break;
-            case 4:
-                criteriaBusqueda += "&ordenarPor=gananciaPorcentaje";
-                break;
-            case 5:
-                criteriaBusqueda += "&ordenarPor=precioLista";
-                break;
-            case 6:
-                criteriaBusqueda += "&ordenarPor=fechaAlta";
-                break;
-            case 7:
-                criteriaBusqueda += "&ordenarPor=fechaUltimaModificacion";
-                break;
+            case 0: criteriaBusqueda += "&ordenarPor=descripcion"; break;
+            case 1: criteriaBusqueda += "&ordenarPor=codigo"; break;
+            case 2: criteriaBusqueda += "&ordenarPor=cantidad"; break;
+            case 3: criteriaBusqueda += "&ordenarPor=precioCosto"; break;
+            case 4: criteriaBusqueda += "&ordenarPor=gananciaPorcentaje"; break;
+            case 5: criteriaBusqueda += "&ordenarPor=precioLista"; break;
+            case 6: criteriaBusqueda += "&ordenarPor=fechaAlta"; break;
+            case 7: criteriaBusqueda += "&ordenarPor=fechaUltimaModificacion"; break;
         }
         int seleccionDireccion = cmbSentido.getSelectedIndex();
         switch (seleccionDireccion) {
-            case 0:
-                criteriaBusqueda += "&sentido=ASC";
-                break;
-            case 1:
-                criteriaBusqueda += "&sentido=DESC";
-                break;
+            case 0: criteriaBusqueda += "&sentido=ASC"; break;
+            case 1: criteriaBusqueda += "&sentido=DESC"; break;
         }
         criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
         try {
@@ -919,28 +937,7 @@ public class ProductosGUI extends JInternalFrame {
     private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
         if (!productosTotal.isEmpty()) {
             if (Desktop.isDesktopSupported()) {
-                String uriReporte = "/productos/reporte/criteria?"
-                        + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
-                if (chk_Codigo.isSelected()) {
-                    uriReporte += "&codigo=" + txt_Codigo.getText().trim();
-                }
-                if (chk_Descripcion.isSelected()) {
-                    uriReporte += "&descripcion=" + txt_Descripcion.getText().trim();
-                }
-                if (chk_Rubro.isSelected()) {
-                    uriReporte += "&idRubro=" + this.getIdRubroSeleccionado();
-                }
-                if (chk_Proveedor.isSelected()) {
-                    uriReporte += "&idProveedor=" + this.getIdProveedorSeleccionado();
-                }
-                if (chk_Disponibilidad.isSelected()) {
-                    uriReporte += "&soloFantantes=" + rb_Faltantes.isSelected();
-                }
-                ExportGUI exportGUI = new ExportGUI(uriReporte + "&formato=xlsx", "ListaPrecios.xlsx",
-                        uriReporte + "&formato=pdf", "ListaPrecios.pdf");
-                exportGUI.setModal(true);
-                exportGUI.setLocationRelativeTo(this);
-                exportGUI.setVisible(true);
+                this.exportar();
             } else {
                 JOptionPane.showMessageDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
