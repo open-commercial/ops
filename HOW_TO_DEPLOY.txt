@@ -1,6 +1,6 @@
+- Eliminar los txt digest y el jar SIC-OPS-Andromeda.jar de /produccion
 - Generar el jar nuevo con mvn clean package
 - Copiar el jar SIC-OPS-Andromeda.jar desde la /target hacia /produccion
-- Eliminar los txt digest de /produccion
 - En una consola, parado en la carpeta /produccion ejecutar el comando: java -classpath getdown-1.7.1.jar com.threerings.getdown.tools.Digester .
 - Commit todo el contenido de /produccion
 - Al hacer merge al branch "produccion" la app va ser deploy con el hook de Heroku
