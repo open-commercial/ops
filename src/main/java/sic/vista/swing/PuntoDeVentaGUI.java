@@ -34,7 +34,7 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
-import sic.modelo.Pedido;
+import sic.modelo.NuevoPedido;
 import sic.modelo.RenglonFactura;
 import sic.modelo.RenglonPedido;
 import sic.modelo.UsuarioActivo;
@@ -44,6 +44,7 @@ import sic.modelo.FormaDePago;
 import sic.modelo.Movimiento;
 import sic.modelo.NuevoRenglonPedido;
 import sic.modelo.PaginaRespuestaRest;
+import sic.modelo.Pedido;
 import sic.modelo.Producto;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
@@ -61,6 +62,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(1200, 700);
     private Pedido pedido;
+    private NuevoPedido nuevoPedido;
     private boolean modificarPedido;
     private int cantidadMaximaRenglones = 0;
     private BigDecimal subTotalBruto;
@@ -229,6 +231,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         } else {
             txtIdFiscalCliente.setText("");
         }
+        txt_Descuento_porcentaje.setValue(cliente.getBonificacion());
     }
 
     private void setColumnas() {
@@ -275,9 +278,9 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             boolean agregado = false;
             //busca entre los renglones al producto, aumenta la cantidad y recalcula el descuento        
             for (int i = 0; i < renglones.size(); i++) {
-                if (renglones.get(i).getId_ProductoItem() == renglon.getId_ProductoItem()) {
+                if (renglones.get(i).getIdProductoItem() == renglon.getIdProductoItem()) {
                     Producto producto = RestClient.getRestTemplate()
-                            .getForObject("/productos/" + renglon.getId_ProductoItem(), Producto.class);
+                            .getForObject("/productos/" + renglon.getIdProductoItem(), Producto.class);
                     renglones.set(i, RestClient.getRestTemplate().getForObject("/facturas/renglon?"
                             + "idProducto=" + producto.getId_Producto()
                             + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
@@ -380,7 +383,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             if (buscarProductosGUI.debeCargarRenglon()) {
                 boolean renglonCargado = false;
                 for (RenglonFactura renglon : renglones) {
-                    if (renglon.getId_ProductoItem() == buscarProductosGUI.getRenglon().getId_ProductoItem()) {
+                    if (renglon.getIdProductoItem() == buscarProductosGUI.getRenglon().getIdProductoItem()) {
                         renglonCargado = true;
                     }
                 }
@@ -609,7 +612,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             renglones = new ArrayList<>();
             resguardoRenglones.stream().map(renglonFactura -> {
                 Producto producto = RestClient.getRestTemplate()
-                        .getForObject("/productos/" + renglonFactura.getId_ProductoItem(), Producto.class);
+                        .getForObject("/productos/" + renglonFactura.getIdProductoItem(), Producto.class);
                 RenglonFactura renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
                         + "idProducto=" + producto.getId_Producto()
                         + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
@@ -643,25 +646,27 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }
 
     private void construirPedido() {
-        pedido = new Pedido();
-        pedido.setEliminado(false);
-        pedido.setFacturas(null);
-        pedido.setFechaVencimiento(dc_fechaVencimiento.getDate());
-        pedido.setObservaciones(txta_Observaciones.getText());
-        BigDecimal subTotalEstimado = BigDecimal.ZERO;
+        nuevoPedido = new NuevoPedido();
+        nuevoPedido.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
+        nuevoPedido.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
+        nuevoPedido.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
+        nuevoPedido.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
+        nuevoPedido.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
+        nuevoPedido.setFechaVencimiento(dc_fechaVencimiento.getDate());
+        nuevoPedido.setObservaciones(txta_Observaciones.getText());
+        nuevoPedido.setRenglones(this.calcularRenglonesPedido());
+        BigDecimal total = BigDecimal.ZERO;
         for (RenglonFactura r : renglones) {
-            subTotalEstimado = subTotalEstimado.add(r.getImporte());
+            total = total.add(r.getImporte());
         }
-        pedido.setTotalEstimado(subTotalEstimado);
-        pedido.setEstado(EstadoPedido.ABIERTO);
-        pedido.setRenglones(this.calcularRenglonesPedido());
+        nuevoPedido.setTotal(total);
     }
     
     private Map<Long, BigDecimal> getProductosSinStockDisponible(List<RenglonFactura> renglonesFactura) {
         long[] idsProductos = new long[renglonesFactura.size()];
         BigDecimal[] cantidades = new BigDecimal[renglonesFactura.size()];
         for (int i = 0; i < idsProductos.length; i++) {
-            idsProductos[i] = renglonesFactura.get(i).getId_ProductoItem();
+            idsProductos[i] = renglonesFactura.get(i).getIdProductoItem();
             cantidades[i] = renglonesFactura.get(i).getCantidad();
         }
         String uri = "/productos/disponibilidad-stock?"
@@ -676,7 +681,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         long[] idsProductos = new long[renglonesFactura.size()];
         BigDecimal[] cantidades = new BigDecimal[renglonesFactura.size()];
         for (int i = 0; i < idsProductos.length; i++) {
-            idsProductos[i] = renglonesFactura.get(i).getId_ProductoItem();
+            idsProductos[i] = renglonesFactura.get(i).getIdProductoItem();
             cantidades[i] = renglonesFactura.get(i).getCantidad();
         }
         String uri = "/productos/cantidad-venta-minima?"
@@ -688,6 +693,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }
     
     private void finalizarPedido() {
+        System.out.println(pedido);
         if (cliente != null) {
             PaginaRespuestaRest<Pedido> response = RestClient.getRestTemplate() 
                 .exchange("/pedidos/busqueda/criteria?"
@@ -699,7 +705,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?idEmpresa="
                         + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                         + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                        + "&idCliente=" + cliente.getId_Cliente(), pedido, Pedido.class);
+                        + "&idCliente=" + cliente.getId_Cliente(), nuevoPedido, Pedido.class);
                 int reply = JOptionPane.showConfirmDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
                         "Aviso", JOptionPane.YES_NO_OPTION);
@@ -757,7 +763,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     public List<RenglonPedido> calcularRenglonesPedido() {
         List<NuevoRenglonPedido> nuevosRenglonesPedido = new ArrayList();
         this.renglones.forEach(r -> nuevosRenglonesPedido.add(
-                new NuevoRenglonPedido(r.getId_ProductoItem(), r.getCantidad(), r.getDescuentoPorcentaje())));
+                new NuevoRenglonPedido(r.getIdProductoItem(), r.getCantidad(), r.getDescuentoPorcentaje())));
         return Arrays.asList(RestClient.getRestTemplate().postForObject("/pedidos/renglones",
                 nuevosRenglonesPedido, RenglonPedido[].class));
     }

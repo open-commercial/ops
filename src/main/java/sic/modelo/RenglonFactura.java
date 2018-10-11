@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 public class RenglonFactura implements Serializable {
 
     private long id_RenglonFactura;
-    private long id_ProductoItem;
+    private long idProductoItem;
     private String codigoItem;
     private String descripcionItem;
     private String medidaItem;
