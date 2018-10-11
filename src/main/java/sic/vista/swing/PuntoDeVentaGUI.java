@@ -150,7 +150,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         cal.set(Calendar.SECOND, 58);
         factura.setFechaVencimiento(cal.getTime());
         factura.setRenglones(this.getRenglones());
-        factura.setObservaciones(this.txta_Observaciones.getText().trim());      
+        factura.setObservaciones(this.txt_Observaciones.getText().trim());      
         factura.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
         factura.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
         factura.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
@@ -365,7 +365,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         modeloTablaResultados = new ModeloTabla();
         this.setColumnas();
         txt_CodigoProducto.setText("");
-        txta_Observaciones.setText("");
+        txt_Observaciones.setText("");
         txt_Descuento_porcentaje.setValue(0.0);
         txt_Recargo_porcentaje.setValue(0.0);
         this.calcularResultados();
@@ -650,16 +650,13 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         nuevoPedido.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
         nuevoPedido.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
         nuevoPedido.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
+        System.err.println(txt_Descuento_neto.getValue().toString());
         nuevoPedido.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
         nuevoPedido.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
         nuevoPedido.setFechaVencimiento(dc_fechaVencimiento.getDate());
-        nuevoPedido.setObservaciones(txta_Observaciones.getText());
+        nuevoPedido.setObservaciones(txt_Observaciones.getText());
         nuevoPedido.setRenglones(this.calcularRenglonesPedido());
-        BigDecimal total = BigDecimal.ZERO;
-        for (RenglonFactura r : renglones) {
-            total = total.add(r.getImporte());
-        }
-        nuevoPedido.setTotal(total);
+        nuevoPedido.setTotal(new BigDecimal(txt_Total.getValue().toString()));
     }
     
     private Map<Long, BigDecimal> getProductosSinStockDisponible(List<RenglonFactura> renglonesFactura) {
@@ -695,13 +692,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private void finalizarPedido() {
         System.out.println(pedido);
         if (cliente != null) {
-            PaginaRespuestaRest<Pedido> response = RestClient.getRestTemplate() 
-                .exchange("/pedidos/busqueda/criteria?"
-                        + "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "&nroPedido=" + pedido.getNroPedido(), HttpMethod.GET, null,
-                        new ParameterizedTypeReference<PaginaRespuestaRest<Pedido>>() {
-                }).getBody();                                   
-            if (response.getContent().isEmpty()) {
+            if (nuevoPedido != null) {
                 Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?idEmpresa="
                         + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                         + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
@@ -724,7 +715,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                     "Aviso", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     private void lanzarReportePedido(Pedido pedido) {
         if (Desktop.isDesktopSupported()) {
             try {
@@ -825,7 +816,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         lbl_Observaciones = new javax.swing.JLabel();
         btn_AddComment = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        txta_Observaciones = new javax.swing.JTextArea();
+        txt_Observaciones = new javax.swing.JTextArea();
         panelResultados = new javax.swing.JPanel();
         lbl_SubTotal = new javax.swing.JLabel();
         txt_Subtotal = new javax.swing.JFormattedTextField();
@@ -1063,12 +1054,12 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             }
         });
 
-        txta_Observaciones.setEditable(false);
-        txta_Observaciones.setBackground(new java.awt.Color(220, 215, 215));
-        txta_Observaciones.setColumns(20);
-        txta_Observaciones.setRows(5);
-        txta_Observaciones.setFocusable(false);
-        jScrollPane1.setViewportView(txta_Observaciones);
+        txt_Observaciones.setEditable(false);
+        txt_Observaciones.setBackground(new java.awt.Color(220, 215, 215));
+        txt_Observaciones.setColumns(20);
+        txt_Observaciones.setRows(5);
+        txt_Observaciones.setFocusable(false);
+        jScrollPane1.setViewportView(txt_Observaciones);
 
         javax.swing.GroupLayout panelObservacionesLayout = new javax.swing.GroupLayout(panelObservaciones);
         panelObservaciones.setLayout(panelObservacionesLayout);
@@ -1480,9 +1471,9 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             this.tipoDeComprobante = (TipoDeComprobante) cmb_TipoComprobante.getSelectedItem();
             this.recargarRenglonesSegunTipoDeFactura();
             if (cmb_TipoComprobante.getSelectedItem().equals(TipoDeComprobante.PEDIDO)) {
-                this.txta_Observaciones.setText("Los precios se encuentran sujetos a modificaciones.");
+                this.txt_Observaciones.setText("Los precios se encuentran sujetos a modificaciones.");
             } else {
-                this.txta_Observaciones.setText("");
+                this.txt_Observaciones.setText("");
             }
         }
     }//GEN-LAST:event_cmb_TipoComprobanteItemStateChanged
@@ -1496,11 +1487,11 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_txt_CodigoProductoActionPerformed
 
     private void btn_AddCommentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AddCommentActionPerformed
-        ObservacionesGUI observacionesGUI = new ObservacionesGUI(txta_Observaciones.getText());
+        ObservacionesGUI observacionesGUI = new ObservacionesGUI(txt_Observaciones.getText());
         observacionesGUI.setModal(true);
         observacionesGUI.setLocationRelativeTo(this);
         observacionesGUI.setVisible(true);
-        txta_Observaciones.setText(observacionesGUI.getTxta_Observaciones().getText());
+        txt_Observaciones.setText(observacionesGUI.getTxta_Observaciones().getText());
     }//GEN-LAST:event_btn_AddCommentActionPerformed
 
     private void txt_Descuento_porcentajeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_Descuento_porcentajeFocusLost
@@ -1687,7 +1678,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 btn_BuscarCliente.setEnabled(false);
                 this.calcularResultados();
                 if (this.tipoDeComprobante.equals(TipoDeComprobante.PEDIDO)) {
-                    txta_Observaciones.setText(this.pedido.getObservaciones());
+                    txt_Observaciones.setText(this.pedido.getObservaciones());
                 }
             }
         } catch (PropertyVetoException ex) {
@@ -1754,11 +1745,11 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private javax.swing.JFormattedTextField txt_IVA105_neto;
     private javax.swing.JFormattedTextField txt_IVA21_neto;
     private javax.swing.JTextField txt_NombreCliente;
+    private javax.swing.JTextArea txt_Observaciones;
     private javax.swing.JFormattedTextField txt_Recargo_neto;
     private javax.swing.JFormattedTextField txt_Recargo_porcentaje;
     private javax.swing.JFormattedTextField txt_SubTotalBruto;
     private javax.swing.JFormattedTextField txt_Subtotal;
     private javax.swing.JFormattedTextField txt_Total;
-    private javax.swing.JTextArea txta_Observaciones;
     // End of variables declaration//GEN-END:variables
 }
