@@ -130,7 +130,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         lineaDeFactura[2] = renglon.getMedidaItem();
         lineaDeFactura[3] = renglon.getCantidad();
         lineaDeFactura[4] = renglon.getPrecioUnitario();
-        lineaDeFactura[5] = renglon.getDescuento_porcentaje();
+        lineaDeFactura[5] = renglon.getDescuentoPorcentaje();
         lineaDeFactura[6] = renglon.getImporte();
         modeloTablaRenglones.addRow(lineaDeFactura);
         renglones.add(renglon);
@@ -203,15 +203,15 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         facturaCompra.setFechaVencimiento(dc_FechaVencimiento.getDate());
         facturaCompra.setRenglones(new ArrayList<>(renglones));
         facturaCompra.setSubTotal(new BigDecimal(txt_SubTotal.getValue().toString()));
-        facturaCompra.setRecargo_porcentaje(BigDecimal.ZERO);
-        facturaCompra.setRecargo_neto(BigDecimal.ZERO);
-        facturaCompra.setDescuento_porcentaje(new BigDecimal(txt_Descuento_Porcentaje.getValue().toString()));
-        facturaCompra.setDescuento_neto(new BigDecimal(txt_Descuento_Neto.getValue().toString()));
-        facturaCompra.setRecargo_porcentaje(new BigDecimal(txt_Recargo_Porcentaje.getValue().toString()));
-        facturaCompra.setRecargo_neto(new BigDecimal(txt_Recargo_Neto.getValue().toString()));
-        facturaCompra.setSubTotal_bruto(subTotalBruto);
-        facturaCompra.setIva_105_neto(iva105netoFactura);
-        facturaCompra.setIva_21_neto(iva21netoFactura);
+        facturaCompra.setRecargoPorcentaje(BigDecimal.ZERO);
+        facturaCompra.setRecargoNeto(BigDecimal.ZERO);
+        facturaCompra.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_Porcentaje.getValue().toString()));
+        facturaCompra.setDescuentoNeto(new BigDecimal(txt_Descuento_Neto.getValue().toString()));
+        facturaCompra.setRecargoPorcentaje(new BigDecimal(txt_Recargo_Porcentaje.getValue().toString()));
+        facturaCompra.setRecargoNeto(new BigDecimal(txt_Recargo_Neto.getValue().toString()));
+        facturaCompra.setSubTotalBruto(subTotalBruto);
+        facturaCompra.setIva105Neto(iva105netoFactura);
+        facturaCompra.setIva21Neto(iva21netoFactura);
         facturaCompra.setTotal(totalComprobante);
         facturaCompra.setObservaciones(txta_Observaciones.getText().trim());
         facturaCompra.setEliminada(false);
@@ -287,8 +287,8 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         for (RenglonFactura renglon : renglones) {
             subTotal = subTotal.add(renglon.getImporte());
             cantidades[indice] = renglon.getCantidad();
-            ivaPorcentajeRenglones[indice] = renglon.getIva_porcentaje();
-            ivaNetoRenglones[indice] = renglon.getIva_neto();
+            ivaPorcentajeRenglones[indice] = renglon.getIvaPorcentaje();
+            ivaNetoRenglones[indice] = renglon.getIvaNeto();
             indice++;
         }
         txt_SubTotal.setValue(subTotal);
@@ -399,13 +399,13 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         dc_FechaVencimiento.setDate(facturaParaMostrar.getFechaVencimiento());
         txta_Observaciones.setText(facturaParaMostrar.getObservaciones());
         txt_SubTotal.setValue(facturaParaMostrar.getSubTotal());
-        txt_Descuento_Porcentaje.setValue(facturaParaMostrar.getDescuento_porcentaje());
-        txt_Descuento_Neto.setValue(facturaParaMostrar.getDescuento_neto());
-        txt_Recargo_Porcentaje.setValue(facturaParaMostrar.getRecargo_porcentaje());
-        txt_Recargo_Neto.setValue(facturaParaMostrar.getRecargo_neto());
-        txt_SubTotal_Neto.setValue(facturaParaMostrar.getSubTotal_bruto());
-        txt_IVA_105.setValue(facturaParaMostrar.getIva_105_neto());
-        txt_IVA_21.setValue(facturaParaMostrar.getIva_21_neto());
+        txt_Descuento_Porcentaje.setValue(facturaParaMostrar.getDescuentoPorcentaje());
+        txt_Descuento_Neto.setValue(facturaParaMostrar.getDescuentoNeto());
+        txt_Recargo_Porcentaje.setValue(facturaParaMostrar.getRecargoPorcentaje());
+        txt_Recargo_Neto.setValue(facturaParaMostrar.getRecargoNeto());
+        txt_SubTotal_Neto.setValue(facturaParaMostrar.getSubTotalBruto());
+        txt_IVA_105.setValue(facturaParaMostrar.getIva105Neto());
+        txt_IVA_21.setValue(facturaParaMostrar.getIva21Neto());
         txt_Total.setValue(facturaParaMostrar.getTotal());
         try {
             facturaParaMostrar.setRenglones(new ArrayList(Arrays.asList(RestClient.getRestTemplate()
@@ -460,7 +460,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
                         + "&tipoDeComprobante=" + tipoDeComprobante.name()
                         + "&movimiento=" + Movimiento.COMPRA
                         + "&cantidad=" + rf.getCantidad()
-                        + "&descuentoPorcentaje=" + rf.getDescuento_porcentaje(),                        
+                        + "&descuentoPorcentaje=" + rf.getDescuentoPorcentaje(),                        
                         RenglonFactura.class);
                 return nuevoRenglon;
             }).forEachOrdered(nuevoRenglon -> {

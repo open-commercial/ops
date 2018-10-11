@@ -176,11 +176,11 @@ public class ModificacionMultipleProductosGUI extends JDialog {
     
     private void calcularGananciaPorcentaje() {
         BigDecimal gananciaPorcentaje = CalculosPrecioProducto.calcularGananciaPorcentaje(BigDecimal.ZERO,
-                BigDecimal.ZERO, new BigDecimal(txtPVP.getValue().toString()), BigDecimal.ZERO, BigDecimal.ZERO,
+                BigDecimal.ZERO, new BigDecimal(txtPVP.getValue().toString()), BigDecimal.ZERO,
                 new BigDecimal(txtPrecioCosto.getValue().toString()), false);
         txtGananciaPorcentaje.setValue(gananciaPorcentaje);
     }
-    
+
     private void calcularGananciaNeto() {
         BigDecimal gananciaNeto = CalculosPrecioProducto.calcularGananciaNeto(new BigDecimal(txtPrecioCosto.getValue().toString()),
                 new BigDecimal(txtGananciaPorcentaje.getValue().toString()));
@@ -201,15 +201,15 @@ public class ModificacionMultipleProductosGUI extends JDialog {
     
     private void calcularPrecioLista() {
         BigDecimal precioDeLista = CalculosPrecioProducto.calcularPrecioLista(new BigDecimal(txtPVP.getValue().toString()),
-                new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()), BigDecimal.ZERO);
+                new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()));
         txtPrecioLista.setValue(precioDeLista);
     }
-    
-    private void calcularGananciaPorcentajeSegunPrecioDeLista() {      
+
+    private void calcularGananciaPorcentajeSegunPrecioDeLista() {
         BigDecimal gananciaPorcentaje = CalculosPrecioProducto.calcularGananciaPorcentaje(
                 new BigDecimal(txtPrecioLista.getValue().toString()), precioListaAnterior,
-                new BigDecimal(txtPVP.getValue().toString()), 
-                new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()), BigDecimal.ZERO,
+                new BigDecimal(txtPVP.getValue().toString()),
+                new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()),
                 new BigDecimal(txtPrecioCosto.getValue().toString()), true);
         txtGananciaPorcentaje.setValue(gananciaPorcentaje);
         precioListaAnterior = new BigDecimal(txtPrecioLista.getValue().toString());

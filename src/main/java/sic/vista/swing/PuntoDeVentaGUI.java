@@ -150,13 +150,13 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         factura.setRenglones(this.getRenglones());
         factura.setObservaciones(this.txta_Observaciones.getText().trim());      
         factura.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
-        factura.setDescuento_porcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
-        factura.setDescuento_neto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
-        factura.setRecargo_porcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
-        factura.setRecargo_neto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
-        factura.setSubTotal_bruto(subTotalBruto);
-        factura.setIva_105_neto(iva_105_netoFactura);
-        factura.setIva_21_neto(iva_21_netoFactura);
+        factura.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
+        factura.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
+        factura.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
+        factura.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
+        factura.setSubTotalBruto(subTotalBruto);
+        factura.setIva105Neto(iva_105_netoFactura);
+        factura.setIva21Neto(iva_21_netoFactura);
         factura.setTotal(new BigDecimal(txt_Total.getValue().toString()));                                             
         return factura;
     }
@@ -283,7 +283,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                             + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                             + "&movimiento=" + Movimiento.VENTA
                             + "&cantidad=" + renglones.get(i).getCantidad().add(renglon.getCantidad())
-                            + "&descuentoPorcentaje=" + renglon.getDescuento_porcentaje(),
+                            + "&descuentoPorcentaje=" + renglon.getDescuentoPorcentaje(),
                             RenglonFactura.class));
                     agregado = true;
                 }
@@ -348,7 +348,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             fila[3] = renglon.getMedidaItem();
             fila[4] = renglon.getCantidad();
             fila[5] = renglon.getPrecioUnitario();
-            fila[6] = renglon.getDescuento_porcentaje();
+            fila[6] = renglon.getDescuentoPorcentaje();
             fila[7] = renglon.getImporte();
             modeloTablaResultados.addRow(fila);
         }
@@ -507,8 +507,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         for (RenglonFactura renglon : renglones) {
             subTotal = subTotal.add(renglon.getImporte());
             cantidades[indice] = renglon.getCantidad();
-            ivaPorcentajeRenglones[indice] = renglon.getIva_porcentaje();
-            ivaNetoRenglones[indice] = renglon.getIva_neto();
+            ivaPorcentajeRenglones[indice] = renglon.getIvaPorcentaje();
+            ivaNetoRenglones[indice] = renglon.getIvaNeto();
             indice++;
         }
         txt_Subtotal.setValue(subTotal);
@@ -615,7 +615,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                         + "&movimiento=" + Movimiento.VENTA
                         + "&cantidad=" + renglonFactura.getCantidad()
-                        + "&descuentoPorcentaje=" + renglonFactura.getDescuento_porcentaje(),
+                        + "&descuentoPorcentaje=" + renglonFactura.getDescuentoPorcentaje(),
                         RenglonFactura.class);
                 return renglon;
             }).forEachOrdered(renglon -> this.agregarRenglon(renglon));
@@ -757,7 +757,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     public List<RenglonPedido> calcularRenglonesPedido() {
         List<NuevoRenglonPedido> nuevosRenglonesPedido = new ArrayList();
         this.renglones.forEach(r -> nuevosRenglonesPedido.add(
-                new NuevoRenglonPedido(r.getId_ProductoItem(), r.getCantidad(), r.getDescuento_porcentaje())));
+                new NuevoRenglonPedido(r.getId_ProductoItem(), r.getCantidad(), r.getDescuentoPorcentaje())));
         return Arrays.asList(RestClient.getRestTemplate().postForObject("/pedidos/renglones",
                 nuevosRenglonesPedido, RenglonPedido[].class));
     }

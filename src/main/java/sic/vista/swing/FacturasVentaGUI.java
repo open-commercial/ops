@@ -323,13 +323,13 @@ public class FacturasVentaGUI extends JInternalFrame {
             fila[7] = factura.getNombreTransportista();
             fila[8] = factura.getTotal();
             fila[9] = factura.getSubTotal();
-            fila[10] = factura.getDescuento_porcentaje();
-            fila[11] = factura.getDescuento_neto();
-            fila[12] = factura.getRecargo_porcentaje();
-            fila[13] = factura.getRecargo_neto();
-            fila[14] = factura.getSubTotal_bruto();
-            fila[15] = factura.getIva_105_neto();
-            fila[16] = factura.getIva_21_neto();
+            fila[10] = factura.getDescuentoPorcentaje();
+            fila[11] = factura.getDescuentoNeto();
+            fila[12] = factura.getRecargoPorcentaje();
+            fila[13] = factura.getRecargoNeto();
+            fila[14] = factura.getSubTotalBruto();
+            fila[15] = factura.getIva105Neto();
+            fila[16] = factura.getIva21Neto();
             if (factura.getNumSerieAfip() == 0 && factura.getNumFacturaAfip() == 0) {
                 fila[17] = "";
             } else {

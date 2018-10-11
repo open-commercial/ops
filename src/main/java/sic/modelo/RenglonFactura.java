@@ -16,13 +16,13 @@ public class RenglonFactura implements Serializable {
     private String medidaItem;
     private BigDecimal cantidad;
     private BigDecimal precioUnitario;
-    private BigDecimal descuento_porcentaje;
-    private BigDecimal descuento_neto;
-    private BigDecimal iva_porcentaje;
-    private BigDecimal iva_neto;
-    private BigDecimal impuesto_porcentaje;
-    private BigDecimal impuesto_neto;
-    private BigDecimal ganancia_porcentaje;
-    private BigDecimal ganancia_neto;
+    private BigDecimal descuentoPorcentaje;
+    private BigDecimal descuentoNeto;
+    private BigDecimal ivaPorcentaje;
+    private BigDecimal ivaNeto;
+    private BigDecimal impuestoPorcentaje;
+    private BigDecimal impuestoNeto;
+    private BigDecimal gananciaPorcentaje;
+    private BigDecimal gananciaNeto;
     private BigDecimal importe;
 }

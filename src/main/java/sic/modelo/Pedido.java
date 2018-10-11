@@ -25,6 +25,11 @@ public class Pedido implements Serializable {
     private String nombreUsuario;
     private List<Factura> facturas;        
     private List<RenglonPedido> renglones;
+    private BigDecimal subTotal;
+    private BigDecimal recargoPorcentaje;
+    private BigDecimal recargoNeto;
+    private BigDecimal descuentoPorcentaje;
+    private BigDecimal descuentoNeto;
     private BigDecimal totalEstimado;
     private BigDecimal totalActual;
     private EstadoPedido estado;

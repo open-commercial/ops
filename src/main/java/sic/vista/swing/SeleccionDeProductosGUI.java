@@ -167,7 +167,7 @@ public class SeleccionDeProductosGUI extends JDialog {
             fila[1] = r.getDescripcionItem();
             fila[2] = r.getMedidaItem();
             fila[3] = r.getPrecioUnitario();
-            fila[4] = r.getIva_porcentaje();
+            fila[4] = r.getIvaPorcentaje();
             fila[5] = r.getCantidad();
             fila[6] = 0.0;
             return fila;

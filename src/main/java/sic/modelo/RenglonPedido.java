@@ -14,8 +14,7 @@ public class RenglonPedido implements Serializable {
     private String descripcionItem;
     private String medidaItem;
     private BigDecimal precioUnitario;
-    private String codigoProducto;
-    private String descripcionProducto;
+    private String codigoItem;
     private BigDecimal cantidad;
     private BigDecimal descuentoPorcentaje;
     private BigDecimal descuentoNeto;
