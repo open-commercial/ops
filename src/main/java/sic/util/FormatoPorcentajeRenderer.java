@@ -1,6 +1,5 @@
 package sic.util;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.math.BigDecimal;
@@ -27,7 +26,7 @@ public class FormatoPorcentajeRenderer extends DefaultTableCellRenderer {
             } else {
                 dFormat = new DecimalFormat("##0.00");
             }
-            cell.setText(dFormat.format(numero));
+            cell.setText(dFormat.format(numero) + "%");
         }
         cell.setFont(new Font("Font", Font.BOLD, 12));
         return cell;

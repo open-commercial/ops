@@ -221,14 +221,21 @@ public class DetalleClienteGUI extends JDialog {
             btnNuevoUsuarioViajante.setEnabled(true);
             lblCredencial.setEnabled(true);
             cmbCredencial.setEnabled(true);
+            txt_bonificacion.setEnabled(true);
         } else {
             btnNuevaCredencial.setEnabled(false);
             btnBuscarCredencial.setEnabled(false);
             btnNuevoUsuarioViajante.setEnabled(false);
             lblCredencial.setEnabled(false);
             cmbCredencial.setEnabled(false);
+            txt_bonificacion.setEnabled(false);
         }
-        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) 
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            txt_bonificacion.setEnabled(true);
+        } else {
+            txt_bonificacion.setEnabled(false);
+        }
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
             btnNuevaLocalidad.setEnabled(true);
             btnNuevaProvincia.setEnabled(true);
@@ -238,7 +245,7 @@ public class DetalleClienteGUI extends JDialog {
             btnBuscarUsuarioViajante.setEnabled(true);
             lblCredencial.setEnabled(true);
             cmbCredencial.setEnabled(true);
-            btnBuscarCredencial.setEnabled(true);            
+            btnBuscarCredencial.setEnabled(true);
         } else {
             btnNuevaLocalidad.setEnabled(false);
             btnNuevaProvincia.setEnabled(false);
