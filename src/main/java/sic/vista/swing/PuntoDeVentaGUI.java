@@ -650,7 +650,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         nuevoPedido.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
         nuevoPedido.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
         nuevoPedido.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
-        System.err.println(txt_Descuento_neto.getValue().toString());
         nuevoPedido.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
         nuevoPedido.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
         nuevoPedido.setFechaVencimiento(dc_fechaVencimiento.getDate());
@@ -690,7 +689,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }
     
     private void finalizarPedido() {
-        System.out.println(pedido);
         if (cliente != null) {
             if (nuevoPedido != null) {
                 Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?idEmpresa="
@@ -740,11 +738,13 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private void actualizarPedido(Pedido pedido) {
         pedido = RestClient.getRestTemplate().getForObject("/pedidos/" + pedido.getId_Pedido(), Pedido.class);
         pedido.setRenglones(this.calcularRenglonesPedido());
-        BigDecimal subTotal = BigDecimal.ZERO;
-        for (RenglonFactura r : renglones) {
-            subTotal = subTotal.add(r.getImporte());
-        }
-        pedido.setTotalEstimado(subTotal);
+        pedido.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
+        pedido.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
+        pedido.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
+        pedido.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
+        pedido.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
+        pedido.setTotalEstimado(new BigDecimal(txt_Total.getValue().toString()));
+        pedido.setObservaciones(txt_Observaciones.getText());
         RestClient.getRestTemplate().put("/pedidos?idEmpresa="
                 + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                 + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
