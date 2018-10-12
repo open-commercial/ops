@@ -127,7 +127,7 @@ public class DetalleClienteGUI extends JDialog {
         txtRazonSocial.setText(cliente.getRazonSocial());
         txtNombreFantasia.setText(cliente.getNombreFantasia());                        
         cmbTipoDeCliente.setSelectedItem(cliente.getTipoDeCliente());
-        txt_bonificacion.setText(cliente.getBonificacion().toString());
+        txt_bonificacion.setText(String.valueOf(cliente.getBonificacion().doubleValue()));
         cmbCategoriaIVA.setSelectedItem(cliente.getCategoriaIVA());
         txtDireccion.setText(cliente.getDireccion());              
         if (cliente.getIdLocalidad() != null) {
