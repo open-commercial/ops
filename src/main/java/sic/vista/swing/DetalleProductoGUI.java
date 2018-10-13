@@ -829,11 +829,11 @@ public class DetalleProductoGUI extends JDialog {
     
     private void calcularGananciaPorcentaje() {
         BigDecimal gananciaPorcentaje = CalculosPrecioProducto.calcularGananciaPorcentaje(BigDecimal.ZERO,
-                BigDecimal.ZERO, new BigDecimal(txtPVP.getValue().toString()), BigDecimal.ZERO, BigDecimal.ZERO,
+                BigDecimal.ZERO, new BigDecimal(txtPVP.getValue().toString()), BigDecimal.ZERO,
                 new BigDecimal(txtPrecioCosto.getValue().toString()), false);
         txtGananciaPorcentaje.setValue(gananciaPorcentaje);
     }
-    
+
     private void calcularGananciaNeto() {        
         BigDecimal gananciaNeto = CalculosPrecioProducto.calcularGananciaNeto(new BigDecimal(txtPrecioCosto.getValue().toString()),
                 new BigDecimal(txtGananciaPorcentaje.getValue().toString()));
@@ -851,23 +851,23 @@ public class DetalleProductoGUI extends JDialog {
                 new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()));
         txtIVANeto.setValue(IVANeto);
     }
-    
-    private void calcularPrecioLista() {        
+
+    private void calcularPrecioLista() {
         BigDecimal precioDeLista = CalculosPrecioProducto.calcularPrecioLista(new BigDecimal(txtPVP.getValue().toString()),
-                new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()), BigDecimal.ZERO);
+                new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()));
         txtPrecioLista.setValue(precioDeLista);
     }
-    
-    private void calcularGananciaPorcentajeSegunPrecioDeLista() {        
+
+    private void calcularGananciaPorcentajeSegunPrecioDeLista() {
         BigDecimal gananciaPorcentaje = CalculosPrecioProducto.calcularGananciaPorcentaje(
                 new BigDecimal(txtPrecioLista.getValue().toString()), precioListaAnterior,
-                new BigDecimal(txtPVP.getValue().toString()), 
-                new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()), BigDecimal.ZERO,
+                new BigDecimal(txtPVP.getValue().toString()),
+                new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()),
                 new BigDecimal(txtPrecioCosto.getValue().toString()), true);
         txtGananciaPorcentaje.setValue(gananciaPorcentaje);
         precioListaAnterior = new BigDecimal(txtPrecioLista.getValue().toString());
     }
-    
+
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         Long idMedida = null;
         Long idRubro = null;
@@ -919,8 +919,6 @@ public class DetalleProductoGUI extends JDialog {
                     producto.setPrecioVentaPublico(new BigDecimal(txtPVP.getValue().toString()));
                     producto.setIvaPorcentaje(new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()));
                     producto.setIvaNeto(new BigDecimal(txtIVANeto.getValue().toString()));
-                    producto.setImpuestoInternoPorcentaje(BigDecimal.ZERO);
-                    producto.setImpuestoInternoNeto(BigDecimal.ZERO);
                     producto.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
                     producto.setIlimitado(chkSinLimite.isSelected());   
                     producto.setPublico(rbPublico.isSelected());
@@ -956,8 +954,6 @@ public class DetalleProductoGUI extends JDialog {
                     productoParaModificar.setPrecioVentaPublico(new BigDecimal(txtPVP.getValue().toString()));
                     productoParaModificar.setIvaPorcentaje(new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()));
                     productoParaModificar.setIvaNeto(new BigDecimal(txtIVANeto.getValue().toString()));
-                    productoParaModificar.setImpuestoInternoPorcentaje(BigDecimal.ZERO);
-                    productoParaModificar.setImpuestoInternoNeto(BigDecimal.ZERO);
                     productoParaModificar.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
                     productoParaModificar.setIlimitado(chkSinLimite.isSelected());   
                     productoParaModificar.setPublico(rbPublico.isSelected());

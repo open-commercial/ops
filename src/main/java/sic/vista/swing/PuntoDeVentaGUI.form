@@ -51,7 +51,7 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="panelRenglones" alignment="0" max="32767" attributes="0"/>
@@ -59,7 +59,7 @@
                       <Component id="panelCliente" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Component id="panelResultados" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="31" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="panelObservaciones" min="-2" max="-2" attributes="0"/>
@@ -77,9 +77,9 @@
                   <Component id="panelEncabezado" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="panelCliente" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="panelRenglones" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="panelObservaciones" min="-2" max="-2" attributes="1"/>
                       <Component id="btn_Continuar" min="-2" max="-2" attributes="1"/>
@@ -100,44 +100,52 @@
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="lblRazonSocialCliente" alignment="0" max="32767" attributes="1"/>
+                          <Component id="lblNombreCliente" alignment="0" max="32767" attributes="1"/>
                           <Component id="lblDireccionCliente" alignment="0" max="32767" attributes="1"/>
                           <Component id="lbl_CondicionIVACliente" alignment="0" min="-2" max="-2" attributes="1"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txtDomicilioCliente" alignment="1" max="32767" attributes="2"/>
-                          <Component id="txt_NombreCliente" alignment="0" max="32767" attributes="2"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="txt_CondicionIVACliente" max="32767" attributes="2"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="txt_CondicionIVACliente" linkSize="24" min="-2" pref="581" max="-2" attributes="2"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="lbl_IDFiscalCliente" min="-2" max="-2" attributes="1"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="txtIdFiscalCliente" max="32767" attributes="2"/>
                           </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="txtNombreCliente" linkSize="24" min="-2" pref="635" max="-2" attributes="2"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lblBonificacion" min="-2" max="-2" attributes="1"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Component id="txtBonificacion" max="32767" attributes="0"/>
+                          </Group>
+                          <Component id="txtDomicilioCliente" alignment="1" max="32767" attributes="2"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="txt_NombreCliente" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblRazonSocialCliente" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="2" attributes="0">
+                          <Component id="lblBonificacion" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtNombreCliente" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblNombreCliente" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtBonificacion" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="txtDomicilioCliente" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtDomicilioCliente" linkSize="18" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="lblDireccionCliente" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="txt_CondicionIVACliente" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="lbl_CondicionIVACliente" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtIdFiscalCliente" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="lbl_IDFiscalCliente" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="2" attributes="0">
+                          <Component id="txtIdFiscalCliente" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txt_CondicionIVACliente" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbl_IDFiscalCliente" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbl_CondicionIVACliente" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="12" max="32767" attributes="0"/>
                   </Group>
@@ -145,10 +153,10 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="lblRazonSocialCliente">
+            <Component class="javax.swing.JLabel" name="lblNombreCliente">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="2"/>
-                <Property name="text" type="java.lang.String" value="Razon Social:"/>
+                <Property name="text" type="java.lang.String" value="Nombre:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblDireccionCliente">
@@ -159,8 +167,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="lbl_IDFiscalCliente">
               <Properties>
-                <Property name="horizontalAlignment" type="int" value="4"/>
-                <Property name="text" type="java.lang.String" value="ID Fiscal:"/>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="CUIL, CUIT o DNI:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lbl_CondicionIVACliente">
@@ -175,22 +183,33 @@
                 <Property name="focusable" type="boolean" value="false"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="txtIdFiscalCliente">
-              <Properties>
-                <Property name="editable" type="boolean" value="false"/>
-                <Property name="focusable" type="boolean" value="false"/>
-              </Properties>
-            </Component>
             <Component class="javax.swing.JTextField" name="txtDomicilioCliente">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="focusable" type="boolean" value="false"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="txt_NombreCliente">
+            <Component class="javax.swing.JTextField" name="txtNombreCliente">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="focusable" type="boolean" value="false"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblBonificacion">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="Bonificaci&#xf3;n:"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtIdFiscalCliente">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="focusable" type="boolean" value="false"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtBonificacion">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -405,7 +424,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTextArea" name="txta_Observaciones">
+                <Component class="javax.swing.JTextArea" name="txt_Observaciones">
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
                     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">

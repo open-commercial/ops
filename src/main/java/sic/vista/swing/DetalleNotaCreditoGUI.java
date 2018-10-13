@@ -113,30 +113,30 @@ public class DetalleNotaCreditoGUI extends JDialog {
             try {
                 txt_Subtotal.setValue(RestClient.getRestTemplate().getForObject("/notas/credito/sub-total?importe="
                         + Arrays.toString(importes).substring(1, Arrays.toString(importes).length() - 1), BigDecimal.class));
-                txt_Decuento_porcentaje.setValue(factura.getDescuento_porcentaje());
+                txt_Decuento_porcentaje.setValue(factura.getDescuentoPorcentaje());
                 txt_Decuento_neto.setValue(RestClient.getRestTemplate().getForObject("/notas/credito/descuento-neto?subTotal="
                         + txt_Subtotal.getValue().toString()
-                        + "&descuentoPorcentaje=" + factura.getDescuento_porcentaje(), BigDecimal.class));
-                txt_Recargo_porcentaje.setValue(factura.getRecargo_porcentaje());
+                        + "&descuentoPorcentaje=" + factura.getDescuentoPorcentaje(), BigDecimal.class));
+                txt_Recargo_porcentaje.setValue(factura.getRecargoPorcentaje());
                 txt_Recargo_neto.setValue(RestClient.getRestTemplate().getForObject("/notas/credito/recargo-neto?subTotal="
                         + txt_Subtotal.getValue().toString()
-                        + "&recargoPorcentaje=" + factura.getRecargo_porcentaje(), BigDecimal.class));
+                        + "&recargoPorcentaje=" + factura.getRecargoPorcentaje(), BigDecimal.class));
                 iva_105_netoFactura = RestClient.getRestTemplate().getForObject("/notas/credito/iva-neto?"
                         + "tipoDeComprobante=" + factura.getTipoComprobante().name()
                         + "&cantidades=" + Arrays.toString(cantidades).substring(1, Arrays.toString(cantidades).length() - 1)
                         + "&ivaPorcentajeRenglones=" + Arrays.toString(ivaPorcentajeRenglones).substring(1, Arrays.toString(ivaPorcentajeRenglones).length() - 1)
                         + "&ivaNetoRenglones=" + Arrays.toString(ivaNetoRenglones).substring(1, Arrays.toString(ivaNetoRenglones).length() - 1)
                         + "&ivaPorcentaje=10.5"
-                        + "&descuentoPorcentaje=" + factura.getDescuento_porcentaje()
-                        + "&recargoPorcentaje=" + factura.getRecargo_porcentaje(), BigDecimal.class);
+                        + "&descuentoPorcentaje=" + factura.getDescuentoPorcentaje()
+                        + "&recargoPorcentaje=" + factura.getRecargoPorcentaje(), BigDecimal.class);
                 iva_21_netoFactura = RestClient.getRestTemplate().getForObject("/notas/credito/iva-neto?"
                         + "tipoDeComprobante=" + factura.getTipoComprobante().name()
                         + "&cantidades=" + Arrays.toString(cantidades).substring(1, Arrays.toString(cantidades).length() - 1)
                         + "&ivaPorcentajeRenglones=" + Arrays.toString(ivaPorcentajeRenglones).substring(1, Arrays.toString(ivaPorcentajeRenglones).length() - 1)
                         + "&ivaNetoRenglones=" + Arrays.toString(ivaNetoRenglones).substring(1, Arrays.toString(ivaNetoRenglones).length() - 1)
                         + "&ivaPorcentaje=21"
-                        + "&descuentoPorcentaje=" + factura.getDescuento_porcentaje()
-                        + "&recargoPorcentaje=" + factura.getRecargo_porcentaje(), BigDecimal.class);
+                        + "&descuentoPorcentaje=" + factura.getDescuentoPorcentaje()
+                        + "&recargoPorcentaje=" + factura.getRecargoPorcentaje(), BigDecimal.class);
                 txt_IVA105_neto.setValue(iva_105_netoFactura);
                 txt_IVA21_neto.setValue(iva_21_netoFactura);
                 subTotalBruto = RestClient.getRestTemplate().getForObject("/notas/credito/sub-total-bruto?"

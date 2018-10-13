@@ -258,13 +258,13 @@ public class FacturasCompraGUI extends JInternalFrame {
             fila[6] = factura.getNombreTransportista();
             fila[7] = factura.getTotal();
             fila[8] = factura.getSubTotal();
-            fila[9] = factura.getDescuento_porcentaje();
-            fila[10] = factura.getDescuento_neto();
-            fila[11] = factura.getRecargo_porcentaje();
-            fila[12] = factura.getRecargo_neto();
-            fila[13] = factura.getSubTotal_bruto();
-            fila[14] = factura.getIva_105_neto();
-            fila[15] = factura.getIva_21_neto();
+            fila[9] = factura.getDescuentoPorcentaje();
+            fila[10] = factura.getDescuentoNeto();
+            fila[11] = factura.getRecargoPorcentaje();
+            fila[12] = factura.getRecargoNeto();
+            fila[13] = factura.getSubTotalBruto();
+            fila[14] = factura.getIva105Neto();
+            fila[15] = factura.getIva21Neto();
             return fila;
         }).forEach(fila -> {
             modeloTablaFacturas.addRow(fila);

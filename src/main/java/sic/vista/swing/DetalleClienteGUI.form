@@ -31,11 +31,11 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="panelPrincipal" max="32767" attributes="0"/>
-                  <Group type="102" alignment="1" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="panelPrincipal" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -46,9 +46,9 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="panelPrincipal" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
-              <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -81,10 +81,13 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                      <Component id="lblTipoDeCliente" max="32767" attributes="0"/>
-                      <Component id="lblEmail" alignment="0" max="32767" attributes="1"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="lblTipoDeCliente" linkSize="16" alignment="0" max="32767" attributes="0"/>
+                      <Component id="lblBonificacion" linkSize="16" alignment="0" max="32767" attributes="0"/>
+                      <Component id="lblIdFiscal" linkSize="16" alignment="0" max="32767" attributes="0"/>
+                      <Component id="lblRazonSocial" linkSize="16" alignment="0" max="32767" attributes="1"/>
+                      <Component id="lblCredencial" alignment="0" max="32767" attributes="1"/>
                       <Component id="lblContacto" alignment="0" max="32767" attributes="1"/>
                       <Component id="lblTelefono" alignment="0" max="32767" attributes="1"/>
                       <Component id="lblViajante" alignment="0" max="32767" attributes="1"/>
@@ -93,51 +96,46 @@
                       <Component id="lblPais" alignment="0" max="32767" attributes="0"/>
                       <Component id="lblDireccion" alignment="0" max="32767" attributes="0"/>
                       <Component id="lblCondicionIVA" alignment="0" max="32767" attributes="1"/>
-                      <Component id="lblIdFiscal" alignment="0" max="32767" attributes="0"/>
-                      <Component id="lblRazonSocial" alignment="0" max="32767" attributes="1"/>
-                      <Component id="lblNombreFantasia" alignment="0" max="32767" attributes="0"/>
-                      <Component id="lblCredencial" max="32767" attributes="1"/>
+                      <Component id="lblNombreFantasia" linkSize="16" alignment="0" max="32767" attributes="0"/>
+                      <Component id="lblEmail" alignment="0" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="cmbProvincia" pref="326" max="32767" attributes="1"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="cmbProvincia" alignment="0" pref="346" max="32767" attributes="1"/>
+                              <Component id="cmbPais" alignment="1" max="32767" attributes="1"/>
+                              <Component id="cmbViajante" alignment="1" max="32767" attributes="1"/>
+                              <Component id="cmbLocalidad" alignment="1" max="32767" attributes="1"/>
+                              <Component id="cmbCredencial" alignment="0" max="32767" attributes="1"/>
+                          </Group>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="btnNuevaProvincia" linkSize="11" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="btnBuscarUsuarioViajante" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                  <Component id="btnNuevoUsuarioViajante" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="btnBuscarCredencial" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                  <Component id="btnNuevaCredencial" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="btnNuevaProvincia" alignment="1" max="32767" attributes="0"/>
+                              <Component id="btnNuevoPais" alignment="1" max="32767" attributes="0"/>
+                              <Component id="btnNuevaLocalidad" alignment="1" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
+                      <Component id="cmbTipoDeCliente" max="32767" attributes="0"/>
+                      <Component id="txtBonificacion" alignment="0" max="32767" attributes="0"/>
+                      <Component id="txtIdFiscal" alignment="0" max="32767" attributes="0"/>
                       <Component id="txtRazonSocial" alignment="0" max="32767" attributes="1"/>
                       <Component id="txtNombreFantasia" alignment="0" max="32767" attributes="1"/>
-                      <Component id="txtDireccion" alignment="0" max="32767" attributes="1"/>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="cmbPais" max="32767" attributes="1"/>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="btnNuevoPais" linkSize="11" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="cmbCredencial" max="32767" attributes="1"/>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="btnBuscarCredencial" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="btnNuevaCredencial" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="cmbLocalidad" max="32767" attributes="1"/>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="btnNuevaLocalidad" linkSize="11" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Component id="txtTelefono" alignment="1" max="32767" attributes="2"/>
-                      <Component id="txtContacto" alignment="1" max="32767" attributes="2"/>
-                      <Component id="txtEmail" alignment="1" max="32767" attributes="2"/>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="cmbViajante" max="32767" attributes="1"/>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="btnBuscarUsuarioViajante" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="btnNuevoUsuarioViajante" min="-2" max="-2" attributes="0"/>
-                      </Group>
                       <Component id="cmbCategoriaIVA" alignment="0" max="32767" attributes="0"/>
-                      <Component id="txtIdFiscal" alignment="1" max="32767" attributes="0"/>
-                      <Component id="cmbTipoDeCliente" alignment="0" max="32767" attributes="0"/>
+                      <Component id="txtDireccion" alignment="0" max="32767" attributes="1"/>
+                      <Component id="txtTelefono" alignment="0" max="32767" attributes="2"/>
+                      <Component id="txtContacto" alignment="0" max="32767" attributes="2"/>
+                      <Component id="txtEmail" alignment="0" max="32767" attributes="2"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -145,16 +143,21 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="cmbTipoDeCliente" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblTipoDeCliente" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblTipoDeCliente" linkSize="17" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="txtBonificacion" linkSize="19" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
+                      <Component id="lblBonificacion" linkSize="17" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lblIdFiscal" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtIdFiscal" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblIdFiscal" linkSize="17" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtIdFiscal" linkSize="19" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -220,8 +223,8 @@
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lblCredencial" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="cmbCredencial" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnNuevaCredencial" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="btnBuscarCredencial" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnNuevaCredencial" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -229,11 +232,53 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
+        <Component class="javax.swing.JLabel" name="lblTipoDeCliente">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="Tipo:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cmbTipoDeCliente">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;TipoDeCliente&gt;"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblBonificacion">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="% Bonificaci&#xf3;n:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="txtBonificacion">
+          <Properties>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format format="#,##0.##" subtype="-1" type="0"/>
+            </Property>
+            <Property name="value" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="0" type="code"/>
+            </Property>
+          </Properties>
+        </Component>
         <Component class="javax.swing.JLabel" name="lblIdFiscal">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="CUIL, CUIT o DNI:"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="txtIdFiscal">
+          <Properties>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format format="#" subtype="-1" type="0"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtIdFiscalFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblRazonSocial">
           <Properties>
@@ -397,6 +442,26 @@
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Usuario&gt;"/>
           </AuxValues>
         </Component>
+        <Component class="javax.swing.JButton" name="btnBuscarUsuarioViajante">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/sic/icons/Search_16x16.png"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarUsuarioViajanteActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnNuevoUsuarioViajante">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/sic/icons/AddGroup_16x16.png"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNuevoUsuarioViajanteActionPerformed"/>
+          </Events>
+        </Component>
         <Component class="javax.swing.JLabel" name="lblTelefono">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -443,6 +508,16 @@
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Usuario&gt;"/>
           </AuxValues>
         </Component>
+        <Component class="javax.swing.JButton" name="btnBuscarCredencial">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/sic/icons/Search_16x16.png"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarCredencialActionPerformed"/>
+          </Events>
+        </Component>
         <Component class="javax.swing.JButton" name="btnNuevaCredencial">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -455,62 +530,6 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNuevaCredencialActionPerformed"/>
           </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="btnBuscarUsuarioViajante">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/Search_16x16.png"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarUsuarioViajanteActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="btnNuevoUsuarioViajante">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/AddGroup_16x16.png"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNuevoUsuarioViajanteActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="btnBuscarCredencial">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/Search_16x16.png"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarCredencialActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txtIdFiscal">
-          <Properties>
-            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-              <Format format="#" subtype="-1" type="0"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtIdFiscalFocusLost"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblTipoDeCliente">
-          <Properties>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Tipo:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cmbTipoDeCliente">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;TipoDeCliente&gt;"/>
-          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

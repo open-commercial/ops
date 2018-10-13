@@ -220,7 +220,7 @@ public class PedidosGUI extends JInternalFrame {
         encabezadoRenglones[0] = "Codigo";
         encabezadoRenglones[1] = "Descripcion";
         encabezadoRenglones[2] = "Cantidad";
-        encabezadoRenglones[3] = "Precio Lista";
+        encabezadoRenglones[3] = "Precio Unitario";
         encabezadoRenglones[4] = "% Descuento";
         encabezadoRenglones[5] = "SubTotal";
         modeloTablaRenglones.setColumnIdentifiers(encabezadoRenglones);
@@ -314,11 +314,11 @@ public class PedidosGUI extends JInternalFrame {
                     .getForObject("/pedidos/" + pedidosTotal.get(row).getId_Pedido() + "/renglones", RenglonPedido[].class));
             renglones.stream().map(r -> {
                 Object[] fila = new Object[6];
-                fila[0] = r.getCodigoProducto();
-                fila[1] = r.getDescripcionProducto();
+                fila[0] = r.getCodigoItem();
+                fila[1] = r.getDescripcionItem();
                 fila[2] = r.getCantidad();
-                fila[3] = r.getPrecioDeListaProducto();
-                fila[4] = r.getDescuento_porcentaje();
+                fila[3] = r.getPrecioUnitario();
+                fila[4] = r.getDescuentoPorcentaje();
                 fila[5] = r.getSubTotal();
                 return fila;
             }).forEach(fila -> {

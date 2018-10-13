@@ -12,6 +12,7 @@ public class Cliente implements Serializable {
 
     private long id_Cliente;
     private TipoDeCliente tipoDeCliente;
+    private BigDecimal bonificacion;
     private String nroCliente;
     private String razonSocial;
     private String nombreFantasia;

@@ -203,7 +203,7 @@ public class BuscarProductosGUI extends JDialog {
     private BigDecimal sumarCantidadesSegunProductosYaCargados() {
         BigDecimal cantidad = new BigDecimal(txtCantidad.getValue().toString());
         for (RenglonFactura r : renglones) {
-            if (r.getId_ProductoItem() == productoSeleccionado.getId_Producto()) {
+            if (r.getIdProductoItem() == productoSeleccionado.getId_Producto()) {
                 cantidad = cantidad.add(r.getCantidad());
             }
         }

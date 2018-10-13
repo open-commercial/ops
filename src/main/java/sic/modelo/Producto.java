@@ -23,8 +23,6 @@ public class Producto implements Serializable {
     private BigDecimal precioVentaPublico;
     private BigDecimal ivaPorcentaje;
     private BigDecimal ivaNeto;
-    private BigDecimal impuestoInternoPorcentaje;
-    private BigDecimal impuestoInternoNeto;
     private BigDecimal precioLista;    
     private String nombreRubro;
     private boolean ilimitado;    

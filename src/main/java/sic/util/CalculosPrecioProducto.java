@@ -9,9 +9,11 @@ public class CalculosPrecioProducto {
 
     public static BigDecimal calcularGananciaPorcentaje(BigDecimal precioDeListaNuevo,
             BigDecimal precioDeListaAnterior, BigDecimal pvp, BigDecimal ivaPorcentaje,
-            BigDecimal impInternoPorcentaje, BigDecimal precioCosto, boolean ascendente) {
+            BigDecimal precioCosto, boolean ascendente) {
         //evita la division por cero
-        if (precioCosto.compareTo(BigDecimal.ZERO) == 0) return BigDecimal.ZERO;
+        if (precioCosto.compareTo(BigDecimal.ZERO) == 0) {
+            return BigDecimal.ZERO;
+        }
         BigDecimal resultado;
         if (!ascendente) {
             resultado = pvp.subtract(precioCosto).divide(precioCosto, 15, RoundingMode.HALF_UP).multiply(CIEN);
@@ -20,7 +22,6 @@ public class CalculosPrecioProducto {
         } else {
             resultado = precioDeListaNuevo;
             BigDecimal porcentajeIncremento = precioDeListaNuevo.divide(precioDeListaAnterior, 15, RoundingMode.HALF_UP);
-            resultado = resultado.subtract(porcentajeIncremento.multiply(impInternoPorcentaje.divide(CIEN, 15, RoundingMode.HALF_UP).multiply(pvp)));
             resultado = resultado.subtract(porcentajeIncremento.multiply(ivaPorcentaje.divide(CIEN, 15, RoundingMode.HALF_UP).multiply(pvp)));
             resultado = resultado.subtract(precioCosto).multiply(CIEN).divide(precioCosto, 15, RoundingMode.HALF_UP);
         }
@@ -39,14 +40,8 @@ public class CalculosPrecioProducto {
         return pvp.multiply(ivaPorcentaje).divide(CIEN, 15, RoundingMode.HALF_UP);
     }
 
-    public static BigDecimal calcularImpInternoNeto(BigDecimal pvp, BigDecimal impInternoPorcentaje) {
-        return pvp.multiply(impInternoPorcentaje).divide(CIEN, 15, RoundingMode.HALF_UP);
-    }
-
-    public static BigDecimal calcularPrecioLista(BigDecimal PVP, BigDecimal ivaPorcentaje, BigDecimal impInternoPorcentaje) {
-        BigDecimal resulIVA = PVP.multiply(ivaPorcentaje.divide(CIEN, 15, RoundingMode.HALF_UP));
-        BigDecimal resultImpInterno = PVP.multiply(impInternoPorcentaje.divide(CIEN, 15, RoundingMode.HALF_UP));
-        return PVP.add(resulIVA).add(resultImpInterno);
+    public static BigDecimal calcularPrecioLista(BigDecimal PVP, BigDecimal ivaPorcentaje) {
+        return PVP.add(PVP.multiply(ivaPorcentaje.divide(CIEN, 15, RoundingMode.HALF_UP)));
     }
 
 }
