@@ -230,7 +230,7 @@ public class DetalleClienteGUI extends JDialog {
             cmbCredencial.setEnabled(false);
             txt_bonificacion.setEnabled(false);
         }
-        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+        if (rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
             txt_bonificacion.setEnabled(true);
         } else {
             txt_bonificacion.setEnabled(false);
