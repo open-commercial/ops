@@ -221,6 +221,7 @@ public class DetalleClienteGUI extends JDialog {
             btnNuevoUsuarioViajante.setEnabled(true);
             lblCredencial.setEnabled(true);
             cmbCredencial.setEnabled(true);
+            lblBonificacion.setEnabled(true);
             txtBonificacion.setEnabled(true);
         } else {
             btnNuevaCredencial.setEnabled(false);
@@ -228,11 +229,14 @@ public class DetalleClienteGUI extends JDialog {
             btnNuevoUsuarioViajante.setEnabled(false);
             lblCredencial.setEnabled(false);
             cmbCredencial.setEnabled(false);
+            lblBonificacion.setEnabled(false);
             txtBonificacion.setEnabled(false);
         }
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            lblBonificacion.setEnabled(true);
             txtBonificacion.setEnabled(true);
         } else {
+            lblBonificacion.setEnabled(false);
             txtBonificacion.setEnabled(false);
         }
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
