@@ -1,7 +1,6 @@
 package sic.util;
 
 import java.awt.Component;
-import java.awt.Font;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -17,10 +16,10 @@ public class FormatoPorcentajeRenderer extends DefaultTableCellRenderer {
             boolean isSelected, boolean hasFocus, int row, int column) {
 
         JLabel cell = (JLabel) super.getTableCellRendererComponent(tabla, valor, isSelected, hasFocus, row, column);
-        this.setHorizontalAlignment(SwingConstants.RIGHT);
+        this.setHorizontalAlignment(SwingConstants.LEFT);
         if (valor instanceof Number) {
             BigDecimal numero = ((BigDecimal) valor).setScale(2, RoundingMode.HALF_UP);
-            DecimalFormat dFormat; // = new DecimalFormat("##,##0.00");
+            DecimalFormat dFormat;
             if (numero.compareTo(BigDecimal.ZERO) == 0) {
                 dFormat = new DecimalFormat("##0");
             } else {
@@ -28,7 +27,6 @@ public class FormatoPorcentajeRenderer extends DefaultTableCellRenderer {
             }
             cell.setText(dFormat.format(numero) + "%");
         }
-        cell.setFont(new Font("Font", Font.BOLD, 12));
         return cell;
     }
 
