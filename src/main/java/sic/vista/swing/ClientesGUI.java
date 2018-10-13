@@ -31,7 +31,7 @@ import sic.modelo.Usuario;
 import sic.modelo.UsuarioActivo;
 import sic.util.ColoresNumerosRenderer;
 import sic.util.FechasRenderer;
-import sic.util.FormatoPorcentajeRenderer;
+import sic.util.PorcentajeRenderer;
 import sic.util.FormatosFechaHora;
 import sic.util.Utilidades;
 
@@ -186,7 +186,7 @@ public class ClientesGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(250);       
         tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(110);
         tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(150);
-        tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(85);
+        tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(90);
         tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(250);        
         tbl_Resultados.getColumnModel().getColumn(11).setPreferredWidth(250);
@@ -201,7 +201,7 @@ public class ClientesGUI extends JInternalFrame {
         //renderers
         tbl_Resultados.getColumnModel().getColumn(6).setCellRenderer(new ColoresNumerosRenderer());
         tbl_Resultados.getColumnModel().getColumn(7).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
-        tbl_Resultados.getColumnModel().getColumn(8).setCellRenderer(new FormatoPorcentajeRenderer());
+        tbl_Resultados.getColumnModel().getColumn(8).setCellRenderer(new PorcentajeRenderer());
         tbl_Resultados.getColumnModel().getColumn(16).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 

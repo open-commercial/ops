@@ -9,7 +9,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
-public class FormatoPorcentajeRenderer extends DefaultTableCellRenderer {
+public class PorcentajeRenderer extends DefaultTableCellRenderer {
 
     @Override
     public Component getTableCellRendererComponent(JTable tabla, Object valor,
@@ -23,7 +23,7 @@ public class FormatoPorcentajeRenderer extends DefaultTableCellRenderer {
             if (numero.compareTo(BigDecimal.ZERO) == 0) {
                 dFormat = new DecimalFormat("##0");
             } else {
-                dFormat = new DecimalFormat("##0.00");
+                dFormat = new DecimalFormat("##0.##");
             }
             cell.setText(dFormat.format(numero) + "%");
         }
