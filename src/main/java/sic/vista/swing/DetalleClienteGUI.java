@@ -221,23 +221,12 @@ public class DetalleClienteGUI extends JDialog {
             btnNuevoUsuarioViajante.setEnabled(true);
             lblCredencial.setEnabled(true);
             cmbCredencial.setEnabled(true);
-            lblBonificacion.setEnabled(true);
-            txtBonificacion.setEnabled(true);
         } else {
             btnNuevaCredencial.setEnabled(false);
             btnBuscarCredencial.setEnabled(false);
             btnNuevoUsuarioViajante.setEnabled(false);
             lblCredencial.setEnabled(false);
             cmbCredencial.setEnabled(false);
-            lblBonificacion.setEnabled(false);
-            txtBonificacion.setEnabled(false);
-        }
-        if (rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-            lblBonificacion.setEnabled(true);
-            txtBonificacion.setEnabled(true);
-        } else {
-            lblBonificacion.setEnabled(false);
-            txtBonificacion.setEnabled(false);
         }
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
@@ -250,16 +239,20 @@ public class DetalleClienteGUI extends JDialog {
             lblCredencial.setEnabled(true);
             cmbCredencial.setEnabled(true);
             btnBuscarCredencial.setEnabled(true);
+            lblBonificacion.setEnabled(true);
+            txtBonificacion.setEnabled(true);
         } else {
             btnNuevaLocalidad.setEnabled(false);
             btnNuevaProvincia.setEnabled(false);
             btnNuevoPais.setEnabled(false);
-            lblViajante.setEnabled(false);            
+            lblViajante.setEnabled(false);
             cmbViajante.setEnabled(false);
             btnBuscarUsuarioViajante.setEnabled(false);
             lblCredencial.setEnabled(false);
             cmbCredencial.setEnabled(false);
-            btnBuscarCredencial.setEnabled(false);            
+            btnBuscarCredencial.setEnabled(false);
+            lblBonificacion.setEnabled(false);
+            txtBonificacion.setEnabled(false);
         }
         if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
                 && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)
