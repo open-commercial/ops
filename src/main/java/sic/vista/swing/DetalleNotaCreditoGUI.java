@@ -183,8 +183,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
         }
     }
 
-    private void cargarDetalleCliente() {
-        txtNombre.setText(((FacturaVenta) factura).getRazonSocialCliente());
+    private void cargarDetalleCliente() {        
+        txtNombre.setText(((FacturaVenta) factura).getRazonSocialCliente() + " (" + cliente.getNroCliente() + ")");
         txtDomicilio.setText(cliente.getDireccion()
                 + " " + cliente.getNombreLocalidad()
                 + " " + cliente.getNombreProvincia()
@@ -458,7 +458,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
         lblDomicilioCliente.setText("Domicilio:");
 
         lblIDFiscalCliente.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblIDFiscalCliente.setText("ID Fiscal:");
+        lblIDFiscalCliente.setText("CUIT o DNI:");
 
         lblCondicionIVACliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblCondicionIVACliente.setText("Condición IVA:");
@@ -512,7 +512,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
                     .addComponent(txtCondicionIVA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblCondicionIVACliente)
                     .addComponent(txtIdFiscal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblIDFiscalCliente)))
+                    .addComponent(lblIDFiscalCliente))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelDetalle.setBorder(javax.swing.BorderFactory.createEtchedBorder());

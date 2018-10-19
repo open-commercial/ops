@@ -316,7 +316,7 @@
     <Component class="javax.swing.JLabel" name="lblIDFiscalCliente">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="4"/>
-        <Property name="text" type="java.lang.String" value="ID Fiscal:"/>
+        <Property name="text" type="java.lang.String" value="CUIT o DNI:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lblDomicilioCliente">

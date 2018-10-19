@@ -255,8 +255,9 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     }
     
     private void cargarDetalleCliente() {
-        this.setTitle("Cuenta Corriente del Cliente: " + cliente.getRazonSocial());
-        txtNombreCliente.setText(cliente.getRazonSocial());
+        String nombreCliente = cliente.getRazonSocial() + " (" + cliente.getNroCliente() + ")";
+        this.setTitle("Cuenta Corriente del Cliente: " + nombreCliente);
+        txtNombreCliente.setText(nombreCliente);        
         String direccion = "";
         if (cliente.getDireccion() != null) direccion = cliente.getDireccion() + " ";
         if (cliente.getNombreLocalidad() != null) {
@@ -689,7 +690,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         txtIDFiscalCliente.setFocusable(false);
 
         lblIDFiscalCliente.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblIDFiscalCliente.setText("ID Fiscal:");
+        lblIDFiscalCliente.setText("CUIT o DNI:");
 
         lblDomicilioCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblDomicilioCliente.setText("Domicilio:");

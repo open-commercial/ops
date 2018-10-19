@@ -168,7 +168,7 @@
             <Component class="javax.swing.JLabel" name="lbl_IDFiscalCliente">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="CUIL, CUIT o DNI:"/>
+                <Property name="text" type="java.lang.String" value="CUIT o DNI:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lbl_CondicionIVACliente">
