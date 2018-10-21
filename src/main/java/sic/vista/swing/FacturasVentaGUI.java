@@ -476,6 +476,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         txt_ResultTotalIVAVenta = new javax.swing.JFormattedTextField();
         btn_Nueva = new javax.swing.JButton();
         btn_Autorizar = new javax.swing.JButton();
+        btnCrearNotaCredito = new javax.swing.JButton();
         panelFiltros = new javax.swing.JPanel();
         subPanelFiltros1 = new javax.swing.JPanel();
         chk_Fecha = new javax.swing.JCheckBox();
@@ -625,6 +626,14 @@ public class FacturasVentaGUI extends JInternalFrame {
             }
         });
 
+        btnCrearNotaCredito.setForeground(java.awt.Color.blue);
+        btnCrearNotaCredito.setText("Nueva Nota Credito");
+        btnCrearNotaCredito.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearNotaCreditoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
@@ -637,6 +646,8 @@ public class FacturasVentaGUI extends JInternalFrame {
                 .addComponent(btn_Autorizar)
                 .addGap(0, 0, 0)
                 .addComponent(btn_VerDetalle)
+                .addGap(0, 0, 0)
+                .addComponent(btnCrearNotaCredito)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panelNumeros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(sp_Resultados)
@@ -655,10 +666,12 @@ public class FacturasVentaGUI extends JInternalFrame {
                         .addComponent(btn_Nueva)
                         .addComponent(btn_Eliminar)
                         .addComponent(btn_Autorizar)
-                        .addComponent(btn_VerDetalle))))
+                        .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn_VerDetalle)
+                            .addComponent(btnCrearNotaCredito)))))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Autorizar, btn_Eliminar, btn_Nueva, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaCredito, btn_Autorizar, btn_Eliminar, btn_Nueva, btn_VerDetalle});
 
         panelFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
 
@@ -1212,10 +1225,55 @@ public class FacturasVentaGUI extends JInternalFrame {
     private void cmbSentidoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbSentidoItemStateChanged
         this.limpiarYBuscar(true);
     }//GEN-LAST:event_cmbSentidoItemStateChanged
+
+    private void btnCrearNotaCreditoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearNotaCreditoActionPerformed
+        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
+            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+            FacturaVenta factura = facturasTotal.get(indexFilaSeleccionada);
+            if (factura.getTipoComprobante() == TipoDeComprobante.FACTURA_A
+                || factura.getTipoComprobante() == TipoDeComprobante.FACTURA_B
+                || factura.getTipoComprobante() == TipoDeComprobante.FACTURA_C
+                || factura.getTipoComprobante() == TipoDeComprobante.FACTURA_X
+                || factura.getTipoComprobante() == TipoDeComprobante.FACTURA_Y
+                || factura.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
+                SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(
+                        factura.getId_Factura(), factura.getTipoComprobante());
+                seleccionDeProductosGUI.setModal(true);
+                seleccionDeProductosGUI.setLocationRelativeTo(this);
+                seleccionDeProductosGUI.setVisible(true);
+                try {
+                    Cliente cliente = RestClient.getRestTemplate()
+                    .getForObject("/clientes/" + factura.getIdCliente(),
+                        Cliente.class);
+                    if (!seleccionDeProductosGUI.getRenglonesConCantidadNueva().isEmpty()) {
+                        DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(
+                            seleccionDeProductosGUI.getRenglonesConCantidadNueva(),
+                            seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock(),
+                            cliente);
+                        detalleNotaCredito.setModal(true);
+                        detalleNotaCredito.setLocationRelativeTo(this);
+                        detalleNotaCredito.setVisible(true);
+                    }
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showInternalMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnCrearNotaCreditoActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarCliente;
     private javax.swing.JButton btnBuscarUsuarios;
+    private javax.swing.JButton btnCrearNotaCredito;
     private javax.swing.JButton btn_Autorizar;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;

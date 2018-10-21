@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class FacturaCompra extends Factura implements Serializable {
 
+      private Long idProveedor;
       private String razonSocialProveedor;
       
 }

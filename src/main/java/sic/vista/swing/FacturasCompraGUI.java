@@ -25,6 +25,7 @@ import sic.modelo.EmpresaActiva;
 import sic.modelo.FacturaCompra;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Proveedor;
+import sic.modelo.RenglonCuentaCorriente;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.TipoDeOperacion;
@@ -295,7 +296,7 @@ public class FacturasCompraGUI extends JInternalFrame {
             .getForObject("/proveedores/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
             Proveedor[].class)).isEmpty();
     }
-    
+       
     private void cargarTiposDeFactura() {
         try {
             TipoDeComprobante[] tiposDeComprobantes = RestClient.getRestTemplate()
@@ -354,6 +355,7 @@ public class FacturasCompraGUI extends JInternalFrame {
         txt_ResultTotalIVACompra = new javax.swing.JFormattedTextField();
         txt_ResultGastoTotal = new javax.swing.JFormattedTextField();
         lbl_TotalFacturado = new javax.swing.JLabel();
+        btnCrearNotaCredito = new javax.swing.JButton();
         panelOrden = new javax.swing.JPanel();
         cmbOrden = new javax.swing.JComboBox<>();
         cmbSentido = new javax.swing.JComboBox<>();
@@ -506,7 +508,6 @@ public class FacturasCompraGUI extends JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panelFiltrosLayout.createSequentialGroup()
-                                .addGap(0, 0, 0)
                                 .addComponent(txt_SerieFactura)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lblSeparador, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -610,6 +611,14 @@ public class FacturasCompraGUI extends JInternalFrame {
 
         lbl_TotalFacturado.setText("Total Facturado:");
 
+        btnCrearNotaCredito.setForeground(java.awt.Color.blue);
+        btnCrearNotaCredito.setText("Nueva Nota Credito");
+        btnCrearNotaCredito.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearNotaCreditoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
@@ -620,6 +629,8 @@ public class FacturasCompraGUI extends JInternalFrame {
                 .addComponent(btn_Eliminar)
                 .addGap(0, 0, 0)
                 .addComponent(btn_VerDetalle)
+                .addGap(0, 0, 0)
+                .addComponent(btnCrearNotaCredito)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_TotalFacturado, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -649,11 +660,12 @@ public class FacturasCompraGUI extends JInternalFrame {
                             .addComponent(lbl_TotalIVACompra)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btn_Eliminar)
-                        .addComponent(btn_VerDetalle))
+                        .addComponent(btn_VerDetalle)
+                        .addComponent(btnCrearNotaCredito))
                     .addComponent(btn_Nuevo, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Eliminar, btn_Nuevo, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaCredito, btn_Eliminar, btn_Nuevo, btn_VerDetalle});
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
 
@@ -878,9 +890,54 @@ public class FacturasCompraGUI extends JInternalFrame {
             txtProveedor.setText(proveedorSeleccionado.getRazonSocial());
         }
     }//GEN-LAST:event_btnBuscarProveedorActionPerformed
+
+    private void btnCrearNotaCreditoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearNotaCreditoActionPerformed
+        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
+            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+            FacturaCompra factura = facturasTotal.get(indexFilaSeleccionada);
+            if (factura.getTipoComprobante() == TipoDeComprobante.FACTURA_A
+                    || factura.getTipoComprobante() == TipoDeComprobante.FACTURA_B
+                    || factura.getTipoComprobante() == TipoDeComprobante.FACTURA_C
+                    || factura.getTipoComprobante() == TipoDeComprobante.FACTURA_X
+                    || factura.getTipoComprobante() == TipoDeComprobante.FACTURA_Y
+                    || factura.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
+                SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(
+                        factura.getId_Factura(), factura.getTipoComprobante());
+                seleccionDeProductosGUI.setModal(true);
+                seleccionDeProductosGUI.setLocationRelativeTo(this);
+                seleccionDeProductosGUI.setVisible(true);
+                try {
+                    Proveedor proveedor = RestClient.getRestTemplate()
+                            .getForObject("/proveedores/" + factura.getIdProveedor(),
+                                    Proveedor.class);
+                    if (!seleccionDeProductosGUI.getRenglonesConCantidadNueva().isEmpty()) {
+                        DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(
+                                seleccionDeProductosGUI.getRenglonesConCantidadNueva(),
+                                seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock(),
+                                proveedor);
+                        detalleNotaCredito.setModal(true);
+                        detalleNotaCredito.setLocationRelativeTo(this);
+                        detalleNotaCredito.setVisible(true);                        
+                    }
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showInternalMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnCrearNotaCreditoActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarProveedor;
+    private javax.swing.JButton btnCrearNotaCredito;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_Nuevo;
