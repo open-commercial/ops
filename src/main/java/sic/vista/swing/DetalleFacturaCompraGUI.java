@@ -436,6 +436,11 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
             for (int i = 0; tiposFactura.length > i; i++) {
                 cmb_TipoFactura.addItem(tiposFactura[i]);
             }
+            // ******* SHADOW ****************
+            cmb_TipoFactura.removeItem(TipoDeComprobante.FACTURA_X);
+            cmb_TipoFactura.removeItem(TipoDeComprobante.FACTURA_Y);
+            cmb_TipoFactura.removeItem(TipoDeComprobante.PRESUPUESTO);
+            // *******************************
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {

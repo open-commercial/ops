@@ -902,6 +902,10 @@ public class NotasVentaGUI extends JInternalFrame {
             JOptionPane.showInternalMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();
         }
+        // ************* SHADOW ***************
+        chk_TipoNota.setVisible(false);
+        cmb_TipoNota.setVisible(false);
+        // ************************************
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void chk_TipoNotaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_TipoNotaItemStateChanged

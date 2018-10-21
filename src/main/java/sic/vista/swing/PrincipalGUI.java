@@ -399,8 +399,11 @@ public class PrincipalGUI extends JFrame {
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-        this.cambiarEstadoDeComponentesSegunRolUsuario();
-        this.checkCajaAbierta();
+        this.cambiarEstadoDeComponentesSegunRolUsuario();        
+        // ******** SHADOW ********************
+        mnu_Administracion.setVisible(false);
+        // ************************************        
+        this.checkCajaAbierta();        
     }//GEN-LAST:event_formWindowOpened
         
     private void mnuItm_UsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_UsuariosActionPerformed
