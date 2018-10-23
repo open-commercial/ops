@@ -1083,6 +1083,12 @@ public class FacturasVentaGUI extends JInternalFrame {
             JOptionPane.showInternalMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();
         }
+        // ********** SHADOW *********************
+        chk_TipoFactura.setVisible(false);
+        cmb_TipoFactura.setVisible(false);
+        chk_NumeroPedido.setVisible(false);
+        txt_NumeroPedido.setVisible(false);
+        // ***************************************
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void chk_UsuarioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UsuarioItemStateChanged

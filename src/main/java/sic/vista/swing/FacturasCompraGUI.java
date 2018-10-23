@@ -738,6 +738,10 @@ public class FacturasCompraGUI extends JInternalFrame {
         } catch (PropertyVetoException ex) {
             LOGGER.error(ex.getMessage());
         }
+        // ********** SHADOW *********************
+        chk_TipoFactura.setVisible(false);
+        cmb_TipoFactura.setVisible(false);
+        // ***************************************
     }//GEN-LAST:event_formInternalFrameOpened
         
     private void chk_NumFacturaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_NumFacturaItemStateChanged
