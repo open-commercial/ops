@@ -138,11 +138,7 @@ public class ProveedoresGUI extends JInternalFrame {
         encabezados[1] = "ID Fiscal";
         encabezados[2] = "Razon Social";
         encabezados[3] = "Saldo C/C";
-        encabezados[4] = "Ultimo Movimiento C/C";
-        // ********** SHADOW *********
-        encabezados[3] = "Saldo";
-        encabezados[4] = "Fecha Saldo";
-        // ***************************
+        encabezados[4] = "Ultimo Movimiento C/C";        
         encabezados[5] = "Direccion";
         encabezados[6] = "Condicion IVA";
         encabezados[7] = "Tel. Primario";
@@ -203,11 +199,7 @@ public class ProveedoresGUI extends JInternalFrame {
             fila[1] = p.getIdFiscal();
             fila[2] = p.getRazonSocial();            
             fila[3] = p.getSaldoCuentaCorriente();
-            fila[4] = p.getFechaUltimoMovimiento();
-            // ********** SHADOW *********
-            fila[3] = BigDecimal.ZERO;
-            fila[4] = new Date();
-            // ***************************
+            fila[4] = p.getFechaUltimoMovimiento();            
             fila[5] = p.getDireccion();
             fila[6] = p.getCategoriaIVA();
             fila[7] = p.getTelPrimario();
@@ -760,10 +752,7 @@ public class ProveedoresGUI extends JInternalFrame {
             LOGGER.error(msjError + " - " + ex.getMessage());
             JOptionPane.showInternalMessageDialog(this, msjError, "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();
-        }
-        // ********** SHADOW *********
-        btnCuentaCorriente.setVisible(false);
-        // ***************************
+        }        
     }//GEN-LAST:event_formInternalFrameOpened
  
     private void btnCuentaCorrienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaCorrienteActionPerformed

@@ -588,12 +588,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
                 for (int i = 0; tiposDeComprobante.length > i; i++) {
-                    cmb_TipoComprobante.addItem(tiposDeComprobante[i]);
-                    // ******* SHADOW ****************
-                    cmb_TipoComprobante.removeItem(TipoDeComprobante.FACTURA_X);
-                    cmb_TipoComprobante.removeItem(TipoDeComprobante.FACTURA_Y);
-                    cmb_TipoComprobante.removeItem(TipoDeComprobante.PRESUPUESTO);
-                    // *******************************
+                    cmb_TipoComprobante.addItem(tiposDeComprobante[i]);                    
                 }
             }
         }

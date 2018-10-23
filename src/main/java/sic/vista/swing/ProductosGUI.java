@@ -921,11 +921,7 @@ public class ProductosGUI extends JInternalFrame {
             LOGGER.error(mensaje + " - " + ex.getMessage());
             JOptionPane.showInternalMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();
-        }
-        // ******** SHADOW ************
-        lbl_ValorStock.setVisible(false);
-        txt_ValorStock.setVisible(false);
-        // ****************************
+        }        
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void chk_DisponibilidadItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_DisponibilidadItemStateChanged

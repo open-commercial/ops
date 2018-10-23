@@ -137,11 +137,7 @@ public class ClientesGUI extends JInternalFrame {
         encabezados[4] = "Razon Social";
         encabezados[5] = "Nombre Fantasia";
         encabezados[6] = "Saldo C/C";
-        encabezados[7] = "Ultimo Movimiento C/C";
-        // ********** SHADOW *********
-        encabezados[6] = "Saldo";
-        encabezados[7] = "Fecha Saldo";
-        // ***************************
+        encabezados[7] = "Ultimo Movimiento C/C";        
         encabezados[8] = "Bonificación";
         encabezados[9] = "Credencial";
         encabezados[10] = "Viajante";        
@@ -219,11 +215,7 @@ public class ClientesGUI extends JInternalFrame {
             fila[4] = c.getRazonSocial();
             fila[5] = c.getNombreFantasia();
             fila[6] = c.getSaldoCuentaCorriente();
-            fila[7] = c.getFechaUltimoMovimiento();
-            // ********** SHADOW *********
-            fila[6] = BigDecimal.ZERO;
-            fila[7] = new Date();
-            // ***************************
+            fila[7] = c.getFechaUltimoMovimiento();            
             fila[8] = c.getBonificacion();
             fila[9] = c.getNombreCredencial();
             fila[10] = c.getNombreViajante();            
@@ -853,10 +845,7 @@ public class ClientesGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();
-        }
-        // ********** SHADOW *********
-        btnCuentaCorriente.setVisible(false);
-        // ***************************
+        }        
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void btn_setPredeterminadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_setPredeterminadoActionPerformed
