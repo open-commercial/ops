@@ -36,12 +36,11 @@ public class ProductosFaltantesGUI extends JDialog {
 
     private void setColumnas() {
         //nombres de columnas
-        String[] encabezados = new String[5];
+        String[] encabezados = new String[4];
         encabezados[0] = "Codigo";
         encabezados[1] = "Descripcion";
         encabezados[2] = "Cant. Solicitada";
-        encabezados[3] = "Cant. Venta Minima";
-        encabezados[4] = "Cant. Disponible";
+        encabezados[3] = "Cant. Disponible";
         modeloTablaFaltantes.setColumnIdentifiers(encabezados);
         tbl_Faltantes.setModel(modeloTablaFaltantes);
         //tipo de dato columnas
@@ -50,7 +49,6 @@ public class ProductosFaltantesGUI extends JDialog {
         tipos[1] = String.class;
         tipos[2] = BigDecimal.class;
         tipos[3] = BigDecimal.class;
-        tipos[4] = BigDecimal.class;
         modeloTablaFaltantes.setClaseColumnas(tipos);
         tbl_Faltantes.getTableHeader().setReorderingAllowed(false);
         tbl_Faltantes.getTableHeader().setResizingAllowed(true);                
@@ -59,7 +57,6 @@ public class ProductosFaltantesGUI extends JDialog {
         tbl_Faltantes.getColumnModel().getColumn(1).setPreferredWidth(300);
         tbl_Faltantes.getColumnModel().getColumn(2).setPreferredWidth(120);
         tbl_Faltantes.getColumnModel().getColumn(3).setPreferredWidth(120);
-        tbl_Faltantes.getColumnModel().getColumn(4).setPreferredWidth(120);
         //renderers
         tbl_Faltantes.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
     }
@@ -72,14 +69,13 @@ public class ProductosFaltantesGUI extends JDialog {
 
     private void cargarResultadosAlTable() {
         this.limpiarJTables();
-        Object[] fila = new Object[5];
+        Object[] fila = new Object[4];
         faltantes.forEach((id, cantidad) -> {
             Producto p = RestClient.getRestTemplate().getForObject("/productos/" + id, Producto.class);
             fila[0] = p.getCodigo();
             fila[1] = p.getDescripcion();
-            fila[2] = cantidad;
-            fila[3] = p.getVentaMinima();            
-            fila[4] = p.getCantidad();
+            fila[2] = cantidad;          
+            fila[3] = p.getCantidad();
             modeloTablaFaltantes.addRow(fila);
         });        
         tbl_Faltantes.setModel(modeloTablaFaltantes);

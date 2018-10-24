@@ -158,13 +158,6 @@ public class BuscarProductosGUI extends JDialog {
             debeCargarRenglon = false;
             this.dispose();
         } else {
-            if (movimiento == Movimiento.PEDIDO) {
-                if ((new BigDecimal(txtCantidad.getValue().toString())).compareTo(productoSeleccionado.getVentaMinima()) < 0) {
-                    JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_producto_cantidad_menor_a_minima"), "Error", JOptionPane.ERROR_MESSAGE);
-                    esValido = false;
-                }
-            }
             if (movimiento == Movimiento.VENTA) {
                 String uri = "/productos/disponibilidad-stock?"
                         + "idProducto=" + productoSeleccionado.getId_Producto()
@@ -239,6 +232,7 @@ public class BuscarProductosGUI extends JDialog {
             productoSeleccionado = productosTotal.get(fila);
             txt_UnidadMedida.setText(productoSeleccionado.getNombreMedida());
             ta_ObservacionesProducto.setText(productoSeleccionado.getNota());
+            lblBulto.setText("Bulto: " + productoSeleccionado.getBulto().doubleValue());
             this.actualizarEstadoSeleccion();
         }
     }
@@ -249,7 +243,7 @@ public class BuscarProductosGUI extends JDialog {
             fila[0] = p.getCodigo();
             fila[1] = p.getDescripcion();
             fila[2] = p.getCantidad();
-            fila[3] = p.getVentaMinima();
+            fila[3] = p.getBulto();
             fila[4] = p.getNombreMedida();
             BigDecimal precio = (movimiento == Movimiento.VENTA) ? p.getPrecioLista()
                     : (movimiento == Movimiento.PEDIDO) ? p.getPrecioLista()
@@ -281,7 +275,7 @@ public class BuscarProductosGUI extends JDialog {
         encabezados[0] = "Codigo";
         encabezados[1] = "Descripción";
         encabezados[2] = "Cantidad";
-        encabezados[3] = "Venta Min.";
+        encabezados[3] = "Bulto";
         encabezados[4] = "Unidad";
         String encabezadoPrecio = (movimiento == Movimiento.VENTA) ? "P. Lista"
                 : (movimiento == Movimiento.PEDIDO) ? "P. Lista"
@@ -342,6 +336,7 @@ public class BuscarProductosGUI extends JDialog {
         txtPorcentajeDescuento = new javax.swing.JFormattedTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         ta_ObservacionesProducto = new javax.swing.JTextArea();
+        lblBulto = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -489,11 +484,15 @@ public class BuscarProductosGUI extends JDialog {
                             .addComponent(txtPorcentajeDescuento)
                             .addComponent(txtCantidad, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_UnidadMedida, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
+                        .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txt_UnidadMedida, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblBulto, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
+
+        panelFondoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblBulto, txt_UnidadMedida});
+
         panelFondoLayout.setVerticalGroup(
             panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFondoLayout.createSequentialGroup()
@@ -513,7 +512,8 @@ public class BuscarProductosGUI extends JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(lbl_Descuento)
-                            .addComponent(txtPorcentajeDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtPorcentajeDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblBulto, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
@@ -521,7 +521,7 @@ public class BuscarProductosGUI extends JDialog {
 
         panelFondoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscar, txtCriteriaBusqueda});
 
-        panelFondoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtCantidad, txtPorcentajeDescuento, txt_UnidadMedida});
+        panelFondoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblBulto, txtCantidad, txtPorcentajeDescuento, txt_UnidadMedida});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -638,6 +638,7 @@ public class BuscarProductosGUI extends JDialog {
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblBulto;
     private javax.swing.JLabel lbl_Cantidad;
     private javax.swing.JLabel lbl_Descuento;
     private javax.swing.JPanel panelFondo;

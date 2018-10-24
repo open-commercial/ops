@@ -114,7 +114,7 @@ public class ProductosGUI extends JInternalFrame {
         encabezados[2] = "Descripcion";
         encabezados[3] = "Cantidad";
         encabezados[4] = "Cant. Minima";
-        encabezados[5] = "Venta Minima";
+        encabezados[5] = "Bulto";
         encabezados[6] = "Sin Límite";
         encabezados[7] = "Medida";
         encabezados[8] = "Precio Costo";
@@ -202,7 +202,7 @@ public class ProductosGUI extends JInternalFrame {
             fila[2] = producto.getDescripcion();
             fila[3] = producto.getCantidad();
             fila[4] = producto.getCantMinima();
-            fila[5] = producto.getVentaMinima();
+            fila[5] = producto.getBulto();
             fila[6] = producto.isIlimitado();
             fila[7] = producto.getNombreMedida();
             fila[8] = producto.getPrecioCosto();

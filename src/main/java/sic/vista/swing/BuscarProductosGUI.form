@@ -65,8 +65,10 @@
                               <Component id="txtCantidad" alignment="1" pref="88" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="txt_UnidadMedida" min="-2" pref="165" max="-2" attributes="1"/>
-                          <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="txt_UnidadMedida" linkSize="6" min="-2" pref="165" max="-2" attributes="1"/>
+                              <Component id="lblBulto" linkSize="6" min="-2" pref="156" max="-2" attributes="0"/>
+                          </Group>
                           <Component id="btnAceptar" min="-2" pref="48" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -96,6 +98,7 @@
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="lbl_Descuento" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="txtPorcentajeDescuento" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblBulto" linkSize="5" alignment="2" min="-2" pref="19" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Component id="btnAceptar" alignment="0" min="-2" pref="54" max="-2" attributes="0"/>
@@ -250,6 +253,8 @@
             </Component>
           </SubComponents>
         </Container>
+        <Component class="javax.swing.JLabel" name="lblBulto">
+        </Component>
       </SubComponents>
     </Container>
   </SubComponents>

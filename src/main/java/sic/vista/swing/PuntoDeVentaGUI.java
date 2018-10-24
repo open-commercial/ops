@@ -426,21 +426,15 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         + "idProducto=" + producto.getId_Producto()
                         + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                         + "&movimiento=" + Movimiento.VENTA
-                        + "&cantidad=" + producto.getVentaMinima()
+                        + "&cantidad=" + producto.getBulto()
                         + "&descuentoPorcentaje=0.0",
                         RenglonFactura.class);
                 boolean esValido = true;
                 Map<Long, BigDecimal> faltantes;
                 if (cmb_TipoComprobante.getSelectedItem() == TipoDeComprobante.PEDIDO) {
                     faltantes = this.getProductosSinStockDisponible(Arrays.asList(renglon));
-                    if (faltantes.isEmpty()) {
-                        faltantes = this.getProductosSinCantidadVentaMinima(Arrays.asList(renglon));
-                        if (faltantes.isEmpty() == false) {
-                            esValido = false;
-                            JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                                .getString("mensaje_producto_cantidad_menor_a_minima"), "Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                    } else {
+                    if (!faltantes.isEmpty()) {
+                    } else { 
                         esValido = false;
                         JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                                 .getString("mensaje_producto_sin_stock_suficiente"), "Error", JOptionPane.ERROR_MESSAGE);                        
@@ -672,21 +666,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         return RestClient.getRestTemplate()
                 .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {
                 }).getBody();
-    }
-        
-    private Map<Long, BigDecimal> getProductosSinCantidadVentaMinima(List<RenglonFactura> renglonesFactura) {
-        long[] idsProductos = new long[renglonesFactura.size()];
-        BigDecimal[] cantidades = new BigDecimal[renglonesFactura.size()];
-        for (int i = 0; i < idsProductos.length; i++) {
-            idsProductos[i] = renglonesFactura.get(i).getIdProductoItem();
-            cantidades[i] = renglonesFactura.get(i).getCantidad();
-        }
-        String uri = "/productos/cantidad-venta-minima?"
-                + "idProducto=" + Arrays.toString(idsProductos).substring(1, Arrays.toString(idsProductos).length() - 1)
-                + "&cantidad=" + Arrays.toString(cantidades).substring(1, Arrays.toString(cantidades).length() - 1);
-        return RestClient.getRestTemplate()
-                .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {
-                }).getBody();        
     }
     
     private void finalizarPedido() {
@@ -1548,13 +1527,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         if (pedido == null || pedido.getId_Pedido() == 0) {
                             this.construirPedido();
                         }
-                        faltantes = this.getProductosSinCantidadVentaMinima(renglones);
-                        if (faltantes.isEmpty()) {
-                            this.finalizarPedido();
-                        } else {
-                            ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(faltantes);
-                            productosFaltantesGUI.setVisible(true);
-                        }
+                        this.finalizarPedido();
                     } else {
                         faltantes = this.getProductosSinStockDisponible(renglones);
                         if (faltantes.isEmpty()) {
