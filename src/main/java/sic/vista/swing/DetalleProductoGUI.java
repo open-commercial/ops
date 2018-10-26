@@ -104,8 +104,8 @@ public class DetalleProductoGUI extends JDialog {
         txt_Cantidad = new javax.swing.JFormattedTextField();
         txt_CantMinima = new javax.swing.JFormattedTextField();
         lbl_CantMinima = new javax.swing.JLabel();
-        lbl_VentaMinima = new javax.swing.JLabel();
-        txt_VentaMinima = new javax.swing.JFormattedTextField();
+        lbl_Bulto = new javax.swing.JLabel();
+        txt_Bulto = new javax.swing.JFormattedTextField();
         lblSinLimite = new javax.swing.JLabel();
         panelPropiedades = new javax.swing.JPanel();
         panel5 = new javax.swing.JPanel();
@@ -208,7 +208,7 @@ public class DetalleProductoGUI extends JDialog {
                 .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelSuperiorLayout.createSequentialGroup()
                         .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmb_Rubro, 0, 295, Short.MAX_VALUE)
+                            .addComponent(cmb_Rubro, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cmb_Proveedor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cmb_Medida, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(0, 0, 0)
@@ -426,7 +426,7 @@ public class DetalleProductoGUI extends JDialog {
 
         lbl_Cantidad.setForeground(java.awt.Color.red);
         lbl_Cantidad.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Cantidad.setText("* Cantidad:");
+        lbl_Cantidad.setText("* Cant. Disponible:");
 
         txt_Cantidad.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
         txt_Cantidad.setText("0");
@@ -445,19 +445,20 @@ public class DetalleProductoGUI extends JDialog {
         });
 
         lbl_CantMinima.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_CantMinima.setText("Cantidad Mínima:");
+        lbl_CantMinima.setText("Cant. Mínima:");
 
-        lbl_VentaMinima.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_VentaMinima.setText("Venta Mínima:");
+        lbl_Bulto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbl_Bulto.setText("Cant. por Bulto:");
 
-        txt_VentaMinima.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
-        txt_VentaMinima.setText("0");
-        txt_VentaMinima.addFocusListener(new java.awt.event.FocusAdapter() {
+        txt_Bulto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
+        txt_Bulto.setText("0");
+        txt_Bulto.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                txt_VentaMinimaFocusGained(evt);
+                txt_BultoFocusGained(evt);
             }
         });
 
+        lblSinLimite.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblSinLimite.setText("Sin Límite:");
 
         javax.swing.GroupLayout panelCantidadesLayout = new javax.swing.GroupLayout(panelCantidades);
@@ -469,22 +470,22 @@ public class DetalleProductoGUI extends JDialog {
                 .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelCantidadesLayout.createSequentialGroup()
                         .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lbl_CantMinima, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lbl_Cantidad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblSinLimite, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(lbl_CantMinima, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbl_Cantidad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblSinLimite, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(chkSinLimite, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
-                            .addComponent(txt_Cantidad)
-                            .addComponent(txt_CantMinima)))
+                            .addComponent(chkSinLimite, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txt_Cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txt_CantMinima, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(panelCantidadesLayout.createSequentialGroup()
-                        .addComponent(lbl_VentaMinima, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lbl_Bulto, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_VentaMinima)))
+                        .addComponent(txt_Bulto, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
-        panelCantidadesLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lbl_CantMinima, lbl_Cantidad, lbl_VentaMinima});
+        panelCantidadesLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lbl_Bulto, lbl_CantMinima, lbl_Cantidad});
 
         panelCantidadesLayout.setVerticalGroup(
             panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -503,8 +504,8 @@ public class DetalleProductoGUI extends JDialog {
                     .addComponent(lbl_CantMinima))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_VentaMinima)
-                    .addComponent(txt_VentaMinima, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lbl_Bulto)
+                    .addComponent(txt_Bulto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -668,7 +669,7 @@ public class DetalleProductoGUI extends JDialog {
                 .addGroup(panelPropiedadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(panel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(78, Short.MAX_VALUE))
+                .addContainerGap(87, Short.MAX_VALUE))
         );
         panelPropiedadesLayout.setVerticalGroup(
             panelPropiedadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -719,7 +720,7 @@ public class DetalleProductoGUI extends JDialog {
         rbPrivado.setSelected(!productoParaModificar.isPublico());
         txt_Cantidad.setValue(productoParaModificar.getCantidad());
         txt_CantMinima.setValue(productoParaModificar.getCantMinima());
-        txt_VentaMinima.setValue(productoParaModificar.getVentaMinima());
+        txt_Bulto.setValue(productoParaModificar.getBulto());
         cmb_Rubro.setSelectedItem(productoParaModificar.getNombreRubro());
         cmb_Proveedor.setSelectedItem(productoParaModificar.getRazonSocialProveedor());
         FormatterFechaHora formateador = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO);
@@ -740,7 +741,7 @@ public class DetalleProductoGUI extends JDialog {
     private void prepararComponentes() {
         txt_Cantidad.setValue(BigDecimal.ZERO);
         txt_CantMinima.setValue(BigDecimal.ZERO);
-        txt_VentaMinima.setValue(BigDecimal.ONE);
+        txt_Bulto.setValue(BigDecimal.ONE);
         txtPrecioCosto.setValue(BigDecimal.ZERO);
         txtPVP.setValue(BigDecimal.ZERO);
         txtIVANeto.setValue(BigDecimal.ZERO);
@@ -813,7 +814,7 @@ public class DetalleProductoGUI extends JDialog {
         txt_Descripcion.setText("");
         txt_Cantidad.setValue(BigDecimal.ZERO);
         txt_CantMinima.setValue(BigDecimal.ZERO);
-        txt_VentaMinima.setValue(BigDecimal.ZERO);
+        txt_Bulto.setValue(BigDecimal.ZERO);
         chkSinLimite.setSelected(false);
         txtPrecioCosto.setValue(BigDecimal.ZERO);
         txtPVP.setValue(BigDecimal.ZERO);
@@ -912,7 +913,7 @@ public class DetalleProductoGUI extends JDialog {
                     producto.setDescripcion(txt_Descripcion.getText().trim());
                     producto.setCantidad(new BigDecimal(txt_Cantidad.getValue().toString()));
                     producto.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
-                    producto.setVentaMinima(new BigDecimal(txt_VentaMinima.getValue().toString()));
+                    producto.setBulto(new BigDecimal(txt_Bulto.getValue().toString()));
                     producto.setPrecioCosto(new BigDecimal(txtPrecioCosto.getValue().toString()));
                     producto.setGananciaPorcentaje(new BigDecimal(txtGananciaPorcentaje.getValue().toString()));
                     producto.setGananciaNeto(new BigDecimal(txtGananciaNeto.getValue().toString()));
@@ -947,7 +948,7 @@ public class DetalleProductoGUI extends JDialog {
                     productoParaModificar.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
                     productoParaModificar.setCantidad(new BigDecimal(txt_Cantidad.getValue().toString()));
                     productoParaModificar.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
-                    productoParaModificar.setVentaMinima(new BigDecimal(txt_VentaMinima.getValue().toString()));
+                    productoParaModificar.setBulto(new BigDecimal(txt_Bulto.getValue().toString()));
                     productoParaModificar.setPrecioCosto(new BigDecimal(txtPrecioCosto.getValue().toString()));
                     productoParaModificar.setGananciaPorcentaje(new BigDecimal(txtGananciaPorcentaje.getValue().toString()));
                     productoParaModificar.setGananciaNeto(new BigDecimal(txtGananciaNeto.getValue().toString()));
@@ -1002,16 +1003,16 @@ public class DetalleProductoGUI extends JDialog {
             txt_Cantidad.setEnabled(false);
             lbl_CantMinima.setEnabled(false);
             txt_CantMinima.setEnabled(false);
-            lbl_VentaMinima.setEnabled(false);
-            txt_VentaMinima.setEnabled(false);
+            lbl_Bulto.setEnabled(false);
+            txt_Bulto.setEnabled(false);
         }
     }//GEN-LAST:event_formWindowOpened
 
-    private void txt_VentaMinimaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_VentaMinimaFocusGained
+    private void txt_BultoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_BultoFocusGained
         SwingUtilities.invokeLater(() -> {
-            txt_VentaMinima.selectAll();
+            txt_Bulto.selectAll();
         });
-    }//GEN-LAST:event_txt_VentaMinimaFocusGained
+    }//GEN-LAST:event_txt_BultoFocusGained
 
     private void txt_CantMinimaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_CantMinimaFocusGained
         SwingUtilities.invokeLater(() -> {
@@ -1031,15 +1032,15 @@ public class DetalleProductoGUI extends JDialog {
             lbl_Cantidad.setForeground(Color.LIGHT_GRAY);
             txt_CantMinima.setEnabled(false);
             lbl_CantMinima.setForeground(Color.LIGHT_GRAY);
-            txt_VentaMinima.setEnabled(false);
-            lbl_VentaMinima.setForeground(Color.LIGHT_GRAY);
+            txt_Bulto.setEnabled(false);
+            lbl_Bulto.setForeground(Color.LIGHT_GRAY);
         } else {
             txt_Cantidad.setEnabled(true);
             lbl_Cantidad.setForeground(Color.RED);
             txt_CantMinima.setEnabled(true);
             lbl_CantMinima.setForeground(Color.BLACK);
-            txt_VentaMinima.setEnabled(true);
-            lbl_VentaMinima.setForeground(Color.BLACK);
+            txt_Bulto.setEnabled(true);
+            lbl_Bulto.setForeground(Color.BLACK);
         }
     }//GEN-LAST:event_chkSinLimiteItemStateChanged
 
@@ -1186,6 +1187,7 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblPublico;
     private javax.swing.JLabel lblSinLimite;
+    private javax.swing.JLabel lbl_Bulto;
     private javax.swing.JLabel lbl_CantMinima;
     private javax.swing.JLabel lbl_Cantidad;
     private javax.swing.JLabel lbl_Codigo;
@@ -1206,7 +1208,6 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JLabel lbl_Proveedor;
     private javax.swing.JLabel lbl_Rubro;
     private javax.swing.JLabel lbl_Ven;
-    private javax.swing.JLabel lbl_VentaMinima;
     private javax.swing.JPanel panel5;
     private javax.swing.JPanel panel6;
     private javax.swing.JPanel panelCantidades;
@@ -1223,6 +1224,7 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JFormattedTextField txtPVP;
     private javax.swing.JFormattedTextField txtPrecioCosto;
     private javax.swing.JFormattedTextField txtPrecioLista;
+    private javax.swing.JFormattedTextField txt_Bulto;
     private javax.swing.JFormattedTextField txt_CantMinima;
     private javax.swing.JFormattedTextField txt_Cantidad;
     private javax.swing.JTextField txt_Codigo;
@@ -1230,7 +1232,6 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JTextField txt_Estante;
     private javax.swing.JTextField txt_Estanteria;
     private javax.swing.JTextArea txt_Nota;
-    private javax.swing.JFormattedTextField txt_VentaMinima;
     // End of variables declaration//GEN-END:variables
  
 }

@@ -144,7 +144,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="cmb_Rubro" alignment="0" pref="295" max="32767" attributes="2"/>
+                                      <Component id="cmb_Rubro" alignment="0" max="32767" attributes="2"/>
                                       <Component id="cmb_Proveedor" alignment="0" max="32767" attributes="2"/>
                                       <Component id="cmb_Medida" max="32767" attributes="0"/>
                                   </Group>
@@ -525,21 +525,21 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="lbl_CantMinima" linkSize="10" max="32767" attributes="0"/>
-                                      <Component id="lbl_Cantidad" linkSize="10" max="32767" attributes="1"/>
-                                      <Component id="lblSinLimite" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbl_CantMinima" linkSize="10" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="lbl_Cantidad" linkSize="10" alignment="1" max="32767" attributes="1"/>
+                                      <Component id="lblSinLimite" alignment="1" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="chkSinLimite" alignment="0" pref="57" max="32767" attributes="2"/>
-                                      <Component id="txt_Cantidad" alignment="0" max="32767" attributes="1"/>
-                                      <Component id="txt_CantMinima" alignment="0" max="32767" attributes="1"/>
+                                      <Component id="chkSinLimite" alignment="0" max="32767" attributes="2"/>
+                                      <Component id="txt_Cantidad" alignment="0" min="-2" pref="57" max="-2" attributes="1"/>
+                                      <Component id="txt_CantMinima" alignment="0" min="-2" pref="57" max="-2" attributes="1"/>
                                   </Group>
                               </Group>
                               <Group type="102" attributes="0">
-                                  <Component id="lbl_VentaMinima" linkSize="10" min="-2" pref="120" max="-2" attributes="0"/>
+                                  <Component id="lbl_Bulto" linkSize="10" min="-2" pref="120" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="txt_VentaMinima" max="32767" attributes="0"/>
+                                  <Component id="txt_Bulto" min="-2" pref="57" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -566,8 +566,8 @@
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lbl_VentaMinima" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txt_VentaMinima" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_Bulto" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txt_Bulto" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
@@ -589,7 +589,7 @@
                       <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="* Cantidad:"/>
+                    <Property name="text" type="java.lang.String" value="* Cant. Disponible:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JFormattedTextField" name="txt_Cantidad">
@@ -617,16 +617,16 @@
                 <Component class="javax.swing.JLabel" name="lbl_CantMinima">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="Cantidad M&#xed;nima:"/>
+                    <Property name="text" type="java.lang.String" value="Cant. M&#xed;nima:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbl_VentaMinima">
+                <Component class="javax.swing.JLabel" name="lbl_Bulto">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="Venta M&#xed;nima:"/>
+                    <Property name="text" type="java.lang.String" value="Cant. por Bulto:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JFormattedTextField" name="txt_VentaMinima">
+                <Component class="javax.swing.JFormattedTextField" name="txt_Bulto">
                   <Properties>
                     <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
                       <Format format="#,##0.##" subtype="-1" type="0"/>
@@ -634,11 +634,12 @@
                     <Property name="text" type="java.lang.String" value="0"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txt_VentaMinimaFocusGained"/>
+                    <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txt_BultoFocusGained"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblSinLimite">
                   <Properties>
+                    <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="text" type="java.lang.String" value="Sin L&#xed;mite:"/>
                   </Properties>
                 </Component>
@@ -664,7 +665,7 @@
                           <Component id="panel5" max="32767" attributes="2"/>
                           <Component id="panel6" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="78" max="32767" attributes="0"/>
+                      <EmptySpace pref="87" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

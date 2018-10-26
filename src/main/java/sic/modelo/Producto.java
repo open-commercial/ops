@@ -15,7 +15,7 @@ public class Producto implements Serializable {
     private String descripcion;
     private BigDecimal cantidad;
     private BigDecimal cantMinima;
-    private BigDecimal ventaMinima;
+    private BigDecimal bulto;
     private String nombreMedida;
     private BigDecimal precioCosto;
     private BigDecimal gananciaPorcentaje;

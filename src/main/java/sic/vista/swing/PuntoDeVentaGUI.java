@@ -419,28 +419,20 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                     + "&codigo=" + txt_CodigoProducto.getText().trim(), Producto.class);
             if (producto == null) {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                        .getString("mensaje_producto_no_encontrado"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+                        .getString("mensaje_producto_no_encontrado"), "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 RenglonFactura renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
                         + "idProducto=" + producto.getId_Producto()
                         + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                         + "&movimiento=" + Movimiento.VENTA
-                        + "&cantidad=" + producto.getVentaMinima()
+                        + "&cantidad=1"
                         + "&descuentoPorcentaje=0.0",
                         RenglonFactura.class);
                 boolean esValido = true;
                 Map<Long, BigDecimal> faltantes;
                 if (cmb_TipoComprobante.getSelectedItem() == TipoDeComprobante.PEDIDO) {
                     faltantes = this.getProductosSinStockDisponible(Arrays.asList(renglon));
-                    if (faltantes.isEmpty()) {
-                        faltantes = this.getProductosSinCantidadVentaMinima(Arrays.asList(renglon));
-                        if (faltantes.isEmpty() == false) {
-                            esValido = false;
-                            JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                                .getString("mensaje_producto_cantidad_menor_a_minima"), "Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                    } else {
+                    if (!faltantes.isEmpty()) {
                         esValido = false;
                         JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                                 .getString("mensaje_producto_sin_stock_suficiente"), "Error", JOptionPane.ERROR_MESSAGE);                        
@@ -471,9 +463,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
             LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                    .getString("mensaje_error_conexion"), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -672,21 +663,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         return RestClient.getRestTemplate()
                 .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {
                 }).getBody();
-    }
-        
-    private Map<Long, BigDecimal> getProductosSinCantidadVentaMinima(List<RenglonFactura> renglonesFactura) {
-        long[] idsProductos = new long[renglonesFactura.size()];
-        BigDecimal[] cantidades = new BigDecimal[renglonesFactura.size()];
-        for (int i = 0; i < idsProductos.length; i++) {
-            idsProductos[i] = renglonesFactura.get(i).getIdProductoItem();
-            cantidades[i] = renglonesFactura.get(i).getCantidad();
-        }
-        String uri = "/productos/cantidad-venta-minima?"
-                + "idProducto=" + Arrays.toString(idsProductos).substring(1, Arrays.toString(idsProductos).length() - 1)
-                + "&cantidad=" + Arrays.toString(cantidades).substring(1, Arrays.toString(cantidades).length() - 1);
-        return RestClient.getRestTemplate()
-                .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {
-                }).getBody();        
     }
     
     private void finalizarPedido() {
@@ -957,8 +933,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
         panelClienteLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblBonificacion, lbl_IDFiscalCliente});
 
-        panelRenglones.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
         tbl_Resultado.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -1028,22 +1002,18 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         panelRenglones.setLayout(panelRenglonesLayout);
         panelRenglonesLayout.setHorizontalGroup(
             panelRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(sp_Resultado)
             .addGroup(panelRenglonesLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sp_Resultado)
-                    .addGroup(panelRenglonesLayout.createSequentialGroup()
-                        .addComponent(tbtn_marcarDesmarcar, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_CodigoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_BuscarPorCodigoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btn_BuscarProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_QuitarProducto)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addComponent(tbtn_marcarDesmarcar, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txt_CodigoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(btn_BuscarPorCodigoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_BuscarProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(btn_QuitarProducto)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         panelRenglonesLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_BuscarProductos, btn_QuitarProducto});
@@ -1060,8 +1030,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         .addComponent(btn_QuitarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(tbtn_marcarDesmarcar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Resultado, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(sp_Resultado, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE))
         );
 
         panelRenglonesLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_BuscarPorCodigoProducto, txt_CodigoProducto});
@@ -1548,13 +1517,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         if (pedido == null || pedido.getId_Pedido() == 0) {
                             this.construirPedido();
                         }
-                        faltantes = this.getProductosSinCantidadVentaMinima(renglones);
-                        if (faltantes.isEmpty()) {
-                            this.finalizarPedido();
-                        } else {
-                            ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(faltantes);
-                            productosFaltantesGUI.setVisible(true);
-                        }
+                        this.finalizarPedido();
                     } else {
                         faltantes = this.getProductosSinStockDisponible(renglones);
                         if (faltantes.isEmpty()) {
@@ -1566,6 +1529,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                             }
                         } else {
                             ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(faltantes);
+                            productosFaltantesGUI.setLocationRelativeTo(this);
                             productosFaltantesGUI.setVisible(true);
                         }
                     }

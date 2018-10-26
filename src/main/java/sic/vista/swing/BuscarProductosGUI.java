@@ -59,9 +59,8 @@ public class BuscarProductosGUI extends JDialog {
         txtCriteriaBusqueda.addKeyListener(keyHandler);
         btnBuscar.addKeyListener(keyHandler);
         tbl_Resultados.addKeyListener(keyHandler);
-        ta_ObservacionesProducto.addKeyListener(keyHandler);
-        txtCantidad.addKeyListener(keyHandler);
-        txt_UnidadMedida.addKeyListener(keyHandler);
+        txtaNotaProducto.addKeyListener(keyHandler);
+        txtCantidad.addKeyListener(keyHandler);        
         txtPorcentajeDescuento.addKeyListener(keyHandler);
         btnAceptar.addKeyListener(keyHandler);        
         // desactivado momentaneamente
@@ -135,8 +134,7 @@ public class BuscarProductosGUI extends JDialog {
                         .getBody();
                 productosParcial = response.getContent();
                 productosTotal.addAll(productosParcial);
-                productoSeleccionado = null;
-                txt_UnidadMedida.setText("");
+                productoSeleccionado = null;                                
                 this.restarCantidadesSegunProductosYaCargados();
                 this.cargarResultadosAlTable();
             }
@@ -158,13 +156,6 @@ public class BuscarProductosGUI extends JDialog {
             debeCargarRenglon = false;
             this.dispose();
         } else {
-            if (movimiento == Movimiento.PEDIDO) {
-                if ((new BigDecimal(txtCantidad.getValue().toString())).compareTo(productoSeleccionado.getVentaMinima()) < 0) {
-                    JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_producto_cantidad_menor_a_minima"), "Error", JOptionPane.ERROR_MESSAGE);
-                    esValido = false;
-                }
-            }
             if (movimiento == Movimiento.VENTA) {
                 String uri = "/productos/disponibilidad-stock?"
                         + "idProducto=" + productoSeleccionado.getId_Producto()
@@ -236,9 +227,8 @@ public class BuscarProductosGUI extends JDialog {
     private void seleccionarProductoEnTable() {
         int fila = tbl_Resultados.getSelectedRow();
         if (fila != -1) {
-            productoSeleccionado = productosTotal.get(fila);
-            txt_UnidadMedida.setText(productoSeleccionado.getNombreMedida());
-            ta_ObservacionesProducto.setText(productoSeleccionado.getNota());
+            productoSeleccionado = productosTotal.get(fila);                                                
+            txtaNotaProducto.setText(productoSeleccionado.getNota());
             this.actualizarEstadoSeleccion();
         }
     }
@@ -249,7 +239,7 @@ public class BuscarProductosGUI extends JDialog {
             fila[0] = p.getCodigo();
             fila[1] = p.getDescripcion();
             fila[2] = p.getCantidad();
-            fila[3] = p.getVentaMinima();
+            fila[3] = p.getBulto();
             fila[4] = p.getNombreMedida();
             BigDecimal precio = (movimiento == Movimiento.VENTA) ? p.getPrecioLista()
                     : (movimiento == Movimiento.PEDIDO) ? p.getPrecioLista()
@@ -280,8 +270,8 @@ public class BuscarProductosGUI extends JDialog {
         String[] encabezados = new String[6];
         encabezados[0] = "Codigo";
         encabezados[1] = "Descripción";
-        encabezados[2] = "Cantidad";
-        encabezados[3] = "Venta Min.";
+        encabezados[2] = "Cant. Disponible";
+        encabezados[3] = "Cant. por Bulto";
         encabezados[4] = "Unidad";
         String encabezadoPrecio = (movimiento == Movimiento.VENTA) ? "P. Lista"
                 : (movimiento == Movimiento.PEDIDO) ? "P. Lista"
@@ -292,8 +282,8 @@ public class BuscarProductosGUI extends JDialog {
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
         tipos[0] = String.class;
         tipos[1] = String.class;
-        tipos[2] = BigDecimal.class;
-        tipos[3] = BigDecimal.class;
+        tipos[2] = BigDecimal.class;        
+        tipos[3] = BigDecimal.class;        
         tipos[4] = String.class;
         tipos[5] = BigDecimal.class;
         modeloTablaResultados.setClaseColumnas(tipos);
@@ -303,10 +293,10 @@ public class BuscarProductosGUI extends JDialog {
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(130);
         tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(130);        
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(380);        
-        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(70);
-        tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(70);        
-        tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(70);
-        tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(70);        
+        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(110);
+        tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(110);                
+        tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(110);
+        tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(110);                
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(70);
         tbl_Resultados.getColumnModel().getColumn(4).setMaxWidth(70);        
         tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(80);
@@ -335,16 +325,14 @@ public class BuscarProductosGUI extends JDialog {
         sp_Resultados = new javax.swing.JScrollPane();
         tbl_Resultados = new javax.swing.JTable();
         btnAceptar = new javax.swing.JButton();
-        txt_UnidadMedida = new javax.swing.JTextField();
         lbl_Cantidad = new javax.swing.JLabel();
         lbl_Descuento = new javax.swing.JLabel();
         txtCantidad = new javax.swing.JFormattedTextField();
         txtPorcentajeDescuento = new javax.swing.JFormattedTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        ta_ObservacionesProducto = new javax.swing.JTextArea();
+        spNotaProducto = new javax.swing.JScrollPane();
+        txtaNotaProducto = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -415,10 +403,7 @@ public class BuscarProductosGUI extends JDialog {
             }
         });
 
-        txt_UnidadMedida.setEditable(false);
-        txt_UnidadMedida.setFont(new java.awt.Font("DejaVu Sans", 0, 17)); // NOI18N
-        txt_UnidadMedida.setFocusable(false);
-
+        lbl_Cantidad.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Cantidad.setText("Cantidad:");
 
         lbl_Descuento.setText("Descuento (%):");
@@ -459,12 +444,12 @@ public class BuscarProductosGUI extends JDialog {
             }
         });
 
-        ta_ObservacionesProducto.setEditable(false);
-        ta_ObservacionesProducto.setColumns(20);
-        ta_ObservacionesProducto.setLineWrap(true);
-        ta_ObservacionesProducto.setRows(4);
-        ta_ObservacionesProducto.setFocusable(false);
-        jScrollPane1.setViewportView(ta_ObservacionesProducto);
+        txtaNotaProducto.setEditable(false);
+        txtaNotaProducto.setColumns(20);
+        txtaNotaProducto.setLineWrap(true);
+        txtaNotaProducto.setRows(5);
+        txtaNotaProducto.setFocusable(false);
+        spNotaProducto.setViewportView(txtaNotaProducto);
 
         javax.swing.GroupLayout panelFondoLayout = new javax.swing.GroupLayout(panelFondo);
         panelFondo.setLayout(panelFondoLayout);
@@ -473,24 +458,22 @@ public class BuscarProductosGUI extends JDialog {
             .addGroup(panelFondoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sp_Resultados)
+                    .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 788, Short.MAX_VALUE)
                     .addGroup(panelFondoLayout.createSequentialGroup()
                         .addComponent(txtCriteriaBusqueda)
                         .addGap(0, 0, 0)
                         .addComponent(btnBuscar))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFondoLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
+                    .addGroup(panelFondoLayout.createSequentialGroup()
+                        .addComponent(spNotaProducto)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lbl_Descuento)
-                            .addComponent(lbl_Cantidad))
+                        .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lbl_Descuento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbl_Cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(txtPorcentajeDescuento)
-                            .addComponent(txtCantidad, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE))
+                            .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_UnidadMedida, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
                         .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -502,26 +485,26 @@ public class BuscarProductosGUI extends JDialog {
                     .addComponent(btnBuscar)
                     .addComponent(txtCriteriaBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE)
+                .addComponent(sp_Resultados)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelFondoLayout.createSequentialGroup()
-                        .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(lbl_Cantidad)
-                            .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_UnidadMedida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(lbl_Descuento)
-                            .addComponent(txtPorcentajeDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spNotaProducto, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(panelFondoLayout.createSequentialGroup()
+                            .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                                .addComponent(lbl_Cantidad)
+                                .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                                .addComponent(lbl_Descuento)
+                                .addComponent(txtPorcentajeDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
 
         panelFondoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscar, txtCriteriaBusqueda});
 
-        panelFondoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtCantidad, txtPorcentajeDescuento, txt_UnidadMedida});
+        panelFondoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtCantidad, txtPorcentajeDescuento});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -537,27 +520,67 @@ public class BuscarProductosGUI extends JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        this.aceptarProducto();
-    }//GEN-LAST:event_btnAceptarActionPerformed
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        productoSeleccionado = null;
+        NUMERO_PAGINA = 0;
+    }//GEN-LAST:event_formWindowClosing
 
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        this.resetScroll();
-        this.limpiarJTable();
-        this.buscar();
-    }//GEN-LAST:event_btnBuscarActionPerformed
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        this.setSize(sizeDialog);
+        this.setTitle("Buscar Producto");
+        this.prepararComponentes();
+    }//GEN-LAST:event_formWindowOpened
 
-    private void tbl_ResultadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_ResultadosMouseClicked
-        this.seleccionarProductoEnTable();
-    }//GEN-LAST:event_tbl_ResultadosMouseClicked
+    private void txtPorcentajeDescuentoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPorcentajeDescuentoKeyReleased
+        if (evt.getKeyCode() == 10) {
+            this.aceptarProducto();
+        } else {
+            this.actualizarEstadoSeleccion();
+        }
+    }//GEN-LAST:event_txtPorcentajeDescuentoKeyReleased
+
+    private void txtPorcentajeDescuentoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPorcentajeDescuentoKeyTyped
+        if (evt.getKeyChar() == KeyEvent.VK_MINUS) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtPorcentajeDescuentoKeyTyped
+
+    private void txtPorcentajeDescuentoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPorcentajeDescuentoFocusLost
+        this.actualizarEstadoSeleccion();
+    }//GEN-LAST:event_txtPorcentajeDescuentoFocusLost
+
+    private void txtPorcentajeDescuentoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPorcentajeDescuentoFocusGained
+        SwingUtilities.invokeLater(() -> {
+            txtPorcentajeDescuento.selectAll();
+        });
+    }//GEN-LAST:event_txtPorcentajeDescuentoFocusGained
+
+    private void txtCantidadKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadKeyPressed
+        if (evt.getKeyCode() == 10) {
+            this.aceptarProducto();
+        } else {
+            this.actualizarEstadoSeleccion();
+        }
+    }//GEN-LAST:event_txtCantidadKeyPressed
 
     private void txtCantidadFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCantidadFocusLost
         this.actualizarEstadoSeleccion();
     }//GEN-LAST:event_txtCantidadFocusLost
 
-    private void txtPorcentajeDescuentoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPorcentajeDescuentoFocusLost
-        this.actualizarEstadoSeleccion();
-    }//GEN-LAST:event_txtPorcentajeDescuentoFocusLost
+    private void txtCantidadFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCantidadFocusGained
+        this.seleccionarProductoEnTable();
+        SwingUtilities.invokeLater(() -> {
+            txtCantidad.selectAll();
+        });
+    }//GEN-LAST:event_txtCantidadFocusGained
+
+    private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
+        this.aceptarProducto();
+    }//GEN-LAST:event_btnAceptarActionPerformed
+
+    private void tbl_ResultadosKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbl_ResultadosKeyReleased
+        this.seleccionarProductoEnTable();
+    }//GEN-LAST:event_tbl_ResultadosKeyReleased
 
     private void tbl_ResultadosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbl_ResultadosKeyPressed
         if (evt.getKeyCode() == 10) {
@@ -568,53 +591,9 @@ public class BuscarProductosGUI extends JDialog {
         }
     }//GEN-LAST:event_tbl_ResultadosKeyPressed
 
-    private void tbl_ResultadosKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbl_ResultadosKeyReleased
+    private void tbl_ResultadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_ResultadosMouseClicked
         this.seleccionarProductoEnTable();
-    }//GEN-LAST:event_tbl_ResultadosKeyReleased
-
-    private void txtPorcentajeDescuentoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPorcentajeDescuentoKeyReleased
-        if (evt.getKeyCode() == 10) {
-            this.aceptarProducto();
-        } else {
-            this.actualizarEstadoSeleccion();
-        }
-    }//GEN-LAST:event_txtPorcentajeDescuentoKeyReleased
-
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        productoSeleccionado = null;
-        NUMERO_PAGINA = 0;
-    }//GEN-LAST:event_formWindowClosing
-
-    private void txtCriteriaBusquedaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCriteriaBusquedaKeyTyped
-        evt.setKeyChar(Utilidades.convertirAMayusculas(evt.getKeyChar()));
-    }//GEN-LAST:event_txtCriteriaBusquedaKeyTyped
-
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        this.setSize(sizeDialog);
-        this.setTitle("Buscar Producto");
-        this.prepararComponentes();
-    }//GEN-LAST:event_formWindowOpened
-
-    private void txtCantidadFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCantidadFocusGained
-        this.seleccionarProductoEnTable();
-        SwingUtilities.invokeLater(() -> {
-            txtCantidad.selectAll();
-        });
-    }//GEN-LAST:event_txtCantidadFocusGained
-
-    private void txtCantidadKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadKeyPressed
-        if (evt.getKeyCode() == 10) {
-            this.aceptarProducto();
-        } else {
-            this.actualizarEstadoSeleccion();
-        }
-    }//GEN-LAST:event_txtCantidadKeyPressed
-
-    private void txtPorcentajeDescuentoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPorcentajeDescuentoFocusGained
-        SwingUtilities.invokeLater(() -> {
-            txtPorcentajeDescuento.selectAll();
-        });
-    }//GEN-LAST:event_txtPorcentajeDescuentoFocusGained
+    }//GEN-LAST:event_tbl_ResultadosMouseClicked
 
     private void tbl_ResultadosFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbl_ResultadosFocusGained
         if ((tbl_Resultados.getSelectedRow() == -1) && (tbl_Resultados.getRowCount() != 0)) {
@@ -622,31 +601,34 @@ public class BuscarProductosGUI extends JDialog {
         }
     }//GEN-LAST:event_tbl_ResultadosFocusGained
 
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        this.resetScroll();
+        this.limpiarJTable();
+        this.buscar();
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void txtCriteriaBusquedaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCriteriaBusquedaKeyTyped
+        evt.setKeyChar(Utilidades.convertirAMayusculas(evt.getKeyChar()));
+    }//GEN-LAST:event_txtCriteriaBusquedaKeyTyped
+
     private void txtCriteriaBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCriteriaBusquedaActionPerformed
         this.resetScroll();
         this.limpiarJTable();
         this.buscar();
     }//GEN-LAST:event_txtCriteriaBusquedaActionPerformed
 
-    private void txtPorcentajeDescuentoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPorcentajeDescuentoKeyTyped
-        if (evt.getKeyChar() == KeyEvent.VK_MINUS) {
-            evt.consume();
-        }
-    }//GEN-LAST:event_txtPorcentajeDescuentoKeyTyped
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnBuscar;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbl_Cantidad;
     private javax.swing.JLabel lbl_Descuento;
     private javax.swing.JPanel panelFondo;
+    private javax.swing.JScrollPane spNotaProducto;
     private javax.swing.JScrollPane sp_Resultados;
-    private javax.swing.JTextArea ta_ObservacionesProducto;
     private javax.swing.JTable tbl_Resultados;
     private javax.swing.JFormattedTextField txtCantidad;
     private javax.swing.JTextField txtCriteriaBusqueda;
     private javax.swing.JFormattedTextField txtPorcentajeDescuento;
-    private javax.swing.JTextField txt_UnidadMedida;
+    private javax.swing.JTextArea txtaNotaProducto;
     // End of variables declaration//GEN-END:variables
 }
