@@ -103,18 +103,15 @@ public class ProductosGUI extends JInternalFrame {
         }
     }
 
-    private void setColumnas() {
-        // Momentaneamente desactivado hasta terminar la paginacion.
-        // sorting
-        // tbl_Resultados.setAutoCreateRowSorter(true);
+    private void setColumnas() {        
         //nombres de columnas
         String[] encabezados = new String[23];
         encabezados[0] = "Público";
         encabezados[1] = "Codigo";
         encabezados[2] = "Descripcion";
-        encabezados[3] = "Cantidad";
+        encabezados[3] = "Cant. Disponible";
         encabezados[4] = "Cant. Minima";
-        encabezados[5] = "Bulto";
+        encabezados[5] = "Cant. por Bulto";
         encabezados[6] = "Sin Límite";
         encabezados[7] = "Medida";
         encabezados[8] = "Precio Costo";
@@ -168,11 +165,11 @@ public class ProductosGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(70);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(150);
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(400);
-        tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(110);
+        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(110);
+        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(110);
         tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(80);
-        tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(150);
+        tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(100);

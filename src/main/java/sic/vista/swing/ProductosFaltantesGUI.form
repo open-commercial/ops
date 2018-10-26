@@ -61,7 +61,7 @@
   <SubComponents>
     <Component class="javax.swing.JLabel" name="lbl_faltantes">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Los siguientes productos no poseen stock suficiente o no cumplen con la cantidad venta minima:"/>
+        <Property name="text" type="java.lang.String" value="Los siguientes productos no poseen stock suficiente:"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JScrollPane" name="sp_faltantes">

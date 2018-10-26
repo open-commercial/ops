@@ -53,10 +53,13 @@ public class ProductosFaltantesGUI extends JDialog {
         tbl_Faltantes.getTableHeader().setReorderingAllowed(false);
         tbl_Faltantes.getTableHeader().setResizingAllowed(true);                
         //tamanios de columnas
-        tbl_Faltantes.getColumnModel().getColumn(0).setPreferredWidth(80);
+        tbl_Faltantes.getColumnModel().getColumn(0).setPreferredWidth(130);
+        tbl_Faltantes.getColumnModel().getColumn(0).setMaxWidth(130);
         tbl_Faltantes.getColumnModel().getColumn(1).setPreferredWidth(300);
         tbl_Faltantes.getColumnModel().getColumn(2).setPreferredWidth(120);
+        tbl_Faltantes.getColumnModel().getColumn(2).setMaxWidth(120);
         tbl_Faltantes.getColumnModel().getColumn(3).setPreferredWidth(120);
+        tbl_Faltantes.getColumnModel().getColumn(3).setMaxWidth(120);
         //renderers
         tbl_Faltantes.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
     }
@@ -99,7 +102,7 @@ public class ProductosFaltantesGUI extends JDialog {
             }
         });
 
-        lbl_faltantes.setText("Los siguientes productos no poseen stock suficiente o no cumplen con la cantidad venta minima:");
+        lbl_faltantes.setText("Los siguientes productos no poseen stock suficiente:");
 
         tbl_Faltantes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
