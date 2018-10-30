@@ -283,7 +283,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                     Producto producto = RestClient.getRestTemplate()
                             .getForObject("/productos/" + renglon.getIdProductoItem(), Producto.class);
                     renglones.set(i, RestClient.getRestTemplate().getForObject("/facturas/renglon?"
-                            + "idProducto=" + producto.getId_Producto()
+                            + "idProducto=" + producto.getIdProducto()
                             + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                             + "&movimiento=" + Movimiento.VENTA
                             + "&cantidad=" + renglones.get(i).getCantidad().add(renglon.getCantidad())
@@ -422,7 +422,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         .getString("mensaje_producto_no_encontrado"), "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 RenglonFactura renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
-                        + "idProducto=" + producto.getId_Producto()
+                        + "idProducto=" + producto.getIdProducto()
                         + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                         + "&movimiento=" + Movimiento.VENTA
                         + "&cantidad=1"
@@ -606,7 +606,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 Producto producto = RestClient.getRestTemplate()
                         .getForObject("/productos/" + renglonFactura.getIdProductoItem(), Producto.class);
                 RenglonFactura renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
-                        + "idProducto=" + producto.getId_Producto()
+                        + "idProducto=" + producto.getIdProducto()
                         + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                         + "&movimiento=" + Movimiento.VENTA
                         + "&cantidad=" + renglonFactura.getCantidad()

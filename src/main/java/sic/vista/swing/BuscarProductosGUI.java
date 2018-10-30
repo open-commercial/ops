@@ -158,7 +158,7 @@ public class BuscarProductosGUI extends JDialog {
         } else {
             if (movimiento == Movimiento.VENTA) {
                 String uri = "/productos/disponibilidad-stock?"
-                        + "idProducto=" + productoSeleccionado.getId_Producto()
+                        + "idProducto=" + productoSeleccionado.getIdProducto()
                         + "&cantidad=" + this.sumarCantidadesSegunProductosYaCargados();
                 boolean existeStockSuficiente = RestClient.getRestTemplate()
                         .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {})
@@ -172,7 +172,7 @@ public class BuscarProductosGUI extends JDialog {
             if (esValido) {
                 try {
                     renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
-                            + "idProducto=" + productoSeleccionado.getId_Producto()
+                            + "idProducto=" + productoSeleccionado.getIdProducto()
                             + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                             + "&movimiento=" + movimiento
                             + "&cantidad=" + txtCantidad.getValue().toString()
@@ -194,7 +194,7 @@ public class BuscarProductosGUI extends JDialog {
     private BigDecimal sumarCantidadesSegunProductosYaCargados() {
         BigDecimal cantidad = new BigDecimal(txtCantidad.getValue().toString());
         for (RenglonFactura r : renglones) {
-            if (r.getIdProductoItem() == productoSeleccionado.getId_Producto()) {
+            if (r.getIdProductoItem() == productoSeleccionado.getIdProducto()) {
                 cantidad = cantidad.add(r.getCantidad());
             }
         }

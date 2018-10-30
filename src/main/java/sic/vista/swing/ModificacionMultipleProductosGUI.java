@@ -793,7 +793,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
             long[] idsProductos = new long[productosParaModificar.size()];
             int i = 0;
             for (Producto producto : productosParaModificar) {
-                idsProductos[i] = producto.getId_Producto();
+                idsProductos[i] = producto.getIdProducto();
                 i++;
             }
             String uri = "/productos/multiples?idProducto=" 
