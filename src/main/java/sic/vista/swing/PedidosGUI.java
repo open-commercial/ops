@@ -5,14 +5,12 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import sic.util.ColoresEstadosRenderer;
-import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -29,7 +27,6 @@ import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Pedido;
-import sic.modelo.RenglonPedido;
 import sic.modelo.Usuario;
 import sic.modelo.EstadoPedido;
 import sic.modelo.PaginaRespuestaRest;
@@ -44,8 +41,7 @@ public class PedidosGUI extends JInternalFrame {
 
     private List<Pedido> pedidosTotal = new ArrayList<>();    
     private List<Pedido> pedidosParcial = new ArrayList<>();
-    private ModeloTabla modeloTablaPedidos;
-    private ModeloTabla modeloTablaRenglones;  
+    private ModeloTabla modeloTablaPedidos;    
     private Cliente clienteSeleccionado;
     private Usuario usuarioSeleccionado;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -197,14 +193,11 @@ public class PedidosGUI extends JInternalFrame {
     
     private void limpiarJTables() {
         modeloTablaPedidos = new ModeloTabla();
-        tbl_Pedidos.setModel(modeloTablaPedidos);
-        modeloTablaRenglones = new ModeloTabla();
-        this.setColumnasPedido();
+        tbl_Pedidos.setModel(modeloTablaPedidos);        
+        this.setColumnas();
     }
 
-    private void setColumnasPedido() {
-        //sorting
-        //tbl_Pedidos.setAutoCreateRowSorter(true);
+    private void setColumnas() {
         //nombres de columnas
         String[] encabezados = new String[7];
         encabezados[0] = "Estado";
@@ -229,9 +222,12 @@ public class PedidosGUI extends JInternalFrame {
         tbl_Pedidos.getTableHeader().setReorderingAllowed(false);
         tbl_Pedidos.getTableHeader().setResizingAllowed(true);
         //tamanios de columnas
-        tbl_Pedidos.getColumnModel().getColumn(0).setPreferredWidth(25);
-        tbl_Pedidos.getColumnModel().getColumn(1).setPreferredWidth(25);
-        tbl_Pedidos.getColumnModel().getColumn(2).setPreferredWidth(25);
+        tbl_Pedidos.getColumnModel().getColumn(0).setPreferredWidth(80);
+        tbl_Pedidos.getColumnModel().getColumn(0).setMaxWidth(80);
+        tbl_Pedidos.getColumnModel().getColumn(1).setPreferredWidth(140);
+        tbl_Pedidos.getColumnModel().getColumn(1).setMaxWidth(140);
+        tbl_Pedidos.getColumnModel().getColumn(2).setPreferredWidth(100);
+        tbl_Pedidos.getColumnModel().getColumn(2).setMaxWidth(100);
         tbl_Pedidos.getColumnModel().getColumn(3).setPreferredWidth(150);
         tbl_Pedidos.getColumnModel().getColumn(4).setPreferredWidth(100);
         tbl_Pedidos.getColumnModel().getColumn(5).setPreferredWidth(25);
