@@ -5,14 +5,12 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import sic.util.ColoresEstadosRenderer;
-import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -29,7 +27,6 @@ import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Pedido;
-import sic.modelo.RenglonPedido;
 import sic.modelo.Usuario;
 import sic.modelo.EstadoPedido;
 import sic.modelo.PaginaRespuestaRest;
@@ -44,8 +41,7 @@ public class PedidosGUI extends JInternalFrame {
 
     private List<Pedido> pedidosTotal = new ArrayList<>();    
     private List<Pedido> pedidosParcial = new ArrayList<>();
-    private ModeloTabla modeloTablaPedidos;
-    private ModeloTabla modeloTablaRenglones;  
+    private ModeloTabla modeloTablaPedidos;    
     private Cliente clienteSeleccionado;
     private Usuario usuarioSeleccionado;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -163,9 +159,7 @@ public class PedidosGUI extends JInternalFrame {
         btnModificarPedido.setEnabled(status);
         btnEliminarPedido.setEnabled(status);
         btnImprimirPedido.setEnabled(status);
-        tbl_RenglonesPedido.setEnabled(status);
         tbl_Pedidos.setEnabled(status);
-        sp_RenglonesPedido.setEnabled(status);
         sp_Pedidos.setEnabled(status);
         tbl_Pedidos.requestFocus();
     }
@@ -199,57 +193,11 @@ public class PedidosGUI extends JInternalFrame {
     
     private void limpiarJTables() {
         modeloTablaPedidos = new ModeloTabla();
-        tbl_Pedidos.setModel(modeloTablaPedidos);
-        modeloTablaRenglones = new ModeloTabla();
-        tbl_RenglonesPedido.setModel(modeloTablaRenglones);
-        this.setColumnasPedido();
-        this.setColumnasRenglonesPedido();
+        tbl_Pedidos.setModel(modeloTablaPedidos);        
+        this.setColumnas();
     }
 
-    private void limpiarTablaRenglones() {
-        modeloTablaRenglones = new ModeloTabla();
-        tbl_RenglonesPedido.setModel(modeloTablaRenglones);
-        this.setColumnasRenglonesPedido();
-    }
-
-    private void setColumnasRenglonesPedido() {
-        //sorting
-        // tbl_RenglonesPedido.setAutoCreateRowSorter(true);
-        //nombres de columnas
-        String[] encabezadoRenglones = new String[6];
-        encabezadoRenglones[0] = "Codigo";
-        encabezadoRenglones[1] = "Descripcion";
-        encabezadoRenglones[2] = "Cantidad";
-        encabezadoRenglones[3] = "Precio Unitario";
-        encabezadoRenglones[4] = "% Descuento";
-        encabezadoRenglones[5] = "SubTotal";
-        modeloTablaRenglones.setColumnIdentifiers(encabezadoRenglones);
-        tbl_RenglonesPedido.setModel(modeloTablaRenglones);
-        //tipo de dato columnas
-        Class[] tiposRenglones = new Class[modeloTablaRenglones.getColumnCount()];
-        tiposRenglones[0] = String.class;
-        tiposRenglones[1] = String.class;
-        tiposRenglones[2] = BigDecimal.class;
-        tiposRenglones[3] = BigDecimal.class;
-        tiposRenglones[4] = BigDecimal.class;
-        tiposRenglones[5] = BigDecimal.class;
-        modeloTablaRenglones.setClaseColumnas(tiposRenglones);
-        tbl_RenglonesPedido.getTableHeader().setReorderingAllowed(false);
-        tbl_RenglonesPedido.getTableHeader().setResizingAllowed(true);
-        //tamanios de columnas
-        tbl_RenglonesPedido.getColumnModel().getColumn(0).setPreferredWidth(25);
-        tbl_RenglonesPedido.getColumnModel().getColumn(1).setPreferredWidth(250);
-        tbl_RenglonesPedido.getColumnModel().getColumn(2).setPreferredWidth(25);
-        tbl_RenglonesPedido.getColumnModel().getColumn(3).setPreferredWidth(25);
-        tbl_RenglonesPedido.getColumnModel().getColumn(4).setPreferredWidth(25);
-        tbl_RenglonesPedido.getColumnModel().getColumn(5).setPreferredWidth(25);
-        //renderers
-        tbl_RenglonesPedido.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
-    }
-
-    private void setColumnasPedido() {
-        //sorting
-        //tbl_Pedidos.setAutoCreateRowSorter(true);
+    private void setColumnas() {
         //nombres de columnas
         String[] encabezados = new String[7];
         encabezados[0] = "Estado";
@@ -274,9 +222,12 @@ public class PedidosGUI extends JInternalFrame {
         tbl_Pedidos.getTableHeader().setReorderingAllowed(false);
         tbl_Pedidos.getTableHeader().setResizingAllowed(true);
         //tamanios de columnas
-        tbl_Pedidos.getColumnModel().getColumn(0).setPreferredWidth(25);
-        tbl_Pedidos.getColumnModel().getColumn(1).setPreferredWidth(25);
-        tbl_Pedidos.getColumnModel().getColumn(2).setPreferredWidth(25);
+        tbl_Pedidos.getColumnModel().getColumn(0).setPreferredWidth(80);
+        tbl_Pedidos.getColumnModel().getColumn(0).setMaxWidth(80);
+        tbl_Pedidos.getColumnModel().getColumn(1).setPreferredWidth(140);
+        tbl_Pedidos.getColumnModel().getColumn(1).setMaxWidth(140);
+        tbl_Pedidos.getColumnModel().getColumn(2).setPreferredWidth(100);
+        tbl_Pedidos.getColumnModel().getColumn(2).setMaxWidth(100);
         tbl_Pedidos.getColumnModel().getColumn(3).setPreferredWidth(150);
         tbl_Pedidos.getColumnModel().getColumn(4).setPreferredWidth(100);
         tbl_Pedidos.getColumnModel().getColumn(5).setPreferredWidth(25);
@@ -295,44 +246,6 @@ public class PedidosGUI extends JInternalFrame {
                 })
                 .getBody();
         return !response.getContent().isEmpty();
-    }
-
-    private void cargarRenglonesDelPedidoSeleccionadoEnTabla(KeyEvent evt) {
-        int row = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
-        if (evt != null) {
-            if ((evt.getKeyCode() == KeyEvent.VK_UP) && row > 0) {
-                row--;
-            }
-            if ((evt.getKeyCode() == KeyEvent.VK_DOWN) && (row + 1) < tbl_Pedidos.getRowCount()) {
-                row++;
-            }
-        }
-        this.limpiarTablaRenglones();
-        this.setColumnasRenglonesPedido();
-        try {
-            List<RenglonPedido> renglones = Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/pedidos/" + pedidosTotal.get(row).getId_Pedido() + "/renglones", RenglonPedido[].class));
-            renglones.stream().map(r -> {
-                Object[] fila = new Object[6];
-                fila[0] = r.getCodigoItem();
-                fila[1] = r.getDescripcionItem();
-                fila[2] = r.getCantidad();
-                fila[3] = r.getPrecioUnitario();
-                fila[4] = r.getDescuentoPorcentaje();
-                fila[5] = r.getSubTotal();
-                return fila;
-            }).forEach(fila -> {
-                modeloTablaRenglones.addRow(fila);
-            });
-            tbl_RenglonesPedido.setModel(modeloTablaRenglones);
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
     }
 
     private void lanzarReportePedido(long idPedido) {
@@ -400,8 +313,6 @@ public class PedidosGUI extends JInternalFrame {
         txtUsuario = new javax.swing.JTextField();
         btnBuscarUsuarios = new javax.swing.JButton();
         panelResultados = new javax.swing.JPanel();
-        sp_RenglonesPedido = new javax.swing.JScrollPane();
-        tbl_RenglonesPedido = new javax.swing.JTable();
         sp_Pedidos = new javax.swing.JScrollPane();
         tbl_Pedidos = new javax.swing.JTable();
         btnNuevoPedido = new javax.swing.JButton();
@@ -616,16 +527,6 @@ public class PedidosGUI extends JInternalFrame {
 
         panelResultados.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados"));
 
-        tbl_RenglonesPedido.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-
-            }
-        ));
-        sp_RenglonesPedido.setViewportView(tbl_RenglonesPedido);
-
         tbl_Pedidos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -635,16 +536,6 @@ public class PedidosGUI extends JInternalFrame {
             }
         ));
         tbl_Pedidos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        tbl_Pedidos.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tbl_PedidosMouseClicked(evt);
-            }
-        });
-        tbl_Pedidos.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                tbl_PedidosKeyPressed(evt);
-            }
-        });
         sp_Pedidos.setViewportView(tbl_Pedidos);
 
         btnNuevoPedido.setForeground(java.awt.Color.blue);
@@ -705,7 +596,6 @@ public class PedidosGUI extends JInternalFrame {
         panelResultadosLayout.setHorizontalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(sp_Pedidos)
-            .addComponent(sp_RenglonesPedido)
             .addGroup(panelResultadosLayout.createSequentialGroup()
                 .addComponent(btnNuevoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
@@ -723,9 +613,7 @@ public class PedidosGUI extends JInternalFrame {
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Pedidos, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_RenglonesPedido, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+                .addComponent(sp_Pedidos, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNuevoPedido)
@@ -881,10 +769,6 @@ public class PedidosGUI extends JInternalFrame {
         this.verFacturasVenta();
     }//GEN-LAST:event_btnVerFacturasActionPerformed
 
-    private void tbl_PedidosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_PedidosMouseClicked
-        this.cargarRenglonesDelPedidoSeleccionadoEnTabla(null);
-    }//GEN-LAST:event_tbl_PedidosMouseClicked
-
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         this.setTitle("Administrar Pedidos");
         this.setSize(sizeInternalFrame);
@@ -902,12 +786,6 @@ public class PedidosGUI extends JInternalFrame {
         this.cambiarEstadoDeComponentesSegunRolUsuario();
     }//GEN-LAST:event_formInternalFrameOpened
         
-    private void tbl_PedidosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbl_PedidosKeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_UP || evt.getKeyCode() == KeyEvent.VK_DOWN) {
-            this.cargarRenglonesDelPedidoSeleccionadoEnTabla(evt);
-        }
-    }//GEN-LAST:event_tbl_PedidosKeyPressed
-
     private void btnImprimirPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirPedidoActionPerformed
         if (tbl_Pedidos.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
@@ -1056,9 +934,7 @@ public class PedidosGUI extends JInternalFrame {
     private javax.swing.JPanel panelFiltros;
     private javax.swing.JPanel panelResultados;
     private javax.swing.JScrollPane sp_Pedidos;
-    private javax.swing.JScrollPane sp_RenglonesPedido;
     private javax.swing.JTable tbl_Pedidos;
-    private javax.swing.JTable tbl_RenglonesPedido;
     private javax.swing.JTextField txtCliente;
     private javax.swing.JTextField txtUsuario;
     private javax.swing.JFormattedTextField txt_NumeroPedido;
