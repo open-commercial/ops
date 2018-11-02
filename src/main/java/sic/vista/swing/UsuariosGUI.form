@@ -256,7 +256,7 @@
         </Component>
         <Component class="javax.swing.JCheckBox" name="chkRoles">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Rol"/>
+            <Property name="text" type="java.lang.String" value="Rol:"/>
           </Properties>
           <Events>
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkRolesItemStateChanged"/>

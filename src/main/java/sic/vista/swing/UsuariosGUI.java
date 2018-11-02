@@ -369,7 +369,7 @@ public class UsuariosGUI extends JInternalFrame {
 
         lblCantResultados.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
-        chkRoles.setText("Rol");
+        chkRoles.setText("Rol:");
         chkRoles.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 chkRolesItemStateChanged(evt);
