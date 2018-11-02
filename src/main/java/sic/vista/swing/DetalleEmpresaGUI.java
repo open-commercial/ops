@@ -126,7 +126,7 @@ public class DetalleEmpresaGUI extends JDialog {
         cmb_Pais.setSelectedItem(empresaModificar.getLocalidad().getProvincia().getPais());
         cmb_Provincia.setSelectedItem(empresaModificar.getLocalidad().getProvincia());
         cmb_Localidad.setSelectedItem(empresaModificar.getLocalidad());
-        if ("".equals(empresaModificar.getLogo())) {
+        if (empresaModificar.getLogo() == null || "".equals(empresaModificar.getLogo())) {
             lbl_Logo.setText("SIN IMAGEN");
             logo = null;
         } else {
@@ -502,9 +502,11 @@ public class DetalleEmpresaGUI extends JDialog {
                 empresaModificar.setEmail(txt_Email.getText().trim());
                 empresaModificar.setTelefono(txt_Telefono.getText().trim());
                 empresaModificar.setLocalidad((Localidad) cmb_Localidad.getSelectedItem());   
-                if (cambioLogo) {
+                if (cambioLogo && logo != null) {
                     empresaModificar.setLogo(RestClient.getRestTemplate().postForObject("/empresas/logo", logo, String.class));
-                } 
+                } else if (cambioLogo && logo == null) {
+                    empresaModificar.setLogo(null);
+                }
                 RestClient.getRestTemplate().put("/empresas", empresaModificar);            
                 mensaje = "La Empresa " + txt_Nombre.getText().trim() + " se modificó correctamente.";
             }
@@ -536,6 +538,7 @@ public class DetalleEmpresaGUI extends JDialog {
         lbl_Logo.setIcon(null);
         lbl_Logo.setText("SIN IMAGEN");
         logo = null;
+        cambioLogo = true;
     }//GEN-LAST:event_btn_EliminarLogoActionPerformed
 
     private void btn_ExaminarArchivosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ExaminarArchivosActionPerformed
