@@ -83,6 +83,9 @@ public class UsuariosGUI extends JInternalFrame {
             case 2:
                 criteriaBusqueda += "ordenarPor=username&";
                 break;
+            case 3:
+                criteriaBusqueda += "ordenarPor=habilitado&";
+                break;
         }
         int seleccionDireccion = cmbSentido.getSelectedIndex();
         switch (seleccionDireccion) {
@@ -377,11 +380,6 @@ public class UsuariosGUI extends JInternalFrame {
         });
 
         cmbRoles.setEnabled(false);
-        cmbRoles.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cmbRolesItemStateChanged(evt);
-            }
-        });
 
         javax.swing.GroupLayout panelFiltrosLayout = new javax.swing.GroupLayout(panelFiltros);
         panelFiltros.setLayout(panelFiltrosLayout);
@@ -423,7 +421,7 @@ public class UsuariosGUI extends JInternalFrame {
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar Por"));
 
-        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nombre", "Apellido", "Usuario" }));
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nombre", "Apellido", "Usuario", "Habilitado" }));
         cmbOrden.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbOrdenItemStateChanged(evt);
@@ -616,10 +614,6 @@ public class UsuariosGUI extends JInternalFrame {
             cmbRoles.setEnabled(false);
         }
     }//GEN-LAST:event_chkRolesItemStateChanged
-
-    private void cmbRolesItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbRolesItemStateChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cmbRolesItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Agregar;
