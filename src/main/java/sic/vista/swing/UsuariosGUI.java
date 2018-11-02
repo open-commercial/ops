@@ -69,6 +69,9 @@ public class UsuariosGUI extends JInternalFrame {
             criteriaBusqueda += "apellido=" + txtCriteria.getText().trim() + "&";
             criteriaBusqueda += "email=" + txtCriteria.getText().trim() + "&";
         }
+        if (chkRoles.isSelected()) {
+            criteriaBusqueda += "roles=" + cmbRoles.getSelectedItem() + "&";
+        }
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
             case 0:
@@ -219,6 +222,12 @@ public class UsuariosGUI extends JInternalFrame {
         this.limpiarJTable();
         this.buscar();
     }
+      
+    private void cargarRoles() {
+        for (Rol roles : Rol.values()) {
+            cmbRoles.addItem(roles.name());
+        }
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -235,6 +244,8 @@ public class UsuariosGUI extends JInternalFrame {
         txtCriteria = new javax.swing.JTextField();
         btn_Buscar = new javax.swing.JButton();
         lblCantResultados = new javax.swing.JLabel();
+        chkRoles = new javax.swing.JCheckBox();
+        cmbRoles = new javax.swing.JComboBox<>();
         panelOrden = new javax.swing.JPanel();
         cmbOrden = new javax.swing.JComboBox<>();
         cmbSentido = new javax.swing.JComboBox<>();
@@ -321,7 +332,7 @@ public class UsuariosGUI extends JInternalFrame {
         panelPrincipalLayout.setVerticalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPrincipalLayout.createSequentialGroup()
-                .addComponent(sp_resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                .addComponent(sp_resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_Agregar)
@@ -358,6 +369,20 @@ public class UsuariosGUI extends JInternalFrame {
 
         lblCantResultados.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
+        chkRoles.setText("Rol");
+        chkRoles.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chkRolesItemStateChanged(evt);
+            }
+        });
+
+        cmbRoles.setEnabled(false);
+        cmbRoles.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbRolesItemStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelFiltrosLayout = new javax.swing.GroupLayout(panelFiltros);
         panelFiltros.setLayout(panelFiltrosLayout);
         panelFiltrosLayout.setHorizontalGroup(
@@ -370,9 +395,13 @@ public class UsuariosGUI extends JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblCantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
-                        .addComponent(chkCriteria)
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(chkCriteria, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(chkRoles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtCriteria, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)))
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtCriteria, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
+                            .addComponent(cmbRoles, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         panelFiltrosLayout.setVerticalGroup(
@@ -383,8 +412,12 @@ public class UsuariosGUI extends JInternalFrame {
                     .addComponent(txtCriteria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblCantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_Buscar))
+                    .addComponent(chkRoles)
+                    .addComponent(cmbRoles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btn_Buscar)
+                    .addComponent(lblCantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -422,7 +455,7 @@ public class UsuariosGUI extends JInternalFrame {
                 .addComponent(cmbOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmbSentido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -438,9 +471,9 @@ public class UsuariosGUI extends JInternalFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(panelFiltros, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelOrden, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -539,6 +572,7 @@ public class UsuariosGUI extends JInternalFrame {
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         this.setSize(sizeInternalFrame);
         this.setColumnas();
+        this.cargarRoles();
         try {
             this.setMaximum(true);
         } catch (PropertyVetoException ex) {
@@ -574,13 +608,28 @@ public class UsuariosGUI extends JInternalFrame {
         this.limpiarYBuscar();
     }//GEN-LAST:event_cmbSentidoItemStateChanged
 
+    private void chkRolesItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkRolesItemStateChanged
+        if (chkRoles.isSelected() == true) {
+            cmbRoles.setEnabled(true);
+            txtCriteria.requestFocus();
+        } else {
+            cmbRoles.setEnabled(false);
+        }
+    }//GEN-LAST:event_chkRolesItemStateChanged
+
+    private void cmbRolesItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbRolesItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbRolesItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Agregar;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_Modificar;
     private javax.swing.JCheckBox chkCriteria;
+    private javax.swing.JCheckBox chkRoles;
     private javax.swing.JComboBox<String> cmbOrden;
+    private javax.swing.JComboBox<String> cmbRoles;
     private javax.swing.JComboBox<String> cmbSentido;
     private javax.swing.JLabel lblCantResultados;
     private javax.swing.JPanel panelFiltros;
