@@ -29,6 +29,7 @@ import sic.util.Utilidades;
 public class DetalleEmpresaGUI extends JDialog {
     
     private byte[] logo = null;
+    private boolean cambioLogo = false;
     private Empresa empresaModificar;
     private final TipoDeOperacion operacion;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -500,12 +501,10 @@ public class DetalleEmpresaGUI extends JDialog {
                 empresaModificar.setFechaInicioActividad(dc_FechaInicioActividad.getDate());
                 empresaModificar.setEmail(txt_Email.getText().trim());
                 empresaModificar.setTelefono(txt_Telefono.getText().trim());
-                empresaModificar.setLocalidad((Localidad) cmb_Localidad.getSelectedItem());                
-                if (logo == null) {
-                    empresaModificar.setLogo("");
-                } else {
+                empresaModificar.setLocalidad((Localidad) cmb_Localidad.getSelectedItem());   
+                if (cambioLogo) {
                     empresaModificar.setLogo(RestClient.getRestTemplate().postForObject("/empresas/logo", logo, String.class));
-                }
+                } 
                 RestClient.getRestTemplate().put("/empresas", empresaModificar);            
                 mensaje = "La Empresa " + txt_Nombre.getText().trim() + " se modificó correctamente.";
             }
@@ -552,6 +551,7 @@ public class DetalleEmpresaGUI extends JDialog {
                     ImageIcon logoRedimensionado = new ImageIcon(logoProvisional.getImage().getScaledInstance(114, 114, Image.SCALE_SMOOTH));
                     lbl_Logo.setIcon(logoRedimensionado);
                     lbl_Logo.setText("");
+                    cambioLogo = true;
                 } else {
                     JOptionPane.showMessageDialog(this, "El tamaño del archivo seleccionado, supera el límite de 512kb.",
                         "Error", JOptionPane.ERROR_MESSAGE);
