@@ -845,7 +845,7 @@ public class ProductosGUI extends JInternalFrame {
                     int[] indicesProductos = Utilidades.getSelectedRowsModelIndices(tbl_Resultados);
                     long[] idsProductos = new long[indicesProductos.length];
                     for (int i = 0; i < indicesProductos.length; i++) {
-                        idsProductos[i] = this.productosTotal.get(indicesProductos[i]).getId_Producto();
+                        idsProductos[i] = this.productosTotal.get(indicesProductos[i]).getIdProducto();
                     }
                     RestClient.getRestTemplate().delete("/productos?idProducto="
                             + Arrays.toString(idsProductos).substring(1, Arrays.toString(idsProductos).length() - 1));

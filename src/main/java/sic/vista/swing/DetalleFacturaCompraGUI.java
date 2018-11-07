@@ -456,7 +456,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
                 Producto producto = RestClient.getRestTemplate()
                         .getForObject("/productos/" + rf.getIdProductoItem(), Producto.class);
                 RenglonFactura nuevoRenglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
-                        + "idProducto=" + producto.getId_Producto()
+                        + "idProducto=" + producto.getIdProducto()
                         + "&tipoDeComprobante=" + tipoDeComprobante.name()
                         + "&movimiento=" + Movimiento.COMPRA
                         + "&cantidad=" + rf.getCantidad()
