@@ -9,6 +9,6 @@ import lombok.EqualsAndHashCode;
 public class FacturaVenta extends Factura implements Serializable {
 
       private Long idCliente;
-      private String razonSocialCliente;
+      private String nombreFiscalCliente;
 
 }

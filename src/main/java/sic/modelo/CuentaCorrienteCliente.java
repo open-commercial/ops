@@ -7,6 +7,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class CuentaCorrienteCliente extends CuentaCorriente {
 
-    private String razonSocialCliente;
+    private String nombreFiscalCliente;
 
 }

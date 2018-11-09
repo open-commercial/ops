@@ -216,7 +216,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
     private void cargarCliente(Cliente cliente) {
         this.cliente = cliente;
-        txtNombreCliente.setText(cliente.getRazonSocial() + " (" + cliente.getNroCliente() + ")");
+        txtNombreCliente.setText(cliente.getNombreFiscal() + " (" + cliente.getNroCliente() + ")");
         txtBonificacion.setText(cliente.getBonificacion().setScale(2, RoundingMode.HALF_UP) + " %");
         String direccion = "";
         if (cliente.getDireccion() != null) direccion = cliente.getDireccion() + " ";
@@ -859,7 +859,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         lbl_IDFiscalCliente.setText("CUIT o DNI:");
 
         lbl_CondicionIVACliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lbl_CondicionIVACliente.setText("Condición IVA:");
+        lbl_CondicionIVACliente.setText("Categoria IVA:");
 
         txt_CondicionIVACliente.setEditable(false);
         txt_CondicionIVACliente.setFocusable(false);

@@ -7,14 +7,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = {"razonSocial", "idFiscal", "nombreEmpresa"})
+@EqualsAndHashCode(of = {"nombreFiscal", "idFiscal", "nombreEmpresa"})
 public class Cliente implements Serializable {
 
-    private long id_Cliente;
-    private TipoDeCliente tipoDeCliente;
+    private long id_Cliente;    
     private BigDecimal bonificacion;
     private String nroCliente;
-    private String razonSocial;
+    private String nombreFiscal;
     private String nombreFantasia;
     private String direccion;  
     private CategoriaIVA categoriaIVA;
@@ -41,6 +40,6 @@ public class Cliente implements Serializable {
 
     @Override
     public String toString() {
-        return razonSocial;
+        return nombreFiscal;
     }
 }

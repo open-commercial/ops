@@ -184,7 +184,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
     }
 
     private void cargarDetalleCliente() {        
-        txtNombre.setText(((FacturaVenta) factura).getRazonSocialCliente() + " (" + cliente.getNroCliente() + ")");
+        txtNombre.setText(((FacturaVenta) factura).getNombreFiscalCliente() + " (" + cliente.getNroCliente() + ")");
         txtDomicilio.setText(cliente.getDireccion()
                 + " " + cliente.getNombreLocalidad()
                 + " " + cliente.getNombreProvincia()
@@ -461,7 +461,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
         lblIDFiscalCliente.setText("CUIT o DNI:");
 
         lblCondicionIVACliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblCondicionIVACliente.setText("Condición IVA:");
+        lblCondicionIVACliente.setText("Categoria IVA:");
 
         txtCondicionIVA.setEditable(false);
         txtCondicionIVA.setFocusable(false);

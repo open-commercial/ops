@@ -133,7 +133,7 @@
       <SubComponents>
         <Component class="javax.swing.JCheckBox" name="chkCriteria">
           <Properties>
-            <Property name="text" type="java.lang.String" value="N&#xba; Cliente, Razon Social, Nombre Fantasia:"/>
+            <Property name="text" type="java.lang.String" value="N&#xba; Cliente o Nombre:"/>
           </Properties>
           <Events>
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkCriteriaItemStateChanged"/>
@@ -390,7 +390,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="cmbOrden" max="32767" attributes="0"/>
-                      <Component id="cmbSentido" pref="158" max="32767" attributes="0"/>
+                      <Component id="cmbSentido" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -413,7 +413,7 @@
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="3">
-                <StringItem index="0" value="Raz&#xf3;n Social"/>
+                <StringItem index="0" value="R. Social o Nombre"/>
                 <StringItem index="1" value="Fecha Alta"/>
                 <StringItem index="2" value="Nombre Fantasia"/>
               </StringArray>

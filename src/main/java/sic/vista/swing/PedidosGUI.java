@@ -170,7 +170,7 @@ public class PedidosGUI extends JInternalFrame {
             fila[0] = p.getEstado();
             fila[1] = p.getFecha();
             fila[2] = p.getNroPedido();
-            fila[3] = p.getRazonSocialCliente();
+            fila[3] = p.getNombreFiscalCliente();
             fila[4] = p.getNombreUsuario();
             fila[5] = p.getTotalEstimado();
             fila[6] = p.getTotalActual();
@@ -894,7 +894,7 @@ public class PedidosGUI extends JInternalFrame {
         buscarClientesGUI.setVisible(true);
         if (buscarClientesGUI.getClienteSeleccionado() != null) {
             clienteSeleccionado = buscarClientesGUI.getClienteSeleccionado();
-            txtCliente.setText(clienteSeleccionado.getRazonSocial());
+            txtCliente.setText(clienteSeleccionado.getNombreFiscal());
         }
     }//GEN-LAST:event_btnBuscarClienteActionPerformed
 

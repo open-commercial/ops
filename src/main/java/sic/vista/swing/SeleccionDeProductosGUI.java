@@ -296,7 +296,7 @@ public class SeleccionDeProductosGUI extends JDialog {
         this.cargarRenglonesAlTable();
         if (factura instanceof FacturaVenta) {
             this.setTitle(factura.getTipoComprobante() + " Nro: " + factura.getNumSerie() + " - " + factura.getNumFactura()
-                    + " del Cliente: " + ((FacturaVenta) factura).getRazonSocialCliente()
+                    + " del Cliente: " + ((FacturaVenta) factura).getNombreFiscalCliente()
                     + " con Fecha: " + (new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO)).format(factura.getFecha()));
         } else if (factura instanceof FacturaCompra) {
             this.setTitle(factura.getTipoComprobante() + " Nro: " + factura.getNumSerie() + " - " + factura.getNumFactura()

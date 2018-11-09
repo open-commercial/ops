@@ -31,11 +31,11 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Component id="panelPrincipal" max="32767" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="panelPrincipal" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -82,28 +82,27 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="lblTipoDeCliente" linkSize="16" alignment="0" max="32767" attributes="0"/>
-                      <Component id="lblBonificacion" linkSize="16" alignment="0" max="32767" attributes="0"/>
-                      <Component id="lblIdFiscal" linkSize="16" alignment="0" max="32767" attributes="0"/>
-                      <Component id="lblRazonSocial" linkSize="16" alignment="0" max="32767" attributes="1"/>
-                      <Component id="lblCredencial" alignment="0" max="32767" attributes="1"/>
-                      <Component id="lblContacto" alignment="0" max="32767" attributes="1"/>
-                      <Component id="lblTelefono" alignment="0" max="32767" attributes="1"/>
-                      <Component id="lblViajante" alignment="0" max="32767" attributes="1"/>
-                      <Component id="lblLocalidad" alignment="0" max="32767" attributes="0"/>
-                      <Component id="lblProvincia" alignment="0" max="32767" attributes="0"/>
-                      <Component id="lblPais" alignment="0" max="32767" attributes="0"/>
-                      <Component id="lblDireccion" alignment="0" max="32767" attributes="0"/>
-                      <Component id="lblCondicionIVA" alignment="0" max="32767" attributes="1"/>
-                      <Component id="lblNombreFantasia" linkSize="16" alignment="0" max="32767" attributes="0"/>
-                      <Component id="lblEmail" alignment="0" max="32767" attributes="1"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="lblBonificacion" linkSize="16" alignment="1" max="32767" attributes="0"/>
+                      <Component id="lblNombreFiscal" linkSize="16" alignment="1" max="32767" attributes="1"/>
+                      <Component id="lblNombreFantasia" linkSize="16" alignment="1" max="32767" attributes="0"/>
+                      <Component id="lblIdFiscal" linkSize="16" alignment="1" max="32767" attributes="0"/>
+                      <Component id="lblCondicionIVA" alignment="1" max="32767" attributes="1"/>
+                      <Component id="lblDireccion" alignment="1" max="32767" attributes="0"/>
+                      <Component id="lblPais" alignment="1" max="32767" attributes="0"/>
+                      <Component id="lblProvincia" alignment="1" max="32767" attributes="0"/>
+                      <Component id="lblLocalidad" alignment="1" max="32767" attributes="0"/>
+                      <Component id="lblViajante" alignment="1" max="32767" attributes="1"/>
+                      <Component id="lblTelefono" alignment="1" max="32767" attributes="1"/>
+                      <Component id="lblContacto" alignment="1" max="32767" attributes="1"/>
+                      <Component id="lblEmail" alignment="1" max="32767" attributes="1"/>
+                      <Component id="lblCredencial" alignment="1" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cmbProvincia" alignment="0" pref="346" max="32767" attributes="1"/>
+                              <Component id="cmbProvincia" alignment="0" pref="295" max="32767" attributes="1"/>
                               <Component id="cmbPais" alignment="1" max="32767" attributes="1"/>
                               <Component id="cmbViajante" alignment="1" max="32767" attributes="1"/>
                               <Component id="cmbLocalidad" alignment="1" max="32767" attributes="1"/>
@@ -126,10 +125,9 @@
                               <Component id="btnNuevaLocalidad" alignment="1" max="32767" attributes="0"/>
                           </Group>
                       </Group>
-                      <Component id="cmbTipoDeCliente" max="32767" attributes="0"/>
                       <Component id="txtBonificacion" alignment="0" max="32767" attributes="0"/>
                       <Component id="txtIdFiscal" alignment="0" max="32767" attributes="0"/>
-                      <Component id="txtRazonSocial" alignment="0" max="32767" attributes="1"/>
+                      <Component id="txtNombreFiscal" alignment="0" max="32767" attributes="1"/>
                       <Component id="txtNombreFantasia" alignment="0" max="32767" attributes="1"/>
                       <Component id="cmbCategoriaIVA" alignment="0" max="32767" attributes="0"/>
                       <Component id="txtDireccion" alignment="0" max="32767" attributes="1"/>
@@ -145,29 +143,24 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="cmbTipoDeCliente" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblTipoDeCliente" linkSize="17" alignment="2" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="txtBonificacion" linkSize="19" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
                       <Component id="lblBonificacion" linkSize="17" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lblIdFiscal" linkSize="17" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtIdFiscal" linkSize="19" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblNombreFiscal" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtNombreFiscal" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lblRazonSocial" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtRazonSocial" alignment="2" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lblNombreFantasia" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="txtNombreFantasia" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="lblIdFiscal" linkSize="17" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtIdFiscal" linkSize="19" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -232,22 +225,6 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="lblTipoDeCliente">
-          <Properties>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Tipo:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cmbTipoDeCliente">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;TipoDeCliente&gt;"/>
-          </AuxValues>
-        </Component>
         <Component class="javax.swing.JLabel" name="lblBonificacion">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
@@ -267,7 +244,7 @@
         <Component class="javax.swing.JLabel" name="lblIdFiscal">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="CUIL, CUIT o DNI:"/>
+            <Property name="text" type="java.lang.String" value="CUIT o DNI:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="txtIdFiscal">
@@ -280,16 +257,16 @@
             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtIdFiscalFocusLost"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JLabel" name="lblRazonSocial">
+        <Component class="javax.swing.JLabel" name="lblNombreFiscal">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="* Razon Social:"/>
+            <Property name="text" type="java.lang.String" value="* R. Social o Nombre:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtRazonSocial">
+        <Component class="javax.swing.JTextField" name="txtNombreFiscal">
         </Component>
         <Component class="javax.swing.JLabel" name="lblNombreFantasia">
           <Properties>
@@ -305,7 +282,7 @@
               <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="* Condici&#xf3;n IVA:"/>
+            <Property name="text" type="java.lang.String" value="* Categoria IVA:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="cmbCategoriaIVA">

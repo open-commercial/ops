@@ -83,7 +83,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         clienteSeleccionado = RestClient.getRestTemplate()
                 .getForObject("/clientes/" + idCliente,
                         Cliente.class);
-        txtCliente.setText(clienteSeleccionado.getRazonSocial());
+        txtCliente.setText(clienteSeleccionado.getNombreFiscal());
         chk_Cliente.setSelected(true);
         this.resetScroll();
         this.limpiarJTable();
@@ -118,7 +118,7 @@ public class FacturasVentaGUI extends JInternalFrame {
                 uriCriteria += "&ordenarPor=fecha";
                 break;
             case 1:
-                uriCriteria += "&ordenarPor=cliente.razonSocial";
+                uriCriteria += "&ordenarPor=cliente.nombreFiscal";
                 break;
             case 2:
                 uriCriteria += "&ordenarPor=total";
@@ -318,7 +318,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             fila[2] = factura.getTipoComprobante();
             fila[3] = factura.getNumSerie() + " - " + factura.getNumFactura();
             fila[4] = factura.getFechaVencimiento();
-            fila[5] = factura.getRazonSocialCliente();
+            fila[5] = factura.getNombreFiscalCliente();
             fila[6] = factura.getNombreUsuario();
             fila[7] = factura.getNombreTransportista();
             fila[8] = factura.getTotal();
@@ -1202,7 +1202,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         buscarClientesGUI.setVisible(true);
         if (buscarClientesGUI.getClienteSeleccionado() != null) {
             clienteSeleccionado = buscarClientesGUI.getClienteSeleccionado();
-            txtCliente.setText(clienteSeleccionado.getRazonSocial());
+            txtCliente.setText(clienteSeleccionado.getNombreFiscal());
         }
     }//GEN-LAST:event_btnBuscarClienteActionPerformed
 

@@ -238,7 +238,7 @@ public class NotasVentaGUI extends JInternalFrame {
             fila[1] = nota.getFecha();
             fila[2] = nota.getTipoComprobante();
             fila[3] = nota.getSerie() + " - " + nota.getNroNota();
-            fila[4] = nota.getRazonSocialCliente();
+            fila[4] = nota.getNombreFiscalCliente();
             fila[5] = nota.getNombreUsuario();
             fila[6] = nota.getTotal();
             if (nota.getNumSerieAfip() == 0 && nota.getNumNotaAfip() == 0) {
@@ -1032,7 +1032,7 @@ public class NotasVentaGUI extends JInternalFrame {
         buscarClientesGUI.setVisible(true);
         if (buscarClientesGUI.getClienteSeleccionado() != null) {
             clienteSeleccionado = buscarClientesGUI.getClienteSeleccionado();
-            txtCliente.setText(clienteSeleccionado.getRazonSocial());
+            txtCliente.setText(clienteSeleccionado.getNombreFiscal());
         }
     }//GEN-LAST:event_btnBuscarClienteActionPerformed
 

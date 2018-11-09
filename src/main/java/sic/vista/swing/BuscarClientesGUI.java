@@ -41,27 +41,7 @@ public class BuscarClientesGUI extends JDialog {
         this.setIcon();        
         this.setColumnas();        
         txtCriteriaBusqueda.addKeyListener(keyHandler);
-        tblResultados.addKeyListener(keyHandler);
-        // desactivado momentaneamente
-        /*Timer timer = new Timer(false);
-        txtCriteriaBusqueda.addKeyListener(new KeyAdapter() {
-            private TimerTask task;
-            @Override
-            public void keyTyped(KeyEvent e) {
-                if (task != null) {
-                    task.cancel();
-                }
-                task = new TimerTask() {
-                    @Override
-                    public void run() {
-                        resetScroll();
-                        limpiarJTable();
-                        buscar();
-                    }
-                };
-                timer.schedule(task, 450);
-            }
-        });*/
+        tblResultados.addKeyListener(keyHandler);        
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
             int va = scrollBar.getVisibleAmount() + 50;
@@ -94,7 +74,7 @@ public class BuscarClientesGUI extends JDialog {
                 this.limpiarJTable();
             } else {
                 String uri = "/clientes/busqueda/criteria?"
-                        + "razonSocial=" + txtCriteriaBusqueda.getText().trim()
+                        + "nombreFiscal=" + txtCriteriaBusqueda.getText().trim()
                         + "&nombreFantasia=" + txtCriteriaBusqueda.getText().trim()                        
                         + "&nroCliente=" + txtCriteriaBusqueda.getText().trim()
                         + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
@@ -122,8 +102,8 @@ public class BuscarClientesGUI extends JDialog {
     private void setColumnas() {
         String[] encabezados = new String[5];
         encabezados[0] = "Nº Cliente";
-        encabezados[1] = "ID Fiscal";
-        encabezados[2] = "Razon Social";
+        encabezados[1] = "CUIT o DNI";
+        encabezados[2] = "R. Social o Nombre";
         encabezados[3] = "Nombre Fantasia";
         encabezados[4] = "Direccion";        
         modeloTablaResultados.setColumnIdentifiers(encabezados);
@@ -149,7 +129,7 @@ public class BuscarClientesGUI extends JDialog {
             Object[] fila = new Object[5];
             fila[0] = cliente.getNroCliente();
             fila[1] = cliente.getIdFiscal();
-            fila[2] = cliente.getRazonSocial();
+            fila[2] = cliente.getNombreFiscal();
             fila[3] = cliente.getNombreFantasia();
             fila[4] = cliente.getDireccion();            
             return fila;
