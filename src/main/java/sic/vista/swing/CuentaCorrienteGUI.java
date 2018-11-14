@@ -255,7 +255,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     }
     
     private void cargarDetalleCliente() {
-        String nombreCliente = cliente.getRazonSocial() + " (" + cliente.getNroCliente() + ")";
+        String nombreCliente = cliente.getNombreFiscal() + " (" + cliente.getNroCliente() + ")";
         this.setTitle("Cuenta Corriente del Cliente: " + nombreCliente);
         txtNombreCliente.setText(nombreCliente);        
         String direccion = "";
@@ -684,7 +684,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         txtCondicionIVACliente.setFocusable(false);
 
         lblCondicionIVACliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblCondicionIVACliente.setText("Condición IVA:");
+        lblCondicionIVACliente.setText("Categoria IVA:");
 
         txtIDFiscalCliente.setEditable(false);
         txtIDFiscalCliente.setFocusable(false);
@@ -723,20 +723,19 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnRefresh))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lblCondicionIVACliente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblDomicilioCliente, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lblNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblCondicionIVACliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblDomicilioCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblNombreCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtCondicionIVACliente)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(txtCondicionIVACliente, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lblIDFiscalCliente)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtIDFiscalCliente))
-                            .addComponent(txtDomicilioCliente)
+                            .addComponent(txtDomicilioCliente, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(txtNombreCliente, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
             .addComponent(pnlResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)

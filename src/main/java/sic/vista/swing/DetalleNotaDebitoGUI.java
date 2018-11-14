@@ -83,7 +83,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
     }
     
     private void cargarDetalleCliente() {
-        txtNombre.setText(cliente.getRazonSocial() + " (" + cliente.getNroCliente() + ")");
+        txtNombre.setText(cliente.getNombreFiscal() + " (" + cliente.getNroCliente() + ")");
         txtDomicilio.setText(cliente.getDireccion()
                 + " " + cliente.getNombreLocalidad()
                 + " " + cliente.getNombreProvincia()                
@@ -336,7 +336,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
         lblIDFiscalCliente.setText("CUIT o DNI:");
 
         lblCondicionIVACliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblCondicionIVACliente.setText("Condición IVA:");
+        lblCondicionIVACliente.setText("Categoria IVA:");
 
         txtCondicionIVA.setEditable(false);
         txtCondicionIVA.setFocusable(false);

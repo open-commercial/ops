@@ -505,7 +505,7 @@ public class UsuariosGUI extends JInternalFrame {
                             respuesta = JOptionPane.showConfirmDialog(this,
                                     MessageFormat.format(ResourceBundle.getBundle("Mensajes")
                                             .getString("mensaje_eliminar_usuario_con_cliente_asignado"),
-                                            clienteRelacionado.getRazonSocial()),
+                                            clienteRelacionado.getNombreFiscal()),
                                     "Eliminar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                         }
                         if (respuesta == JOptionPane.YES_OPTION) {

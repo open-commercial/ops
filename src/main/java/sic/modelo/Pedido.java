@@ -21,7 +21,7 @@ public class Pedido implements Serializable {
     private String observaciones;  
     private String nombreEmpresa;
     private boolean eliminado;    
-    private String razonSocialCliente;  
+    private String nombreFiscalCliente;  
     private String nombreUsuario;
     private List<Factura> facturas;        
     private List<RenglonPedido> renglones;
