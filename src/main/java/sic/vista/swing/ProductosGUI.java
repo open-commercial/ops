@@ -41,8 +41,7 @@ public class ProductosGUI extends JInternalFrame {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(880, 600);
     private static int totalElementosBusqueda;
-    private static int NUMERO_PAGINA = 0;
-    private static final int TAMANIO_PAGINA = 50;
+    private static int NUMERO_PAGINA = 0;    
     private List<Rubro> rubros;
     private List<Proveedor> proveedores;
 
@@ -52,7 +51,7 @@ public class ProductosGUI extends JInternalFrame {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
             int va = scrollBar.getVisibleAmount() + 50;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (productosTotal.size() >= TAMANIO_PAGINA) {
+                if (productosTotal.size() >= 50) {
                     NUMERO_PAGINA += 1;
                     buscar();
                 }
@@ -386,7 +385,7 @@ public class ProductosGUI extends JInternalFrame {
             case 0: criteriaBusqueda += "&sentido=ASC"; break;
             case 1: criteriaBusqueda += "&sentido=DESC"; break;
         }
-        criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
+        criteriaBusqueda += "&pagina=" + NUMERO_PAGINA;
         try {
             PaginaRespuestaRest<Producto> response = RestClient.getRestTemplate()
                     .exchange(criteriaBusqueda, HttpMethod.GET, null,

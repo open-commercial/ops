@@ -44,8 +44,7 @@ public class BuscarProductosGUI extends JDialog {
     private boolean debeCargarRenglon;    
     private final Movimiento movimiento;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
-    private int NUMERO_PAGINA = 0;
-    private static final int TAMANIO_PAGINA = 50;
+    private int NUMERO_PAGINA = 0;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeDialog = new Dimension(1000, 600);
     
@@ -62,32 +61,12 @@ public class BuscarProductosGUI extends JDialog {
         txtaNotaProducto.addKeyListener(keyHandler);
         txtCantidad.addKeyListener(keyHandler);        
         txtPorcentajeDescuento.addKeyListener(keyHandler);
-        btnAceptar.addKeyListener(keyHandler);        
-        // desactivado momentaneamente
-        /*Timer timer = new Timer(false);
-        txtCriteriaBusqueda.addKeyListener(new KeyAdapter() {
-            private TimerTask task;
-            @Override
-            public void keyTyped(KeyEvent e) {
-                if (task != null) {
-                    task.cancel();
-                }
-                task = new TimerTask() {
-                    @Override
-                    public void run() {
-                        resetScroll();
-                        limpiarJTable();
-                        buscar();
-                    }
-                };
-                timer.schedule(task, 450);
-            }
-        });*/
+        btnAceptar.addKeyListener(keyHandler);
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
             int va = scrollBar.getVisibleAmount() + 50;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (productosTotal.size() >= TAMANIO_PAGINA) {
+                if (productosTotal.size() >= 50) {
                     NUMERO_PAGINA += 1;
                     buscar();
                 }
@@ -126,7 +105,7 @@ public class BuscarProductosGUI extends JDialog {
                 String uri = "descripcion=" + txtCriteriaBusqueda.getText().trim()
                         + "&codigo=" + txtCriteriaBusqueda.getText().trim()
                         + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
+                        + "&pagina=" + NUMERO_PAGINA;
                 PaginaRespuestaRest<Producto> response = RestClient.getRestTemplate()
                         .exchange("/productos/busqueda/criteria?" + uri, HttpMethod.GET, null,
                                 new ParameterizedTypeReference<PaginaRespuestaRest<Producto>>() {
