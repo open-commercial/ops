@@ -429,7 +429,7 @@ public class DetalleClienteGUI extends JDialog {
 
         lblCredencial.setForeground(java.awt.Color.red);
         lblCredencial.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblCredencial.setText("*Credencial:");
+        lblCredencial.setText("* Credencial:");
 
         cmbCredencial.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -734,7 +734,8 @@ public class DetalleClienteGUI extends JDialog {
         gui_DetalleUsuario.setModal(true);
         gui_DetalleUsuario.setLocationRelativeTo(this);
         gui_DetalleUsuario.setVisible(true);
-        if (gui_DetalleUsuario.getUsuarioCreado().getRoles().contains(Rol.COMPRADOR)) {
+        if (gui_DetalleUsuario.getUsuarioCreado() != null && gui_DetalleUsuario.getUsuarioCreado().getRoles().contains(Rol.COMPRADOR)) {
+            cmbCredencial.removeAllItems();
             cmbCredencial.addItem(gui_DetalleUsuario.getUsuarioCreado());
             cmbCredencial.setSelectedIndex(0);
         }
@@ -782,7 +783,8 @@ public class DetalleClienteGUI extends JDialog {
         gui_DetalleUsuario.setModal(true);
         gui_DetalleUsuario.setLocationRelativeTo(this);
         gui_DetalleUsuario.setVisible(true);
-        if (gui_DetalleUsuario.getUsuarioCreado().getRoles().contains(Rol.VIAJANTE)) {
+        if (gui_DetalleUsuario.getUsuarioCreado() != null && gui_DetalleUsuario.getUsuarioCreado().getRoles().contains(Rol.VIAJANTE)) {
+            cmbViajante.removeAllItems();
             cmbViajante.addItem(gui_DetalleUsuario.getUsuarioCreado());
             cmbViajante.setSelectedIndex(0);
         }
