@@ -412,10 +412,13 @@
         <Component class="javax.swing.JComboBox" name="cmbOrden">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="3">
+              <StringArray count="6">
                 <StringItem index="0" value="R. Social o Nombre"/>
                 <StringItem index="1" value="Fecha Alta"/>
                 <StringItem index="2" value="Nombre Fantasia"/>
+                <StringItem index="3" value="Saldo"/>
+                <StringItem index="4" value="Ultimo Movimiento C/C"/>
+                <StringItem index="5" value="Bonificaci&#xf3;n"/>
               </StringArray>
             </Property>
           </Properties>

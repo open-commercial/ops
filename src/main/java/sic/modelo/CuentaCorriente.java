@@ -37,6 +37,7 @@ public abstract class CuentaCorriente implements Serializable {
     private Date fechaApertura;
     private Empresa empresa;
     private BigDecimal saldo;
+    private Date fechaUltimoMovimiento;
     private List<RenglonCuentaCorriente> renglones;    
     
 }

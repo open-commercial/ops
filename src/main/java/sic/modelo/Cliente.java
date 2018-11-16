@@ -35,8 +35,6 @@ public class Cliente implements Serializable {
     private Long idCredencial;
     private String nombreCredencial;    
     private boolean predeterminado;
-    private BigDecimal saldoCuentaCorriente;
-    private Date fechaUltimoMovimiento;
 
     @Override
     public String toString() {
