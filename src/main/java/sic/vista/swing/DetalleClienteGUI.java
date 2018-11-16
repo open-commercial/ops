@@ -47,7 +47,7 @@ public class DetalleClienteGUI extends JDialog {
     }
 
     public Cliente getClienteDadoDeAlta() {
-        return (cliente.getId_Cliente() != 0L? cliente : null);
+        return (cliente.getId_Cliente() != 0L ? cliente : null);
     }
     
     private void setIcon() {
@@ -737,6 +737,7 @@ public class DetalleClienteGUI extends JDialog {
         if (gui_DetalleUsuario.getUsuarioCreado() != null && gui_DetalleUsuario.getUsuarioCreado().getRoles().contains(Rol.COMPRADOR)) {
             cmbCredencial.removeAllItems();
             cmbCredencial.addItem(gui_DetalleUsuario.getUsuarioCreado());
+            cmbCredencial.addItem(null);
             cmbCredencial.setSelectedIndex(0);
         }
     }//GEN-LAST:event_btnNuevaCredencialActionPerformed
@@ -786,6 +787,7 @@ public class DetalleClienteGUI extends JDialog {
         if (gui_DetalleUsuario.getUsuarioCreado() != null && gui_DetalleUsuario.getUsuarioCreado().getRoles().contains(Rol.VIAJANTE)) {
             cmbViajante.removeAllItems();
             cmbViajante.addItem(gui_DetalleUsuario.getUsuarioCreado());
+            cmbViajante.addItem(null);
             cmbViajante.setSelectedIndex(0);
         }
     }//GEN-LAST:event_btnNuevoUsuarioViajanteActionPerformed
