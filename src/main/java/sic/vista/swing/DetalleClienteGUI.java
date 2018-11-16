@@ -47,7 +47,7 @@ public class DetalleClienteGUI extends JDialog {
     }
 
     public Cliente getClienteDadoDeAlta() {
-        return (cliente.getId_Cliente() != 0L? cliente : null);
+        return (cliente.getId_Cliente() != 0L ? cliente : null);
     }
     
     private void setIcon() {
@@ -427,8 +427,9 @@ public class DetalleClienteGUI extends JDialog {
         lblEmail.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblEmail.setText("Email:");
 
+        lblCredencial.setForeground(java.awt.Color.red);
         lblCredencial.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblCredencial.setText("Credencial:");
+        lblCredencial.setText("* Credencial:");
 
         cmbCredencial.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -733,6 +734,12 @@ public class DetalleClienteGUI extends JDialog {
         gui_DetalleUsuario.setModal(true);
         gui_DetalleUsuario.setLocationRelativeTo(this);
         gui_DetalleUsuario.setVisible(true);
+        if (gui_DetalleUsuario.getUsuarioCreado() != null && gui_DetalleUsuario.getUsuarioCreado().getRoles().contains(Rol.COMPRADOR)) {
+            cmbCredencial.removeAllItems();
+            cmbCredencial.addItem(gui_DetalleUsuario.getUsuarioCreado());
+            cmbCredencial.addItem(null);
+            cmbCredencial.setSelectedIndex(0);
+        }
     }//GEN-LAST:event_btnNuevaCredencialActionPerformed
 
     private void btnBuscarUsuarioViajanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarUsuarioViajanteActionPerformed
@@ -777,6 +784,12 @@ public class DetalleClienteGUI extends JDialog {
         gui_DetalleUsuario.setModal(true);
         gui_DetalleUsuario.setLocationRelativeTo(this);
         gui_DetalleUsuario.setVisible(true);
+        if (gui_DetalleUsuario.getUsuarioCreado() != null && gui_DetalleUsuario.getUsuarioCreado().getRoles().contains(Rol.VIAJANTE)) {
+            cmbViajante.removeAllItems();
+            cmbViajante.addItem(gui_DetalleUsuario.getUsuarioCreado());
+            cmbViajante.addItem(null);
+            cmbViajante.setSelectedIndex(0);
+        }
     }//GEN-LAST:event_btnNuevoUsuarioViajanteActionPerformed
 
     private void txtIdFiscalFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtIdFiscalFocusLost

@@ -19,6 +19,7 @@ import sic.modelo.TipoDeOperacion;
 public class DetalleUsuarioGUI extends JDialog {
     
     private Usuario usuarioParaModificar;
+    private Usuario usuarioCreado;
     private final TipoDeOperacion operacion;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
@@ -67,7 +68,11 @@ public class DetalleUsuarioGUI extends JDialog {
             }
         });
     }
-    
+
+    public Usuario getUsuarioCreado() {
+        return usuarioCreado;
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -302,7 +307,7 @@ public class DetalleUsuarioGUI extends JDialog {
                     if (chk_Viajante.isSelected()) roles.add(Rol.VIAJANTE);
                     if (chk_Comprador.isSelected()) roles.add(Rol.COMPRADOR);
                     usuario.setRoles(roles);
-                    RestClient.getRestTemplate().postForObject("/usuarios", usuario, Usuario.class);                                     
+                    usuarioCreado = RestClient.getRestTemplate().postForObject("/usuarios", usuario, Usuario.class);                                     
                     this.dispose();
                 } else {                    
                     JOptionPane.showMessageDialog(this, 
