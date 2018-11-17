@@ -283,7 +283,7 @@ public class ClientesGUI extends JInternalFrame {
     
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
-        String criteriaBusqueda = "/cuentas-corriente/clientes/criteria?";
+        String criteriaBusqueda = "/cuentas-corriente/clientes/busqueda/criteria?";
         if (chkCriteria.isSelected()) {
             criteriaBusqueda += "nombreFiscal=" + txtCriteria.getText().trim() + "&";
             criteriaBusqueda += "nombreFantasia=" + txtCriteria.getText().trim() + "&";            
