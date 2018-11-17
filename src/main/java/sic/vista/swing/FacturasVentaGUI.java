@@ -415,7 +415,7 @@ public class FacturasVentaGUI extends JInternalFrame {
     private boolean existeClienteDisponible() {
         String criteriaBusqueda = "/clientes/busqueda/criteria?idEmpresa="
                 + String.valueOf(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())
-                + "&pagina=0&tamanio=" + 1 + "&conSaldo=false";
+                + "&pagina=0&tamanio=" + 1;
         PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
                 .exchange(criteriaBusqueda, HttpMethod.GET, null,
                         new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {

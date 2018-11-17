@@ -21,6 +21,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
+import sic.modelo.CuentaCorrienteCliente;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Localidad;
 import sic.modelo.PaginaRespuestaRest;
@@ -37,8 +38,8 @@ import sic.util.Utilidades;
 
 public class ClientesGUI extends JInternalFrame {
 
-    private List<Cliente> clientesTotal = new ArrayList<>();
-    private List<Cliente> clientesParcial = new ArrayList<>();
+    private List<CuentaCorrienteCliente> cuentasCorrienteClienteTotal = new ArrayList<>();
+    private List<CuentaCorrienteCliente> cuentasCorrienteClienteParcial = new ArrayList<>();
     private Usuario viajanteSeleccionado;
     private boolean tienePermisoSegunRoles;
     private ModeloTabla modeloTablaDeResultados = new ModeloTabla();    
@@ -54,7 +55,7 @@ public class ClientesGUI extends JInternalFrame {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
             int va = scrollBar.getVisibleAmount() + 50;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (clientesTotal.size() >= TAMANIO_PAGINA) {
+                if (cuentasCorrienteClienteTotal.size() >= TAMANIO_PAGINA) {
                     NUMERO_PAGINA += 1;
                     buscar();
                 }
@@ -203,27 +204,27 @@ public class ClientesGUI extends JInternalFrame {
     }
 
     private void cargarResultadosAlTable() {
-        clientesParcial.stream().map(c -> {
+        cuentasCorrienteClienteParcial.stream().map(c -> {
             Object[] fila = new Object[19];
-            fila[0] = c.isPredeterminado();            
-            fila[1] = c.getNroCliente();
-            fila[2] = c.getIdFiscal();
-            fila[3] = c.getNombreFiscal();
-            fila[4] = c.getNombreFantasia();
-            fila[5] = c.getSaldoCuentaCorriente();
+            fila[0] = c.getCliente().isPredeterminado();            
+            fila[1] = c.getCliente().getNroCliente();
+            fila[2] = c.getCliente().getIdFiscal();
+            fila[3] = c.getCliente().getNombreFiscal();
+            fila[4] = c.getCliente().getNombreFantasia();
+            fila[5] = c.getSaldo();
             fila[6] = c.getFechaUltimoMovimiento();            
-            fila[7] = c.getBonificacion();
-            fila[8] = c.getNombreCredencial();
-            fila[9] = c.getNombreViajante();            
-            fila[10] = c.getDireccion();
-            fila[11] = c.getCategoriaIVA();
-            fila[12] = c.getTelefono();            
-            fila[13] = c.getContacto();
-            fila[14] = c.getEmail();
-            fila[15] = c.getFechaAlta();
-            fila[16] = c.getNombreLocalidad();
-            fila[17] = c.getNombreProvincia();
-            fila[18] = c.getNombrePais();
+            fila[7] = c.getCliente().getBonificacion();
+            fila[8] = c.getCliente().getNombreCredencial();
+            fila[9] = c.getCliente().getNombreViajante();            
+            fila[10] = c.getCliente().getDireccion();
+            fila[11] = c.getCliente().getCategoriaIVA();
+            fila[12] = c.getCliente().getTelefono();            
+            fila[13] = c.getCliente().getContacto();
+            fila[14] = c.getCliente().getEmail();
+            fila[15] = c.getCliente().getFechaAlta();
+            fila[16] = c.getCliente().getNombreLocalidad();
+            fila[17] = c.getCliente().getNombreProvincia();
+            fila[18] = c.getCliente().getNombrePais();
             return fila;
         }).forEach(fila -> {
             modeloTablaDeResultados.addRow(fila);
@@ -234,8 +235,8 @@ public class ClientesGUI extends JInternalFrame {
     
     private void resetScroll() {
         NUMERO_PAGINA = 0;
-        clientesTotal.clear();
-        clientesParcial.clear();
+        cuentasCorrienteClienteTotal.clear();
+        cuentasCorrienteClienteParcial.clear();
         Point p = new Point(0, 0);
         sp_Resultados.getViewport().setViewPosition(p);
     }
@@ -282,7 +283,7 @@ public class ClientesGUI extends JInternalFrame {
     
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
-        String criteriaBusqueda = "/clientes/busqueda/criteria?";
+        String criteriaBusqueda = "/cuentas-corriente/clientes/busqueda/criteria?";
         if (chkCriteria.isSelected()) {
             criteriaBusqueda += "nombreFiscal=" + txtCriteria.getText().trim() + "&";
             criteriaBusqueda += "nombreFantasia=" + txtCriteria.getText().trim() + "&";            
@@ -305,13 +306,22 @@ public class ClientesGUI extends JInternalFrame {
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
             case 0:
-                criteriaBusqueda += "ordenarPor=nombreFiscal&";
+                criteriaBusqueda += "ordenarPor=cliente.nombreFiscal&";
                 break;
             case 1:
-                criteriaBusqueda += "ordenarPor=fechaAlta&";
+                criteriaBusqueda += "ordenarPor=cliente.fechaAlta&";
                 break;
             case 2:
-                criteriaBusqueda += "ordenarPor=nombreFantasia&";
+                criteriaBusqueda += "ordenarPor=cliente.nombreFantasia&";
+                break;
+            case 3:
+                criteriaBusqueda += "ordenarPor=saldo&";
+                break;
+            case 4:
+                criteriaBusqueda += "ordenarPor=fechaUltimoMovimiento&";
+                break;
+            case 5:
+                criteriaBusqueda += "ordenarPor=cliente.bonificacion&";
                 break;
         }
         int seleccionDireccion = cmbSentido.getSelectedIndex();
@@ -324,15 +334,15 @@ public class ClientesGUI extends JInternalFrame {
                 break;
         }
         criteriaBusqueda += "idEmpresa=" + String.valueOf(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
-        criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
+        criteriaBusqueda += "&pagina=" + NUMERO_PAGINA;
         try {
-            PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
+            PaginaRespuestaRest<CuentaCorrienteCliente> response = RestClient.getRestTemplate()
                     .exchange(criteriaBusqueda, HttpMethod.GET, null,
-                            new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {})
+                            new ParameterizedTypeReference<PaginaRespuestaRest<CuentaCorrienteCliente>>() {})
                     .getBody();
             totalElementosBusqueda = response.getTotalElements();
-            clientesParcial = response.getContent();
-            clientesTotal.addAll(clientesParcial);
+            cuentasCorrienteClienteParcial = response.getContent();
+            cuentasCorrienteClienteTotal.addAll(cuentasCorrienteClienteParcial);
             this.cargarResultadosAlTable();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -646,7 +656,7 @@ public class ClientesGUI extends JInternalFrame {
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar Por"));
 
-        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "R. Social o Nombre", "Fecha Alta", "Nombre Fantasia" }));
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "R. Social o Nombre", "Fecha Alta", "Nombre Fantasia", "Saldo C/C", "Ultimo Movimiento C/C", "Bonificación" }));
         cmbOrden.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbOrdenItemStateChanged(evt);
@@ -780,11 +790,11 @@ public class ClientesGUI extends JInternalFrame {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             int respuesta = JOptionPane.showConfirmDialog(this,
                     "¿Esta seguro que desea eliminar el cliente: "
-                    + clientesTotal.get(indexFilaSeleccionada) + "?",
+                    + cuentasCorrienteClienteTotal.get(indexFilaSeleccionada).getCliente() + "?",
                     "Eliminar", JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
                 try {
-                    RestClient.getRestTemplate().delete("/clientes/" + clientesTotal.get(indexFilaSeleccionada).getId_Cliente());
+                    RestClient.getRestTemplate().delete("/clientes/" + cuentasCorrienteClienteTotal.get(indexFilaSeleccionada).getCliente().getId_Cliente());
                     this.resetScroll();
                     this.limpiarJTable();
                     this.buscar();
@@ -803,7 +813,7 @@ public class ClientesGUI extends JInternalFrame {
     private void btn_ModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ModificarActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-            DetalleClienteGUI gui_DetalleCliente = new DetalleClienteGUI(clientesTotal.get(indexFilaSeleccionada));
+            DetalleClienteGUI gui_DetalleCliente = new DetalleClienteGUI(cuentasCorrienteClienteTotal.get(indexFilaSeleccionada).getCliente());
             gui_DetalleCliente.setModal(true);
             gui_DetalleCliente.setLocationRelativeTo(this);
             gui_DetalleCliente.setVisible(true);
@@ -849,7 +859,7 @@ public class ClientesGUI extends JInternalFrame {
             try {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
                 Cliente cliente = RestClient.getRestTemplate()
-                        .getForObject("/clientes/" + clientesTotal.get(indexFilaSeleccionada).getId_Cliente(), Cliente.class);
+                        .getForObject("/clientes/" + cuentasCorrienteClienteTotal.get(indexFilaSeleccionada).getCliente().getId_Cliente(), Cliente.class);
                 if (cliente != null) {
                     RestClient.getRestTemplate().put("/clientes/" + cliente.getId_Cliente() + "/predeterminado", null);
                     btn_BuscarActionPerformed(evt);
@@ -877,7 +887,7 @@ public class ClientesGUI extends JInternalFrame {
         if (tbl_Resultados.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             Cliente cliente = RestClient.getRestTemplate()
-                    .getForObject("/clientes/" + clientesTotal.get(indexFilaSeleccionada).getId_Cliente(), Cliente.class);
+                    .getForObject("/clientes/" + cuentasCorrienteClienteTotal.get(indexFilaSeleccionada).getCliente().getId_Cliente(), Cliente.class);
             JInternalFrame gui;
             if (cliente != null) {
                 gui = new CuentaCorrienteGUI(cliente);
