@@ -656,7 +656,7 @@ public class ClientesGUI extends JInternalFrame {
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar Por"));
 
-        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "R. Social o Nombre", "Fecha Alta", "Nombre Fantasia", "Saldo", "Ultimo Movimiento C/C", "Bonificación" }));
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "R. Social o Nombre", "Fecha Alta", "Nombre Fantasia", "Saldo C/C", "Ultimo Movimiento C/C", "Bonificación" }));
         cmbOrden.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbOrdenItemStateChanged(evt);
