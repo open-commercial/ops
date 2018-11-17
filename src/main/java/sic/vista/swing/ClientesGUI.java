@@ -38,8 +38,8 @@ import sic.util.Utilidades;
 
 public class ClientesGUI extends JInternalFrame {
 
-    private List<CuentaCorrienteCliente> cuentasCorrienteClientesTotal = new ArrayList<>();
-    private List<CuentaCorrienteCliente> cuentasCorrienteClientesParcial = new ArrayList<>();
+    private List<CuentaCorrienteCliente> cuentasCorrienteClienteTotal = new ArrayList<>();
+    private List<CuentaCorrienteCliente> cuentasCorrienteClienteParcial = new ArrayList<>();
     private Usuario viajanteSeleccionado;
     private boolean tienePermisoSegunRoles;
     private ModeloTabla modeloTablaDeResultados = new ModeloTabla();    
@@ -55,7 +55,7 @@ public class ClientesGUI extends JInternalFrame {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
             int va = scrollBar.getVisibleAmount() + 50;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (cuentasCorrienteClientesTotal.size() >= TAMANIO_PAGINA) {
+                if (cuentasCorrienteClienteTotal.size() >= TAMANIO_PAGINA) {
                     NUMERO_PAGINA += 1;
                     buscar();
                 }
@@ -204,7 +204,7 @@ public class ClientesGUI extends JInternalFrame {
     }
 
     private void cargarResultadosAlTable() {
-        cuentasCorrienteClientesParcial.stream().map(c -> {
+        cuentasCorrienteClienteParcial.stream().map(c -> {
             Object[] fila = new Object[19];
             fila[0] = c.getCliente().isPredeterminado();            
             fila[1] = c.getCliente().getNroCliente();
@@ -235,8 +235,8 @@ public class ClientesGUI extends JInternalFrame {
     
     private void resetScroll() {
         NUMERO_PAGINA = 0;
-        cuentasCorrienteClientesTotal.clear();
-        cuentasCorrienteClientesParcial.clear();
+        cuentasCorrienteClienteTotal.clear();
+        cuentasCorrienteClienteParcial.clear();
         Point p = new Point(0, 0);
         sp_Resultados.getViewport().setViewPosition(p);
     }
@@ -341,8 +341,8 @@ public class ClientesGUI extends JInternalFrame {
                             new ParameterizedTypeReference<PaginaRespuestaRest<CuentaCorrienteCliente>>() {})
                     .getBody();
             totalElementosBusqueda = response.getTotalElements();
-            cuentasCorrienteClientesParcial = response.getContent();
-            cuentasCorrienteClientesTotal.addAll(cuentasCorrienteClientesParcial);
+            cuentasCorrienteClienteParcial = response.getContent();
+            cuentasCorrienteClienteTotal.addAll(cuentasCorrienteClienteParcial);
             this.cargarResultadosAlTable();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -790,11 +790,11 @@ public class ClientesGUI extends JInternalFrame {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             int respuesta = JOptionPane.showConfirmDialog(this,
                     "¿Esta seguro que desea eliminar el cliente: "
-                    + cuentasCorrienteClientesTotal.get(indexFilaSeleccionada).getCliente() + "?",
+                    + cuentasCorrienteClienteTotal.get(indexFilaSeleccionada).getCliente() + "?",
                     "Eliminar", JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
                 try {
-                    RestClient.getRestTemplate().delete("/clientes/" + cuentasCorrienteClientesTotal.get(indexFilaSeleccionada).getCliente().getId_Cliente());
+                    RestClient.getRestTemplate().delete("/clientes/" + cuentasCorrienteClienteTotal.get(indexFilaSeleccionada).getCliente().getId_Cliente());
                     this.resetScroll();
                     this.limpiarJTable();
                     this.buscar();
@@ -813,7 +813,7 @@ public class ClientesGUI extends JInternalFrame {
     private void btn_ModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ModificarActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-            DetalleClienteGUI gui_DetalleCliente = new DetalleClienteGUI(cuentasCorrienteClientesTotal.get(indexFilaSeleccionada).getCliente());
+            DetalleClienteGUI gui_DetalleCliente = new DetalleClienteGUI(cuentasCorrienteClienteTotal.get(indexFilaSeleccionada).getCliente());
             gui_DetalleCliente.setModal(true);
             gui_DetalleCliente.setLocationRelativeTo(this);
             gui_DetalleCliente.setVisible(true);
@@ -859,7 +859,7 @@ public class ClientesGUI extends JInternalFrame {
             try {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
                 Cliente cliente = RestClient.getRestTemplate()
-                        .getForObject("/clientes/" + cuentasCorrienteClientesTotal.get(indexFilaSeleccionada).getCliente().getId_Cliente(), Cliente.class);
+                        .getForObject("/clientes/" + cuentasCorrienteClienteTotal.get(indexFilaSeleccionada).getCliente().getId_Cliente(), Cliente.class);
                 if (cliente != null) {
                     RestClient.getRestTemplate().put("/clientes/" + cliente.getId_Cliente() + "/predeterminado", null);
                     btn_BuscarActionPerformed(evt);
@@ -887,7 +887,7 @@ public class ClientesGUI extends JInternalFrame {
         if (tbl_Resultados.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             Cliente cliente = RestClient.getRestTemplate()
-                    .getForObject("/clientes/" + cuentasCorrienteClientesTotal.get(indexFilaSeleccionada).getCliente().getId_Cliente(), Cliente.class);
+                    .getForObject("/clientes/" + cuentasCorrienteClienteTotal.get(indexFilaSeleccionada).getCliente().getId_Cliente(), Cliente.class);
             JInternalFrame gui;
             if (cliente != null) {
                 gui = new CuentaCorrienteGUI(cliente);
