@@ -1,7 +1,10 @@
 package sic.vista.swing;
 
 import java.awt.Color;
+import java.awt.Image;
 import java.awt.event.ItemEvent;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -10,6 +13,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
@@ -29,11 +33,15 @@ import sic.modelo.Rubro;
 import sic.modelo.TipoDeOperacion;
 import sic.modelo.UsuarioActivo;
 import sic.util.CalculosPrecioProducto;
+import sic.util.FiltroImagenes;
 import sic.util.FormatosFechaHora;
 import sic.util.FormatterFechaHora;
+import sic.util.Utilidades;
 
 public class DetalleProductoGUI extends JDialog {
 
+    private byte[] imagenProducto = null;
+    private boolean cambioLogo = false;
     private Producto productoParaModificar;
     private final TipoDeOperacion operacion;        
     private List<Medida> medidas;
@@ -121,6 +129,9 @@ public class DetalleProductoGUI extends JDialog {
         lblPublico = new javax.swing.JLabel();
         rbPublico = new javax.swing.JRadioButton();
         rbPrivado = new javax.swing.JRadioButton();
+        lbl_imagen = new javax.swing.JLabel();
+        btn_EliminarImagen = new javax.swing.JButton();
+        btn_ExaminarArchivos = new javax.swing.JButton();
         panel6 = new javax.swing.JPanel();
         lbl_FUM = new javax.swing.JLabel();
         lbl_FechaUltimaModificacion = new javax.swing.JLabel();
@@ -567,6 +578,27 @@ public class DetalleProductoGUI extends JDialog {
         bgVisibilidad.add(rbPrivado);
         rbPrivado.setText("Privado");
 
+        lbl_imagen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_imagen.setText("SIN IMAGEN");
+        lbl_imagen.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        lbl_imagen.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        btn_EliminarImagen.setForeground(java.awt.Color.blue);
+        btn_EliminarImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/RemovePicture_16x16.png"))); // NOI18N
+        btn_EliminarImagen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_EliminarImagenActionPerformed(evt);
+            }
+        });
+
+        btn_ExaminarArchivos.setForeground(java.awt.Color.blue);
+        btn_ExaminarArchivos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddPicture_16x16.png"))); // NOI18N
+        btn_ExaminarArchivos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ExaminarArchivosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panel5Layout = new javax.swing.GroupLayout(panel5);
         panel5.setLayout(panel5Layout);
         panel5Layout.setHorizontalGroup(
@@ -586,16 +618,31 @@ public class DetalleProductoGUI extends JDialog {
                     .addComponent(txt_Estante)
                     .addComponent(txt_Estanteria)
                     .addGroup(panel5Layout.createSequentialGroup()
-                        .addComponent(rbPublico)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(rbPrivado)
+                        .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panel5Layout.createSequentialGroup()
+                                .addComponent(lbl_imagen, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btn_ExaminarArchivos)
+                                    .addComponent(btn_EliminarImagen)))
+                            .addGroup(panel5Layout.createSequentialGroup()
+                                .addComponent(rbPublico)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(rbPrivado)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panel5Layout.setVerticalGroup(
             panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel5Layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(10, Short.MAX_VALUE)
+                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_imagen, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panel5Layout.createSequentialGroup()
+                        .addComponent(btn_ExaminarArchivos)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btn_EliminarImagen)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPublico)
                     .addComponent(rbPublico)
@@ -616,7 +663,7 @@ public class DetalleProductoGUI extends JDialog {
                 .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_Nota)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         panel6.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -673,12 +720,12 @@ public class DetalleProductoGUI extends JDialog {
         );
         panelPropiedadesLayout.setVerticalGroup(
             panelPropiedadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelPropiedadesLayout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPropiedadesLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addGap(140, 140, 140))
         );
 
         tpTabs.addTab("Propiedades", panelPropiedades);
@@ -688,21 +735,20 @@ public class DetalleProductoGUI extends JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnGuardar))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(tpTabs)))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnGuardar)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(tpTabs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tpTabs)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tpTabs, javax.swing.GroupLayout.PREFERRED_SIZE, 479, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnGuardar)
                 .addContainerGap())
         );
@@ -927,12 +973,16 @@ public class DetalleProductoGUI extends JDialog {
                     producto.setEstante(txt_Estante.getText().trim());
                     producto.setNota(txt_Nota.getText().trim());                    
                     producto.setFechaVencimiento(dc_Vencimiento.getDate());
-                    RestClient.getRestTemplate().postForObject("/productos?idMedida=" + idMedida 
+                    producto.setURLImagenProducto("");
+                    producto = RestClient.getRestTemplate().postForObject("/productos?idMedida=" + idMedida 
                             + "&idRubro=" + idRubro
                             + "&idProveedor=" + idProveedor 
                             + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                             producto, Producto.class);
                     LOGGER.warn("El producto " + producto + " se guardó correctamente");
+                    if (imagenProducto != null) {
+                        producto.setURLImagenProducto(RestClient.getRestTemplate().postForObject("/productos/" + producto.getIdProducto() + "/imagen", imagenProducto, String.class));
+                    }
                     int respuesta = JOptionPane.showConfirmDialog(this,
                             "El producto se guardó correctamente.\n¿Desea dar de alta otro producto?",
                             "Aviso", JOptionPane.YES_NO_OPTION);
@@ -962,12 +1012,16 @@ public class DetalleProductoGUI extends JDialog {
                     productoParaModificar.setEstante(txt_Estante.getText().trim());
                     productoParaModificar.setNota(txt_Nota.getText().trim());
                     productoParaModificar.setFechaVencimiento(dc_Vencimiento.getDate());
+                    productoParaModificar.setURLImagenProducto("");
                     RestClient.getRestTemplate().put("/productos?idMedida=" + idMedida 
                             + "&idRubro=" + idRubro
                             + "&idProveedor=" + idProveedor 
                             + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                             productoParaModificar);
                     LOGGER.warn("El producto " + productoParaModificar + " se modificó correctamente");
+                    if (imagenProducto != null) {
+                        productoParaModificar.setURLImagenProducto(RestClient.getRestTemplate().postForObject("/productos/" + productoParaModificar.getIdProducto() + "/imagen", imagenProducto, String.class));
+                    }
                     JOptionPane.showMessageDialog(this, "El producto se modificó correctamente.",
                             "Aviso", JOptionPane.INFORMATION_MESSAGE);
                     this.dispose();
@@ -1172,9 +1226,47 @@ public class DetalleProductoGUI extends JDialog {
         this.cargarRubros();
     }//GEN-LAST:event_btn_RubrosActionPerformed
 
+    private void btn_EliminarImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarImagenActionPerformed
+        lbl_imagen.setIcon(null);
+        lbl_imagen.setText("SIN IMAGEN");
+        imagenProducto = null;
+        cambioLogo = true;
+    }//GEN-LAST:event_btn_EliminarImagenActionPerformed
+
+    private void btn_ExaminarArchivosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ExaminarArchivosActionPerformed
+        JFileChooser menuElegirLogo = new JFileChooser();
+        menuElegirLogo.setAcceptAllFileFilterUsed(false);
+        menuElegirLogo.addChoosableFileFilter(new FiltroImagenes());
+        try {
+            if (menuElegirLogo.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                if (Utilidades.esTamanioValido(menuElegirLogo.getSelectedFile(), 512000)) {
+                    File file = menuElegirLogo.getSelectedFile();
+                    imagenProducto = Utilidades.convertirFileIntoByteArray(file);
+                    ImageIcon logoProvisional = new ImageIcon(menuElegirLogo.getSelectedFile().getAbsolutePath());
+                    ImageIcon logoRedimensionado = new ImageIcon(logoProvisional.getImage().getScaledInstance(114, 114, Image.SCALE_SMOOTH));
+                    lbl_imagen.setIcon(logoRedimensionado);
+                    lbl_imagen.setText("");
+                    cambioLogo = true;
+                } else {
+                    JOptionPane.showMessageDialog(this, "El tamaño del archivo seleccionado, supera el límite de 512kb.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                    imagenProducto = null;
+                }
+            } else {
+                imagenProducto = null;
+            }
+        } catch (IOException ex) {
+            String mensaje = ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException");
+            LOGGER.error(mensaje + " - " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btn_ExaminarArchivosActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgVisibilidad;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btn_EliminarImagen;
+    private javax.swing.JButton btn_ExaminarArchivos;
     private javax.swing.JButton btn_Medidas;
     private javax.swing.JButton btn_NuevoProveedor;
     private javax.swing.JButton btn_Rubros;
@@ -1208,6 +1300,7 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JLabel lbl_Proveedor;
     private javax.swing.JLabel lbl_Rubro;
     private javax.swing.JLabel lbl_Ven;
+    private javax.swing.JLabel lbl_imagen;
     private javax.swing.JPanel panel5;
     private javax.swing.JPanel panel6;
     private javax.swing.JPanel panelCantidades;
