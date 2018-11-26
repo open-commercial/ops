@@ -43,7 +43,6 @@ import sic.util.Utilidades;
 public class DetalleProductoGUI extends JDialog {
 
     private byte[] imagenProducto = null;
-    private boolean cambioLogo = false;
     private Producto productoParaModificar;
     private final TipoDeOperacion operacion;        
     private List<Medida> medidas;
@@ -1035,12 +1034,7 @@ public class DetalleProductoGUI extends JDialog {
                             producto, Producto.class);
                     LOGGER.warn("El producto " + producto + " se guardó correctamente");
                     if (imagenProducto != null) {
-                        String urlImagen = RestClient.getRestTemplate().postForObject("/imagenes?nombreImagen="
-                                + Producto.class.getSimpleName() + producto.getIdProducto(), imagenProducto, String.class);
-                        RestClient.getRestTemplate().put("/productos/imagenes?idProducto="
-                                + producto.getIdProducto()
-                                + "&urlImagen= " + urlImagen,
-                                null);
+                        RestClient.getRestTemplate().put("/productos/" + producto.getIdProducto() + "/imagenes", imagenProducto);
                     }
                     int respuesta = JOptionPane.showConfirmDialog(this,
                             "El producto se guardó correctamente.\n¿Desea dar de alta otro producto?",
@@ -1078,14 +1072,9 @@ public class DetalleProductoGUI extends JDialog {
                             productoParaModificar);
                     LOGGER.warn("El producto " + productoParaModificar + " se modificó correctamente");
                     if (imagenProducto != null) {
-                        String urlImagen = RestClient.getRestTemplate().postForObject("/imagenes?nombreImagen=" 
-                                + Producto.class.getSimpleName() + productoParaModificar.getIdProducto(), imagenProducto, String.class);
-                        RestClient.getRestTemplate().put("/productos/imagenes?idProducto="
-                                + productoParaModificar.getIdProducto()
-                                + "&urlImagen= " + urlImagen,
-                                null);
+                        RestClient.getRestTemplate().put("/productos/" + productoParaModificar.getIdProducto() + "/imagenes", imagenProducto);
                     } else if (productoParaModificar.getUrlImagenProducto()!= null && !productoParaModificar.getUrlImagenProducto().isEmpty()) {
-                        RestClient.getRestTemplate().delete("/imagenes?nombreImagen=" + Producto.class.getSimpleName() + productoParaModificar.getIdProducto());
+                        RestClient.getRestTemplate().delete("/productos/" + productoParaModificar.getIdProducto() + "/imagenes");
                     }
                     JOptionPane.showMessageDialog(this, "El producto se modificó correctamente.",
                             "Aviso", JOptionPane.INFORMATION_MESSAGE);
@@ -1295,7 +1284,6 @@ public class DetalleProductoGUI extends JDialog {
         lbl_imagen.setIcon(null);
         lbl_imagen.setText("SIN IMAGEN");
         imagenProducto = null;
-        cambioLogo = true;
     }//GEN-LAST:event_btn_EliminarImagenActionPerformed
 
     private void btn_ExaminarArchivosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ExaminarArchivosActionPerformed
@@ -1311,7 +1299,6 @@ public class DetalleProductoGUI extends JDialog {
                     ImageIcon logoRedimensionado = new ImageIcon(logoProvisional.getImage().getScaledInstance(392, 392, Image.SCALE_SMOOTH));
                     lbl_imagen.setIcon(logoRedimensionado);
                     lbl_imagen.setText("");
-                    cambioLogo = true;
                 } else {
                     JOptionPane.showMessageDialog(this, "El tamaño del archivo seleccionado, supera el límite de 512kb.",
                             "Error", JOptionPane.ERROR_MESSAGE);
