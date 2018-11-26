@@ -1036,7 +1036,7 @@ public class DetalleProductoGUI extends JDialog {
                     LOGGER.warn("El producto " + producto + " se guardó correctamente");
                     if (imagenProducto != null) {
                         String urlImagen = RestClient.getRestTemplate().postForObject("/imagenes?nombreImagen="
-                                + producto.getIdProducto(), imagenProducto, String.class);
+                                + Producto.class.getSimpleName() + producto.getIdProducto(), imagenProducto, String.class);
                         RestClient.getRestTemplate().put("/productos/imagenes?idProducto="
                                 + producto.getIdProducto()
                                 + "&urlImagen= " + urlImagen,
@@ -1079,13 +1079,13 @@ public class DetalleProductoGUI extends JDialog {
                     LOGGER.warn("El producto " + productoParaModificar + " se modificó correctamente");
                     if (imagenProducto != null) {
                         String urlImagen = RestClient.getRestTemplate().postForObject("/imagenes?nombreImagen=" 
-                                + productoParaModificar.getIdProducto(), imagenProducto, String.class);
+                                + Producto.class.getSimpleName() + productoParaModificar.getIdProducto(), imagenProducto, String.class);
                         RestClient.getRestTemplate().put("/productos/imagenes?idProducto="
                                 + productoParaModificar.getIdProducto()
                                 + "&urlImagen= " + urlImagen,
                                 null);
                     } else if (productoParaModificar.getUrlImagenProducto()!= null && !productoParaModificar.getUrlImagenProducto().isEmpty()) {
-                        RestClient.getRestTemplate().delete("/imagenes?nombreImagen=" + productoParaModificar.getIdProducto());
+                        RestClient.getRestTemplate().delete("/imagenes?nombreImagen=" + Producto.class.getSimpleName() + productoParaModificar.getIdProducto());
                     }
                     JOptionPane.showMessageDialog(this, "El producto se modificó correctamente.",
                             "Aviso", JOptionPane.INFORMATION_MESSAGE);
