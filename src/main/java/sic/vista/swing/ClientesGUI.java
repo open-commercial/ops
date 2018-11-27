@@ -788,9 +788,11 @@ public class ClientesGUI extends JInternalFrame {
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-            int respuesta = JOptionPane.showConfirmDialog(this,
-                    "¿Esta seguro que desea eliminar el cliente: "
-                    + cuentasCorrienteClienteTotal.get(indexFilaSeleccionada).getCliente() + "?",
+            String mensaje = "¿Esta seguro que desea eliminar el cliente: "
+                    + cuentasCorrienteClienteTotal.get(indexFilaSeleccionada).getCliente() + "?"
+                    + "\nEl usuario " + cuentasCorrienteClienteTotal.get(indexFilaSeleccionada).getCliente().getNombreCredencial()
+                    + " será desvinculado del cliente.";
+            int respuesta = JOptionPane.showConfirmDialog(this, mensaje,
                     "Eliminar", JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
                 try {
