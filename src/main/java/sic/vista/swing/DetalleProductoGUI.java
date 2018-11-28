@@ -817,14 +817,14 @@ public class DetalleProductoGUI extends JDialog {
         cmbIVAPorcentaje.setSelectedItem(productoParaModificar.getIvaPorcentaje().stripTrailingZeros());        
         txtIVANeto.setValue(productoParaModificar.getIvaNeto());        
         txtPrecioLista.setValue(productoParaModificar.getPrecioLista());
-        if (productoParaModificar.getUrlImagenProducto() == null || "".equals(productoParaModificar.getUrlImagenProducto())) {
+        if (productoParaModificar.getUrlImagen() == null || "".equals(productoParaModificar.getUrlImagen())) {
             lbl_imagen.setText("SIN IMAGEN");
             imagenProducto = null;
         } else {
             lbl_imagen.setText("");
             Image image = null;
             try {
-                URL url = new URL(productoParaModificar.getUrlImagenProducto());
+                URL url = new URL(productoParaModificar.getUrlImagen());
                 image = ImageIO.read(url);
             } catch (IOException ex) {
                 LOGGER.error(ex.getMessage());
@@ -1073,7 +1073,7 @@ public class DetalleProductoGUI extends JDialog {
                     LOGGER.warn("El producto " + productoParaModificar + " se modificó correctamente");
                     if (imagenProducto != null) {
                         RestClient.getRestTemplate().put("/productos/" + productoParaModificar.getIdProducto() + "/imagenes", imagenProducto);
-                    } else if (productoParaModificar.getUrlImagenProducto()!= null && !productoParaModificar.getUrlImagenProducto().isEmpty()) {
+                    } else if (productoParaModificar.getUrlImagen()!= null && !productoParaModificar.getUrlImagen().isEmpty()) {
                         RestClient.getRestTemplate().delete("/productos/" + productoParaModificar.getIdProducto() + "/imagenes");
                     }
                     JOptionPane.showMessageDialog(this, "El producto se modificó correctamente.",
