@@ -1292,7 +1292,7 @@ public class DetalleProductoGUI extends JDialog {
         menuElegirLogo.addChoosableFileFilter(new FiltroImagenes());
         try {
             if (menuElegirLogo.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                if (Utilidades.esTamanioValido(menuElegirLogo.getSelectedFile(), 512000)) {
+                if (Utilidades.esTamanioValido(menuElegirLogo.getSelectedFile(), 1024000)) {
                     File file = menuElegirLogo.getSelectedFile();
                     imagenProducto = Utilidades.convertirFileIntoByteArray(file);
                     ImageIcon logoProvisional = new ImageIcon(menuElegirLogo.getSelectedFile().getAbsolutePath());
