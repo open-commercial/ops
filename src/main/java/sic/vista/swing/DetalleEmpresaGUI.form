@@ -107,13 +107,15 @@
                       <Component id="cmbCategoriaIVA" alignment="0" max="32767" attributes="0"/>
                       <Component id="txtIdFiscal" alignment="1" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
-                          <Component id="lbl_Logo" min="-2" pref="150" max="-2" attributes="0"/>
+                          <Component id="lbl_Logo" min="-2" pref="180" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="btn_ExaminarArchivos" alignment="0" min="-2" max="-2" attributes="1"/>
                               <Component id="btn_EliminarLogo" alignment="0" min="-2" max="-2" attributes="1"/>
+                              <Component id="lblTamanioMax" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblAspectRatio" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="0" pref="190" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="38" max="32767" attributes="0"/>
                       </Group>
                       <Component id="txtIngresosBrutos" alignment="0" max="32767" attributes="0"/>
                   </Group>
@@ -126,12 +128,16 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="lbl_Logo" alignment="0" min="-2" pref="135" max="-2" attributes="1"/>
-                      <Group type="102" alignment="0" attributes="0">
+                      <Group type="102" attributes="0">
                           <Component id="btn_ExaminarArchivos" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btn_EliminarLogo" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="lblTamanioMax" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="lblAspectRatio" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="lbl_Logo" min="-2" pref="135" max="-2" attributes="1"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -440,6 +446,22 @@
           <Events>
             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtIngresosBrutosFocusLost"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblAspectRatio">
+          <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="80" green="80" id="gray" palette="1" red="80" type="palette"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Relacion de aspecto 4:3"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblTamanioMax">
+          <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="80" green="80" id="gray" palette="1" red="80" type="palette"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Maximo 1MB"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>
