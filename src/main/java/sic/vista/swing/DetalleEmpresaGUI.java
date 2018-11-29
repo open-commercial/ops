@@ -500,13 +500,14 @@ public class DetalleEmpresaGUI extends JDialog {
                 empresa.setEmail(txt_Email.getText().trim());
                 empresa.setTelefono(txt_Telefono.getText().trim());
                 empresa.setLocalidad((Localidad) cmb_Localidad.getSelectedItem());                
+                empresa = RestClient.getRestTemplate().postForObject("/empresas", empresa, Empresa.class);            
+                mensaje = "La Empresa " + txt_Nombre.getText().trim() + " se guardó correctamente.";
                 if (logo == null) {
                     empresa.setLogo("");
                 } else {
-                    empresa.setLogo(RestClient.getRestTemplate().postForObject("/empresas/logo", logo, String.class));
+                    empresa.setLogo(RestClient.getRestTemplate().postForObject("/empresas/" + empresa.getId_Empresa() + "/logo", logo, String.class));
+                    RestClient.getRestTemplate().put("/empresas", empresa);
                 }
-                RestClient.getRestTemplate().postForObject("/empresas", empresa, Empresa.class);            
-                mensaje = "La Empresa " + txt_Nombre.getText().trim() + " se guardó correctamente.";
             }
             if (operacion == TipoDeOperacion.ACTUALIZACION) {
                 empresaModificar.setNombre(txt_Nombre.getText().trim());
@@ -520,7 +521,7 @@ public class DetalleEmpresaGUI extends JDialog {
                 empresaModificar.setTelefono(txt_Telefono.getText().trim());
                 empresaModificar.setLocalidad((Localidad) cmb_Localidad.getSelectedItem());   
                 if (cambioLogo && logo != null) {
-                    empresaModificar.setLogo(RestClient.getRestTemplate().postForObject("/empresas/logo", logo, String.class));
+                    empresaModificar.setLogo(RestClient.getRestTemplate().postForObject("/empresas/" + empresaModificar.getId_Empresa() + "/logo", logo, String.class));
                 } else if (cambioLogo && logo == null) {
                     empresaModificar.setLogo(null);
                 }
