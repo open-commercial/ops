@@ -29,6 +29,7 @@ import sic.modelo.EmpresaActiva;
 import sic.modelo.FacturaVenta;
 import sic.modelo.Usuario;
 import sic.modelo.PaginaRespuestaRest;
+import sic.modelo.Producto;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.UsuarioActivo;
@@ -44,6 +45,7 @@ public class FacturasVentaGUI extends JInternalFrame {
     private List<FacturaVenta> facturasParcial = new ArrayList<>();
     private Cliente clienteSeleccionado;
     private Usuario usuarioSeleccionado;
+    private Producto productoSeleccionado;
     private boolean tienePermisoSegunRoles;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(970, 600);
@@ -108,6 +110,9 @@ public class FacturasVentaGUI extends JInternalFrame {
         }
         if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
             uriCriteria += "&idUsuario=" + usuarioSeleccionado.getId_Usuario();
+        }
+        if (chk_Producto.isSelected() && productoSeleccionado != null) {
+            uriCriteria += "&idProducto=" + productoSeleccionado.getIdProducto();
         }
         if (chk_NumeroPedido.isSelected()) {
             uriCriteria += "&nroPedido=" + Long.parseLong(txt_NumeroPedido.getText());
@@ -491,7 +496,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         txtUsuario = new javax.swing.JTextField();
         btnBuscarUsuarios = new javax.swing.JButton();
         txtProducto = new javax.swing.JTextField();
-        btnBuscarUsuarios1 = new javax.swing.JButton();
+        btnBuscarProductos = new javax.swing.JButton();
         chk_Producto = new javax.swing.JCheckBox();
         subPanelFiltros2 = new javax.swing.JPanel();
         chk_TipoFactura = new javax.swing.JCheckBox();
@@ -740,11 +745,11 @@ public class FacturasVentaGUI extends JInternalFrame {
         txtProducto.setEnabled(false);
         txtProducto.setOpaque(false);
 
-        btnBuscarUsuarios1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
-        btnBuscarUsuarios1.setEnabled(false);
-        btnBuscarUsuarios1.addActionListener(new java.awt.event.ActionListener() {
+        btnBuscarProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
+        btnBuscarProductos.setEnabled(false);
+        btnBuscarProductos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarUsuarios1ActionPerformed(evt);
+                btnBuscarProductosActionPerformed(evt);
             }
         });
 
@@ -785,7 +790,7 @@ public class FacturasVentaGUI extends JInternalFrame {
                         .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnBuscarUsuarios, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btnBuscarCliente, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnBuscarUsuarios1, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(btnBuscarProductos, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addGap(12, 12, 12))))
             .addGroup(subPanelFiltros1Layout.createSequentialGroup()
                 .addComponent(chk_Producto, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
@@ -817,7 +822,7 @@ public class FacturasVentaGUI extends JInternalFrame {
                     .addComponent(chk_Usuario))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btnBuscarUsuarios1)
+                    .addComponent(btnBuscarProductos)
                     .addComponent(txtProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chk_Producto))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1317,18 +1322,32 @@ public class FacturasVentaGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btnCrearNotaCreditoActionPerformed
 
-    private void btnBuscarUsuarios1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarUsuarios1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnBuscarUsuarios1ActionPerformed
+    private void btnBuscarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProductosActionPerformed
+        BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI();
+        buscarProductosGUI.setModal(true);
+        buscarProductosGUI.setLocationRelativeTo(this);
+        buscarProductosGUI.setVisible(true);
+        productoSeleccionado = buscarProductosGUI.getProductoSeleccionado();
+        if (productoSeleccionado != null) {
+            txtProducto.setText(productoSeleccionado.getDescripcion());
+        }
+    }//GEN-LAST:event_btnBuscarProductosActionPerformed
 
     private void chk_ProductoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ProductoItemStateChanged
-        // TODO add your handling code here:
+        if (chk_Producto.isSelected() == true) {
+            btnBuscarProductos.setEnabled(true);
+            btnBuscarProductos.requestFocus();
+            txtProducto.setEnabled(true);
+        } else {
+            btnBuscarProductos.setEnabled(false);
+            txtProducto.setEnabled(false);
+        }
     }//GEN-LAST:event_chk_ProductoItemStateChanged
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarCliente;
+    private javax.swing.JButton btnBuscarProductos;
     private javax.swing.JButton btnBuscarUsuarios;
-    private javax.swing.JButton btnBuscarUsuarios1;
     private javax.swing.JButton btnCrearNotaCredito;
     private javax.swing.JButton btn_Autorizar;
     private javax.swing.JButton btn_Buscar;
