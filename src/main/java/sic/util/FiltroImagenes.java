@@ -14,7 +14,7 @@ public class FiltroImagenes extends FileFilter {
         }
 
         if (!extension.equals("")) {
-            return extension.equals("jpg") | extension.equals("png");
+            return extension.equals("jpg") | extension.equals("jpeg") | extension.equals("png");
         } else {
             return fotoElegida.isDirectory();
         }
@@ -22,6 +22,6 @@ public class FiltroImagenes extends FileFilter {
 
     @Override
     public String getDescription() {
-        return "Archivos de Imagenes (*.jpg y *.png)";
+        return "Archivos de Imagenes (*.jpg, *.jpeg y *.png)";
     }
 }

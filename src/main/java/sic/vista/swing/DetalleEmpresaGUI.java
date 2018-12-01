@@ -30,8 +30,10 @@ public class DetalleEmpresaGUI extends JDialog {
     
     private byte[] logo = null;
     private boolean cambioLogo = false;
+    private final int anchoImagenContainer = 180;
+    private final int altoImagenContainer = 135;            
     private Empresa empresaModificar;
-    private final TipoDeOperacion operacion;
+    private final TipoDeOperacion operacion;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleEmpresaGUI() {
@@ -142,7 +144,8 @@ public class DetalleEmpresaGUI extends JDialog {
                 this.dispose();
             }
             ImageIcon imagenLogo = new ImageIcon(image);
-            ImageIcon logoRedimensionado = new ImageIcon(imagenLogo.getImage().getScaledInstance(114, 114, Image.SCALE_SMOOTH));
+            ImageIcon logoRedimensionado = new ImageIcon(imagenLogo.getImage()
+                    .getScaledInstance(anchoImagenContainer, altoImagenContainer, Image.SCALE_SMOOTH));
             lbl_Logo.setIcon(logoRedimensionado);
         }
     }
@@ -182,6 +185,8 @@ public class DetalleEmpresaGUI extends JDialog {
         btn_NuevaLocalidad = new javax.swing.JButton();
         txtIdFiscal = new javax.swing.JFormattedTextField();
         txtIngresosBrutos = new javax.swing.JFormattedTextField();
+        lblAspectRatio = new javax.swing.JLabel();
+        lblTamanioMax = new javax.swing.JLabel();
         btn_Guardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -312,6 +317,12 @@ public class DetalleEmpresaGUI extends JDialog {
             }
         });
 
+        lblAspectRatio.setForeground(java.awt.Color.gray);
+        lblAspectRatio.setText("Relacion de aspecto 4:3");
+
+        lblTamanioMax.setForeground(java.awt.Color.gray);
+        lblTamanioMax.setText("Maximo 1MB");
+
         javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
         panelPrincipal.setLayout(panelPrincipalLayout);
         panelPrincipalLayout.setHorizontalGroup(
@@ -354,12 +365,14 @@ public class DetalleEmpresaGUI extends JDialog {
                     .addComponent(cmbCategoriaIVA, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtIdFiscal, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panelPrincipalLayout.createSequentialGroup()
-                        .addComponent(lbl_Logo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lbl_Logo, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btn_ExaminarArchivos)
-                            .addComponent(btn_EliminarLogo))
-                        .addGap(0, 190, Short.MAX_VALUE))
+                            .addComponent(btn_EliminarLogo)
+                            .addComponent(lblTamanioMax)
+                            .addComponent(lblAspectRatio))
+                        .addGap(0, 38, Short.MAX_VALUE))
                     .addComponent(txtIngresosBrutos))
                 .addContainerGap())
         );
@@ -368,11 +381,15 @@ public class DetalleEmpresaGUI extends JDialog {
             .addGroup(panelPrincipalLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_Logo, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelPrincipalLayout.createSequentialGroup()
                         .addComponent(btn_ExaminarArchivos)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btn_EliminarLogo)))
+                        .addComponent(btn_EliminarLogo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblTamanioMax)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblAspectRatio))
+                    .addComponent(lbl_Logo, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_Nombre)
@@ -483,13 +500,15 @@ public class DetalleEmpresaGUI extends JDialog {
                 empresa.setEmail(txt_Email.getText().trim());
                 empresa.setTelefono(txt_Telefono.getText().trim());
                 empresa.setLocalidad((Localidad) cmb_Localidad.getSelectedItem());                
+                empresa = RestClient.getRestTemplate().postForObject("/empresas", empresa, Empresa.class);            
+                mensaje = "La Empresa " + txt_Nombre.getText().trim() + " se guardó correctamente.";
                 if (logo == null) {
                     empresa.setLogo("");
                 } else {
-                    empresa.setLogo(RestClient.getRestTemplate().postForObject("/empresas/logo", logo, String.class));
+                    empresa.setLogo(RestClient.getRestTemplate()
+                            .postForObject("/empresas/" + empresa.getId_Empresa() + "/logo", logo, String.class));
+                    RestClient.getRestTemplate().put("/empresas", empresa);
                 }
-                RestClient.getRestTemplate().postForObject("/empresas", empresa, Empresa.class);            
-                mensaje = "La Empresa " + txt_Nombre.getText().trim() + " se guardó correctamente.";
             }
             if (operacion == TipoDeOperacion.ACTUALIZACION) {
                 empresaModificar.setNombre(txt_Nombre.getText().trim());
@@ -503,7 +522,8 @@ public class DetalleEmpresaGUI extends JDialog {
                 empresaModificar.setTelefono(txt_Telefono.getText().trim());
                 empresaModificar.setLocalidad((Localidad) cmb_Localidad.getSelectedItem());   
                 if (cambioLogo && logo != null) {
-                    empresaModificar.setLogo(RestClient.getRestTemplate().postForObject("/empresas/logo", logo, String.class));
+                    empresaModificar.setLogo(RestClient.getRestTemplate()
+                            .postForObject("/empresas/" + empresaModificar.getId_Empresa() + "/logo", logo, String.class));
                 } else if (cambioLogo && logo == null) {
                     empresaModificar.setLogo(null);
                 }
@@ -547,16 +567,17 @@ public class DetalleEmpresaGUI extends JDialog {
         menuElegirLogo.addChoosableFileFilter(new FiltroImagenes());
         try {
             if (menuElegirLogo.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                if (Utilidades.esTamanioValido(menuElegirLogo.getSelectedFile(), 512000)) {
+                if (Utilidades.esTamanioValido(menuElegirLogo.getSelectedFile(), 1024000)) {
                     File file = menuElegirLogo.getSelectedFile();
                     logo = Utilidades.convertirFileIntoByteArray(file);
                     ImageIcon logoProvisional = new ImageIcon(menuElegirLogo.getSelectedFile().getAbsolutePath());
-                    ImageIcon logoRedimensionado = new ImageIcon(logoProvisional.getImage().getScaledInstance(114, 114, Image.SCALE_SMOOTH));
+                    ImageIcon logoRedimensionado = new ImageIcon(logoProvisional.getImage()
+                            .getScaledInstance(anchoImagenContainer, altoImagenContainer, Image.SCALE_SMOOTH));
                     lbl_Logo.setIcon(logoRedimensionado);
                     lbl_Logo.setText("");
                     cambioLogo = true;
                 } else {
-                    JOptionPane.showMessageDialog(this, "El tamaño del archivo seleccionado, supera el límite de 512kb.",
+                    JOptionPane.showMessageDialog(this, "El tamaño del archivo seleccionado supera el límite de 1MB.",
                         "Error", JOptionPane.ERROR_MESSAGE);
                     logo = null;
                 }
@@ -628,6 +649,8 @@ public class DetalleEmpresaGUI extends JDialog {
     private javax.swing.JComboBox cmb_Pais;
     private javax.swing.JComboBox cmb_Provincia;
     private com.toedter.calendar.JDateChooser dc_FechaInicioActividad;
+    private javax.swing.JLabel lblAspectRatio;
+    private javax.swing.JLabel lblTamanioMax;
     private javax.swing.JLabel lbl_CUIP;
     private javax.swing.JLabel lbl_CondicionIVA;
     private javax.swing.JLabel lbl_Direccion;

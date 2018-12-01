@@ -1,15 +1,21 @@
 package sic.vista.swing;
 
 import java.awt.Color;
+import java.awt.Image;
 import java.awt.event.ItemEvent;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
@@ -29,11 +35,16 @@ import sic.modelo.Rubro;
 import sic.modelo.TipoDeOperacion;
 import sic.modelo.UsuarioActivo;
 import sic.util.CalculosPrecioProducto;
+import sic.util.FiltroImagenes;
 import sic.util.FormatosFechaHora;
 import sic.util.FormatterFechaHora;
+import sic.util.Utilidades;
 
 public class DetalleProductoGUI extends JDialog {
 
+    private byte[] imagenProducto = null;
+    private final int anchoImagenContainer = 416;
+    private final int altoImagenContainer = 312; 
     private Producto productoParaModificar;
     private final TipoDeOperacion operacion;        
     private List<Medida> medidas;
@@ -126,6 +137,12 @@ public class DetalleProductoGUI extends JDialog {
         lbl_FechaUltimaModificacion = new javax.swing.JLabel();
         lbl_FA = new javax.swing.JLabel();
         lbl_FechaAlta = new javax.swing.JLabel();
+        panelImagen = new javax.swing.JPanel();
+        lbl_imagen = new javax.swing.JLabel();
+        btn_EliminarImagen = new javax.swing.JButton();
+        btn_ExaminarArchivos = new javax.swing.JButton();
+        lblAspectRatio = new javax.swing.JLabel();
+        lblTamanioMax = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -506,7 +523,7 @@ public class DetalleProductoGUI extends JDialog {
                 .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_Bulto)
                     .addComponent(txt_Bulto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout panelGeneralLayout = new javax.swing.GroupLayout(panelGeneral);
@@ -527,12 +544,12 @@ public class DetalleProductoGUI extends JDialog {
             panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelGeneralLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panelSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panelSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(panelPrecios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelCantidades, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(10, 10, 10))
+                    .addComponent(panelCantidades, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         tpTabs.addTab("General", panelGeneral);
@@ -571,30 +588,29 @@ public class DetalleProductoGUI extends JDialog {
         panel5.setLayout(panel5Layout);
         panel5Layout.setHorizontalGroup(
             panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel5Layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel5Layout.createSequentialGroup()
                 .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(lbl_Estante, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblPublico, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_Estanteria, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Ven, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
-                    .addComponent(lbl_Nota, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbl_Ven, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_Nota, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dc_Vencimiento, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
-                    .addComponent(txt_Estante)
                     .addComponent(txt_Estanteria)
+                    .addComponent(dc_Vencimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panel5Layout.createSequentialGroup()
                         .addComponent(rbPublico)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(rbPrivado)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(txt_Estante)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panel5Layout.setVerticalGroup(
             panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel5Layout.createSequentialGroup()
+            .addGroup(panel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPublico)
@@ -666,43 +682,109 @@ public class DetalleProductoGUI extends JDialog {
             panelPropiedadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPropiedadesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelPropiedadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(panelPropiedadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(panel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(87, Short.MAX_VALUE))
+                .addContainerGap())
         );
         panelPropiedadesLayout.setVerticalGroup(
             panelPropiedadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelPropiedadesLayout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPropiedadesLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addGap(285, 285, 285))
         );
 
         tpTabs.addTab("Propiedades", panelPropiedades);
+
+        lbl_imagen.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_imagen.setText("SIN IMAGEN");
+        lbl_imagen.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        lbl_imagen.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        btn_EliminarImagen.setForeground(java.awt.Color.blue);
+        btn_EliminarImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/RemovePicture_16x16.png"))); // NOI18N
+        btn_EliminarImagen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_EliminarImagenActionPerformed(evt);
+            }
+        });
+
+        btn_ExaminarArchivos.setForeground(java.awt.Color.blue);
+        btn_ExaminarArchivos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddPicture_16x16.png"))); // NOI18N
+        btn_ExaminarArchivos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ExaminarArchivosActionPerformed(evt);
+            }
+        });
+
+        lblAspectRatio.setForeground(java.awt.Color.gray);
+        lblAspectRatio.setText("Relacion de aspecto 4:3");
+
+        lblTamanioMax.setForeground(java.awt.Color.gray);
+        lblTamanioMax.setText("Maximo 1MB");
+
+        javax.swing.GroupLayout panelImagenLayout = new javax.swing.GroupLayout(panelImagen);
+        panelImagen.setLayout(panelImagenLayout);
+        panelImagenLayout.setHorizontalGroup(
+            panelImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelImagenLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lbl_imagen, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(btn_ExaminarArchivos, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(btn_EliminarImagen, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(lblAspectRatio)
+                    .addComponent(lblTamanioMax))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        panelImagenLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_EliminarImagen, btn_ExaminarArchivos});
+
+        panelImagenLayout.setVerticalGroup(
+            panelImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelImagenLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_imagen, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelImagenLayout.createSequentialGroup()
+                        .addComponent(btn_ExaminarArchivos)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btn_EliminarImagen)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblTamanioMax)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblAspectRatio)))
+                .addGap(27, 27, 27))
+        );
+
+        tpTabs.addTab("Imagen", panelImagen);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnGuardar))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(tpTabs)))
+                        .addComponent(tpTabs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tpTabs)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tpTabs, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnGuardar)
                 .addContainerGap())
         );
@@ -736,6 +818,26 @@ public class DetalleProductoGUI extends JDialog {
         cmbIVAPorcentaje.setSelectedItem(productoParaModificar.getIvaPorcentaje().stripTrailingZeros());        
         txtIVANeto.setValue(productoParaModificar.getIvaNeto());        
         txtPrecioLista.setValue(productoParaModificar.getPrecioLista());
+        if (productoParaModificar.getUrlImagen() == null || "".equals(productoParaModificar.getUrlImagen())) {
+            lbl_imagen.setText("SIN IMAGEN");
+            imagenProducto = null;
+        } else {
+            lbl_imagen.setText("");
+            Image image = null;
+            try {
+                URL url = new URL(productoParaModificar.getUrlImagen());
+                image = ImageIO.read(url);
+            } catch (IOException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_404_logo"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                this.dispose();
+            }
+            ImageIcon imagenLogo = new ImageIcon(image);
+            ImageIcon logoRedimensionado = new ImageIcon(imagenLogo.getImage()
+                    .getScaledInstance(anchoImagenContainer, altoImagenContainer, Image.SCALE_SMOOTH));
+            lbl_imagen.setIcon(logoRedimensionado);
+        }
     }
 
     private void prepararComponentes() {
@@ -927,12 +1029,16 @@ public class DetalleProductoGUI extends JDialog {
                     producto.setEstante(txt_Estante.getText().trim());
                     producto.setNota(txt_Nota.getText().trim());                    
                     producto.setFechaVencimiento(dc_Vencimiento.getDate());
-                    RestClient.getRestTemplate().postForObject("/productos?idMedida=" + idMedida 
+                    producto = RestClient.getRestTemplate().postForObject("/productos?idMedida=" + idMedida 
                             + "&idRubro=" + idRubro
                             + "&idProveedor=" + idProveedor 
                             + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                             producto, Producto.class);
                     LOGGER.warn("El producto " + producto + " se guardó correctamente");
+                    if (imagenProducto != null) {
+                        RestClient.getRestTemplate()
+                                .postForObject("/productos/" + producto.getIdProducto() + "/imagenes", imagenProducto, String.class);
+                    }
                     int respuesta = JOptionPane.showConfirmDialog(this,
                             "El producto se guardó correctamente.\n¿Desea dar de alta otro producto?",
                             "Aviso", JOptionPane.YES_NO_OPTION);
@@ -968,6 +1074,12 @@ public class DetalleProductoGUI extends JDialog {
                             + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                             productoParaModificar);
                     LOGGER.warn("El producto " + productoParaModificar + " se modificó correctamente");
+                    if (imagenProducto != null) {
+                        RestClient.getRestTemplate()
+                                .postForObject("/productos/" + productoParaModificar.getIdProducto() + "/imagenes", imagenProducto, String.class);
+                    } else if (productoParaModificar.getUrlImagen()!= null && !productoParaModificar.getUrlImagen().isEmpty()) {
+                        RestClient.getRestTemplate().delete("/productos/" + productoParaModificar.getIdProducto() + "/imagenes");
+                    }
                     JOptionPane.showMessageDialog(this, "El producto se modificó correctamente.",
                             "Aviso", JOptionPane.INFORMATION_MESSAGE);
                     this.dispose();
@@ -1172,9 +1284,46 @@ public class DetalleProductoGUI extends JDialog {
         this.cargarRubros();
     }//GEN-LAST:event_btn_RubrosActionPerformed
 
+    private void btn_EliminarImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarImagenActionPerformed
+        lbl_imagen.setIcon(null);
+        lbl_imagen.setText("SIN IMAGEN");
+        imagenProducto = null;
+    }//GEN-LAST:event_btn_EliminarImagenActionPerformed
+
+    private void btn_ExaminarArchivosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ExaminarArchivosActionPerformed
+        JFileChooser menuElegirLogo = new JFileChooser();
+        menuElegirLogo.setAcceptAllFileFilterUsed(false);
+        menuElegirLogo.addChoosableFileFilter(new FiltroImagenes());
+        try {
+            if (menuElegirLogo.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                if (Utilidades.esTamanioValido(menuElegirLogo.getSelectedFile(), 1024000)) {
+                    File file = menuElegirLogo.getSelectedFile();
+                    imagenProducto = Utilidades.convertirFileIntoByteArray(file);
+                    ImageIcon logoProvisional = new ImageIcon(menuElegirLogo.getSelectedFile().getAbsolutePath());
+                    ImageIcon logoRedimensionado = new ImageIcon(logoProvisional.getImage()
+                            .getScaledInstance(anchoImagenContainer, altoImagenContainer, Image.SCALE_SMOOTH));
+                    lbl_imagen.setIcon(logoRedimensionado);
+                    lbl_imagen.setText("");
+                } else {
+                    JOptionPane.showMessageDialog(this, "El tamaño del archivo seleccionado supera el límite de 1MB.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    imagenProducto = null;
+                }
+            } else {
+                imagenProducto = null;
+            }
+        } catch (IOException ex) {
+            String mensaje = ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException");
+            LOGGER.error(mensaje + " - " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btn_ExaminarArchivosActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgVisibilidad;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btn_EliminarImagen;
+    private javax.swing.JButton btn_ExaminarArchivos;
     private javax.swing.JButton btn_Medidas;
     private javax.swing.JButton btn_NuevoProveedor;
     private javax.swing.JButton btn_Rubros;
@@ -1185,8 +1334,10 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JComboBox cmb_Rubro;
     private com.toedter.calendar.JDateChooser dc_Vencimiento;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblAspectRatio;
     private javax.swing.JLabel lblPublico;
     private javax.swing.JLabel lblSinLimite;
+    private javax.swing.JLabel lblTamanioMax;
     private javax.swing.JLabel lbl_Bulto;
     private javax.swing.JLabel lbl_CantMinima;
     private javax.swing.JLabel lbl_Cantidad;
@@ -1208,10 +1359,12 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JLabel lbl_Proveedor;
     private javax.swing.JLabel lbl_Rubro;
     private javax.swing.JLabel lbl_Ven;
+    private javax.swing.JLabel lbl_imagen;
     private javax.swing.JPanel panel5;
     private javax.swing.JPanel panel6;
     private javax.swing.JPanel panelCantidades;
     private javax.swing.JPanel panelGeneral;
+    private javax.swing.JPanel panelImagen;
     private javax.swing.JPanel panelPrecios;
     private javax.swing.JPanel panelPropiedades;
     private javax.swing.JPanel panelSuperior;

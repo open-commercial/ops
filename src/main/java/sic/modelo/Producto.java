@@ -36,4 +36,5 @@ public class Producto implements Serializable {
     private Date fechaVencimiento;   
     private String nombreEmpresa;
     private boolean eliminado;
+    private String urlImagen;
 }
