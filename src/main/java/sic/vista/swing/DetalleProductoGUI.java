@@ -1036,7 +1036,8 @@ public class DetalleProductoGUI extends JDialog {
                             producto, Producto.class);
                     LOGGER.warn("El producto " + producto + " se guardó correctamente");
                     if (imagenProducto != null) {
-                        RestClient.getRestTemplate().put("/productos/" + producto.getIdProducto() + "/imagenes", imagenProducto);
+                        RestClient.getRestTemplate()
+                                .postForObject("/productos/" + producto.getIdProducto() + "/imagenes", imagenProducto, String.class);
                     }
                     int respuesta = JOptionPane.showConfirmDialog(this,
                             "El producto se guardó correctamente.\n¿Desea dar de alta otro producto?",
@@ -1074,7 +1075,8 @@ public class DetalleProductoGUI extends JDialog {
                             productoParaModificar);
                     LOGGER.warn("El producto " + productoParaModificar + " se modificó correctamente");
                     if (imagenProducto != null) {
-                        RestClient.getRestTemplate().put("/productos/" + productoParaModificar.getIdProducto() + "/imagenes", imagenProducto);
+                        RestClient.getRestTemplate()
+                                .postForObject("/productos/" + productoParaModificar.getIdProducto() + "/imagenes", imagenProducto, String.class);
                     } else if (productoParaModificar.getUrlImagen()!= null && !productoParaModificar.getUrlImagen().isEmpty()) {
                         RestClient.getRestTemplate().delete("/productos/" + productoParaModificar.getIdProducto() + "/imagenes");
                     }
