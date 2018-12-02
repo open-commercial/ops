@@ -18,8 +18,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.Cliente;
-import sic.modelo.EmpresaActiva;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
@@ -496,18 +494,6 @@ public class UsuariosGUI extends JInternalFrame {
                 }
                 if (respuesta == JOptionPane.YES_OPTION) {
                     try {
-                        Cliente clienteRelacionado = RestClient.getRestTemplate()
-                                .getForObject("/clientes/usuarios/"
-                                        + usuarioSeleccionado.getId_Usuario()
-                                        + "/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                                        Cliente.class);
-                        if (clienteRelacionado != null) {
-                            respuesta = JOptionPane.showConfirmDialog(this,
-                                    MessageFormat.format(ResourceBundle.getBundle("Mensajes")
-                                            .getString("mensaje_eliminar_usuario_con_cliente_asignado"),
-                                            clienteRelacionado.getNombreFiscal()),
-                                    "Eliminar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-                        }
                         if (respuesta == JOptionPane.YES_OPTION) {
                             RestClient.getRestTemplate().delete("/usuarios/" + usuarioSeleccionado.getId_Usuario());
                             LOGGER.warn("El usuario " + usuarioSeleccionado.getUsername() + " se eliminó correctamente.");
