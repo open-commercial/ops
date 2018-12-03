@@ -43,6 +43,7 @@ import sic.util.Utilidades;
 public class DetalleProductoGUI extends JDialog {
 
     private byte[] imagenProducto = null;
+    private boolean cambioImagen = false;
     private final int anchoImagenContainer = 416;
     private final int altoImagenContainer = 312; 
     private Producto productoParaModificar;
@@ -1068,18 +1069,18 @@ public class DetalleProductoGUI extends JDialog {
                     productoParaModificar.setEstante(txt_Estante.getText().trim());
                     productoParaModificar.setNota(txt_Nota.getText().trim());
                     productoParaModificar.setFechaVencimiento(dc_Vencimiento.getDate());
-                    RestClient.getRestTemplate().put("/productos?idMedida=" + idMedida 
+                    if (cambioImagen && imagenProducto != null) {
+                        productoParaModificar.setUrlImagen(RestClient.getRestTemplate()
+                                .postForObject("/productos/" + productoParaModificar.getIdProducto() + "/imagenes", imagenProducto, String.class));
+                    } else if (cambioImagen && imagenProducto == null) {
+                        productoParaModificar.setUrlImagen(null);
+                    }
+                    RestClient.getRestTemplate().put("/productos?idMedida=" + idMedida
                             + "&idRubro=" + idRubro
-                            + "&idProveedor=" + idProveedor 
+                            + "&idProveedor=" + idProveedor
                             + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                             productoParaModificar);
                     LOGGER.warn("El producto " + productoParaModificar + " se modificó correctamente");
-                    if (imagenProducto != null) {
-                        RestClient.getRestTemplate()
-                                .postForObject("/productos/" + productoParaModificar.getIdProducto() + "/imagenes", imagenProducto, String.class);
-                    } else if (productoParaModificar.getUrlImagen()!= null && !productoParaModificar.getUrlImagen().isEmpty()) {
-                        RestClient.getRestTemplate().delete("/productos/" + productoParaModificar.getIdProducto() + "/imagenes");
-                    }
                     JOptionPane.showMessageDialog(this, "El producto se modificó correctamente.",
                             "Aviso", JOptionPane.INFORMATION_MESSAGE);
                     this.dispose();
@@ -1288,6 +1289,7 @@ public class DetalleProductoGUI extends JDialog {
         lbl_imagen.setIcon(null);
         lbl_imagen.setText("SIN IMAGEN");
         imagenProducto = null;
+        cambioImagen = true;
     }//GEN-LAST:event_btn_EliminarImagenActionPerformed
 
     private void btn_ExaminarArchivosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ExaminarArchivosActionPerformed
@@ -1304,6 +1306,7 @@ public class DetalleProductoGUI extends JDialog {
                             .getScaledInstance(anchoImagenContainer, altoImagenContainer, Image.SCALE_SMOOTH));
                     lbl_imagen.setIcon(logoRedimensionado);
                     lbl_imagen.setText("");
+                    cambioImagen = true;
                 } else {
                     JOptionPane.showMessageDialog(this, "El tamaño del archivo seleccionado supera el límite de 1MB.",
                             "Error", JOptionPane.ERROR_MESSAGE);
