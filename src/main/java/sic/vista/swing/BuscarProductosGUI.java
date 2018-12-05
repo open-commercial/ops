@@ -73,6 +73,32 @@ public class BuscarProductosGUI extends JDialog {
             }
         });
     }
+    
+    public BuscarProductosGUI() {
+        this.initComponents();
+        this.setIcon();
+        this.renglones = null;
+        this.movimiento = null;
+        this.tipoDeComprobante = null;
+        this.setColumnas();
+        txtCriteriaBusqueda.addKeyListener(keyHandler);
+        btnBuscar.addKeyListener(keyHandler);
+        tbl_Resultados.addKeyListener(keyHandler);
+        txtaNotaProducto.addKeyListener(keyHandler);
+        txtCantidad.addKeyListener(keyHandler);
+        txtPorcentajeDescuento.addKeyListener(keyHandler);
+        btnAceptar.addKeyListener(keyHandler);
+        sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
+            JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
+            int va = scrollBar.getVisibleAmount() + 50;
+            if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
+                if (productosTotal.size() >= 50) {
+                    NUMERO_PAGINA += 1;
+                    buscar();
+                }
+            }
+        });
+    }
 
     public boolean debeCargarRenglon() {
         return debeCargarRenglon;
@@ -94,6 +120,12 @@ public class BuscarProductosGUI extends JDialog {
     private void prepararComponentes() {
         txtCantidad.setValue(1.00);
         txtPorcentajeDescuento.setValue(0.0);
+        if (renglones == null && movimiento == null && tipoDeComprobante == null) {
+            lbl_Cantidad.setVisible(false);
+            lbl_Descuento.setVisible(false);
+            txtCantidad.setVisible(false);
+            txtPorcentajeDescuento.setVisible(false);
+        }
     }
 
     private void buscar() {
@@ -113,8 +145,10 @@ public class BuscarProductosGUI extends JDialog {
                         .getBody();
                 productosParcial = response.getContent();
                 productosTotal.addAll(productosParcial);
-                productoSeleccionado = null;                                
-                this.restarCantidadesSegunProductosYaCargados();
+                productoSeleccionado = null;       
+                if (renglones != null) {
+                    this.restarCantidadesSegunProductosYaCargados();
+                }
                 this.cargarResultadosAlTable();
             }
         } catch (RestClientResponseException ex) {
@@ -131,10 +165,10 @@ public class BuscarProductosGUI extends JDialog {
     private void aceptarProducto() {
         boolean esValido = true;
         this.actualizarEstadoSeleccion();
-        if (productoSeleccionado == null) {
+        if (productoSeleccionado == null || (renglones == null && movimiento == null && tipoDeComprobante == null)) {
             debeCargarRenglon = false;
             this.dispose();
-        } else {
+        } else {            
             if (movimiento == Movimiento.VENTA) {
                 String uri = "/productos/disponibilidad-stock?"
                         + "idProducto=" + productoSeleccionado.getIdProducto()
@@ -166,7 +200,7 @@ public class BuscarProductosGUI extends JDialog {
                     JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
-            }
+            }            
         }
     }
     

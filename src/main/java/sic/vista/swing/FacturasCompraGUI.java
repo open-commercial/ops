@@ -24,8 +24,8 @@ import sic.RestClient;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.FacturaCompra;
 import sic.modelo.PaginaRespuestaRest;
+import sic.modelo.Producto;
 import sic.modelo.Proveedor;
-import sic.modelo.RenglonCuentaCorriente;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.TipoDeOperacion;
@@ -41,6 +41,7 @@ public class FacturasCompraGUI extends JInternalFrame {
     private List<FacturaCompra> facturasTotal = new ArrayList<>();
     private List<FacturaCompra> facturasParcial =  new ArrayList<>();
     private Proveedor proveedorSeleccionado;
+    private Producto productoSeleccionado;
     private static int totalElementosBusqueda;
     private static int NUMERO_PAGINA = 0;
     private static final int TAMANIO_PAGINA = 50;
@@ -197,6 +198,9 @@ public class FacturasCompraGUI extends JInternalFrame {
             criteria += "&nroSerie=" + Integer.valueOf(txt_SerieFactura.getValue().toString())
                     + "&nroFactura=" + Integer.valueOf(txt_NroFactura.getValue().toString());
         }
+        if (chk_Producto.isSelected() && productoSeleccionado != null) {
+            criteria += "&idProducto=" + productoSeleccionado.getIdProducto();
+        }
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
             case 0:
@@ -329,22 +333,27 @@ public class FacturasCompraGUI extends JInternalFrame {
     private void initComponents() {
 
         panelFiltros = new javax.swing.JPanel();
-        chk_Fecha = new javax.swing.JCheckBox();
-        chk_Proveedor = new javax.swing.JCheckBox();
         btn_Buscar = new javax.swing.JButton();
-        chk_NumFactura = new javax.swing.JCheckBox();
+        lbl_CantRegistrosEncontrados = new javax.swing.JLabel();
+        panelFiltros1 = new javax.swing.JPanel();
+        dc_FechaDesde = new com.toedter.calendar.JDateChooser();
         lbl_Hasta = new javax.swing.JLabel();
         lbl_Desde = new javax.swing.JLabel();
-        dc_FechaDesde = new com.toedter.calendar.JDateChooser();
+        chk_Fecha = new javax.swing.JCheckBox();
         dc_FechaHasta = new com.toedter.calendar.JDateChooser();
-        lblSeparador = new javax.swing.JLabel();
-        txt_SerieFactura = new javax.swing.JFormattedTextField();
-        txt_NroFactura = new javax.swing.JFormattedTextField();
-        lbl_CantRegistrosEncontrados = new javax.swing.JLabel();
-        chk_TipoFactura = new javax.swing.JCheckBox();
-        cmb_TipoFactura = new javax.swing.JComboBox();
+        chk_Proveedor = new javax.swing.JCheckBox();
         txtProveedor = new javax.swing.JTextField();
         btnBuscarProveedor = new javax.swing.JButton();
+        txtProducto = new javax.swing.JTextField();
+        btnBuscarProductos = new javax.swing.JButton();
+        chk_Producto = new javax.swing.JCheckBox();
+        panelFiltros2 = new javax.swing.JPanel();
+        chk_TipoFactura = new javax.swing.JCheckBox();
+        cmb_TipoFactura = new javax.swing.JComboBox();
+        chk_NumFactura = new javax.swing.JCheckBox();
+        txt_NroFactura = new javax.swing.JFormattedTextField();
+        txt_SerieFactura = new javax.swing.JFormattedTextField();
+        lblSeparador = new javax.swing.JLabel();
         panelResultados = new javax.swing.JPanel();
         sp_Resultados = new javax.swing.JScrollPane();
         tbl_Resultados = new javax.swing.JTable();
@@ -385,20 +394,6 @@ public class FacturasCompraGUI extends JInternalFrame {
 
         panelFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
 
-        chk_Fecha.setText("Fecha Factura:");
-        chk_Fecha.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                chk_FechaItemStateChanged(evt);
-            }
-        });
-
-        chk_Proveedor.setText("Proveedor:");
-        chk_Proveedor.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                chk_ProveedorItemStateChanged(evt);
-            }
-        });
-
         btn_Buscar.setForeground(java.awt.Color.blue);
         btn_Buscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
         btn_Buscar.setText("Buscar");
@@ -408,12 +403,10 @@ public class FacturasCompraGUI extends JInternalFrame {
             }
         });
 
-        chk_NumFactura.setText("Nº de Factura:");
-        chk_NumFactura.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                chk_NumFacturaItemStateChanged(evt);
-            }
-        });
+        lbl_CantRegistrosEncontrados.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+
+        dc_FechaDesde.setDateFormatString("dd/MM/yyyy");
+        dc_FechaDesde.setEnabled(false);
 
         lbl_Hasta.setText("Hasta:");
         lbl_Hasta.setEnabled(false);
@@ -421,27 +414,128 @@ public class FacturasCompraGUI extends JInternalFrame {
         lbl_Desde.setText("Desde:");
         lbl_Desde.setEnabled(false);
 
-        dc_FechaDesde.setDateFormatString("dd/MM/yyyy");
-        dc_FechaDesde.setEnabled(false);
+        chk_Fecha.setText("Fecha Factura:");
+        chk_Fecha.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chk_FechaItemStateChanged(evt);
+            }
+        });
 
         dc_FechaHasta.setDateFormatString("dd/MM/yyyy");
         dc_FechaHasta.setEnabled(false);
 
-        lblSeparador.setFont(new java.awt.Font("DejaVu Sans", 0, 15)); // NOI18N
-        lblSeparador.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSeparador.setText("-");
-
-        txt_SerieFactura.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        txt_SerieFactura.setText("0");
-        txt_SerieFactura.setEnabled(false);
-        txt_SerieFactura.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_SerieFacturaActionPerformed(evt);
+        chk_Proveedor.setText("Proveedor:");
+        chk_Proveedor.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chk_ProveedorItemStateChanged(evt);
             }
         });
-        txt_SerieFactura.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txt_SerieFacturaKeyTyped(evt);
+
+        txtProveedor.setEditable(false);
+        txtProveedor.setEnabled(false);
+        txtProveedor.setOpaque(false);
+
+        btnBuscarProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
+        btnBuscarProveedor.setEnabled(false);
+        btnBuscarProveedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarProveedorActionPerformed(evt);
+            }
+        });
+
+        txtProducto.setEditable(false);
+        txtProducto.setEnabled(false);
+        txtProducto.setOpaque(false);
+
+        btnBuscarProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
+        btnBuscarProductos.setEnabled(false);
+        btnBuscarProductos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarProductosActionPerformed(evt);
+            }
+        });
+
+        chk_Producto.setText("Producto:");
+        chk_Producto.setToolTipText("");
+        chk_Producto.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chk_ProductoItemStateChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelFiltros1Layout = new javax.swing.GroupLayout(panelFiltros1);
+        panelFiltros1.setLayout(panelFiltros1Layout);
+        panelFiltros1Layout.setHorizontalGroup(
+            panelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelFiltros1Layout.createSequentialGroup()
+                .addGroup(panelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(chk_Fecha, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chk_Proveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chk_Producto, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelFiltros1Layout.createSequentialGroup()
+                        .addComponent(lbl_Desde)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbl_Hasta)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelFiltros1Layout.createSequentialGroup()
+                        .addGroup(panelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtProducto)
+                            .addComponent(txtProveedor))
+                        .addGap(0, 0, 0)
+                        .addGroup(panelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnBuscarProveedor, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnBuscarProductos, javax.swing.GroupLayout.Alignment.TRAILING)))))
+        );
+
+        panelFiltros1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {dc_FechaDesde, dc_FechaHasta});
+
+        panelFiltros1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chk_Fecha, chk_Producto, chk_Proveedor});
+
+        panelFiltros1Layout.setVerticalGroup(
+            panelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelFiltros1Layout.createSequentialGroup()
+                .addGroup(panelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_Hasta)
+                    .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_Desde)
+                    .addComponent(chk_Fecha))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(chk_Proveedor)
+                    .addComponent(txtProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarProveedor))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(chk_Producto)
+                    .addComponent(txtProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarProductos)))
+        );
+
+        panelFiltros1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {chk_Fecha, chk_Producto, chk_Proveedor});
+
+        panelFiltros1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarProveedor, txtProveedor});
+
+        panelFiltros1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarProductos, txtProducto});
+
+        chk_TipoFactura.setText("Tipo de Factura:");
+        chk_TipoFactura.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chk_TipoFacturaItemStateChanged(evt);
+            }
+        });
+
+        cmb_TipoFactura.setEnabled(false);
+
+        chk_NumFactura.setText("Nº de Factura:");
+        chk_NumFactura.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chk_NumFacturaItemStateChanged(evt);
             }
         });
 
@@ -459,28 +553,60 @@ public class FacturasCompraGUI extends JInternalFrame {
             }
         });
 
-        lbl_CantRegistrosEncontrados.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-
-        chk_TipoFactura.setText("Tipo de Factura:");
-        chk_TipoFactura.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                chk_TipoFacturaItemStateChanged(evt);
-            }
-        });
-
-        cmb_TipoFactura.setEnabled(false);
-
-        txtProveedor.setEditable(false);
-        txtProveedor.setEnabled(false);
-        txtProveedor.setOpaque(false);
-
-        btnBuscarProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
-        btnBuscarProveedor.setEnabled(false);
-        btnBuscarProveedor.addActionListener(new java.awt.event.ActionListener() {
+        txt_SerieFactura.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        txt_SerieFactura.setText("0");
+        txt_SerieFactura.setEnabled(false);
+        txt_SerieFactura.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarProveedorActionPerformed(evt);
+                txt_SerieFacturaActionPerformed(evt);
             }
         });
+        txt_SerieFactura.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txt_SerieFacturaKeyTyped(evt);
+            }
+        });
+
+        lblSeparador.setFont(new java.awt.Font("DejaVu Sans", 0, 15)); // NOI18N
+        lblSeparador.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblSeparador.setText("-");
+
+        javax.swing.GroupLayout panelFiltros2Layout = new javax.swing.GroupLayout(panelFiltros2);
+        panelFiltros2.setLayout(panelFiltros2Layout);
+        panelFiltros2Layout.setHorizontalGroup(
+            panelFiltros2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelFiltros2Layout.createSequentialGroup()
+                .addComponent(chk_TipoFactura)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmb_TipoFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(panelFiltros2Layout.createSequentialGroup()
+                .addComponent(chk_NumFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txt_SerieFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblSeparador, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txt_NroFactura))
+        );
+
+        panelFiltros2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chk_NumFactura, chk_TipoFactura});
+
+        panelFiltros2Layout.setVerticalGroup(
+            panelFiltros2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelFiltros2Layout.createSequentialGroup()
+                .addGroup(panelFiltros2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(cmb_TipoFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chk_TipoFactura))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelFiltros2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(txt_SerieFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSeparador)
+                    .addComponent(txt_NroFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chk_NumFactura))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        panelFiltros2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txt_NroFactura, txt_SerieFactura});
 
         javax.swing.GroupLayout panelFiltrosLayout = new javax.swing.GroupLayout(panelFiltros);
         panelFiltros.setLayout(panelFiltrosLayout);
@@ -490,74 +616,28 @@ public class FacturasCompraGUI extends JInternalFrame {
                 .addContainerGap()
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
+                        .addComponent(panelFiltros1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(panelFiltros2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 3, Short.MAX_VALUE))
+                    .addGroup(panelFiltrosLayout.createSequentialGroup()
                         .addComponent(btn_Buscar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_CantRegistrosEncontrados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(panelFiltrosLayout.createSequentialGroup()
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(chk_NumFactura, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(chk_Proveedor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(chk_Fecha, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE))
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(panelFiltrosLayout.createSequentialGroup()
-                                .addComponent(lbl_Desde)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lbl_Hasta)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panelFiltrosLayout.createSequentialGroup()
-                                .addComponent(txt_SerieFactura)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblSeparador, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txt_NroFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panelFiltrosLayout.createSequentialGroup()
-                                .addComponent(txtProveedor)
-                                .addGap(0, 0, 0)
-                                .addComponent(btnBuscarProveedor)))
-                        .addComponent(chk_TipoFactura, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmb_TipoFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addComponent(lbl_CantRegistrosEncontrados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(6, 6, 6))
         );
-
-        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {dc_FechaDesde, dc_FechaHasta});
-
         panelFiltrosLayout.setVerticalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFiltrosLayout.createSequentialGroup()
-                .addGap(1, 1, 1)
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(chk_Fecha)
-                    .addComponent(lbl_Desde)
-                    .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Hasta)
-                    .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chk_TipoFactura)
-                    .addComponent(cmb_TipoFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(3, 3, 3)
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btnBuscarProveedor)
-                    .addComponent(txtProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chk_Proveedor))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(txt_NroFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txt_SerieFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSeparador)
-                    .addComponent(chk_NumFactura))
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelFiltros1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelFiltros2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btn_Buscar)
                     .addComponent(lbl_CantRegistrosEncontrados, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarProveedor, txtProveedor});
-
-        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txt_NroFactura, txt_SerieFactura});
 
         panelResultados.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados"));
 
@@ -647,7 +727,7 @@ public class FacturasCompraGUI extends JInternalFrame {
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
@@ -718,8 +798,8 @@ public class FacturasCompraGUI extends JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -934,8 +1014,31 @@ public class FacturasCompraGUI extends JInternalFrame {
             }
         }
     }//GEN-LAST:event_btnCrearNotaCreditoActionPerformed
+
+    private void chk_ProductoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ProductoItemStateChanged
+        if (chk_Producto.isSelected() == true) {
+            btnBuscarProductos.setEnabled(true);
+            btnBuscarProductos.requestFocus();
+            txtProducto.setEnabled(true);
+        } else {
+            btnBuscarProductos.setEnabled(false);
+            txtProducto.setEnabled(false);
+        }
+    }//GEN-LAST:event_chk_ProductoItemStateChanged
+
+    private void btnBuscarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProductosActionPerformed
+        BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI();
+        buscarProductosGUI.setModal(true);
+        buscarProductosGUI.setLocationRelativeTo(this);
+        buscarProductosGUI.setVisible(true);
+        productoSeleccionado = buscarProductosGUI.getProductoSeleccionado();
+        if (productoSeleccionado != null) {
+            txtProducto.setText(productoSeleccionado.getDescripcion());
+        }
+    }//GEN-LAST:event_btnBuscarProductosActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuscarProductos;
     private javax.swing.JButton btnBuscarProveedor;
     private javax.swing.JButton btnCrearNotaCredito;
     private javax.swing.JButton btn_Buscar;
@@ -944,6 +1047,7 @@ public class FacturasCompraGUI extends JInternalFrame {
     private javax.swing.JButton btn_VerDetalle;
     private javax.swing.JCheckBox chk_Fecha;
     private javax.swing.JCheckBox chk_NumFactura;
+    private javax.swing.JCheckBox chk_Producto;
     private javax.swing.JCheckBox chk_Proveedor;
     private javax.swing.JCheckBox chk_TipoFactura;
     private javax.swing.JComboBox<String> cmbOrden;
@@ -958,10 +1062,13 @@ public class FacturasCompraGUI extends JInternalFrame {
     private javax.swing.JLabel lbl_TotalFacturado;
     private javax.swing.JLabel lbl_TotalIVACompra;
     private javax.swing.JPanel panelFiltros;
+    private javax.swing.JPanel panelFiltros1;
+    private javax.swing.JPanel panelFiltros2;
     private javax.swing.JPanel panelOrden;
     private javax.swing.JPanel panelResultados;
     private javax.swing.JScrollPane sp_Resultados;
     private javax.swing.JTable tbl_Resultados;
+    private javax.swing.JTextField txtProducto;
     private javax.swing.JTextField txtProveedor;
     private javax.swing.JFormattedTextField txt_NroFactura;
     private javax.swing.JFormattedTextField txt_ResultGastoTotal;
