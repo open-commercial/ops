@@ -43,8 +43,8 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="panelOrden" min="-2" max="-2" attributes="0"/>
-                  <Component id="panelFiltros" min="-2" max="-2" attributes="0"/>
+                  <Component id="panelFiltros" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="panelOrden" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="panelResultados" max="32767" attributes="0"/>
@@ -69,10 +69,10 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+                          <Component id="panelFiltros1" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="9" max="32767" attributes="0"/>
+                          <Component id="panelFiltros2" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="3" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
                           <Component id="btn_Buscar" min="-2" max="-2" attributes="0"/>
@@ -80,6 +80,7 @@
                           <Component id="lbl_CantRegistrosEncontrados" max="32767" attributes="0"/>
                       </Group>
                   </Group>
+                  <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -87,14 +88,15 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-                      <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
+                      <Component id="panelFiltros1" min="-2" max="-2" attributes="0"/>
+                      <Component id="panelFiltros2" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="btn_Buscar" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lbl_CantRegistrosEncontrados" alignment="2" min="-2" pref="25" max="-2" attributes="0"/>
                   </Group>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -119,36 +121,39 @@
             <Property name="horizontalAlignment" type="int" value="4"/>
           </Properties>
         </Component>
-        <Container class="javax.swing.JPanel" name="jPanel1">
+        <Container class="javax.swing.JPanel" name="panelFiltros1">
 
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="chk_Fecha" linkSize="20" min="-2" pref="140" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="lbl_Desde" min="-2" max="-2" attributes="1"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="dc_FechaDesde" linkSize="6" min="-2" pref="136" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="lbl_Hasta" min="-2" max="-2" attributes="1"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="dc_FechaHasta" linkSize="6" min="-2" pref="136" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="103" alignment="0" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="chk_Fecha" linkSize="20" alignment="0" min="-2" pref="140" max="-2" attributes="0"/>
                           <Component id="chk_Proveedor" linkSize="20" min="-2" pref="140" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="txtProveedor" linkSize="22" min="-2" pref="335" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnBuscarProveedor" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
                           <Component id="chk_Producto" linkSize="20" min="-2" pref="115" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="txtProducto" linkSize="22" min="-2" pref="343" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnBuscarProductos" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="lbl_Desde" min="-2" max="-2" attributes="1"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="dc_FechaDesde" linkSize="6" min="-2" pref="136" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lbl_Hasta" min="-2" max="-2" attributes="1"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="dc_FechaHasta" linkSize="6" min="-2" pref="136" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="txtProducto" max="32767" attributes="0"/>
+                                  <Component id="txtProveedor" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="btnBuscarProveedor" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnBuscarProductos" alignment="1" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
                       </Group>
                   </Group>
               </Group>
@@ -165,15 +170,15 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="txtProveedor" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnBuscarProveedor" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="chk_Proveedor" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtProveedor" linkSize="24" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnBuscarProveedor" linkSize="24" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
                           <Component id="chk_Producto" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtProducto" linkSize="10" alignment="2" min="-2" pref="31" max="-2" attributes="0"/>
-                          <Component id="btnBuscarProductos" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtProducto" linkSize="25" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnBuscarProductos" linkSize="25" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -267,7 +272,7 @@
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="jPanel2">
+        <Container class="javax.swing.JPanel" name="panelFiltros2">
 
           <Layout>
             <DimensionLayout dim="0">
@@ -280,9 +285,9 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="chk_NumFactura" linkSize="13" min="-2" pref="140" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="txt_SerieFactura" min="-2" pref="31" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                      <Component id="lblSeparador" min="-2" pref="27" max="-2" attributes="0"/>
+                      <Component id="txt_SerieFactura" min="-2" pref="43" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="lblSeparador" min="-2" pref="15" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="txt_NroFactura" max="32767" attributes="0"/>
                   </Group>
@@ -391,7 +396,7 @@
                   <Component id="btn_VerDetalle" linkSize="7" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="btnCrearNotaCredito" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="256" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="lbl_TotalFacturado" alignment="1" min="-2" max="-2" attributes="1"/>
                       <Component id="lbl_TotalIVACompra" alignment="1" min="-2" max="-2" attributes="1"/>
@@ -408,7 +413,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="sp_Resultados" pref="320" max="32767" attributes="0"/>
+                  <Component id="sp_Resultados" pref="314" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
