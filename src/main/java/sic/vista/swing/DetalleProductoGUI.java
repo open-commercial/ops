@@ -18,6 +18,7 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.xml.bind.DatatypeConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -27,6 +28,7 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Medida;
+import sic.modelo.NuevoProducto;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
 import sic.modelo.Proveedor;
@@ -1011,7 +1013,7 @@ public class DetalleProductoGUI extends JDialog {
         if (ejecutarOperacion) {
             try {
                 if (operacion == TipoDeOperacion.ALTA) {
-                    Producto producto = new Producto();
+                    NuevoProducto producto = new NuevoProducto();
                     producto.setCodigo(txt_Codigo.getText());
                     producto.setDescripcion(txt_Descripcion.getText().trim());
                     producto.setCantidad(new BigDecimal(txt_Cantidad.getValue().toString()));
@@ -1030,16 +1032,15 @@ public class DetalleProductoGUI extends JDialog {
                     producto.setEstante(txt_Estante.getText().trim());
                     producto.setNota(txt_Nota.getText().trim());                    
                     producto.setFechaVencimiento(dc_Vencimiento.getDate());
-                    producto = RestClient.getRestTemplate().postForObject("/productos?idMedida=" + idMedida 
+                    if (imagenProducto != null) {
+                        producto.setBase64Imagen(DatatypeConverter.printBase64Binary(imagenProducto));
+                    }
+                    Producto productoRecuperado = RestClient.getRestTemplate().postForObject("/productos?idMedida=" + idMedida
                             + "&idRubro=" + idRubro
-                            + "&idProveedor=" + idProveedor 
+                            + "&idProveedor=" + idProveedor
                             + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                             producto, Producto.class);
-                    LOGGER.warn("El producto " + producto + " se guardó correctamente");
-                    if (imagenProducto != null) {
-                        RestClient.getRestTemplate()
-                                .postForObject("/productos/" + producto.getIdProducto() + "/imagenes", imagenProducto, String.class);
-                    }
+                    LOGGER.warn("El producto " + productoRecuperado + " se guardó correctamente");
                     int respuesta = JOptionPane.showConfirmDialog(this,
                             "El producto se guardó correctamente.\n¿Desea dar de alta otro producto?",
                             "Aviso", JOptionPane.YES_NO_OPTION);
