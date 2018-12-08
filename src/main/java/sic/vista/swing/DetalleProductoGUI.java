@@ -18,7 +18,6 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-import javax.xml.bind.DatatypeConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -1026,21 +1025,22 @@ public class DetalleProductoGUI extends JDialog {
                     producto.setIvaPorcentaje(new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()));
                     producto.setIvaNeto(new BigDecimal(txtIVANeto.getValue().toString()));
                     producto.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
-                    producto.setIlimitado(chkSinLimite.isSelected());   
+                    producto.setIlimitado(chkSinLimite.isSelected());
                     producto.setPublico(rbPublico.isSelected());
                     producto.setEstanteria(txt_Estanteria.getText().trim());
                     producto.setEstante(txt_Estante.getText().trim());
-                    producto.setNota(txt_Nota.getText().trim());                    
+                    producto.setNota(txt_Nota.getText().trim());
                     producto.setFechaVencimiento(dc_Vencimiento.getDate());
-                    if (imagenProducto != null) {
-                        producto.setBase64Imagen(DatatypeConverter.printBase64Binary(imagenProducto));
-                    }
                     Producto productoRecuperado = RestClient.getRestTemplate().postForObject("/productos?idMedida=" + idMedida
                             + "&idRubro=" + idRubro
                             + "&idProveedor=" + idProveedor
                             + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                             producto, Producto.class);
                     LOGGER.warn("El producto " + productoRecuperado + " se guardó correctamente");
+                    if (imagenProducto != null) {
+                        RestClient.getRestTemplate()
+                                .postForObject("/productos/" + productoRecuperado.getIdProducto() + "/imagenes", imagenProducto, String.class);
+                    }
                     int respuesta = JOptionPane.showConfirmDialog(this,
                             "El producto se guardó correctamente.\n¿Desea dar de alta otro producto?",
                             "Aviso", JOptionPane.YES_NO_OPTION);
