@@ -46,16 +46,15 @@ public class ClientesGUI extends JInternalFrame {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(880, 600);
     private static int totalElementosBusqueda;
-    private static int NUMERO_PAGINA = 0;
-    private static final int TAMANIO_PAGINA = 50;
+    private static int NUMERO_PAGINA = 0;    
 
     public ClientesGUI() {
         this.initComponents();        
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-            int va = scrollBar.getVisibleAmount() + 50;
+            int va = scrollBar.getVisibleAmount() + 10;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (cuentasCorrienteClienteTotal.size() >= TAMANIO_PAGINA) {
+                if (cuentasCorrienteClienteTotal.size() >= 10) {
                     NUMERO_PAGINA += 1;
                     buscar();
                 }

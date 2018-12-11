@@ -31,8 +31,7 @@ public class BuscarClientesGUI extends JDialog {
     private List<Cliente> clientesParcial = new ArrayList<>();
     private Cliente clienteSeleccionado;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
-    private int NUMERO_PAGINA = 0;
-    private static final int TAMANIO_PAGINA = 50;
+    private int NUMERO_PAGINA = 0;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeDialog = new Dimension(1000, 600);
 
@@ -44,9 +43,9 @@ public class BuscarClientesGUI extends JDialog {
         tblResultados.addKeyListener(keyHandler);        
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-            int va = scrollBar.getVisibleAmount() + 50;
+            int va = scrollBar.getVisibleAmount() + 10;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (clientesTotal.size() >= TAMANIO_PAGINA) {
+                if (clientesTotal.size() >= 10) {
                     NUMERO_PAGINA += 1;
                     buscar();
                 }
@@ -78,8 +77,7 @@ public class BuscarClientesGUI extends JDialog {
                         + "&nombreFantasia=" + txtCriteriaBusqueda.getText().trim()                        
                         + "&nroCliente=" + txtCriteriaBusqueda.getText().trim()
                         + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "&pagina=" + NUMERO_PAGINA
-                        + "&tamanio=" + TAMANIO_PAGINA;
+                        + "&pagina=" + NUMERO_PAGINA;
                 PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
                         .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {})
                         .getBody();

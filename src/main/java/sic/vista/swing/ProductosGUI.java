@@ -49,9 +49,9 @@ public class ProductosGUI extends JInternalFrame {
         this.initComponents();        
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-            int va = scrollBar.getVisibleAmount() + 50;
+            int va = scrollBar.getVisibleAmount() + 10;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (productosTotal.size() >= 50) {
+                if (productosTotal.size() >= 10) {
                     NUMERO_PAGINA += 1;
                     buscar();
                 }

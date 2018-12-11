@@ -50,16 +50,15 @@ public class FacturasVentaGUI extends JInternalFrame {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(970, 600);
     private static int totalElementosBusqueda;
-    private static int NUMERO_PAGINA = 0;
-    private static final int TAMANIO_PAGINA = 50;
+    private static int NUMERO_PAGINA = 0;    
 
     public FacturasVentaGUI() {
         this.initComponents();
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-            int va = scrollBar.getVisibleAmount() + 50;
+            int va = scrollBar.getVisibleAmount() + 10;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (facturasTotal.size() >= TAMANIO_PAGINA) {
+                if (facturasTotal.size() >= 10) {
                     NUMERO_PAGINA += 1;
                     buscar(false);
                 }
@@ -138,14 +137,11 @@ public class FacturasVentaGUI extends JInternalFrame {
                 uriCriteria += "&sentido=ASC";
                 break;
         }
-        uriCriteria += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
+        uriCriteria += "&pagina=" + NUMERO_PAGINA;
         return uriCriteria;
     }
 
-    private void setColumnas() {
-        // Momentaneamente desactivado hasta terminar la paginacion.        
-        //sorting
-        // tbl_Resultados.setAutoCreateRowSorter(true);        
+    private void setColumnas() {     
         //nombres de columnas
         String[] encabezados = new String[19];
         encabezados[0] = "CAE";
@@ -1312,7 +1308,7 @@ public class FacturasVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_btnCrearNotaCreditoActionPerformed
 
     private void btnBuscarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProductosActionPerformed
-        BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI();
+        BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(null, null, null);
         buscarProductosGUI.setModal(true);
         buscarProductosGUI.setLocationRelativeTo(this);
         buscarProductosGUI.setVisible(true);

@@ -55,8 +55,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     private final Proveedor proveedor;
     private CuentaCorriente cuentaCorriente;
     private ModeloTabla modeloTablaResultados = new ModeloTabla();
-    private static int NUMERO_PAGINA = 0;
-    private static final int TAMANIO_PAGINA = 50;
+    private static int NUMERO_PAGINA = 0;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final List<RenglonCuentaCorriente> movimientosTotal = new ArrayList<>();
     private List<RenglonCuentaCorriente> movimientosParcial = new ArrayList<>();
@@ -79,9 +78,9 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     private void setListeners() {
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-            int va = scrollBar.getVisibleAmount() + 50;
+            int va = scrollBar.getVisibleAmount() + 10;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (movimientosTotal.size() >= TAMANIO_PAGINA) {
+                if (movimientosTotal.size() >= 10) {
                     NUMERO_PAGINA += 1;
                     buscar(false);
                 }
@@ -119,7 +118,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         try {
             PaginaRespuestaRest<RenglonCuentaCorriente> response = RestClient.getRestTemplate()
                     .exchange("/cuentas-corriente/" + cuentaCorriente.getIdCuentaCorriente() + "/renglones"
-                            + "?pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA, HttpMethod.GET, null,
+                            + "?pagina=" + NUMERO_PAGINA, HttpMethod.GET, null,
                             new ParameterizedTypeReference<PaginaRespuestaRest<RenglonCuentaCorriente>>() {
                     })
                     .getBody();
@@ -1023,7 +1022,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
         if (Desktop.isDesktopSupported()) {
             String uriReporte = "/cuentas-corriente/clientes/" + this.cliente.getId_Cliente() + "/reporte?"
-                    + "pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
+                    + "pagina=" + NUMERO_PAGINA;
             ExportGUI exportGUI = new ExportGUI(uriReporte + "&formato=xlsx", "CuentaCorriente.xlsx",
                     uriReporte + "&formato=pdf", "CuentaCorriente.pdf");
             exportGUI.setModal(true);

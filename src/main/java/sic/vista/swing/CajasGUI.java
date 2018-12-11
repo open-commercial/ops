@@ -38,17 +38,16 @@ public class CajasGUI extends JInternalFrame {
     private List<Caja> cajasTotal = new ArrayList<>();
     private List<Caja> cajasParcial = new ArrayList<>();
     private static int totalElementosBusqueda;
-    private static int NUMERO_PAGINA = 0;
-    private static final int TAMANIO_PAGINA = 50;
+    private static int NUMERO_PAGINA = 0;    
     private final Dimension sizeInternalFrame = new Dimension(880, 600);
 
     public CajasGUI() {
         this.initComponents();        
         sp_Cajas.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-            int va = scrollBar.getVisibleAmount() + 50;
+            int va = scrollBar.getVisibleAmount() + 10;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (cajasTotal.size() >= TAMANIO_PAGINA) {
+                if (cajasTotal.size() >= 10) {
                     NUMERO_PAGINA += 1;
                     buscar(false);
                 }
@@ -104,7 +103,7 @@ public class CajasGUI extends JInternalFrame {
         if (chk_Fecha.isSelected()) criteria += "&desde=" + dc_FechaDesde.getDate().getTime() + "&hasta=" + dc_FechaHasta.getDate().getTime();
         if (chk_UsuarioApertura.isSelected()) criteria += "&idUsuarioApertura=" + ((Usuario) cmb_UsuariosApertura.getSelectedItem()).getId_Usuario();
         if (chk_UsuarioCierre.isSelected()) criteria += "&idUsuarioCierre=" + ((Usuario) cmb_UsuariosCierre.getSelectedItem()).getId_Usuario();
-        criteria += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
+        criteria += "&pagina=" + NUMERO_PAGINA;
         try {
             PaginaRespuestaRest<Caja> response = RestClient.getRestTemplate()
                     .exchange(busqueda + criteria, HttpMethod.GET, null,

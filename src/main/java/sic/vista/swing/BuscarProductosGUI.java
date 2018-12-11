@@ -64,35 +64,9 @@ public class BuscarProductosGUI extends JDialog {
         btnAceptar.addKeyListener(keyHandler);
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-            int va = scrollBar.getVisibleAmount() + 50;
+            int va = scrollBar.getVisibleAmount() + 10;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (productosTotal.size() >= 50) {
-                    NUMERO_PAGINA += 1;
-                    buscar();
-                }
-            }
-        });
-    }
-    
-    public BuscarProductosGUI() {
-        this.initComponents();
-        this.setIcon();
-        this.renglones = null;
-        this.movimiento = null;
-        this.tipoDeComprobante = null;
-        this.setColumnas();
-        txtCriteriaBusqueda.addKeyListener(keyHandler);
-        btnBuscar.addKeyListener(keyHandler);
-        tbl_Resultados.addKeyListener(keyHandler);
-        txtaNotaProducto.addKeyListener(keyHandler);
-        txtCantidad.addKeyListener(keyHandler);
-        txtPorcentajeDescuento.addKeyListener(keyHandler);
-        btnAceptar.addKeyListener(keyHandler);
-        sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
-            JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-            int va = scrollBar.getVisibleAmount() + 50;
-            if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (productosTotal.size() >= 50) {
+                if (productosTotal.size() >= 10) {
                     NUMERO_PAGINA += 1;
                     buscar();
                 }

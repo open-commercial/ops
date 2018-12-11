@@ -51,16 +51,15 @@ public class NotasVentaGUI extends JInternalFrame {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(970, 600);
     private static int totalElementosBusqueda;
-    private static int NUMERO_PAGINA = 0;
-    private static final int TAMANIO_PAGINA = 50;
+    private static int NUMERO_PAGINA = 0;    
 
     public NotasVentaGUI() {
         this.initComponents();
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-            int va = scrollBar.getVisibleAmount() + 50;
+            int va = scrollBar.getVisibleAmount() + 10;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (notasTotal.size() >= TAMANIO_PAGINA) {
+                if (notasTotal.size() >= 10) {
                     NUMERO_PAGINA += 1;
                     buscar(false);
                 }
@@ -88,7 +87,7 @@ public class NotasVentaGUI extends JInternalFrame {
         if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
             uriCriteria += "&idUsuario=" + usuarioSeleccionado.getId_Usuario();
         }
-        uriCriteria += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
+        uriCriteria += "&pagina=" + NUMERO_PAGINA;
         return uriCriteria;
     }
 

@@ -32,8 +32,7 @@ public class BuscarUsuariosGUI extends JDialog {
     private List<Usuario> usuariosParcial = new ArrayList<>();
     private Usuario usuarioSeleccionado;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
-    private int NUMERO_PAGINA = 0;
-    private static final int TAMANIO_PAGINA = 50;
+    private int NUMERO_PAGINA = 0;    
     private final Rol[] rolesParaFiltrar;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeDialog = new Dimension(1000, 600);
@@ -47,9 +46,9 @@ public class BuscarUsuariosGUI extends JDialog {
         this.rolesParaFiltrar = rolesParaFiltrar;
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-            int va = scrollBar.getVisibleAmount() + 50;
+            int va = scrollBar.getVisibleAmount() + 10;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (usuariosTotal.size() >= TAMANIO_PAGINA) {
+                if (usuariosTotal.size() >= 10) {
                     NUMERO_PAGINA += 1;
                     buscar();
                 }
@@ -83,7 +82,7 @@ public class BuscarUsuariosGUI extends JDialog {
                 criteriaBusqueda += "&email=" + txtCriteriaBusqueda.getText().trim();                
                 criteriaBusqueda += "&roles=" + Arrays.toString(rolesParaFiltrar)
                         .substring(1, Arrays.toString(rolesParaFiltrar).length() - 1);
-                criteriaBusqueda += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
+                criteriaBusqueda += "&pagina=" + NUMERO_PAGINA;
                 PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
                         .exchange(criteriaBusqueda, HttpMethod.GET, null,
                                 new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {})

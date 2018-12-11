@@ -47,16 +47,15 @@ public class PedidosGUI extends JInternalFrame {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame =  new Dimension(880, 600);
     private static int totalElementosBusqueda;
-    private static int NUMERO_PAGINA = 0;
-    private static final int TAMANIO_PAGINA = 50;
+    private static int NUMERO_PAGINA = 0;    
 
     public PedidosGUI() {
         this.initComponents();
         sp_Pedidos.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-            int va = scrollBar.getVisibleAmount() + 50;
+            int va = scrollBar.getVisibleAmount() + 10;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (pedidosTotal.size() >= TAMANIO_PAGINA) {
+                if (pedidosTotal.size() >= 10) {
                     NUMERO_PAGINA += 1;
                     buscar();
                 }
@@ -83,7 +82,7 @@ public class PedidosGUI extends JInternalFrame {
         if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
             criteria += "&idUsuario=" + usuarioSeleccionado.getId_Usuario();
         }
-        criteria += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
+        criteria += "&pagina=" + NUMERO_PAGINA;
         try {
             PaginaRespuestaRest<Pedido> response = RestClient.getRestTemplate()
                     .exchange(criteria, HttpMethod.GET, null,
