@@ -38,12 +38,12 @@ public class ProductosGUI extends JInternalFrame {
     private ModeloTabla modeloTablaResultados = new ModeloTabla();
     private List<Producto> productosTotal = new ArrayList<>();
     private List<Producto> productosParcial = new ArrayList<>();
+    private Proveedor proveedorSeleccionado;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(880, 600);
     private static int totalElementosBusqueda;
     private static int NUMERO_PAGINA = 0;    
     private List<Rubro> rubros;
-    private List<Proveedor> proveedores;
 
     public ProductosGUI() {
         this.initComponents();        
@@ -68,30 +68,6 @@ public class ProductosGUI extends JInternalFrame {
             rubros.stream().forEach(r -> {
                 cmb_Rubro.addItem(r.getNombre());
             });
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void cargarProveedores() {
-        try {
-            String uri = "/proveedores/busqueda/criteria?"
-                    + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                    + "&conSaldo=false"
-                    + "&pagina=0"
-                    + "&tamanio=" + Integer.MAX_VALUE;
-            PaginaRespuestaRest<Proveedor> response = RestClient.getRestTemplate()
-                    .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<PaginaRespuestaRest<Proveedor>>() {
-                    })
-                    .getBody();
-            proveedores = response.getContent();
-            cmb_Proveedor.removeAllItems();
-            proveedores.stream().forEach(p -> cmb_Proveedor.addItem(p.getRazonSocial()));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -259,9 +235,9 @@ public class ProductosGUI extends JInternalFrame {
         }
         chk_Proveedor.setEnabled(status);
         if (status == true && chk_Proveedor.isSelected() == true) {
-            cmb_Proveedor.setEnabled(true);
+            btnBuscarProveedor.setEnabled(true);
         } else {
-            cmb_Proveedor.setEnabled(false);
+            btnBuscarProveedor.setEnabled(false);
         }
         chk_Disponibilidad.setEnabled(status);
         if (status == true && chk_Disponibilidad.isSelected() == true) {
@@ -290,11 +266,7 @@ public class ProductosGUI extends JInternalFrame {
     }
     
     private long getIdProveedorSeleccionado() {
-        long idProveedor = 0;
-        for (Proveedor p : proveedores) {
-            if (p.getRazonSocial().equals(cmb_Proveedor.getSelectedItem())) idProveedor = p.getId_Proveedor();
-        }
-        return idProveedor;
+        return ((proveedorSeleccionado != null) ? proveedorSeleccionado.getId_Proveedor() : 0);
     }
     
     private void exportar() {
@@ -442,7 +414,6 @@ public class ProductosGUI extends JInternalFrame {
         chk_Codigo = new javax.swing.JCheckBox();
         txt_Codigo = new javax.swing.JTextField();
         chk_Proveedor = new javax.swing.JCheckBox();
-        cmb_Proveedor = new javax.swing.JComboBox();
         btn_Buscar = new javax.swing.JButton();
         txt_Descripcion = new javax.swing.JTextField();
         chk_Descripcion = new javax.swing.JCheckBox();
@@ -455,6 +426,8 @@ public class ProductosGUI extends JInternalFrame {
         chk_visibilidad = new javax.swing.JCheckBox();
         rb_publico = new javax.swing.JRadioButton();
         rb_privado = new javax.swing.JRadioButton();
+        txtProveedor = new javax.swing.JTextField();
+        btnBuscarProveedor = new javax.swing.JButton();
         panelResultados = new javax.swing.JPanel();
         sp_Resultados = new javax.swing.JScrollPane();
         tbl_Resultados = new javax.swing.JTable();
@@ -513,8 +486,6 @@ public class ProductosGUI extends JInternalFrame {
                 chk_ProveedorItemStateChanged(evt);
             }
         });
-
-        cmb_Proveedor.setEnabled(false);
 
         btn_Buscar.setForeground(java.awt.Color.blue);
         btn_Buscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
@@ -580,6 +551,18 @@ public class ProductosGUI extends JInternalFrame {
         rb_privado.setText("Privados");
         rb_privado.setEnabled(false);
 
+        txtProveedor.setEditable(false);
+        txtProveedor.setEnabled(false);
+        txtProveedor.setOpaque(false);
+
+        btnBuscarProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
+        btnBuscarProveedor.setEnabled(false);
+        btnBuscarProveedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarProveedorActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelFiltrosLayout = new javax.swing.GroupLayout(panelFiltros);
         panelFiltros.setLayout(panelFiltrosLayout);
         panelFiltrosLayout.setHorizontalGroup(
@@ -599,16 +582,20 @@ public class ProductosGUI extends JInternalFrame {
                             .addComponent(chk_Codigo)
                             .addComponent(chk_Proveedor))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txt_Descripcion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmb_Rubro, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_Codigo, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmb_Proveedor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFiltrosLayout.createSequentialGroup()
+                                .addComponent(txtProveedor)
+                                .addGap(0, 0, 0)
+                                .addComponent(btnBuscarProveedor))
+                            .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(txt_Descripcion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cmb_Rubro, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txt_Codigo, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(25, 25, 25)
                         .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(chk_Disponibilidad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(chk_visibilidad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(rb_privado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(rb_Todos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -638,14 +625,18 @@ public class ProductosGUI extends JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_Proveedor)
-                    .addComponent(cmb_Proveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(rb_privado))
+                    .addComponent(rb_privado)
+                    .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                        .addComponent(txtProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnBuscarProveedor)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btn_Buscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmb_Rubro, txtProveedor, txt_Codigo, txt_Descripcion});
 
         panelResultados.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados"));
 
@@ -728,7 +719,7 @@ public class ProductosGUI extends JInternalFrame {
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btn_Nuevo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -813,12 +804,12 @@ public class ProductosGUI extends JInternalFrame {
 
     private void chk_ProveedorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ProveedorItemStateChanged
         if (chk_Proveedor.isSelected() == true) {
-            cmb_Proveedor.setEnabled(true);
-            this.cargarProveedores();
-            cmb_Proveedor.requestFocus();
+            btnBuscarProveedor.setEnabled(true);
+            btnBuscarProveedor.requestFocus();
+            txtProveedor.setEnabled(true);
         } else {
-            cmb_Proveedor.removeAllItems();
-            cmb_Proveedor.setEnabled(false);
+            btnBuscarProveedor.setEnabled(false);
+            txtProveedor.setEnabled(false);
         }
     }//GEN-LAST:event_chk_ProveedorItemStateChanged
 
@@ -967,10 +958,22 @@ public class ProductosGUI extends JInternalFrame {
     private void cmbSentidoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbSentidoItemStateChanged
         this.limpiarYBuscar();
     }//GEN-LAST:event_cmbSentidoItemStateChanged
+
+    private void btnBuscarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProveedorActionPerformed
+        BuscarProveedoresGUI buscarProveedoresGUI = new BuscarProveedoresGUI();
+        buscarProveedoresGUI.setModal(true);
+        buscarProveedoresGUI.setLocationRelativeTo(this);
+        buscarProveedoresGUI.setVisible(true);
+        if (buscarProveedoresGUI.getProveedorSeleccionado() != null) {
+            proveedorSeleccionado = buscarProveedoresGUI.getProveedorSeleccionado();
+            txtProveedor.setText(proveedorSeleccionado.getRazonSocial());
+        }
+    }//GEN-LAST:event_btnBuscarProveedorActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgDisponibilidad;
     private javax.swing.ButtonGroup bgVisibilidad;
+    private javax.swing.JButton btnBuscarProveedor;
     private javax.swing.JButton btnExportar;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;
@@ -984,7 +987,6 @@ public class ProductosGUI extends JInternalFrame {
     private javax.swing.JCheckBox chk_visibilidad;
     private javax.swing.JComboBox<String> cmbOrden;
     private javax.swing.JComboBox<String> cmbSentido;
-    private javax.swing.JComboBox cmb_Proveedor;
     private javax.swing.JComboBox cmb_Rubro;
     private javax.swing.JLabel lbl_ValorStock;
     private javax.swing.JLabel lbl_cantResultados;
@@ -997,6 +999,7 @@ public class ProductosGUI extends JInternalFrame {
     private javax.swing.JRadioButton rb_publico;
     private javax.swing.JScrollPane sp_Resultados;
     private javax.swing.JTable tbl_Resultados;
+    private javax.swing.JTextField txtProveedor;
     private javax.swing.JTextField txt_Codigo;
     private javax.swing.JTextField txt_Descripcion;
     private javax.swing.JFormattedTextField txt_ValorStock;
