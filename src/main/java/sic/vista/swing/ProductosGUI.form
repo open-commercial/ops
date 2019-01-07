@@ -124,20 +124,20 @@
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="chk_Codigo" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txt_Codigo" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txt_Codigo" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="chk_Disponibilidad" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="rb_Todos" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="chk_Descripcion" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txt_Descripcion" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txt_Descripcion" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="rb_Faltantes" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="chk_Rubro" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmb_Rubro" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="cmb_Rubro" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="chk_visibilidad" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="rb_publico" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -145,10 +145,8 @@
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="chk_Proveedor" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="rb_privado" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Group type="103" alignment="2" groupAlignment="2" attributes="0">
-                          <Component id="txtProveedor" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnBuscarProveedor" alignment="2" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="txtProveedor" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnBuscarProveedor" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -342,7 +340,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="sp_Resultados" pref="262" max="32767" attributes="0"/>
+                  <Component id="sp_Resultados" pref="250" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="btn_Nuevo" linkSize="2" alignment="2" max="32767" attributes="0"/>

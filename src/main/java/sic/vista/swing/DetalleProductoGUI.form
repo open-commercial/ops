@@ -148,10 +148,10 @@
                               <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Component id="txtProveedor" max="32767" attributes="0"/>
-                                      <Component id="cmb_Rubro" alignment="0" pref="333" max="32767" attributes="2"/>
+                                      <Component id="cmb_Rubro" alignment="0" pref="339" max="32767" attributes="2"/>
                                       <Component id="cmb_Medida" alignment="0" max="32767" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="btn_Rubros" alignment="1" min="-2" max="-2" attributes="1"/>
                                       <Group type="102" alignment="1" attributes="0">
@@ -172,12 +172,12 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txt_Codigo" linkSize="13" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txt_Codigo" linkSize="15" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="lbl_Codigo" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txt_Descripcion" linkSize="13" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txt_Descripcion" linkSize="15" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="lbl_Descripcion" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -189,9 +189,9 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="lbl_Proveedor" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtProveedor" linkSize="13" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="btnBuscarProveedor" linkSize="1" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="btn_NuevoProveedor" linkSize="1" alignment="2" min="-2" pref="25" max="-2" attributes="0"/>
+                              <Component id="txtProveedor" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -199,7 +199,7 @@
                               <Component id="cmb_Medida" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="lbl_Medida" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
