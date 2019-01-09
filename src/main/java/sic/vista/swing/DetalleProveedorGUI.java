@@ -52,8 +52,9 @@ public class DetalleProveedorGUI extends JDialog {
         txtIdFiscal.setValue(proveedorModificar.getIdFiscal());
         cmbCategoriaIVA.setSelectedItem(proveedorModificar.getCategoriaIVA());
         txtDireccion.setText(proveedorModificar.getDireccion());
-        cmbPais.setSelectedItem(proveedorModificar.getLocalidad().getProvincia().getPais());
-        cmbProvincia.setSelectedItem(proveedorModificar.getLocalidad().getProvincia());
+        Provincia provinciaDelProveedor = RestClient.getRestTemplate().getForObject("/provincias/" + proveedorModificar.getLocalidad().getIdProvincia(), Provincia.class);
+        cmbPais.setSelectedItem(provinciaDelProveedor.getPais());
+        cmbProvincia.setSelectedItem(provinciaDelProveedor);
         cmbLocalidad.setSelectedItem(proveedorModificar.getLocalidad());
         txtTelPrimario.setText(proveedorModificar.getTelPrimario());
         txtTelSecundario.setText(proveedorModificar.getTelSecundario());

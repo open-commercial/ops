@@ -125,8 +125,9 @@ public class DetalleEmpresaGUI extends JDialog {
         dc_FechaInicioActividad.setDate(empresaModificar.getFechaInicioActividad());
         txt_Email.setText(empresaModificar.getEmail());
         txt_Telefono.setText(empresaModificar.getTelefono());
-        cmb_Pais.setSelectedItem(empresaModificar.getLocalidad().getProvincia().getPais());
-        cmb_Provincia.setSelectedItem(empresaModificar.getLocalidad().getProvincia());
+        Provincia provinciaDeEmpresa = RestClient.getRestTemplate().getForObject("/provincias/" + empresaModificar.getLocalidad().getIdProvincia(), Provincia.class);
+        cmb_Pais.setSelectedItem(provinciaDeEmpresa.getPais());
+        cmb_Provincia.setSelectedItem(provinciaDeEmpresa);
         cmb_Localidad.setSelectedItem(empresaModificar.getLocalidad());
         if (empresaModificar.getLogo() == null || "".equals(empresaModificar.getLogo())) {
             lbl_Logo.setText("SIN IMAGEN");

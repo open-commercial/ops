@@ -10,7 +10,8 @@ public class Medida implements Serializable {
 
     private long id_Medida;
     private String nombre;
-    private Empresa empresa;
+    private Long idEmpresa;
+    private String nombreEmpresa;
     private boolean eliminada;
 
     @Override

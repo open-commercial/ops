@@ -48,8 +48,10 @@ public class DetalleTransportistaGUI extends JDialog {
         txt_Direccion.setText(transportistaModificar.getDireccion());
         try {
             Localidad localidadDelTransportista = RestClient.getRestTemplate().getForObject("/localidades/" + transportistaModificar.getIdLocalidad(), Localidad.class);
-            cmb_Pais.setSelectedItem(localidadDelTransportista.getProvincia().getPais());
-            cmb_Provincia.setSelectedItem(localidadDelTransportista.getProvincia());
+            Provincia provinciaDelTransportista = RestClient.getRestTemplate().getForObject("/provincias/" + localidadDelTransportista.getIdProvincia(), Provincia.class);
+            Pais paisDelTransportista = RestClient.getRestTemplate().getForObject("/paises/" + provinciaDelTransportista.getPais().getId_Pais(), Pais.class);
+            cmb_Pais.setSelectedItem(paisDelTransportista);
+            cmb_Provincia.setSelectedItem(provinciaDelTransportista);
             cmb_Localidad.setSelectedItem(localidadDelTransportista);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

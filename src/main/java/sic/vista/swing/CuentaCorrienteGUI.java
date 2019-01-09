@@ -285,8 +285,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         txtNombreCliente.setText(proveedor.getRazonSocial());
         txtDomicilioCliente.setText(proveedor.getDireccion() 
                 + " " + proveedor.getLocalidad().getNombre() 
-                + " " + proveedor.getLocalidad().getProvincia().getNombre() 
-                + " " + proveedor.getLocalidad().getProvincia().getPais());        
+                + " " + proveedor.getLocalidad().getNombreProvincia()
+                + " " + proveedor.getLocalidad().getNombrePais());        
         if (proveedor.getIdFiscal() != null) txtIDFiscalCliente.setText(proveedor.getIdFiscal().toString());
         txtCondicionIVACliente.setText(proveedor.getCategoriaIVA().toString());
         try {

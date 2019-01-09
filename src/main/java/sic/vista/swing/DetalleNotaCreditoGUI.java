@@ -205,8 +205,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
         txtNombre.setText(((FacturaCompra) factura).getRazonSocialProveedor());
         txtDomicilio.setText(proveedor.getDireccion()
                 + " " + proveedor.getLocalidad().getNombre()
-                + " " + proveedor.getLocalidad().getProvincia().getNombre()                
-                + " " + proveedor.getLocalidad().getProvincia().getPais());        
+                + " " + proveedor.getLocalidad().getNombreProvincia()
+                + " " + proveedor.getLocalidad().getNombrePais());        
         if (proveedor.getIdFiscal() != null) txtIdFiscal.setText(proveedor.getIdFiscal().toString());
         txtCondicionIVA.setText(proveedor.getCategoriaIVA().toString());
     }
@@ -217,8 +217,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
         txtNombre.setText(proveedorDeNota.getRazonSocial());
         txtDomicilio.setText(proveedorDeNota.getDireccion()
                 + " " + proveedorDeNota.getLocalidad().getNombre()
-                + " " + proveedorDeNota.getLocalidad().getProvincia().getNombre()
-                + " " + proveedorDeNota.getLocalidad().getProvincia().getPais());                        
+                + " " + proveedorDeNota.getLocalidad().getNombreProvincia()
+                + " " + proveedorDeNota.getLocalidad().getNombrePais());                        
         if (proveedorDeNota.getIdFiscal() != null) txtIdFiscal.setText(proveedorDeNota.getIdFiscal().toString());        
         txtCondicionIVA.setText(proveedorDeNota.getCategoriaIVA().toString());        
         txt_Serie.setEnabled(false);

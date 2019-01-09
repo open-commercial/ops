@@ -208,8 +208,8 @@ public class ProveedoresGUI extends JInternalFrame {
             fila[10] = p.getEmail();
             fila[11] = p.getWeb();
             fila[12] = p.getLocalidad().getNombre();
-            fila[13] = p.getLocalidad().getProvincia().getNombre();
-            fila[14] = p.getLocalidad().getProvincia().getPais().getNombre();
+            fila[13] = p.getLocalidad().getNombreProvincia();
+            fila[14] = p.getLocalidad().getNombrePais();
             return fila;
         }).forEach(f -> {
             modeloTablaResultados.addRow(f);

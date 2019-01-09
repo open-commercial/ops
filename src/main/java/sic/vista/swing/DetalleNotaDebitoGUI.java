@@ -104,8 +104,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
         txtNombre.setText(proveedor.getRazonSocial());
         txtDomicilio.setText(proveedor.getDireccion()
                 + " " + proveedor.getLocalidad().getNombre()
-                + " " + proveedor.getLocalidad().getProvincia().getNombre()                                
-                + " " + proveedor.getLocalidad().getProvincia().getPais());        
+                + " " + proveedor.getLocalidad().getNombreProvincia()
+                + " " + proveedor.getLocalidad().getNombrePais());        
         if (proveedor.getIdFiscal() != null) txtIdFiscal.setText(proveedor.getIdFiscal().toString());
         txtCondicionIVA.setText(proveedor.getCategoriaIVA().toString());
     }
@@ -234,8 +234,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
             cmbDescripcionRenglon2.addItem(notaDebito.getMotivo());
             txtDomicilio.setText(proveedorDeNota.getDireccion()
                     + " " + proveedorDeNota.getLocalidad().getNombre()
-                    + " " + proveedorDeNota.getLocalidad().getProvincia().getNombre()
-                    + " " + proveedorDeNota.getLocalidad().getProvincia().getPais());
+                    + " " + proveedorDeNota.getLocalidad().getNombreProvincia()
+                    + " " + proveedorDeNota.getLocalidad().getNombrePais());
             txtCondicionIVA.setText(proveedorDeNota.getCategoriaIVA().toString());
             if (proveedorDeNota.getIdFiscal() != null) txtIdFiscal.setText(proveedorDeNota.getIdFiscal().toString());            
             Recibo reciboNotaDebitoProveedor = RestClient.getRestTemplate().getForObject("/recibos/" + notaDebito.getIdRecibo(), Recibo.class);
