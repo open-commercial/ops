@@ -197,9 +197,9 @@ public class ProveedoresGUI extends JInternalFrame {
             Object[] fila = new Object[15];
             fila[0] = p.getCodigo();
             fila[1] = p.getIdFiscal();
-            fila[2] = p.getRazonSocial();            
+            fila[2] = p.getRazonSocial();
             fila[3] = p.getSaldoCuentaCorriente();
-            fila[4] = p.getFechaUltimoMovimiento();            
+            fila[4] = p.getFechaUltimoMovimiento();
             fila[5] = p.getDireccion();
             fila[6] = p.getCategoriaIVA();
             fila[7] = p.getTelPrimario();
@@ -207,9 +207,10 @@ public class ProveedoresGUI extends JInternalFrame {
             fila[9] = p.getContacto();
             fila[10] = p.getEmail();
             fila[11] = p.getWeb();
-            fila[12] = p.getLocalidad().getNombre();
-            fila[13] = p.getLocalidad().getNombreProvincia();
-            fila[14] = p.getLocalidad().getNombrePais();
+            Localidad localidadDelProveedor = RestClient.getRestTemplate().getForObject("/localidades/" + p.getIdLocalidad(), Localidad.class);
+            fila[12] = localidadDelProveedor.getNombre();
+            fila[13] = localidadDelProveedor.getNombreProvincia();
+            fila[14] = localidadDelProveedor.getNombrePais();
             return fila;
         }).forEach(f -> {
             modeloTablaResultados.addRow(f);

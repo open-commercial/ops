@@ -23,6 +23,7 @@ import sic.modelo.EmpresaActiva;
 import sic.modelo.Factura;
 import sic.modelo.FacturaCompra;
 import sic.modelo.FacturaVenta;
+import sic.modelo.Localidad;
 import sic.modelo.Movimiento;
 import sic.modelo.NotaCredito;
 import sic.modelo.Proveedor;
@@ -203,10 +204,11 @@ public class DetalleNotaCreditoGUI extends JDialog {
 
     private void cargarDetalleProveedor() {
         txtNombre.setText(((FacturaCompra) factura).getRazonSocialProveedor());
+        Localidad localidadDelProveedor = RestClient.getRestTemplate().getForObject("/localidades/" + proveedor.getIdLocalidad(), Localidad.class);
         txtDomicilio.setText(proveedor.getDireccion()
-                + " " + proveedor.getLocalidad().getNombre()
-                + " " + proveedor.getLocalidad().getNombreProvincia()
-                + " " + proveedor.getLocalidad().getNombrePais());        
+                + " " + localidadDelProveedor.getNombre()
+                + " " + localidadDelProveedor.getNombreProvincia()
+                + " " + localidadDelProveedor.getNombrePais());        
         if (proveedor.getIdFiscal() != null) txtIdFiscal.setText(proveedor.getIdFiscal().toString());
         txtCondicionIVA.setText(proveedor.getCategoriaIVA().toString());
     }
@@ -215,10 +217,11 @@ public class DetalleNotaCreditoGUI extends JDialog {
         Proveedor proveedorDeNota = RestClient.getRestTemplate()
                 .getForObject("/proveedores/" + notaCredito.getIdProveedor(), Proveedor.class);
         txtNombre.setText(proveedorDeNota.getRazonSocial());
+        Localidad localidadDelProveedor = RestClient.getRestTemplate().getForObject("/localidades/" + proveedorDeNota.getIdLocalidad(), Localidad.class);
         txtDomicilio.setText(proveedorDeNota.getDireccion()
-                + " " + proveedorDeNota.getLocalidad().getNombre()
-                + " " + proveedorDeNota.getLocalidad().getNombreProvincia()
-                + " " + proveedorDeNota.getLocalidad().getNombrePais());                        
+                + " " + localidadDelProveedor.getNombre()
+                + " " + localidadDelProveedor.getNombreProvincia()
+                + " " + localidadDelProveedor.getNombrePais());                        
         if (proveedorDeNota.getIdFiscal() != null) txtIdFiscal.setText(proveedorDeNota.getIdFiscal().toString());        
         txtCondicionIVA.setText(proveedorDeNota.getCategoriaIVA().toString());        
         txt_Serie.setEnabled(false);

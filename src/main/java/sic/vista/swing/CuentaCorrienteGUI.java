@@ -34,6 +34,7 @@ import sic.modelo.CuentaCorrienteProveedor;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.FacturaCompra;
 import sic.modelo.FacturaVenta;
+import sic.modelo.Localidad;
 import sic.modelo.NotaCredito;
 import sic.modelo.NotaDebito;
 import sic.modelo.PaginaRespuestaRest;
@@ -279,17 +280,20 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     private void cargarDetalleProveedor() {
         this.setTitle("Cuenta Corriente del Proveedor: " + proveedor.getRazonSocial());
         txtNombreCliente.setText(proveedor.getRazonSocial());
-        txtDomicilioCliente.setText(proveedor.getDireccion() 
-                + " " + proveedor.getLocalidad().getNombre() 
-                + " " + proveedor.getLocalidad().getNombreProvincia()
-                + " " + proveedor.getLocalidad().getNombrePais());        
-        if (proveedor.getIdFiscal() != null) txtIDFiscalCliente.setText(proveedor.getIdFiscal().toString());
-        txtCondicionIVACliente.setText(proveedor.getCategoriaIVA().toString());
         try {
+            Localidad localidadDelProveedor = RestClient.getRestTemplate().getForObject("/localidades/" + proveedor.getIdLocalidad(), Localidad.class);
+            txtDomicilioCliente.setText(proveedor.getDireccion()
+                    + " " + localidadDelProveedor.getNombre()
+                    + " " + localidadDelProveedor.getNombreProvincia()
+                    + " " + localidadDelProveedor.getNombrePais());
+            if (proveedor.getIdFiscal() != null) {
+                txtIDFiscalCliente.setText(proveedor.getIdFiscal().toString());
+            }
+            txtCondicionIVACliente.setText(proveedor.getCategoriaIVA().toString());
             cuentaCorriente = RestClient.getRestTemplate()
                     .getForObject("/cuentas-corriente/proveedores/" + proveedor.getId_Proveedor(), CuentaCorrienteProveedor.class);
         } catch (RestClientResponseException ex) {
