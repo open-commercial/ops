@@ -125,10 +125,12 @@ public class DetalleEmpresaGUI extends JDialog {
         dc_FechaInicioActividad.setDate(empresaModificar.getFechaInicioActividad());
         txt_Email.setText(empresaModificar.getEmail());
         txt_Telefono.setText(empresaModificar.getTelefono());
-        Provincia provinciaDeEmpresa = RestClient.getRestTemplate().getForObject("/provincias/" + empresaModificar.getLocalidad().getIdProvincia(), Provincia.class);
-        cmb_Pais.setSelectedItem(provinciaDeEmpresa.getPais());
-        cmb_Provincia.setSelectedItem(provinciaDeEmpresa);
-        cmb_Localidad.setSelectedItem(empresaModificar.getLocalidad());
+        Localidad localidadDeEmpresa = RestClient.getRestTemplate().getForObject("/localidades/" + empresaModificar.getIdLocalidad(), Localidad.class);
+        Provincia provinciaDeEmpresa = RestClient.getRestTemplate().getForObject("/provincias/" + localidadDeEmpresa.getIdProvincia(), Provincia.class);
+        Pais paisDeEmpresa = RestClient.getRestTemplate().getForObject("/paises/" + provinciaDeEmpresa.getIdPais(), Pais.class);
+        cmb_Pais.setSelectedItem(paisDeEmpresa);
+        cmb_Provincia.setSelectedItem(provinciaDeEmpresa);        
+        cmb_Localidad.setSelectedItem(localidadDeEmpresa);
         if (empresaModificar.getLogo() == null || "".equals(empresaModificar.getLogo())) {
             lbl_Logo.setText("SIN IMAGEN");
             logo = null;
@@ -499,9 +501,8 @@ public class DetalleEmpresaGUI extends JDialog {
                 empresa.setIngresosBrutos((Long) txtIngresosBrutos.getValue());
                 empresa.setFechaInicioActividad(dc_FechaInicioActividad.getDate());
                 empresa.setEmail(txt_Email.getText().trim());
-                empresa.setTelefono(txt_Telefono.getText().trim());
-                empresa.setLocalidad((Localidad) cmb_Localidad.getSelectedItem());                
-                empresa = RestClient.getRestTemplate().postForObject("/empresas", empresa, Empresa.class);            
+                empresa.setTelefono(txt_Telefono.getText().trim());               
+                empresa = RestClient.getRestTemplate().postForObject("/empresas?idLocalidad=" + ((Localidad) cmb_Localidad.getSelectedItem()).getId_Localidad(), empresa, Empresa.class);            
                 mensaje = "La Empresa " + txt_Nombre.getText().trim() + " se guardó correctamente.";
                 if (logo == null) {
                     empresa.setLogo("");
@@ -521,14 +522,13 @@ public class DetalleEmpresaGUI extends JDialog {
                 empresaModificar.setFechaInicioActividad(dc_FechaInicioActividad.getDate());
                 empresaModificar.setEmail(txt_Email.getText().trim());
                 empresaModificar.setTelefono(txt_Telefono.getText().trim());
-                empresaModificar.setLocalidad((Localidad) cmb_Localidad.getSelectedItem());   
                 if (cambioLogo && logo != null) {
                     empresaModificar.setLogo(RestClient.getRestTemplate()
                             .postForObject("/empresas/" + empresaModificar.getId_Empresa() + "/logo", logo, String.class));
                 } else if (cambioLogo && logo == null) {
                     empresaModificar.setLogo(null);
                 }
-                RestClient.getRestTemplate().put("/empresas", empresaModificar);            
+                RestClient.getRestTemplate().put("/empresas?idLocalidad=" + ((Localidad) cmb_Localidad.getSelectedItem()).getId_Localidad(), empresaModificar);            
                 mensaje = "La Empresa " + txt_Nombre.getText().trim() + " se modificó correctamente.";
             }
             LOGGER.warn(mensaje);

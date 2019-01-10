@@ -266,8 +266,7 @@ public class DetalleProvinciaGUI extends JDialog {
         try {
             Provincia provincia = new Provincia();
             provincia.setNombre(txt_Nombre.getText().trim());
-            provincia.setPais((Pais) cmb_Paises.getSelectedItem());
-            RestClient.getRestTemplate().postForObject("/provincias", provincia, Provincia.class);
+            RestClient.getRestTemplate().postForObject("/provincias?idPais=" + ((Pais) cmb_Paises.getSelectedItem()).getId_Pais(), provincia, Provincia.class);
             txt_Nombre.setText("");
             this.cargarProvinciasDelPais((Pais) cmb_PaisesBusqueda.getSelectedItem());
         } catch (RestClientResponseException ex) {
@@ -300,8 +299,7 @@ public class DetalleProvinciaGUI extends JDialog {
                 Provincia provinciaModificada = new Provincia();
                 provinciaModificada.setId_Provincia(provinciaSeleccionada.getId_Provincia());
                 provinciaModificada.setNombre(txt_Nombre.getText().trim());
-                provinciaModificada.setPais((Pais) cmb_Paises.getSelectedItem());
-                RestClient.getRestTemplate().put("/provincias", provinciaModificada);
+                RestClient.getRestTemplate().put("/provincias?idPais=" + ((Pais) cmb_Paises.getSelectedItem()).getId_Pais(), provinciaModificada);
                 txt_Nombre.setText("");
                 provinciaSeleccionada = null;
                 cargarProvinciasDelPais((Pais) cmb_PaisesBusqueda.getSelectedItem());

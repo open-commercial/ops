@@ -49,7 +49,7 @@ public class DetalleTransportistaGUI extends JDialog {
         try {
             Localidad localidadDelTransportista = RestClient.getRestTemplate().getForObject("/localidades/" + transportistaModificar.getIdLocalidad(), Localidad.class);
             Provincia provinciaDelTransportista = RestClient.getRestTemplate().getForObject("/provincias/" + localidadDelTransportista.getIdProvincia(), Provincia.class);
-            Pais paisDelTransportista = RestClient.getRestTemplate().getForObject("/paises/" + provinciaDelTransportista.getPais().getId_Pais(), Pais.class);
+            Pais paisDelTransportista = RestClient.getRestTemplate().getForObject("/paises/" + provinciaDelTransportista.getIdPais(), Pais.class);
             cmb_Pais.setSelectedItem(paisDelTransportista);
             cmb_Provincia.setSelectedItem(provinciaDelTransportista);
             cmb_Localidad.setSelectedItem(localidadDelTransportista);

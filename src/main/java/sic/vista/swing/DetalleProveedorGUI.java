@@ -52,15 +52,26 @@ public class DetalleProveedorGUI extends JDialog {
         txtIdFiscal.setValue(proveedorModificar.getIdFiscal());
         cmbCategoriaIVA.setSelectedItem(proveedorModificar.getCategoriaIVA());
         txtDireccion.setText(proveedorModificar.getDireccion());
-        Provincia provinciaDelProveedor = RestClient.getRestTemplate().getForObject("/provincias/" + proveedorModificar.getLocalidad().getIdProvincia(), Provincia.class);
-        cmbPais.setSelectedItem(provinciaDelProveedor.getPais());
-        cmbProvincia.setSelectedItem(provinciaDelProveedor);
+        try {
+            Provincia provinciaDelProveedor = RestClient.getRestTemplate().getForObject("/provincias/" + proveedorModificar.getLocalidad().getIdProvincia(), Provincia.class);
+            Pais paisDelProveedor = RestClient.getRestTemplate().getForObject("/paises/" + provinciaDelProveedor.getIdPais(), Pais.class);
+            cmbPais.setSelectedItem(paisDelProveedor);
+            cmbProvincia.setSelectedItem(provinciaDelProveedor);
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
         cmbLocalidad.setSelectedItem(proveedorModificar.getLocalidad());
         txtTelPrimario.setText(proveedorModificar.getTelPrimario());
         txtTelSecundario.setText(proveedorModificar.getTelSecundario());
         txtContacto.setText(proveedorModificar.getContacto());
         txtEmail.setText(proveedorModificar.getEmail());
         txtWeb.setText(proveedorModificar.getWeb());
+
     }
 
     private void limpiarYRecargarComponentes() {
