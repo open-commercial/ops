@@ -91,7 +91,6 @@ public class ModificacionMultipleProductosGUI extends JDialog {
             cmb_Proveedor.removeAllItems();
             String uri = "/proveedores/busqueda/criteria?"
                     + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                    + "&conSaldo=false"
                     + "&pagina=0"
                     + "&tamanio=" + Integer.MAX_VALUE;
             PaginaRespuestaRest<Proveedor> response = RestClient.getRestTemplate()
