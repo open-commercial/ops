@@ -148,18 +148,18 @@
                               <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Component id="txtProveedor" max="32767" attributes="0"/>
-                                      <Component id="cmb_Rubro" alignment="0" pref="339" max="32767" attributes="2"/>
-                                      <Component id="cmb_Medida" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="cmb_Medida" alignment="0" pref="339" max="32767" attributes="0"/>
+                                      <Component id="cmb_Rubro" alignment="0" max="32767" attributes="2"/>
                                   </Group>
                                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="btn_Rubros" alignment="1" min="-2" max="-2" attributes="1"/>
+                                      <Component id="btn_Medidas" alignment="1" min="-2" max="-2" attributes="0"/>
                                       <Group type="102" alignment="1" attributes="0">
                                           <Component id="btnBuscarProveedor" linkSize="12" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                           <Component id="btn_NuevoProveedor" linkSize="12" min="-2" max="-2" attributes="1"/>
                                       </Group>
-                                      <Component id="btn_Medidas" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btn_Rubros" alignment="1" min="-2" max="-2" attributes="1"/>
                                   </Group>
                               </Group>
                           </Group>
