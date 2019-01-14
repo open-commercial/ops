@@ -181,7 +181,7 @@ public class FacturasCompraGUI extends JInternalFrame {
             criteria += "&desde=" + dc_FechaDesde.getDate().getTime();
             criteria += "&hasta=" + dc_FechaHasta.getDate().getTime();
         }
-        if (chk_Proveedor.isSelected()) {
+        if (chk_Proveedor.isSelected() && proveedorSeleccionado != null) {
             criteria += "&idProveedor=" + proveedorSeleccionado.getId_Proveedor();
         }
         if (chk_TipoFactura.isSelected()) {

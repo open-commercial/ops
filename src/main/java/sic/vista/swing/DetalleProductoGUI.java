@@ -273,7 +273,7 @@ public class DetalleProductoGUI extends JDialog {
                     .addComponent(lbl_Proveedor)
                     .addComponent(btnBuscarProveedor)
                     .addComponent(btn_NuevoProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtProveedor, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addComponent(txtProveedor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_Medidas, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -282,7 +282,7 @@ public class DetalleProductoGUI extends JDialog {
                 .addContainerGap())
         );
 
-        panelSuperiorLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarProveedor, btn_Medidas, btn_NuevoProveedor, btn_Rubros, cmb_Medida, cmb_Rubro});
+        panelSuperiorLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarProveedor, btn_Medidas, btn_NuevoProveedor, btn_Rubros, cmb_Medida, cmb_Rubro, txtProveedor});
 
         panelSuperiorLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txt_Codigo, txt_Descripcion});
 
