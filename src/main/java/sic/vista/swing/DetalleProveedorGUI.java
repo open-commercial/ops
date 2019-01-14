@@ -143,9 +143,9 @@ public class DetalleProveedorGUI extends JDialog {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) 
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-            btnNuevaLocalidad.setEnabled(false);
-            btnNuevaProvincia.setEnabled(false);
-            btnNuevoPais.setEnabled(false);
+            btnNuevaLocalidad.setEnabled(true);
+            btnNuevaProvincia.setEnabled(true);
+            btnNuevoPais.setEnabled(true);
         } else {
             btnNuevaLocalidad.setEnabled(false);
             btnNuevaProvincia.setEnabled(false);
