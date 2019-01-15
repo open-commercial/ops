@@ -110,6 +110,7 @@ public class PrincipalGUI extends JFrame {
         mnuItm_NotasCompra = new javax.swing.JMenuItem();
         mnu_Ventas = new javax.swing.JMenu();
         mnuItm_FacturasVenta = new javax.swing.JMenuItem();
+        mnuItm_RecibosVenta = new javax.swing.JMenuItem();
         mnuItm_Pedidos = new javax.swing.JMenuItem();
         mnuItm_Clientes = new javax.swing.JMenuItem();
         mnuItm_NotasVenta = new javax.swing.JMenuItem();
@@ -237,6 +238,14 @@ public class PrincipalGUI extends JFrame {
             }
         });
         mnu_Ventas.add(mnuItm_FacturasVenta);
+
+        mnuItm_RecibosVenta.setText("Recibos");
+        mnuItm_RecibosVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuItm_RecibosVentaActionPerformed(evt);
+            }
+        });
+        mnu_Ventas.add(mnuItm_RecibosVenta);
 
         mnuItm_Pedidos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/PedidoFacturar_16x16.png"))); // NOI18N
         mnuItm_Pedidos.setText("Pedidos");
@@ -676,6 +685,25 @@ public class PrincipalGUI extends JFrame {
         }
     }//GEN-LAST:event_mnuItm_NotasCompraActionPerformed
 
+    private void mnuItm_RecibosVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_RecibosVentaActionPerformed
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), RecibosVentaGUI.class);
+        if (gui == null) {
+            gui = new RecibosVentaGUI();
+            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+            getDesktopPane().add(gui);
+            gui.setVisible(true);
+        } else {
+            try {
+                gui.setSelected(true);
+            } catch (PropertyVetoException ex) {
+                String msjError = "No se pudo seleccionar la ventana requerida.";
+                LOGGER.error(msjError + " - " + ex.getMessage());
+                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_mnuItm_RecibosVentaActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane dp_Escritorio;
     private javax.swing.JMenuBar mb_BarraMenues;
@@ -693,6 +721,7 @@ public class PrincipalGUI extends JFrame {
     private javax.swing.JMenuItem mnuItm_Pedidos;
     private javax.swing.JMenuItem mnuItm_Productos;
     private javax.swing.JMenuItem mnuItm_Proveedores;
+    private javax.swing.JMenuItem mnuItm_RecibosVenta;
     private javax.swing.JMenuItem mnuItm_Salir;
     private javax.swing.JMenuItem mnuItm_Transportistas;
     private javax.swing.JMenuItem mnuItm_Usuarios;
