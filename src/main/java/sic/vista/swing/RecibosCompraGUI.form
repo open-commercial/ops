@@ -5,7 +5,7 @@
     <Property name="closable" type="boolean" value="true"/>
     <Property name="maximizable" type="boolean" value="true"/>
     <Property name="resizable" type="boolean" value="true"/>
-    <Property name="title" type="java.lang.String" value="Administrar Recibos de Venta"/>
+    <Property name="title" type="java.lang.String" value="Administrar Recibos de Compra"/>
     <Property name="frameIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
       <Image iconType="3" name="/sic/icons/SIC_16_square.png"/>
     </Property>
@@ -85,16 +85,13 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="sp_Resultados" pref="224" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="btn_VerDetalle" linkSize="3" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btn_Eliminar" linkSize="3" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="btn_VerDetalle" linkSize="3" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_Eliminar" linkSize="3" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="panelNumeros" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -217,7 +214,6 @@
                   <Component id="subPanelFiltros1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="subPanelFiltros2" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
               </Group>
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
@@ -254,7 +250,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="chk_Concepto" alignment="0" min="-2" pref="139" max="-2" attributes="0"/>
                           <Component id="chk_Usuario" alignment="0" min="-2" pref="139" max="-2" attributes="0"/>
-                          <Component id="chk_Cliente" alignment="0" min="-2" pref="139" max="-2" attributes="0"/>
+                          <Component id="chk_Proveedor" alignment="0" min="-2" pref="139" max="-2" attributes="0"/>
                           <Component id="chk_Fecha" alignment="0" min="-2" pref="139" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -270,7 +266,7 @@
                           </Group>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="txtCliente" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="txtProveedor" alignment="0" max="32767" attributes="0"/>
                                   <Component id="txtUsuario" alignment="0" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
@@ -296,8 +292,8 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="chk_Cliente" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtCliente" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="chk_Proveedor" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtProveedor" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="btnBuscarCliente" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -324,12 +320,12 @@
                 <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_FechaItemStateChanged"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JCheckBox" name="chk_Cliente">
+            <Component class="javax.swing.JCheckBox" name="chk_Proveedor">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Cliente:"/>
+                <Property name="text" type="java.lang.String" value="Proveedor:"/>
               </Properties>
               <Events>
-                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_ClienteItemStateChanged"/>
+                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_ProveedorItemStateChanged"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="lbl_Hasta">
@@ -365,7 +361,7 @@
                 <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_UsuarioItemStateChanged"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JTextField" name="txtCliente">
+            <Component class="javax.swing.JTextField" name="txtProveedor">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="enabled" type="boolean" value="false"/>

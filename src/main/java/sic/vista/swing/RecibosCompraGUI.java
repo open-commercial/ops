@@ -8,7 +8,9 @@ import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,10 +25,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Usuario;
 import sic.modelo.PaginaRespuestaRest;
+import sic.modelo.Proveedor;
 import sic.modelo.Recibo;
 import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
@@ -35,12 +37,12 @@ import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
 import sic.util.Utilidades;
 
-public class RecibosVentaGUI extends JInternalFrame {
+public class RecibosCompraGUI extends JInternalFrame {
 
     private ModeloTabla modeloTablaFacturas = new ModeloTabla();
     private List<Recibo> recibosTotal = new ArrayList<>();
     private List<Recibo> recibosParcial = new ArrayList<>();
-    private Cliente clienteSeleccionado;
+    private Proveedor proveedorSeleccionado;
     private Usuario usuarioSeleccionado;
     private boolean tienePermisoSegunRoles;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -48,7 +50,7 @@ public class RecibosVentaGUI extends JInternalFrame {
     private static int totalElementosBusqueda;
     private static int NUMERO_PAGINA = 0;    
 
-    public RecibosVentaGUI() {
+    public RecibosCompraGUI() {
         this.initComponents();
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
@@ -64,8 +66,8 @@ public class RecibosVentaGUI extends JInternalFrame {
     
     private String getUriCriteria() {
         String uriCriteria = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
-        if (chk_Cliente.isSelected() && clienteSeleccionado != null) {
-            uriCriteria += "&idCliente=" + clienteSeleccionado.getId_Cliente();
+        if (chk_Proveedor.isSelected() && proveedorSeleccionado != null) {
+            uriCriteria += "&idProveedor=" + proveedorSeleccionado.getId_Proveedor();
         }
         if (chk_Fecha.isSelected()) {
             uriCriteria += "&desde=" + dc_FechaDesde.getDate().getTime()
@@ -111,7 +113,7 @@ public class RecibosVentaGUI extends JInternalFrame {
         String[] encabezados = new String[6];
         encabezados[0] = "Fecha Recibo";
         encabezados[1] = "Nº Recibo";
-        encabezados[2] = "Cliente";
+        encabezados[2] = "Proveedor";
         encabezados[3] = "Usuario";
         encabezados[4] = "Concepto";
         encabezados[5] = "Monto";
@@ -142,7 +144,7 @@ public class RecibosVentaGUI extends JInternalFrame {
 
     private void calcularResultados(String uriCriteria) {
         txt_ResultMontoRecibos.setValue(RestClient.getRestTemplate()
-                .getForObject("/recibos/venta/monto/criteria?" + uriCriteria, BigDecimal.class));
+                .getForObject("/recibos/compra/monto/criteria?" + uriCriteria, BigDecimal.class));
     }
 
     private void buscar(boolean calcularResultados) {
@@ -150,7 +152,7 @@ public class RecibosVentaGUI extends JInternalFrame {
         String uriCriteria = getUriCriteria();
         try {
             PaginaRespuestaRest<Recibo> response = RestClient.getRestTemplate()
-                    .exchange("/recibos/venta/busqueda/criteria?" + uriCriteria, HttpMethod.GET, null,
+                    .exchange("/recibos/compra/busqueda/criteria?" + uriCriteria, HttpMethod.GET, null,
                             new ParameterizedTypeReference<PaginaRespuestaRest<Recibo>>() {
                     })
                     .getBody();
@@ -182,8 +184,8 @@ public class RecibosVentaGUI extends JInternalFrame {
             dc_FechaDesde.setEnabled(false);
             dc_FechaHasta.setEnabled(false);
         }
-        chk_Cliente.setEnabled(status);
-        if (status == true && chk_Cliente.isSelected() == true) {
+        chk_Proveedor.setEnabled(status);
+        if (status == true && chk_Proveedor.isSelected() == true) {
             btnBuscarCliente.setEnabled(true);
         } else {
             btnBuscarCliente.setEnabled(false);
@@ -225,7 +227,7 @@ public class RecibosVentaGUI extends JInternalFrame {
             } else {
                 fila[1] = recibo.getNumSerie() + " - " + recibo.getNumRecibo();
             }
-            fila[2] = recibo.getNombreFiscalCliente();
+            fila[2] = recibo.getRazonSocialProveedor();
             fila[3] = recibo.getNombreUsuario();
             fila[4] = recibo.getConcepto();
             fila[5] = recibo.getMonto();
@@ -258,32 +260,15 @@ public class RecibosVentaGUI extends JInternalFrame {
     }
 
     private void lanzarReporteRecibo() {
-        if (Desktop.isDesktopSupported()) {
-            try {
-                byte[] reporte = RestClient.getRestTemplate()
-                        .getForObject("/recibos/" + recibosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getIdRecibo() + "/reporte",
-                                byte[].class);
-                File f = new File(System.getProperty("user.home") + "/Recibo.pdf");
-                Files.write(f.toPath(), reporte);
-                Desktop.getDesktop().open(f);
-            } catch (IOException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        Recibo recibo = RestClient.getRestTemplate()
+                .getForObject("/recibos/" + recibosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getIdRecibo(), Recibo.class);
+        DecimalFormat dFormat = new DecimalFormat("##,##0.00");
+        String mensaje = "Forma de Pago: " + recibo.getNombreFormaDePago()
+                + "\nMonto: " + dFormat.format(recibo.getMonto().setScale(2, RoundingMode.HALF_UP))
+                + "\nConcepto: " + recibo.getConcepto();
+        JOptionPane.showMessageDialog(this, mensaje,
+                "Detalle Recibo Nº " + recibo.getNumSerie() + " - " + recibo.getNumRecibo(),
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
@@ -320,13 +305,13 @@ public class RecibosVentaGUI extends JInternalFrame {
         panelFiltros = new javax.swing.JPanel();
         subPanelFiltros1 = new javax.swing.JPanel();
         chk_Fecha = new javax.swing.JCheckBox();
-        chk_Cliente = new javax.swing.JCheckBox();
+        chk_Proveedor = new javax.swing.JCheckBox();
         lbl_Hasta = new javax.swing.JLabel();
         lbl_Desde = new javax.swing.JLabel();
         dc_FechaDesde = new com.toedter.calendar.JDateChooser();
         dc_FechaHasta = new com.toedter.calendar.JDateChooser();
         chk_Usuario = new javax.swing.JCheckBox();
-        txtCliente = new javax.swing.JTextField();
+        txtProveedor = new javax.swing.JTextField();
         btnBuscarCliente = new javax.swing.JButton();
         txtUsuario = new javax.swing.JTextField();
         btnBuscarUsuarios = new javax.swing.JButton();
@@ -346,7 +331,7 @@ public class RecibosVentaGUI extends JInternalFrame {
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
-        setTitle("Administrar Recibos de Venta");
+        setTitle("Administrar Recibos de Compra");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/SIC_16_square.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
@@ -446,14 +431,12 @@ public class RecibosVentaGUI extends JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelResultadosLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btn_VerDetalle)
-                            .addComponent(btn_Eliminar)))
+                    .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btn_VerDetalle)
+                        .addComponent(btn_Eliminar))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(panelNumeros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
         );
@@ -469,10 +452,10 @@ public class RecibosVentaGUI extends JInternalFrame {
             }
         });
 
-        chk_Cliente.setText("Cliente:");
-        chk_Cliente.addItemListener(new java.awt.event.ItemListener() {
+        chk_Proveedor.setText("Proveedor:");
+        chk_Proveedor.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                chk_ClienteItemStateChanged(evt);
+                chk_ProveedorItemStateChanged(evt);
             }
         });
 
@@ -496,9 +479,9 @@ public class RecibosVentaGUI extends JInternalFrame {
             }
         });
 
-        txtCliente.setEditable(false);
-        txtCliente.setEnabled(false);
-        txtCliente.setOpaque(false);
+        txtProveedor.setEditable(false);
+        txtProveedor.setEnabled(false);
+        txtProveedor.setOpaque(false);
 
         btnBuscarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
         btnBuscarCliente.setEnabled(false);
@@ -538,7 +521,7 @@ public class RecibosVentaGUI extends JInternalFrame {
                 .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(chk_Concepto, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chk_Usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chk_Cliente, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chk_Proveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chk_Fecha, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -552,7 +535,7 @@ public class RecibosVentaGUI extends JInternalFrame {
                         .addComponent(dc_FechaHasta, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE))
                     .addGroup(subPanelFiltros1Layout.createSequentialGroup()
                         .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtCliente)
+                            .addComponent(txtProveedor)
                             .addComponent(txtUsuario))
                         .addGap(0, 0, 0)
                         .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -571,8 +554,8 @@ public class RecibosVentaGUI extends JInternalFrame {
                     .addComponent(chk_Fecha))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(chk_Cliente)
-                    .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chk_Proveedor)
+                    .addComponent(txtProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscarCliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
@@ -587,7 +570,7 @@ public class RecibosVentaGUI extends JInternalFrame {
 
         subPanelFiltros1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarUsuarios, txtUsuario, txt_Concepto});
 
-        subPanelFiltros1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarCliente, txtCliente});
+        subPanelFiltros1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarCliente, txtProveedor});
 
         chk_NumRecibo.setText("Nº de Recibo:");
         chk_NumRecibo.addItemListener(new java.awt.event.ItemListener() {
@@ -670,8 +653,7 @@ public class RecibosVentaGUI extends JInternalFrame {
                 .addGap(6, 6, 6)
                 .addComponent(subPanelFiltros1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(subPanelFiltros2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0))
+                .addComponent(subPanelFiltros2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(panelFiltrosLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btn_Buscar)
@@ -765,16 +747,16 @@ public class RecibosVentaGUI extends JInternalFrame {
         }
 }//GEN-LAST:event_chk_FechaItemStateChanged
 
-    private void chk_ClienteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ClienteItemStateChanged
-        if (chk_Cliente.isSelected() == true) {
+    private void chk_ProveedorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ProveedorItemStateChanged
+        if (chk_Proveedor.isSelected() == true) {
             btnBuscarCliente.setEnabled(true);
             btnBuscarCliente.requestFocus();
-            txtCliente.setEnabled(true);
+            txtProveedor.setEnabled(true);
         } else {
             btnBuscarCliente.setEnabled(false);
-            txtCliente.setEnabled(false);
+            txtProveedor.setEnabled(false);
         }
-}//GEN-LAST:event_chk_ClienteItemStateChanged
+}//GEN-LAST:event_chk_ProveedorItemStateChanged
 
     private void btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarActionPerformed
         this.limpiarYBuscar(true);
@@ -836,13 +818,13 @@ public class RecibosVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_UsuarioItemStateChanged
 
     private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarClienteActionPerformed
-        BuscarClientesGUI buscarClientesGUI = new BuscarClientesGUI();
-        buscarClientesGUI.setModal(true);
-        buscarClientesGUI.setLocationRelativeTo(this);
-        buscarClientesGUI.setVisible(true);
-        if (buscarClientesGUI.getClienteSeleccionado() != null) {
-            clienteSeleccionado = buscarClientesGUI.getClienteSeleccionado();
-            txtCliente.setText(clienteSeleccionado.getNombreFiscal());
+        BuscarProveedoresGUI buscarProveedoresGUI = new BuscarProveedoresGUI();
+        buscarProveedoresGUI.setModal(true);
+        buscarProveedoresGUI.setLocationRelativeTo(this);
+        buscarProveedoresGUI.setVisible(true);
+        if (buscarProveedoresGUI.getProveedorSeleccionado() != null) {
+            proveedorSeleccionado = buscarProveedoresGUI.getProveedorSeleccionado();
+            txtProveedor.setText(proveedorSeleccionado.getRazonSocial());
         }
     }//GEN-LAST:event_btnBuscarClienteActionPerformed
 
@@ -907,10 +889,10 @@ public class RecibosVentaGUI extends JInternalFrame {
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_VerDetalle;
-    private javax.swing.JCheckBox chk_Cliente;
     private javax.swing.JCheckBox chk_Concepto;
     private javax.swing.JCheckBox chk_Fecha;
     private javax.swing.JCheckBox chk_NumRecibo;
+    private javax.swing.JCheckBox chk_Proveedor;
     private javax.swing.JCheckBox chk_Usuario;
     private javax.swing.JComboBox<String> cmbOrden;
     private javax.swing.JComboBox<String> cmbSentido;
@@ -929,7 +911,7 @@ public class RecibosVentaGUI extends JInternalFrame {
     private javax.swing.JPanel subPanelFiltros1;
     private javax.swing.JPanel subPanelFiltros2;
     private javax.swing.JTable tbl_Resultados;
-    private javax.swing.JTextField txtCliente;
+    private javax.swing.JTextField txtProveedor;
     private javax.swing.JTextField txtUsuario;
     private javax.swing.JTextField txt_Concepto;
     private javax.swing.JFormattedTextField txt_NroRecibo;
