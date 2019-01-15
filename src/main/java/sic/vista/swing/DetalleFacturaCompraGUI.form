@@ -96,15 +96,21 @@
                       <Component id="lbl_Transporte" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="cmb_TipoFactura" max="32767" attributes="1"/>
-                      <Component id="cmb_Transportista" alignment="0" max="32767" attributes="2"/>
-                      <Component id="cmb_Proveedor" alignment="0" max="32767" attributes="2"/>
-                  </Group>
-                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="btn_NuevoTransportista" max="32767" attributes="1"/>
-                      <Component id="btn_NuevoProveedor" max="32767" attributes="1"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Group type="102" alignment="1" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="cmb_TipoFactura" pref="260" max="32767" attributes="1"/>
+                              <Component id="cmb_Transportista" alignment="0" max="32767" attributes="2"/>
+                          </Group>
+                          <Component id="btn_NuevoTransportista" min="-2" max="-2" attributes="1"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="txtProveedor" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                          <Component id="btnBuscarProveedor" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                          <Component id="btn_NuevoProveedor" min="-2" max="-2" attributes="1"/>
+                      </Group>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
@@ -116,8 +122,9 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lbl_Proveedor" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmb_Proveedor" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btn_NuevoProveedor" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btn_NuevoProveedor" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtProveedor" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnBuscarProveedor" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -128,7 +135,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lbl_TipoFactura" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmb_TipoFactura" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="cmb_TipoFactura" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -175,16 +182,6 @@
             <Property name="text" type="java.lang.String" value="* Proveedor:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JComboBox" name="cmb_Proveedor">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmb_ProveedorItemStateChanged"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JButton" name="btn_NuevoProveedor">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -193,7 +190,6 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/sic/icons/AddProviderBag_16x16.png"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Nuevo"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_NuevoProveedorActionPerformed"/>
@@ -216,6 +212,22 @@
           </Properties>
           <Events>
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmb_TipoFacturaItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtProveedor">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="opaque" type="boolean" value="false"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnBuscarProveedor">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/sic/icons/Search_16x16.png"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarProveedorActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
@@ -253,7 +265,7 @@
                       <Component id="btn_QuitarDeLista" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="sp_Renglones" pref="217" max="32767" attributes="0"/>
+                  <Component id="sp_Renglones" pref="210" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -650,6 +662,7 @@
           <Image iconType="3" name="/sic/icons/Accept_16x16.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Guardar"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_GuardarActionPerformed"/>

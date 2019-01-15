@@ -20,15 +20,12 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Medida;
 import sic.modelo.NuevoProducto;
-import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
 import sic.modelo.Proveedor;
 import sic.modelo.Rol;
@@ -50,8 +47,8 @@ public class DetalleProductoGUI extends JDialog {
     private Producto productoParaModificar;
     private final TipoDeOperacion operacion;        
     private List<Medida> medidas;
-    private List<Rubro> rubros;
-    private List<Proveedor> proveedores;    
+    private List<Rubro> rubros;  
+    private Proveedor proveedorSeleccionado;
     private BigDecimal precioListaAnterior = BigDecimal.ZERO;
     private final static BigDecimal IVA_21 = new BigDecimal("21");	
     private final static BigDecimal IVA_105 = new BigDecimal("10.5");
@@ -93,11 +90,12 @@ public class DetalleProductoGUI extends JDialog {
         cmb_Rubro = new javax.swing.JComboBox();
         btn_Rubros = new javax.swing.JButton();
         lbl_Proveedor = new javax.swing.JLabel();
-        cmb_Proveedor = new javax.swing.JComboBox();
         btn_NuevoProveedor = new javax.swing.JButton();
         btn_Medidas = new javax.swing.JButton();
         cmb_Medida = new javax.swing.JComboBox();
         lbl_Medida = new javax.swing.JLabel();
+        btnBuscarProveedor = new javax.swing.JButton();
+        txtProveedor = new javax.swing.JTextField();
         panelPrecios = new javax.swing.JPanel();
         lbl_PrecioCosto = new javax.swing.JLabel();
         lbl_Ganancia = new javax.swing.JLabel();
@@ -191,7 +189,6 @@ public class DetalleProductoGUI extends JDialog {
 
         btn_NuevoProveedor.setForeground(java.awt.Color.blue);
         btn_NuevoProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddProviderBag_16x16.png"))); // NOI18N
-        btn_NuevoProveedor.setText("Nuevo");
         btn_NuevoProveedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_NuevoProveedorActionPerformed(evt);
@@ -209,7 +206,17 @@ public class DetalleProductoGUI extends JDialog {
 
         lbl_Medida.setForeground(java.awt.Color.red);
         lbl_Medida.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Medida.setText("* Unidad de Medida:");
+        lbl_Medida.setText("* U. de Medida:");
+
+        btnBuscarProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
+        btnBuscarProveedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarProveedorActionPerformed(evt);
+            }
+        });
+
+        txtProveedor.setEditable(false);
+        txtProveedor.setOpaque(false);
 
         javax.swing.GroupLayout panelSuperiorLayout = new javax.swing.GroupLayout(panelSuperior);
         panelSuperior.setLayout(panelSuperiorLayout);
@@ -221,24 +228,31 @@ public class DetalleProductoGUI extends JDialog {
                     .addComponent(lbl_Codigo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_Medida, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_Proveedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Rubro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Descripcion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbl_Descripcion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_Rubro, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelSuperiorLayout.createSequentialGroup()
-                        .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmb_Rubro, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmb_Proveedor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmb_Medida, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, 0)
-                        .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btn_NuevoProveedor)
-                            .addComponent(btn_Medidas)
-                            .addComponent(btn_Rubros)))
                     .addComponent(txt_Codigo)
-                    .addComponent(txt_Descripcion))
+                    .addComponent(txt_Descripcion)
+                    .addGroup(panelSuperiorLayout.createSequentialGroup()
+                        .addComponent(txtProveedor)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnBuscarProveedor)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_NuevoProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelSuperiorLayout.createSequentialGroup()
+                        .addComponent(cmb_Medida, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_Medidas, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelSuperiorLayout.createSequentialGroup()
+                        .addComponent(cmb_Rubro, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_Rubros, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
+
+        panelSuperiorLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnBuscarProveedor, btn_NuevoProveedor});
+
         panelSuperiorLayout.setVerticalGroup(
             panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelSuperiorLayout.createSequentialGroup()
@@ -251,24 +265,27 @@ public class DetalleProductoGUI extends JDialog {
                     .addComponent(txt_Descripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_Descripcion))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmb_Rubro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_Rubros, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Rubro))
+                .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(txtProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_Proveedor)
+                    .addComponent(btn_NuevoProveedor)
+                    .addComponent(btnBuscarProveedor))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmb_Proveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_NuevoProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Proveedor))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_Medidas, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(cmb_Medida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Medida))
+                    .addComponent(lbl_Medida)
+                    .addComponent(btn_Medidas))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(cmb_Rubro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_Rubro)
+                    .addComponent(btn_Rubros))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panelSuperiorLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Medidas, btn_NuevoProveedor, btn_Rubros, cmb_Medida, cmb_Proveedor, cmb_Rubro});
+        panelSuperiorLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarProveedor, btn_Medidas, btn_NuevoProveedor, btn_Rubros, cmb_Medida, cmb_Rubro, txtProveedor});
+
+        panelSuperiorLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txt_Codigo, txt_Descripcion});
 
         panelPrecios.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -382,7 +399,7 @@ public class DetalleProductoGUI extends JDialog {
                 .addContainerGap()
                 .addGroup(panelPreciosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_PrecioLista, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_PVP, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
+                    .addComponent(lbl_PVP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_IVA, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_Ganancia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_PrecioCosto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -486,22 +503,22 @@ public class DetalleProductoGUI extends JDialog {
             panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelCantidadesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panelCantidadesLayout.createSequentialGroup()
                         .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lbl_CantMinima, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lbl_Cantidad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblSinLimite, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(chkSinLimite, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txt_Cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_CantMinima, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txt_CantMinima)
+                            .addComponent(chkSinLimite, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+                            .addComponent(txt_Cantidad)))
                     .addGroup(panelCantidadesLayout.createSequentialGroup()
                         .addComponent(lbl_Bulto, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_Bulto, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addComponent(txt_Bulto)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelCantidadesLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lbl_Bulto, lbl_CantMinima, lbl_Cantidad});
@@ -551,7 +568,7 @@ public class DetalleProductoGUI extends JDialog {
                 .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(panelPrecios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelCantidades, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         tpTabs.addTab("General", panelGeneral);
@@ -607,7 +624,7 @@ public class DetalleProductoGUI extends JDialog {
                         .addComponent(rbPrivado)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(txt_Estante)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panel5Layout.setVerticalGroup(
@@ -771,24 +788,22 @@ public class DetalleProductoGUI extends JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnGuardar))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(tpTabs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnGuardar)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(tpTabs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(tpTabs, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnGuardar)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -806,7 +821,7 @@ public class DetalleProductoGUI extends JDialog {
         txt_CantMinima.setValue(productoParaModificar.getCantMinima());
         txt_Bulto.setValue(productoParaModificar.getBulto());
         cmb_Rubro.setSelectedItem(productoParaModificar.getNombreRubro());
-        cmb_Proveedor.setSelectedItem(productoParaModificar.getRazonSocialProveedor());
+        txtProveedor.setText(productoParaModificar.getRazonSocialProveedor());
         FormatterFechaHora formateador = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO);
         lbl_FechaUltimaModificacion.setText(formateador.format(productoParaModificar.getFechaUltimaModificacion()));
         lbl_FechaAlta.setText(formateador.format(productoParaModificar.getFechaAlta()));
@@ -988,11 +1003,6 @@ public class DetalleProductoGUI extends JDialog {
                 idRubro = r.getId_Rubro();
             }
         }
-        for (Proveedor p : proveedores) {
-            if (p.getRazonSocial().equals(cmb_Proveedor.getSelectedItem())) {
-                idProveedor = p.getId_Proveedor();
-            }
-        }
         if (idMedida == null) {
             mensajeError = mensajeError.concat(ResourceBundle.getBundle("Mensajes")
                     .getString("mensaje_producto_vacio_medida") + "\n");
@@ -1003,10 +1013,16 @@ public class DetalleProductoGUI extends JDialog {
                     .getString("mensaje_producto_vacio_rubro") + "\n");
             ejecutarOperacion = false;
         }
-        if (idProveedor == null) {
-            mensajeError = mensajeError.concat(ResourceBundle.getBundle("Mensajes")
-                    .getString("mensaje_producto_vacio_proveedor") + "\n");
-            ejecutarOperacion = false;
+        if (operacion == TipoDeOperacion.ALTA) {
+            if (proveedorSeleccionado == null) {
+                mensajeError = mensajeError.concat(ResourceBundle.getBundle("Mensajes")
+                        .getString("mensaje_producto_vacio_proveedor") + "\n");
+                ejecutarOperacion = false;
+            } else {
+                idProveedor = proveedorSeleccionado.getId_Proveedor();
+            }
+        } else if (operacion == TipoDeOperacion.ACTUALIZACION && proveedorSeleccionado != null) {
+            idProveedor = proveedorSeleccionado.getId_Proveedor();
         }
         if (ejecutarOperacion) {
             try {
@@ -1032,7 +1048,7 @@ public class DetalleProductoGUI extends JDialog {
                     producto.setFechaVencimiento(dc_Vencimiento.getDate());
                     Producto productoRecuperado = RestClient.getRestTemplate().postForObject("/productos?idMedida=" + idMedida
                             + "&idRubro=" + idRubro
-                            + "&idProveedor=" + idProveedor
+                            + "&idProveedor=" + ((idProveedor != null) ? idProveedor : "")
                             + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                             producto, Producto.class);
                     LOGGER.warn("El producto " + productoRecuperado + " se guardó correctamente");
@@ -1077,7 +1093,7 @@ public class DetalleProductoGUI extends JDialog {
                     }
                     RestClient.getRestTemplate().put("/productos?idMedida=" + idMedida
                             + "&idRubro=" + idRubro
-                            + "&idProveedor=" + idProveedor
+                            + "&idProveedor=" + ((idProveedor != null) ? idProveedor : "")
                             + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                             productoParaModificar);
                     LOGGER.warn("El producto " + productoParaModificar + " se modificó correctamente");
@@ -1102,7 +1118,6 @@ public class DetalleProductoGUI extends JDialog {
         this.prepararComponentes();
         this.cargarMedidas();
         this.cargarRubros();
-        this.cargarProveedores();
         if (operacion == TipoDeOperacion.ALTA) {
             this.setTitle("Nuevo Producto");
         } else if (operacion == TipoDeOperacion.ACTUALIZACION) {
@@ -1224,7 +1239,9 @@ public class DetalleProductoGUI extends JDialog {
     private void txtGananciaPorcentajeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGananciaPorcentajeFocusLost
         try {
             txtGananciaPorcentaje.commitEdit();
-        } catch (ParseException ex) {}
+        } catch (ParseException ex) {
+            
+        }
         this.calcularGananciaNeto();
         this.calcularPVP();
         this.calcularGananciaPorcentaje();
@@ -1274,7 +1291,10 @@ public class DetalleProductoGUI extends JDialog {
         gui_DetalleProveedor.setModal(true);
         gui_DetalleProveedor.setLocationRelativeTo(this);
         gui_DetalleProveedor.setVisible(true);
-        this.cargarProveedores();
+        if (gui_DetalleProveedor.getProveedorCreado() != null) {
+            txtProveedor.setText(gui_DetalleProveedor.getProveedorCreado().getRazonSocial());
+            proveedorSeleccionado = gui_DetalleProveedor.getProveedorCreado();
+        }
     }//GEN-LAST:event_btn_NuevoProveedorActionPerformed
 
     private void btn_RubrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_RubrosActionPerformed
@@ -1322,8 +1342,20 @@ public class DetalleProductoGUI extends JDialog {
         }
     }//GEN-LAST:event_btn_ExaminarArchivosActionPerformed
 
+    private void btnBuscarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProveedorActionPerformed
+        BuscarProveedoresGUI buscarProveedoresGUI = new BuscarProveedoresGUI();
+        buscarProveedoresGUI.setModal(true);
+        buscarProveedoresGUI.setLocationRelativeTo(this);
+        buscarProveedoresGUI.setVisible(true);
+        if (buscarProveedoresGUI.getProveedorSeleccionado() != null) {
+            proveedorSeleccionado = buscarProveedoresGUI.getProveedorSeleccionado();
+            txtProveedor.setText(proveedorSeleccionado.getRazonSocial());
+        }
+    }//GEN-LAST:event_btnBuscarProveedorActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgVisibilidad;
+    private javax.swing.JButton btnBuscarProveedor;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btn_EliminarImagen;
     private javax.swing.JButton btn_ExaminarArchivos;
@@ -1333,7 +1365,6 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JCheckBox chkSinLimite;
     private javax.swing.JComboBox cmbIVAPorcentaje;
     private javax.swing.JComboBox cmb_Medida;
-    private javax.swing.JComboBox cmb_Proveedor;
     private javax.swing.JComboBox cmb_Rubro;
     private com.toedter.calendar.JDateChooser dc_Vencimiento;
     private javax.swing.JScrollPane jScrollPane1;
@@ -1380,6 +1411,7 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JFormattedTextField txtPVP;
     private javax.swing.JFormattedTextField txtPrecioCosto;
     private javax.swing.JFormattedTextField txtPrecioLista;
+    private javax.swing.JTextField txtProveedor;
     private javax.swing.JFormattedTextField txt_Bulto;
     private javax.swing.JFormattedTextField txt_CantMinima;
     private javax.swing.JFormattedTextField txt_Cantidad;

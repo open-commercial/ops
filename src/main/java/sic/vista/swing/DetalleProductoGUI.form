@@ -32,18 +32,14 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              <Component id="btnGuardar" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      <Component id="btnGuardar" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <Component id="tpTabs" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                  </Group>
-              </Group>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="tpTabs" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -52,9 +48,9 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="tpTabs" min="-2" pref="370" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="btnGuardar" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -114,7 +110,7 @@
                           <Component id="panelPrecios" max="32767" attributes="3"/>
                           <Component id="panelCantidades" min="-2" max="-2" attributes="1"/>
                       </Group>
-                      <EmptySpace pref="25" max="32767" attributes="0"/>
+                      <EmptySpace pref="10" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -132,32 +128,36 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="lbl_Codigo" alignment="1" max="32767" attributes="1"/>
                               <Component id="lbl_Medida" max="32767" attributes="1"/>
                               <Component id="lbl_Proveedor" alignment="0" max="32767" attributes="1"/>
-                              <Component id="lbl_Rubro" alignment="0" max="32767" attributes="1"/>
                               <Component id="lbl_Descripcion" max="32767" attributes="1"/>
+                              <Component id="lbl_Rubro" alignment="1" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="cmb_Rubro" alignment="0" max="32767" attributes="2"/>
-                                      <Component id="cmb_Proveedor" alignment="0" max="32767" attributes="2"/>
-                                      <Component id="cmb_Medida" max="32767" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="btn_NuevoProveedor" min="-2" max="-2" attributes="1"/>
-                                      <Component id="btn_Medidas" min="-2" max="-2" attributes="0"/>
-                                      <Component id="btn_Rubros" min="-2" max="-2" attributes="1"/>
-                                  </Group>
-                              </Group>
                               <Component id="txt_Codigo" max="32767" attributes="2"/>
                               <Component id="txt_Descripcion" alignment="0" max="32767" attributes="2"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="txtProveedor" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                  <Component id="btnBuscarProveedor" linkSize="16" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                  <Component id="btn_NuevoProveedor" linkSize="16" min="-2" pref="54" max="-2" attributes="1"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="cmb_Medida" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                  <Component id="btn_Medidas" min="-2" pref="108" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="cmb_Rubro" max="32767" attributes="2"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                  <Component id="btn_Rubros" min="-2" pref="108" max="-2" attributes="1"/>
+                              </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -168,31 +168,32 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txt_Codigo" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txt_Codigo" linkSize="15" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="lbl_Codigo" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txt_Descripcion" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txt_Descripcion" linkSize="15" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="lbl_Descripcion" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="cmb_Rubro" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btn_Rubros" linkSize="1" alignment="3" min="-2" pref="27" max="-2" attributes="0"/>
-                              <Component id="lbl_Rubro" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="txtProveedor" linkSize="1" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_Proveedor" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="btn_NuevoProveedor" linkSize="1" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnBuscarProveedor" linkSize="1" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="cmb_Proveedor" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btn_NuevoProveedor" linkSize="1" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
-                              <Component id="lbl_Proveedor" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="cmb_Medida" linkSize="1" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_Medida" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="btn_Medidas" linkSize="1" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="btn_Medidas" linkSize="1" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
-                              <Component id="cmb_Medida" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbl_Medida" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="cmb_Rubro" linkSize="1" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_Rubro" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="btn_Rubros" linkSize="1" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
@@ -258,13 +259,6 @@
                     <Property name="text" type="java.lang.String" value="* Proveedor:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="cmb_Proveedor">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="0"/>
-                    </Property>
-                  </Properties>
-                </Component>
                 <Component class="javax.swing.JButton" name="btn_NuevoProveedor">
                   <Properties>
                     <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -273,7 +267,6 @@
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                       <Image iconType="3" name="/sic/icons/AddProviderBag_16x16.png"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="Nuevo"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_NuevoProveedorActionPerformed"/>
@@ -306,7 +299,23 @@
                       <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="* Unidad de Medida:"/>
+                    <Property name="text" type="java.lang.String" value="* U. de Medida:"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JButton" name="btnBuscarProveedor">
+                  <Properties>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/sic/icons/Search_16x16.png"/>
+                    </Property>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarProveedorActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JTextField" name="txtProveedor">
+                  <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
+                    <Property name="opaque" type="boolean" value="false"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -327,7 +336,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="lbl_PrecioLista" max="32767" attributes="1"/>
-                              <Component id="lbl_PVP" pref="182" max="32767" attributes="0"/>
+                              <Component id="lbl_PVP" max="32767" attributes="0"/>
                               <Component id="lbl_IVA" alignment="0" max="32767" attributes="0"/>
                               <Component id="lbl_Ganancia" alignment="0" max="32767" attributes="1"/>
                               <Component id="lbl_PrecioCosto" alignment="0" max="32767" attributes="1"/>
@@ -523,7 +532,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Component id="lbl_CantMinima" linkSize="10" alignment="1" max="32767" attributes="0"/>
@@ -531,19 +540,19 @@
                                       <Component id="lblSinLimite" alignment="1" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="chkSinLimite" alignment="0" max="32767" attributes="2"/>
-                                      <Component id="txt_Cantidad" alignment="0" min="-2" pref="57" max="-2" attributes="1"/>
-                                      <Component id="txt_CantMinima" alignment="0" min="-2" pref="57" max="-2" attributes="1"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="txt_CantMinima" alignment="0" max="32767" attributes="1"/>
+                                      <Component id="chkSinLimite" alignment="0" pref="137" max="32767" attributes="2"/>
+                                      <Component id="txt_Cantidad" alignment="0" max="32767" attributes="1"/>
                                   </Group>
                               </Group>
                               <Group type="102" attributes="0">
                                   <Component id="lbl_Bulto" linkSize="10" min="-2" pref="120" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="txt_Bulto" min="-2" pref="57" max="-2" attributes="0"/>
+                                  <Component id="txt_Bulto" max="32767" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -714,7 +723,7 @@
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
                               <Component id="txt_Estante" alignment="0" max="32767" attributes="3"/>
-                              <Component id="jScrollPane1" alignment="0" pref="432" max="32767" attributes="0"/>
+                              <Component id="jScrollPane1" alignment="0" pref="453" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
