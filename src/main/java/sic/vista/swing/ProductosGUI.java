@@ -324,7 +324,7 @@ public class ProductosGUI extends JInternalFrame {
             criteriaBusqueda += "&idRubro=" + this.getIdRubroSeleccionado();
             criteriaCosto += "&idRubro=" + this.getIdRubroSeleccionado();
         }
-        if (chk_Proveedor.isSelected()) {
+        if (chk_Proveedor.isSelected() &&  this.getIdProveedorSeleccionado() != 0L) {
             criteriaBusqueda += "&idProveedor=" + this.getIdProveedorSeleccionado();
             criteriaCosto += "&idProveedor=" + this.getIdProveedorSeleccionado();
         }
