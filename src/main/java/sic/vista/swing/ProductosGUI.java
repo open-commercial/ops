@@ -78,29 +78,6 @@ public class ProductosGUI extends JInternalFrame {
         }
     }
 
-    private void cargarProveedores() {
-        try {
-            String uri = "/proveedores/busqueda/criteria?"
-                    + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                    + "&pagina=0"
-                    + "&tamanio=" + Integer.MAX_VALUE;
-            PaginaRespuestaRest<Proveedor> response = RestClient.getRestTemplate()
-                    .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<PaginaRespuestaRest<Proveedor>>() {
-                    })
-                    .getBody();
-            proveedores = response.getContent();
-            cmb_Proveedor.removeAllItems();
-            proveedores.stream().forEach(p -> cmb_Proveedor.addItem(p.getRazonSocial()));
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
     private void setColumnas() {        
         //nombres de columnas
         String[] encabezados = new String[23];
