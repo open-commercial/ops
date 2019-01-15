@@ -14,14 +14,11 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Medida;
-import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
 import sic.modelo.Proveedor;
 import sic.modelo.Rubro;
@@ -30,6 +27,7 @@ import sic.util.CalculosPrecioProducto;
 public class ModificacionMultipleProductosGUI extends JDialog {
 
     private final List<Producto> productosParaModificar;
+    private Proveedor proveedorSeleccionado;
     private ModeloTabla modeloTablaProductos;
     private BigDecimal precioListaAnterior = BigDecimal.ZERO;
     private final static BigDecimal IVA_21 = new BigDecimal("21");	
@@ -40,7 +38,8 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         this.initComponents();
         this.setIcon();        
         this.productosParaModificar = productosParaModificar;
-        this.cargarResultadosAlTable();        
+        this.cargarResultadosAlTable(); 
+        this.proveedorSeleccionado = null;
     }    
 
     private void setIcon() {
@@ -75,31 +74,6 @@ public class ModificacionMultipleProductosGUI extends JDialog {
                 Rubro[].class)));
             rubros.stream().forEach((r) -> {
                 cmb_Rubro.addItem(r);
-            });
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void cargarProveedores() {
-        try {
-            cmb_Proveedor.removeAllItems();
-            String uri = "/proveedores/busqueda/criteria?"
-                    + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                    + "&conSaldo=false"
-                    + "&pagina=0"
-                    + "&tamanio=" + Integer.MAX_VALUE;
-            PaginaRespuestaRest<Proveedor> response = RestClient.getRestTemplate()
-                    .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<PaginaRespuestaRest<Proveedor>>() {
-                    })
-                    .getBody();
-            response.getContent().stream().forEach((p) -> {
-                cmb_Proveedor.addItem(p);
             });
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -226,7 +200,6 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         panel1 = new javax.swing.JPanel();
         cmb_Rubro = new javax.swing.JComboBox();
         btn_Rubros = new javax.swing.JButton();
-        cmb_Proveedor = new javax.swing.JComboBox();
         btn_NuevoProveedor = new javax.swing.JButton();
         btn_Medidas = new javax.swing.JButton();
         cmb_Medida = new javax.swing.JComboBox();
@@ -236,6 +209,8 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         chkVisibilidad = new javax.swing.JCheckBox();
         rbPublico = new javax.swing.JRadioButton();
         rbPrivado = new javax.swing.JRadioButton();
+        txtProveedor = new javax.swing.JTextField();
+        btnBuscarProveedor = new javax.swing.JButton();
         panel2 = new javax.swing.JPanel();
         lbl_PrecioCosto = new javax.swing.JLabel();
         lbl_Ganancia = new javax.swing.JLabel();
@@ -292,11 +267,8 @@ public class ModificacionMultipleProductosGUI extends JDialog {
             }
         });
 
-        cmb_Proveedor.setEnabled(false);
-
         btn_NuevoProveedor.setForeground(java.awt.Color.blue);
         btn_NuevoProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddProviderBag_16x16.png"))); // NOI18N
-        btn_NuevoProveedor.setText("Nuevo");
         btn_NuevoProveedor.setEnabled(false);
         btn_NuevoProveedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -352,6 +324,18 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         rbPrivado.setText("Privado");
         rbPrivado.setEnabled(false);
 
+        txtProveedor.setEditable(false);
+        txtProveedor.setEnabled(false);
+        txtProveedor.setOpaque(false);
+
+        btnBuscarProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
+        btnBuscarProveedor.setEnabled(false);
+        btnBuscarProveedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarProveedorActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
         panel1.setLayout(panel1Layout);
         panel1Layout.setHorizontalGroup(
@@ -368,20 +352,27 @@ public class ModificacionMultipleProductosGUI extends JDialog {
                     .addGroup(panel1Layout.createSequentialGroup()
                         .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cmb_Medida, javax.swing.GroupLayout.Alignment.TRAILING, 0, 314, Short.MAX_VALUE)
-                            .addComponent(cmb_Proveedor, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cmb_Rubro, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(0, 0, 0)
                         .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btn_NuevoProveedor)
                             .addComponent(btn_Medidas)
                             .addComponent(btn_Rubros)))
                     .addGroup(panel1Layout.createSequentialGroup()
                         .addComponent(rbPublico)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(rbPrivado)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                        .addComponent(txtProveedor)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnBuscarProveedor)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_NuevoProveedor)))
                 .addContainerGap())
         );
+
+        panel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnBuscarProveedor, btn_NuevoProveedor});
+
         panel1Layout.setVerticalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel1Layout.createSequentialGroup()
@@ -391,10 +382,11 @@ public class ModificacionMultipleProductosGUI extends JDialog {
                     .addComponent(cmb_Rubro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_Rubros, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER, false)
                     .addComponent(chk_Proveedor)
-                    .addComponent(cmb_Proveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_NuevoProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btn_NuevoProveedor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarProveedor)
+                    .addComponent(txtProveedor, javax.swing.GroupLayout.Alignment.LEADING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_UnidadDeMedida)
@@ -410,9 +402,9 @@ public class ModificacionMultipleProductosGUI extends JDialog {
 
         panel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Rubros, cmb_Rubro});
 
-        panel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_NuevoProveedor, cmb_Proveedor});
-
         panel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Medidas, cmb_Medida});
+
+        panel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarProveedor, btn_NuevoProveedor, txtProveedor});
 
         panel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -729,7 +721,10 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         gui_DetalleProveedor.setModal(true);
         gui_DetalleProveedor.setLocationRelativeTo(this);
         gui_DetalleProveedor.setVisible(true);
-        this.cargarProveedores();
+        if (gui_DetalleProveedor.getProveedorCreado() != null) {
+            txtProveedor.setText(gui_DetalleProveedor.getProveedorCreado().getRazonSocial());
+            proveedorSeleccionado = gui_DetalleProveedor.getProveedorCreado();
+        }
     }//GEN-LAST:event_btn_NuevoProveedorActionPerformed
 
     private void btn_MedidasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_MedidasActionPerformed
@@ -741,80 +736,101 @@ public class ModificacionMultipleProductosGUI extends JDialog {
     }//GEN-LAST:event_btn_MedidasActionPerformed
 
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
-        boolean checkPrecios = false;
-        boolean checkVisibilidad = false;
-        boolean checkDescuentoRecargo = false;
-        boolean checkMedida = false;
-        boolean checkRubro = false;
-        boolean checkProveedor = false;
-        Medida medida = new Medida();
-        Rubro rubro = new Rubro();
-        Proveedor proveedor = new Proveedor();
-        String preciosProducto = "";
-        String descuentoRecargoPorcentaje = "";
-        String visibilidad = "";
-        if (chk_Precios.isSelected() == true) {
-            checkPrecios = true;
-            preciosProducto = "&precioCosto=" + new BigDecimal(txtPrecioCosto.getValue().toString())
-                    + "&gananciaPorcentaje=" + new BigDecimal(txtGananciaPorcentaje.getValue().toString())
-                    + "&gananciaNeto=" + new BigDecimal(txtGananciaNeto.getValue().toString())
-                    + "&precioVentaPublico=" + new BigDecimal(txtPVP.getValue().toString())
-                    + "&IVAPorcentaje=" + new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString())
-                    + "&IVANeto=" + new BigDecimal(txtIVANeto.getValue().toString())
-                    + "&precioLista=" + new BigDecimal(txtPrecioLista.getValue().toString());
-        }
-        if (chkVisibilidad.isSelected() == true) {
-            checkVisibilidad = true;
-            visibilidad = "&publico=" + rbPublico.isSelected();
-        }
-        if (chkRecargoDescuento.isSelected() == true) {
-            checkDescuentoRecargo = true;
-            descuentoRecargoPorcentaje = "&descuentoRecargoPorcentaje=";
-            if (rbRecargo.isSelected()) {
-                descuentoRecargoPorcentaje += new BigDecimal(txtDescuentoRecargoPorcentaje.getValue().toString());
-            } else if (rbDescuento.isSelected()) {
-                descuentoRecargoPorcentaje += (new BigDecimal(txtDescuentoRecargoPorcentaje.getValue().toString())
-                        .multiply(new BigDecimal(-1L)));
+        Long idMedida = null;
+        Long idRubro = null;
+        String mensajeError = "";
+        if (chk_UnidadDeMedida.isSelected()) {
+            if (cmb_Medida.getSelectedItem() != null) {
+                idMedida = ((Medida) cmb_Medida.getSelectedItem()).getId_Medida();
+            } else {
+                mensajeError = mensajeError.concat(ResourceBundle.getBundle("Mensajes")
+                        .getString("mensaje_producto_vacio_medida") + "\n");
             }
         }
-        if (chk_UnidadDeMedida.isSelected() == true) {
-            checkMedida = true;
-            medida = (Medida) cmb_Medida.getSelectedItem();
-        }
-        if (chk_Rubro.isSelected() == true) {
-            checkRubro = true;
-            rubro = (Rubro) cmb_Rubro.getSelectedItem();
-        }
-        if (chk_Proveedor.isSelected() == true) {
-            checkProveedor = true;
-            proveedor = (Proveedor) cmb_Proveedor.getSelectedItem();
-        }
-        try {
-            long[] idsProductos = new long[productosParaModificar.size()];
-            int i = 0;
-            for (Producto producto : productosParaModificar) {
-                idsProductos[i] = producto.getIdProducto();
-                i++;
+        if (chk_Rubro.isSelected()) {
+            if (cmb_Rubro.getSelectedItem() != null) {
+                idRubro = ((Rubro) cmb_Rubro.getSelectedItem()).getId_Rubro();
+            } else {
+                mensajeError = mensajeError.concat(ResourceBundle.getBundle("Mensajes")
+                        .getString("mensaje_producto_vacio_rubro") + "\n");
             }
-            String uri = "/productos/multiples?idProducto=" 
-                    + Arrays.toString(idsProductos).substring(1, Arrays.toString(idsProductos).length() - 1);                                
-            if (checkMedida) uri += "&idMedida=" + medida.getId_Medida();            
-            if (checkRubro) uri += "&idRubro=" + rubro.getId_Rubro();            
-            if (checkProveedor) uri += "&idProveedor=" + proveedor.getId_Proveedor();
-            if (checkPrecios) uri += preciosProducto;
-            if (checkVisibilidad) uri += visibilidad;
-            if (checkDescuentoRecargo) uri += descuentoRecargoPorcentaje;
-            RestClient.getRestTemplate().put(uri , null);
-            JOptionPane.showMessageDialog(this, "Los productos se modificaron correctamente.",
-                    "Aviso", JOptionPane.INFORMATION_MESSAGE);
-            this.dispose();
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        if (chk_Proveedor.isSelected() && proveedorSeleccionado == null) {
+            mensajeError = mensajeError.concat(ResourceBundle.getBundle("Mensajes")
+                    .getString("mensaje_producto_vacio_proveedor") + "\n");
+        }
+        if (!mensajeError.isEmpty()) {
+            JOptionPane.showMessageDialog(this, mensajeError, "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            boolean checkPrecios = false;
+            boolean checkVisibilidad = false;
+            boolean checkDescuentoRecargo = false;
+            String preciosProducto = "";
+            String descuentoRecargoPorcentaje = "";
+            String visibilidad = "";
+            if (chk_Precios.isSelected() == true) {
+                checkPrecios = true;
+                preciosProducto = "&precioCosto=" + new BigDecimal(txtPrecioCosto.getValue().toString())
+                        + "&gananciaPorcentaje=" + new BigDecimal(txtGananciaPorcentaje.getValue().toString())
+                        + "&gananciaNeto=" + new BigDecimal(txtGananciaNeto.getValue().toString())
+                        + "&precioVentaPublico=" + new BigDecimal(txtPVP.getValue().toString())
+                        + "&IVAPorcentaje=" + new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString())
+                        + "&IVANeto=" + new BigDecimal(txtIVANeto.getValue().toString())
+                        + "&precioLista=" + new BigDecimal(txtPrecioLista.getValue().toString());
+            }
+            if (chkVisibilidad.isSelected() == true) {
+                checkVisibilidad = true;
+                visibilidad = "&publico=" + rbPublico.isSelected();
+            }
+            if (chkRecargoDescuento.isSelected() == true) {
+                checkDescuentoRecargo = true;
+                descuentoRecargoPorcentaje = "&descuentoRecargoPorcentaje=";
+                if (rbRecargo.isSelected()) {
+                    descuentoRecargoPorcentaje += new BigDecimal(txtDescuentoRecargoPorcentaje.getValue().toString());
+                } else if (rbDescuento.isSelected()) {
+                    descuentoRecargoPorcentaje += (new BigDecimal(txtDescuentoRecargoPorcentaje.getValue().toString())
+                            .multiply(new BigDecimal(-1L)));
+                }
+            }
+            try {
+                long[] idsProductos = new long[productosParaModificar.size()];
+                int i = 0;
+                for (Producto producto : productosParaModificar) {
+                    idsProductos[i] = producto.getIdProducto();
+                    i++;
+                }
+                String uri = "/productos/multiples?idProducto="
+                        + Arrays.toString(idsProductos).substring(1, Arrays.toString(idsProductos).length() - 1);
+                if (idMedida != null) {
+                    uri += "&idMedida=" + idMedida;
+                }
+                if (idRubro != null) {
+                    uri += "&idRubro=" + idRubro;
+                }
+                if (proveedorSeleccionado != null) {
+                    uri += "&idProveedor=" + proveedorSeleccionado.getId_Proveedor();
+                }
+                if (checkPrecios) {
+                    uri += preciosProducto;
+                }
+                if (checkVisibilidad) {
+                    uri += visibilidad;
+                }
+                if (checkDescuentoRecargo) {
+                    uri += descuentoRecargoPorcentaje;
+                }
+                RestClient.getRestTemplate().put(uri, null);
+                JOptionPane.showMessageDialog(this, "Los productos se modificaron correctamente.",
+                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                this.dispose();
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_btn_GuardarActionPerformed
 
@@ -830,11 +846,14 @@ public class ModificacionMultipleProductosGUI extends JDialog {
     }//GEN-LAST:event_chk_RubroItemStateChanged
 
     private void chk_ProveedorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ProveedorItemStateChanged
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            cmb_Proveedor.setEnabled(true);
+        if (chk_Proveedor.isSelected() == true) {
+            btnBuscarProveedor.setEnabled(true);
+            btnBuscarProveedor.requestFocus();
+            txtProveedor.setEnabled(true);
             btn_NuevoProveedor.setEnabled(true);
         } else {
-            cmb_Proveedor.setEnabled(false);
+            btnBuscarProveedor.setEnabled(false);
+            txtProveedor.setEnabled(false);
             btn_NuevoProveedor.setEnabled(false);
         }
         this.habilitarBotonGuardar();
@@ -855,7 +874,6 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         this.prepararComponentes();
         this.cargarMedidas();   
         this.cargarRubros();
-        this.cargarProveedores();
     }//GEN-LAST:event_formWindowOpened
 
     private void cmbIVAPorcentajeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbIVAPorcentajeItemStateChanged
@@ -1046,9 +1064,21 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         this.habilitarBotonGuardar();
     }//GEN-LAST:event_chkVisibilidadItemStateChanged
 
+    private void btnBuscarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProveedorActionPerformed
+        BuscarProveedoresGUI buscarProveedoresGUI = new BuscarProveedoresGUI();
+        buscarProveedoresGUI.setModal(true);
+        buscarProveedoresGUI.setLocationRelativeTo(this);
+        buscarProveedoresGUI.setVisible(true);
+        if (buscarProveedoresGUI.getProveedorSeleccionado() != null) {
+            proveedorSeleccionado = buscarProveedoresGUI.getProveedorSeleccionado();
+            txtProveedor.setText(proveedorSeleccionado.getRazonSocial());
+        }
+    }//GEN-LAST:event_btnBuscarProveedorActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgRecargoDescuento;
     private javax.swing.ButtonGroup bgVisibilidad;
+    private javax.swing.JButton btnBuscarProveedor;
     private javax.swing.JButton btn_Guardar;
     private javax.swing.JButton btn_Medidas;
     private javax.swing.JButton btn_NuevoProveedor;
@@ -1061,7 +1091,6 @@ public class ModificacionMultipleProductosGUI extends JDialog {
     private javax.swing.JCheckBox chk_UnidadDeMedida;
     private javax.swing.JComboBox cmbIVAPorcentaje;
     private javax.swing.JComboBox cmb_Medida;
-    private javax.swing.JComboBox cmb_Proveedor;
     private javax.swing.JComboBox cmb_Rubro;
     private javax.swing.JLabel lbl_Ganancia;
     private javax.swing.JLabel lbl_IVA;
@@ -1085,5 +1114,6 @@ public class ModificacionMultipleProductosGUI extends JDialog {
     private javax.swing.JFormattedTextField txtPVP;
     private javax.swing.JFormattedTextField txtPrecioCosto;
     private javax.swing.JFormattedTextField txtPrecioLista;
+    private javax.swing.JTextField txtProveedor;
     // End of variables declaration//GEN-END:variables
 }
