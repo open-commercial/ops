@@ -77,7 +77,6 @@ public class BuscarProveedoresGUI extends JDialog {
                         + "codigo=" + txtCriteriaBusqueda.getText().trim()
                         + "&razonSocial=" + txtCriteriaBusqueda.getText().trim()                        
                         + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "&conSaldo=false"
                         + "&pagina=" + NUMERO_PAGINA
                         + "&tamanio=" + TAMANIO_PAGINA;
                 PaginaRespuestaRest<Proveedor> response = RestClient.getRestTemplate()

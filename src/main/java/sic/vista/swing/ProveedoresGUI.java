@@ -20,6 +20,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.CuentaCorrienteProveedor;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Localidad;
 import sic.modelo.PaginaRespuestaRest;
@@ -36,12 +37,11 @@ import sic.util.Utilidades;
 public class ProveedoresGUI extends JInternalFrame {
 
     private ModeloTabla modeloTablaResultados = new ModeloTabla();
-    private List<Proveedor> proveedoresTotal = new ArrayList<>();
-    private List<Proveedor> proveedoresParcial = new ArrayList<>();
+    private List<CuentaCorrienteProveedor> cuentasCorrienteProveedoresTotal = new ArrayList<>();
+    private List<CuentaCorrienteProveedor> cuentasCorrienteProveedoresParcial = new ArrayList<>();
     private Proveedor proveedorSeleccionado;
     private static int totalElementosBusqueda;
     private static int NUMERO_PAGINA = 0;
-    private static final int TAMANIO_PAGINA = 50;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(880, 600);
 
@@ -49,9 +49,9 @@ public class ProveedoresGUI extends JInternalFrame {
         this.initComponents();
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-            int va = scrollBar.getVisibleAmount() + 50;
+            int va = scrollBar.getVisibleAmount() + 10;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (proveedoresTotal.size() >= TAMANIO_PAGINA) {
+                if (cuentasCorrienteProveedoresTotal.size() >= 10) {
                     NUMERO_PAGINA += 1;
                     buscar();
                 }
@@ -193,28 +193,27 @@ public class ProveedoresGUI extends JInternalFrame {
     }
 
     private void cargarResultadosAlTable() {
-        proveedoresParcial.stream().map(p -> {
+        cuentasCorrienteProveedoresParcial.stream().map(p -> {
             Object[] fila = new Object[15];
-            fila[0] = p.getCodigo();
-            fila[1] = p.getIdFiscal();
-            fila[2] = p.getRazonSocial();            
-            fila[3] = p.getSaldoCuentaCorriente();
+            fila[0] = p.getProveedor().getCodigo();
+            fila[1] = p.getProveedor().getIdFiscal();
+            fila[2] = p.getProveedor().getRazonSocial();            
+            fila[3] = p.getSaldo();
             fila[4] = p.getFechaUltimoMovimiento();            
-            fila[5] = p.getDireccion();
-            fila[6] = p.getCategoriaIVA();
-            fila[7] = p.getTelPrimario();
-            fila[8] = p.getTelSecundario();
-            fila[9] = p.getContacto();
-            fila[10] = p.getEmail();
-            fila[11] = p.getWeb();
-            fila[12] = p.getLocalidad().getNombre();
-            fila[13] = p.getLocalidad().getProvincia().getNombre();
-            fila[14] = p.getLocalidad().getProvincia().getPais().getNombre();
+            fila[5] = p.getProveedor().getDireccion();
+            fila[6] = p.getProveedor().getCategoriaIVA();
+            fila[7] = p.getProveedor().getTelPrimario();
+            fila[8] = p.getProveedor().getTelSecundario();
+            fila[9] = p.getProveedor().getContacto();
+            fila[10] = p.getProveedor().getEmail();
+            fila[11] = p.getProveedor().getWeb();
+            fila[12] = p.getProveedor().getLocalidad().getNombre();
+            fila[13] = p.getProveedor().getLocalidad().getProvincia().getNombre();
+            fila[14] = p.getProveedor().getLocalidad().getProvincia().getPais().getNombre();
             return fila;
         }).forEach(f -> {
             modeloTablaResultados.addRow(f);
         });
-
         tbl_Resultados.setModel(modeloTablaResultados);
         String mensaje = totalElementosBusqueda + " proveedores encontrados";
         lbl_cantResultados.setText(mensaje);
@@ -222,8 +221,8 @@ public class ProveedoresGUI extends JInternalFrame {
     
     private void resetScroll() {
         NUMERO_PAGINA = 0;
-        proveedoresTotal.clear();
-        proveedoresParcial.clear();
+        cuentasCorrienteProveedoresTotal.clear();
+        cuentasCorrienteProveedoresParcial.clear();
         Point p = new Point(0, 0);
         sp_Resultados.getViewport().setViewPosition(p);
     }    
@@ -279,7 +278,7 @@ public class ProveedoresGUI extends JInternalFrame {
 
     private void buscar() {    
         this.cambiarEstadoEnabled(false);
-        String criteria = "/proveedores/busqueda/criteria?";
+        String criteria = "/cuentas-corriente/proveedores/busqueda/criteria?";
         if (chk_Codigo.isSelected()) {
             criteria += "codigo=" + txt_Codigo.getText().trim() + "&";
         }
@@ -300,16 +299,37 @@ public class ProveedoresGUI extends JInternalFrame {
                  criteria += "idLocalidad=" + String.valueOf((((Localidad) cmb_Localidad.getSelectedItem()).getId_Localidad())) + "&";
             }
         }    
+                int seleccionOrden = cmbOrden.getSelectedIndex();
+        switch (seleccionOrden) {
+            case 0:
+                criteria += "ordenarPor=proveedor.razonSocial&";
+                break;
+            case 1:
+                criteria += "ordenarPor=saldo&";
+                break;
+            case 2:
+                criteria += "ordenarPor=fechaUltimoMovimiento&";
+                break;
+        }
+        int seleccionDireccion = cmbSentido.getSelectedIndex();
+        switch (seleccionDireccion) {
+            case 0:
+                criteria += "sentido=ASC&";
+                break;
+            case 1:
+                criteria += "sentido=DESC&";
+                break;
+        }
         criteria += "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
-        criteria += "&pagina=" + NUMERO_PAGINA + "&tamanio=" + TAMANIO_PAGINA;
+        criteria += "&pagina=" + NUMERO_PAGINA;
         try {
-            PaginaRespuestaRest<Proveedor> response = RestClient.getRestTemplate()
-                    .exchange(criteria, HttpMethod.GET, null, new ParameterizedTypeReference<PaginaRespuestaRest<Proveedor>>() {
+            PaginaRespuestaRest<CuentaCorrienteProveedor> response = RestClient.getRestTemplate()
+                    .exchange(criteria, HttpMethod.GET, null, new ParameterizedTypeReference<PaginaRespuestaRest<CuentaCorrienteProveedor>>() {
                     })
                     .getBody();
             totalElementosBusqueda = response.getTotalElements();
-            proveedoresParcial = response.getContent();
-            proveedoresTotal.addAll(proveedoresParcial);
+            cuentasCorrienteProveedoresParcial = response.getContent();
+            cuentasCorrienteProveedoresTotal.addAll(cuentasCorrienteProveedoresParcial);
             this.cargarResultadosAlTable();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -358,6 +378,9 @@ public class ProveedoresGUI extends JInternalFrame {
         btn_Modificar = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
         btnCuentaCorriente = new javax.swing.JButton();
+        panelOrden = new javax.swing.JPanel();
+        cmbOrden = new javax.swing.JComboBox<>();
+        cmbSentido = new javax.swing.JComboBox<>();
 
         setClosable(true);
         setMaximizable(true);
@@ -578,7 +601,7 @@ public class ProveedoresGUI extends JInternalFrame {
                 .addGap(0, 0, 0)
                 .addComponent(btnCuentaCorriente)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 790, Short.MAX_VALUE)
+            .addComponent(sp_Resultados)
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCuentaCorriente, btn_Eliminar, btn_Modificar, btn_Nuevo});
@@ -595,19 +618,59 @@ public class ProveedoresGUI extends JInternalFrame {
                     .addComponent(btn_Nuevo, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
 
+        panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar Por"));
+
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Razón Social", "Saldo C/C", "Ultimo Movimiento C/C" }));
+        cmbOrden.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbOrdenItemStateChanged(evt);
+            }
+        });
+
+        cmbSentido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ascendente", "Descendente" }));
+        cmbSentido.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbSentidoItemStateChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelOrdenLayout = new javax.swing.GroupLayout(panelOrden);
+        panelOrden.setLayout(panelOrdenLayout);
+        panelOrdenLayout.setHorizontalGroup(
+            panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOrdenLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cmbOrden, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cmbSentido, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        panelOrdenLayout.setVerticalGroup(
+            panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOrdenLayout.createSequentialGroup()
+                .addComponent(cmbOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmbSentido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -692,11 +755,11 @@ public class ProveedoresGUI extends JInternalFrame {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             int respuesta = JOptionPane.showConfirmDialog(this,
                     "¿Esta seguro que desea eliminar el proveedor: "
-                    + proveedoresTotal.get(indexFilaSeleccionada) + "?", "Eliminar",
+                    + cuentasCorrienteProveedoresTotal.get(indexFilaSeleccionada).getProveedor() + "?", "Eliminar",
                     JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
                 try {
-                    RestClient.getRestTemplate().delete("/proveedores/" + proveedoresTotal.get(indexFilaSeleccionada).getId_Proveedor());
+                    RestClient.getRestTemplate().delete("/proveedores/" + cuentasCorrienteProveedoresTotal.get(indexFilaSeleccionada).getProveedor().getId_Proveedor());
                     this.limpiarYBuscar();
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -713,7 +776,7 @@ public class ProveedoresGUI extends JInternalFrame {
     private void btn_ModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ModificarActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-            DetalleProveedorGUI gui_DetalleProveedor = new DetalleProveedorGUI(proveedoresTotal.get(indexFilaSeleccionada));
+            DetalleProveedorGUI gui_DetalleProveedor = new DetalleProveedorGUI(cuentasCorrienteProveedoresTotal.get(indexFilaSeleccionada).getProveedor());
             gui_DetalleProveedor.setModal(true);
             gui_DetalleProveedor.setLocationRelativeTo(this);
             gui_DetalleProveedor.setVisible(true);
@@ -759,7 +822,7 @@ public class ProveedoresGUI extends JInternalFrame {
         if (tbl_Resultados.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             Proveedor proveedor = RestClient.getRestTemplate()
-                    .getForObject("/proveedores/" + proveedoresTotal.get(indexFilaSeleccionada).getId_Proveedor(), Proveedor.class);
+                    .getForObject("/proveedores/" + cuentasCorrienteProveedoresTotal.get(indexFilaSeleccionada).getProveedor().getId_Proveedor(), Proveedor.class);
             JInternalFrame gui;
             if (proveedor != null) {
                 gui = new CuentaCorrienteGUI(proveedor);
@@ -790,6 +853,14 @@ public class ProveedoresGUI extends JInternalFrame {
         btn_BuscarActionPerformed(null);
     }//GEN-LAST:event_txt_Id_FiscalActionPerformed
 
+    private void cmbOrdenItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbOrdenItemStateChanged
+        this.limpiarYBuscar();
+    }//GEN-LAST:event_cmbOrdenItemStateChanged
+
+    private void cmbSentidoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbSentidoItemStateChanged
+        this.limpiarYBuscar();
+    }//GEN-LAST:event_cmbSentidoItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCuentaCorriente;
     private javax.swing.JButton btn_Buscar;
@@ -800,11 +871,14 @@ public class ProveedoresGUI extends JInternalFrame {
     private javax.swing.JCheckBox chk_Id_Fiscal;
     private javax.swing.JCheckBox chk_RazonSocial;
     private javax.swing.JCheckBox chk_Ubicacion;
+    private javax.swing.JComboBox<String> cmbOrden;
+    private javax.swing.JComboBox<String> cmbSentido;
     private javax.swing.JComboBox cmb_Localidad;
     private javax.swing.JComboBox cmb_Pais;
     private javax.swing.JComboBox cmb_Provincia;
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;
+    private javax.swing.JPanel panelOrden;
     private javax.swing.JPanel panelResultados;
     private javax.swing.JScrollPane sp_Resultados;
     private javax.swing.JTable tbl_Resultados;

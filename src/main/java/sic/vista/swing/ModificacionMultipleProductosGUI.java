@@ -85,6 +85,30 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         }
     }
 
+    private void cargarProveedores() {
+        try {
+            cmb_Proveedor.removeAllItems();
+            String uri = "/proveedores/busqueda/criteria?"
+                    + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + "&pagina=0"
+                    + "&tamanio=" + Integer.MAX_VALUE;
+            PaginaRespuestaRest<Proveedor> response = RestClient.getRestTemplate()
+                    .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<PaginaRespuestaRest<Proveedor>>() {
+                    })
+                    .getBody();
+            response.getContent().stream().forEach((p) -> {
+                cmb_Proveedor.addItem(p);
+            });
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private void prepararComponentes() {
         txtPrecioCosto.setValue(BigDecimal.ZERO);
         txtPVP.setValue(BigDecimal.ZERO);
