@@ -214,10 +214,10 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private void cargarDetalleNotaDebitoProveedor() {
         try {
             notaDebito = RestClient.getRestTemplate().getForObject("/notas/" + idNotaDebito, NotaDebito.class);
-            Proveedor notaDeProveedor = RestClient.getRestTemplate()
+            Proveedor proveedorDeNota = RestClient.getRestTemplate()
                 .getForObject("/proveedores/" + notaDebito.getIdProveedor(), Proveedor.class);
             this.setTitle(notaDebito.getTipoComprobante() + " Nº " + notaDebito.getSerie() + " - " + notaDebito.getNroNota()
-                    + " con fecha " + formatter.format(notaDebito.getFecha()) + " del Proveedor: " + notaDeProveedor.getRazonSocial());
+                    + " con fecha " + formatter.format(notaDebito.getFecha()) + " del Proveedor: " + proveedorDeNota.getRazonSocial());
             dcFechaNota.setEnabled(false);
             txt_Serie.setEnabled(false);
             txt_Numero.setEnabled(false);                        
@@ -231,16 +231,16 @@ public class DetalleNotaDebitoGUI extends JDialog {
             } else {
                 txt_CAE.setText(String.valueOf(notaDebito.getCAE()));
             }            
-            txtNombre.setText(notaDeProveedor.getRazonSocial());
+            txtNombre.setText(proveedorDeNota.getRazonSocial());
             cmbDescripcionRenglon2.removeAllItems();
             cmbDescripcionRenglon2.addItem(notaDebito.getMotivo());
-            Localidad localidadDeNotaProveedor = RestClient.getRestTemplate().getForObject("/localidades/" + notaDeProveedor.getIdLocalidad(), Localidad.class);
-            txtDomicilio.setText(notaDeProveedor.getDireccion()
+            Localidad localidadDeNotaProveedor = RestClient.getRestTemplate().getForObject("/localidades/" + proveedorDeNota.getIdLocalidad(), Localidad.class);
+            txtDomicilio.setText(proveedorDeNota.getDireccion()
                     + " " + localidadDeNotaProveedor.getNombre()
                     + " " + localidadDeNotaProveedor.getNombreProvincia()
                     + " " + localidadDeNotaProveedor.getNombrePais());
-            txtCondicionIVA.setText(notaDeProveedor.getCategoriaIVA().toString());
-            if (notaDeProveedor.getIdFiscal() != null) txtIdFiscal.setText(notaDeProveedor.getIdFiscal().toString());            
+            txtCondicionIVA.setText(proveedorDeNota.getCategoriaIVA().toString());
+            if (proveedorDeNota.getIdFiscal() != null) txtIdFiscal.setText(proveedorDeNota.getIdFiscal().toString());            
             Recibo reciboNotaDebitoProveedor = RestClient.getRestTemplate().getForObject("/recibos/" + notaDebito.getIdRecibo(), Recibo.class);
             lblDetallePago.setText("Nº Recibo: " + reciboNotaDebitoProveedor.getNumSerie() + " - " + reciboNotaDebitoProveedor.getNumRecibo() 
                     + " - " + reciboNotaDebitoProveedor.getConcepto());
