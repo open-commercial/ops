@@ -211,6 +211,7 @@ public class PrincipalGUI extends JFrame {
         });
         mnu_Compras.add(mnuItm_FacturasCompra);
 
+        mnuItm_RecibosCompra.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Stamp_16x16.png"))); // NOI18N
         mnuItm_RecibosCompra.setText("Recibos");
         mnuItm_RecibosCompra.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -248,6 +249,7 @@ public class PrincipalGUI extends JFrame {
         });
         mnu_Ventas.add(mnuItm_FacturasVenta);
 
+        mnuItm_RecibosVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Stamp_16x16.png"))); // NOI18N
         mnuItm_RecibosVenta.setText("Recibos");
         mnuItm_RecibosVenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

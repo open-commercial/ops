@@ -113,8 +113,8 @@ public class RecibosVentaGUI extends JInternalFrame {
         encabezados[1] = "Nº Recibo";
         encabezados[2] = "Cliente";
         encabezados[3] = "Usuario";
-        encabezados[4] = "Concepto";
-        encabezados[5] = "Monto";
+        encabezados[4] = "Monto";
+        encabezados[5] = "Concepto";
         modeloTablaFacturas.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaFacturas);
         //tipo de dato columnas
@@ -123,26 +123,21 @@ public class RecibosVentaGUI extends JInternalFrame {
         tipos[1] = String.class;
         tipos[2] = String.class;
         tipos[3] = String.class;
-        tipos[4] = String.class;
-        tipos[5] = BigDecimal.class;
+        tipos[4] = BigDecimal.class;
+        tipos[5] = String.class;
         modeloTablaFacturas.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
-        tbl_Resultados.getTableHeader().setResizingAllowed(true);        
+        tbl_Resultados.getTableHeader().setResizingAllowed(true);
         //tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(140);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(130);
-        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(320);
-        tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(130);
-        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(320);
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(310);
+        tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(140);
+        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(320);
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         tbl_Resultados.getColumnModel().getColumn(0).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
-    }
-
-    private void calcularResultados(String uriCriteria) {
-        txt_ResultMontoRecibos.setValue(RestClient.getRestTemplate()
-                .getForObject("/recibos/venta/monto/criteria?" + uriCriteria, BigDecimal.class));
     }
 
     private void buscar(boolean calcularResultados) {
@@ -157,9 +152,6 @@ public class RecibosVentaGUI extends JInternalFrame {
             totalElementosBusqueda = response.getTotalElements();
             recibosParcial = response.getContent();
             recibosTotal.addAll(recibosParcial);
-            if (calcularResultados && tienePermisoSegunRoles) {
-                this.calcularResultados(getUriCriteria());
-            }
             this.cargarResultadosAlTable();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -227,8 +219,8 @@ public class RecibosVentaGUI extends JInternalFrame {
             }
             fila[2] = recibo.getNombreFiscalCliente();
             fila[3] = recibo.getNombreUsuario();
-            fila[4] = recibo.getConcepto();
-            fila[5] = recibo.getMonto();
+            fila[4] = recibo.getMonto();
+            fila[5] = recibo.getConcepto();
             return fila;
         }).forEach(fila -> {
             modeloTablaFacturas.addRow(fila);
@@ -293,14 +285,6 @@ public class RecibosVentaGUI extends JInternalFrame {
         } else {
             btn_Eliminar.setEnabled(false);
         }
-        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) 
-                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-            lbl_MontosRecibos.setVisible(true);
-            txt_ResultMontoRecibos.setVisible(true);
-        } else {
-            lbl_MontosRecibos.setVisible(false);
-            txt_ResultMontoRecibos.setVisible(false);
-        }
         tienePermisoSegunRoles = rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO);
     }
@@ -314,9 +298,7 @@ public class RecibosVentaGUI extends JInternalFrame {
         tbl_Resultados = new javax.swing.JTable();
         btn_VerDetalle = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
-        panelNumeros = new javax.swing.JPanel();
-        lbl_MontosRecibos = new javax.swing.JLabel();
-        txt_ResultMontoRecibos = new javax.swing.JFormattedTextField();
+        btnCrearNotaDebito = new javax.swing.JButton();
         panelFiltros = new javax.swing.JPanel();
         subPanelFiltros1 = new javax.swing.JPanel();
         chk_Fecha = new javax.swing.JCheckBox();
@@ -347,7 +329,7 @@ public class RecibosVentaGUI extends JInternalFrame {
         setMaximizable(true);
         setResizable(true);
         setTitle("Administrar Recibos de Venta");
-        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/SIC_16_square.png"))); // NOI18N
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Stamp_16x16.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameOpened(evt);
@@ -397,68 +379,48 @@ public class RecibosVentaGUI extends JInternalFrame {
             }
         });
 
-        lbl_MontosRecibos.setText("Monto Total:");
-
-        txt_ResultMontoRecibos.setEditable(false);
-        txt_ResultMontoRecibos.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
-        txt_ResultMontoRecibos.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-
-        javax.swing.GroupLayout panelNumerosLayout = new javax.swing.GroupLayout(panelNumeros);
-        panelNumeros.setLayout(panelNumerosLayout);
-        panelNumerosLayout.setHorizontalGroup(
-            panelNumerosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelNumerosLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lbl_MontosRecibos, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txt_ResultMontoRecibos, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        panelNumerosLayout.setVerticalGroup(
-            panelNumerosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelNumerosLayout.createSequentialGroup()
-                .addGroup(panelNumerosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_MontosRecibos)
-                    .addComponent(txt_ResultMontoRecibos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
+        btnCrearNotaDebito.setForeground(java.awt.Color.blue);
+        btnCrearNotaDebito.setText("Nueva Nota Debito");
+        btnCrearNotaDebito.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearNotaDebitoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(btn_Eliminar)
                 .addGap(0, 0, 0)
-                .addComponent(btn_VerDetalle)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(panelNumeros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(sp_Resultados)
-                .addContainerGap())
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelResultadosLayout.createSequentialGroup()
+                        .addComponent(btnCrearNotaDebito)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_VerDetalle)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_Eliminar)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(panelResultadosLayout.createSequentialGroup()
+                        .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 1085, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Eliminar, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCrearNotaDebito, btn_Eliminar, btn_VerDetalle});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelResultadosLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btn_VerDetalle)
-                            .addComponent(btn_Eliminar)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panelNumeros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_VerDetalle)
+                    .addComponent(btn_Eliminar)
+                    .addComponent(btnCrearNotaDebito)))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Eliminar, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaDebito, btn_Eliminar, btn_VerDetalle});
 
         panelFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
 
@@ -670,8 +632,7 @@ public class RecibosVentaGUI extends JInternalFrame {
                 .addGap(6, 6, 6)
                 .addComponent(subPanelFiltros1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(subPanelFiltros2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0))
+                .addComponent(subPanelFiltros2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(panelFiltrosLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btn_Buscar)
@@ -900,10 +861,21 @@ public class RecibosVentaGUI extends JInternalFrame {
             txt_SerieRecibo.setEnabled(false);
         }
     }//GEN-LAST:event_chk_NumReciboItemStateChanged
-    
+
+    private void btnCrearNotaDebitoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearNotaDebitoActionPerformed
+        if (tbl_Resultados.getSelectedRow() != -1) {
+            Recibo reciboDeCliente = recibosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados));
+            Cliente cliente = RestClient.getRestTemplate().getForObject("/clientes/" + reciboDeCliente.getIdCliente(), Cliente.class);
+            DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(cliente, reciboDeCliente.getIdRecibo());
+            detalleNotaDebitoGUI.setLocationRelativeTo(this);
+            detalleNotaDebitoGUI.setVisible(true);
+        }
+    }//GEN-LAST:event_btnCrearNotaDebitoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarCliente;
     private javax.swing.JButton btnBuscarUsuarios;
+    private javax.swing.JButton btnCrearNotaDebito;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_VerDetalle;
@@ -918,10 +890,8 @@ public class RecibosVentaGUI extends JInternalFrame {
     private com.toedter.calendar.JDateChooser dc_FechaHasta;
     private javax.swing.JLabel lbl_Desde;
     private javax.swing.JLabel lbl_Hasta;
-    private javax.swing.JLabel lbl_MontosRecibos;
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;
-    private javax.swing.JPanel panelNumeros;
     private javax.swing.JPanel panelOrden;
     private javax.swing.JPanel panelResultados;
     private javax.swing.JLabel separador;
@@ -933,7 +903,6 @@ public class RecibosVentaGUI extends JInternalFrame {
     private javax.swing.JTextField txtUsuario;
     private javax.swing.JTextField txt_Concepto;
     private javax.swing.JFormattedTextField txt_NroRecibo;
-    private javax.swing.JFormattedTextField txt_ResultMontoRecibos;
     private javax.swing.JFormattedTextField txt_SerieRecibo;
     // End of variables declaration//GEN-END:variables
 }
