@@ -1308,7 +1308,7 @@ public class FacturasVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_btnCrearNotaCreditoActionPerformed
 
     private void btnBuscarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProductosActionPerformed
-        BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(null, null, null);
+        BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI();
         buscarProductosGUI.setModal(true);
         buscarProductosGUI.setLocationRelativeTo(this);
         buscarProductosGUI.setVisible(true);

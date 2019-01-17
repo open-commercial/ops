@@ -73,6 +73,32 @@ public class BuscarProductosGUI extends JDialog {
             }
         });
     }
+    
+    public BuscarProductosGUI() {
+        this.initComponents();
+        this.setIcon();
+        this.renglones = null;
+        this.movimiento = null;
+        this.tipoDeComprobante = null;
+        this.setColumnas();
+        txtCriteriaBusqueda.addKeyListener(keyHandler);
+        btnBuscar.addKeyListener(keyHandler);
+        tbl_Resultados.addKeyListener(keyHandler);
+        txtaNotaProducto.addKeyListener(keyHandler);
+        txtCantidad.addKeyListener(keyHandler);
+        txtPorcentajeDescuento.addKeyListener(keyHandler);
+        btnAceptar.addKeyListener(keyHandler);
+        sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
+            JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
+            int va = scrollBar.getVisibleAmount() + 10;
+            if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
+                if (productosTotal.size() >= 10) {
+                    NUMERO_PAGINA += 1;
+                    buscar();
+                }
+            }
+        });
+    }
 
     public boolean debeCargarRenglon() {
         return debeCargarRenglon;
@@ -225,13 +251,13 @@ public class BuscarProductosGUI extends JDialog {
             Object[] fila = new Object[6];
             fila[0] = p.getCodigo();
             fila[1] = p.getDescripcion();
-            fila[2] = p.getCantidad();
-            fila[3] = p.getBulto();
-            fila[4] = p.getNombreMedida();
-            BigDecimal precio = (movimiento == Movimiento.VENTA) ? p.getPrecioLista()
-                    : (movimiento == Movimiento.PEDIDO) ? p.getPrecioLista()
-                    : (movimiento == Movimiento.COMPRA) ? p.getPrecioCosto() : BigDecimal.ZERO;
-            fila[5] = precio;
+                fila[2] = p.getCantidad();
+                fila[3] = p.getBulto();
+                fila[4] = p.getNombreMedida();
+                BigDecimal precio = (movimiento == Movimiento.VENTA) ? p.getPrecioLista()
+                        : (movimiento == Movimiento.PEDIDO) ? p.getPrecioLista()
+                                : (movimiento == Movimiento.COMPRA) ? p.getPrecioCosto() : BigDecimal.ZERO;
+                fila[5] = precio;
             return fila;
         }).forEach(fila -> {
             modeloTablaResultados.addRow(fila);
@@ -253,7 +279,7 @@ public class BuscarProductosGUI extends JDialog {
         this.setColumnas();
     }
 
-    private void setColumnas() {        
+    private void setColumnas() {
         String[] encabezados = new String[6];
         encabezados[0] = "Codigo";
         encabezados[1] = "Descripción";
@@ -262,32 +288,37 @@ public class BuscarProductosGUI extends JDialog {
         encabezados[4] = "Unidad";
         String encabezadoPrecio = (movimiento == Movimiento.VENTA) ? "P. Lista"
                 : (movimiento == Movimiento.PEDIDO) ? "P. Lista"
-                : (movimiento == Movimiento.COMPRA) ? "P.Costo" : "";
+                        : (movimiento == Movimiento.COMPRA) ? "P.Costo" : "";
         encabezados[5] = encabezadoPrecio;
         modeloTablaResultados.setColumnIdentifiers(encabezados);
-        tbl_Resultados.setModel(modeloTablaResultados);        
+        tbl_Resultados.setModel(modeloTablaResultados);
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
         tipos[0] = String.class;
         tipos[1] = String.class;
-        tipos[2] = BigDecimal.class;        
-        tipos[3] = BigDecimal.class;        
+        tipos[2] = BigDecimal.class;
+        tipos[3] = BigDecimal.class;
         tipos[4] = String.class;
         tipos[5] = BigDecimal.class;
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
-        tbl_Resultados.getTableHeader().setResizingAllowed(true);        
-        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());        
+        tbl_Resultados.getTableHeader().setResizingAllowed(true);
+        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(130);
-        tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(130);        
-        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(380);        
+        tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(380);
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(110);
-        tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(110);                
+        tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(110);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(110);
-        tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(110);                
+        tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(110);
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(70);
-        tbl_Resultados.getColumnModel().getColumn(4).setMaxWidth(70);        
+        tbl_Resultados.getColumnModel().getColumn(4).setMaxWidth(70);
         tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(80);
         tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(80);
+        if (renglones == null && movimiento == null && tipoDeComprobante == null) {
+            for (int i = 0; i < 4; i++) {
+                tbl_Resultados.removeColumn(tbl_Resultados.getColumnModel().getColumn((tbl_Resultados.getColumnCount() - 1)));
+            }
+        }
     }
 
     /**
