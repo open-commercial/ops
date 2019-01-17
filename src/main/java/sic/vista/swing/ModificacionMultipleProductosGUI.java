@@ -199,9 +199,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         tbl_ProductosAModifcar = new javax.swing.JTable();
         panel1 = new javax.swing.JPanel();
         cmb_Rubro = new javax.swing.JComboBox();
-        btn_Rubros = new javax.swing.JButton();
         btn_NuevoProveedor = new javax.swing.JButton();
-        btn_Medidas = new javax.swing.JButton();
         cmb_Medida = new javax.swing.JComboBox();
         chk_Rubro = new javax.swing.JCheckBox();
         chk_Proveedor = new javax.swing.JCheckBox();
@@ -257,32 +255,12 @@ public class ModificacionMultipleProductosGUI extends JDialog {
 
         cmb_Rubro.setEnabled(false);
 
-        btn_Rubros.setForeground(java.awt.Color.blue);
-        btn_Rubros.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddBlock.png"))); // NOI18N
-        btn_Rubros.setText("Nuevo");
-        btn_Rubros.setEnabled(false);
-        btn_Rubros.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_RubrosActionPerformed(evt);
-            }
-        });
-
         btn_NuevoProveedor.setForeground(java.awt.Color.blue);
         btn_NuevoProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddProviderBag_16x16.png"))); // NOI18N
         btn_NuevoProveedor.setEnabled(false);
         btn_NuevoProveedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_NuevoProveedorActionPerformed(evt);
-            }
-        });
-
-        btn_Medidas.setForeground(java.awt.Color.blue);
-        btn_Medidas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddRuler_16x16.png"))); // NOI18N
-        btn_Medidas.setText("Nueva");
-        btn_Medidas.setEnabled(false);
-        btn_Medidas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_MedidasActionPerformed(evt);
             }
         });
 
@@ -342,27 +320,24 @@ public class ModificacionMultipleProductosGUI extends JDialog {
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(chkVisibilidad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(chk_UnidadDeMedida, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(chk_Proveedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(chk_Rubro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel1Layout.createSequentialGroup()
-                        .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmb_Medida, javax.swing.GroupLayout.Alignment.TRAILING, 0, 314, Short.MAX_VALUE)
-                            .addComponent(cmb_Rubro, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, 0)
-                        .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btn_Medidas)
-                            .addComponent(btn_Rubros)))
-                    .addGroup(panel1Layout.createSequentialGroup()
-                        .addComponent(rbPublico)
+                        .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(chk_Rubro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(chkVisibilidad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(chk_UnidadDeMedida, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(rbPrivado)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                        .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmb_Medida, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(panel1Layout.createSequentialGroup()
+                                .addComponent(rbPublico)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(rbPrivado)
+                                .addGap(0, 234, Short.MAX_VALUE))
+                            .addComponent(cmb_Rubro, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(panel1Layout.createSequentialGroup()
+                        .addComponent(chk_Proveedor)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtProveedor)
                         .addGap(0, 0, 0)
                         .addComponent(btnBuscarProveedor)
@@ -373,25 +348,26 @@ public class ModificacionMultipleProductosGUI extends JDialog {
 
         panel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnBuscarProveedor, btn_NuevoProveedor});
 
+        panel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chk_Proveedor, chk_Rubro, chk_UnidadDeMedida});
+
         panel1Layout.setVerticalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(chk_Rubro)
-                    .addComponent(cmb_Rubro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_Rubros, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER, false)
-                    .addComponent(chk_Proveedor)
                     .addComponent(btn_NuevoProveedor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscarProveedor)
-                    .addComponent(txtProveedor, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtProveedor)
+                        .addComponent(chk_Proveedor)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(chk_Rubro)
+                    .addComponent(cmb_Rubro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_UnidadDeMedida)
-                    .addComponent(cmb_Medida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_Medidas, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmb_Medida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chkVisibilidad)
@@ -400,11 +376,9 @@ public class ModificacionMultipleProductosGUI extends JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Rubros, cmb_Rubro});
+        panel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarProveedor, btn_NuevoProveedor, cmb_Medida, cmb_Rubro, txtProveedor});
 
-        panel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Medidas, cmb_Medida});
-
-        panel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarProveedor, btn_NuevoProveedor, txtProveedor});
+        panel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {chk_Proveedor, chk_Rubro, chk_UnidadDeMedida});
 
         panel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -708,14 +682,6 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btn_RubrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_RubrosActionPerformed
-        DetalleRubroGUI gui_DetalleRubro = new DetalleRubroGUI();
-        gui_DetalleRubro.setModal(true);
-        gui_DetalleRubro.setLocationRelativeTo(this);
-        gui_DetalleRubro.setVisible(true);
-        this.cargarRubros();
-    }//GEN-LAST:event_btn_RubrosActionPerformed
-
     private void btn_NuevoProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoProveedorActionPerformed
         DetalleProveedorGUI gui_DetalleProveedor = new DetalleProveedorGUI();
         gui_DetalleProveedor.setModal(true);
@@ -726,14 +692,6 @@ public class ModificacionMultipleProductosGUI extends JDialog {
             proveedorSeleccionado = gui_DetalleProveedor.getProveedorCreado();
         }
     }//GEN-LAST:event_btn_NuevoProveedorActionPerformed
-
-    private void btn_MedidasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_MedidasActionPerformed
-        DetalleMedidaGUI gui_DetalleMedida = new DetalleMedidaGUI();
-        gui_DetalleMedida.setModal(true);
-        gui_DetalleMedida.setLocationRelativeTo(this);
-        gui_DetalleMedida.setVisible(true);
-        this.cargarMedidas();
-    }//GEN-LAST:event_btn_MedidasActionPerformed
 
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
         Long idMedida = null;
@@ -837,10 +795,8 @@ public class ModificacionMultipleProductosGUI extends JDialog {
     private void chk_RubroItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_RubroItemStateChanged
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             cmb_Rubro.setEnabled(true);
-            btn_Rubros.setEnabled(true);
         } else {
             cmb_Rubro.setEnabled(false);
-            btn_Rubros.setEnabled(false);
         }
         this.habilitarBotonGuardar();
     }//GEN-LAST:event_chk_RubroItemStateChanged
@@ -862,10 +818,8 @@ public class ModificacionMultipleProductosGUI extends JDialog {
     private void chk_UnidadDeMedidaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UnidadDeMedidaItemStateChanged
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             cmb_Medida.setEnabled(true);
-            btn_Medidas.setEnabled(true);
         } else {
             cmb_Medida.setEnabled(false);
-            btn_Medidas.setEnabled(false);
         }
         this.habilitarBotonGuardar();
     }//GEN-LAST:event_chk_UnidadDeMedidaItemStateChanged
@@ -1080,9 +1034,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
     private javax.swing.ButtonGroup bgVisibilidad;
     private javax.swing.JButton btnBuscarProveedor;
     private javax.swing.JButton btn_Guardar;
-    private javax.swing.JButton btn_Medidas;
     private javax.swing.JButton btn_NuevoProveedor;
-    private javax.swing.JButton btn_Rubros;
     private javax.swing.JCheckBox chkRecargoDescuento;
     private javax.swing.JCheckBox chkVisibilidad;
     private javax.swing.JCheckBox chk_Precios;

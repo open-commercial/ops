@@ -117,6 +117,8 @@ public class PrincipalGUI extends JFrame {
         mnuItm_Transportistas = new javax.swing.JMenuItem();
         mnuItm_FormasDePago = new javax.swing.JMenuItem();
         mnu_Cajas = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
         mnu_Stock = new javax.swing.JMenu();
         mnuItm_Productos = new javax.swing.JMenuItem();
 
@@ -294,6 +296,22 @@ public class PrincipalGUI extends JFrame {
             }
         });
         mnu_Administracion.add(mnu_Cajas);
+
+        jMenuItem1.setText("Rubros");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        mnu_Administracion.add(jMenuItem1);
+
+        jMenuItem2.setText("Medidas");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        mnu_Administracion.add(jMenuItem2);
 
         mb_BarraMenues.add(mnu_Administracion);
 
@@ -676,8 +694,48 @@ public class PrincipalGUI extends JFrame {
         }
     }//GEN-LAST:event_mnuItm_NotasCompraActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), DetalleRubroGUI.class);
+        if (gui == null) {
+            gui = new DetalleRubroGUI();
+            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+            getDesktopPane().add(gui);
+            gui.setVisible(true);
+        } else {
+            try {
+                gui.setSelected(true);
+            } catch (PropertyVetoException ex) {
+                String msjError = "No se pudo seleccionar la ventana requerida.";
+                LOGGER.error(msjError + " - " + ex.getMessage());
+                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), DetalleMedidaGUI.class);
+        if (gui == null) {
+            gui = new DetalleMedidaGUI();
+            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+            getDesktopPane().add(gui);
+            gui.setVisible(true);
+        } else {
+            try {
+                gui.setSelected(true);
+            } catch (PropertyVetoException ex) {
+                String msjError = "No se pudo seleccionar la ventana requerida.";
+                LOGGER.error(msjError + " - " + ex.getMessage());
+                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane dp_Escritorio;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuBar mb_BarraMenues;
     private javax.swing.JMenuItem mnuItm_CambiarEmpresa;
     private javax.swing.JMenuItem mnuItm_CambiarUser;

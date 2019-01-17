@@ -108,7 +108,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="panelPrecios" max="32767" attributes="3"/>
-                          <Component id="panelCantidades" min="-2" max="-2" attributes="1"/>
+                          <Component id="panelCantidades" max="32767" attributes="1"/>
                       </Group>
                       <EmptySpace pref="10" max="32767" attributes="0"/>
                   </Group>
@@ -142,22 +142,14 @@
                               <Component id="txt_Codigo" max="32767" attributes="2"/>
                               <Component id="txt_Descripcion" alignment="0" max="32767" attributes="2"/>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="txtProveedor" max="32767" attributes="0"/>
+                                  <Component id="txtProveedor" pref="373" max="32767" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Component id="btnBuscarProveedor" linkSize="16" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Component id="btn_NuevoProveedor" linkSize="16" min="-2" pref="54" max="-2" attributes="1"/>
                               </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="cmb_Medida" max="32767" attributes="0"/>
-                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                                  <Component id="btn_Medidas" min="-2" pref="108" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="cmb_Rubro" max="32767" attributes="2"/>
-                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                                  <Component id="btn_Rubros" min="-2" pref="108" max="-2" attributes="1"/>
-                              </Group>
+                              <Component id="cmb_Medida" alignment="0" max="32767" attributes="0"/>
+                              <Component id="cmb_Rubro" alignment="0" max="32767" attributes="2"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -187,13 +179,11 @@
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="cmb_Medida" linkSize="1" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="lbl_Medida" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="btn_Medidas" linkSize="1" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="cmb_Rubro" linkSize="1" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="lbl_Rubro" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="btn_Rubros" linkSize="1" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
@@ -236,20 +226,6 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JButton" name="btn_Rubros">
-                  <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
-                    </Property>
-                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/sic/icons/AddBlock.png"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="Nuevo"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_RubrosActionPerformed"/>
-                  </Events>
-                </Component>
                 <Component class="javax.swing.JLabel" name="lbl_Proveedor">
                   <Properties>
                     <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -270,20 +246,6 @@
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_NuevoProveedorActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JButton" name="btn_Medidas">
-                  <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
-                    </Property>
-                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/sic/icons/AddRuler_16x16.png"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="Nueva"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_MedidasActionPerformed"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="cmb_Medida">
@@ -579,7 +541,7 @@
                               <Component id="lbl_Bulto" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="txt_Bulto" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="14" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>

@@ -88,10 +88,8 @@ public class DetalleProductoGUI extends JDialog {
         txt_Codigo = new javax.swing.JTextField();
         lbl_Rubro = new javax.swing.JLabel();
         cmb_Rubro = new javax.swing.JComboBox();
-        btn_Rubros = new javax.swing.JButton();
         lbl_Proveedor = new javax.swing.JLabel();
         btn_NuevoProveedor = new javax.swing.JButton();
-        btn_Medidas = new javax.swing.JButton();
         cmb_Medida = new javax.swing.JComboBox();
         lbl_Medida = new javax.swing.JLabel();
         btnBuscarProveedor = new javax.swing.JButton();
@@ -174,15 +172,6 @@ public class DetalleProductoGUI extends JDialog {
         lbl_Rubro.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Rubro.setText("* Rubro:");
 
-        btn_Rubros.setForeground(java.awt.Color.blue);
-        btn_Rubros.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddBlock.png"))); // NOI18N
-        btn_Rubros.setText("Nuevo");
-        btn_Rubros.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_RubrosActionPerformed(evt);
-            }
-        });
-
         lbl_Proveedor.setForeground(java.awt.Color.red);
         lbl_Proveedor.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Proveedor.setText("* Proveedor:");
@@ -192,15 +181,6 @@ public class DetalleProductoGUI extends JDialog {
         btn_NuevoProveedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_NuevoProveedorActionPerformed(evt);
-            }
-        });
-
-        btn_Medidas.setForeground(java.awt.Color.blue);
-        btn_Medidas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddRuler_16x16.png"))); // NOI18N
-        btn_Medidas.setText("Nueva");
-        btn_Medidas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_MedidasActionPerformed(evt);
             }
         });
 
@@ -235,19 +215,13 @@ public class DetalleProductoGUI extends JDialog {
                     .addComponent(txt_Codigo)
                     .addComponent(txt_Descripcion)
                     .addGroup(panelSuperiorLayout.createSequentialGroup()
-                        .addComponent(txtProveedor)
+                        .addComponent(txtProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
                         .addComponent(btnBuscarProveedor)
                         .addGap(0, 0, 0)
                         .addComponent(btn_NuevoProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelSuperiorLayout.createSequentialGroup()
-                        .addComponent(cmb_Medida, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_Medidas, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelSuperiorLayout.createSequentialGroup()
-                        .addComponent(cmb_Rubro, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_Rubros, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(cmb_Medida, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cmb_Rubro, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -273,17 +247,15 @@ public class DetalleProductoGUI extends JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(cmb_Medida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Medida)
-                    .addComponent(btn_Medidas))
+                    .addComponent(lbl_Medida))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(cmb_Rubro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Rubro)
-                    .addComponent(btn_Rubros))
+                    .addComponent(lbl_Rubro))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panelSuperiorLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarProveedor, btn_Medidas, btn_NuevoProveedor, btn_Rubros, cmb_Medida, cmb_Rubro, txtProveedor});
+        panelSuperiorLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarProveedor, btn_NuevoProveedor, cmb_Medida, cmb_Rubro, txtProveedor});
 
         panelSuperiorLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txt_Codigo, txt_Descripcion});
 
@@ -542,7 +514,7 @@ public class DetalleProductoGUI extends JDialog {
                 .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_Bulto)
                     .addComponent(txt_Bulto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout panelGeneralLayout = new javax.swing.GroupLayout(panelGeneral);
@@ -567,7 +539,7 @@ public class DetalleProductoGUI extends JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(panelPrecios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelCantidades, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(panelCantidades, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(10, Short.MAX_VALUE))
         );
 
@@ -1255,14 +1227,6 @@ public class DetalleProductoGUI extends JDialog {
         });
     }//GEN-LAST:event_txtPrecioCostoFocusGained
 
-    private void btn_MedidasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_MedidasActionPerformed
-        DetalleMedidaGUI gui_DetalleMedida = new DetalleMedidaGUI();
-        gui_DetalleMedida.setModal(true);
-        gui_DetalleMedida.setLocationRelativeTo(this);
-        gui_DetalleMedida.setVisible(true);
-        this.cargarMedidas();
-    }//GEN-LAST:event_btn_MedidasActionPerformed
-
     private void btn_NuevoProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoProveedorActionPerformed
         DetalleProveedorGUI gui_DetalleProveedor = new DetalleProveedorGUI();
         gui_DetalleProveedor.setModal(true);
@@ -1273,14 +1237,6 @@ public class DetalleProductoGUI extends JDialog {
             proveedorSeleccionado = gui_DetalleProveedor.getProveedorCreado();
         }
     }//GEN-LAST:event_btn_NuevoProveedorActionPerformed
-
-    private void btn_RubrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_RubrosActionPerformed
-        DetalleRubroGUI gui_DetalleRubro = new DetalleRubroGUI();
-        gui_DetalleRubro.setModal(true);
-        gui_DetalleRubro.setLocationRelativeTo(this);
-        gui_DetalleRubro.setVisible(true);
-        this.cargarRubros();
-    }//GEN-LAST:event_btn_RubrosActionPerformed
 
     private void btn_EliminarImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarImagenActionPerformed
         lbl_imagen.setIcon(null);
@@ -1336,9 +1292,7 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btn_EliminarImagen;
     private javax.swing.JButton btn_ExaminarArchivos;
-    private javax.swing.JButton btn_Medidas;
     private javax.swing.JButton btn_NuevoProveedor;
-    private javax.swing.JButton btn_Rubros;
     private javax.swing.JCheckBox chkSinLimite;
     private javax.swing.JComboBox cmbIVAPorcentaje;
     private javax.swing.JComboBox cmb_Medida;

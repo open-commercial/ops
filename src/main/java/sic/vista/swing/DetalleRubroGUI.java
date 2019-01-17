@@ -4,8 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,7 @@ import sic.modelo.Rubro;
 import sic.modelo.UsuarioActivo;
 import sic.util.Utilidades;
 
-public class DetalleRubroGUI extends JDialog {
+public class DetalleRubroGUI extends JInternalFrame {
 
     private final DefaultListModel modeloList = new DefaultListModel();
     private Rubro rubroSeleccionado;  
@@ -27,12 +26,6 @@ public class DetalleRubroGUI extends JDialog {
 
     public DetalleRubroGUI() {
         this.initComponents();
-        this.setIcon();
-    }
-
-    private void setIcon() {
-        ImageIcon iconoVentana = new ImageIcon(DetalleRubroGUI.class.getResource("/sic/icons/Block.png"));
-        this.setIconImage(iconoVentana.getImage());
     }
 
     @SuppressWarnings("unchecked")
@@ -49,12 +42,23 @@ public class DetalleRubroGUI extends JDialog {
         btn_Actualizar = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setClosable(true);
         setTitle("Administrar Rubros");
-        setResizable(false);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                formWindowOpened(evt);
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -261,12 +265,12 @@ public class DetalleRubroGUI extends JDialog {
         evt.setKeyChar(Utilidades.convertirAMayusculas(evt.getKeyChar()));
     }//GEN-LAST:event_txt_NuevoKeyTyped
 
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+    private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         this.cargarListRubros();
         if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
             btn_Eliminar.setEnabled(false);
         }
-    }//GEN-LAST:event_formWindowOpened
+    }//GEN-LAST:event_formInternalFrameOpened
 
     private void cargarListRubros() {
         modeloList.clear();
