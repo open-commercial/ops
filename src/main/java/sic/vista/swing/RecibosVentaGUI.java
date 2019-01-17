@@ -42,7 +42,6 @@ public class RecibosVentaGUI extends JInternalFrame {
     private List<Recibo> recibosParcial = new ArrayList<>();
     private Cliente clienteSeleccionado;
     private Usuario usuarioSeleccionado;
-    private boolean tienePermisoSegunRoles;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(970, 600);
     private static int totalElementosBusqueda;
@@ -56,7 +55,7 @@ public class RecibosVentaGUI extends JInternalFrame {
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
                 if (recibosTotal.size() >= 10) {
                     NUMERO_PAGINA += 1;
-                    buscar(false);
+                    buscar();
                 }
             }
         });
@@ -90,6 +89,9 @@ public class RecibosVentaGUI extends JInternalFrame {
                 uriCriteria += "&ordenarPor=concepto";
                 break;
             case 2:
+                uriCriteria += "&ordenarPor=formaDePago";
+                break;
+            case 3:
                 uriCriteria += "&ordenarPor=monto";
                 break;
         }
@@ -108,13 +110,14 @@ public class RecibosVentaGUI extends JInternalFrame {
 
     private void setColumnas() {     
         //nombres de columnas
-        String[] encabezados = new String[6];
+        String[] encabezados = new String[7];
         encabezados[0] = "Fecha Recibo";
         encabezados[1] = "Nº Recibo";
         encabezados[2] = "Cliente";
         encabezados[3] = "Usuario";
-        encabezados[4] = "Monto";
-        encabezados[5] = "Concepto";
+        encabezados[4] = "Forma de Pago";
+        encabezados[5] = "Monto";
+        encabezados[6] = "Concepto";
         modeloTablaFacturas.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaFacturas);
         //tipo de dato columnas
@@ -123,8 +126,9 @@ public class RecibosVentaGUI extends JInternalFrame {
         tipos[1] = String.class;
         tipos[2] = String.class;
         tipos[3] = String.class;
-        tipos[4] = BigDecimal.class;
-        tipos[5] = String.class;
+        tipos[4] = String.class;
+        tipos[5] = BigDecimal.class;
+        tipos[6] = String.class;
         modeloTablaFacturas.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
@@ -132,15 +136,16 @@ public class RecibosVentaGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(140);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(130);
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(310);
-        tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(140);
-        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(130);
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(320);
+        tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(180);
+        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(320);
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         tbl_Resultados.getColumnModel().getColumn(0).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
     }
 
-    private void buscar(boolean calcularResultados) {
+    private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
         String uriCriteria = getUriCriteria();
         try {
@@ -203,6 +208,7 @@ public class RecibosVentaGUI extends JInternalFrame {
         btn_Buscar.setEnabled(status);        
         btn_Eliminar.setEnabled(status);
         btn_VerDetalle.setEnabled(status);
+        btnCrearNotaDebito.setEnabled(status);
         tbl_Resultados.setEnabled(status);
         sp_Resultados.setEnabled(status);
         tbl_Resultados.requestFocus();
@@ -210,7 +216,7 @@ public class RecibosVentaGUI extends JInternalFrame {
 
     private void cargarResultadosAlTable() {
         recibosParcial.stream().map(recibo -> {
-            Object[] fila = new Object[6];
+            Object[] fila = new Object[7];
             fila[0] = recibo.getFecha();
             if (recibo.getNumSerie() == 0 && recibo.getNumRecibo() == 0) {
                 fila[1] = "";
@@ -219,8 +225,9 @@ public class RecibosVentaGUI extends JInternalFrame {
             }
             fila[2] = recibo.getNombreFiscalCliente();
             fila[3] = recibo.getNombreUsuario();
-            fila[4] = recibo.getMonto();
-            fila[5] = recibo.getConcepto();
+            fila[4] = recibo.getNombreFormaDePago();
+            fila[5] = recibo.getMonto();
+            fila[6] = recibo.getConcepto();
             return fila;
         }).forEach(fila -> {
             modeloTablaFacturas.addRow(fila);
@@ -243,10 +250,10 @@ public class RecibosVentaGUI extends JInternalFrame {
         this.setColumnas();
     }
 
-    private void limpiarYBuscar(boolean calcularResultados) {
+    private void limpiarYBuscar() {
         this.resetScroll();
         this.limpiarJTable();
-        this.buscar(calcularResultados);
+        this.buscar();
     }
 
     private void lanzarReporteRecibo() {
@@ -285,8 +292,6 @@ public class RecibosVentaGUI extends JInternalFrame {
         } else {
             btn_Eliminar.setEnabled(false);
         }
-        tienePermisoSegunRoles = rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
-                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO);
     }
     
     @SuppressWarnings("unchecked")
@@ -491,6 +496,11 @@ public class RecibosVentaGUI extends JInternalFrame {
         });
 
         txt_Concepto.setEnabled(false);
+        txt_Concepto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_ConceptoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout subPanelFiltros1Layout = new javax.swing.GroupLayout(subPanelFiltros1);
         subPanelFiltros1.setLayout(subPanelFiltros1Layout);
@@ -654,7 +664,7 @@ public class RecibosVentaGUI extends JInternalFrame {
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
 
-        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha Recibo", "Concepto", "Monto" }));
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha Recibo", "Concepto", "Forma de Pago", "Monto" }));
         cmbOrden.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbOrdenItemStateChanged(evt);
@@ -738,7 +748,7 @@ public class RecibosVentaGUI extends JInternalFrame {
 }//GEN-LAST:event_chk_ClienteItemStateChanged
 
     private void btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarActionPerformed
-        this.limpiarYBuscar(true);
+        this.limpiarYBuscar();
 }//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void btn_VerDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VerDetalleActionPerformed
@@ -756,7 +766,7 @@ public class RecibosVentaGUI extends JInternalFrame {
                 try {
                     RestClient.getRestTemplate().delete("/recibos?idRecibo="
                             + recibosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)));
-                    this.limpiarYBuscar(true);
+                    this.limpiarYBuscar();
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (ResourceAccessException ex) {
@@ -820,11 +830,11 @@ public class RecibosVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_btnBuscarUsuariosActionPerformed
 
     private void cmbOrdenItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbOrdenItemStateChanged
-        this.limpiarYBuscar(true);
+        this.limpiarYBuscar();
     }//GEN-LAST:event_cmbOrdenItemStateChanged
 
     private void cmbSentidoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbSentidoItemStateChanged
-        this.limpiarYBuscar(true);
+        this.limpiarYBuscar();
     }//GEN-LAST:event_cmbSentidoItemStateChanged
 
     private void chk_ConceptoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ConceptoItemStateChanged
@@ -871,6 +881,10 @@ public class RecibosVentaGUI extends JInternalFrame {
             detalleNotaDebitoGUI.setVisible(true);
         }
     }//GEN-LAST:event_btnCrearNotaDebitoActionPerformed
+
+    private void txt_ConceptoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_ConceptoActionPerformed
+        this.limpiarYBuscar();
+    }//GEN-LAST:event_txt_ConceptoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarCliente;

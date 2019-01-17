@@ -378,6 +378,9 @@
               <Properties>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_ConceptoActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -513,10 +516,11 @@
         <Component class="javax.swing.JComboBox" name="cmbOrden">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="3">
+              <StringArray count="4">
                 <StringItem index="0" value="Fecha Recibo"/>
                 <StringItem index="1" value="Concepto"/>
-                <StringItem index="2" value="Monto"/>
+                <StringItem index="2" value="Forma de Pago"/>
+                <StringItem index="3" value="Monto"/>
               </StringArray>
             </Property>
           </Properties>
