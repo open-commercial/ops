@@ -209,8 +209,7 @@ public class DetalleMedidaGUI extends JDialog {
         try {
             Medida medida = new Medida();
             medida.setNombre(txt_Nuevo.getText().trim());
-            medida.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
-            RestClient.getRestTemplate().postForObject("/medidas", medida, Medida.class);
+            RestClient.getRestTemplate().postForObject("/medidas?idEmpresa=" + (EmpresaActiva.getInstance().getEmpresa()).getId_Empresa(), medida, Medida.class);
             txt_Nuevo.setText("");
             this.cargarListMedidas();
         } catch (RestClientResponseException ex) {
@@ -241,8 +240,7 @@ public class DetalleMedidaGUI extends JDialog {
                 Medida medidaModificada = new Medida();
                 medidaModificada.setId_Medida(medidaSeleccionada.getId_Medida());
                 medidaModificada.setNombre(txt_Nuevo.getText().trim());
-                medidaModificada.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
-                RestClient.getRestTemplate().put("/medidas", medidaModificada);
+                RestClient.getRestTemplate().put("/medidas?idEmpresa=" + (EmpresaActiva.getInstance().getEmpresa()).getId_Empresa(), medidaModificada);
                 txt_Nuevo.setText("");
                 medidaSeleccionada = null;
                 this.cargarListMedidas();

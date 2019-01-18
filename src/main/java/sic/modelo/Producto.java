@@ -29,12 +29,11 @@ public class Producto implements Serializable {
     private boolean publico;
     private Date fechaUltimaModificacion;    
     private String estanteria;    
-    private String estante;    
+    private String estante;        
     private String razonSocialProveedor;    
     private String nota;    
     private Date fechaAlta;    
     private Date fechaVencimiento;   
-    private String nombreEmpresa;
     private boolean eliminado;
     private String urlImagen;
 }

@@ -11,8 +11,9 @@ public class FormaDePago implements Serializable {
     private long id_FormaDePago;
     private String nombre;
     private boolean afectaCaja;
-    private boolean predeterminado;   
-    private Empresa empresa;
+    private boolean predeterminado;
+    private Long idEmpresa;
+    private String nombreEmpresa;
     private boolean eliminada;
 
     @Override

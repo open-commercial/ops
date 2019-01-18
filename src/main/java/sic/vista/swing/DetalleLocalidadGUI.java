@@ -316,8 +316,7 @@ public class DetalleLocalidadGUI extends JDialog {
             Localidad localidad = new Localidad();
             localidad.setNombre(txt_Nombre.getText().trim());
             localidad.setCodigoPostal(txt_CodigoPostal.getText().trim());
-            localidad.setProvincia((Provincia) cmb_Provincias.getSelectedItem());
-            RestClient.getRestTemplate().postForObject("/localidades", localidad, Localidad.class);
+            RestClient.getRestTemplate().postForObject("/localidades?idProvincia=" + ((Provincia) cmb_Provincias.getSelectedItem()).getId_Provincia(), localidad, Localidad.class);
             txt_Nombre.setText("");
             txt_CodigoPostal.setText("");
             this.cargarLocalidadesDeLaProvincia((Provincia) cmb_ProvinciasBusqueda.getSelectedItem());
@@ -353,8 +352,7 @@ public class DetalleLocalidadGUI extends JDialog {
                 localidadModificada.setId_Localidad(localidadSeleccionada.getId_Localidad());
                 localidadModificada.setNombre(txt_Nombre.getText().trim());
                 localidadModificada.setCodigoPostal(txt_CodigoPostal.getText().trim());
-                localidadModificada.setProvincia((Provincia) cmb_Provincias.getSelectedItem());
-                RestClient.getRestTemplate().put("/localidades", localidadModificada);
+                RestClient.getRestTemplate().put("/localidades?idProvincia=" + ((Provincia) cmb_Provincias.getSelectedItem()).getId_Provincia(), localidadModificada);
                 txt_Nombre.setText("");
                 txt_CodigoPostal.setText("");
                 localidadSeleccionada = null;

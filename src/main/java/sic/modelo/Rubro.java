@@ -10,7 +10,8 @@ public class Rubro implements Serializable {
 
     private long id_Rubro;
     private String nombre;
-    private Empresa empresa;
+    private Long idEmpresa;
+    private String nombreEmpresa;
     private boolean eliminado;
 
     @Override

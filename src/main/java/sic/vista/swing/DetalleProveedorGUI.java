@@ -53,14 +53,27 @@ public class DetalleProveedorGUI extends JDialog {
         txtIdFiscal.setValue(proveedorModificar.getIdFiscal());
         cmbCategoriaIVA.setSelectedItem(proveedorModificar.getCategoriaIVA());
         txtDireccion.setText(proveedorModificar.getDireccion());
-        cmbPais.setSelectedItem(proveedorModificar.getLocalidad().getProvincia().getPais());
-        cmbProvincia.setSelectedItem(proveedorModificar.getLocalidad().getProvincia());
-        cmbLocalidad.setSelectedItem(proveedorModificar.getLocalidad());
+        try {
+            Localidad localidadDelProveedor = RestClient.getRestTemplate().getForObject("/localidades/" + proveedorModificar.getIdLocalidad(), Localidad.class);
+            Provincia provinciaDelProveedor = RestClient.getRestTemplate().getForObject("/provincias/" + localidadDelProveedor.getIdProvincia(), Provincia.class);
+            Pais paisDelProveedor = RestClient.getRestTemplate().getForObject("/paises/" + provinciaDelProveedor.getIdPais(), Pais.class);
+            cmbPais.setSelectedItem(paisDelProveedor);
+            cmbProvincia.setSelectedItem(provinciaDelProveedor);
+            cmbLocalidad.setSelectedItem(localidadDelProveedor);
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
         txtTelPrimario.setText(proveedorModificar.getTelPrimario());
         txtTelSecundario.setText(proveedorModificar.getTelSecundario());
         txtContacto.setText(proveedorModificar.getContacto());
         txtEmail.setText(proveedorModificar.getEmail());
         txtWeb.setText(proveedorModificar.getWeb());
+
     }
 
     private void limpiarYRecargarComponentes() {
@@ -496,14 +509,13 @@ public class DetalleProveedorGUI extends JDialog {
                 proveedor.setIdFiscal((Long) txtIdFiscal.getValue());
                 proveedor.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
                 proveedor.setDireccion(txtDireccion.getText().trim());
-                proveedor.setLocalidad((Localidad) cmbLocalidad.getSelectedItem());
                 proveedor.setTelPrimario(txtTelPrimario.getText().trim());
                 proveedor.setTelSecundario(txtTelSecundario.getText().trim());
                 proveedor.setContacto(txtContacto.getText().trim());
                 proveedor.setEmail(txtEmail.getText().trim());
                 proveedor.setWeb(txtWeb.getText().trim());
-                proveedor.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
-                proveedorNuevo = RestClient.getRestTemplate().postForObject("/proveedores", proveedor, Proveedor.class);
+                RestClient.getRestTemplate().postForObject("/proveedores?idEmpresa=" + (EmpresaActiva.getInstance().getEmpresa()).getId_Empresa()
+                        + "&idLocalidad=" + ((Localidad) cmbLocalidad.getSelectedItem()).getId_Localidad(), proveedor, Proveedor.class);
                 int respuesta = JOptionPane.showConfirmDialog(this,
                         "El proveedor se guardó correctamente.\n¿Desea dar de alta otro proveedor?",
                         "Aviso", JOptionPane.YES_NO_OPTION);
@@ -519,14 +531,13 @@ public class DetalleProveedorGUI extends JDialog {
                 proveedorModificar.setIdFiscal((Long) txtIdFiscal.getValue());
                 proveedorModificar.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
                 proveedorModificar.setDireccion(txtDireccion.getText().trim());
-                proveedorModificar.setLocalidad((Localidad) cmbLocalidad.getSelectedItem());
                 proveedorModificar.setTelPrimario(txtTelPrimario.getText().trim());
                 proveedorModificar.setTelSecundario(txtTelSecundario.getText().trim());
                 proveedorModificar.setContacto(txtContacto.getText().trim());
                 proveedorModificar.setEmail(txtEmail.getText().trim());
                 proveedorModificar.setWeb(txtWeb.getText().trim());
-                proveedorModificar.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
-                RestClient.getRestTemplate().put("/proveedores", proveedorModificar);
+                RestClient.getRestTemplate().put("/proveedores?idEmpresa=" + (EmpresaActiva.getInstance().getEmpresa()).getId_Empresa()
+                        + "&idLocalidad=" + ((Localidad) cmbLocalidad.getSelectedItem()).getId_Localidad(), proveedorModificar);
                 JOptionPane.showMessageDialog(this, "El proveedor se modificó correctamente.",
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();

@@ -46,9 +46,21 @@ public class DetalleTransportistaGUI extends JDialog {
     private void cargarTransportistaParaModificar() {
         txt_Nombre.setText(transportistaModificar.getNombre());
         txt_Direccion.setText(transportistaModificar.getDireccion());
-        cmb_Pais.setSelectedItem(transportistaModificar.getLocalidad().getProvincia().getPais());
-        cmb_Provincia.setSelectedItem(transportistaModificar.getLocalidad().getProvincia());
-        cmb_Localidad.setSelectedItem(transportistaModificar.getLocalidad());
+        try {
+            Localidad localidadDelTransportista = RestClient.getRestTemplate().getForObject("/localidades/" + transportistaModificar.getIdLocalidad(), Localidad.class);
+            Provincia provinciaDelTransportista = RestClient.getRestTemplate().getForObject("/provincias/" + localidadDelTransportista.getIdProvincia(), Provincia.class);
+            Pais paisDelTransportista = RestClient.getRestTemplate().getForObject("/paises/" + provinciaDelTransportista.getIdPais(), Pais.class);
+            cmb_Pais.setSelectedItem(paisDelTransportista);
+            cmb_Provincia.setSelectedItem(provinciaDelTransportista);
+            cmb_Localidad.setSelectedItem(localidadDelTransportista);
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
         txt_Telefono.setText(transportistaModificar.getTelefono());
         txt_Web.setText(transportistaModificar.getWeb());
     }
@@ -369,11 +381,10 @@ public class DetalleTransportistaGUI extends JDialog {
                     Transportista transportista = new Transportista();
                     transportista.setNombre(txt_Nombre.getText().trim());
                     transportista.setDireccion(txt_Direccion.getText().trim());
-                    transportista.setLocalidad((Localidad) cmb_Localidad.getSelectedItem());
                     transportista.setTelefono(txt_Telefono.getText().trim());
                     transportista.setWeb(txt_Web.getText().trim());
-                    transportista.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
-                    RestClient.getRestTemplate().postForObject("/transportistas", transportista, Transportista.class);
+                    RestClient.getRestTemplate().postForObject("/transportistas?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                            + "&idLocalidad=" + ((Localidad) cmb_Localidad.getSelectedItem()).getId_Localidad(), transportista, Transportista.class);
                     int respuesta = JOptionPane.showConfirmDialog(this,
                             "El transportista se guardó correctamente.\n¿Desea dar de alta otro transportista?",
                             "Aviso", JOptionPane.YES_NO_OPTION);
@@ -386,10 +397,10 @@ public class DetalleTransportistaGUI extends JDialog {
                 if (operacion == TipoDeOperacion.ACTUALIZACION) {
                     transportistaModificar.setNombre(txt_Nombre.getText().trim());
                     transportistaModificar.setDireccion(txt_Direccion.getText().trim());
-                    transportistaModificar.setLocalidad((Localidad) cmb_Localidad.getSelectedItem());
+                    transportistaModificar.setIdLocalidad(((Localidad) cmb_Localidad.getSelectedItem()).getId_Localidad());
                     transportistaModificar.setTelefono(txt_Telefono.getText().trim());
                     transportistaModificar.setWeb(txt_Web.getText().trim());
-                    transportistaModificar.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
+                    transportistaModificar.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
                     RestClient.getRestTemplate().put("/transportistas", transportistaModificar);
                     JOptionPane.showMessageDialog(this, "El transportista se modificó correctamente!",
                             "Aviso", JOptionPane.INFORMATION_MESSAGE);

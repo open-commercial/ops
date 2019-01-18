@@ -10,7 +10,8 @@ public class Provincia implements Serializable {
 
     private long id_Provincia;
     private String nombre;    
-    private Pais pais;    
+    private Long idPais;
+    private String nombrePais;   
     private boolean eliminada = false;
 
     @Override

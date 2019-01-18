@@ -74,12 +74,12 @@ public class FormasDePagoGUI extends JInternalFrame {
             FormaDePago formaDePago = new FormaDePago();
             formaDePago.setNombre(txt_Nombre.getText().trim());
             formaDePago.setAfectaCaja(chk_AfectaCaja.isSelected());
-            formaDePago.setEmpresa(EmpresaActiva.getInstance().getEmpresa());
-            RestClient.getRestTemplate().postForObject("/formas-de-pago",
+            RestClient.getRestTemplate().postForObject("/formas-de-pago?idEmpresa="
+                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                     formaDePago,
                     FormaDePago.class);
             txt_Nombre.setText("");
-            chk_AfectaCaja.setSelected(false);            
+            chk_AfectaCaja.setSelected(false);
             this.cargarFormasDePago();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
