@@ -25,6 +25,7 @@ import sic.modelo.UsuarioActivo;
 public class DetalleProveedorGUI extends JDialog {
 
     private Proveedor proveedorModificar;
+    private Proveedor proveedorNuevo;
     private final TipoDeOperacion operacion;  
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
@@ -156,14 +157,18 @@ public class DetalleProveedorGUI extends JDialog {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) 
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-            btnNuevaLocalidad.setEnabled(false);
-            btnNuevaProvincia.setEnabled(false);
-            btnNuevoPais.setEnabled(false);
+            btnNuevaLocalidad.setEnabled(true);
+            btnNuevaProvincia.setEnabled(true);
+            btnNuevoPais.setEnabled(true);
         } else {
             btnNuevaLocalidad.setEnabled(false);
             btnNuevaProvincia.setEnabled(false);
             btnNuevoPais.setEnabled(false);
         }
+    }
+    
+    public Proveedor getProveedorCreado() {
+        return proveedorNuevo;
     }
     
     @SuppressWarnings("unchecked")

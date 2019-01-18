@@ -8,6 +8,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class CuentaCorrienteProveedor extends CuentaCorriente {
 
-    private String razonSocialProveedor;
+    private Proveedor proveedor;
     
 }

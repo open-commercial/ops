@@ -88,19 +88,25 @@
                               <Component id="chk_Codigo" min="-2" max="-2" attributes="0"/>
                               <Component id="chk_Proveedor" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="txt_Descripcion" alignment="0" min="-2" pref="319" max="-2" attributes="2"/>
-                              <Component id="cmb_Rubro" alignment="0" min="-2" pref="319" max="-2" attributes="0"/>
-                              <Component id="txt_Codigo" min="-2" pref="319" max="-2" attributes="2"/>
-                              <Component id="cmb_Proveedor" alignment="0" min="-2" pref="319" max="-2" attributes="2"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="txtProveedor" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                  <Component id="btnBuscarProveedor" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="txt_Descripcion" alignment="0" min="-2" pref="319" max="-2" attributes="2"/>
+                                  <Component id="cmb_Rubro" alignment="0" min="-2" pref="319" max="-2" attributes="0"/>
+                                  <Component id="txt_Codigo" min="-2" pref="319" max="-2" attributes="2"/>
+                              </Group>
                           </Group>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="chk_Disponibilidad" max="32767" attributes="0"/>
                               <Component id="chk_visibilidad" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="rb_privado" alignment="0" max="32767" attributes="0"/>
                               <Component id="rb_Todos" alignment="0" max="32767" attributes="0"/>
@@ -118,28 +124,29 @@
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="chk_Codigo" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txt_Codigo" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txt_Codigo" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="chk_Disponibilidad" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="rb_Todos" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="chk_Descripcion" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txt_Descripcion" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txt_Descripcion" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="rb_Faltantes" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="chk_Rubro" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmb_Rubro" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="cmb_Rubro" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="chk_visibilidad" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="rb_publico" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="chk_Proveedor" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmb_Proveedor" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="rb_privado" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtProveedor" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnBuscarProveedor" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -175,14 +182,6 @@
           <Events>
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_ProveedorItemStateChanged"/>
           </Events>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cmb_Proveedor">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btn_Buscar">
           <Properties>
@@ -290,6 +289,24 @@
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
         </Component>
+        <Component class="javax.swing.JTextField" name="txtProveedor">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="opaque" type="boolean" value="false"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnBuscarProveedor">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/sic/icons/Search_16x16.png"/>
+            </Property>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarProveedorActionPerformed"/>
+          </Events>
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="panelResultados">
@@ -323,7 +340,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="sp_Resultados" pref="266" max="32767" attributes="0"/>
+                  <Component id="sp_Resultados" pref="250" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="btn_Nuevo" linkSize="2" alignment="2" max="32767" attributes="0"/>
