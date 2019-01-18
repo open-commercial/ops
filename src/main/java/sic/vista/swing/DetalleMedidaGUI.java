@@ -14,12 +14,15 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Medida;
+import sic.modelo.Rol;
+import sic.modelo.UsuarioActivo;
 import sic.util.Utilidades;
 
 public class DetalleMedidaGUI extends JInternalFrame {
 
     private final DefaultListModel modeloList = new DefaultListModel();
     private Medida medidaSeleccionada;
+    private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleMedidaGUI() {
@@ -61,6 +64,7 @@ public class DetalleMedidaGUI extends JInternalFrame {
 
         setClosable(true);
         setTitle("Administrar Unidades de Medida");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Ruler_16x16.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameOpened(evt);
@@ -285,6 +289,9 @@ public class DetalleMedidaGUI extends JInternalFrame {
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         this.cargarListMedidas();
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(false);
+        }
     }//GEN-LAST:event_formInternalFrameOpened
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -44,6 +44,7 @@ public class DetalleRubroGUI extends JInternalFrame {
 
         setClosable(true);
         setTitle("Administrar Rubros");
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Block.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameOpened(evt);

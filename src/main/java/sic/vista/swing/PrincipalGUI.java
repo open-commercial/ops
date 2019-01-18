@@ -297,6 +297,7 @@ public class PrincipalGUI extends JFrame {
         });
         mnu_Administracion.add(mnu_Cajas);
 
+        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Block.png"))); // NOI18N
         jMenuItem1.setText("Rubros");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -305,6 +306,7 @@ public class PrincipalGUI extends JFrame {
         });
         mnu_Administracion.add(jMenuItem1);
 
+        jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Ruler_16x16.png"))); // NOI18N
         jMenuItem2.setText("Medidas");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

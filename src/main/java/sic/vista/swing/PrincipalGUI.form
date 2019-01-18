@@ -204,6 +204,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/sic/icons/Block.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Rubros"/>
               </Properties>
               <Events>
@@ -212,6 +215,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem2">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/sic/icons/Ruler_16x16.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Medidas"/>
               </Properties>
               <Events>
