@@ -22,6 +22,7 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
+import sic.modelo.Localidad;
 import sic.modelo.Movimiento;
 import sic.modelo.NotaDebito;
 import sic.modelo.Proveedor;
@@ -102,10 +103,11 @@ public class DetalleNotaDebitoGUI extends JDialog {
 
     private void cargarDetalleProveedor() {
         txtNombre.setText(proveedor.getRazonSocial());
+        Localidad localidadDelProveedor = RestClient.getRestTemplate().getForObject("/localidades/" + proveedor.getIdLocalidad(), Localidad.class);
         txtDomicilio.setText(proveedor.getDireccion()
-                + " " + proveedor.getLocalidad().getNombre()
-                + " " + proveedor.getLocalidad().getProvincia().getNombre()                                
-                + " " + proveedor.getLocalidad().getProvincia().getPais());        
+                + " " + localidadDelProveedor.getNombre()
+                + " " + localidadDelProveedor.getNombreProvincia()
+                + " " + localidadDelProveedor.getNombrePais());        
         if (proveedor.getIdFiscal() != null) txtIdFiscal.setText(proveedor.getIdFiscal().toString());
         txtCondicionIVA.setText(proveedor.getCategoriaIVA().toString());
     }
@@ -232,10 +234,11 @@ public class DetalleNotaDebitoGUI extends JDialog {
             txtNombre.setText(proveedorDeNota.getRazonSocial());
             cmbDescripcionRenglon2.removeAllItems();
             cmbDescripcionRenglon2.addItem(notaDebito.getMotivo());
+            Localidad localidadDeNotaProveedor = RestClient.getRestTemplate().getForObject("/localidades/" + proveedorDeNota.getIdLocalidad(), Localidad.class);
             txtDomicilio.setText(proveedorDeNota.getDireccion()
-                    + " " + proveedorDeNota.getLocalidad().getNombre()
-                    + " " + proveedorDeNota.getLocalidad().getProvincia().getNombre()
-                    + " " + proveedorDeNota.getLocalidad().getProvincia().getPais());
+                    + " " + localidadDeNotaProveedor.getNombre()
+                    + " " + localidadDeNotaProveedor.getNombreProvincia()
+                    + " " + localidadDeNotaProveedor.getNombrePais());
             txtCondicionIVA.setText(proveedorDeNota.getCategoriaIVA().toString());
             if (proveedorDeNota.getIdFiscal() != null) txtIdFiscal.setText(proveedorDeNota.getIdFiscal().toString());            
             Recibo reciboNotaDebitoProveedor = RestClient.getRestTemplate().getForObject("/recibos/" + notaDebito.getIdRecibo(), Recibo.class);
@@ -795,6 +798,12 @@ public class DetalleNotaDebitoGUI extends JDialog {
             this.setTitle("Nueva Nota de Debito");
             try {
                 recibo = RestClient.getRestTemplate().getForObject("/recibos/" + idRecibo, Recibo.class);
+                if (cliente != null) {
+                    this.cargarDetalleCliente();
+                } else if (proveedor != null) {
+                    this.cargarDetalleProveedor();
+                    dcFechaNota.setDate(new Date());
+                }
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             } catch (ResourceAccessException ex) {
@@ -802,12 +811,6 @@ public class DetalleNotaDebitoGUI extends JDialog {
                 JOptionPane.showMessageDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                         "Error", JOptionPane.ERROR_MESSAGE);
-            }
-            if (cliente != null) {
-                this.cargarDetalleCliente();
-            } else if (proveedor != null) {
-                this.cargarDetalleProveedor();
-                dcFechaNota.setDate(new Date());
             }
             this.cargarDetalleRecibo();
         } else {

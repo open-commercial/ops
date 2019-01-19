@@ -11,10 +11,14 @@ public class Transportista implements Serializable {
     private long id_Transportista;
     private String nombre;
     private String direccion;
-    private Localidad localidad;
+    private Long idLocalidad;
+    private String nombreLocalidad;
+    private String nombreProvincia;
+    private String nombrePais;
     private String web;
     private String telefono;
-    private Empresa empresa;
+    private Long idEmpresa;
+    private String nombreEmpresa;
     private boolean eliminado;
 
     @Override

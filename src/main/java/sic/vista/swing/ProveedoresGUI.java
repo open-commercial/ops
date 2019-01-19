@@ -195,21 +195,22 @@ public class ProveedoresGUI extends JInternalFrame {
     private void cargarResultadosAlTable() {
         cuentasCorrienteProveedoresParcial.stream().map(p -> {
             Object[] fila = new Object[15];
-            fila[0] = p.getProveedor().getCodigo();
-            fila[1] = p.getProveedor().getIdFiscal();
-            fila[2] = p.getProveedor().getRazonSocial();            
-            fila[3] = p.getSaldo();
-            fila[4] = p.getFechaUltimoMovimiento();            
-            fila[5] = p.getProveedor().getDireccion();
-            fila[6] = p.getProveedor().getCategoriaIVA();
-            fila[7] = p.getProveedor().getTelPrimario();
-            fila[8] = p.getProveedor().getTelSecundario();
-            fila[9] = p.getProveedor().getContacto();
-            fila[10] = p.getProveedor().getEmail();
-            fila[11] = p.getProveedor().getWeb();
-            fila[12] = p.getProveedor().getLocalidad().getNombre();
-            fila[13] = p.getProveedor().getLocalidad().getProvincia().getNombre();
-            fila[14] = p.getProveedor().getLocalidad().getProvincia().getPais().getNombre();
+            fila[0] = p.getCodigo();
+            fila[1] = p.getIdFiscal();
+            fila[2] = p.getRazonSocial();
+            fila[3] = p.getSaldoCuentaCorriente();
+            fila[4] = p.getFechaUltimoMovimiento();
+            fila[5] = p.getDireccion();
+            fila[6] = p.getCategoriaIVA();
+            fila[7] = p.getTelPrimario();
+            fila[8] = p.getTelSecundario();
+            fila[9] = p.getContacto();
+            fila[10] = p.getEmail();
+            fila[11] = p.getWeb();
+            Localidad localidadDelProveedor = RestClient.getRestTemplate().getForObject("/localidades/" + p.getIdLocalidad(), Localidad.class);
+            fila[12] = localidadDelProveedor.getNombre();
+            fila[13] = localidadDelProveedor.getNombreProvincia();
+            fila[14] = localidadDelProveedor.getNombrePais();
             return fila;
         }).forEach(f -> {
             modeloTablaResultados.addRow(f);
