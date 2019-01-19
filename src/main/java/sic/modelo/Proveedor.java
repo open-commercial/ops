@@ -1,8 +1,6 @@
 package sic.modelo;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Date;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -25,9 +23,7 @@ public class Proveedor implements Serializable {
     private String nombreLocalidad;
     private Long idEmpresa;
     private String nombreEmpresa;
-    private boolean eliminado;
-    private BigDecimal saldoCuentaCorriente; 
-    private Date fechaUltimoMovimiento;
+    private boolean eliminado;    
 
     @Override
     public String toString() {

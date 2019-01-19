@@ -119,8 +119,8 @@ public class PrincipalGUI extends JFrame {
         mnuItm_Transportistas = new javax.swing.JMenuItem();
         mnuItm_FormasDePago = new javax.swing.JMenuItem();
         mnu_Cajas = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        mnuItmRubros = new javax.swing.JMenuItem();
+        mnuItmMedidas = new javax.swing.JMenuItem();
         mnu_Stock = new javax.swing.JMenu();
         mnuItm_Productos = new javax.swing.JMenuItem();
 
@@ -317,23 +317,23 @@ public class PrincipalGUI extends JFrame {
         });
         mnu_Administracion.add(mnu_Cajas);
 
-        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Block.png"))); // NOI18N
-        jMenuItem1.setText("Rubros");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        mnuItmRubros.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Block.png"))); // NOI18N
+        mnuItmRubros.setText("Rubros");
+        mnuItmRubros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                mnuItmRubrosActionPerformed(evt);
             }
         });
-        mnu_Administracion.add(jMenuItem1);
+        mnu_Administracion.add(mnuItmRubros);
 
-        jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Ruler_16x16.png"))); // NOI18N
-        jMenuItem2.setText("Medidas");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        mnuItmMedidas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Ruler_16x16.png"))); // NOI18N
+        mnuItmMedidas.setText("Medidas");
+        mnuItmMedidas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                mnuItmMedidasActionPerformed(evt);
             }
         });
-        mnu_Administracion.add(jMenuItem2);
+        mnu_Administracion.add(mnuItmMedidas);
 
         mb_BarraMenues.add(mnu_Administracion);
 
@@ -754,11 +754,49 @@ public class PrincipalGUI extends JFrame {
         }
     }//GEN-LAST:event_mnuItm_RecibosCompraActionPerformed
 
+    private void mnuItmRubrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmRubrosActionPerformed
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), DetalleRubroGUI.class);
+        if (gui == null) {
+            gui = new DetalleRubroGUI();
+            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+            getDesktopPane().add(gui);
+            gui.setVisible(true);
+        } else {
+            try {
+                gui.setSelected(true);
+            } catch (PropertyVetoException ex) {
+                String msjError = "No se pudo seleccionar la ventana requerida.";
+                LOGGER.error(msjError + " - " + ex.getMessage());
+                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_mnuItmRubrosActionPerformed
+
+    private void mnuItmMedidasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmMedidasActionPerformed
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), DetalleMedidaGUI.class);
+        if (gui == null) {
+            gui = new DetalleMedidaGUI();
+            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+            getDesktopPane().add(gui);
+            gui.setVisible(true);
+        } else {
+            try {
+                gui.setSelected(true);
+            } catch (PropertyVetoException ex) {
+                String msjError = "No se pudo seleccionar la ventana requerida.";
+                LOGGER.error(msjError + " - " + ex.getMessage());
+                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_mnuItmMedidasActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane dp_Escritorio;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuBar mb_BarraMenues;
+    private javax.swing.JMenuItem mnuItmMedidas;
+    private javax.swing.JMenuItem mnuItmRubros;
     private javax.swing.JMenuItem mnuItm_CambiarEmpresa;
     private javax.swing.JMenuItem mnuItm_CambiarUser;
     private javax.swing.JMenuItem mnuItm_Clientes;
