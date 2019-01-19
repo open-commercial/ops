@@ -34,15 +34,16 @@ import sic.util.Utilidades;
 
 public class BuscarProductosGUI extends JDialog {
 
-    private final TipoDeComprobante tipoDeComprobante;
+    private TipoDeComprobante tipoDeComprobante;
     private ModeloTabla modeloTablaResultados = new ModeloTabla();
     private List<Producto> productosTotal = new ArrayList<>();
     private List<Producto> productosParcial = new ArrayList<>();
-    private final List<RenglonFactura> renglones;
+    private List<RenglonFactura> renglones;
     private Producto productoSeleccionado;
     private RenglonFactura renglon;
     private boolean debeCargarRenglon;    
-    private final Movimiento movimiento;
+    private boolean busquedaParaCompraOVenta;
+    private Movimiento movimiento;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int NUMERO_PAGINA = 0;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -54,24 +55,17 @@ public class BuscarProductosGUI extends JDialog {
         this.renglones = renglones;
         this.movimiento = movimiento;
         this.tipoDeComprobante = tipoDeComprobante;
+        this.busquedaParaCompraOVenta = true;
         this.setColumnas();
-        txtCriteriaBusqueda.addKeyListener(keyHandler);
-        btnBuscar.addKeyListener(keyHandler);
-        tbl_Resultados.addKeyListener(keyHandler);
-        txtaNotaProducto.addKeyListener(keyHandler);
-        txtCantidad.addKeyListener(keyHandler);        
-        txtPorcentajeDescuento.addKeyListener(keyHandler);
-        btnAceptar.addKeyListener(keyHandler);
-        sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
-            JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-            int va = scrollBar.getVisibleAmount() + 10;
-            if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (productosTotal.size() >= 10) {
-                    NUMERO_PAGINA += 1;
-                    buscar();
-                }
-            }
-        });
+        this.agregarListeners();
+    }
+    
+    public BuscarProductosGUI() {
+        this.initComponents();
+        this.setIcon();
+        this.busquedaParaCompraOVenta = false;
+        this.setColumnas();
+        this.agregarListeners();
     }
 
     public boolean debeCargarRenglon() {
@@ -222,16 +216,18 @@ public class BuscarProductosGUI extends JDialog {
 
     private void cargarResultadosAlTable() {
         productosParcial.stream().map(p -> {
-            Object[] fila = new Object[6];
+            Object[] fila = new Object[busquedaParaCompraOVenta ? 6 : 2];
             fila[0] = p.getCodigo();
             fila[1] = p.getDescripcion();
-            fila[2] = p.getCantidad();
-            fila[3] = p.getBulto();
-            fila[4] = p.getNombreMedida();
-            BigDecimal precio = (movimiento == Movimiento.VENTA) ? p.getPrecioLista()
-                    : (movimiento == Movimiento.PEDIDO) ? p.getPrecioLista()
-                    : (movimiento == Movimiento.COMPRA) ? p.getPrecioCosto() : BigDecimal.ZERO;
-            fila[5] = precio;
+            if (busquedaParaCompraOVenta) {
+                fila[2] = p.getCantidad();
+                fila[3] = p.getBulto();
+                fila[4] = p.getNombreMedida();
+                BigDecimal precio = (movimiento == Movimiento.VENTA) ? p.getPrecioLista()
+                        : (movimiento == Movimiento.PEDIDO) ? p.getPrecioLista()
+                                : (movimiento == Movimiento.COMPRA) ? p.getPrecioCosto() : BigDecimal.ZERO;
+                fila[5] = precio;
+            }
             return fila;
         }).forEach(fila -> {
             modeloTablaResultados.addRow(fila);
@@ -253,41 +249,67 @@ public class BuscarProductosGUI extends JDialog {
         this.setColumnas();
     }
 
-    private void setColumnas() {        
-        String[] encabezados = new String[6];
+    private void setColumnas() {
+        String[] encabezados = new String[busquedaParaCompraOVenta ? 6 : 2];
         encabezados[0] = "Codigo";
         encabezados[1] = "Descripción";
-        encabezados[2] = "Cant. Disponible";
-        encabezados[3] = "Cant. por Bulto";
-        encabezados[4] = "Unidad";
-        String encabezadoPrecio = (movimiento == Movimiento.VENTA) ? "P. Lista"
-                : (movimiento == Movimiento.PEDIDO) ? "P. Lista"
-                : (movimiento == Movimiento.COMPRA) ? "P.Costo" : "";
-        encabezados[5] = encabezadoPrecio;
+        if (busquedaParaCompraOVenta) {
+            encabezados[2] = "Cant. Disponible";
+            encabezados[3] = "Cant. por Bulto";
+            encabezados[4] = "Unidad";
+            String encabezadoPrecio = (movimiento == Movimiento.VENTA) ? "P. Lista"
+                    : (movimiento == Movimiento.PEDIDO) ? "P. Lista"
+                            : (movimiento == Movimiento.COMPRA) ? "P.Costo" : "";
+            encabezados[5] = encabezadoPrecio;
+        }
         modeloTablaResultados.setColumnIdentifiers(encabezados);
-        tbl_Resultados.setModel(modeloTablaResultados);        
+        tbl_Resultados.setModel(modeloTablaResultados);
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
         tipos[0] = String.class;
         tipos[1] = String.class;
-        tipos[2] = BigDecimal.class;        
-        tipos[3] = BigDecimal.class;        
-        tipos[4] = String.class;
-        tipos[5] = BigDecimal.class;
+        if (busquedaParaCompraOVenta) {
+            tipos[2] = BigDecimal.class;
+            tipos[3] = BigDecimal.class;
+            tipos[4] = String.class;
+            tipos[5] = BigDecimal.class;
+        }
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
-        tbl_Resultados.getTableHeader().setResizingAllowed(true);        
-        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());        
+        tbl_Resultados.getTableHeader().setResizingAllowed(true);
+        tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(130);
-        tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(130);        
-        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(380);        
-        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(110);
-        tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(110);                
-        tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(110);
-        tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(110);                
-        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(70);
-        tbl_Resultados.getColumnModel().getColumn(4).setMaxWidth(70);        
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(80);
-        tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(80);
+        tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(380);
+        if (busquedaParaCompraOVenta) {
+            tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(110);
+            tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(110);
+            tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(110);
+            tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(110);
+            tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(70);
+            tbl_Resultados.getColumnModel().getColumn(4).setMaxWidth(70);
+            tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(80);
+            tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(80);
+        }
+    }
+
+    private void agregarListeners() {
+        txtCriteriaBusqueda.addKeyListener(keyHandler);
+        btnBuscar.addKeyListener(keyHandler);
+        tbl_Resultados.addKeyListener(keyHandler);
+        txtaNotaProducto.addKeyListener(keyHandler);
+        txtCantidad.addKeyListener(keyHandler);
+        txtPorcentajeDescuento.addKeyListener(keyHandler);
+        btnAceptar.addKeyListener(keyHandler);
+        sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
+            JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
+            int va = scrollBar.getVisibleAmount() + 10;
+            if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
+                if (productosTotal.size() >= 10) {
+                    NUMERO_PAGINA += 1;
+                    buscar();
+                }
+            }
+        });
     }
 
     /**
