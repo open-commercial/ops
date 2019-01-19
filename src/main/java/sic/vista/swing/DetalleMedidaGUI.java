@@ -5,8 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,7 @@ import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
 import sic.util.Utilidades;
 
-public class DetalleMedidaGUI extends JDialog {
+public class DetalleMedidaGUI extends JInternalFrame {
 
     private final DefaultListModel modeloList = new DefaultListModel();
     private Medida medidaSeleccionada;
@@ -28,12 +27,6 @@ public class DetalleMedidaGUI extends JDialog {
 
     public DetalleMedidaGUI() {
         this.initComponents();
-        this.setIcon();
-    }
-
-    private void setIcon() {
-        ImageIcon iconoVentana = new ImageIcon(DetalleMedidaGUI.class.getResource("/sic/icons/Ruler_16x16.png"));
-        this.setIconImage(iconoVentana.getImage());
     }
 
     private void cargarListMedidas() {
@@ -69,12 +62,24 @@ public class DetalleMedidaGUI extends JDialog {
         btn_Actualizar = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setClosable(true);
         setTitle("Administrar Unidades de Medida");
-        setResizable(false);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                formWindowOpened(evt);
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Ruler_16x16.png"))); // NOI18N
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
         });
 
@@ -280,12 +285,12 @@ public class DetalleMedidaGUI extends JDialog {
         evt.setKeyChar(Utilidades.convertirAMayusculas(evt.getKeyChar()));
     }//GEN-LAST:event_txt_NuevoKeyTyped
 
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+    private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         this.cargarListMedidas();
         if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
             btn_Eliminar.setEnabled(false);
         }
-    }//GEN-LAST:event_formWindowOpened
+    }//GEN-LAST:event_formInternalFrameOpened
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Actualizar;
