@@ -14,9 +14,12 @@ public class Gasto implements Serializable {
     private long nroGasto;
     private Date fecha;
     private String concepto;
-    private Empresa empresa;
-    private Usuario usuario;
-    private FormaDePago formaDePago;
+    private Long idEmpresa;
+    private String nombreEmpresa;
+    private Long idUsuario;
+    private String nombreUsuario;
+    private Long idFormaDePago;
+    private String nombreFormaDePago;
     private BigDecimal monto;
     private boolean eliminado;
 }
