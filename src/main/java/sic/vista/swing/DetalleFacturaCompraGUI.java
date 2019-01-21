@@ -66,6 +66,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         operacionAlta = false;
         facturaParaMostrar = facturaCompra;
         txtProveedor.setText(facturaParaMostrar.getRazonSocialProveedor());
+        btnBuscarProveedor.setEnabled(false);
         btn_NuevoProveedor.setEnabled(false);
         dc_FechaFactura.setEnabled(false);
         txt_SerieFactura.setEditable(false);
