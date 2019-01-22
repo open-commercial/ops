@@ -513,7 +513,7 @@ public class CajaGUI extends JInternalFrame {
                 if (tipoDeComprobante.equals(TipoDeComprobante.GASTO)) {
                     Gasto gasto = RestClient.getRestTemplate().getForObject("/gastos/" + id, Gasto.class);
                     String mensaje = "En Concepto de: " + gasto.getConcepto()
-                            + "\nMonto: " + gasto.getMonto() + "\nUsuario: " + gasto.getUsuario().getNombre();
+                            + "\nMonto: " + gasto.getMonto() + "\nUsuario: " + gasto.getNombreUsuario();
                     JOptionPane.showMessageDialog(this, mensaje, "Resumen de Gasto", JOptionPane.INFORMATION_MESSAGE);
                 }
             } catch (RestClientResponseException ex) {

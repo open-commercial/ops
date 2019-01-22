@@ -37,16 +37,12 @@ public class AgregarGastoGUI extends JDialog {
         this.setIconImage(iconoVentana.getImage());
     }
     
-    public Gasto construirGasto(String concepto, BigDecimal monto, FormaDePago formaDePago) {
-        Empresa empresa = EmpresaActiva.getInstance().getEmpresa();        
+    public Gasto construirGasto(String concepto, BigDecimal monto) {      
         Gasto gasto = new Gasto();
         gasto.setConcepto(concepto);
         gasto.setEliminado(false);
-        gasto.setEmpresa(empresa);
         gasto.setFecha(new Date());
-        gasto.setFormaDePago(formaDePago);
         gasto.setMonto(monto);
-        gasto.setUsuario(UsuarioActivo.getInstance().getUsuario());
         return gasto;
     }
 
@@ -182,9 +178,10 @@ public class AgregarGastoGUI extends JDialog {
         }
         Gasto gasto = null;
         try {
-            gasto = RestClient.getRestTemplate().postForObject("/gastos", this.construirGasto(ftxt_Concepto.getText(),
-                    new BigDecimal(ftxt_Monto.getValue().toString()),
-                    (FormaDePago) cmb_FormaDePago.getSelectedItem()), Gasto.class);
+            gasto = RestClient.getRestTemplate().postForObject("/gastos?idEmpresa="
+                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + "&idFormaDePago=" + ((FormaDePago) cmb_FormaDePago.getSelectedItem()).getId_FormaDePago(), this.construirGasto(ftxt_Concepto.getText(),
+                    new BigDecimal(ftxt_Monto.getValue().toString())), Gasto.class);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
