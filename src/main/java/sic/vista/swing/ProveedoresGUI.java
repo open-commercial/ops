@@ -207,10 +207,9 @@ public class ProveedoresGUI extends JInternalFrame {
             fila[9] = p.getProveedor().getContacto();
             fila[10] = p.getProveedor().getEmail();
             fila[11] = p.getProveedor().getWeb();
-            Localidad localidadDelProveedor = RestClient.getRestTemplate().getForObject("/localidades/" + p.getProveedor().getIdLocalidad(), Localidad.class);
-            fila[12] = localidadDelProveedor.getNombre();
-            fila[13] = localidadDelProveedor.getNombreProvincia();
-            fila[14] = localidadDelProveedor.getNombrePais();
+            fila[12] = p.getProveedor().getNombreLocalidad();
+            fila[13] = p.getProveedor().getNombreProvincia();
+            fila[14] = p.getProveedor().getNombrePais();
             return fila;
         }).forEach(f -> {
             modeloTablaResultados.addRow(f);
