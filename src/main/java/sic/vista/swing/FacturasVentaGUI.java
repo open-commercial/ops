@@ -51,7 +51,7 @@ public class FacturasVentaGUI extends JInternalFrame {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(970, 600);
     private static int totalElementosBusqueda;
-    private static int NUMERO_PAGINA = 0;    
+    private static int NUMERO_PAGINA = 0;
 
     public FacturasVentaGUI() {
         this.initComponents();
@@ -73,7 +73,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         txt_NumeroPedido.setText(String.valueOf(nroPedido));
         this.limpiarYBuscar(true);
     }
-    
+
     public void buscarPorSerieNroTipo(long nroSerie, long nroFactura, TipoDeComprobante tipoDeComprobante, long idCliente) {
         chk_NumFactura.setSelected(true);
         txt_SerieFactura.setEnabled(true);
@@ -145,7 +145,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         return uriCriteria;
     }
 
-    private void setColumnas() {     
+    private void setColumnas() {
         //nombres de columnas
         String[] encabezados = new String[20];
         encabezados[0] = "CAE";
@@ -194,7 +194,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         tipos[19] = Date.class;
         modeloTablaFacturas.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
-        tbl_Resultados.getTableHeader().setResizingAllowed(true);        
+        tbl_Resultados.getTableHeader().setResizingAllowed(true);
         //tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(140);
@@ -247,7 +247,9 @@ public class FacturasVentaGUI extends JInternalFrame {
             totalElementosBusqueda = response.getTotalElements();
             facturasParcial = response.getContent();
             facturasTotal.addAll(facturasParcial);
-            if (calcularResultados && tienePermisoSegunRoles) this.calcularResultados(getUriCriteria());            
+            if (calcularResultados && tienePermisoSegunRoles) {
+                this.calcularResultados(getUriCriteria());
+            }
             this.cargarResultadosAlTable();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -308,7 +310,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         } else {
             txt_NumeroPedido.setEnabled(false);
         }
-        btn_Buscar.setEnabled(status);        
+        btn_Buscar.setEnabled(status);
         btn_Nueva.setEnabled(status);
         btn_Eliminar.setEnabled(status);
         btn_VerDetalle.setEnabled(status);
@@ -372,7 +374,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         this.limpiarJTable();
         this.buscar(calcularResultados);
     }
-    
+
     private void cargarTiposDeFactura() {
         try {
             TipoDeComprobante[] tiposDeComprobantes = RestClient.getRestTemplate()
@@ -440,7 +442,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         } else {
             btn_Eliminar.setEnabled(false);
         }
-        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) 
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
             txt_ResultGananciaTotal.setVisible(true);
             lbl_GananciaTotal.setVisible(true);
@@ -452,7 +454,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             lbl_TotalIVAVenta.setVisible(false);
             txt_ResultTotalIVAVenta.setVisible(false);
         }
-        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) 
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
                 || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
             tienePermisoSegunRoles = true;
@@ -466,7 +468,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             chk_Usuario.setEnabled(false);
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -1174,7 +1176,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             LOGGER.error(mensaje + " - " + ex.getMessage());
             JOptionPane.showInternalMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();
-        }        
+        }
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void chk_UsuarioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UsuarioItemStateChanged
@@ -1323,11 +1325,11 @@ public class FacturasVentaGUI extends JInternalFrame {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             FacturaVenta factura = facturasTotal.get(indexFilaSeleccionada);
             if (factura.getTipoComprobante() == TipoDeComprobante.FACTURA_A
-                || factura.getTipoComprobante() == TipoDeComprobante.FACTURA_B
-                || factura.getTipoComprobante() == TipoDeComprobante.FACTURA_C
-                || factura.getTipoComprobante() == TipoDeComprobante.FACTURA_X
-                || factura.getTipoComprobante() == TipoDeComprobante.FACTURA_Y
-                || factura.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
+                    || factura.getTipoComprobante() == TipoDeComprobante.FACTURA_B
+                    || factura.getTipoComprobante() == TipoDeComprobante.FACTURA_C
+                    || factura.getTipoComprobante() == TipoDeComprobante.FACTURA_X
+                    || factura.getTipoComprobante() == TipoDeComprobante.FACTURA_Y
+                    || factura.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
                 SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(
                         factura.getId_Factura(), factura.getTipoComprobante());
                 seleccionDeProductosGUI.setModal(true);
@@ -1335,13 +1337,13 @@ public class FacturasVentaGUI extends JInternalFrame {
                 seleccionDeProductosGUI.setVisible(true);
                 try {
                     Cliente cliente = RestClient.getRestTemplate()
-                    .getForObject("/clientes/" + factura.getIdCliente(),
-                        Cliente.class);
+                            .getForObject("/clientes/" + factura.getIdCliente(),
+                                    Cliente.class);
                     if (!seleccionDeProductosGUI.getRenglonesConCantidadNueva().isEmpty()) {
                         DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(
-                            seleccionDeProductosGUI.getRenglonesConCantidadNueva(),
-                            seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock(),
-                            cliente);
+                                seleccionDeProductosGUI.getRenglonesConCantidadNueva(),
+                                seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock(),
+                                cliente);
                         detalleNotaCredito.setModal(true);
                         detalleNotaCredito.setLocationRelativeTo(this);
                         detalleNotaCredito.setVisible(true);
@@ -1351,13 +1353,13 @@ public class FacturasVentaGUI extends JInternalFrame {
                 } catch (ResourceAccessException ex) {
                     LOGGER.error(ex.getMessage());
                     JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
                 JOptionPane.showInternalMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnCrearNotaCreditoActionPerformed
@@ -1406,7 +1408,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             txtViajante.setText(viajanteSeleccionado.toString());
         }
     }//GEN-LAST:event_btnBuscarViajantesActionPerformed
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarCliente;
     private javax.swing.JButton btnBuscarProductos;
