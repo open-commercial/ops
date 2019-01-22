@@ -338,33 +338,24 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="2" attributes="0">
+                          <Component id="chk_Producto" alignment="2" min="-2" pref="139" max="-2" attributes="0"/>
+                          <Component id="chk_Viajante" alignment="2" min="-2" pref="139" max="-2" attributes="0"/>
+                          <Component id="chk_Usuario" alignment="2" min="-2" pref="139" max="-2" attributes="0"/>
+                          <Component id="chk_Cliente" alignment="2" min="-2" pref="139" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="2" attributes="0">
+                          <Component id="txtCliente" alignment="2" pref="346" max="32767" attributes="0"/>
+                          <Component id="txtUsuario" alignment="2" max="32767" attributes="0"/>
+                          <Component id="txtProducto" alignment="2" max="32767" attributes="0"/>
+                          <Component id="txtViajante" alignment="2" max="32767" attributes="0"/>
+                      </Group>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="chk_Producto" alignment="0" min="-2" pref="139" max="-2" attributes="0"/>
-                                  <Component id="chk_Usuario" alignment="0" min="-2" pref="139" max="-2" attributes="0"/>
-                                  <Component id="chk_Cliente" alignment="0" min="-2" pref="139" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="txtCliente" alignment="0" pref="346" max="32767" attributes="0"/>
-                                  <Component id="txtUsuario" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="txtProducto" alignment="0" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="btnBuscarCliente" alignment="1" min="-2" max="-2" attributes="0"/>
-                                  <Component id="btnBuscarUsuarios" alignment="1" min="-2" max="-2" attributes="0"/>
-                                  <Component id="btnBuscarProductos" alignment="1" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="chk_Viajante" min="-2" pref="139" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="txtViajante" max="32767" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                              <Component id="btnBuscarViajantes" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="btnBuscarCliente" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnBuscarUsuarios" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnBuscarProductos" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnBuscarViajantes" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -374,27 +365,27 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="chk_Cliente" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtCliente" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="btnBuscarCliente" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtCliente" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="chk_Cliente" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="chk_Usuario" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtUsuario" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="btnBuscarUsuarios" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtUsuario" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="chk_Usuario" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="chk_Producto" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtProducto" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="btnBuscarProductos" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtProducto" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="chk_Producto" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="chk_Viajante" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtViajante" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="btnBuscarViajantes" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtViajante" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="chk_Viajante" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -516,34 +507,29 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="1" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="2" attributes="0">
+                          <Component id="chk_TipoFactura" linkSize="10" alignment="2" max="32767" attributes="0"/>
+                          <Component id="chk_Fecha" linkSize="10" alignment="2" min="-2" pref="139" max="-2" attributes="0"/>
+                          <Component id="chk_NumeroPedido" linkSize="10" alignment="2" max="32767" attributes="0"/>
+                          <Component id="chk_NumFactura" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="chk_Fecha" linkSize="10" min="-2" pref="139" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="lbl_Desde" min="-2" max="-2" attributes="1"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Component id="dc_FechaDesde" linkSize="20" min="-2" pref="120" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="chk_NumFactura" linkSize="10" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="txt_SerieFactura" min="-2" pref="59" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="separador" min="-2" pref="14" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="txt_NroFactura" max="32767" attributes="0"/>
                               </Group>
-                              <Group type="102" attributes="0">
-                                  <Component id="chk_NumeroPedido" linkSize="10" max="32767" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="txt_NumeroPedido" max="32767" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="chk_TipoFactura" linkSize="10" max="32767" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="cmb_TipoFactura" min="-2" pref="180" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="txt_NumeroPedido" alignment="0" max="32767" attributes="0"/>
+                              <Component id="cmb_TipoFactura" alignment="0" min="-2" pref="180" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -559,14 +545,14 @@
                       <Group type="103" groupAlignment="2" attributes="0">
                           <Component id="chk_Fecha" linkSize="17" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="dc_FechaDesde" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="dc_FechaHasta" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="lbl_Desde" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="dc_FechaHasta" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="lbl_Hasta" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="chk_TipoFactura" linkSize="17" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="cmb_TipoFactura" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="chk_TipoFactura" linkSize="17" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
@@ -574,11 +560,11 @@
                           <Component id="txt_NumeroPedido" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="chk_NumFactura" linkSize="17" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txt_SerieFactura" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="separador" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txt_NroFactura" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="2" attributes="0">
+                          <Component id="chk_NumFactura" linkSize="17" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txt_SerieFactura" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="separador" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txt_NroFactura" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>

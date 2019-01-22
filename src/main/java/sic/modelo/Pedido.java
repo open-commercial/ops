@@ -23,6 +23,8 @@ public class Pedido implements Serializable {
     private boolean eliminado;    
     private String nombreFiscalCliente;  
     private String nombreUsuario;
+    private Long idViajante;
+    private String nombreViajante;
     private List<Factura> facturas;        
     private List<RenglonPedido> renglones;
     private BigDecimal subTotal;
