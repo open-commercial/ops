@@ -80,6 +80,8 @@ public class DetalleClienteGUI extends JDialog {
                         + idViajante, Usuario.class);
                 cmbViajante.addItem(usuario);
                 cmbViajante.addItem(null);
+                cmbCredencial.addItem(usuario);
+                cmbCredencial.addItem(null);
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             } catch (ResourceAccessException ex) {
@@ -207,14 +209,10 @@ public class DetalleClienteGUI extends JDialog {
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
-            btnNuevaCredencial.setEnabled(true);
-            btnBuscarCredencial.setEnabled(true);
             btnNuevoUsuarioViajante.setEnabled(true);
             lblCredencial.setEnabled(true);
             cmbCredencial.setEnabled(true);
         } else {
-            btnNuevaCredencial.setEnabled(false);
-            btnBuscarCredencial.setEnabled(false);
             btnNuevoUsuarioViajante.setEnabled(false);
             lblCredencial.setEnabled(false);
             cmbCredencial.setEnabled(false);
@@ -244,6 +242,15 @@ public class DetalleClienteGUI extends JDialog {
             btnBuscarCredencial.setEnabled(false);
             lblBonificacion.setEnabled(false);
             txtBonificacion.setEnabled(false);
+        }
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+            btnNuevaCredencial.setEnabled(true);
+            btnBuscarCredencial.setEnabled(true);
+        } else {
+            btnNuevaCredencial.setEnabled(false);
+            btnBuscarCredencial.setEnabled(false);
         }
         if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
                 && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)

@@ -362,25 +362,29 @@ public class ClientesGUI extends JInternalFrame {
         } else {
             btn_Eliminar.setEnabled(false);
         }
-        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) 
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
             btn_setPredeterminado.setEnabled(true);
         } else {
             btn_setPredeterminado.setEnabled(false);
         }
-        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) 
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
                 || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+//            btn_Nuevo.setEnabled(true);
+//            btn_Modificar.setEnabled(true);
             chkViajante.setEnabled(true);
             btnBuscarViajante.setEnabled(true);
             tienePermisoSegunRoles = true;
         } else {
+//            btn_Nuevo.setEnabled(false);
+//            btn_Modificar.setEnabled(false);
             chkViajante.setEnabled(false);
             btnBuscarViajante.setEnabled(false);
             tienePermisoSegunRoles = false;
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
