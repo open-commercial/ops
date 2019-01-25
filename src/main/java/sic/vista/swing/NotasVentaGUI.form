@@ -499,13 +499,13 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="chk_Cliente" linkSize="7" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="chk_Cliente" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="txtCliente" linkSize="9" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="btnBuscarCliente" linkSize="9" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="chk_Usuario" linkSize="7" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="chk_Usuario" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="txtUsuario" linkSize="9" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="btnBuscarUsuarios" linkSize="9" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>

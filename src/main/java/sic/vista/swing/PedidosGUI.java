@@ -174,8 +174,8 @@ public class PedidosGUI extends JInternalFrame {
             fila[1] = p.getFecha();
             fila[2] = p.getNroPedido();
             fila[3] = p.getNombreFiscalCliente();
-            fila[4] = p.getNombreViajante();
-            fila[5] = p.getNombreUsuario();
+            fila[4] = p.getNombreUsuario();
+            fila[5] = p.getNombreViajante();
             fila[6] = p.getTotalEstimado();
             fila[7] = p.getTotalActual();
             return fila;
@@ -208,8 +208,8 @@ public class PedidosGUI extends JInternalFrame {
         encabezados[1] = "Fecha Pedido";
         encabezados[2] = "Nº Pedido";
         encabezados[3] = "Cliente";
-        encabezados[4] = "Viajante";
-        encabezados[5] = "Usuario";
+        encabezados[4] = "Usuario";
+        encabezados[5] = "Viajante";
         encabezados[6] = "Total Estimado";
         encabezados[7] = "Total Actual";
         modeloTablaPedidos.setColumnIdentifiers(encabezados);
@@ -234,9 +234,9 @@ public class PedidosGUI extends JInternalFrame {
         tbl_Pedidos.getColumnModel().getColumn(1).setMaxWidth(140);
         tbl_Pedidos.getColumnModel().getColumn(2).setPreferredWidth(100);
         tbl_Pedidos.getColumnModel().getColumn(2).setMaxWidth(100);
-        tbl_Pedidos.getColumnModel().getColumn(3).setPreferredWidth(150);
+        tbl_Pedidos.getColumnModel().getColumn(3).setPreferredWidth(220);
         tbl_Pedidos.getColumnModel().getColumn(4).setPreferredWidth(220);
-        tbl_Pedidos.getColumnModel().getColumn(5).setPreferredWidth(100);
+        tbl_Pedidos.getColumnModel().getColumn(5).setPreferredWidth(220);
         tbl_Pedidos.getColumnModel().getColumn(6).setPreferredWidth(25);
         tbl_Pedidos.getColumnModel().getColumn(7).setPreferredWidth(25);
         //renderers

@@ -47,6 +47,7 @@ public class NotasVentaGUI extends JInternalFrame {
     private List<Nota> notasParcial = new ArrayList<>();
     private Cliente clienteSeleccionado;
     private Usuario usuarioSeleccionado;
+    private Usuario viajanteSeleccionado;
     private boolean tienePermisoSegunRoles;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(970, 600);
@@ -84,6 +85,9 @@ public class NotasVentaGUI extends JInternalFrame {
         if (chk_Cliente.isSelected() && clienteSeleccionado != null) {
             uriCriteria += "&idCliente=" + clienteSeleccionado.getId_Cliente();
         }
+        if (chk_Viajante.isSelected() && viajanteSeleccionado != null) {
+            uriCriteria += "&idViajante=" + viajanteSeleccionado.getId_Usuario();
+        }
         if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
             uriCriteria += "&idUsuario=" + usuarioSeleccionado.getId_Usuario();
         }
@@ -93,17 +97,18 @@ public class NotasVentaGUI extends JInternalFrame {
 
     private void setColumnas() {        
         //nombres de columnas
-        String[] encabezados = new String[10];
+        String[] encabezados = new String[11];
         encabezados[0] = "CAE";
         encabezados[1] = "Fecha Nota";
         encabezados[2] = "Tipo";
         encabezados[3] = "Nº Nota";
         encabezados[4] = "Cliente";
         encabezados[5] = "Usuario";
-        encabezados[6] = "Total";
-        encabezados[7] = "Nº Nota Afip";
-        encabezados[8] = "Vencimiento CAE";
-        encabezados[9] = "Motivo";
+        encabezados[6] = "Viajante";
+        encabezados[7] = "Total";
+        encabezados[8] = "Nº Nota Afip";
+        encabezados[9] = "Vencimiento CAE";
+        encabezados[10] = "Motivo";
         modeloTablaNotas.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaNotas);
         //tipo de dato columnas
@@ -114,10 +119,11 @@ public class NotasVentaGUI extends JInternalFrame {
         tipos[3] = String.class;
         tipos[4] = String.class;
         tipos[5] = String.class;
-        tipos[6] = BigDecimal.class;
-        tipos[7] = String.class;
-        tipos[8] = Date.class;
-        tipos[9] = String.class;
+        tipos[6] = String.class;
+        tipos[7] = BigDecimal.class;
+        tipos[8] = String.class;
+        tipos[9] = Date.class;
+        tipos[10] = String.class;
         modeloTablaNotas.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
@@ -134,18 +140,19 @@ public class NotasVentaGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(3).setMinWidth(100);
         tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(100);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(250);        
-        tbl_Resultados.getColumnModel().getColumn(6).setMinWidth(120);
-        tbl_Resultados.getColumnModel().getColumn(6).setMaxWidth(120);
-        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(120);
-        tbl_Resultados.getColumnModel().getColumn(7).setMinWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(7).setMaxWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(8).setMinWidth(140);
-        tbl_Resultados.getColumnModel().getColumn(8).setMaxWidth(140);
-        tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(140);
-        tbl_Resultados.getColumnModel().getColumn(9).setMinWidth(500);
+        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(220);   
+        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(7).setMinWidth(120);
+        tbl_Resultados.getColumnModel().getColumn(7).setMaxWidth(120);
+        tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(120);
+        tbl_Resultados.getColumnModel().getColumn(8).setMinWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(8).setMaxWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(9).setMinWidth(140);
+        tbl_Resultados.getColumnModel().getColumn(9).setMaxWidth(140);
+        tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(140);
+        tbl_Resultados.getColumnModel().getColumn(10).setMinWidth(500);
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         tbl_Resultados.getColumnModel().getColumn(1).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
@@ -232,21 +239,22 @@ public class NotasVentaGUI extends JInternalFrame {
 
     private void cargarResultadosAlTable() {
         notasParcial.stream().map(nota -> {
-            Object[] fila = new Object[10];
+            Object[] fila = new Object[11];
             fila[0] = nota.getCAE() == 0 ? "" : nota.getCAE();
             fila[1] = nota.getFecha();
             fila[2] = nota.getTipoComprobante();
             fila[3] = nota.getSerie() + " - " + nota.getNroNota();
             fila[4] = nota.getNombreFiscalCliente();
             fila[5] = nota.getNombreUsuario();
-            fila[6] = nota.getTotal();
+            fila[6] = nota.getNombreViajante();
+            fila[7] = nota.getTotal();
             if (nota.getNumSerieAfip() == 0 && nota.getNumNotaAfip() == 0) {
-                fila[7] = "";
+                fila[8] = "";
             } else {
-                fila[7] = nota.getNumSerieAfip() + " - " + nota.getNumNotaAfip();
+                fila[8] = nota.getNumSerieAfip() + " - " + nota.getNumNotaAfip();
             }
-            fila[8] = nota.getVencimientoCAE();
-            fila[9] = nota.getMotivo();
+            fila[9] = nota.getVencimientoCAE();
+            fila[10] = nota.getMotivo();
             return fila;
         }).forEach(fila -> {
             modeloTablaNotas.addRow(fila);
@@ -1095,18 +1103,18 @@ public class NotasVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_FechaItemStateChanged
 
     private void chk_ViajanteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ViajanteItemStateChanged
-        /*if (chk_Viajante.isSelected() == true) {
+        if (chk_Viajante.isSelected() == true) {
             btnBuscarViajantes.setEnabled(true);
             btnBuscarViajantes.requestFocus();
             txtViajante.setEnabled(true);
         } else {
             btnBuscarViajantes.setEnabled(false);
             txtViajante.setEnabled(false);
-        }*/
+        }
     }//GEN-LAST:event_chk_ViajanteItemStateChanged
 
     private void btnBuscarViajantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarViajantesActionPerformed
-        /*Rol[] rolesParaFiltrar = new Rol[]{Rol.VIAJANTE};
+        Rol[] rolesParaFiltrar = new Rol[]{Rol.VIAJANTE};
         BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar);
         buscarUsuariosGUI.setModal(true);
         buscarUsuariosGUI.setLocationRelativeTo(this);
@@ -1114,9 +1122,9 @@ public class NotasVentaGUI extends JInternalFrame {
         if (buscarUsuariosGUI.getUsuarioSeleccionado() != null) {
             viajanteSeleccionado = buscarUsuariosGUI.getUsuarioSeleccionado();
             txtViajante.setText(viajanteSeleccionado.toString());
-        }*/
+        }
     }//GEN-LAST:event_btnBuscarViajantesActionPerformed
-        
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarCliente;
     private javax.swing.JButton btnBuscarUsuarios;

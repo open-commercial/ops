@@ -399,7 +399,7 @@
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
                           <Component id="chk_Concepto" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="txt_Concepto" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txt_Concepto" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>

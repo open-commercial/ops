@@ -36,6 +36,8 @@ public class Nota implements Serializable {
     private String nombreUsuario;   
     private long idCliente;
     private String nombreFiscalCliente;
+    private long idViajante;
+    private String nombreViajante;
     private long idProveedor;
     private String razonSocialProveedor;
     private long idFacturaVenta;

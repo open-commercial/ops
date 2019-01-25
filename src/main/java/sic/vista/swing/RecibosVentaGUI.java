@@ -118,8 +118,8 @@ public class RecibosVentaGUI extends JInternalFrame {
         encabezados[0] = "Fecha Recibo";
         encabezados[1] = "Nº Recibo";
         encabezados[2] = "Cliente";
-        encabezados[3] = "Viajante";
-        encabezados[4] = "Usuario";
+        encabezados[3] = "Usuario";
+        encabezados[4] = "Viajante";
         encabezados[5] = "Forma de Pago";
         encabezados[6] = "Monto";
         encabezados[7] = "Concepto";
@@ -141,9 +141,9 @@ public class RecibosVentaGUI extends JInternalFrame {
         //tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(140);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(130);
-        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(310);
+        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(220);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(220);
-        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(180);
+        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(220);
         tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(220);
         tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(130);
         tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(320);
@@ -231,8 +231,8 @@ public class RecibosVentaGUI extends JInternalFrame {
                 fila[1] = recibo.getNumSerie() + " - " + recibo.getNumRecibo();
             }
             fila[2] = recibo.getNombreFiscalCliente();
-            fila[3] = recibo.getNombreViajante();
-            fila[4] = recibo.getNombreUsuario();
+            fila[3] = recibo.getNombreUsuario();
+            fila[4] = recibo.getNombreViajante();
             fila[5] = recibo.getNombreFormaDePago();
             fila[6] = recibo.getMonto();
             fila[7] = recibo.getConcepto();

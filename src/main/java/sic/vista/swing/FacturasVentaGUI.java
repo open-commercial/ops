@@ -154,8 +154,8 @@ public class FacturasVentaGUI extends JInternalFrame {
         encabezados[3] = "Nº Factura";
         encabezados[4] = "Fecha Vencimiento";
         encabezados[5] = "Cliente";
-        encabezados[6] = "Viajante";
-        encabezados[7] = "Usuario";
+        encabezados[6] = "Usuario";
+        encabezados[7] = "Viajante";
         encabezados[8] = "Transportista";
         encabezados[9] = "Total";
         encabezados[10] = "SubTotal";
@@ -201,9 +201,9 @@ public class FacturasVentaGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(90);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(130);
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(280);
-        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(190);
-        tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(190);
+        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(220);
         tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(190);
         tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(120);
@@ -329,8 +329,8 @@ public class FacturasVentaGUI extends JInternalFrame {
             fila[3] = factura.getNumSerie() + " - " + factura.getNumFactura();
             fila[4] = factura.getFechaVencimiento();
             fila[5] = factura.getNombreFiscalCliente();
-            fila[6] = factura.getNombreViajante();
-            fila[7] = factura.getNombreUsuario();
+            fila[6] = factura.getNombreUsuario();
+            fila[7] = factura.getNombreViajante();
             fila[8] = factura.getNombreTransportista();
             fila[9] = factura.getTotal();
             fila[10] = factura.getSubTotal();
