@@ -323,7 +323,22 @@ public class BuscarUsuariosGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.setSize(sizeDialog);
-        this.setTitle("Buscar Usuario");
+        if (this.rolesParaFiltrar.length == 1) {
+            switch (this.rolesParaFiltrar[0]) {
+                case ADMINISTRADOR:
+                    this.setTitle("Buscar Administrador");
+                case ENCARGADO:
+                    this.setTitle("Buscar Encargado");
+                case VENDEDOR:
+                    this.setTitle("Buscar Vendedor");
+                case VIAJANTE:
+                    this.setTitle("Buscar Viajante");
+                default:
+                    this.setTitle("Buscar Usuario");
+            }
+        } else {
+            this.setTitle("Buscar Usuario");
+        }
         this.setColumnas();
     }//GEN-LAST:event_formWindowOpened
 
