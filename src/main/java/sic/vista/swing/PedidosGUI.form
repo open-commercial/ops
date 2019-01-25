@@ -61,53 +61,53 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
                           <Component id="btn_Buscar" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="lbl_cantResultados" max="32767" attributes="0"/>
                       </Group>
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="chk_Cliente" linkSize="12" alignment="2" min="-2" pref="128" max="-2" attributes="0"/>
-                              <Component id="chk_Usuario" linkSize="12" alignment="2" min="-2" pref="128" max="-2" attributes="0"/>
-                              <Component id="chk_Viajante" linkSize="12" alignment="2" min="-2" pref="106" max="-2" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="chk_Usuario" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="chk_Cliente" linkSize="12" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="chk_Viajante" linkSize="12" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="txtCliente" linkSize="13" alignment="2" max="32767" attributes="0"/>
-                              <Component id="txtUsuario" linkSize="13" alignment="2" pref="369" max="32767" attributes="0"/>
-                              <Component id="txtViajante" linkSize="13" alignment="2" min="-2" pref="334" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="txtUsuario" alignment="0" pref="330" max="32767" attributes="0"/>
+                              <Component id="txtCliente" alignment="0" max="32767" attributes="0"/>
+                              <Component id="txtViajante" max="32767" attributes="0"/>
                           </Group>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="btnBuscarCliente" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="btnBuscarUsuarios" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="btnBuscarViajantes" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="chk_NumeroPedido" linkSize="14" alignment="2" min="-2" pref="109" max="-2" attributes="0"/>
-                              <Component id="chk_Fecha" linkSize="14" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="chkEstado" linkSize="14" alignment="2" min="-2" pref="128" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cmbEstado" min="-2" pref="140" max="-2" attributes="0"/>
-                              <Component id="txt_NumeroPedido" min="-2" pref="140" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                                  <Component id="lbl_Desde" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                                  <Component id="dc_FechaDesde" linkSize="10" min="-2" pref="150" max="-2" attributes="0"/>
-                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                                  <Component id="lbl_Hasta" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                                  <Component id="dc_FechaHasta" linkSize="10" min="-2" pref="150" max="-2" attributes="0"/>
+                                  <Component id="chk_NumeroPedido" linkSize="14" min="-2" pref="109" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="txt_NumeroPedido" max="32767" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="chkEstado" linkSize="14" min="-2" pref="128" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="cmbEstado" max="32767" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="chk_Fecha" linkSize="14" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="dc_FechaDesde" linkSize="19" min="-2" pref="136" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="dc_FechaHasta" linkSize="19" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -115,30 +115,28 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="txtCliente" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="chk_Cliente" linkSize="11" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnBuscarCliente" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtCliente" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="chk_Fecha" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbl_Desde" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="dc_FechaDesde" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="dc_FechaHasta" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbl_Hasta" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="dc_FechaDesde" linkSize="16" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="dc_FechaHasta" linkSize="16" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnBuscarCliente" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="chk_Usuario" linkSize="11" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtUsuario" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="btnBuscarUsuarios" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="chkEstado" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="cmbEstado" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtUsuario" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="chk_Usuario" linkSize="11" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="txt_NumeroPedido" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="chk_NumeroPedido" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnBuscarViajantes" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtViajante" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="chk_Viajante" linkSize="11" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtViajante" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnBuscarViajantes" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="chk_NumeroPedido" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txt_NumeroPedido" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -167,11 +165,6 @@
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_FechaItemStateChanged"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JLabel" name="lbl_Desde">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Desde:"/>
-          </Properties>
-        </Component>
         <Component class="com.toedter.calendar.JDateChooser" name="dc_FechaDesde">
           <Properties>
             <Property name="dateFormatString" type="java.lang.String" value="dd/MM/yyyy"/>
@@ -182,11 +175,6 @@
           <Properties>
             <Property name="dateFormatString" type="java.lang.String" value="dd/MM/yyyy"/>
             <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lbl_Hasta">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Hasta:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="chk_Cliente">
@@ -352,7 +340,7 @@
                   <Component id="btnFacturar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="btnImprimirPedido" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="613" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="479" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

@@ -320,8 +320,6 @@ public class RecibosVentaGUI extends JInternalFrame {
         btnBuscarCliente = new javax.swing.JButton();
         txtUsuario = new javax.swing.JTextField();
         btnBuscarUsuarios = new javax.swing.JButton();
-        chk_Concepto = new javax.swing.JCheckBox();
-        txt_Concepto = new javax.swing.JTextField();
         chk_Viajante = new javax.swing.JCheckBox();
         txtViajante = new javax.swing.JTextField();
         btnBuscarViajantes = new javax.swing.JButton();
@@ -331,10 +329,10 @@ public class RecibosVentaGUI extends JInternalFrame {
         separador = new javax.swing.JLabel();
         txt_NroRecibo = new javax.swing.JFormattedTextField();
         chk_Fecha = new javax.swing.JCheckBox();
-        lbl_Desde = new javax.swing.JLabel();
         dc_FechaDesde = new com.toedter.calendar.JDateChooser();
         dc_FechaHasta = new com.toedter.calendar.JDateChooser();
-        lbl_Hasta = new javax.swing.JLabel();
+        chk_Concepto = new javax.swing.JCheckBox();
+        txt_Concepto = new javax.swing.JTextField();
         btn_Buscar = new javax.swing.JButton();
         lbl_cantResultados = new javax.swing.JLabel();
         panelOrden = new javax.swing.JPanel();
@@ -410,16 +408,14 @@ public class RecibosVentaGUI extends JInternalFrame {
             .addGroup(panelResultadosLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(sp_Resultados)
                     .addGroup(panelResultadosLayout.createSequentialGroup()
                         .addComponent(btnCrearNotaDebito)
                         .addGap(0, 0, 0)
                         .addComponent(btn_VerDetalle)
                         .addGap(0, 0, 0)
                         .addComponent(btn_Eliminar)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(panelResultadosLayout.createSequentialGroup()
-                        .addComponent(sp_Resultados)
-                        .addContainerGap())))
+                        .addGap(0, 669, Short.MAX_VALUE))))
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCrearNotaDebito, btn_Eliminar, btn_VerDetalle});
@@ -427,8 +423,7 @@ public class RecibosVentaGUI extends JInternalFrame {
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_VerDetalle)
@@ -479,21 +474,6 @@ public class RecibosVentaGUI extends JInternalFrame {
             }
         });
 
-        chk_Concepto.setText("Concepto:");
-        chk_Concepto.setToolTipText("");
-        chk_Concepto.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                chk_ConceptoItemStateChanged(evt);
-            }
-        });
-
-        txt_Concepto.setEnabled(false);
-        txt_Concepto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_ConceptoActionPerformed(evt);
-            }
-        });
-
         chk_Viajante.setText("Viajante:");
         chk_Viajante.setToolTipText("");
         chk_Viajante.addItemListener(new java.awt.event.ItemListener() {
@@ -519,57 +499,48 @@ public class RecibosVentaGUI extends JInternalFrame {
         subPanelFiltros1Layout.setHorizontalGroup(
             subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(subPanelFiltros1Layout.createSequentialGroup()
-                .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(chk_Cliente, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chk_Usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chk_Viajante, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chk_Concepto, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(txtViajante, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btnBuscarViajantes)
+                .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(subPanelFiltros1Layout.createSequentialGroup()
+                        .addComponent(chk_Viajante)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtViajante, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(subPanelFiltros1Layout.createSequentialGroup()
+                        .addComponent(chk_Usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtUsuario))
+                    .addGroup(subPanelFiltros1Layout.createSequentialGroup()
+                        .addComponent(chk_Cliente, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 0, 0)
+                .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnBuscarCliente)
                     .addComponent(btnBuscarUsuarios)
-                    .addComponent(btnBuscarCliente))
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(subPanelFiltros1Layout.createSequentialGroup()
-                .addGap(139, 139, 139)
-                .addComponent(txt_Concepto)
-                .addGap(6, 6, 6))
+                    .addComponent(btnBuscarViajantes)))
         );
 
         subPanelFiltros1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnBuscarCliente, btnBuscarUsuarios, btnBuscarViajantes});
-
-        subPanelFiltros1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txtCliente, txtUsuario, txtViajante});
-
-        subPanelFiltros1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chk_Usuario, chk_Viajante});
 
         subPanelFiltros1Layout.setVerticalGroup(
             subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(subPanelFiltros1Layout.createSequentialGroup()
                 .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chk_Cliente)
+                    .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscarCliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chk_Usuario)
+                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscarUsuarios))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_Viajante)
                     .addComponent(txtViajante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscarViajantes))
-                .addGap(3, 3, 3)
-                .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(txt_Concepto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chk_Concepto)))
+                    .addComponent(btnBuscarViajantes)))
         );
 
-        subPanelFiltros1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarUsuarios, txtUsuario, txtViajante, txt_Concepto});
+        subPanelFiltros1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarUsuarios, txtUsuario, txtViajante});
 
         subPanelFiltros1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarCliente, txtCliente});
 
@@ -619,64 +590,71 @@ public class RecibosVentaGUI extends JInternalFrame {
             }
         });
 
-        lbl_Desde.setText("Desde:");
-        lbl_Desde.setEnabled(false);
-
         dc_FechaDesde.setDateFormatString("dd/MM/yyyy");
         dc_FechaDesde.setEnabled(false);
 
         dc_FechaHasta.setDateFormatString("dd/MM/yyyy");
         dc_FechaHasta.setEnabled(false);
 
-        lbl_Hasta.setText("Hasta:");
-        lbl_Hasta.setEnabled(false);
+        chk_Concepto.setText("Concepto:");
+        chk_Concepto.setToolTipText("");
+        chk_Concepto.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chk_ConceptoItemStateChanged(evt);
+            }
+        });
+
+        txt_Concepto.setEnabled(false);
+        txt_Concepto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_ConceptoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout subPanelFiltros2Layout = new javax.swing.GroupLayout(subPanelFiltros2);
         subPanelFiltros2.setLayout(subPanelFiltros2Layout);
         subPanelFiltros2Layout.setHorizontalGroup(
             subPanelFiltros2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-            .addGroup(subPanelFiltros2Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, subPanelFiltros2Layout.createSequentialGroup()
                 .addGroup(subPanelFiltros2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(chk_Fecha)
+                    .addComponent(chk_NumRecibo)
+                    .addComponent(chk_Concepto, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(subPanelFiltros2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(subPanelFiltros2Layout.createSequentialGroup()
-                        .addComponent(chk_NumRecibo)
+                        .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(subPanelFiltros2Layout.createSequentialGroup()
                         .addComponent(txt_SerieRecibo, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(separador, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txt_NroRecibo))
-                    .addGroup(subPanelFiltros2Layout.createSequentialGroup()
-                        .addComponent(chk_Fecha, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lbl_Desde)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_Hasta)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                    .addComponent(txt_Concepto))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         subPanelFiltros2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {dc_FechaDesde, dc_FechaHasta});
-
-        subPanelFiltros2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chk_Fecha, chk_NumRecibo});
 
         subPanelFiltros2Layout.setVerticalGroup(
             subPanelFiltros2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(subPanelFiltros2Layout.createSequentialGroup()
                 .addGroup(subPanelFiltros2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_Fecha)
-                    .addComponent(lbl_Desde)
                     .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Hasta)
                     .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(subPanelFiltros2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(subPanelFiltros2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_NumRecibo)
                     .addComponent(txt_SerieRecibo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(separador)
-                    .addComponent(txt_NroRecibo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(txt_NroRecibo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(subPanelFiltros2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(chk_Concepto)
+                    .addComponent(txt_Concepto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         subPanelFiltros2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {dc_FechaDesde, dc_FechaHasta});
@@ -699,26 +677,30 @@ public class RecibosVentaGUI extends JInternalFrame {
         panelFiltrosLayout.setHorizontalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFiltrosLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(subPanelFiltros1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(subPanelFiltros2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(panelFiltrosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btn_Buscar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelFiltrosLayout.createSequentialGroup()
+                        .addComponent(btn_Buscar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(panelFiltrosLayout.createSequentialGroup()
+                        .addComponent(subPanelFiltros1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(subPanelFiltros2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         panelFiltrosLayout.setVerticalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFiltrosLayout.createSequentialGroup()
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(subPanelFiltros1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(subPanelFiltros2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_Buscar)))
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(subPanelFiltros1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(subPanelFiltros2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(btn_Buscar)
+                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
@@ -766,7 +748,7 @@ public class RecibosVentaGUI extends JInternalFrame {
                 .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 147, Short.MAX_VALUE))
+                .addGap(0, 58, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -775,7 +757,8 @@ public class RecibosVentaGUI extends JInternalFrame {
                     .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -783,28 +766,13 @@ public class RecibosVentaGUI extends JInternalFrame {
     private void chk_FechaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_FechaItemStateChanged
         if (chk_Fecha.isSelected() == true) {
             dc_FechaDesde.setEnabled(true);
-            dc_FechaHasta.setEnabled(true);
-            lbl_Desde.setEnabled(true);
-            lbl_Hasta.setEnabled(true);
+            dc_FechaHasta.setEnabled(true);            
             dc_FechaDesde.requestFocus();
         } else {
             dc_FechaDesde.setEnabled(false);
-            dc_FechaHasta.setEnabled(false);
-            lbl_Desde.setEnabled(false);
-            lbl_Hasta.setEnabled(false);
+            dc_FechaHasta.setEnabled(false);            
         }
 }//GEN-LAST:event_chk_FechaItemStateChanged
-
-    private void chk_ClienteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ClienteItemStateChanged
-        if (chk_Cliente.isSelected() == true) {
-            btnBuscarCliente.setEnabled(true);
-            btnBuscarCliente.requestFocus();
-            txtCliente.setEnabled(true);
-        } else {
-            btnBuscarCliente.setEnabled(false);
-            txtCliente.setEnabled(false);
-        }
-}//GEN-LAST:event_chk_ClienteItemStateChanged
 
     private void btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarActionPerformed
         this.limpiarYBuscar();
@@ -853,40 +821,6 @@ public class RecibosVentaGUI extends JInternalFrame {
             this.dispose();
         }
     }//GEN-LAST:event_formInternalFrameOpened
-
-    private void chk_UsuarioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UsuarioItemStateChanged
-        if (chk_Usuario.isSelected() == true) {
-            btnBuscarUsuarios.setEnabled(true);
-            btnBuscarUsuarios.requestFocus();
-            txtUsuario.setEnabled(true);
-        } else {
-            btnBuscarUsuarios.setEnabled(false);
-            txtUsuario.setEnabled(false);
-        }
-    }//GEN-LAST:event_chk_UsuarioItemStateChanged
-
-    private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarClienteActionPerformed
-        BuscarClientesGUI buscarClientesGUI = new BuscarClientesGUI();
-        buscarClientesGUI.setModal(true);
-        buscarClientesGUI.setLocationRelativeTo(this);
-        buscarClientesGUI.setVisible(true);
-        if (buscarClientesGUI.getClienteSeleccionado() != null) {
-            clienteSeleccionado = buscarClientesGUI.getClienteSeleccionado();
-            txtCliente.setText(clienteSeleccionado.getNombreFiscal());
-        }
-    }//GEN-LAST:event_btnBuscarClienteActionPerformed
-
-    private void btnBuscarUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarUsuariosActionPerformed
-        Rol[] rolesParaFiltrar = new Rol[]{Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR};
-        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar);
-        buscarUsuariosGUI.setModal(true);
-        buscarUsuariosGUI.setLocationRelativeTo(this);
-        buscarUsuariosGUI.setVisible(true);
-        if (buscarUsuariosGUI.getUsuarioSeleccionado() != null) {
-            usuarioSeleccionado = buscarUsuariosGUI.getUsuarioSeleccionado();
-            txtUsuario.setText(usuarioSeleccionado.toString());
-        }
-    }//GEN-LAST:event_btnBuscarUsuariosActionPerformed
 
     private void cmbOrdenItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbOrdenItemStateChanged
         this.limpiarYBuscar();
@@ -945,17 +879,6 @@ public class RecibosVentaGUI extends JInternalFrame {
         this.limpiarYBuscar();
     }//GEN-LAST:event_txt_ConceptoActionPerformed
 
-    private void chk_ViajanteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ViajanteItemStateChanged
-        if (chk_Viajante.isSelected() == true) {
-            btnBuscarViajantes.setEnabled(true);
-            btnBuscarViajantes.requestFocus();
-            txtViajante.setEnabled(true);
-        } else {
-            btnBuscarViajantes.setEnabled(false);
-            txtViajante.setEnabled(false);
-        }
-    }//GEN-LAST:event_chk_ViajanteItemStateChanged
-
     private void btnBuscarViajantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarViajantesActionPerformed
         Rol[] rolesParaFiltrar = new Rol[]{Rol.VIAJANTE};
         BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar);
@@ -967,6 +890,62 @@ public class RecibosVentaGUI extends JInternalFrame {
             txtViajante.setText(viajanteSeleccionado.toString());
         }
     }//GEN-LAST:event_btnBuscarViajantesActionPerformed
+
+    private void chk_ViajanteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ViajanteItemStateChanged
+        if (chk_Viajante.isSelected() == true) {
+            btnBuscarViajantes.setEnabled(true);
+            btnBuscarViajantes.requestFocus();
+            txtViajante.setEnabled(true);
+        } else {
+            btnBuscarViajantes.setEnabled(false);
+            txtViajante.setEnabled(false);
+        }
+    }//GEN-LAST:event_chk_ViajanteItemStateChanged
+
+    private void btnBuscarUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarUsuariosActionPerformed
+        Rol[] rolesParaFiltrar = new Rol[]{Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR};
+        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar);
+        buscarUsuariosGUI.setModal(true);
+        buscarUsuariosGUI.setLocationRelativeTo(this);
+        buscarUsuariosGUI.setVisible(true);
+        if (buscarUsuariosGUI.getUsuarioSeleccionado() != null) {
+            usuarioSeleccionado = buscarUsuariosGUI.getUsuarioSeleccionado();
+            txtUsuario.setText(usuarioSeleccionado.toString());
+        }
+    }//GEN-LAST:event_btnBuscarUsuariosActionPerformed
+
+    private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarClienteActionPerformed
+        BuscarClientesGUI buscarClientesGUI = new BuscarClientesGUI();
+        buscarClientesGUI.setModal(true);
+        buscarClientesGUI.setLocationRelativeTo(this);
+        buscarClientesGUI.setVisible(true);
+        if (buscarClientesGUI.getClienteSeleccionado() != null) {
+            clienteSeleccionado = buscarClientesGUI.getClienteSeleccionado();
+            txtCliente.setText(clienteSeleccionado.getNombreFiscal());
+        }
+    }//GEN-LAST:event_btnBuscarClienteActionPerformed
+
+    private void chk_UsuarioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UsuarioItemStateChanged
+        if (chk_Usuario.isSelected() == true) {
+            btnBuscarUsuarios.setEnabled(true);
+            btnBuscarUsuarios.requestFocus();
+            txtUsuario.setEnabled(true);
+        } else {
+            btnBuscarUsuarios.setEnabled(false);
+            txtUsuario.setEnabled(false);
+        }
+    }//GEN-LAST:event_chk_UsuarioItemStateChanged
+
+    private void chk_ClienteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ClienteItemStateChanged
+        if (chk_Cliente.isSelected() == true) {
+            btnBuscarCliente.setEnabled(true);
+            btnBuscarCliente.requestFocus();
+            txtCliente.setEnabled(true);
+        } else {
+            btnBuscarCliente.setEnabled(false);
+            txtCliente.setEnabled(false);
+        }
+    }//GEN-LAST:event_chk_ClienteItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarCliente;
@@ -986,8 +965,6 @@ public class RecibosVentaGUI extends JInternalFrame {
     private javax.swing.JComboBox<String> cmbSentido;
     private com.toedter.calendar.JDateChooser dc_FechaDesde;
     private com.toedter.calendar.JDateChooser dc_FechaHasta;
-    private javax.swing.JLabel lbl_Desde;
-    private javax.swing.JLabel lbl_Hasta;
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;
     private javax.swing.JPanel panelOrden;

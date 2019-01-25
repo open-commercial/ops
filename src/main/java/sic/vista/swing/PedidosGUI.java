@@ -304,10 +304,8 @@ public class PedidosGUI extends JInternalFrame {
         panelFiltros = new javax.swing.JPanel();
         chk_NumeroPedido = new javax.swing.JCheckBox();
         chk_Fecha = new javax.swing.JCheckBox();
-        lbl_Desde = new javax.swing.JLabel();
         dc_FechaDesde = new com.toedter.calendar.JDateChooser();
         dc_FechaHasta = new com.toedter.calendar.JDateChooser();
-        lbl_Hasta = new javax.swing.JLabel();
         chk_Cliente = new javax.swing.JCheckBox();
         chk_Usuario = new javax.swing.JCheckBox();
         btn_Buscar = new javax.swing.JButton();
@@ -370,15 +368,11 @@ public class PedidosGUI extends JInternalFrame {
             }
         });
 
-        lbl_Desde.setText("Desde:");
-
         dc_FechaDesde.setDateFormatString("dd/MM/yyyy");
         dc_FechaDesde.setEnabled(false);
 
         dc_FechaHasta.setDateFormatString("dd/MM/yyyy");
         dc_FechaHasta.setEnabled(false);
-
-        lbl_Hasta.setText("Hasta:");
 
         chk_Cliente.setText("Cliente:");
         chk_Cliente.addItemListener(new java.awt.event.ItemListener() {
@@ -478,80 +472,75 @@ public class PedidosGUI extends JInternalFrame {
         panelFiltrosLayout.setHorizontalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFiltrosLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addContainerGap()
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
                         .addComponent(btn_Buscar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(chk_Cliente, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(chk_Usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(chk_Viajante, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(txtCliente)
-                            .addComponent(txtUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE)
-                            .addComponent(txtViajante, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(chk_Usuario)
+                            .addComponent(chk_Cliente)
+                            .addComponent(chk_Viajante))
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtUsuario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
+                            .addComponent(txtCliente, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtViajante))
+                        .addGap(0, 0, 0)
                         .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(btnBuscarCliente)
                             .addComponent(btnBuscarUsuarios)
                             .addComponent(btnBuscarViajantes))
-                        .addGap(0, 0, 0)
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(chk_NumeroPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(chk_Fecha)
-                            .addComponent(chkEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_NumeroPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(panelFiltrosLayout.createSequentialGroup()
-                                .addGap(0, 0, 0)
-                                .addComponent(lbl_Desde)
-                                .addGap(0, 0, 0)
-                                .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, 0)
-                                .addComponent(lbl_Hasta)
-                                .addGap(0, 0, 0)
-                                .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                                .addComponent(chk_NumeroPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txt_NumeroPedido))
+                            .addGroup(panelFiltrosLayout.createSequentialGroup()
+                                .addComponent(chkEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cmbEstado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(panelFiltrosLayout.createSequentialGroup()
+                                .addComponent(chk_Fecha)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {dc_FechaDesde, dc_FechaHasta});
-
-        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chk_Cliente, chk_Usuario, chk_Viajante});
-
-        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txtCliente, txtUsuario, txtViajante});
+        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chk_Cliente, chk_Viajante});
 
         panelFiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chkEstado, chk_Fecha, chk_NumeroPedido});
+
+        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {dc_FechaDesde, dc_FechaHasta});
 
         panelFiltrosLayout.setVerticalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFiltrosLayout.createSequentialGroup()
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chk_Cliente)
-                    .addComponent(btnBuscarCliente)
+                    .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chk_Fecha)
-                    .addComponent(lbl_Desde)
                     .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Hasta))
+                    .addComponent(btnBuscarCliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(chk_Usuario)
+                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscarUsuarios)
                     .addComponent(chkEstado)
-                    .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chk_Usuario))
+                    .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(txt_NumeroPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chk_NumeroPedido)
-                    .addComponent(btnBuscarViajantes)
+                    .addComponent(chk_Viajante)
                     .addComponent(txtViajante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chk_Viajante))
+                    .addComponent(btnBuscarViajantes)
+                    .addComponent(chk_NumeroPedido)
+                    .addComponent(txt_NumeroPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -562,6 +551,8 @@ public class PedidosGUI extends JInternalFrame {
         panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarCliente, btnBuscarUsuarios, txtCliente, txtUsuario, txtViajante});
 
         panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {chk_Cliente, chk_Usuario, chk_Viajante});
+
+        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {dc_FechaDesde, dc_FechaHasta});
 
         panelResultados.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados"));
 
@@ -646,7 +637,7 @@ public class PedidosGUI extends JInternalFrame {
                 .addComponent(btnFacturar)
                 .addGap(0, 0, 0)
                 .addComponent(btnImprimirPedido)
-                .addGap(0, 613, Short.MAX_VALUE))
+                .addGap(0, 479, Short.MAX_VALUE))
         );
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -993,8 +984,6 @@ public class PedidosGUI extends JInternalFrame {
     private javax.swing.JComboBox<String> cmbEstado;
     private com.toedter.calendar.JDateChooser dc_FechaDesde;
     private com.toedter.calendar.JDateChooser dc_FechaHasta;
-    private javax.swing.JLabel lbl_Desde;
-    private javax.swing.JLabel lbl_Hasta;
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;
     private javax.swing.JPanel panelResultados;
