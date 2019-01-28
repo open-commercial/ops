@@ -14,7 +14,6 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Localidad;
-import sic.modelo.Pais;
 import sic.modelo.Provincia;
 import sic.modelo.Transportista;
 import sic.modelo.TipoDeOperacion;
@@ -49,8 +48,6 @@ public class DetalleTransportistaGUI extends JDialog {
         try {
             Localidad localidadDelTransportista = RestClient.getRestTemplate().getForObject("/localidades/" + transportistaModificar.getIdLocalidad(), Localidad.class);
             Provincia provinciaDelTransportista = RestClient.getRestTemplate().getForObject("/provincias/" + localidadDelTransportista.getIdProvincia(), Provincia.class);
-            Pais paisDelTransportista = RestClient.getRestTemplate().getForObject("/paises/" + provinciaDelTransportista.getIdPais(), Pais.class);
-            cmb_Pais.setSelectedItem(paisDelTransportista);
             cmb_Provincia.setSelectedItem(provinciaDelTransportista);
             cmb_Localidad.setSelectedItem(localidadDelTransportista);
         } catch (RestClientResponseException ex) {
@@ -70,32 +67,14 @@ public class DetalleTransportistaGUI extends JDialog {
         txt_Direccion.setText("");
         txt_Telefono.setText("");
         txt_Web.setText("");
-        cargarComboBoxPaises();
+        cargarComboBoxProvincias();
     }
 
-    private void cargarComboBoxPaises() {
-        cmb_Pais.removeAllItems();
-        try {
-            List<Pais> paises = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/paises", Pais[].class)));
-            paises.stream().forEach((p) -> {
-                cmb_Pais.addItem(p);
-            });
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void cargarComboBoxProvinciasDelPais(Pais paisSeleccionado) {
+    private void cargarComboBoxProvincias() {
         cmb_Provincia.removeAllItems();
         try {
             List<Provincia> provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/provincias/paises/" + paisSeleccionado.getId_Pais(),
+                    .getForObject("/provincias",
                             Provincia[].class)));
             provincias.stream().forEach((p) -> {
                 cmb_Provincia.addItem(p);
@@ -139,9 +118,6 @@ public class DetalleTransportistaGUI extends JDialog {
         lbl_Provincia = new javax.swing.JLabel();
         cmb_Provincia = new javax.swing.JComboBox();
         lbl_Localidad = new javax.swing.JLabel();
-        cmb_Pais = new javax.swing.JComboBox();
-        lbl_Pais = new javax.swing.JLabel();
-        btn_NuevoPais = new javax.swing.JButton();
         btn_NuevaProvincia = new javax.swing.JButton();
         btn_NuevaLocalidad = new javax.swing.JButton();
         cmb_Localidad = new javax.swing.JComboBox();
@@ -181,25 +157,6 @@ public class DetalleTransportistaGUI extends JDialog {
         lbl_Localidad.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Localidad.setText("* Localidad:");
 
-        cmb_Pais.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cmb_PaisItemStateChanged(evt);
-            }
-        });
-
-        lbl_Pais.setForeground(java.awt.Color.red);
-        lbl_Pais.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Pais.setText("* Pais:");
-
-        btn_NuevoPais.setForeground(java.awt.Color.blue);
-        btn_NuevoPais.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
-        btn_NuevoPais.setText("Nuevo");
-        btn_NuevoPais.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_NuevoPaisActionPerformed(evt);
-            }
-        });
-
         btn_NuevaProvincia.setForeground(java.awt.Color.blue);
         btn_NuevaProvincia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
         btn_NuevaProvincia.setText("Nueva");
@@ -237,7 +194,6 @@ public class DetalleTransportistaGUI extends JDialog {
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lbl_Localidad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
                     .addComponent(lbl_Provincia, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Pais, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_Direccion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_Nombre, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_Web, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -250,12 +206,10 @@ public class DetalleTransportistaGUI extends JDialog {
                     .addGroup(panelPrincipalLayout.createSequentialGroup()
                         .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cmb_Localidad, 0, 343, Short.MAX_VALUE)
-                            .addComponent(cmb_Provincia, 0, 343, Short.MAX_VALUE)
-                            .addComponent(cmb_Pais, 0, 343, Short.MAX_VALUE))
+                            .addComponent(cmb_Provincia, 0, 343, Short.MAX_VALUE))
                         .addGap(0, 0, 0)
                         .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btn_NuevaProvincia)
-                            .addComponent(btn_NuevoPais)
                             .addComponent(btn_NuevaLocalidad)))
                     .addComponent(txt_Nombre))
                 .addContainerGap())
@@ -271,11 +225,6 @@ public class DetalleTransportistaGUI extends JDialog {
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txt_Direccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_Direccion))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Pais)
-                    .addComponent(cmb_Pais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_NuevoPais))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_Provincia)
@@ -297,8 +246,6 @@ public class DetalleTransportistaGUI extends JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_NuevoPais, cmb_Pais});
-
         panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_NuevaProvincia, cmb_Provincia});
 
         panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_NuevaLocalidad, cmb_Localidad});
@@ -318,62 +265,25 @@ public class DetalleTransportistaGUI extends JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btn_Guardar)
-                    .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btn_Guardar)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panelPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_Guardar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-	private void btn_NuevoPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoPaisActionPerformed
-            DetallePaisGUI gui_DetallePais = new DetallePaisGUI();
-            gui_DetallePais.setModal(true);
-            gui_DetallePais.setLocationRelativeTo(this);
-            gui_DetallePais.setVisible(true);
-            cargarComboBoxPaises();
-            cargarComboBoxProvinciasDelPais((Pais) cmb_Pais.getSelectedItem());
-	}//GEN-LAST:event_btn_NuevoPaisActionPerformed
-
-	private void btn_NuevaProvinciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevaProvinciaActionPerformed
-            DetalleProvinciaGUI gui_DetalleProvincia = new DetalleProvinciaGUI();
-            gui_DetalleProvincia.setModal(true);
-            gui_DetalleProvincia.setLocationRelativeTo(this);
-            gui_DetalleProvincia.setVisible(true);
-            cargarComboBoxProvinciasDelPais((Pais) cmb_Pais.getSelectedItem());
-	}//GEN-LAST:event_btn_NuevaProvinciaActionPerformed
-
-	private void cmb_PaisItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_PaisItemStateChanged
-            if (cmb_Pais.getItemCount() > 0) {
-                cargarComboBoxProvinciasDelPais((Pais) cmb_Pais.getSelectedItem());
-            }
-	}//GEN-LAST:event_cmb_PaisItemStateChanged
-
-	private void btn_NuevaLocalidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevaLocalidadActionPerformed
-            DetalleLocalidadGUI gui_DetalleLocalidad = new DetalleLocalidadGUI();
-            gui_DetalleLocalidad.setModal(true);
-            gui_DetalleLocalidad.setLocationRelativeTo(this);
-            gui_DetalleLocalidad.setVisible(true);
-            cargarComboBoxLocalidadesDeLaProvincia((Provincia) cmb_Provincia.getSelectedItem());
-	}//GEN-LAST:event_btn_NuevaLocalidadActionPerformed
-
-	private void cmb_ProvinciaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_ProvinciaItemStateChanged
-            if (cmb_Provincia.getItemCount() > 0) {
-                cargarComboBoxLocalidadesDeLaProvincia((Provincia) cmb_Provincia.getSelectedItem());
-            } else {
-                cmb_Localidad.removeAllItems();
-            }
-	}//GEN-LAST:event_cmb_ProvinciaItemStateChanged
 
 	private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
             try {
@@ -417,7 +327,7 @@ public class DetalleTransportistaGUI extends JDialog {
 	}//GEN-LAST:event_btn_GuardarActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        this.cargarComboBoxPaises();
+        this.cargarComboBoxProvincias();
         if (operacion == TipoDeOperacion.ACTUALIZACION) {
             this.setTitle("Modificar Transportista");
             this.cargarTransportistaParaModificar();
@@ -425,18 +335,40 @@ public class DetalleTransportistaGUI extends JDialog {
             this.setTitle("Nuevo Transportista");
         }
     }//GEN-LAST:event_formWindowOpened
+
+    private void btn_NuevaLocalidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevaLocalidadActionPerformed
+        DetalleLocalidadGUI gui_DetalleLocalidad = new DetalleLocalidadGUI();
+        gui_DetalleLocalidad.setModal(true);
+        gui_DetalleLocalidad.setLocationRelativeTo(this);
+        gui_DetalleLocalidad.setVisible(true);
+        cargarComboBoxLocalidadesDeLaProvincia((Provincia) cmb_Provincia.getSelectedItem());
+    }//GEN-LAST:event_btn_NuevaLocalidadActionPerformed
+
+    private void btn_NuevaProvinciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevaProvinciaActionPerformed
+        DetalleProvinciaGUI gui_DetalleProvincia = new DetalleProvinciaGUI();
+        gui_DetalleProvincia.setModal(true);
+        gui_DetalleProvincia.setLocationRelativeTo(this);
+        gui_DetalleProvincia.setVisible(true);
+        cargarComboBoxProvincias();
+    }//GEN-LAST:event_btn_NuevaProvinciaActionPerformed
+
+    private void cmb_ProvinciaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_ProvinciaItemStateChanged
+        if (cmb_Provincia.getItemCount() > 0) {
+            cargarComboBoxLocalidadesDeLaProvincia((Provincia) cmb_Provincia.getSelectedItem());
+        } else {
+            cmb_Localidad.removeAllItems();
+        }
+    }//GEN-LAST:event_cmb_ProvinciaItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Guardar;
     private javax.swing.JButton btn_NuevaLocalidad;
     private javax.swing.JButton btn_NuevaProvincia;
-    private javax.swing.JButton btn_NuevoPais;
     private javax.swing.JComboBox cmb_Localidad;
-    private javax.swing.JComboBox cmb_Pais;
     private javax.swing.JComboBox cmb_Provincia;
     private javax.swing.JLabel lbl_Direccion;
     private javax.swing.JLabel lbl_Localidad;
     private javax.swing.JLabel lbl_Nombre;
-    private javax.swing.JLabel lbl_Pais;
     private javax.swing.JLabel lbl_Provincia;
     private javax.swing.JLabel lbl_Telefono;
     private javax.swing.JLabel lbl_Web;

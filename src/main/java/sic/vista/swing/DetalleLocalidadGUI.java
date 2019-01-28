@@ -16,7 +16,6 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Localidad;
-import sic.modelo.Pais;
 import sic.modelo.Provincia;
 import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
@@ -40,30 +39,11 @@ public class DetalleLocalidadGUI extends JDialog {
         ImageIcon iconoVentana = new ImageIcon(DetalleLocalidadGUI.class.getResource("/sic/icons/Map_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
     }
-
-    private void cargarPaises() {
-        try {
-            List<Pais> paises = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/paises", Pais[].class)));
-            modeloComboPaises.removeAllElements();
-            paises.stream().forEach(p -> {
-                modeloComboPaises.addElement(p);
-            });
-            cmb_Paises.setModel(modeloComboPaises);
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
     
-    private void cargarProvinciasDelPais(JComboBox comboBox, DefaultComboBoxModel modelo, Pais pais) {
+    private void cargarProvincias(JComboBox comboBox, DefaultComboBoxModel modelo) {
         try {
             List<Provincia> provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/provincias/paises/" + pais.getId_Pais(), Provincia[].class)));
+                    .getForObject("/provincias", Provincia[].class)));
             modelo.removeAllElements();
             provincias.stream().forEach(p -> {
                 modelo.addElement(p);
@@ -103,8 +83,6 @@ public class DetalleLocalidadGUI extends JDialog {
     private void initComponents() {
 
         panelPrincipal = new javax.swing.JPanel();
-        lbl_Pais = new javax.swing.JLabel();
-        cmb_Paises = new javax.swing.JComboBox();
         lbl_Prov = new javax.swing.JLabel();
         cmb_ProvinciasBusqueda = new javax.swing.JComboBox();
         lbl_Localidades = new javax.swing.JLabel();
@@ -131,15 +109,6 @@ public class DetalleLocalidadGUI extends JDialog {
         });
 
         panelPrincipal.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        lbl_Pais.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Pais.setText("Pais:");
-
-        cmb_Paises.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cmb_PaisesItemStateChanged(evt);
-            }
-        });
 
         lbl_Prov.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Prov.setText("Provincia:");
@@ -168,12 +137,10 @@ public class DetalleLocalidadGUI extends JDialog {
             .addGroup(panelPrincipalLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_Pais, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_Prov, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_Localidades, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cmb_Paises, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cmb_ProvinciasBusqueda, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(sp_ListaMedidas, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE))
                 .addGap(4, 4, 4))
@@ -181,19 +148,14 @@ public class DetalleLocalidadGUI extends JDialog {
         panelPrincipalLayout.setVerticalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPrincipalLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Pais)
-                    .addComponent(cmb_Paises, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_Prov)
                     .addComponent(cmb_ProvinciasBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_Localidades)
-                    .addComponent(sp_ListaMedidas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(sp_ListaMedidas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         panelInferior.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -293,9 +255,9 @@ public class DetalleLocalidadGUI extends JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(panelInferior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelInferior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -397,20 +359,9 @@ public class DetalleLocalidadGUI extends JDialog {
         }
     }//GEN-LAST:event_cmb_ProvinciasBusquedaItemStateChanged
 
-    private void cmb_PaisesItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_PaisesItemStateChanged
-        if (modeloComboPaises.getSize() > 0) {
-            this.cargarProvinciasDelPais(cmb_ProvinciasBusqueda,
-                    modeloComboProvinciasBusqueda,
-                    (Pais) cmb_Paises.getSelectedItem());
-            this.cargarProvinciasDelPais(cmb_Provincias,
-                    modeloComboProvincias,
-                    (Pais) cmb_Paises.getSelectedItem());
-        }
-    }//GEN-LAST:event_cmb_PaisesItemStateChanged
-
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        this.cargarPaises();
-        cmb_PaisesItemStateChanged(null);
+        this.cargarProvincias(cmb_Provincias,
+                modeloComboProvincias);
         cmb_ProvinciasBusquedaItemStateChanged(null);
         if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
             btn_Eliminar.setEnabled(false);
@@ -420,13 +371,11 @@ public class DetalleLocalidadGUI extends JDialog {
     private javax.swing.JButton btn_Actualizar;
     private javax.swing.JButton btn_Agregar;
     private javax.swing.JButton btn_Eliminar;
-    private javax.swing.JComboBox cmb_Paises;
     private javax.swing.JComboBox cmb_Provincias;
     private javax.swing.JComboBox cmb_ProvinciasBusqueda;
     private javax.swing.JLabel lbl_CP;
     private javax.swing.JLabel lbl_Localidades;
     private javax.swing.JLabel lbl_Nombre;
-    private javax.swing.JLabel lbl_Pais;
     private javax.swing.JLabel lbl_Prov;
     private javax.swing.JLabel lbl_Provincia;
     private javax.swing.JList lst_Localidades;

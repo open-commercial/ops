@@ -20,7 +20,6 @@ import sic.RestClient;
 import sic.modelo.CategoriaIVA;
 import sic.modelo.Empresa;
 import sic.modelo.Localidad;
-import sic.modelo.Pais;
 import sic.modelo.Provincia;
 import sic.modelo.TipoDeOperacion;
 import sic.util.FiltroImagenes;
@@ -61,29 +60,11 @@ public class DetalleEmpresaGUI extends JDialog {
         } 
     }
 
-    private void cargarComboBoxPaises() {
-        cmb_Pais.removeAllItems();
-        try {
-            List<Pais> paises = Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/paises", Pais[].class));
-            paises.stream().forEach((p) -> {
-                cmb_Pais.addItem(p);
-            });
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void cargarComboBoxProvinciasDelPais(Pais paisSeleccionado) {
+    private void cargarComboBoxProvincias() {
         cmb_Provincia.removeAllItems();
         try {
             List<Provincia> provincias = Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/provincias/paises/" + paisSeleccionado.getId_Pais(), Provincia[].class));
+                    .getForObject("/provincias", Provincia[].class));
             provincias.stream().forEach((p) -> {
                 cmb_Provincia.addItem(p);
             });
@@ -127,8 +108,6 @@ public class DetalleEmpresaGUI extends JDialog {
         txt_Telefono.setText(empresaModificar.getTelefono());
         Localidad localidadDeEmpresa = RestClient.getRestTemplate().getForObject("/localidades/" + empresaModificar.getIdLocalidad(), Localidad.class);
         Provincia provinciaDeEmpresa = RestClient.getRestTemplate().getForObject("/provincias/" + localidadDeEmpresa.getIdProvincia(), Provincia.class);
-        Pais paisDeEmpresa = RestClient.getRestTemplate().getForObject("/paises/" + provinciaDeEmpresa.getIdPais(), Pais.class);
-        cmb_Pais.setSelectedItem(paisDeEmpresa);
         cmb_Provincia.setSelectedItem(provinciaDeEmpresa);        
         cmb_Localidad.setSelectedItem(localidadDeEmpresa);
         if (empresaModificar.getLogo() == null || "".equals(empresaModificar.getLogo())) {
@@ -177,9 +156,6 @@ public class DetalleEmpresaGUI extends JDialog {
         txt_Email = new javax.swing.JTextField();
         lbl_Telefono = new javax.swing.JLabel();
         txt_Telefono = new javax.swing.JTextField();
-        lbl_Pais = new javax.swing.JLabel();
-        cmb_Pais = new javax.swing.JComboBox();
-        btn_NuevoPais = new javax.swing.JButton();
         lbl_Provincia = new javax.swing.JLabel();
         cmb_Provincia = new javax.swing.JComboBox();
         btn_NuevaProvincia = new javax.swing.JButton();
@@ -255,25 +231,6 @@ public class DetalleEmpresaGUI extends JDialog {
         lbl_Telefono.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Telefono.setText("Teléfono:");
 
-        lbl_Pais.setForeground(java.awt.Color.red);
-        lbl_Pais.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Pais.setText("* Pais:");
-
-        cmb_Pais.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cmb_PaisItemStateChanged(evt);
-            }
-        });
-
-        btn_NuevoPais.setForeground(java.awt.Color.blue);
-        btn_NuevoPais.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
-        btn_NuevoPais.setText("Nuevo");
-        btn_NuevoPais.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_NuevoPaisActionPerformed(evt);
-            }
-        });
-
         lbl_Provincia.setForeground(java.awt.Color.red);
         lbl_Provincia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Provincia.setText("* Provincia:");
@@ -342,7 +299,6 @@ public class DetalleEmpresaGUI extends JDialog {
                     .addComponent(lbl_FIA, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lbl_Email, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_Telefono, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Pais, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_Provincia, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_Localidad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -353,10 +309,6 @@ public class DetalleEmpresaGUI extends JDialog {
                     .addComponent(dc_FechaInicioActividad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txt_Email)
                     .addComponent(txt_Telefono)
-                    .addGroup(panelPrincipalLayout.createSequentialGroup()
-                        .addComponent(cmb_Pais, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_NuevoPais))
                     .addGroup(panelPrincipalLayout.createSequentialGroup()
                         .addComponent(cmb_Provincia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
@@ -431,11 +383,6 @@ public class DetalleEmpresaGUI extends JDialog {
                     .addComponent(lbl_Telefono))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btn_NuevoPais)
-                    .addComponent(cmb_Pais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Pais))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_Provincia)
                     .addComponent(cmb_Provincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_NuevaProvincia))
@@ -446,8 +393,6 @@ public class DetalleEmpresaGUI extends JDialog {
                     .addComponent(btn_NuevaLocalidad))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_NuevoPais, cmb_Pais});
 
         panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_NuevaProvincia, cmb_Provincia});
 
@@ -478,11 +423,10 @@ public class DetalleEmpresaGUI extends JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panelPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btn_Guardar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(btn_Guardar))
         );
 
         pack();
@@ -546,7 +490,7 @@ public class DetalleEmpresaGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cargarComboBoxCondicionesIVA();
-        this.cargarComboBoxPaises();        
+        this.cargarComboBoxProvincias();
         if (operacion == TipoDeOperacion.ACTUALIZACION) {
             this.setTitle("Modificar Empresa");
             this.cargarEmpresaParaModificar();
@@ -605,16 +549,8 @@ public class DetalleEmpresaGUI extends JDialog {
         gui_DetalleProvincia.setModal(true);
         gui_DetalleProvincia.setLocationRelativeTo(this);
         gui_DetalleProvincia.setVisible(true);
-        this.cargarComboBoxProvinciasDelPais((Pais) cmb_Pais.getSelectedItem());
+        this.cargarComboBoxProvincias();
     }//GEN-LAST:event_btn_NuevaProvinciaActionPerformed
-
-    private void btn_NuevoPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoPaisActionPerformed
-        DetallePaisGUI gui_DetallePais = new DetallePaisGUI();
-        gui_DetallePais.setModal(true);
-        gui_DetallePais.setLocationRelativeTo(this);
-        gui_DetallePais.setVisible(true);
-        this.cargarComboBoxPaises();
-    }//GEN-LAST:event_btn_NuevoPaisActionPerformed
 
     private void cmb_ProvinciaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_ProvinciaItemStateChanged
         if (cmb_Provincia.getItemCount() > 0) {
@@ -623,12 +559,6 @@ public class DetalleEmpresaGUI extends JDialog {
             cmb_Localidad.removeAllItems();
         }
     }//GEN-LAST:event_cmb_ProvinciaItemStateChanged
-
-    private void cmb_PaisItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_PaisItemStateChanged
-        if (cmb_Pais.getItemCount() > 0) {
-            this.cargarComboBoxProvinciasDelPais((Pais) cmb_Pais.getSelectedItem());
-        }
-    }//GEN-LAST:event_cmb_PaisItemStateChanged
 
     private void txtIdFiscalFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtIdFiscalFocusLost
         if (txtIdFiscal.getText().equals("")) txtIdFiscal.setValue(null);
@@ -644,10 +574,8 @@ public class DetalleEmpresaGUI extends JDialog {
     private javax.swing.JButton btn_Guardar;
     private javax.swing.JButton btn_NuevaLocalidad;
     private javax.swing.JButton btn_NuevaProvincia;
-    private javax.swing.JButton btn_NuevoPais;
     private javax.swing.JComboBox cmbCategoriaIVA;
     private javax.swing.JComboBox cmb_Localidad;
-    private javax.swing.JComboBox cmb_Pais;
     private javax.swing.JComboBox cmb_Provincia;
     private com.toedter.calendar.JDateChooser dc_FechaInicioActividad;
     private javax.swing.JLabel lblAspectRatio;
@@ -662,7 +590,6 @@ public class DetalleEmpresaGUI extends JDialog {
     private javax.swing.JLabel lbl_Localidad;
     private javax.swing.JLabel lbl_Logo;
     private javax.swing.JLabel lbl_Nombre;
-    private javax.swing.JLabel lbl_Pais;
     private javax.swing.JLabel lbl_Provincia;
     private javax.swing.JLabel lbl_Telefono;
     private javax.swing.JPanel panelPrincipal;

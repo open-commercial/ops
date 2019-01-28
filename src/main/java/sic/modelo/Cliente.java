@@ -24,8 +24,6 @@ public class Cliente implements Serializable {
     private String nombreLocalidad;
     private Long idProvincia;
     private String nombreProvincia;
-    private Long idPais;
-    private String nombrePais;
     private String contacto;
     private Date fechaAlta;    
     private Long idEmpresa;

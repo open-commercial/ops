@@ -30,9 +30,9 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="panelInferior" max="32767" attributes="1"/>
-                  <Component id="panelPrincipal" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="panelPrincipal" min="-2" max="-2" attributes="0"/>
+                  <Component id="panelInferior" alignment="0" min="-2" max="-2" attributes="1"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -66,13 +66,11 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="lbl_Pais" alignment="1" max="32767" attributes="1"/>
                       <Component id="lbl_Prov" alignment="1" max="32767" attributes="1"/>
                       <Component id="lbl_Localidades" alignment="1" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="cmb_Paises" max="32767" attributes="1"/>
                       <Component id="cmb_ProvinciasBusqueda" alignment="0" max="32767" attributes="1"/>
                       <Component id="sp_ListaMedidas" alignment="0" pref="269" max="32767" attributes="1"/>
                   </Group>
@@ -83,12 +81,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lbl_Pais" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmb_Paises" alignment="2" min="-2" max="-2" attributes="1"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lbl_Prov" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="cmb_ProvinciasBusqueda" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -98,28 +91,11 @@
                       <Component id="lbl_Localidades" min="-2" max="-2" attributes="0"/>
                       <Component id="sp_ListaMedidas" min="-2" max="-2" attributes="1"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="lbl_Pais">
-          <Properties>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Pais:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cmb_Paises">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmb_PaisesItemStateChanged"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JLabel" name="lbl_Prov">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>

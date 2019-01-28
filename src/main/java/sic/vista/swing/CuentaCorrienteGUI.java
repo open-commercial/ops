@@ -262,8 +262,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         if (cliente.getDireccion() != null) direccion = cliente.getDireccion() + " ";
         if (cliente.getNombreLocalidad() != null) {
             direccion += cliente.getNombreLocalidad() 
-                    + " " + cliente.getNombreProvincia()
-                    + " " + cliente.getNombrePais();
+                    + " " + cliente.getNombreProvincia();
         }
         txtDomicilioCliente.setText(direccion);
         if (cliente.getIdFiscal() != null) txtIDFiscalCliente.setText(cliente.getIdFiscal().toString());
@@ -288,8 +287,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             Localidad localidadDelProveedor = RestClient.getRestTemplate().getForObject("/localidades/" + proveedor.getIdLocalidad(), Localidad.class);
             txtDomicilioCliente.setText(proveedor.getDireccion()
                     + " " + localidadDelProveedor.getNombre()
-                    + " " + localidadDelProveedor.getNombreProvincia()
-                    + " " + localidadDelProveedor.getNombrePais());
+                    + " " + localidadDelProveedor.getNombreProvincia());
             if (proveedor.getIdFiscal() != null) {
                 txtIDFiscalCliente.setText(proveedor.getIdFiscal().toString());
             }

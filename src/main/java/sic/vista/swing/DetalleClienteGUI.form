@@ -89,7 +89,6 @@
                       <Component id="lblIdFiscal" linkSize="16" alignment="1" max="32767" attributes="0"/>
                       <Component id="lblCondicionIVA" alignment="1" max="32767" attributes="1"/>
                       <Component id="lblDireccion" alignment="1" max="32767" attributes="0"/>
-                      <Component id="lblPais" alignment="1" max="32767" attributes="0"/>
                       <Component id="lblProvincia" alignment="1" max="32767" attributes="0"/>
                       <Component id="lblLocalidad" alignment="1" max="32767" attributes="0"/>
                       <Component id="lblViajante" alignment="1" max="32767" attributes="1"/>
@@ -102,13 +101,16 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cmbProvincia" alignment="0" pref="295" max="32767" attributes="1"/>
-                              <Component id="cmbPais" alignment="1" max="32767" attributes="1"/>
-                              <Component id="cmbViajante" alignment="1" max="32767" attributes="1"/>
-                              <Component id="cmbLocalidad" alignment="1" max="32767" attributes="1"/>
-                              <Component id="cmbCredencial" alignment="0" max="32767" attributes="1"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="cmbProvincia" alignment="0" pref="295" max="32767" attributes="1"/>
+                                  <Component id="cmbViajante" alignment="1" max="32767" attributes="1"/>
+                                  <Component id="cmbCredencial" alignment="0" max="32767" attributes="1"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="cmbLocalidad" max="32767" attributes="1"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                              </Group>
                           </Group>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="btnBuscarUsuarioViajante" min="-2" max="-2" attributes="0"/>
@@ -121,7 +123,6 @@
                                   <Component id="btnNuevaCredencial" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="btnNuevaProvincia" alignment="1" max="32767" attributes="0"/>
-                              <Component id="btnNuevoPais" alignment="1" max="32767" attributes="0"/>
                               <Component id="btnNuevaLocalidad" alignment="1" max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -171,12 +172,6 @@
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lblDireccion" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="txtDireccion" alignment="2" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lblPais" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmbPais" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnNuevoPais" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -302,39 +297,6 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtDireccion">
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblPais">
-          <Properties>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Pais:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cmbPais">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmbPaisItemStateChanged"/>
-          </Events>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Pais&gt;"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JButton" name="btnNuevoPais">
-          <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
-            </Property>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/AddMap_16x16.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Nuevo"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNuevoPaisActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblProvincia">
           <Properties>

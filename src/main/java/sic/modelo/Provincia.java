@@ -9,9 +9,7 @@ import lombok.EqualsAndHashCode;
 public class Provincia implements Serializable {
 
     private long id_Provincia;
-    private String nombre;    
-    private Long idPais;
-    private String nombrePais;   
+    private String nombre;     
     private boolean eliminada = false;
 
     @Override

@@ -14,7 +14,6 @@ public class Transportista implements Serializable {
     private Long idLocalidad;
     private String nombreLocalidad;
     private String nombreProvincia;
-    private String nombrePais;
     private String web;
     private String telefono;
     private Long idEmpresa;

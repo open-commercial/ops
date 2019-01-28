@@ -90,7 +90,6 @@
                                   <Component id="btnBuscarViajante" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="txtCriteria" max="32767" attributes="2"/>
-                              <Component id="cmbPais" alignment="0" max="32767" attributes="2"/>
                           </Group>
                       </Group>
                   </Group>
@@ -112,10 +111,7 @@
                       <Component id="btnBuscarViajante" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="chk_Ubicacion" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmbPais" linkSize="7" alignment="2" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="chk_Ubicacion" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="cmbProvincia" linkSize="7" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -164,17 +160,6 @@
           </Properties>
           <Events>
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmbProvinciaItemStateChanged"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cmbPais">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmbPaisItemStateChanged"/>
           </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="cmbLocalidad">
@@ -262,7 +247,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="sp_Resultados" pref="221" max="32767" attributes="0"/>
+                  <Component id="sp_Resultados" pref="222" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="btn_setPredeterminado" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>

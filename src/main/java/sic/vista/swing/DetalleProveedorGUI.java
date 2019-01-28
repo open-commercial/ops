@@ -15,7 +15,6 @@ import sic.RestClient;
 import sic.modelo.CategoriaIVA;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Localidad;
-import sic.modelo.Pais;
 import sic.modelo.Proveedor;
 import sic.modelo.Provincia;
 import sic.modelo.Rol;
@@ -26,18 +25,18 @@ public class DetalleProveedorGUI extends JDialog {
 
     private Proveedor proveedorModificar;
     private Proveedor proveedorNuevo;
-    private final TipoDeOperacion operacion;  
+    private final TipoDeOperacion operacion;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleProveedorGUI() {
         this.initComponents();
-        this.setIcon();        
+        this.setIcon();
         operacion = TipoDeOperacion.ALTA;
     }
 
     public DetalleProveedorGUI(Proveedor prov) {
         this.initComponents();
-        this.setIcon();        
+        this.setIcon();
         operacion = TipoDeOperacion.ACTUALIZACION;
         proveedorModificar = prov;
     }
@@ -56,8 +55,6 @@ public class DetalleProveedorGUI extends JDialog {
         try {
             Localidad localidadDelProveedor = RestClient.getRestTemplate().getForObject("/localidades/" + proveedorModificar.getIdLocalidad(), Localidad.class);
             Provincia provinciaDelProveedor = RestClient.getRestTemplate().getForObject("/provincias/" + localidadDelProveedor.getIdProvincia(), Provincia.class);
-            Pais paisDelProveedor = RestClient.getRestTemplate().getForObject("/paises/" + provinciaDelProveedor.getIdPais(), Pais.class);
-            cmbPais.setSelectedItem(paisDelProveedor);
             cmbProvincia.setSelectedItem(provinciaDelProveedor);
             cmbLocalidad.setSelectedItem(localidadDelProveedor);
         } catch (RestClientResponseException ex) {
@@ -87,40 +84,22 @@ public class DetalleProveedorGUI extends JDialog {
         txtEmail.setText("");
         txtWeb.setText("");
         this.cargarComboBoxCondicionesIVA();
-        this.cargarComboBoxPaises();
+        this.cargarComboBoxProvincias();
     }
 
     private void cargarComboBoxCondicionesIVA() {
         cmbCategoriaIVA.removeAllItems();
         for (CategoriaIVA c : CategoriaIVA.values()) {
             cmbCategoriaIVA.addItem(c);
-        } 
-    }
-
-    private void cargarComboBoxPaises() {
-        cmbPais.removeAllItems();
-        try {
-            List<Pais> paises = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/paises", Pais[].class)));
-            paises.stream().forEach((pais) -> {
-                cmbPais.addItem(pais);
-            });
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void cargarComboBoxProvinciasDelPais(Pais paisSeleccionado) {
+    private void cargarComboBoxProvincias() {
         cmbProvincia.removeAllItems();
         try {
             List<Provincia> provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/provincias/paises/" + paisSeleccionado.getId_Pais(),
-                    Provincia[].class)));
+                    .getForObject("/provincias",
+                            Provincia[].class)));
             provincias.stream().forEach((p) -> {
                 cmbProvincia.addItem(p);
             });
@@ -139,7 +118,7 @@ public class DetalleProveedorGUI extends JDialog {
         try {
             List<Localidad> Localidades = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/localidades/provincias/" + provSeleccionada.getId_Provincia(),
-                    Localidad[].class)));
+                            Localidad[].class)));
             Localidades.stream().forEach((l) -> {
                 cmbLocalidad.addItem(l);
             });
@@ -155,22 +134,20 @@ public class DetalleProveedorGUI extends JDialog {
 
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
-        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) 
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
             btnNuevaLocalidad.setEnabled(true);
             btnNuevaProvincia.setEnabled(true);
-            btnNuevoPais.setEnabled(true);
         } else {
             btnNuevaLocalidad.setEnabled(false);
             btnNuevaProvincia.setEnabled(false);
-            btnNuevoPais.setEnabled(false);
         }
     }
-    
+
     public Proveedor getProveedorCreado() {
         return proveedorNuevo;
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -186,9 +163,6 @@ public class DetalleProveedorGUI extends JDialog {
         cmbCategoriaIVA = new javax.swing.JComboBox();
         lblDireccion = new javax.swing.JLabel();
         txtDireccion = new javax.swing.JTextField();
-        lblPais = new javax.swing.JLabel();
-        cmbPais = new javax.swing.JComboBox();
-        btnNuevoPais = new javax.swing.JButton();
         lblProvincia = new javax.swing.JLabel();
         cmbProvincia = new javax.swing.JComboBox();
         btnNuevaProvincia = new javax.swing.JButton();
@@ -245,25 +219,6 @@ public class DetalleProveedorGUI extends JDialog {
 
         lblDireccion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblDireccion.setText("Dirección:");
-
-        lblPais.setForeground(java.awt.Color.red);
-        lblPais.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblPais.setText("* Pais:");
-
-        cmbPais.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cmbPaisItemStateChanged(evt);
-            }
-        });
-
-        btnNuevoPais.setForeground(java.awt.Color.blue);
-        btnNuevoPais.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
-        btnNuevoPais.setText("Nuevo");
-        btnNuevoPais.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNuevoPaisActionPerformed(evt);
-            }
-        });
 
         lblProvincia.setForeground(java.awt.Color.red);
         lblProvincia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -332,7 +287,6 @@ public class DetalleProveedorGUI extends JDialog {
                     .addComponent(lblIdFiscal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblCondicionIVA, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblDireccion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblPais, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblProvincia, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblLocalidad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblTelPrimario, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -346,10 +300,6 @@ public class DetalleProveedorGUI extends JDialog {
                         .addComponent(cmbLocalidad, 0, 342, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
                         .addComponent(btnNuevaLocalidad))
-                    .addGroup(panelPrincipalLayout.createSequentialGroup()
-                        .addComponent(cmbPais, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btnNuevoPais))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
                         .addComponent(cmbProvincia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
@@ -391,11 +341,6 @@ public class DetalleProveedorGUI extends JDialog {
                     .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblPais)
-                    .addComponent(cmbPais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnNuevoPais))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblProvincia)
                     .addComponent(cmbProvincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnNuevaProvincia))
@@ -426,8 +371,6 @@ public class DetalleProveedorGUI extends JDialog {
                     .addComponent(txtWeb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevoPais, cmbPais});
 
         panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevaProvincia, cmbProvincia});
 
@@ -460,29 +403,13 @@ public class DetalleProveedorGUI extends JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnNuevoPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoPaisActionPerformed
-        DetallePaisGUI gui_DetallePais = new DetallePaisGUI();
-        gui_DetallePais.setModal(true);
-        gui_DetallePais.setLocationRelativeTo(this);
-        gui_DetallePais.setVisible(true);
-        this.cargarComboBoxPaises();
-    }//GEN-LAST:event_btnNuevoPaisActionPerformed
-
     private void btnNuevaProvinciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaProvinciaActionPerformed
         DetalleProvinciaGUI gui_DetalleProvincia = new DetalleProvinciaGUI();
         gui_DetalleProvincia.setModal(true);
         gui_DetalleProvincia.setLocationRelativeTo(this);
         gui_DetalleProvincia.setVisible(true);
-        this.cargarComboBoxProvinciasDelPais((Pais) cmbPais.getSelectedItem());
+        this.cargarComboBoxProvincias();
     }//GEN-LAST:event_btnNuevaProvinciaActionPerformed
-
-    private void cmbPaisItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbPaisItemStateChanged
-        if (cmbPais.getItemCount() > 0) {
-            this.cargarComboBoxProvinciasDelPais((Pais) cmbPais.getSelectedItem());
-        } else {
-            cmbProvincia.removeAllItems();
-        }
-    }//GEN-LAST:event_cmbPaisItemStateChanged
 
     private void btnNuevaLocalidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaLocalidadActionPerformed
         DetalleLocalidadGUI gui_DetalleLocalidad = new DetalleLocalidadGUI();
@@ -551,10 +478,10 @@ public class DetalleProveedorGUI extends JDialog {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_GuardarActionPerformed
-              
+
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cargarComboBoxCondicionesIVA();
-        this.cargarComboBoxPaises();
+        this.cargarComboBoxProvincias();
         this.cambiarEstadoDeComponentesSegunRolUsuario();
         if (operacion == TipoDeOperacion.ACTUALIZACION) {
             this.setTitle("Modificar Proveedor");
@@ -565,17 +492,17 @@ public class DetalleProveedorGUI extends JDialog {
     }//GEN-LAST:event_formWindowOpened
 
     private void txtIdFiscalFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtIdFiscalFocusLost
-        if (txtIdFiscal.getText().equals("")) txtIdFiscal.setValue(null);
+        if (txtIdFiscal.getText().equals("")) {
+            txtIdFiscal.setValue(null);
+        }
     }//GEN-LAST:event_txtIdFiscalFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnNuevaLocalidad;
     private javax.swing.JButton btnNuevaProvincia;
-    private javax.swing.JButton btnNuevoPais;
     private javax.swing.JButton btn_Guardar;
     private javax.swing.JComboBox cmbCategoriaIVA;
     private javax.swing.JComboBox cmbLocalidad;
-    private javax.swing.JComboBox cmbPais;
     private javax.swing.JComboBox cmbProvincia;
     private javax.swing.JLabel lblCodigo;
     private javax.swing.JLabel lblCondicionIVA;
@@ -584,7 +511,6 @@ public class DetalleProveedorGUI extends JDialog {
     private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblIdFiscal;
     private javax.swing.JLabel lblLocalidad;
-    private javax.swing.JLabel lblPais;
     private javax.swing.JLabel lblProvincia;
     private javax.swing.JLabel lblRazonSocial;
     private javax.swing.JLabel lblTelPrimario;

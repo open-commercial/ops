@@ -13,7 +13,6 @@ public class Localidad implements Serializable {
     private String codigoPostal;
     private Long idProvincia;
     private String nombreProvincia;
-    private String nombrePais;
     private boolean eliminada = false;
 
     @Override

@@ -35,6 +35,7 @@ import sic.util.FormatosFechaHora;
 import sic.util.FormatterFechaHora;
 
 public class DetalleNotaCreditoGUI extends JDialog {
+
     private final ModeloTabla modeloTablaRenglones = new ModeloTabla();
     private boolean modificarStock;
     private long idFactura;
@@ -43,7 +44,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private Proveedor proveedor;
     private long idNotaCredito;
     private NotaCredito notaCredito;
-    private HashMap<Long,BigDecimal> idsRenglonesYCantidades = new HashMap<>();
+    private HashMap<Long, BigDecimal> idsRenglonesYCantidades = new HashMap<>();
     private List<RenglonNotaCredito> renglones;
     private boolean notaCreditoCreada;
     private final FormatterFechaHora formatter = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO);
@@ -52,7 +53,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private BigDecimal iva_105_netoFactura = BigDecimal.ZERO;
     private BigDecimal iva_21_netoFactura = BigDecimal.ZERO;
 
-    public DetalleNotaCreditoGUI(HashMap<Long,BigDecimal> idsRenglonesYCantidades, long idFactura,
+    public DetalleNotaCreditoGUI(HashMap<Long, BigDecimal> idsRenglonesYCantidades, long idFactura,
             boolean modificarStock, Cliente cliente) {
         this.initComponents();
         this.setIcon();
@@ -63,7 +64,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
         this.idFactura = idFactura;
     }
 
-    public DetalleNotaCreditoGUI(HashMap<Long,BigDecimal> idsRenglonesYCantidades, long idFactura,
+    public DetalleNotaCreditoGUI(HashMap<Long, BigDecimal> idsRenglonesYCantidades, long idFactura,
             boolean modificarStock, Proveedor proveedor) {
         this.initComponents();
         this.setIcon();
@@ -184,13 +185,14 @@ public class DetalleNotaCreditoGUI extends JDialog {
         }
     }
 
-    private void cargarDetalleCliente() {        
+    private void cargarDetalleCliente() {
         txtNombre.setText(((FacturaVenta) factura).getNombreFiscalCliente() + " (" + cliente.getNroCliente() + ")");
         txtDomicilio.setText(cliente.getDireccion()
                 + " " + cliente.getNombreLocalidad()
-                + " " + cliente.getNombreProvincia()
-                + " " + cliente.getNombrePais());        
-        if (cliente.getIdFiscal() != null) txtIdFiscal.setText(cliente.getIdFiscal().toString());
+                + " " + cliente.getNombreProvincia());
+        if (cliente.getIdFiscal() != null) {
+            txtIdFiscal.setText(cliente.getIdFiscal().toString());
+        }
         txtCondicionIVA.setText(cliente.getCategoriaIVA().toString());
         lbl_NumComprobante.setVisible(false);
         txt_Serie.setVisible(false);
@@ -207,9 +209,10 @@ public class DetalleNotaCreditoGUI extends JDialog {
         Localidad localidadDelProveedor = RestClient.getRestTemplate().getForObject("/localidades/" + proveedor.getIdLocalidad(), Localidad.class);
         txtDomicilio.setText(proveedor.getDireccion()
                 + " " + localidadDelProveedor.getNombre()
-                + " " + localidadDelProveedor.getNombreProvincia()
-                + " " + localidadDelProveedor.getNombrePais());        
-        if (proveedor.getIdFiscal() != null) txtIdFiscal.setText(proveedor.getIdFiscal().toString());
+                + " " + localidadDelProveedor.getNombreProvincia());
+        if (proveedor.getIdFiscal() != null) {
+            txtIdFiscal.setText(proveedor.getIdFiscal().toString());
+        }
         txtCondicionIVA.setText(proveedor.getCategoriaIVA().toString());
     }
 
@@ -220,10 +223,11 @@ public class DetalleNotaCreditoGUI extends JDialog {
         Localidad localidadDelProveedor = RestClient.getRestTemplate().getForObject("/localidades/" + proveedorDeNota.getIdLocalidad(), Localidad.class);
         txtDomicilio.setText(proveedorDeNota.getDireccion()
                 + " " + localidadDelProveedor.getNombre()
-                + " " + localidadDelProveedor.getNombreProvincia()
-                + " " + localidadDelProveedor.getNombrePais());                        
-        if (proveedorDeNota.getIdFiscal() != null) txtIdFiscal.setText(proveedorDeNota.getIdFiscal().toString());        
-        txtCondicionIVA.setText(proveedorDeNota.getCategoriaIVA().toString());        
+                + " " + localidadDelProveedor.getNombreProvincia());
+        if (proveedorDeNota.getIdFiscal() != null) {
+            txtIdFiscal.setText(proveedorDeNota.getIdFiscal().toString());
+        }
+        txtCondicionIVA.setText(proveedorDeNota.getCategoriaIVA().toString());
         txt_Serie.setEnabled(false);
         txt_Numero.setEnabled(false);
         cmbMotivo.setEnabled(false);
@@ -236,7 +240,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
             txt_CAE.setText(String.valueOf(notaCredito.getCAE()));
         }
         cmbMotivo.removeAllItems();
-        cmbMotivo.addItem(notaCredito.getMotivo());        
+        cmbMotivo.addItem(notaCredito.getMotivo());
         dc_FechaNota.setEnabled(false);
         dc_FechaNota.setDate(notaCredito.getFecha());
     }
@@ -366,7 +370,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
             this.dispose();
         }
     }
-    
+
     private void lanzarReporteNotaCredito(long idNota) throws IOException {
         int reply = JOptionPane.showConfirmDialog(this,
                 ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),

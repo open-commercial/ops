@@ -23,8 +23,6 @@ public class Proveedor implements Serializable {
     private String nombreLocalidad;
     private Long idProvincia;
     private String nombreProvincia;
-    private Long idPais;
-    private String nombrePais;
     private Long idEmpresa;
     private String nombreEmpresa;
     private boolean eliminado;    

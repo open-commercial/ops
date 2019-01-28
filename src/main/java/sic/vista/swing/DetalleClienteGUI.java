@@ -16,7 +16,6 @@ import sic.modelo.CategoriaIVA;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Localidad;
-import sic.modelo.Pais;
 import sic.modelo.Provincia;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeOperacion;
@@ -27,7 +26,6 @@ import java.math.BigDecimal;
 public class DetalleClienteGUI extends JDialog {
 
     private Cliente cliente = new Cliente();    
-    private List<Pais> paises;
     private List<Provincia> provincias;
     private List<Localidad> localidades;
     private final TipoDeOperacion operacion;        
@@ -90,16 +88,6 @@ public class DetalleClienteGUI extends JDialog {
             }
         }
     }
-
-    private void seleccionarPaisSegunId(Long idPais) {
-        int indice = 0;
-        for (int i=0; i<paises.size(); i++) {
-            if (paises.get(i).getId_Pais() == idPais) {
-                indice = i;
-            }
-        }
-        cmbPais.setSelectedItem(paises.get(indice));
-    }
     
     private void seleccionarProvinciaSegunId(Long idProvincia) {
         int indice = 0;
@@ -129,7 +117,6 @@ public class DetalleClienteGUI extends JDialog {
         cmbCategoriaIVA.setSelectedItem(cliente.getCategoriaIVA());
         txtDireccion.setText(cliente.getDireccion());              
         if (cliente.getIdLocalidad() != null) {
-            this.seleccionarPaisSegunId(cliente.getIdPais());
             this.seleccionarProvinciaSegunId(cliente.getIdProvincia());
             this.seleccionarLocalidadSegunId(cliente.getIdLocalidad());
         }
@@ -145,36 +132,15 @@ public class DetalleClienteGUI extends JDialog {
         for (CategoriaIVA c : CategoriaIVA.values()) {
             cmbCategoriaIVA.addItem(c);
         }        
-    }        
-
-    private void cargarComboBoxPaises() {
-        cmbPais.removeAllItems();
-        try {
-            paises = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/paises", Pais[].class)));
-            Pais paisVacio = new Pais();    
-            paisVacio.setNombre("");
-            cmbPais.addItem(paisVacio);
-            paises.stream().forEach(p -> cmbPais.addItem(p));
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
     }
 
-    private void cargarComboBoxProvinciasDelPais(Pais pais) {
+    private void cargarComboBoxProvincias() {
         cmbProvincia.removeAllItems();
         try {
-            if (!pais.getNombre().equals("")) {
-                provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                        .getForObject("/provincias/paises/" + pais.getId_Pais(),
-                                Provincia[].class)));
-                provincias.stream().forEach(p -> cmbProvincia.addItem(p));
-            }
+            provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
+                    .getForObject("/provincias",
+                            Provincia[].class)));
+            provincias.stream().forEach(p -> cmbProvincia.addItem(p));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -223,7 +189,6 @@ public class DetalleClienteGUI extends JDialog {
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
             btnNuevaLocalidad.setEnabled(true);
             btnNuevaProvincia.setEnabled(true);
-            btnNuevoPais.setEnabled(true);
             lblViajante.setEnabled(true);
             cmbViajante.setEnabled(true);
             btnBuscarUsuarioViajante.setEnabled(true);
@@ -235,7 +200,6 @@ public class DetalleClienteGUI extends JDialog {
         } else {
             btnNuevaLocalidad.setEnabled(false);
             btnNuevaProvincia.setEnabled(false);
-            btnNuevoPais.setEnabled(false);
             lblViajante.setEnabled(false);
             cmbViajante.setEnabled(false);
             btnBuscarUsuarioViajante.setEnabled(false);
@@ -271,9 +235,6 @@ public class DetalleClienteGUI extends JDialog {
         cmbCategoriaIVA = new javax.swing.JComboBox<>();
         lblDireccion = new javax.swing.JLabel();
         txtDireccion = new javax.swing.JTextField();
-        lblPais = new javax.swing.JLabel();
-        cmbPais = new javax.swing.JComboBox<>();
-        btnNuevoPais = new javax.swing.JButton();
         lblProvincia = new javax.swing.JLabel();
         cmbProvincia = new javax.swing.JComboBox<>();
         btnNuevaProvincia = new javax.swing.JButton();
@@ -344,24 +305,6 @@ public class DetalleClienteGUI extends JDialog {
 
         lblDireccion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblDireccion.setText("Dirección:");
-
-        lblPais.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblPais.setText("Pais:");
-
-        cmbPais.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cmbPaisItemStateChanged(evt);
-            }
-        });
-
-        btnNuevoPais.setForeground(java.awt.Color.blue);
-        btnNuevoPais.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
-        btnNuevoPais.setText("Nuevo");
-        btnNuevoPais.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNuevoPaisActionPerformed(evt);
-            }
-        });
 
         lblProvincia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblProvincia.setText("Provincia:");
@@ -465,7 +408,6 @@ public class DetalleClienteGUI extends JDialog {
                     .addComponent(lblIdFiscal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblCondicionIVA, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblDireccion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblPais, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblProvincia, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblLocalidad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblViajante, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -477,12 +419,13 @@ public class DetalleClienteGUI extends JDialog {
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelPrincipalLayout.createSequentialGroup()
                         .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmbProvincia, 0, 295, Short.MAX_VALUE)
-                            .addComponent(cmbPais, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmbViajante, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmbLocalidad, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmbCredencial, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, 0)
+                            .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(cmbProvincia, 0, 295, Short.MAX_VALUE)
+                                .addComponent(cmbViajante, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cmbCredencial, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
+                                .addComponent(cmbLocalidad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(panelPrincipalLayout.createSequentialGroup()
                                 .addComponent(btnBuscarUsuarioViajante)
@@ -493,7 +436,6 @@ public class DetalleClienteGUI extends JDialog {
                                 .addGap(0, 0, 0)
                                 .addComponent(btnNuevaCredencial))
                             .addComponent(btnNuevaProvincia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnNuevoPais, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnNuevaLocalidad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(txtBonificacion)
                     .addComponent(txtIdFiscal)
@@ -538,11 +480,6 @@ public class DetalleClienteGUI extends JDialog {
                     .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblPais)
-                    .addComponent(cmbPais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnNuevoPais))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblProvincia)
                     .addComponent(cmbProvincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnNuevaProvincia))
@@ -577,8 +514,6 @@ public class DetalleClienteGUI extends JDialog {
                     .addComponent(btnNuevaCredencial))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevoPais, cmbPais});
 
         panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnNuevaProvincia, cmbProvincia});
 
@@ -620,28 +555,12 @@ public class DetalleClienteGUI extends JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnNuevoPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoPaisActionPerformed
-        DetallePaisGUI gui_DetallePais = new DetallePaisGUI();
-        gui_DetallePais.setModal(true);
-        gui_DetallePais.setLocationRelativeTo(this);
-        gui_DetallePais.setVisible(true);        
-        this.cargarComboBoxPaises();
-        this.cargarComboBoxProvinciasDelPais(cmbPais.getItemAt(cmbPais.getSelectedIndex()));        
-    }//GEN-LAST:event_btnNuevoPaisActionPerformed
-
     private void btnNuevaProvinciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaProvinciaActionPerformed
         DetalleProvinciaGUI gui_DetalleProvincia = new DetalleProvinciaGUI();
         gui_DetalleProvincia.setModal(true);
         gui_DetalleProvincia.setLocationRelativeTo(this);
         gui_DetalleProvincia.setVisible(true);        
-        this.cargarComboBoxProvinciasDelPais(cmbPais.getItemAt(cmbPais.getSelectedIndex()));
     }//GEN-LAST:event_btnNuevaProvinciaActionPerformed
-
-    private void cmbPaisItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbPaisItemStateChanged
-        if (cmbPais.getItemCount() > 0) {
-            this.cargarComboBoxProvinciasDelPais(cmbPais.getItemAt(cmbPais.getSelectedIndex()));
-        }
-    }//GEN-LAST:event_cmbPaisItemStateChanged
 
     private void btnNuevaLocalidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaLocalidadActionPerformed
         DetalleLocalidadGUI gui_DetalleLocalidad = new DetalleLocalidadGUI();
@@ -719,7 +638,7 @@ public class DetalleClienteGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cargarComboBoxCategoriasIVA();
-        this.cargarComboBoxPaises();
+        this.cargarComboBoxProvincias();
         this.cambiarEstadoDeComponentesSegunRolUsuario();
         if (operacion == TipoDeOperacion.ACTUALIZACION) {
             this.setTitle("Modificar Cliente Nº " + cliente.getNroCliente());
@@ -802,13 +721,11 @@ public class DetalleClienteGUI extends JDialog {
     private javax.swing.JButton btnNuevaCredencial;
     private javax.swing.JButton btnNuevaLocalidad;
     private javax.swing.JButton btnNuevaProvincia;
-    private javax.swing.JButton btnNuevoPais;
     private javax.swing.JButton btnNuevoUsuarioViajante;
     private javax.swing.JButton btn_Guardar;
     private javax.swing.JComboBox<CategoriaIVA> cmbCategoriaIVA;
     private javax.swing.JComboBox<Usuario> cmbCredencial;
     private javax.swing.JComboBox<Localidad> cmbLocalidad;
-    private javax.swing.JComboBox<Pais> cmbPais;
     private javax.swing.JComboBox<Provincia> cmbProvincia;
     private javax.swing.JComboBox<Usuario> cmbViajante;
     private javax.swing.JLabel lblBonificacion;
@@ -821,7 +738,6 @@ public class DetalleClienteGUI extends JDialog {
     private javax.swing.JLabel lblLocalidad;
     private javax.swing.JLabel lblNombreFantasia;
     private javax.swing.JLabel lblNombreFiscal;
-    private javax.swing.JLabel lblPais;
     private javax.swing.JLabel lblProvincia;
     private javax.swing.JLabel lblTelefono;
     private javax.swing.JLabel lblViajante;
