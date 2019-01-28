@@ -924,7 +924,7 @@ public class ClientesGUI extends JInternalFrame {
 
     private void btnBuscarViajanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarViajanteActionPerformed
         Rol[] rolesParaFiltrar = new Rol[]{Rol.VIAJANTE};
-        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar);
+        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar, "Buscar Viajante");
         buscarUsuariosGUI.setModal(true);
         buscarUsuariosGUI.setLocationRelativeTo(this);
         buscarUsuariosGUI.setVisible(true);

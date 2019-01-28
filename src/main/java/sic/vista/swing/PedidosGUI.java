@@ -235,8 +235,14 @@ public class PedidosGUI extends JInternalFrame {
         tbl_Pedidos.getColumnModel().getColumn(2).setPreferredWidth(100);
         tbl_Pedidos.getColumnModel().getColumn(2).setMaxWidth(100);
         tbl_Pedidos.getColumnModel().getColumn(3).setPreferredWidth(220);
+        tbl_Pedidos.getColumnModel().getColumn(3).setMaxWidth(220);
+        tbl_Pedidos.getColumnModel().getColumn(3).setMinWidth(220);
         tbl_Pedidos.getColumnModel().getColumn(4).setPreferredWidth(220);
+        tbl_Pedidos.getColumnModel().getColumn(4).setMaxWidth(220);
+        tbl_Pedidos.getColumnModel().getColumn(4).setMinWidth(220);
         tbl_Pedidos.getColumnModel().getColumn(5).setPreferredWidth(220);
+        tbl_Pedidos.getColumnModel().getColumn(5).setMaxWidth(220);
+        tbl_Pedidos.getColumnModel().getColumn(5).setMinWidth(220);
         tbl_Pedidos.getColumnModel().getColumn(6).setPreferredWidth(25);
         tbl_Pedidos.getColumnModel().getColumn(7).setPreferredWidth(25);
         //renderers
@@ -931,7 +937,7 @@ public class PedidosGUI extends JInternalFrame {
 
     private void btnBuscarUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarUsuariosActionPerformed
         Rol[] rolesParaFiltrar = new Rol[]{Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR, Rol.VIAJANTE, Rol.COMPRADOR};
-        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar);
+        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar, "Buscar Usuario");
         buscarUsuariosGUI.setModal(true);
         buscarUsuariosGUI.setLocationRelativeTo(this);
         buscarUsuariosGUI.setVisible(true);
@@ -954,7 +960,7 @@ public class PedidosGUI extends JInternalFrame {
 
     private void btnBuscarViajantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarViajantesActionPerformed
         Rol[] rolesParaFiltrar = new Rol[]{Rol.VIAJANTE};
-        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar);
+        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar, "Buscar Viajante");
         buscarUsuariosGUI.setModal(true);
         buscarUsuariosGUI.setLocationRelativeTo(this);
         buscarUsuariosGUI.setVisible(true);

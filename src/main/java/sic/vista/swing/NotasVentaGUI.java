@@ -141,8 +141,14 @@ public class NotasVentaGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(100);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(220);
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(220);   
+        tbl_Resultados.getColumnModel().getColumn(4).setMaxWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(4).setMinWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(5).setMinWidth(220);
         tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(6).setMaxWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(6).setMinWidth(220);
         tbl_Resultados.getColumnModel().getColumn(7).setMinWidth(120);
         tbl_Resultados.getColumnModel().getColumn(7).setMaxWidth(120);
         tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(120);
@@ -1032,7 +1038,7 @@ public class NotasVentaGUI extends JInternalFrame {
 
     private void btnBuscarUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarUsuariosActionPerformed
         Rol[] rolesParaFiltrar = new Rol[]{Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR};
-        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar);
+        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar, "Buscar Usuario");
         buscarUsuariosGUI.setModal(true);
         buscarUsuariosGUI.setLocationRelativeTo(this);
         buscarUsuariosGUI.setVisible(true);
@@ -1115,7 +1121,7 @@ public class NotasVentaGUI extends JInternalFrame {
 
     private void btnBuscarViajantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarViajantesActionPerformed
         Rol[] rolesParaFiltrar = new Rol[]{Rol.VIAJANTE};
-        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar);
+        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar, "Buscar Viajante");
         buscarUsuariosGUI.setModal(true);
         buscarUsuariosGUI.setLocationRelativeTo(this);
         buscarUsuariosGUI.setVisible(true);

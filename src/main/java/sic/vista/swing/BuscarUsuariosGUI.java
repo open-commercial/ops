@@ -34,16 +34,17 @@ public class BuscarUsuariosGUI extends JDialog {
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int NUMERO_PAGINA = 0;    
     private final Rol[] rolesParaFiltrar;
+    private String title;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeDialog = new Dimension(1000, 600);
 
-    public BuscarUsuariosGUI(Rol[] rolesParaFiltrar) {
+    public BuscarUsuariosGUI(Rol[] rolesParaFiltrar, String title) {
         this.initComponents();
         this.setIcon();
-        this.setColumnas();
         txtCriteriaBusqueda.addKeyListener(keyHandler);
         tblResultados.addKeyListener(keyHandler);
         this.rolesParaFiltrar = rolesParaFiltrar;
+        this.title = title;
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
             int va = scrollBar.getVisibleAmount() + 10;
@@ -323,22 +324,7 @@ public class BuscarUsuariosGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.setSize(sizeDialog);
-        if (this.rolesParaFiltrar.length == 1) {
-            switch (this.rolesParaFiltrar[0]) {
-                case ADMINISTRADOR:
-                    this.setTitle("Buscar Administrador");
-                case ENCARGADO:
-                    this.setTitle("Buscar Encargado");
-                case VENDEDOR:
-                    this.setTitle("Buscar Vendedor");
-                case VIAJANTE:
-                    this.setTitle("Buscar Viajante");
-                default:
-                    this.setTitle("Buscar Usuario");
-            }
-        } else {
-            this.setTitle("Buscar Usuario");
-        }
+        this.setTitle(title);
         this.setColumnas();
     }//GEN-LAST:event_formWindowOpened
 
