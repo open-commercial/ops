@@ -372,7 +372,7 @@ public class ClientesGUI extends JInternalFrame {
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
                 || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
             chkViajante.setEnabled(true);
-            btnBuscarViajante.setEnabled(true);
+            btnBuscarViajante.setEnabled(false);
             tienePermisoSegunRoles = true;
         } else {
             chkViajante.setEnabled(false);
