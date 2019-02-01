@@ -248,6 +248,8 @@ public class DetalleClienteGUI extends JDialog {
                 || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
             btnNuevaCredencial.setEnabled(true);
             btnBuscarCredencial.setEnabled(true);
+            lblCredencial.setEnabled(true);
+            cmbCredencial.setEnabled(true);
         } else {
             btnNuevaCredencial.setEnabled(false);
             btnBuscarCredencial.setEnabled(false);
