@@ -20,12 +20,21 @@ public class DetalleUsuarioGUI extends JDialog {
     
     private Usuario usuarioParaModificar;
     private Usuario usuarioCreado;
+    private Rol rolDeUsuarioACrear;
     private final TipoDeOperacion operacion;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleUsuarioGUI() {
         this.initComponents();
         operacion = TipoDeOperacion.ALTA;
+        this.setIcon();
+        lblAvisoSeguridad.setText("");
+    }
+
+    public DetalleUsuarioGUI(Rol rolDeUsuarioACrear) {
+        this.initComponents();
+        operacion = TipoDeOperacion.ALTA;
+        this.rolDeUsuarioACrear = rolDeUsuarioACrear;
         this.setIcon();
         lblAvisoSeguridad.setText("");
     }
@@ -380,6 +389,30 @@ public class DetalleUsuarioGUI extends JDialog {
             this.cargarUsuarioParaModificar();
         } else if (operacion == TipoDeOperacion.ALTA) {
             this.setTitle("Nuevo Usuario");
+            if (rolDeUsuarioACrear != null) {
+                if (rolDeUsuarioACrear.equals(Rol.COMPRADOR)) {
+                    lblHabilitado.setEnabled(false);
+                    chkHabilitado.setSelected(true);
+                    chkHabilitado.setEnabled(false);
+                    chk_Comprador.setSelected(true);
+                    chk_Comprador.setEnabled(false);
+                    chk_Administrador.setEnabled(false);
+                    chk_Encargado.setEnabled(false);
+                    chk_Vendedor.setEnabled(false);
+                    chk_Viajante.setEnabled(false);
+                }
+                if (rolDeUsuarioACrear.equals(Rol.VIAJANTE)) {
+                    lblHabilitado.setEnabled(false);
+                    chkHabilitado.setSelected(true);
+                    chkHabilitado.setEnabled(false);
+                    chk_Viajante.setSelected(true);
+                    chk_Viajante.setEnabled(false);
+                    chk_Administrador.setEnabled(false);
+                    chk_Encargado.setEnabled(false);
+                    chk_Comprador.setEnabled(false);
+                    chk_Vendedor.setEnabled(false);
+                }
+            }
         }
     }//GEN-LAST:event_formWindowOpened
 

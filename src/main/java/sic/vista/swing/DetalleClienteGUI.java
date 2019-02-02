@@ -26,22 +26,22 @@ import java.math.BigDecimal;
 
 public class DetalleClienteGUI extends JDialog {
 
-    private Cliente cliente = new Cliente();    
+    private Cliente cliente = new Cliente();
     private List<Pais> paises;
     private List<Provincia> provincias;
     private List<Localidad> localidades;
-    private final TipoDeOperacion operacion;        
+    private final TipoDeOperacion operacion;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleClienteGUI() {
         this.initComponents();
-        this.setIcon();        
+        this.setIcon();
         operacion = TipoDeOperacion.ALTA;
     }
 
     public DetalleClienteGUI(Cliente cliente) {
         this.initComponents();
-        this.setIcon();        
+        this.setIcon();
         operacion = TipoDeOperacion.ACTUALIZACION;
         this.cliente = cliente;
     }
@@ -49,12 +49,12 @@ public class DetalleClienteGUI extends JDialog {
     public Cliente getClienteDadoDeAlta() {
         return (cliente.getId_Cliente() != 0L ? cliente : null);
     }
-    
+
     private void setIcon() {
         ImageIcon iconoVentana = new ImageIcon(DetalleClienteGUI.class.getResource("/sic/icons/Client_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
     }
-    
+
     private void seleccionarCredencialSegunId(Long idCredencial) {
         if (idCredencial != null) {
             try {
@@ -72,7 +72,7 @@ public class DetalleClienteGUI extends JDialog {
             }
         }
     }
-    
+
     private void seleccionarViajanteSegunId(Long idViajante) {
         if (idViajante != null) {
             try {
@@ -80,6 +80,8 @@ public class DetalleClienteGUI extends JDialog {
                         + idViajante, Usuario.class);
                 cmbViajante.addItem(usuario);
                 cmbViajante.addItem(null);
+                cmbCredencial.addItem(usuario);
+                cmbCredencial.addItem(null);
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             } catch (ResourceAccessException ex) {
@@ -93,41 +95,41 @@ public class DetalleClienteGUI extends JDialog {
 
     private void seleccionarPaisSegunId(Long idPais) {
         int indice = 0;
-        for (int i=0; i<paises.size(); i++) {
+        for (int i = 0; i < paises.size(); i++) {
             if (paises.get(i).getId_Pais() == idPais) {
                 indice = i;
             }
         }
         cmbPais.setSelectedItem(paises.get(indice));
     }
-    
+
     private void seleccionarProvinciaSegunId(Long idProvincia) {
         int indice = 0;
-        for (int i=0; i<provincias.size(); i++) {
+        for (int i = 0; i < provincias.size(); i++) {
             if (provincias.get(i).getId_Provincia() == idProvincia) {
                 indice = i;
             }
         }
         cmbProvincia.setSelectedItem(provincias.get(indice));
     }
-    
+
     private void seleccionarLocalidadSegunId(Long idLocalidad) {
         int indice = 0;
-        for (int i=0; i<localidades.size(); i++) {
+        for (int i = 0; i < localidades.size(); i++) {
             if (localidades.get(i).getId_Localidad() == idLocalidad) {
                 indice = i;
             }
         }
         cmbLocalidad.setSelectedItem(localidades.get(indice));
     }
-    
+
     private void cargarClienteParaModificar() {
         txtIdFiscal.setValue(cliente.getIdFiscal());
         txtNombreFiscal.setText(cliente.getNombreFiscal());
-        txtNombreFantasia.setText(cliente.getNombreFantasia());                                
+        txtNombreFantasia.setText(cliente.getNombreFantasia());
         txtBonificacion.setValue(cliente.getBonificacion());
         cmbCategoriaIVA.setSelectedItem(cliente.getCategoriaIVA());
-        txtDireccion.setText(cliente.getDireccion());              
+        txtDireccion.setText(cliente.getDireccion());
         if (cliente.getIdLocalidad() != null) {
             this.seleccionarPaisSegunId(cliente.getIdPais());
             this.seleccionarProvinciaSegunId(cliente.getIdProvincia());
@@ -135,24 +137,24 @@ public class DetalleClienteGUI extends JDialog {
         }
         this.seleccionarCredencialSegunId(cliente.getIdCredencial());
         this.seleccionarViajanteSegunId(cliente.getIdViajante());
-        txtTelefono.setText(cliente.getTelefono());        
+        txtTelefono.setText(cliente.getTelefono());
         txtContacto.setText(cliente.getContacto());
         txtEmail.setText(cliente.getEmail());
-    }    
-    
+    }
+
     private void cargarComboBoxCategoriasIVA() {
         cmbCategoriaIVA.removeAllItems();
         for (CategoriaIVA c : CategoriaIVA.values()) {
             cmbCategoriaIVA.addItem(c);
-        }        
-    }        
+        }
+    }
 
     private void cargarComboBoxPaises() {
         cmbPais.removeAllItems();
         try {
             paises = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/paises", Pais[].class)));
-            Pais paisVacio = new Pais();    
+            Pais paisVacio = new Pais();
             paisVacio.setNombre("");
             cmbPais.addItem(paisVacio);
             paises.stream().forEach(p -> cmbPais.addItem(p));
@@ -191,7 +193,7 @@ public class DetalleClienteGUI extends JDialog {
             if (!provincia.getNombre().equals("")) {
                 localidades = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                         .getForObject("/localidades/provincias/" + provincia.getId_Provincia(),
-                        Localidad[].class)));
+                                Localidad[].class)));
                 localidades.stream().forEach(l -> cmbLocalidad.addItem(l));
             }
         } catch (RestClientResponseException ex) {
@@ -203,18 +205,14 @@ public class DetalleClienteGUI extends JDialog {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
-            btnNuevaCredencial.setEnabled(true);
-            btnBuscarCredencial.setEnabled(true);
             btnNuevoUsuarioViajante.setEnabled(true);
             lblCredencial.setEnabled(true);
             cmbCredencial.setEnabled(true);
         } else {
-            btnNuevaCredencial.setEnabled(false);
-            btnBuscarCredencial.setEnabled(false);
             btnNuevoUsuarioViajante.setEnabled(false);
             lblCredencial.setEnabled(false);
             cmbCredencial.setEnabled(false);
@@ -245,6 +243,17 @@ public class DetalleClienteGUI extends JDialog {
             lblBonificacion.setEnabled(false);
             txtBonificacion.setEnabled(false);
         }
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+            btnNuevaCredencial.setEnabled(true);
+            btnBuscarCredencial.setEnabled(true);
+            lblCredencial.setEnabled(true);
+            cmbCredencial.setEnabled(true);
+        } else {
+            btnNuevaCredencial.setEnabled(false);
+            btnBuscarCredencial.setEnabled(false);
+        }
         if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
                 && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)
                 && !rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
@@ -252,7 +261,7 @@ public class DetalleClienteGUI extends JDialog {
             this.seleccionarViajanteSegunId(UsuarioActivo.getInstance().getUsuario().getId_Usuario());
         }
     }
-               
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -624,16 +633,16 @@ public class DetalleClienteGUI extends JDialog {
         DetallePaisGUI gui_DetallePais = new DetallePaisGUI();
         gui_DetallePais.setModal(true);
         gui_DetallePais.setLocationRelativeTo(this);
-        gui_DetallePais.setVisible(true);        
+        gui_DetallePais.setVisible(true);
         this.cargarComboBoxPaises();
-        this.cargarComboBoxProvinciasDelPais(cmbPais.getItemAt(cmbPais.getSelectedIndex()));        
+        this.cargarComboBoxProvinciasDelPais(cmbPais.getItemAt(cmbPais.getSelectedIndex()));
     }//GEN-LAST:event_btnNuevoPaisActionPerformed
 
     private void btnNuevaProvinciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaProvinciaActionPerformed
         DetalleProvinciaGUI gui_DetalleProvincia = new DetalleProvinciaGUI();
         gui_DetalleProvincia.setModal(true);
         gui_DetalleProvincia.setLocationRelativeTo(this);
-        gui_DetalleProvincia.setVisible(true);        
+        gui_DetalleProvincia.setVisible(true);
         this.cargarComboBoxProvinciasDelPais(cmbPais.getItemAt(cmbPais.getSelectedIndex()));
     }//GEN-LAST:event_btnNuevaProvinciaActionPerformed
 
@@ -647,12 +656,12 @@ public class DetalleClienteGUI extends JDialog {
         DetalleLocalidadGUI gui_DetalleLocalidad = new DetalleLocalidadGUI();
         gui_DetalleLocalidad.setModal(true);
         gui_DetalleLocalidad.setLocationRelativeTo(this);
-        gui_DetalleLocalidad.setVisible(true);      
-        this.cargarComboBoxLocalidadesDeLaProvincia(cmbProvincia.getItemAt(cmbProvincia.getSelectedIndex()));      
+        gui_DetalleLocalidad.setVisible(true);
+        this.cargarComboBoxLocalidadesDeLaProvincia(cmbProvincia.getItemAt(cmbProvincia.getSelectedIndex()));
     }//GEN-LAST:event_btnNuevaLocalidadActionPerformed
 
     private void cmbProvinciaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbProvinciaItemStateChanged
-        if (cmbProvincia.getItemCount() > 0) {            
+        if (cmbProvincia.getItemCount() > 0) {
             this.cargarComboBoxLocalidadesDeLaProvincia(cmbProvincia.getItemAt(cmbProvincia.getSelectedIndex()));
         } else {
             cmbLocalidad.removeAllItems();
@@ -660,24 +669,24 @@ public class DetalleClienteGUI extends JDialog {
     }//GEN-LAST:event_cmbProvinciaItemStateChanged
 
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
-        try {            
+        try {
             String idLocalidad = "";
             String idViajante = "";
             String idCredencial = "";
             cliente.setIdFiscal((Long) txtIdFiscal.getValue());
             cliente.setNombreFiscal(txtNombreFiscal.getText().trim());
-            cliente.setNombreFantasia(txtNombreFantasia.getText().trim());            
+            cliente.setNombreFantasia(txtNombreFantasia.getText().trim());
             cliente.setBonificacion(new BigDecimal(txtBonificacion.getText()));
             cliente.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
             cliente.setDireccion(txtDireccion.getText().trim());
-            cliente.setTelefono(txtTelefono.getText().trim());            
+            cliente.setTelefono(txtTelefono.getText().trim());
             cliente.setContacto(txtContacto.getText().trim());
-            cliente.setEmail(txtEmail.getText().trim());            
+            cliente.setEmail(txtEmail.getText().trim());
             if (cmbLocalidad.getSelectedItem() != null) {
                 idLocalidad = String.valueOf(
                         ((Localidad) cmbLocalidad.getSelectedItem()).getId_Localidad());
             }
-            if (cmbViajante.getSelectedItem() != null) {                
+            if (cmbViajante.getSelectedItem() != null) {
                 idViajante = String.valueOf(
                         ((Usuario) cmbViajante.getSelectedItem()).getId_Usuario());
             }
@@ -687,17 +696,17 @@ public class DetalleClienteGUI extends JDialog {
             }
             if (operacion == TipoDeOperacion.ALTA) {
                 cliente = RestClient.getRestTemplate().postForObject(
-                        "/clientes?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()                        
+                        "/clientes?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                         + "&idLocalidad=" + idLocalidad
                         + "&idViajante=" + idViajante
                         + "&idCredencial=" + idCredencial,
                         cliente, Cliente.class);
                 JOptionPane.showMessageDialog(this, "El Cliente se guardó correctamente!",
-                        "Aviso", JOptionPane.INFORMATION_MESSAGE);                
+                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
             }
             if (operacion == TipoDeOperacion.ACTUALIZACION) {
                 RestClient.getRestTemplate().put(
-                        "/clientes?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()                        
+                        "/clientes?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                         + "&idLocalidad=" + idLocalidad
                         + "&idViajante=" + idViajante
                         + "&idCredencial=" + idCredencial,
@@ -725,12 +734,12 @@ public class DetalleClienteGUI extends JDialog {
             this.setTitle("Modificar Cliente Nº " + cliente.getNroCliente());
             this.cargarClienteParaModificar();
         } else if (operacion == TipoDeOperacion.ALTA) {
-            this.setTitle("Nuevo Cliente");            
+            this.setTitle("Nuevo Cliente");
         }
     }//GEN-LAST:event_formWindowOpened
-        
+
     private void btnNuevaCredencialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaCredencialActionPerformed
-        DetalleUsuarioGUI gui_DetalleUsuario = new DetalleUsuarioGUI();
+        DetalleUsuarioGUI gui_DetalleUsuario = new DetalleUsuarioGUI(Rol.COMPRADOR);
         gui_DetalleUsuario.setModal(true);
         gui_DetalleUsuario.setLocationRelativeTo(this);
         gui_DetalleUsuario.setVisible(true);
@@ -780,7 +789,7 @@ public class DetalleClienteGUI extends JDialog {
     }//GEN-LAST:event_btnBuscarCredencialActionPerformed
 
     private void btnNuevoUsuarioViajanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoUsuarioViajanteActionPerformed
-        DetalleUsuarioGUI gui_DetalleUsuario = new DetalleUsuarioGUI();
+        DetalleUsuarioGUI gui_DetalleUsuario = new DetalleUsuarioGUI(Rol.VIAJANTE);
         gui_DetalleUsuario.setModal(true);
         gui_DetalleUsuario.setLocationRelativeTo(this);
         gui_DetalleUsuario.setVisible(true);
@@ -793,7 +802,9 @@ public class DetalleClienteGUI extends JDialog {
     }//GEN-LAST:event_btnNuevoUsuarioViajanteActionPerformed
 
     private void txtIdFiscalFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtIdFiscalFocusLost
-        if (txtIdFiscal.getText().equals("")) txtIdFiscal.setValue(null);
+        if (txtIdFiscal.getText().equals("")) {
+            txtIdFiscal.setValue(null);
+        }
     }//GEN-LAST:event_txtIdFiscalFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
