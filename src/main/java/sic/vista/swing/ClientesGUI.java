@@ -371,14 +371,10 @@ public class ClientesGUI extends JInternalFrame {
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
                 || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-//            btn_Nuevo.setEnabled(true);
-//            btn_Modificar.setEnabled(true);
             chkViajante.setEnabled(true);
             btnBuscarViajante.setEnabled(true);
             tienePermisoSegunRoles = true;
         } else {
-//            btn_Nuevo.setEnabled(false);
-//            btn_Modificar.setEnabled(false);
             chkViajante.setEnabled(false);
             btnBuscarViajante.setEnabled(false);
             tienePermisoSegunRoles = false;
