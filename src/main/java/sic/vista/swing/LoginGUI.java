@@ -67,8 +67,7 @@ public class LoginGUI extends JFrame {
             List<Rol> rolesDeUsuario = UsuarioActivo.getInstance().getUsuario().getRoles();
             if (rolesDeUsuario.contains(Rol.ADMINISTRADOR)
                     || rolesDeUsuario.contains(Rol.ENCARGADO)
-                    || rolesDeUsuario.contains(Rol.VENDEDOR)
-                    || rolesDeUsuario.contains(Rol.VIAJANTE)) {
+                    || rolesDeUsuario.contains(Rol.VENDEDOR)) {
                 this.setVisible(false);
                 new PrincipalGUI().setVisible(true);
                 this.dispose();
