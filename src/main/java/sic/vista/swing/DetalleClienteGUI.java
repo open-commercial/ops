@@ -79,9 +79,7 @@ public class DetalleClienteGUI extends JDialog {
                 Usuario usuario = RestClient.getRestTemplate().getForObject("/usuarios/"
                         + idViajante, Usuario.class);
                 cmbViajante.addItem(usuario);
-                cmbViajante.addItem(null);
-                cmbCredencial.addItem(usuario);
-                cmbCredencial.addItem(null);
+                cmbViajante.addItem(null);                
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             } catch (ResourceAccessException ex) {
@@ -253,12 +251,6 @@ public class DetalleClienteGUI extends JDialog {
         } else {
             btnNuevaCredencial.setEnabled(false);
             btnBuscarCredencial.setEnabled(false);
-        }
-        if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
-                && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)
-                && !rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
-                && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-            this.seleccionarViajanteSegunId(UsuarioActivo.getInstance().getUsuario().getId_Usuario());
         }
     }
 
@@ -793,7 +785,7 @@ public class DetalleClienteGUI extends JDialog {
         gui_DetalleUsuario.setModal(true);
         gui_DetalleUsuario.setLocationRelativeTo(this);
         gui_DetalleUsuario.setVisible(true);
-        if (gui_DetalleUsuario.getUsuarioCreado() != null && gui_DetalleUsuario.getUsuarioCreado().getRoles().contains(Rol.VIAJANTE)) {
+        if (gui_DetalleUsuario.getUsuarioCreado() != null) {
             cmbViajante.removeAllItems();
             cmbViajante.addItem(gui_DetalleUsuario.getUsuarioCreado());
             cmbViajante.addItem(null);
