@@ -1,6 +1,7 @@
 package sic.modelo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,6 +14,8 @@ public class Localidad implements Serializable {
     private String codigoPostal;
     private Long idProvincia;
     private String nombreProvincia;
+    private boolean envioGratuito;
+    private BigDecimal costoEnvio;
     private boolean eliminada = false;
 
     @Override

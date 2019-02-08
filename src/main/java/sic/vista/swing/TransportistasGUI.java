@@ -15,7 +15,6 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Localidad;
-import sic.modelo.Pais;
 import sic.modelo.Provincia;
 import sic.modelo.Rol;
 import sic.modelo.Transportista;
@@ -42,31 +41,11 @@ public class TransportistasGUI extends JInternalFrame {
         this.transSeleccionado = transSeleccionado;
     }
 
-    private void cargarComboBoxPaises() {
-        cmb_Pais.removeAllItems();
-        try {
-            List<Pais> paises = new ArrayList(Arrays.asList(RestClient.getRestTemplate().getForObject("/paises", Pais[].class)));
-            Pais paisTodos = new Pais();
-            paisTodos.setNombre("Todos");
-            cmb_Pais.addItem(paisTodos);
-            paises.stream().forEach((pais) -> {
-                cmb_Pais.addItem(pais);
-            });
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void cargarComboBoxProvinciasDelPais(Pais paisSeleccionado) {        
+    private void cargarComboBoxProvincias() {        
         cmb_Provincia.removeAllItems();
         try {
             List<Provincia> provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/provincias/paises/" + paisSeleccionado.getId_Pais(),
+                    .getForObject("/provincias",
                     Provincia[].class)));
             Provincia provinciaTodas = new Provincia();
             provinciaTodas.setNombre("Todas");
@@ -111,14 +90,13 @@ public class TransportistasGUI extends JInternalFrame {
         tbl_Resultados.setAutoCreateRowSorter(true);
 
         //nombres de columnas
-        String[] encabezados = new String[7];
+        String[] encabezados = new String[6];
         encabezados[0] = "Nombre";
         encabezados[1] = "Direccion";
         encabezados[2] = "Telefono";
         encabezados[3] = "Web";
         encabezados[4] = "Localidad";
         encabezados[5] = "Provincia";
-        encabezados[6] = "Pais";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaResultados);
 
@@ -130,7 +108,6 @@ public class TransportistasGUI extends JInternalFrame {
         tipos[3] = String.class;
         tipos[4] = String.class;
         tipos[5] = String.class;
-        tipos[6] = String.class;
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
@@ -142,7 +119,6 @@ public class TransportistasGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(200);
     }
 
     private void cargarResultadosAlTable() {
@@ -155,7 +131,6 @@ public class TransportistasGUI extends JInternalFrame {
             fila[3] = transportista.getWeb();
             fila[4] = transportista.getNombreLocalidad();
             fila[5] = transportista.getNombreProvincia();
-            fila[6] = transportista.getNombrePais();
             return fila;
         }).forEach((fila) -> {
             modeloTablaResultados.addRow(fila);
@@ -180,11 +155,9 @@ public class TransportistasGUI extends JInternalFrame {
         }
         chk_Ubicacion.setEnabled(status);
         if (status == true && chk_Ubicacion.isSelected() == true) {
-            cmb_Pais.setEnabled(true);
             cmb_Provincia.setEnabled(true);
             cmb_Localidad.setEnabled(true);
         } else {
-            cmb_Pais.setEnabled(false);
             cmb_Provincia.setEnabled(false);
             cmb_Localidad.setEnabled(false);
         }
@@ -203,9 +176,6 @@ public class TransportistasGUI extends JInternalFrame {
             criteria += "nombre=" + txt_Nombre.getText().trim() + "&";
         }
         if (chk_Ubicacion.isSelected()) {
-            if (!((Pais) cmb_Pais.getSelectedItem()).getNombre().equals("Todos")) {
-                criteria += "idPais=" + String.valueOf(((Pais) cmb_Pais.getSelectedItem()).getId_Pais()) + "&";
-            }
             if (!((Provincia) (cmb_Provincia.getSelectedItem())).getNombre().equals("Todas")) {
                 criteria += "idProvincia=" + String.valueOf(((Provincia) (cmb_Provincia.getSelectedItem())).getId_Provincia()) + "&";
             }
@@ -249,7 +219,6 @@ public class TransportistasGUI extends JInternalFrame {
         txt_Nombre = new javax.swing.JTextField();
         chk_Ubicacion = new javax.swing.JCheckBox();
         cmb_Provincia = new javax.swing.JComboBox();
-        cmb_Pais = new javax.swing.JComboBox();
         cmb_Localidad = new javax.swing.JComboBox();
         btn_Buscar = new javax.swing.JButton();
         lbl_cantResultados = new javax.swing.JLabel();
@@ -313,13 +282,6 @@ public class TransportistasGUI extends JInternalFrame {
             }
         });
 
-        cmb_Pais.setEnabled(false);
-        cmb_Pais.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cmb_PaisItemStateChanged(evt);
-            }
-        });
-
         cmb_Localidad.setEnabled(false);
 
         btn_Buscar.setForeground(java.awt.Color.blue);
@@ -340,20 +302,16 @@ public class TransportistasGUI extends JInternalFrame {
             .addGroup(panelFiltrosLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelFiltrosLayout.createSequentialGroup()
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(chk_Ubicacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(chk_Nombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmb_Provincia, 0, 351, Short.MAX_VALUE)
-                            .addComponent(cmb_Pais, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmb_Localidad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txt_Nombre)))
-                    .addGroup(panelFiltrosLayout.createSequentialGroup()
-                        .addComponent(btn_Buscar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(chk_Ubicacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(chk_Nombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btn_Buscar))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cmb_Provincia, 0, 351, Short.MAX_VALUE)
+                    .addComponent(cmb_Localidad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txt_Nombre)
+                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panelFiltrosLayout.setVerticalGroup(
@@ -363,17 +321,16 @@ public class TransportistasGUI extends JInternalFrame {
                     .addComponent(chk_Nombre)
                     .addComponent(txt_Nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelFiltrosLayout.createSequentialGroup()
+                        .addComponent(cmb_Provincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmb_Localidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(chk_Ubicacion))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(chk_Ubicacion)
-                    .addComponent(cmb_Pais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmb_Provincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmb_Localidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btn_Buscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btn_Buscar)
+                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -437,7 +394,7 @@ public class TransportistasGUI extends JInternalFrame {
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_Nuevo)
@@ -478,37 +435,16 @@ public class TransportistasGUI extends JInternalFrame {
 
     private void chk_UbicacionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UbicacionItemStateChanged
         if (chk_Ubicacion.isSelected() == true) {
-            this.cargarComboBoxPaises();
-            cmb_Pais.setEnabled(true);
+            this.cargarComboBoxProvincias();
             cmb_Provincia.setEnabled(true);
             cmb_Localidad.setEnabled(true);
-            cmb_Pais.requestFocus();
         } else {
-            cmb_Pais.removeAllItems();
-            cmb_Pais.setEnabled(false);
             cmb_Provincia.removeAllItems();
             cmb_Provincia.setEnabled(false);
             cmb_Localidad.removeAllItems();
             cmb_Localidad.setEnabled(false);
         }
     }//GEN-LAST:event_chk_UbicacionItemStateChanged
-
-    private void cmb_PaisItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_PaisItemStateChanged
-        if (cmb_Pais.getItemCount() > 0) {
-            if (!cmb_Pais.getSelectedItem().toString().equals("Todos")) {
-                cargarComboBoxProvinciasDelPais((Pais) cmb_Pais.getSelectedItem());
-            } else {
-                cmb_Provincia.removeAllItems();
-                Provincia provinciaTodas = new Provincia();
-                provinciaTodas.setNombre("Todas");
-                cmb_Provincia.addItem(provinciaTodas);
-                cmb_Localidad.removeAllItems();
-                Localidad localidadTodas = new Localidad();
-                localidadTodas.setNombre("Todas");
-                cmb_Localidad.addItem(localidadTodas);
-            }
-        }
-    }//GEN-LAST:event_cmb_PaisItemStateChanged
 
     private void cmb_ProvinciaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_ProvinciaItemStateChanged
         if (cmb_Provincia.getItemCount() > 0) {
@@ -597,7 +533,6 @@ public class TransportistasGUI extends JInternalFrame {
     private javax.swing.JCheckBox chk_Nombre;
     private javax.swing.JCheckBox chk_Ubicacion;
     private javax.swing.JComboBox cmb_Localidad;
-    private javax.swing.JComboBox cmb_Pais;
     private javax.swing.JComboBox cmb_Provincia;
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;

@@ -40,7 +40,7 @@
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="lblCondicionIVACliente" alignment="0" max="32767" attributes="1"/>
-                          <Component id="lblDomicilioCliente" alignment="0" max="32767" attributes="1"/>
+                          <Component id="lblDomicilioFiscalCliente" alignment="0" max="32767" attributes="1"/>
                           <Component id="lblNombreCliente" alignment="0" max="32767" attributes="1"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -52,7 +52,7 @@
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="txtIDFiscalCliente" max="32767" attributes="2"/>
                           </Group>
-                          <Component id="txtDomicilioCliente" alignment="1" max="32767" attributes="2"/>
+                          <Component id="txtDomicilioFiscalCliente" alignment="1" max="32767" attributes="2"/>
                           <Component id="txtNombreCliente" alignment="1" max="32767" attributes="2"/>
                       </Group>
                   </Group>
@@ -72,8 +72,8 @@
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="2" attributes="0">
-                  <Component id="lblDomicilioCliente" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="txtDomicilioCliente" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblDomicilioFiscalCliente" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtDomicilioFiscalCliente" alignment="2" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="2" attributes="0">
@@ -317,10 +317,10 @@
         <Property name="text" type="java.lang.String" value="CUIT o DNI:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblDomicilioCliente">
+    <Component class="javax.swing.JLabel" name="lblDomicilioFiscalCliente">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="2"/>
-        <Property name="text" type="java.lang.String" value="Domicilio:"/>
+        <Property name="text" type="java.lang.String" value="Domicilio Fiscal:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lblNombreCliente">
@@ -335,7 +335,7 @@
         <Property name="focusable" type="boolean" value="false"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="txtDomicilioCliente">
+    <Component class="javax.swing.JTextField" name="txtDomicilioFiscalCliente">
       <Properties>
         <Property name="editable" type="boolean" value="false"/>
         <Property name="focusable" type="boolean" value="false"/>
