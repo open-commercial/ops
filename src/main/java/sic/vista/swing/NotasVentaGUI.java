@@ -850,8 +850,6 @@ public class NotasVentaGUI extends JInternalFrame {
                     .addComponent(btnBuscarViajantes)))
         );
 
-        subPanelFiltros1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {chk_Cliente, chk_Usuario});
-
         subPanelFiltros1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarCliente, btnBuscarUsuarios, txtCliente, txtUsuario, txtViajante});
 
         btn_Buscar.setForeground(java.awt.Color.blue);
