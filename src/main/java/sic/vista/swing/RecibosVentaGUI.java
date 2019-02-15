@@ -160,7 +160,7 @@ public class RecibosVentaGUI extends JInternalFrame {
 
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
-        String uriCriteria = getUriCriteria();
+        String uriCriteria = this.getUriCriteria();
         try {
             PaginaRespuestaRest<Recibo> response = RestClient.getRestTemplate()
                     .exchange("/recibos/venta/busqueda/criteria?" + uriCriteria, HttpMethod.GET, null,
@@ -171,6 +171,8 @@ public class RecibosVentaGUI extends JInternalFrame {
             recibosParcial = response.getContent();
             recibosTotal.addAll(recibosParcial);
             this.cargarResultadosAlTable();
+            txtTotal.setValue(RestClient.getRestTemplate()
+                .getForObject("/recibos/venta/total/criteria?" + uriCriteria, BigDecimal.class));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -318,6 +320,8 @@ public class RecibosVentaGUI extends JInternalFrame {
         btn_VerDetalle = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
         btnCrearNotaDebito = new javax.swing.JButton();
+        lblTotal = new javax.swing.JLabel();
+        txtTotal = new javax.swing.JFormattedTextField();
         panelFiltros = new javax.swing.JPanel();
         subPanelFiltros1 = new javax.swing.JPanel();
         chk_Cliente = new javax.swing.JCheckBox();
@@ -407,6 +411,12 @@ public class RecibosVentaGUI extends JInternalFrame {
             }
         });
 
+        lblTotal.setText("Total:");
+
+        txtTotal.setEditable(false);
+        txtTotal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        txtTotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
@@ -421,7 +431,11 @@ public class RecibosVentaGUI extends JInternalFrame {
                         .addComponent(btn_VerDetalle)
                         .addGap(0, 0, 0)
                         .addComponent(btn_Eliminar)
-                        .addGap(0, 669, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblTotal)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCrearNotaDebito, btn_Eliminar, btn_VerDetalle});
@@ -429,12 +443,16 @@ public class RecibosVentaGUI extends JInternalFrame {
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_VerDetalle)
-                    .addComponent(btn_Eliminar)
-                    .addComponent(btnCrearNotaDebito)))
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblTotal)
+                        .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btn_VerDetalle)
+                        .addComponent(btn_Eliminar)
+                        .addComponent(btnCrearNotaDebito))))
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaDebito, btn_Eliminar, btn_VerDetalle});
@@ -763,8 +781,7 @@ public class RecibosVentaGUI extends JInternalFrame {
                     .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -971,6 +988,7 @@ public class RecibosVentaGUI extends JInternalFrame {
     private javax.swing.JComboBox<String> cmbSentido;
     private com.toedter.calendar.JDateChooser dc_FechaDesde;
     private com.toedter.calendar.JDateChooser dc_FechaHasta;
+    private javax.swing.JLabel lblTotal;
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;
     private javax.swing.JPanel panelOrden;
@@ -981,6 +999,7 @@ public class RecibosVentaGUI extends JInternalFrame {
     private javax.swing.JPanel subPanelFiltros2;
     private javax.swing.JTable tbl_Resultados;
     private javax.swing.JTextField txtCliente;
+    private javax.swing.JFormattedTextField txtTotal;
     private javax.swing.JTextField txtUsuario;
     private javax.swing.JTextField txtViajante;
     private javax.swing.JTextField txt_Concepto;
