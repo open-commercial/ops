@@ -150,8 +150,8 @@ public class CerrarVentaGUI extends JDialog {
     private void calcularVuelto() {
         try {
             if (txt_AbonaCon.isEditValid()) txt_AbonaCon.commitEdit();
-            BigDecimal montoRecibido = new BigDecimal(txt_AbonaCon.getValue().toString());
-            BigDecimal vuelto = gui_puntoDeVenta.getTotal().subtract(montoRecibido);
+            BigDecimal montoRecibido = new BigDecimal(txt_AbonaCon.getValue().toString());            
+            BigDecimal vuelto = montoRecibido.subtract(gui_puntoDeVenta.getTotal());            
             lbl_Vuelto.setValue(vuelto.compareTo(BigDecimal.ZERO) >= 0 ? vuelto : BigDecimal.ZERO);
         } catch (ParseException ex) {
             String mensaje = "Se produjo un error analizando los campos.";
