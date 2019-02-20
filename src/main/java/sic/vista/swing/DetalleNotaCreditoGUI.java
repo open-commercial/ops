@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -335,7 +336,12 @@ public class DetalleNotaCreditoGUI extends JDialog {
                 + "/factura/" + factura.getId_Factura()
                 + "?modificarStock=" + modificarStock;
         if (proveedor != null) {
-            notaCreditoNueva.setFecha(dc_FechaNota.getDate());
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(dc_FechaNota.getDate());
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 59);
+            notaCreditoNueva.setFecha(cal.getTime());
             notaCreditoNueva.setSerie(Long.parseLong(txt_Serie.getValue().toString()));
             notaCreditoNueva.setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
             notaCreditoNueva.setCAE(Long.parseLong(txt_CAE.getValue().toString()));
@@ -363,10 +369,9 @@ public class DetalleNotaCreditoGUI extends JDialog {
             } else {
                 JOptionPane.showMessageDialog(this, "La Nota se guardó correctamente!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
             }
-            this.dispose();
         }
     }
-    
+
     private void lanzarReporteNotaCredito(long idNota) throws IOException {
         int reply = JOptionPane.showConfirmDialog(this,
                 ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
@@ -847,6 +852,9 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         try {
             this.guardar();
+            if (notaCreditoCreada) {
+                this.dispose();
+            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();
