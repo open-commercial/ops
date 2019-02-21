@@ -394,7 +394,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private void autorizarNotaCredito(NotaCredito notaCredito) {
         if (notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_A
                 || notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B) {
-            notaCredito = RestClient.getRestTemplate()
+            RestClient.getRestTemplate()
                     .postForObject("/notas/" + notaCredito.getIdNota() + "/autorizacion",
                             null, NotaCredito.class);
         }
