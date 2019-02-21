@@ -361,9 +361,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
                             + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                             + "/factura-electronica-habilitada", Boolean.class);
             if (cliente != null && FEHabilitada) {
-                if (this.autorizarNotaCredito(nc)) {
-                    this.lanzarReporteNotaCredito(nc.getIdNota());
-                }
+                this.autorizarNotaCredito(nc);
+                this.lanzarReporteNotaCredito(nc.getIdNota());
             } else if (cliente != null) {
                 this.lanzarReporteNotaCredito(nc.getIdNota());
             } else {
@@ -392,15 +391,13 @@ public class DetalleNotaCreditoGUI extends JDialog {
         }
     }
 
-    private boolean autorizarNotaCredito(NotaCredito notaCredito) {
+    private void autorizarNotaCredito(NotaCredito notaCredito) {
         if (notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_A
                 || notaCredito.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B) {
             notaCredito = RestClient.getRestTemplate()
                     .postForObject("/notas/" + notaCredito.getIdNota() + "/autorizacion",
                             null, NotaCredito.class);
-            return (notaCredito.getCAE() != 0L);
         }
-        return false;
     }
 
     @SuppressWarnings("unchecked")
@@ -852,12 +849,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         try {
             this.guardar();
-            if (notaCreditoCreada) {
-                this.dispose();
-            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            this.dispose();
         } catch (ResourceAccessException ex) {
             LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this,
@@ -868,6 +861,9 @@ public class DetalleNotaCreditoGUI extends JDialog {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
                     "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        if (notaCreditoCreada) {
+            this.dispose();
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
