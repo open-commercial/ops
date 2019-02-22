@@ -336,12 +336,13 @@ public class DetalleNotaCreditoGUI extends JDialog {
                 + "/factura/" + factura.getId_Factura()
                 + "?modificarStock=" + modificarStock;
         if (proveedor != null) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(dc_FechaNota.getDate());
-            cal.set(Calendar.HOUR_OF_DAY, 23);
-            cal.set(Calendar.MINUTE, 59);
-            cal.set(Calendar.SECOND, 59);
-            notaCreditoNueva.setFecha(cal.getTime());
+            Calendar fechaActual = Calendar.getInstance();
+            Calendar fechaNotaCredito = Calendar.getInstance();
+            fechaNotaCredito.setTime(dc_FechaNota.getDate());
+            fechaNotaCredito.set(Calendar.HOUR_OF_DAY, fechaActual.get(Calendar.HOUR_OF_DAY));
+            fechaNotaCredito.set(Calendar.MINUTE, fechaActual.get(Calendar.MINUTE));
+            fechaNotaCredito.set(Calendar.SECOND, fechaActual.get(Calendar.SECOND));
+            notaCreditoNueva.setFecha(fechaNotaCredito.getTime());
             notaCreditoNueva.setSerie(Long.parseLong(txt_Serie.getValue().toString()));
             notaCreditoNueva.setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
             notaCreditoNueva.setCAE(Long.parseLong(txt_CAE.getValue().toString()));
