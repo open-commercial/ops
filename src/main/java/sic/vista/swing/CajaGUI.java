@@ -477,8 +477,7 @@ public class CajaGUI extends JInternalFrame {
                             + "\nSaldo Real:", "Cerrar Caja", JOptionPane.QUESTION_MESSAGE);
                     if (monto != null) {
                         RestClient.getRestTemplate().put("/cajas/" + caja.getId_Caja() + "/cierre?"
-                                + "monto=" + new BigDecimal(monto)
-                                + "&idUsuarioCierre=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario(),
+                                + "monto=" + new BigDecimal(monto),
                                 Caja.class);
                         this.dispose();
                     }
