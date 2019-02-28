@@ -824,6 +824,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         btn_BuscarCliente = new javax.swing.JButton();
         lblSeparadorIzquierdo = new javax.swing.JLabel();
         lblSeparadorDerecho = new javax.swing.JLabel();
+        btn_Modificar = new javax.swing.JButton();
 
         setResizable(true);
         setTitle("S.I.C. Punto de Venta");
@@ -852,7 +853,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         lblNombreCliente.setText("Nombre:");
 
         lblDomicilioFiscalCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblDomicilioFiscalCliente.setText("Domicilio Fiscal:");
+        lblDomicilioFiscalCliente.setText("Ubicación Fiscal:");
 
         lbl_IDFiscalCliente.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_IDFiscalCliente.setText("CUIT o DNI:");
@@ -1333,6 +1334,16 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
         lblSeparadorDerecho.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
+        btn_Modificar.setForeground(java.awt.Color.blue);
+        btn_Modificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/EditClient_16x16.png"))); // NOI18N
+        btn_Modificar.setText("Modificar Cliente");
+        btn_Modificar.setEnabled(false);
+        btn_Modificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ModificarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelEncabezadoLayout = new javax.swing.GroupLayout(panelEncabezado);
         panelEncabezado.setLayout(panelEncabezadoLayout);
         panelEncabezadoLayout.setHorizontalGroup(
@@ -1343,6 +1354,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         .addComponent(btn_NuevoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
                         .addComponent(btn_BuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_Modificar, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lbl_fechaDeVencimiento)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1358,29 +1371,39 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         .addComponent(lblSeparadorDerecho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
+
+        panelEncabezadoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_BuscarCliente, btn_Modificar, btn_NuevoCliente});
+
         panelEncabezadoLayout.setVerticalGroup(
             panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.CENTER, panelEncabezadoLayout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addComponent(lbl_fechaDeVencimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(6, 6, 6))
             .addGroup(panelEncabezadoLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_TipoDeComprobante)
-                    .addComponent(cmb_TipoComprobante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(4, 4, 4)
-                .addGroup(panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btn_NuevoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_BuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_fechaDeVencimiento, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
-                    .addComponent(dc_fechaVencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-            .addGroup(panelEncabezadoLayout.createSequentialGroup()
-                .addGap(6, 6, 6)
                 .addGroup(panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblSeparadorDerecho, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSeparadorIzquierdo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelEncabezadoLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(lbl_TipoDeComprobante)
+                            .addComponent(cmb_TipoComprobante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(4, 4, 4)
+                        .addGroup(panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(btn_BuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_Modificar)
+                            .addComponent(btn_NuevoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(panelEncabezadoLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblSeparadorDerecho, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblSeparadorIzquierdo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.CENTER, panelEncabezadoLayout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addComponent(dc_fechaVencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panelEncabezadoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_BuscarCliente, btn_NuevoCliente});
+        panelEncabezadoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_BuscarCliente, btn_Modificar, btn_NuevoCliente});
 
         javax.swing.GroupLayout panelGeneralLayout = new javax.swing.GroupLayout(panelGeneral);
         panelGeneral.setLayout(panelGeneralLayout);
@@ -1441,6 +1464,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             this.cargarCliente(buscarClientesGUI.getClienteSeleccionado());
             this.cargarTiposDeComprobantesDisponibles();
             cmb_TipoComprobante.setSelectedIndex(0);
+            btn_Modificar.setEnabled(true);
         }
     }//GEN-LAST:event_btn_BuscarClienteActionPerformed
 
@@ -1452,6 +1476,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         if (gui_DetalleCliente.getClienteDadoDeAlta() != null) {
             this.cargarCliente(gui_DetalleCliente.getClienteDadoDeAlta());
             this.cargarTiposDeComprobantesDisponibles();
+            btn_Modificar.setEnabled(true);
         }
     }//GEN-LAST:event_btn_NuevoClienteActionPerformed
 
@@ -1683,12 +1708,22 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_formInternalFrameOpened
 
+    private void btn_ModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ModificarActionPerformed
+        if (cliente != null) {
+            DetalleClienteGUI gui_DetalleCliente = new DetalleClienteGUI(cliente);
+            gui_DetalleCliente.setModal(true);
+            gui_DetalleCliente.setLocationRelativeTo(this);
+            gui_DetalleCliente.setVisible(true);
+        }
+    }//GEN-LAST:event_btn_ModificarActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_AddComment;
     private javax.swing.JButton btn_BuscarCliente;
     private javax.swing.JButton btn_BuscarPorCodigoProducto;
     private javax.swing.JButton btn_BuscarProductos;
     private javax.swing.JButton btn_Continuar;
+    private javax.swing.JButton btn_Modificar;
     private javax.swing.JButton btn_NuevoCliente;
     private javax.swing.JButton btn_QuitarProducto;
     private javax.swing.JComboBox cmb_TipoComprobante;
