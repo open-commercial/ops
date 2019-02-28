@@ -6,14 +6,14 @@ import javax.swing.JOptionPane;
 import sic.modelo.Ubicacion;
 
 public class DetalleUbicacionGUI extends JDialog {
-    
+
     private Ubicacion ubicacionAModificar;
 
     public DetalleUbicacionGUI(Ubicacion ubicacionAModificar) {
         this.ubicacionAModificar = ubicacionAModificar;
         initComponents();
     }
-    
+
     public Ubicacion getUbicacionModificada() {
         return ubicacionAModificar;
     }
@@ -43,11 +43,14 @@ public class DetalleUbicacionGUI extends JDialog {
         btnSeleccionar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Administrar Ubicación");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
             }
         });
+
+        pnlDetalleUbicacion.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         jLabel1.setText("Latitud:");
 
@@ -72,9 +75,11 @@ public class DetalleUbicacionGUI extends JDialog {
 
         ftfLongitud.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##0.#######"))));
 
-        lblCalle.setText("Calle:");
+        lblCalle.setForeground(java.awt.Color.red);
+        lblCalle.setText("* Calle:");
 
-        lblNumero.setText("Número:");
+        lblNumero.setForeground(java.awt.Color.red);
+        lblNumero.setText("* Número:");
 
         lblPiso.setText("Piso:");
 
@@ -91,49 +96,31 @@ public class DetalleUbicacionGUI extends JDialog {
             .addGroup(pnlDetalleUbicacionLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlDetalleUbicacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblPiso)
+                    .addComponent(lblNumero)
+                    .addComponent(lblCalle)
+                    .addComponent(jLabel4)
+                    .addComponent(lblDepartamento)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addGap(0, 0, 0)
+                .addGroup(pnlDetalleUbicacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlDetalleUbicacionLayout.createSequentialGroup()
-                        .addGroup(pnlDetalleUbicacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlDetalleUbicacionLayout.createSequentialGroup()
-                                .addComponent(lblPiso)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtPiso, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(pnlDetalleUbicacionLayout.createSequentialGroup()
-                                .addComponent(lblNumero)
-                                .addGap(18, 18, 18)
-                                .addComponent(ftfNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(pnlDetalleUbicacionLayout.createSequentialGroup()
-                                .addComponent(lblCalle)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtCalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(pnlDetalleUbicacionLayout.createSequentialGroup()
-                        .addGroup(pnlDetalleUbicacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlDetalleUbicacionLayout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(txtLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(pnlDetalleUbicacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(ftfLatitud, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ftfLongitud, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtDepartamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPiso, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ftfNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDetalleUbicacionLayout.createSequentialGroup()
+                                .addComponent(txtLocalidad)
                                 .addGap(0, 0, 0)
-                                .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(pnlDetalleUbicacionLayout.createSequentialGroup()
-                                .addGroup(pnlDetalleUbicacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(pnlDetalleUbicacionLayout.createSequentialGroup()
-                                        .addComponent(lblDepartamento)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(txtDepartamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(pnlDetalleUbicacionLayout.createSequentialGroup()
-                                        .addComponent(jLabel3)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(pnlDetalleUbicacionLayout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(ftfLatitud, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(pnlDetalleUbicacionLayout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(ftfLongitud, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap())))
+                                .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(txtCalle, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         pnlDetalleUbicacionLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, jLabel2, jLabel3, jLabel4, lblCalle, lblDepartamento, lblNumero, lblPiso});
@@ -143,6 +130,7 @@ public class DetalleUbicacionGUI extends JDialog {
         pnlDetalleUbicacionLayout.setVerticalGroup(
             pnlDetalleUbicacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDetalleUbicacionLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(pnlDetalleUbicacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblCalle)
                     .addComponent(txtCalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -175,7 +163,7 @@ public class DetalleUbicacionGUI extends JDialog {
                 .addGroup(pnlDetalleUbicacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(ftfLongitud, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         pnlDetalleUbicacionLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel1, jLabel2, jLabel3, jLabel4});
@@ -195,10 +183,12 @@ public class DetalleUbicacionGUI extends JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlDetalleUbicacion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSeleccionar, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnSeleccionar))
+                    .addComponent(pnlDetalleUbicacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -215,64 +205,79 @@ public class DetalleUbicacionGUI extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        if (ubicacionAModificar == null) {
+        if (ubicacionAModificar != null) {
+            txtCalle.setText(ubicacionAModificar.getCalle());
+            ftfNumero.setText(ubicacionAModificar.getNumero().toString());
+            if (ubicacionAModificar.getPiso() != null) {
+                txtPiso.setText(ubicacionAModificar.getPiso().toString());
+            }
+            if (ubicacionAModificar.getDepartamento() != null) {
+                txtDepartamento.setText(ubicacionAModificar.getDepartamento());
+            }
+            if (ubicacionAModificar.getDescripcion() != null) {
+                txtDescripcion.setText(ubicacionAModificar.getDescripcion());
+            }
+            if (ubicacionAModificar.getNombreLocalidad() != null) {
+                txtLocalidad.setText(ubicacionAModificar.getNombreLocalidad() + " " + ubicacionAModificar.getNombreProvincia());
+            }
+            if (ubicacionAModificar.getLatitud() != null) {
+                ftfLatitud.setText(ubicacionAModificar.getLatitud().toString());
+            }
+            if (ubicacionAModificar.getLongitud() != null) {
+                ftfLongitud.setText(ubicacionAModificar.getLongitud().toString());
+            }
+        } else {
             ubicacionAModificar = new Ubicacion();
         }
-        txtCalle.setText(ubicacionAModificar.getCalle());
-        ftfNumero.setText(ubicacionAModificar.getNumero().toString());
-        if (ubicacionAModificar.getPiso() != null) {
-            txtPiso.setText(ubicacionAModificar.getPiso().toString());
-        }
-        if (ubicacionAModificar.getDepartamento() != null) {
-            txtDepartamento.setText(ubicacionAModificar.getDepartamento());
-        }
-        if (ubicacionAModificar.getDescripcion() != null) {
-            txtDescripcion.setText(ubicacionAModificar.getDescripcion());
-        }
-        if (ubicacionAModificar.getDetalleUbicacion() != null) {
-            txtLocalidad.setText(ubicacionAModificar.getDetalleUbicacion());
-        }
-        if (ubicacionAModificar.getLatitud() != null) {
-            ftfLatitud.setText(ubicacionAModificar.getLatitud().toString());
-        }
-        if (ubicacionAModificar.getLongitud() != null) {
-            ftfLatitud.setText(ubicacionAModificar.getLongitud().toString());
-        }
     }//GEN-LAST:event_formWindowOpened
-    
+
     private void btnSeleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarActionPerformed
-        ubicacionAModificar.setCalle(txtCalle.getText());
-        ubicacionAModificar.setNumero(Integer.valueOf(ftfNumero.getText()));
-        if (!txtPiso.getText().isEmpty()) {
-            ubicacionAModificar.setPiso(Integer.valueOf(txtPiso.getText()));
+        if (txtCalle.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_ubicacion_calle_vacia"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            if (ftfNumero.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_ubicacion_numero_vacio"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                ubicacionAModificar.setCalle(txtCalle.getText());
+                ubicacionAModificar.setNumero(Integer.valueOf(ftfNumero.getText()));
+                if (!txtPiso.getText().isEmpty()) {
+                    ubicacionAModificar.setPiso(Integer.valueOf(txtPiso.getText()));
+                }
+                if (!txtDepartamento.getText().isEmpty()) {
+                    ubicacionAModificar.setDepartamento(txtDepartamento.getText());
+                }
+                if (!txtDescripcion.getText().isEmpty()) {
+                    ubicacionAModificar.setDescripcion(txtDescripcion.getText());
+                }
+                if (!ftfLatitud.getText().isEmpty()) {
+                    ubicacionAModificar.setLatitud(Double.valueOf(ftfLatitud.getText()));
+                }
+                if (!ftfLongitud.getText().isEmpty()) {
+                    ubicacionAModificar.setLongitud(Double.valueOf(ftfLongitud.getText()));
+                }
+                ubicacionAModificar.setDescripcion(txtDescripcion.getText());
+                this.dispose();
+            }
         }
-        if (!txtDepartamento.getText().isEmpty()) {
-            ubicacionAModificar.setDepartamento(txtDepartamento.getText());
-        }
-        if (!txtDescripcion.getText().isEmpty()) {
-            ubicacionAModificar.setDescripcion(txtDescripcion.getText());
-        }
-        if (!ftfLatitud.getText().isEmpty()) {
-            ubicacionAModificar.setLatitud(Double.valueOf(ftfLatitud.getText()));
-        }
-        if (!ftfLongitud.getText().isEmpty()) {
-            ubicacionAModificar.setLongitud(Double.valueOf(ftfLongitud.getText()));
-        }
-        ubicacionAModificar.setDescripcion(txtDescripcion.getText());
-        this.dispose();
     }//GEN-LAST:event_btnSeleccionarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        DetalleLocalidadGUI gui_DetalleLocalidad = new DetalleLocalidadGUI();
+        DetalleLocalidadGUI gui_DetalleLocalidad = new DetalleLocalidadGUI(ubicacionAModificar);
         gui_DetalleLocalidad.setModal(true);
         gui_DetalleLocalidad.setLocationRelativeTo(this);
-        gui_DetalleLocalidad.setVisible(true);       
+        gui_DetalleLocalidad.setVisible(true);
+        ubicacionAModificar.setNombreLocalidad(gui_DetalleLocalidad.getLocalidadSeleccionada().getNombre());
         ubicacionAModificar.setIdLocalidad(gui_DetalleLocalidad.getLocalidadSeleccionada().getId_Localidad());
-        ubicacionAModificar.setIdProvincia(gui_DetalleLocalidad.getLocalidadSeleccionada().getIdProvincia());
         ubicacionAModificar.setCodigoPostal(gui_DetalleLocalidad.getLocalidadSeleccionada().getCodigoPostal());
-        txtLocalidad.setText(ubicacionAModificar.getDetalleUbicacion());       
+        ubicacionAModificar.setNombreProvincia(gui_DetalleLocalidad.getLocalidadSeleccionada().getNombreProvincia());
+        ubicacionAModificar.setIdProvincia(gui_DetalleLocalidad.getLocalidadSeleccionada().getIdProvincia());
+        txtLocalidad.setText(ubicacionAModificar.getNombreLocalidad() + " (" + ubicacionAModificar.getCodigoPostal() + ") "  + ubicacionAModificar.getNombreProvincia());
     }//GEN-LAST:event_btnModificarActionPerformed
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnSeleccionar;

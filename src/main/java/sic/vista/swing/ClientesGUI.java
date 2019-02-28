@@ -123,8 +123,8 @@ public class ClientesGUI extends JInternalFrame {
         encabezados[12] = "Contacto";
         encabezados[13] = "Email";
         encabezados[14] = "Fecha Alta";
-        encabezados[15] = "Ubicacion Facturación";
-        encabezados[16] = "Ubicacion Envío";
+        encabezados[15] = "Localidad";
+        encabezados[16] = "Provincia";
         modeloTablaDeResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaDeResultados);
         //tipo de dato columnas
@@ -192,8 +192,8 @@ public class ClientesGUI extends JInternalFrame {
             fila[12] = c.getCliente().getContacto();
             fila[13] = c.getCliente().getEmail();
             fila[14] = c.getCliente().getFechaAlta();
-            fila[15] = c.getCliente().getUbicacionFacturacion().getDetalleUbicacion();
-            fila[16] = c.getCliente().getUbicacionEnvio().getDetalleUbicacion();
+            fila[15] = c.getCliente().getUbicacionFacturacion() != null ? c.getCliente().getUbicacionFacturacion().getNombreLocalidad() : "";
+            fila[16] = c.getCliente().getUbicacionFacturacion() != null ? c.getCliente().getUbicacionFacturacion().getNombreProvincia(): "";
             return fila;
         }).forEach(fila -> {
             modeloTablaDeResultados.addRow(fila);

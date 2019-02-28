@@ -27,15 +27,16 @@
 
   <Layout>
     <DimensionLayout dim="0">
-      <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+      <Group type="103" groupAlignment="1" attributes="0">
+          <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="panelPrincipal" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace max="32767" attributes="0"/>
-              <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="0" pref="511" max="32767" attributes="0"/>
+                      <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="panelPrincipal" alignment="0" max="32767" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -44,7 +45,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="panelPrincipal" min="-2" pref="392" max="-2" attributes="0"/>
+              <Component id="panelPrincipal" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
@@ -83,6 +84,23 @@
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="lblUbicacionFacturacion" linkSize="16" max="32767" attributes="0"/>
+                              <Component id="lblUbicacionEnvio" linkSize="16" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                  <Component id="txtUbicacionFacturacion" min="-2" pref="320" max="-2" attributes="1"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                  <Component id="txtUbicacionEnvio" min="-2" pref="320" max="-2" attributes="1"/>
+                              </Group>
+                          </Group>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      </Group>
+                      <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="lblCondicionIVA" linkSize="16" alignment="1" min="-2" pref="150" max="-2" attributes="1"/>
                               <Component id="lblBonificacion" linkSize="16" alignment="1" max="32767" attributes="0"/>
@@ -91,12 +109,12 @@
                               <Component id="lblIdFiscal" linkSize="16" alignment="1" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtBonificacion" alignment="0" max="32767" attributes="0"/>
-                              <Component id="txtIdFiscal" alignment="0" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
                               <Component id="txtNombreFiscal" alignment="0" max="32767" attributes="1"/>
                               <Component id="txtNombreFantasia" alignment="0" max="32767" attributes="1"/>
-                              <Component id="cmbCategoriaIVA" alignment="0" max="32767" attributes="0"/>
+                              <Component id="txtIdFiscal" alignment="0" max="32767" attributes="0"/>
+                              <Component id="cmbCategoriaIVA" max="32767" attributes="0"/>
+                              <Component id="txtBonificacion" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
@@ -109,48 +127,40 @@
                           </Group>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="cmbCredencial" max="32767" attributes="1"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btnBuscarCredencial" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                                  <Component id="btnNuevaCredencial" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="txtEmail" alignment="0" max="32767" attributes="2"/>
                               <Component id="txtContacto" alignment="0" max="32767" attributes="2"/>
-                              <Component id="txtEmail" alignment="1" max="32767" attributes="2"/>
-                              <Group type="102" alignment="0" attributes="0">
+                              <Component id="txtTelefono" alignment="0" max="32767" attributes="2"/>
+                              <Group type="102" alignment="1" attributes="0">
                                   <Component id="cmbViajante" max="32767" attributes="1"/>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Component id="btnBuscarUsuarioViajante" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Component id="btnNuevoUsuarioViajante" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="txtTelefono" alignment="1" max="32767" attributes="2"/>
-                          </Group>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="lblUbicacionFacturacion" linkSize="16" max="32767" attributes="0"/>
-                              <Component id="lblUbicacionEnvio" linkSize="16" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="txtUbicacionFacturacion" pref="301" max="32767" attributes="1"/>
-                              <Component id="txtUbicacionEnvio" max="32767" attributes="1"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="btnUbicacionFacturacion" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnUbicacionEnvio" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="btnUbicacionFacturacion" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btnUbicacionEnvio" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="cmbCredencial" max="32767" attributes="1"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                  <Component id="btnBuscarCredencial" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                  <Component id="btnNuevaCredencial" min="-2" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
                   </Group>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="txtBonificacion" linkSize="19" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
@@ -178,9 +188,9 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="btnUbicacionFacturacion" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtUbicacionFacturacion" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblUbicacionFacturacion" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtUbicacionFacturacion" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnUbicacionFacturacion" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -188,17 +198,17 @@
                       <Component id="txtUbicacionEnvio" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="btnUbicacionEnvio" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="cmbViajante" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblViajante" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmbViajante" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="btnBuscarUsuarioViajante" linkSize="15" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="btnNuevoUsuarioViajante" linkSize="15" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lblTelefono" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtTelefono" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtTelefono" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -217,7 +227,7 @@
                       <Component id="btnBuscarCredencial" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="btnNuevaCredencial" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -415,17 +425,6 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNuevaCredencialActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btnUbicacionFacturacion">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/AddMap_16x16.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Modificar"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUbicacionFacturacionActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JLabel" name="lblUbicacionEnvio">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
@@ -436,6 +435,17 @@
           <Properties>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnUbicacionFacturacion">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/sic/icons/AddMap_16x16.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Modificar"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUbicacionFacturacionActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnUbicacionEnvio">
           <Properties>

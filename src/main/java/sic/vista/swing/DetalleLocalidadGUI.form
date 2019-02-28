@@ -71,9 +71,10 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="cmb_ProvinciasBusqueda" pref="269" max="32767" attributes="1"/>
-                      <Component id="cmbLocalidad" max="32767" attributes="0"/>
+                      <Component id="cmbLocalidad" pref="263" max="32767" attributes="0"/>
+                      <Component id="cmb_ProvinciasBusqueda" max="32767" attributes="1"/>
                   </Group>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

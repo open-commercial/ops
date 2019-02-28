@@ -258,8 +258,17 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         String nombreCliente = cliente.getNombreFiscal() + " (" + cliente.getNroCliente() + ")";
         this.setTitle("Cuenta Corriente del Cliente: " + nombreCliente);
         txtNombreCliente.setText(nombreCliente);        
-        txtDomicilioFiscalCliente.setText(cliente.getUbicacionFacturacion().getDetalleUbicacion());
-        if (cliente.getIdFiscal() != null) txtIDFiscalCliente.setText(cliente.getIdFiscal().toString());
+        txtDomicilioFiscalCliente.setText((cliente.getUbicacionFacturacion().getCalle() != null ? cliente.getUbicacionFacturacion().getCalle() : "")
+                + " "
+                + (cliente.getUbicacionFacturacion().getNumero() != null ? cliente.getUbicacionFacturacion().getNumero() : "")
+                + ", "
+                + (cliente.getUbicacionFacturacion().getPiso() != null ? cliente.getUbicacionFacturacion().getPiso() + "," : "")
+                + (cliente.getUbicacionFacturacion().getNombreLocalidad() != null ? cliente.getUbicacionFacturacion().getNombreProvincia() : "")
+                + " "
+                + (cliente.getUbicacionFacturacion().getNombreProvincia() != null ? cliente.getUbicacionFacturacion().getNombreProvincia() : ""));
+        if (cliente.getIdFiscal() != null) {
+            txtIDFiscalCliente.setText(cliente.getIdFiscal().toString());
+        }
         txtCondicionIVACliente.setText(cliente.getCategoriaIVA().toString());
         try {
             cuentaCorriente = RestClient.getRestTemplate()

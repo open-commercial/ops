@@ -15,6 +15,7 @@ import sic.RestClient;
 import sic.modelo.Localidad;
 import sic.modelo.Provincia;
 import sic.modelo.Rol;
+import sic.modelo.Ubicacion;
 import sic.modelo.UsuarioActivo;
 
 public class DetalleLocalidadGUI extends JDialog {
@@ -22,9 +23,17 @@ public class DetalleLocalidadGUI extends JDialog {
     private List<Localidad> localidades;
     private Localidad localidadSeleccionada;
     private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+    private final Ubicacion ubicacion;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleLocalidadGUI() {
+        this.ubicacion = null;
+        this.initComponents();
+        this.setIcon();
+    }
+    
+    public DetalleLocalidadGUI(Ubicacion ubicacion) {
+        this.ubicacion = ubicacion;
         this.initComponents();
         this.setIcon();
     }
@@ -38,10 +47,14 @@ public class DetalleLocalidadGUI extends JDialog {
         try {
             cmb_ProvinciasBusqueda.removeAllItems();
             List<Provincia> provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/provincias", Provincia[].class)));
+                    .getForObject("/ubicaciones/provincias", Provincia[].class)));
             provincias.stream().forEach(p -> {
                 cmb_ProvinciasBusqueda.addItem(p);
             });
+            if (this.ubicacion != null && this.ubicacion.getIdProvincia() != null) {
+                Provincia provinciaASeleccionar = RestClient.getRestTemplate().getForObject("/ubicaciones/provincias/" + this.ubicacion.getIdProvincia(), Provincia.class);
+                cmb_ProvinciasBusqueda.setSelectedItem(provinciaASeleccionar);
+            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -57,9 +70,13 @@ public class DetalleLocalidadGUI extends JDialog {
         try {
             if (!provincia.getNombre().equals("")) {
                 localidades = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                        .getForObject("/localidades/provincias/" + provincia.getId_Provincia(),
+                        .getForObject("/ubicaciones/localidades/provincias/" + provincia.getId_Provincia(),
                                 Localidad[].class)));
                 localidades.stream().forEach(l -> cmbLocalidad.addItem(l));
+            }
+            if (this.ubicacion != null && this.ubicacion.getIdLocalidad() != null) {
+                Localidad localidadASeleccionar = RestClient.getRestTemplate().getForObject("/ubicaciones/localidades/" + this.ubicacion.getIdLocalidad(), Localidad.class);
+                cmbLocalidad.setSelectedItem(localidadASeleccionar);
             }
             localidadSeleccionada = (Localidad) cmbLocalidad.getSelectedItem();
         } catch (RestClientResponseException ex) {
@@ -136,8 +153,9 @@ public class DetalleLocalidadGUI extends JDialog {
                     .addComponent(lbl_Localidades, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cmb_ProvinciasBusqueda, 0, 269, Short.MAX_VALUE)
-                    .addComponent(cmbLocalidad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(cmbLocalidad, 0, 263, Short.MAX_VALUE)
+                    .addComponent(cmb_ProvinciasBusqueda, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         panelPrincipalLayout.setVerticalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
