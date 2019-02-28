@@ -166,8 +166,8 @@ public class CajasGUI extends JInternalFrame {
             fila[0] = caja.getEstado();
             fila[1] = caja.getFechaApertura();
             if (caja.getFechaCierre() != null) fila[2] = caja.getFechaCierre();
-            fila[3] = caja.getUsuarioAbreCaja();
-            fila[4] = (caja.getUsuarioCierraCaja() != null ? caja.getUsuarioCierraCaja() : "");
+            fila[3] = caja.getNombreUsuarioAbreCaja();            
+            fila[4] = caja.getNombreUsuarioCierraCaja();
             fila[5] = caja.getSaldoApertura();
             fila[6] = caja.getSaldoSistema();
             fila[7] = caja.getSaldoReal();
