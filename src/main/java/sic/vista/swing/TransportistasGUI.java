@@ -130,8 +130,10 @@ public class TransportistasGUI extends JInternalFrame {
                     transportista.getUbicacion().getCalle() + transportista.getUbicacion().getNumero() : "";
             fila[2] = transportista.getTelefono();
             fila[3] = transportista.getWeb();
-            fila[4] = (transportista.getUbicacion() != null) ? transportista.getUbicacion().getNombreLocalidad(): "";
-            fila[5] = (transportista.getUbicacion() != null) ? transportista.getUbicacion().getNombreProvincia(): "";
+            fila[4] = (transportista.getUbicacion() != null 
+                    && transportista.getUbicacion().getNombreLocalidad() != null) ? transportista.getUbicacion().getNombreLocalidad(): "";
+            fila[5] = (transportista.getUbicacion() != null 
+                    && transportista.getUbicacion().getNombreLocalidad() != null) ? transportista.getUbicacion().getNombreProvincia(): "";
             return fila;
         }).forEach((fila) -> {
             modeloTablaResultados.addRow(fila);

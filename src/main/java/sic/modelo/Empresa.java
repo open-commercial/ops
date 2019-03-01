@@ -20,8 +20,6 @@ public class Empresa implements Serializable {
     private String email;
     private String telefono;
     private Ubicacion ubicacion;
-    private Long idLocalidad;
-    private String nombreLocalidad;
     private String logo;
     private boolean eliminada;
 

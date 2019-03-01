@@ -211,10 +211,11 @@ public class DetalleNotaCreditoGUI extends JDialog {
 
     private void cargarDetalleProveedor() {
         txtNombre.setText(((FacturaCompra) factura).getRazonSocialProveedor());
-        Localidad localidadDelProveedor = RestClient.getRestTemplate().getForObject("/localidades/" + proveedor.getIdLocalidad(), Localidad.class);
-        txtDomicilioFiscalCliente.setText(proveedor.getDireccion()
-                + " " + localidadDelProveedor.getNombre()
-                + " " + localidadDelProveedor.getNombreProvincia());
+        if (proveedor.getUbicacion() != null) {
+            txtDomicilioFiscalCliente.setText(proveedor.getUbicacion().getCalle() + " " + proveedor.getUbicacion().getNumero()
+                    + " " + ((proveedor.getUbicacion().getNombreLocalidad() != null) ? proveedor.getUbicacion().getNombreLocalidad() : "")
+                    + " " + ((proveedor.getUbicacion().getNombreProvincia() != null) ? proveedor.getUbicacion().getNombreProvincia() : ""));
+        }
         if (proveedor.getIdFiscal() != null) {
             txtIdFiscal.setText(proveedor.getIdFiscal().toString());
         }
@@ -225,10 +226,11 @@ public class DetalleNotaCreditoGUI extends JDialog {
         Proveedor proveedorDeNota = RestClient.getRestTemplate()
                 .getForObject("/proveedores/" + notaCredito.getIdProveedor(), Proveedor.class);
         txtNombre.setText(proveedorDeNota.getRazonSocial());
-        Localidad localidadDelProveedor = RestClient.getRestTemplate().getForObject("/localidades/" + proveedorDeNota.getIdLocalidad(), Localidad.class);
-        txtDomicilioFiscalCliente.setText(proveedorDeNota.getDireccion()
-                + " " + localidadDelProveedor.getNombre()
-                + " " + localidadDelProveedor.getNombreProvincia());
+        if (proveedor.getUbicacion() != null) {
+            txtDomicilioFiscalCliente.setText(proveedor.getUbicacion().getCalle() + " " + proveedor.getUbicacion().getNumero()
+                    + " " + ((proveedor.getUbicacion().getNombreLocalidad() != null) ? proveedor.getUbicacion().getNombreLocalidad() : "")
+                    + " " + ((proveedor.getUbicacion().getNombreProvincia() != null) ? proveedor.getUbicacion().getNombreProvincia() : ""));
+        }
         if (proveedorDeNota.getIdFiscal() != null) {
             txtIdFiscal.setText(proveedorDeNota.getIdFiscal().toString());
         }

@@ -287,10 +287,11 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         this.setTitle("Cuenta Corriente del Proveedor: " + proveedor.getRazonSocial());
         txtNombreCliente.setText(proveedor.getRazonSocial());
         try {
-            Localidad localidadDelProveedor = RestClient.getRestTemplate().getForObject("/localidades/" + proveedor.getIdLocalidad(), Localidad.class);
-            txtDomicilioFiscalCliente.setText(proveedor.getDireccion()
-                    + " " + localidadDelProveedor.getNombre()
-                    + " " + localidadDelProveedor.getNombreProvincia());
+            if (proveedor.getUbicacion() != null) {
+                txtDomicilioFiscalCliente.setText(proveedor.getUbicacion().getCalle() + " " + proveedor.getUbicacion().getNumero()
+                        + " " + ((proveedor.getUbicacion().getNombreLocalidad() != null) ? proveedor.getUbicacion().getNombreLocalidad() : "")
+                        + " " + ((proveedor.getUbicacion().getNombreProvincia() != null) ? proveedor.getUbicacion().getNombreProvincia() : ""));
+            }
             if (proveedor.getIdFiscal() != null) {
                 txtIDFiscalCliente.setText(proveedor.getIdFiscal().toString());
             }

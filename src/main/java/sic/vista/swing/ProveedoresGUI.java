@@ -116,7 +116,7 @@ public class ProveedoresGUI extends JInternalFrame {
         encabezados[1] = "ID Fiscal";
         encabezados[2] = "Razon Social";
         encabezados[3] = "Saldo C/C";
-        encabezados[4] = "Ultimo Movimiento C/C";        
+        encabezados[4] = "Ultimo Movimiento C/C";
         encabezados[5] = "Direccion";
         encabezados[6] = "Condicion IVA";
         encabezados[7] = "Tel. Primario";
@@ -161,7 +161,7 @@ public class ProveedoresGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(11).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(12).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(13).setPreferredWidth(200);       
+        tbl_Resultados.getColumnModel().getColumn(13).setPreferredWidth(200);
         //renderers
         tbl_Resultados.getColumnModel().getColumn(3).setCellRenderer(new ColoresNumerosRenderer());
         tbl_Resultados.setDefaultRenderer(Date.class, new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
@@ -182,8 +182,10 @@ public class ProveedoresGUI extends JInternalFrame {
             fila[9] = p.getProveedor().getContacto();
             fila[10] = p.getProveedor().getEmail();
             fila[11] = p.getProveedor().getWeb();
-            fila[12] = p.getProveedor().getNombreLocalidad();
-            fila[13] = p.getProveedor().getNombreProvincia();
+            fila[12] = (p.getProveedor().getUbicacion() != null
+                    && p.getProveedor().getUbicacion().getNombreLocalidad() != null) ? p.getProveedor().getUbicacion().getNombreLocalidad() : "";
+            fila[13] = (p.getProveedor().getUbicacion() != null
+                    && p.getProveedor().getUbicacion().getNombreProvincia() != null) ? p.getProveedor().getUbicacion().getNombreProvincia() : "";
             return fila;
         }).forEach(f -> {
             modeloTablaResultados.addRow(f);
@@ -192,16 +194,16 @@ public class ProveedoresGUI extends JInternalFrame {
         String mensaje = totalElementosBusqueda + " proveedores encontrados";
         lbl_cantResultados.setText(mensaje);
     }
-    
+
     private void resetScroll() {
         NUMERO_PAGINA = 0;
         cuentasCorrienteProveedoresTotal.clear();
         cuentasCorrienteProveedoresParcial.clear();
         Point p = new Point(0, 0);
         sp_Resultados.getViewport().setViewPosition(p);
-    }    
-    
-    private void limpiarJTable() {       
+    }
+
+    private void limpiarJTable() {
         modeloTablaResultados = new ModeloTabla();
         tbl_Resultados.setModel(modeloTablaResultados);
         this.setColumnas();
@@ -234,21 +236,21 @@ public class ProveedoresGUI extends JInternalFrame {
             cmb_Provincia.setEnabled(false);
             cmb_Localidad.setEnabled(false);
         }
-        btn_Buscar.setEnabled(status);        
+        btn_Buscar.setEnabled(status);
         tbl_Resultados.setEnabled(status);
         btn_Nuevo.setEnabled(status);
         btn_Modificar.setEnabled(status);
-        btn_Eliminar.setEnabled(status);     
+        btn_Eliminar.setEnabled(status);
         tbl_Resultados.requestFocus();
     }
-    
+
     private void limpiarYBuscar() {
         this.resetScroll();
         this.limpiarJTable();
         this.buscar();
     }
 
-    private void buscar() {    
+    private void buscar() {
         this.cambiarEstadoEnabled(false);
         String criteria = "/cuentas-corriente/proveedores/busqueda/criteria?";
         if (chk_Codigo.isSelected()) {
@@ -265,10 +267,10 @@ public class ProveedoresGUI extends JInternalFrame {
                 criteria += "idProvincia=" + String.valueOf(((Provincia) (cmb_Provincia.getSelectedItem())).getId_Provincia()) + "&";
             }
             if (!((Localidad) cmb_Localidad.getSelectedItem()).getNombre().equals("Todas")) {
-                 criteria += "idLocalidad=" + String.valueOf((((Localidad) cmb_Localidad.getSelectedItem()).getId_Localidad())) + "&";
+                criteria += "idLocalidad=" + String.valueOf((((Localidad) cmb_Localidad.getSelectedItem()).getId_Localidad())) + "&";
             }
-        }    
-                int seleccionOrden = cmbOrden.getSelectedIndex();
+        }
+        int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
             case 0:
                 criteria += "ordenarPor=proveedor.razonSocial&";
@@ -322,7 +324,7 @@ public class ProveedoresGUI extends JInternalFrame {
             btn_Eliminar.setEnabled(false);
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -747,7 +749,7 @@ public class ProveedoresGUI extends JInternalFrame {
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         this.setSize(sizeInternalFrame);
         this.setColumnas();
-        try {            
+        try {
             this.setMaximum(true);
             this.cambiarEstadoDeComponentesSegunRolUsuario();
         } catch (PropertyVetoException ex) {
@@ -755,9 +757,9 @@ public class ProveedoresGUI extends JInternalFrame {
             LOGGER.error(msjError + " - " + ex.getMessage());
             JOptionPane.showInternalMessageDialog(this, msjError, "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();
-        }        
+        }
     }//GEN-LAST:event_formInternalFrameOpened
- 
+
     private void btnCuentaCorrienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCuentaCorrienteActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
