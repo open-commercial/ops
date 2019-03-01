@@ -19,6 +19,7 @@ public class Empresa implements Serializable {
     private Date fechaInicioActividad;
     private String email;
     private String telefono;
+    private Ubicacion ubicacion;
     private Long idLocalidad;
     private String nombreLocalidad;
     private String logo;

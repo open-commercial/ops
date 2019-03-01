@@ -47,7 +47,7 @@
               <Component id="panelPrincipal" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -65,33 +65,24 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="lbl_Localidad" alignment="1" pref="109" max="32767" attributes="1"/>
-                      <Component id="lbl_Provincia" alignment="1" max="32767" attributes="1"/>
-                      <Component id="lbl_Direccion" alignment="1" max="32767" attributes="1"/>
                       <Component id="lbl_Nombre" alignment="1" max="32767" attributes="1"/>
-                      <Component id="lbl_Web" alignment="0" max="32767" attributes="1"/>
+                      <Component id="lbl_Web" alignment="0" pref="109" max="32767" attributes="1"/>
                       <Component id="lbl_Telefono" alignment="0" max="32767" attributes="1"/>
+                      <Component id="lblUbicacion" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="txt_Web" max="32767" attributes="1"/>
                       <Component id="txt_Telefono" alignment="0" max="32767" attributes="1"/>
-                      <Component id="txt_Direccion" alignment="0" pref="437" max="32767" attributes="1"/>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cmb_Localidad" pref="343" max="32767" attributes="1"/>
-                              <Component id="cmb_Provincia" alignment="0" pref="343" max="32767" attributes="1"/>
-                          </Group>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="btn_NuevaProvincia" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="btn_NuevaLocalidad" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
                       <Component id="txt_Nombre" alignment="0" max="32767" attributes="1"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="txtUbicacion" pref="322" max="32767" attributes="1"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                          <Component id="btnUbicacion" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
@@ -106,21 +97,10 @@
                       <Component id="lbl_Nombre" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="txt_Direccion" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbl_Direccion" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lbl_Provincia" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmb_Provincia" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btn_NuevaProvincia" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lbl_Localidad" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmb_Localidad" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btn_NuevaLocalidad" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblUbicacion" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtUbicacion" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnUbicacion" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -138,78 +118,6 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="lbl_Direccion">
-          <Properties>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Direcci&#xf3;n:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txt_Direccion">
-        </Component>
-        <Component class="javax.swing.JLabel" name="lbl_Provincia">
-          <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
-            </Property>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="* Provincia:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cmb_Provincia">
-          <Properties>
-            <Property name="maximumRowCount" type="int" value="5"/>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmb_ProvinciaItemStateChanged"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lbl_Localidad">
-          <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
-            </Property>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="* Localidad:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="btn_NuevaProvincia">
-          <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
-            </Property>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/AddMap_16x16.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Nueva"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_NuevaProvinciaActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="btn_NuevaLocalidad">
-          <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
-            </Property>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/AddMap_16x16.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Nueva"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_NuevaLocalidadActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cmb_Localidad">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JLabel" name="lbl_Nombre">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -236,6 +144,28 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txt_Telefono">
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtUbicacion">
+          <Properties>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnUbicacion">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/sic/icons/AddMap_16x16.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Modificar"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUbicacionActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblUbicacion">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="Ubicaci&#xf3;n:"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

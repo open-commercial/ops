@@ -17,11 +17,13 @@ import sic.modelo.Localidad;
 import sic.modelo.Provincia;
 import sic.modelo.Transportista;
 import sic.modelo.TipoDeOperacion;
+import sic.modelo.Ubicacion;
 
 public class DetalleTransportistaGUI extends JDialog {
 
     private Transportista transportistaModificar;
     private final TipoDeOperacion operacion;
+    private Ubicacion ubicacion;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleTransportistaGUI() {
@@ -44,19 +46,24 @@ public class DetalleTransportistaGUI extends JDialog {
 
     private void cargarTransportistaParaModificar() {
         txt_Nombre.setText(transportistaModificar.getNombre());
-        txt_Direccion.setText(transportistaModificar.getDireccion());
-        try {
-            Localidad localidadDelTransportista = RestClient.getRestTemplate().getForObject("/localidades/" + transportistaModificar.getIdLocalidad(), Localidad.class);
-            Provincia provinciaDelTransportista = RestClient.getRestTemplate().getForObject("/provincias/" + localidadDelTransportista.getIdProvincia(), Provincia.class);
-            cmb_Provincia.setSelectedItem(provinciaDelTransportista);
-            cmb_Localidad.setSelectedItem(localidadDelTransportista);
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+                if (transportistaModificar.getUbicacion() != null) {
+            txtUbicacion.setText(transportistaModificar.getUbicacion().getCalle()
+                    + " "
+                    + transportistaModificar.getUbicacion().getNumero()
+                    + (transportistaModificar.getUbicacion().getPiso() != null
+                    ? ", " + transportistaModificar.getUbicacion().getPiso() + " "
+                    : " ")
+                    + (transportistaModificar.getUbicacion().getDepartamento() != null
+                    ? transportistaModificar.getUbicacion().getDepartamento()
+                    : "")
+                    + (transportistaModificar.getUbicacion().getNombreLocalidad() != null
+                    ? ", " + transportistaModificar.getUbicacion().getNombreLocalidad()
+                    : " ")
+                    + " "
+                    + (transportistaModificar.getUbicacion().getNombreProvincia() != null
+                    ? transportistaModificar.getUbicacion().getNombreProvincia()
+                    : " "));
+            this.ubicacion = transportistaModificar.getUbicacion();
         }
         txt_Telefono.setText(transportistaModificar.getTelefono());
         txt_Web.setText(transportistaModificar.getWeb());
@@ -64,48 +71,8 @@ public class DetalleTransportistaGUI extends JDialog {
 
     private void limpiarYRecargarComponentes() {
         txt_Nombre.setText("");
-        txt_Direccion.setText("");
         txt_Telefono.setText("");
         txt_Web.setText("");
-        cargarComboBoxProvincias();
-    }
-
-    private void cargarComboBoxProvincias() {
-        cmb_Provincia.removeAllItems();
-        try {
-            List<Provincia> provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/provincias",
-                            Provincia[].class)));
-            provincias.stream().forEach((p) -> {
-                cmb_Provincia.addItem(p);
-            });
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void cargarComboBoxLocalidadesDeLaProvincia(Provincia provSeleccionada) {
-        cmb_Localidad.removeAllItems();
-        try {
-            List<Localidad> Localidades = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/localidades/provincias/" + provSeleccionada.getId_Provincia(),
-                            Localidad[].class)));
-            Localidades.stream().forEach((l) -> {
-                cmb_Localidad.addItem(l);
-            });
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
     }
 
     @SuppressWarnings("unchecked")
@@ -113,20 +80,15 @@ public class DetalleTransportistaGUI extends JDialog {
     private void initComponents() {
 
         panelPrincipal = new javax.swing.JPanel();
-        lbl_Direccion = new javax.swing.JLabel();
-        txt_Direccion = new javax.swing.JTextField();
-        lbl_Provincia = new javax.swing.JLabel();
-        cmb_Provincia = new javax.swing.JComboBox();
-        lbl_Localidad = new javax.swing.JLabel();
-        btn_NuevaProvincia = new javax.swing.JButton();
-        btn_NuevaLocalidad = new javax.swing.JButton();
-        cmb_Localidad = new javax.swing.JComboBox();
         lbl_Nombre = new javax.swing.JLabel();
         txt_Nombre = new javax.swing.JTextField();
         lbl_Web = new javax.swing.JLabel();
         txt_Web = new javax.swing.JTextField();
         lbl_Telefono = new javax.swing.JLabel();
         txt_Telefono = new javax.swing.JTextField();
+        txtUbicacion = new javax.swing.JTextField();
+        btnUbicacion = new javax.swing.JButton();
+        lblUbicacion = new javax.swing.JLabel();
         btn_Guardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -139,42 +101,6 @@ public class DetalleTransportistaGUI extends JDialog {
 
         panelPrincipal.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        lbl_Direccion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Direccion.setText("Dirección:");
-
-        lbl_Provincia.setForeground(java.awt.Color.red);
-        lbl_Provincia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Provincia.setText("* Provincia:");
-
-        cmb_Provincia.setMaximumRowCount(5);
-        cmb_Provincia.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cmb_ProvinciaItemStateChanged(evt);
-            }
-        });
-
-        lbl_Localidad.setForeground(java.awt.Color.red);
-        lbl_Localidad.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Localidad.setText("* Localidad:");
-
-        btn_NuevaProvincia.setForeground(java.awt.Color.blue);
-        btn_NuevaProvincia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
-        btn_NuevaProvincia.setText("Nueva");
-        btn_NuevaProvincia.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_NuevaProvinciaActionPerformed(evt);
-            }
-        });
-
-        btn_NuevaLocalidad.setForeground(java.awt.Color.blue);
-        btn_NuevaLocalidad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
-        btn_NuevaLocalidad.setText("Nueva");
-        btn_NuevaLocalidad.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_NuevaLocalidadActionPerformed(evt);
-            }
-        });
-
         lbl_Nombre.setForeground(java.awt.Color.red);
         lbl_Nombre.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Nombre.setText("* Nombre:");
@@ -185,6 +111,19 @@ public class DetalleTransportistaGUI extends JDialog {
         lbl_Telefono.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Telefono.setText("Teléfono:");
 
+        txtUbicacion.setEnabled(false);
+
+        btnUbicacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
+        btnUbicacion.setText("Modificar");
+        btnUbicacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUbicacionActionPerformed(evt);
+            }
+        });
+
+        lblUbicacion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblUbicacion.setText("Ubicación:");
+
         javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
         panelPrincipal.setLayout(panelPrincipalLayout);
         panelPrincipalLayout.setHorizontalGroup(
@@ -192,26 +131,19 @@ public class DetalleTransportistaGUI extends JDialog {
             .addGroup(panelPrincipalLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lbl_Localidad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
-                    .addComponent(lbl_Provincia, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Direccion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_Nombre, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Web, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Telefono, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbl_Web, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
+                    .addComponent(lbl_Telefono, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblUbicacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txt_Web)
                     .addComponent(txt_Telefono)
-                    .addComponent(txt_Direccion, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
+                    .addComponent(txt_Nombre)
                     .addGroup(panelPrincipalLayout.createSequentialGroup()
-                        .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmb_Localidad, 0, 343, Short.MAX_VALUE)
-                            .addComponent(cmb_Provincia, 0, 343, Short.MAX_VALUE))
+                        .addComponent(txtUbicacion, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
-                        .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btn_NuevaProvincia)
-                            .addComponent(btn_NuevaLocalidad)))
-                    .addComponent(txt_Nombre))
+                        .addComponent(btnUbicacion)))
                 .addContainerGap())
         );
         panelPrincipalLayout.setVerticalGroup(
@@ -222,19 +154,10 @@ public class DetalleTransportistaGUI extends JDialog {
                     .addComponent(txt_Nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_Nombre))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_Direccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Direccion))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Provincia)
-                    .addComponent(cmb_Provincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_NuevaProvincia))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Localidad)
-                    .addComponent(cmb_Localidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_NuevaLocalidad))
+                    .addComponent(lblUbicacion)
+                    .addComponent(txtUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnUbicacion))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_Telefono)
@@ -245,10 +168,6 @@ public class DetalleTransportistaGUI extends JDialog {
                     .addComponent(txt_Web, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_NuevaProvincia, cmb_Provincia});
-
-        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_NuevaLocalidad, cmb_Localidad});
 
         btn_Guardar.setForeground(java.awt.Color.blue);
         btn_Guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
@@ -290,11 +209,14 @@ public class DetalleTransportistaGUI extends JDialog {
                 if (operacion == TipoDeOperacion.ALTA) {
                     Transportista transportista = new Transportista();
                     transportista.setNombre(txt_Nombre.getText().trim());
-                    transportista.setDireccion(txt_Direccion.getText().trim());
                     transportista.setTelefono(txt_Telefono.getText().trim());
                     transportista.setWeb(txt_Web.getText().trim());
-                    RestClient.getRestTemplate().postForObject("/transportistas?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                            + "&idLocalidad=" + ((Localidad) cmb_Localidad.getSelectedItem()).getId_Localidad(), transportista, Transportista.class);
+                    transportista = RestClient.getRestTemplate().postForObject("/transportistas?idEmpresa="
+                            + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), transportista, Transportista.class);
+                    if (this.ubicacion != null) {
+                        RestClient.getRestTemplate().postForObject("/ubicaciones/transportistas/" 
+                                + transportista.getIdEmpresa(), this.ubicacion, Ubicacion.class);
+                    }
                     int respuesta = JOptionPane.showConfirmDialog(this,
                             "El transportista se guardó correctamente.\n¿Desea dar de alta otro transportista?",
                             "Aviso", JOptionPane.YES_NO_OPTION);
@@ -306,12 +228,15 @@ public class DetalleTransportistaGUI extends JDialog {
 
                 if (operacion == TipoDeOperacion.ACTUALIZACION) {
                     transportistaModificar.setNombre(txt_Nombre.getText().trim());
-                    transportistaModificar.setDireccion(txt_Direccion.getText().trim());
-                    transportistaModificar.setIdLocalidad(((Localidad) cmb_Localidad.getSelectedItem()).getId_Localidad());
                     transportistaModificar.setTelefono(txt_Telefono.getText().trim());
                     transportistaModificar.setWeb(txt_Web.getText().trim());
                     transportistaModificar.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
                     RestClient.getRestTemplate().put("/transportistas", transportistaModificar);
+                    if (transportistaModificar.getUbicacion() == null && this.ubicacion != null) {
+                        RestClient.getRestTemplate().postForObject("/ubicaciones/transportistas/" + transportistaModificar.getId_Transportista(), this.ubicacion, Ubicacion.class);
+                    } else if (transportistaModificar.getUbicacion() != null && this.ubicacion != null) {
+                        RestClient.getRestTemplate().put("/ubicaciones", this.ubicacion);
+                    }
                     JOptionPane.showMessageDialog(this, "El transportista se modificó correctamente!",
                             "Aviso", JOptionPane.INFORMATION_MESSAGE);
                     this.dispose();
@@ -327,7 +252,6 @@ public class DetalleTransportistaGUI extends JDialog {
 	}//GEN-LAST:event_btn_GuardarActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        this.cargarComboBoxProvincias();
         if (operacion == TipoDeOperacion.ACTUALIZACION) {
             this.setTitle("Modificar Transportista");
             this.cargarTransportistaParaModificar();
@@ -336,44 +260,41 @@ public class DetalleTransportistaGUI extends JDialog {
         }
     }//GEN-LAST:event_formWindowOpened
 
-    private void btn_NuevaLocalidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevaLocalidadActionPerformed
-        DetalleLocalidadGUI gui_DetalleLocalidad = new DetalleLocalidadGUI();
-        gui_DetalleLocalidad.setModal(true);
-        gui_DetalleLocalidad.setLocationRelativeTo(this);
-        gui_DetalleLocalidad.setVisible(true);
-        cargarComboBoxLocalidadesDeLaProvincia((Provincia) cmb_Provincia.getSelectedItem());
-    }//GEN-LAST:event_btn_NuevaLocalidadActionPerformed
-
-    private void btn_NuevaProvinciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevaProvinciaActionPerformed
-        DetalleProvinciaGUI gui_DetalleProvincia = new DetalleProvinciaGUI();
-        gui_DetalleProvincia.setModal(true);
-        gui_DetalleProvincia.setLocationRelativeTo(this);
-        gui_DetalleProvincia.setVisible(true);
-        cargarComboBoxProvincias();
-    }//GEN-LAST:event_btn_NuevaProvinciaActionPerformed
-
-    private void cmb_ProvinciaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_ProvinciaItemStateChanged
-        if (cmb_Provincia.getItemCount() > 0) {
-            cargarComboBoxLocalidadesDeLaProvincia((Provincia) cmb_Provincia.getSelectedItem());
-        } else {
-            cmb_Localidad.removeAllItems();
+    private void btnUbicacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbicacionActionPerformed
+        DetalleUbicacionGUI guiDetalleUbicacion = new DetalleUbicacionGUI(this.ubicacion);
+        guiDetalleUbicacion.setModal(true);
+        guiDetalleUbicacion.setLocationRelativeTo(this);
+        guiDetalleUbicacion.setVisible(true);
+        if (guiDetalleUbicacion.getUbicacionModificada() != null) {
+            this.ubicacion = guiDetalleUbicacion.getUbicacionModificada();
+            txtUbicacion.setText(this.ubicacion.getCalle()
+                + " "
+                + this.ubicacion.getNumero()
+                + (this.ubicacion.getPiso() != null
+                    ? ", " + this.ubicacion.getPiso() + " "
+                    : " ")
+                + (this.ubicacion.getDepartamento() != null
+                    ? this.ubicacion.getDepartamento()
+                    : "")
+                + (this.ubicacion.getNombreLocalidad() != null
+                    ? ", " + this.ubicacion.getNombreProvincia()
+                    : " ")
+                + " "
+                + (this.ubicacion.getNombreProvincia() != null
+                    ? this.ubicacion.getNombreProvincia()
+                    : " "));
         }
-    }//GEN-LAST:event_cmb_ProvinciaItemStateChanged
+    }//GEN-LAST:event_btnUbicacionActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnUbicacion;
     private javax.swing.JButton btn_Guardar;
-    private javax.swing.JButton btn_NuevaLocalidad;
-    private javax.swing.JButton btn_NuevaProvincia;
-    private javax.swing.JComboBox cmb_Localidad;
-    private javax.swing.JComboBox cmb_Provincia;
-    private javax.swing.JLabel lbl_Direccion;
-    private javax.swing.JLabel lbl_Localidad;
+    private javax.swing.JLabel lblUbicacion;
     private javax.swing.JLabel lbl_Nombre;
-    private javax.swing.JLabel lbl_Provincia;
     private javax.swing.JLabel lbl_Telefono;
     private javax.swing.JLabel lbl_Web;
     private javax.swing.JPanel panelPrincipal;
-    private javax.swing.JTextField txt_Direccion;
+    private javax.swing.JTextField txtUbicacion;
     private javax.swing.JTextField txt_Nombre;
     private javax.swing.JTextField txt_Telefono;
     private javax.swing.JTextField txt_Web;

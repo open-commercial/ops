@@ -22,21 +22,21 @@ import sic.modelo.Ubicacion;
 
 public class DetalleClienteGUI extends JDialog {
 
-    private Cliente cliente = new Cliente();    
+    private Cliente cliente = new Cliente();
     private Ubicacion ubicacionDeFacturacion;
     private Ubicacion ubicacionDeEnvio;
-    private final TipoDeOperacion operacion;        
+    private final TipoDeOperacion operacion;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleClienteGUI() {
         this.initComponents();
-        this.setIcon();        
+        this.setIcon();
         operacion = TipoDeOperacion.ALTA;
     }
 
     public DetalleClienteGUI(Cliente cliente) {
         this.initComponents();
-        this.setIcon();        
+        this.setIcon();
         operacion = TipoDeOperacion.ACTUALIZACION;
         this.cliente = cliente;
     }
@@ -44,12 +44,12 @@ public class DetalleClienteGUI extends JDialog {
     public Cliente getClienteDadoDeAlta() {
         return (cliente.getId_Cliente() != 0L ? cliente : null);
     }
-    
+
     private void setIcon() {
         ImageIcon iconoVentana = new ImageIcon(DetalleClienteGUI.class.getResource("/sic/icons/Client_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
     }
-    
+
     private void seleccionarCredencialSegunId(Long idCredencial) {
         if (idCredencial != null) {
             try {
@@ -67,7 +67,7 @@ public class DetalleClienteGUI extends JDialog {
             }
         }
     }
-    
+
     private void seleccionarViajanteSegunId(Long idViajante) {
         if (idViajante != null) {
             try {
@@ -85,7 +85,7 @@ public class DetalleClienteGUI extends JDialog {
             }
         }
     }
-    
+
     private void cargarClienteParaModificar() {
         txtIdFiscal.setValue(cliente.getIdFiscal());
         txtNombreFiscal.setText(cliente.getNombreFiscal());
@@ -139,9 +139,9 @@ public class DetalleClienteGUI extends JDialog {
         cmbCategoriaIVA.removeAllItems();
         for (CategoriaIVA c : CategoriaIVA.values()) {
             cmbCategoriaIVA.addItem(c);
-        }        
+        }
     }
-    
+
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
@@ -184,7 +184,7 @@ public class DetalleClienteGUI extends JDialog {
             this.seleccionarViajanteSegunId(UsuarioActivo.getInstance().getUsuario().getId_Usuario());
         }
     }
-               
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -529,7 +529,7 @@ public class DetalleClienteGUI extends JDialog {
             cliente.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
             cliente.setTelefono(txtTelefono.getText().trim());
             cliente.setContacto(txtContacto.getText().trim());
-            cliente.setEmail(txtEmail.getText().trim());                
+            cliente.setEmail(txtEmail.getText().trim());
             if (cmbViajante.getSelectedItem() != null) {
                 idViajante = String.valueOf(
                         ((Usuario) cmbViajante.getSelectedItem()).getId_Usuario());
@@ -589,10 +589,10 @@ public class DetalleClienteGUI extends JDialog {
             this.setTitle("Modificar Cliente Nº " + cliente.getNroCliente());
             this.cargarClienteParaModificar();
         } else if (operacion == TipoDeOperacion.ALTA) {
-            this.setTitle("Nuevo Cliente");            
+            this.setTitle("Nuevo Cliente");
         }
     }//GEN-LAST:event_formWindowOpened
-        
+
     private void btnNuevaCredencialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaCredencialActionPerformed
         DetalleUsuarioGUI gui_DetalleUsuario = new DetalleUsuarioGUI();
         gui_DetalleUsuario.setModal(true);
@@ -657,16 +657,18 @@ public class DetalleClienteGUI extends JDialog {
     }//GEN-LAST:event_btnNuevoUsuarioViajanteActionPerformed
 
     private void txtIdFiscalFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtIdFiscalFocusLost
-        if (txtIdFiscal.getText().equals("")) txtIdFiscal.setValue(null);
+        if (txtIdFiscal.getText().equals("")) {
+            txtIdFiscal.setValue(null);
+        }
     }//GEN-LAST:event_txtIdFiscalFocusLost
 
     private void btnUbicacionFacturacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbicacionFacturacionActionPerformed
-        DetalleUbicacionGUI guiDetalleUsuario = new DetalleUbicacionGUI(this.cliente.getUbicacionFacturacion());
-        guiDetalleUsuario.setModal(true);
-        guiDetalleUsuario.setLocationRelativeTo(this);
-        guiDetalleUsuario.setVisible(true);
-        if (guiDetalleUsuario.getUbicacionModificada() != null) {
-            this.ubicacionDeFacturacion = guiDetalleUsuario.getUbicacionModificada();
+        DetalleUbicacionGUI guiDetalleUbicacion = new DetalleUbicacionGUI(this.cliente.getUbicacionFacturacion());
+        guiDetalleUbicacion.setModal(true);
+        guiDetalleUbicacion.setLocationRelativeTo(this);
+        guiDetalleUbicacion.setVisible(true);
+        if (guiDetalleUbicacion.getUbicacionModificada() != null) {
+            this.ubicacionDeFacturacion = guiDetalleUbicacion.getUbicacionModificada();
             txtUbicacionFacturacion.setText(this.ubicacionDeFacturacion.getCalle()
                     + " "
                     + this.ubicacionDeFacturacion.getNumero()
@@ -677,7 +679,7 @@ public class DetalleClienteGUI extends JDialog {
                     ? this.ubicacionDeFacturacion.getDepartamento()
                     : "")
                     + (this.ubicacionDeFacturacion.getNombreLocalidad() != null
-                    ? ", " + this.ubicacionDeFacturacion.getNombreProvincia()
+                    ? ", " + this.ubicacionDeFacturacion.getNombreLocalidad()
                     : " ")
                     + " "
                     + (this.ubicacionDeFacturacion.getNombreProvincia() != null
@@ -687,12 +689,12 @@ public class DetalleClienteGUI extends JDialog {
     }//GEN-LAST:event_btnUbicacionFacturacionActionPerformed
 
     private void btnUbicacionEnvioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbicacionEnvioActionPerformed
-        DetalleUbicacionGUI guiDetalleUsuario = new DetalleUbicacionGUI(this.cliente.getUbicacionEnvio());
-        guiDetalleUsuario.setModal(true);
-        guiDetalleUsuario.setLocationRelativeTo(this);
-        guiDetalleUsuario.setVisible(true);
-        if (guiDetalleUsuario.getUbicacionModificada() != null) {
-            this.ubicacionDeEnvio = guiDetalleUsuario.getUbicacionModificada();
+        DetalleUbicacionGUI guiDetalleUbicacion = new DetalleUbicacionGUI(this.cliente.getUbicacionEnvio());
+        guiDetalleUbicacion.setModal(true);
+        guiDetalleUbicacion.setLocationRelativeTo(this);
+        guiDetalleUbicacion.setVisible(true);
+        if (guiDetalleUbicacion.getUbicacionModificada() != null) {
+            this.ubicacionDeEnvio = guiDetalleUbicacion.getUbicacionModificada();
             txtUbicacionEnvio.setText(this.ubicacionDeEnvio.getCalle()
                     + " "
                     + this.ubicacionDeEnvio.getNumero()

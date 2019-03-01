@@ -52,12 +52,16 @@ public class DetalleUbicacionGUI extends JDialog {
 
         pnlDetalleUbicacion.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Latitud:");
 
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Longitud:");
 
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("Descripción:");
 
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText("Localidad:");
 
         txtLocalidad.setEditable(false);
@@ -76,13 +80,17 @@ public class DetalleUbicacionGUI extends JDialog {
         ftfLongitud.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##0.#######"))));
 
         lblCalle.setForeground(java.awt.Color.red);
+        lblCalle.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblCalle.setText("* Calle:");
 
         lblNumero.setForeground(java.awt.Color.red);
+        lblNumero.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblNumero.setText("* Número:");
 
+        lblPiso.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblPiso.setText("Piso:");
 
+        lblDepartamento.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblDepartamento.setText("Departamento:");
 
         ftfNumero.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
@@ -226,12 +234,13 @@ public class DetalleUbicacionGUI extends JDialog {
             if (ubicacionAModificar.getLongitud() != null) {
                 ftfLongitud.setText(ubicacionAModificar.getLongitud().toString());
             }
-        } else {
-            ubicacionAModificar = new Ubicacion();
         }
     }//GEN-LAST:event_formWindowOpened
 
     private void btnSeleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarActionPerformed
+        if (ubicacionAModificar == null) {
+            ubicacionAModificar = new Ubicacion();
+        }
         if (txtCalle.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_ubicacion_calle_vacia"),
@@ -275,7 +284,7 @@ public class DetalleUbicacionGUI extends JDialog {
         ubicacionAModificar.setCodigoPostal(gui_DetalleLocalidad.getLocalidadSeleccionada().getCodigoPostal());
         ubicacionAModificar.setNombreProvincia(gui_DetalleLocalidad.getLocalidadSeleccionada().getNombreProvincia());
         ubicacionAModificar.setIdProvincia(gui_DetalleLocalidad.getLocalidadSeleccionada().getIdProvincia());
-        txtLocalidad.setText(ubicacionAModificar.getNombreLocalidad() + " (" + ubicacionAModificar.getCodigoPostal() + ") "  + ubicacionAModificar.getNombreProvincia());
+        txtLocalidad.setText(ubicacionAModificar.getNombreLocalidad() + " (" + ubicacionAModificar.getCodigoPostal() + ") " + ubicacionAModificar.getNombreProvincia());
     }//GEN-LAST:event_btnModificarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
