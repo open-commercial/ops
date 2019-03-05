@@ -674,9 +674,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 this.limpiarYRecargarComponentes();
             } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificarPedido == true) {
                 this.actualizarPedido(pedido);
-                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_pedido_actualizado"),
-                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
-                this.dispose();
             }
         } else {
             JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_seleccionar_cliente"),
@@ -694,10 +691,13 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         pedido.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
         pedido.setTotalEstimado(new BigDecimal(txt_Total.getValue().toString()));
         pedido.setObservaciones(txt_Observaciones.getText());
-        RestClient.getRestTemplate().put("/pedidos?idEmpresa="
-                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                + "&idCliente=" + cliente.getId_Cliente(), pedido);
+        CerrarPedidoGUI cerrarPedido = new CerrarPedidoGUI(pedido, cliente);
+        cerrarPedido.setModal(true);
+        cerrarPedido.setLocationRelativeTo(this);
+        cerrarPedido.setVisible(true);
+        if (cerrarPedido.isActualizacionExitosa()) {
+            this.dispose();
+        }
     }
 
     public List<RenglonPedido> calcularRenglonesPedido() {

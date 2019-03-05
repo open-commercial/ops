@@ -9,6 +9,8 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
@@ -19,13 +21,22 @@ import sic.modelo.UsuarioActivo;
 
 public class CerrarPedidoGUI extends JDialog {
 
-    private NuevoPedido nuevoPedido;
-    private Cliente cliente;
+    private final NuevoPedido nuevoPedido;
+    private final Cliente cliente;
+    private Pedido pedido;
+    private boolean actualizacionExitosa = false;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public CerrarPedidoGUI(NuevoPedido nuevoPedido, Cliente cliente) {
         this.nuevoPedido = nuevoPedido;
         this.cliente = cliente;
+        initComponents();
+    }
+
+    public CerrarPedidoGUI(Pedido pedido, Cliente cliente) {
+        this.nuevoPedido = null;
+        this.cliente = cliente;
+        this.pedido = pedido;
         initComponents();
     }
 
@@ -48,6 +59,10 @@ public class CerrarPedidoGUI extends JDialog {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+    
+    public boolean isActualizacionExitosa() {
+        return this.actualizacionExitosa;
     }
 
     @SuppressWarnings("unchecked")
@@ -340,16 +355,36 @@ public class CerrarPedidoGUI extends JDialog {
                 } else {
                     RestClient.getRestTemplate().put("/ubicaciones", cliente.getUbicacionEnvio());
                 }
-                Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?idEmpresa="
-                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                        + "&idCliente=" + cliente.getId_Cliente()
-                        + "&usarUbicacionDeFacturacion=" + chkEnviarUbicacionFacturacion.isSelected(), nuevoPedido, Pedido.class);
-                int reply = JOptionPane.showConfirmDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
-                        "Aviso", JOptionPane.YES_NO_OPTION);
-                if (reply == JOptionPane.YES_OPTION) {
-                    this.lanzarReportePedido(p);
+                try {
+                    if (nuevoPedido != null) {
+                        Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?idEmpresa="
+                                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                                + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
+                                + "&idCliente=" + cliente.getId_Cliente()
+                                + "&usarUbicacionDeFacturacion=" + chkEnviarUbicacionFacturacion.isSelected(), nuevoPedido, Pedido.class);
+                        int reply = JOptionPane.showConfirmDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                                "Aviso", JOptionPane.YES_NO_OPTION);
+                        if (reply == JOptionPane.YES_OPTION) {
+                            this.lanzarReportePedido(p);
+                        }
+                    } else {
+                        RestClient.getRestTemplate().put("/pedidos?idEmpresa="
+                                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                                + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
+                                + "&idCliente=" + cliente.getId_Cliente()
+                                + "&usarUbicacionDeFacturacion=" + chkEnviarUbicacionFacturacion.isSelected(), pedido);
+                        this.actualizacionExitosa = true;
+                        JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_pedido_actualizado"),
+                                "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
                 this.dispose();
             }
@@ -357,22 +392,22 @@ public class CerrarPedidoGUI extends JDialog {
     }//GEN-LAST:event_btnCerrarPedidoActionPerformed
 
     private void chkEnviarUbicacionFacturacionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkEnviarUbicacionFacturacionItemStateChanged
-        lblCalle.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
-        lblDepartamento.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
-        lblDescripcion.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
-        lblLatitud.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
-        lblLocalidad.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
-        lblLongitud.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
-        lblNumero.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
-        lblPiso.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
-        txtCalle.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
-        txtDepartamento.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
-        txtDescripcion.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
-        txtLocalidad.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
-        txtPiso.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
-        ftfLatitud.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
-        ftfLongitud.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
-        ftfNumero.setEnabled(chkEnviarUbicacionFacturacion.isSelected());           
+        lblCalle.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
+        lblDepartamento.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
+        lblDescripcion.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
+        lblLatitud.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
+        lblLocalidad.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
+        lblLongitud.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
+        lblNumero.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
+        lblPiso.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
+        txtCalle.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
+        txtDepartamento.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
+        txtDescripcion.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
+        txtLocalidad.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
+        txtPiso.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
+        ftfLatitud.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
+        ftfLongitud.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
+        ftfNumero.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
     }//GEN-LAST:event_chkEnviarUbicacionFacturacionItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
