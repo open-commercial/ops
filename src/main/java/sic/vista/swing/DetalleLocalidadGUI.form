@@ -66,13 +66,13 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="lbl_Prov" alignment="1" max="32767" attributes="1"/>
-                      <Component id="lbl_Localidades" alignment="1" max="32767" attributes="1"/>
+                      <Component id="lblProv" alignment="1" max="32767" attributes="1"/>
+                      <Component id="lblLocalidades" alignment="1" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="cmbLocalidad" pref="263" max="32767" attributes="0"/>
-                      <Component id="cmb_ProvinciasBusqueda" max="32767" attributes="1"/>
+                      <Component id="cmbProvinciasBusqueda" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -83,12 +83,12 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lbl_Prov" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmb_ProvinciasBusqueda" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblProv" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="cmbProvinciasBusqueda" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lbl_Localidades" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblLocalidades" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cmbLocalidad" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="111" max="-2" attributes="0"/>
@@ -97,26 +97,26 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="lbl_Prov">
+        <Component class="javax.swing.JLabel" name="lblProv">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="Provincia:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JComboBox" name="cmb_ProvinciasBusqueda">
+        <Component class="javax.swing.JComboBox" name="cmbProvinciasBusqueda">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmb_ProvinciasBusquedaItemStateChanged"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmbProvinciasBusquedaItemStateChanged"/>
           </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Provincia&gt;"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JLabel" name="lbl_Localidades">
+        <Component class="javax.swing.JLabel" name="lblLocalidades">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="Localidades:"/>
@@ -153,19 +153,19 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="lbl_Nombre" linkSize="5" alignment="0" max="32767" attributes="1"/>
-                              <Component id="lbl_CP" linkSize="5" alignment="0" max="32767" attributes="1"/>
+                              <Component id="lblNombre" linkSize="5" alignment="0" max="32767" attributes="1"/>
+                              <Component id="lblCP" linkSize="5" alignment="0" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txt_CodigoPostal" linkSize="4" alignment="1" min="-2" pref="258" max="-2" attributes="2"/>
+                              <Component id="txtCodigoPostal" linkSize="4" alignment="1" min="-2" pref="258" max="-2" attributes="2"/>
                               <Component id="txt_Nombre" linkSize="4" alignment="1" min="-2" pref="258" max="-2" attributes="2"/>
                           </Group>
                       </Group>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="btnAceptar" min="-2" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
-                              <Component id="jLabel2" linkSize="5" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblCostoEnvio" linkSize="5" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Component id="ftfCostoEnvio" linkSize="4" min="-2" pref="258" max="-2" attributes="0"/>
                           </Group>
@@ -175,7 +175,7 @@
               </Group>
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jLabel1" linkSize="5" min="-2" max="-2" attributes="0"/>
+                  <Component id="chkEnvio" linkSize="5" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="chkEnvioGratuito" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
@@ -188,22 +188,22 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="txt_Nombre" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbl_Nombre" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblNombre" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="txt_CodigoPostal" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbl_CP" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtCodigoPostal" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblCP" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="jLabel1" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="chkEnvio" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="chkEnvioGratuito" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="ftfCostoEnvio" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel2" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblCostoEnvio" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="btnAceptar" min="-2" max="-2" attributes="0"/>
@@ -213,7 +213,7 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="lbl_Nombre">
+        <Component class="javax.swing.JLabel" name="lblNombre">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="Nombre:"/>
@@ -224,12 +224,12 @@
             <Property name="editable" type="boolean" value="false"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txt_CodigoPostal">
+        <Component class="javax.swing.JTextField" name="txtCodigoPostal">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="lbl_CP">
+        <Component class="javax.swing.JLabel" name="lblCP">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="C&#xf3;digo Postal:"/>
@@ -254,12 +254,12 @@
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabel1">
+        <Component class="javax.swing.JLabel" name="chkEnvio">
           <Properties>
             <Property name="text" type="java.lang.String" value="Env&#xed;o Gratuito:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabel2">
+        <Component class="javax.swing.JLabel" name="lblCostoEnvio">
           <Properties>
             <Property name="text" type="java.lang.String" value="Costo de Env&#xed;o:"/>
           </Properties>

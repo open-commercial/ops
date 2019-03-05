@@ -45,15 +45,15 @@ public class DetalleLocalidadGUI extends JDialog {
     
     private void cargarProvincias() {
         try {
-            cmb_ProvinciasBusqueda.removeAllItems();
+            cmbProvinciasBusqueda.removeAllItems();
             List<Provincia> provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/ubicaciones/provincias", Provincia[].class)));
             provincias.stream().forEach(p -> {
-                cmb_ProvinciasBusqueda.addItem(p);
+                cmbProvinciasBusqueda.addItem(p);
             });
             if (this.ubicacion != null && this.ubicacion.getIdProvincia() != null) {
                 Provincia provinciaASeleccionar = RestClient.getRestTemplate().getForObject("/ubicaciones/provincias/" + this.ubicacion.getIdProvincia(), Provincia.class);
-                cmb_ProvinciasBusqueda.setSelectedItem(provinciaASeleccionar);
+                cmbProvinciasBusqueda.setSelectedItem(provinciaASeleccionar);
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -98,19 +98,19 @@ public class DetalleLocalidadGUI extends JDialog {
     private void initComponents() {
 
         panelPrincipal = new javax.swing.JPanel();
-        lbl_Prov = new javax.swing.JLabel();
-        cmb_ProvinciasBusqueda = new javax.swing.JComboBox<>();
-        lbl_Localidades = new javax.swing.JLabel();
+        lblProv = new javax.swing.JLabel();
+        cmbProvinciasBusqueda = new javax.swing.JComboBox<>();
+        lblLocalidades = new javax.swing.JLabel();
         cmbLocalidad = new javax.swing.JComboBox<>();
         panelInferior = new javax.swing.JPanel();
-        lbl_Nombre = new javax.swing.JLabel();
+        lblNombre = new javax.swing.JLabel();
         txt_Nombre = new javax.swing.JTextField();
-        txt_CodigoPostal = new javax.swing.JTextField();
-        lbl_CP = new javax.swing.JLabel();
+        txtCodigoPostal = new javax.swing.JTextField();
+        lblCP = new javax.swing.JLabel();
         btnAceptar = new javax.swing.JButton();
         chkEnvioGratuito = new javax.swing.JCheckBox();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        chkEnvio = new javax.swing.JLabel();
+        lblCostoEnvio = new javax.swing.JLabel();
         ftfCostoEnvio = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -124,17 +124,17 @@ public class DetalleLocalidadGUI extends JDialog {
 
         panelPrincipal.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        lbl_Prov.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Prov.setText("Provincia:");
+        lblProv.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblProv.setText("Provincia:");
 
-        cmb_ProvinciasBusqueda.addItemListener(new java.awt.event.ItemListener() {
+        cmbProvinciasBusqueda.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cmb_ProvinciasBusquedaItemStateChanged(evt);
+                cmbProvinciasBusquedaItemStateChanged(evt);
             }
         });
 
-        lbl_Localidades.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Localidades.setText("Localidades:");
+        lblLocalidades.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblLocalidades.setText("Localidades:");
 
         cmbLocalidad.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -149,12 +149,12 @@ public class DetalleLocalidadGUI extends JDialog {
             .addGroup(panelPrincipalLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_Prov, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Localidades, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblProv, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblLocalidades, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(cmbLocalidad, 0, 263, Short.MAX_VALUE)
-                    .addComponent(cmb_ProvinciasBusqueda, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(cmbProvinciasBusqueda, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panelPrincipalLayout.setVerticalGroup(
@@ -162,26 +162,26 @@ public class DetalleLocalidadGUI extends JDialog {
             .addGroup(panelPrincipalLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Prov)
-                    .addComponent(cmb_ProvinciasBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblProv)
+                    .addComponent(cmbProvinciasBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_Localidades)
+                    .addComponent(lblLocalidades)
                     .addComponent(cmbLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(111, 111, 111))
         );
 
         panelInferior.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        lbl_Nombre.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Nombre.setText("Nombre:");
+        lblNombre.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblNombre.setText("Nombre:");
 
         txt_Nombre.setEditable(false);
 
-        txt_CodigoPostal.setEditable(false);
+        txtCodigoPostal.setEditable(false);
 
-        lbl_CP.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_CP.setText("Código Postal:");
+        lblCP.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblCP.setText("Código Postal:");
 
         btnAceptar.setForeground(java.awt.Color.blue);
         btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
@@ -194,9 +194,9 @@ public class DetalleLocalidadGUI extends JDialog {
 
         chkEnvioGratuito.setEnabled(false);
 
-        jLabel1.setText("Envío Gratuito:");
+        chkEnvio.setText("Envío Gratuito:");
 
-        jLabel2.setText("Costo de Envío:");
+        lblCostoEnvio.setText("Costo de Envío:");
 
         ftfCostoEnvio.setEditable(false);
         ftfCostoEnvio.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
@@ -209,30 +209,30 @@ public class DetalleLocalidadGUI extends JDialog {
                 .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelInferiorLayout.createSequentialGroup()
                         .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lbl_Nombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lbl_CP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(lblNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblCP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(0, 0, 0)
                         .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txt_CodigoPostal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCodigoPostal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txt_Nombre, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(btnAceptar)
                         .addGroup(panelInferiorLayout.createSequentialGroup()
-                            .addComponent(jLabel2)
+                            .addComponent(lblCostoEnvio)
                             .addGap(0, 0, 0)
                             .addComponent(ftfCostoEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(0, 4, Short.MAX_VALUE))
             .addGroup(panelInferiorLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addComponent(chkEnvio)
                 .addGap(0, 0, 0)
                 .addComponent(chkEnvioGratuito)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panelInferiorLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ftfCostoEnvio, txt_CodigoPostal, txt_Nombre});
+        panelInferiorLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ftfCostoEnvio, txtCodigoPostal, txt_Nombre});
 
-        panelInferiorLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, jLabel2, lbl_CP, lbl_Nombre});
+        panelInferiorLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chkEnvio, lblCP, lblCostoEnvio, lblNombre});
 
         panelInferiorLayout.setVerticalGroup(
             panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -240,27 +240,27 @@ public class DetalleLocalidadGUI extends JDialog {
                 .addContainerGap()
                 .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(txt_Nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Nombre))
+                    .addComponent(lblNombre))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(txt_CodigoPostal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_CP))
+                    .addComponent(txtCodigoPostal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCP))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jLabel1)
+                    .addComponent(chkEnvio)
                     .addComponent(chkEnvioGratuito))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(ftfCostoEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
+                    .addComponent(lblCostoEnvio))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnAceptar)
                 .addContainerGap())
         );
 
-        panelInferiorLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {ftfCostoEnvio, txt_CodigoPostal, txt_Nombre});
+        panelInferiorLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {ftfCostoEnvio, txtCodigoPostal, txt_Nombre});
 
-        panelInferiorLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel1, jLabel2, lbl_CP, lbl_Nombre});
+        panelInferiorLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {chkEnvio, lblCP, lblCostoEnvio, lblNombre});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -291,13 +291,13 @@ public class DetalleLocalidadGUI extends JDialog {
         this.dispose();
     }//GEN-LAST:event_btnAceptarActionPerformed
 
-    private void cmb_ProvinciasBusquedaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_ProvinciasBusquedaItemStateChanged
-        this.cargarLocalidadesDeLaProvincia((Provincia) cmb_ProvinciasBusqueda.getSelectedItem());
-    }//GEN-LAST:event_cmb_ProvinciasBusquedaItemStateChanged
+    private void cmbProvinciasBusquedaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbProvinciasBusquedaItemStateChanged
+        this.cargarLocalidadesDeLaProvincia((Provincia) cmbProvinciasBusqueda.getSelectedItem());
+    }//GEN-LAST:event_cmbProvinciasBusquedaItemStateChanged
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
        this.cargarProvincias();
-       this.cargarLocalidadesDeLaProvincia((Provincia) cmb_ProvinciasBusqueda.getSelectedItem());
+       this.cargarLocalidadesDeLaProvincia((Provincia) cmbProvinciasBusqueda.getSelectedItem());
         if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
             btnAceptar.setEnabled(false);
         }
@@ -307,7 +307,7 @@ public class DetalleLocalidadGUI extends JDialog {
         localidadSeleccionada = (Localidad) cmbLocalidad.getSelectedItem();
         if (localidadSeleccionada != null) {
             txt_Nombre.setText(localidadSeleccionada.getNombre());
-            txt_CodigoPostal.setText(localidadSeleccionada.getCodigoPostal());
+            txtCodigoPostal.setText(localidadSeleccionada.getCodigoPostal());
             chkEnvioGratuito.setSelected(localidadSeleccionada.isEnvioGratuito());
             if (localidadSeleccionada.getCostoEnvio() != null) {
                 ftfCostoEnvio.setText(localidadSeleccionada.getCostoEnvio().toString());
@@ -317,19 +317,19 @@ public class DetalleLocalidadGUI extends JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
+    private javax.swing.JLabel chkEnvio;
     private javax.swing.JCheckBox chkEnvioGratuito;
     private javax.swing.JComboBox<Localidad> cmbLocalidad;
-    private javax.swing.JComboBox<Provincia> cmb_ProvinciasBusqueda;
+    private javax.swing.JComboBox<Provincia> cmbProvinciasBusqueda;
     private javax.swing.JFormattedTextField ftfCostoEnvio;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel lbl_CP;
-    private javax.swing.JLabel lbl_Localidades;
-    private javax.swing.JLabel lbl_Nombre;
-    private javax.swing.JLabel lbl_Prov;
+    private javax.swing.JLabel lblCP;
+    private javax.swing.JLabel lblCostoEnvio;
+    private javax.swing.JLabel lblLocalidades;
+    private javax.swing.JLabel lblNombre;
+    private javax.swing.JLabel lblProv;
     private javax.swing.JPanel panelInferior;
     private javax.swing.JPanel panelPrincipal;
-    private javax.swing.JTextField txt_CodigoPostal;
+    private javax.swing.JTextField txtCodigoPostal;
     private javax.swing.JTextField txt_Nombre;
     // End of variables declaration//GEN-END:variables
 }

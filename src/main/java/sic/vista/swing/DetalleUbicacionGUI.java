@@ -23,10 +23,10 @@ public class DetalleUbicacionGUI extends JDialog {
     private void initComponents() {
 
         pnlDetalleUbicacion = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        lblLatitud = new javax.swing.JLabel();
+        lblLongitud = new javax.swing.JLabel();
+        lblDescripcion = new javax.swing.JLabel();
+        lblLocalidad = new javax.swing.JLabel();
         txtDescripcion = new javax.swing.JTextField();
         txtLocalidad = new javax.swing.JTextField();
         btnModificar = new javax.swing.JButton();
@@ -52,17 +52,17 @@ public class DetalleUbicacionGUI extends JDialog {
 
         pnlDetalleUbicacion.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel1.setText("Latitud:");
+        lblLatitud.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblLatitud.setText("Latitud:");
 
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setText("Longitud:");
+        lblLongitud.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblLongitud.setText("Longitud:");
 
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel3.setText("Descripción:");
+        lblDescripcion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblDescripcion.setText("Descripción:");
 
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel4.setText("Localidad:");
+        lblLocalidad.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblLocalidad.setText("Localidad:");
 
         txtLocalidad.setEditable(false);
         txtLocalidad.setEnabled(false);
@@ -107,11 +107,11 @@ public class DetalleUbicacionGUI extends JDialog {
                     .addComponent(lblPiso)
                     .addComponent(lblNumero)
                     .addComponent(lblCalle)
-                    .addComponent(jLabel4)
+                    .addComponent(lblLocalidad)
                     .addComponent(lblDepartamento)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
+                    .addComponent(lblDescripcion)
+                    .addComponent(lblLatitud)
+                    .addComponent(lblLongitud))
                 .addGap(0, 0, 0)
                 .addGroup(pnlDetalleUbicacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlDetalleUbicacionLayout.createSequentialGroup()
@@ -131,7 +131,7 @@ public class DetalleUbicacionGUI extends JDialog {
                 .addContainerGap())
         );
 
-        pnlDetalleUbicacionLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, jLabel2, jLabel3, jLabel4, lblCalle, lblDepartamento, lblNumero, lblPiso});
+        pnlDetalleUbicacionLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblCalle, lblDepartamento, lblDescripcion, lblLatitud, lblLocalidad, lblLongitud, lblNumero, lblPiso});
 
         pnlDetalleUbicacionLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ftfLatitud, ftfLongitud, ftfNumero, txtCalle, txtDepartamento, txtDescripcion, txtPiso});
 
@@ -156,25 +156,25 @@ public class DetalleUbicacionGUI extends JDialog {
                     .addComponent(txtDepartamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDetalleUbicacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
+                    .addComponent(lblDescripcion)
                     .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDetalleUbicacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(txtLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
+                    .addComponent(lblLocalidad)
                     .addComponent(btnModificar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDetalleUbicacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jLabel1)
+                    .addComponent(lblLatitud)
                     .addComponent(ftfLatitud, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDetalleUbicacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
+                    .addComponent(lblLongitud)
                     .addComponent(ftfLongitud, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
-        pnlDetalleUbicacionLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel1, jLabel2, jLabel3, jLabel4});
+        pnlDetalleUbicacionLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblDescripcion, lblLatitud, lblLocalidad, lblLongitud});
 
         pnlDetalleUbicacionLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {ftfLatitud, ftfLongitud, ftfNumero, txtCalle, txtDepartamento, txtDescripcion, txtLocalidad, txtPiso});
 
@@ -293,12 +293,12 @@ public class DetalleUbicacionGUI extends JDialog {
     private javax.swing.JFormattedTextField ftfLatitud;
     private javax.swing.JFormattedTextField ftfLongitud;
     private javax.swing.JFormattedTextField ftfNumero;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel lblCalle;
     private javax.swing.JLabel lblDepartamento;
+    private javax.swing.JLabel lblDescripcion;
+    private javax.swing.JLabel lblLatitud;
+    private javax.swing.JLabel lblLocalidad;
+    private javax.swing.JLabel lblLongitud;
     private javax.swing.JLabel lblNumero;
     private javax.swing.JLabel lblPiso;
     private javax.swing.JPanel pnlDetalleUbicacion;

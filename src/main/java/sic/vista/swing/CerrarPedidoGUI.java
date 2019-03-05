@@ -1,10 +1,53 @@
 package sic.vista.swing;
 
-public class CerrarPedidoGUI extends javax.swing.JDialog {
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ResourceBundle;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sic.RestClient;
+import sic.modelo.Cliente;
+import sic.modelo.EmpresaActiva;
+import sic.modelo.NuevoPedido;
+import sic.modelo.Pedido;
+import sic.modelo.Ubicacion;
+import sic.modelo.UsuarioActivo;
 
-    public CerrarPedidoGUI(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+public class CerrarPedidoGUI extends JDialog {
+
+    private NuevoPedido nuevoPedido;
+    private Cliente cliente;
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+
+    public CerrarPedidoGUI(NuevoPedido nuevoPedido, Cliente cliente) {
+        this.nuevoPedido = nuevoPedido;
+        this.cliente = cliente;
         initComponents();
+    }
+
+    private void lanzarReportePedido(Pedido pedido) {
+        if (Desktop.isDesktopSupported()) {
+            try {
+                byte[] reporte = RestClient.getRestTemplate()
+                        .getForObject("/pedidos/" + pedido.getId_Pedido() + "/reporte", byte[].class);
+                File f = new File(System.getProperty("user.home") + "/Pedido.pdf");
+                Files.write(f.toPath(), reporte);
+                Desktop.getDesktop().open(f);
+            } catch (IOException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -20,20 +63,25 @@ public class CerrarPedidoGUI extends javax.swing.JDialog {
         txtPiso = new javax.swing.JFormattedTextField();
         lblDepartamento = new javax.swing.JLabel();
         txtDepartamento = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
+        lblDescripcion = new javax.swing.JLabel();
         txtDescripcion = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
+        lblLocalidad = new javax.swing.JLabel();
         txtLocalidad = new javax.swing.JTextField();
-        btnModificar = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        btnModificarLocalidad = new javax.swing.JButton();
+        lblLatitud = new javax.swing.JLabel();
         ftfLatitud = new javax.swing.JFormattedTextField();
-        jLabel2 = new javax.swing.JLabel();
+        lblLongitud = new javax.swing.JLabel();
         ftfLongitud = new javax.swing.JFormattedTextField();
         btnCerrarPedido = new javax.swing.JButton();
         chkEnviarUbicacionFacturacion = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Detalle de Envío");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         PanelCerrarPedido.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
@@ -55,36 +103,30 @@ public class CerrarPedidoGUI extends javax.swing.JDialog {
         lblDepartamento.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblDepartamento.setText("Departamento:");
 
-        txtDepartamento.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDepartamentoActionPerformed(evt);
-            }
-        });
+        lblDescripcion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblDescripcion.setText("Descripción:");
 
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel3.setText("Descripción:");
-
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel4.setText("Localidad:");
+        lblLocalidad.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblLocalidad.setText("Localidad:");
 
         txtLocalidad.setEditable(false);
         txtLocalidad.setEnabled(false);
 
-        btnModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
-        btnModificar.setText("Modificar");
-        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+        btnModificarLocalidad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
+        btnModificarLocalidad.setText("Modificar");
+        btnModificarLocalidad.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnModificarActionPerformed(evt);
+                btnModificarLocalidadActionPerformed(evt);
             }
         });
 
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel1.setText("Latitud:");
+        lblLatitud.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblLatitud.setText("Latitud:");
 
         ftfLatitud.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##0.#######"))));
 
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setText("Longitud:");
+        lblLongitud.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblLongitud.setText("Longitud:");
 
         ftfLongitud.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##0.#######"))));
 
@@ -98,7 +140,7 @@ public class CerrarPedidoGUI extends javax.swing.JDialog {
                     .addGroup(PanelCerrarPedidoLayout.createSequentialGroup()
                         .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblDepartamento)
-                            .addComponent(jLabel3)
+                            .addComponent(lblDescripcion)
                             .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(lblPiso)
                                 .addComponent(lblNumero))
@@ -111,15 +153,15 @@ public class CerrarPedidoGUI extends javax.swing.JDialog {
                             .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtCalle, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(PanelCerrarPedidoLayout.createSequentialGroup()
-                        .addComponent(jLabel4)
+                        .addComponent(lblLocalidad)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtLocalidad)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnModificarLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(PanelCerrarPedidoLayout.createSequentialGroup()
                         .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
+                            .addComponent(lblLatitud)
+                            .addComponent(lblLongitud))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(ftfLatitud, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -127,7 +169,7 @@ public class CerrarPedidoGUI extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        PanelCerrarPedidoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, jLabel2, jLabel3, jLabel4, lblCalle, lblDepartamento, lblNumero, lblPiso});
+        PanelCerrarPedidoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblCalle, lblDepartamento, lblDescripcion, lblLatitud, lblLocalidad, lblLongitud, lblNumero, lblPiso});
 
         PanelCerrarPedidoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ftfLatitud, ftfLongitud, ftfNumero, txtCalle, txtDepartamento, txtDescripcion, txtPiso});
 
@@ -152,32 +194,42 @@ public class CerrarPedidoGUI extends javax.swing.JDialog {
                     .addComponent(txtDepartamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
+                    .addComponent(lblDescripcion)
                     .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(5, 5, 5)
                 .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
+                    .addComponent(lblLocalidad)
                     .addComponent(txtLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnModificar))
+                    .addComponent(btnModificarLocalidad))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
+                    .addComponent(lblLatitud)
                     .addComponent(ftfLatitud, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
+                    .addComponent(lblLongitud)
                     .addComponent(ftfLongitud, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        PanelCerrarPedidoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel1, jLabel2, jLabel3, jLabel4, lblCalle, lblDepartamento, lblNumero, lblPiso});
+        PanelCerrarPedidoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblCalle, lblDepartamento, lblDescripcion, lblLatitud, lblLocalidad, lblLongitud, lblNumero, lblPiso});
 
         PanelCerrarPedidoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {ftfLatitud, ftfLongitud, ftfNumero, txtCalle, txtDepartamento, txtDescripcion, txtLocalidad, txtPiso});
 
         btnCerrarPedido.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
         btnCerrarPedido.setText("Cerrar Pedido");
+        btnCerrarPedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrarPedidoActionPerformed(evt);
+            }
+        });
 
         chkEnviarUbicacionFacturacion.setText("Enviar a la dirección de Facturación");
+        chkEnviarUbicacionFacturacion.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chkEnviarUbicacionFacturacionItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -213,37 +265,130 @@ public class CerrarPedidoGUI extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-//        DetalleLocalidadGUI gui_DetalleLocalidad = new DetalleLocalidadGUI(ubicacionAModificar);
-//        gui_DetalleLocalidad.setModal(true);
-//        gui_DetalleLocalidad.setLocationRelativeTo(this);
-//        gui_DetalleLocalidad.setVisible(true);
-//        ubicacionAModificar.setNombreLocalidad(gui_DetalleLocalidad.getLocalidadSeleccionada().getNombre());
-//        ubicacionAModificar.setIdLocalidad(gui_DetalleLocalidad.getLocalidadSeleccionada().getId_Localidad());
-//        ubicacionAModificar.setCodigoPostal(gui_DetalleLocalidad.getLocalidadSeleccionada().getCodigoPostal());
-//        ubicacionAModificar.setNombreProvincia(gui_DetalleLocalidad.getLocalidadSeleccionada().getNombreProvincia());
-//        ubicacionAModificar.setIdProvincia(gui_DetalleLocalidad.getLocalidadSeleccionada().getIdProvincia());
-//        txtLocalidad.setText(ubicacionAModificar.getNombreLocalidad() + " (" + ubicacionAModificar.getCodigoPostal() + ") " + ubicacionAModificar.getNombreProvincia());
-    }//GEN-LAST:event_btnModificarActionPerformed
+    private void btnModificarLocalidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarLocalidadActionPerformed
+        DetalleLocalidadGUI gui_DetalleLocalidad = new DetalleLocalidadGUI(this.cliente.getUbicacionEnvio());
+        gui_DetalleLocalidad.setModal(true);
+        gui_DetalleLocalidad.setLocationRelativeTo(this);
+        gui_DetalleLocalidad.setVisible(true);
+        this.cliente.getUbicacionEnvio().setNombreLocalidad(gui_DetalleLocalidad.getLocalidadSeleccionada().getNombre());
+        this.cliente.getUbicacionEnvio().setIdLocalidad(gui_DetalleLocalidad.getLocalidadSeleccionada().getId_Localidad());
+        this.cliente.getUbicacionEnvio().setCodigoPostal(gui_DetalleLocalidad.getLocalidadSeleccionada().getCodigoPostal());
+        this.cliente.getUbicacionEnvio().setNombreProvincia(gui_DetalleLocalidad.getLocalidadSeleccionada().getNombreProvincia());
+        this.cliente.getUbicacionEnvio().setIdProvincia(gui_DetalleLocalidad.getLocalidadSeleccionada().getIdProvincia());
+        txtLocalidad.setText(this.cliente.getUbicacionEnvio().getNombreLocalidad()
+                + " (" + this.cliente.getUbicacionEnvio().getCodigoPostal() + ") "
+                + this.cliente.getUbicacionEnvio().getNombreProvincia());
+    }//GEN-LAST:event_btnModificarLocalidadActionPerformed
 
-    private void txtDepartamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDepartamentoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtDepartamentoActionPerformed
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        if (this.cliente.getUbicacionEnvio() != null) {
+            txtCalle.setText(this.cliente.getUbicacionEnvio().getCalle());
+            ftfNumero.setText(this.cliente.getUbicacionEnvio().getNumero().toString());
+            if (this.cliente.getUbicacionEnvio().getPiso() != null) {
+                txtPiso.setText(this.cliente.getUbicacionEnvio().getPiso().toString());
+            }
+            if (this.cliente.getUbicacionEnvio().getDepartamento() != null) {
+                txtDepartamento.setText(this.cliente.getUbicacionEnvio().getDepartamento());
+            }
+            if (this.cliente.getUbicacionEnvio().getDescripcion() != null) {
+                txtDescripcion.setText(this.cliente.getUbicacionEnvio().getDescripcion());
+            }
+            if (this.cliente.getUbicacionEnvio().getNombreLocalidad() != null) {
+                txtLocalidad.setText(this.cliente.getUbicacionEnvio().getNombreLocalidad() + " " + this.cliente.getUbicacionEnvio().getNombreProvincia());
+            }
+            if (this.cliente.getUbicacionEnvio().getLatitud() != null) {
+                ftfLatitud.setText(this.cliente.getUbicacionEnvio().getLatitud().toString());
+            }
+            if (this.cliente.getUbicacionEnvio().getLongitud() != null) {
+                ftfLongitud.setText(this.cliente.getUbicacionEnvio().getLongitud().toString());
+            }
+        } else {
+            this.cliente.setUbicacionEnvio(new Ubicacion());
+        }
+    }//GEN-LAST:event_formWindowOpened
+
+    private void btnCerrarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarPedidoActionPerformed
+        if (txtCalle.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_ubicacion_calle_vacia"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            if (ftfNumero.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_ubicacion_numero_vacio"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                cliente.getUbicacionEnvio().setCalle(txtCalle.getText());
+                cliente.getUbicacionEnvio().setNumero(Integer.valueOf(ftfNumero.getText()));
+                if (!txtPiso.getText().isEmpty()) {
+                    cliente.getUbicacionEnvio().setPiso(Integer.valueOf(txtPiso.getText()));
+                }
+                if (!txtDepartamento.getText().isEmpty()) {
+                    cliente.getUbicacionEnvio().setDepartamento(txtDepartamento.getText());
+                }
+                if (!txtDescripcion.getText().isEmpty()) {
+                    cliente.getUbicacionEnvio().setDescripcion(txtDescripcion.getText());
+                }
+                if (!ftfLatitud.getText().isEmpty()) {
+                    cliente.getUbicacionEnvio().setLatitud(Double.valueOf(ftfLatitud.getText()));
+                }
+                if (!ftfLongitud.getText().isEmpty()) {
+                    cliente.getUbicacionEnvio().setLongitud(Double.valueOf(ftfLongitud.getText()));
+                }
+                if (cliente.getUbicacionEnvio().getIdUbicacion() == 0L) {
+                    RestClient.getRestTemplate().postForObject("/ubicaciones/clientes/" + cliente.getId_Cliente() + "/envio", cliente.getUbicacionEnvio(), Ubicacion.class);
+                } else {
+                    RestClient.getRestTemplate().put("/ubicaciones", cliente.getUbicacionEnvio());
+                }
+                Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?idEmpresa="
+                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
+                        + "&idCliente=" + cliente.getId_Cliente()
+                        + "&usarUbicacionDeFacturacion=" + chkEnviarUbicacionFacturacion.isSelected(), nuevoPedido, Pedido.class);
+                int reply = JOptionPane.showConfirmDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                        "Aviso", JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION) {
+                    this.lanzarReportePedido(p);
+                }
+                this.dispose();
+            }
+        }
+    }//GEN-LAST:event_btnCerrarPedidoActionPerformed
+
+    private void chkEnviarUbicacionFacturacionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkEnviarUbicacionFacturacionItemStateChanged
+        lblCalle.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
+        lblDepartamento.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
+        lblDescripcion.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
+        lblLatitud.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
+        lblLocalidad.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
+        lblLongitud.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
+        lblNumero.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
+        lblPiso.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
+        txtCalle.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
+        txtDepartamento.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
+        txtDescripcion.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
+        txtLocalidad.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
+        txtPiso.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
+        ftfLatitud.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
+        ftfLongitud.setEnabled(chkEnviarUbicacionFacturacion.isSelected());
+        ftfNumero.setEnabled(chkEnviarUbicacionFacturacion.isSelected());           
+    }//GEN-LAST:event_chkEnviarUbicacionFacturacionItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelCerrarPedido;
     private javax.swing.JButton btnCerrarPedido;
-    private javax.swing.JButton btnModificar;
+    private javax.swing.JButton btnModificarLocalidad;
     private javax.swing.JCheckBox chkEnviarUbicacionFacturacion;
     private javax.swing.JFormattedTextField ftfLatitud;
     private javax.swing.JFormattedTextField ftfLongitud;
     private javax.swing.JFormattedTextField ftfNumero;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel lblCalle;
     private javax.swing.JLabel lblDepartamento;
+    private javax.swing.JLabel lblDescripcion;
+    private javax.swing.JLabel lblLatitud;
+    private javax.swing.JLabel lblLocalidad;
+    private javax.swing.JLabel lblLongitud;
     private javax.swing.JLabel lblNumero;
     private javax.swing.JLabel lblPiso;
     private javax.swing.JTextField txtCalle;

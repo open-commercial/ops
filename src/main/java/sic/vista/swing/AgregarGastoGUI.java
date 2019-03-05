@@ -14,11 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.Empresa;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.FormaDePago;
 import sic.modelo.Gasto;
-import sic.modelo.UsuarioActivo;
 
 public class AgregarGastoGUI extends JDialog {
     
@@ -26,7 +24,6 @@ public class AgregarGastoGUI extends JDialog {
     private final List<FormaDePago> formasDePago;
     
     public AgregarGastoGUI(List<FormaDePago> formasDePago) {
-        this.setModal(true);
         this.formasDePago = formasDePago;
         this.initComponents();
         this.setIcon();
