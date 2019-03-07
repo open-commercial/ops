@@ -671,7 +671,9 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 cerrarPedido.setModal(true);
                 cerrarPedido.setLocationRelativeTo(this);
                 cerrarPedido.setVisible(true);
-                this.limpiarYRecargarComponentes();
+                if (cerrarPedido.isActualizacionExitosa()) {
+                   this.limpiarYRecargarComponentes(); 
+                }
             } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificarPedido == true) {
                 this.actualizarPedido(pedido);
             }

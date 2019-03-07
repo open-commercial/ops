@@ -1,8 +1,5 @@
 package sic.vista.swing;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -13,8 +10,6 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.EmpresaActiva;
-import sic.modelo.Localidad;
-import sic.modelo.Provincia;
 import sic.modelo.Transportista;
 import sic.modelo.TipoDeOperacion;
 import sic.modelo.Ubicacion;
@@ -47,7 +42,7 @@ public class DetalleTransportistaGUI extends JDialog {
     private void cargarTransportistaParaModificar() {
         txt_Nombre.setText(transportistaModificar.getNombre());
                 if (transportistaModificar.getUbicacion() != null) {
-            txtUbicacion.setText(transportistaModificar.getUbicacion().getCalle()
+            lblDetalleUbicacionTransportista.setText(transportistaModificar.getUbicacion().getCalle()
                     + " "
                     + transportistaModificar.getUbicacion().getNumero()
                     + (transportistaModificar.getUbicacion().getPiso() != null
@@ -86,9 +81,9 @@ public class DetalleTransportistaGUI extends JDialog {
         txt_Web = new javax.swing.JTextField();
         lbl_Telefono = new javax.swing.JLabel();
         txt_Telefono = new javax.swing.JTextField();
-        txtUbicacion = new javax.swing.JTextField();
         btnUbicacion = new javax.swing.JButton();
         lblUbicacion = new javax.swing.JLabel();
+        lblDetalleUbicacionTransportista = new javax.swing.JLabel();
         btn_Guardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -111,10 +106,7 @@ public class DetalleTransportistaGUI extends JDialog {
         lbl_Telefono.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Telefono.setText("Teléfono:");
 
-        txtUbicacion.setEnabled(false);
-
-        btnUbicacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
-        btnUbicacion.setText("Modificar");
+        btnUbicacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/EditMap_16x16.png"))); // NOI18N
         btnUbicacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUbicacionActionPerformed(evt);
@@ -123,6 +115,9 @@ public class DetalleTransportistaGUI extends JDialog {
 
         lblUbicacion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblUbicacion.setText("Ubicación:");
+
+        lblDetalleUbicacionTransportista.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblDetalleUbicacionTransportista.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
         panelPrincipal.setLayout(panelPrincipalLayout);
@@ -135,13 +130,13 @@ public class DetalleTransportistaGUI extends JDialog {
                     .addComponent(lbl_Web, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
                     .addComponent(lbl_Telefono, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblUbicacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txt_Web)
                     .addComponent(txt_Telefono)
                     .addComponent(txt_Nombre)
                     .addGroup(panelPrincipalLayout.createSequentialGroup()
-                        .addComponent(txtUbicacion, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+                        .addComponent(lblDetalleUbicacionTransportista, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
                         .addComponent(btnUbicacion)))
                 .addContainerGap())
@@ -156,8 +151,8 @@ public class DetalleTransportistaGUI extends JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblUbicacion)
-                    .addComponent(txtUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnUbicacion))
+                    .addComponent(btnUbicacion)
+                    .addComponent(lblDetalleUbicacionTransportista))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_Telefono)
@@ -168,6 +163,8 @@ public class DetalleTransportistaGUI extends JDialog {
                     .addComponent(txt_Web, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblDetalleUbicacionTransportista, txt_Telefono});
 
         btn_Guardar.setForeground(java.awt.Color.blue);
         btn_Guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
@@ -267,7 +264,7 @@ public class DetalleTransportistaGUI extends JDialog {
         guiDetalleUbicacion.setVisible(true);
         if (guiDetalleUbicacion.getUbicacionModificada() != null) {
             this.ubicacion = guiDetalleUbicacion.getUbicacionModificada();
-            txtUbicacion.setText(this.ubicacion.getCalle()
+            lblDetalleUbicacionTransportista.setText(this.ubicacion.getCalle()
                 + " "
                 + this.ubicacion.getNumero()
                 + (this.ubicacion.getPiso() != null
@@ -277,7 +274,7 @@ public class DetalleTransportistaGUI extends JDialog {
                     ? this.ubicacion.getDepartamento()
                     : "")
                 + (this.ubicacion.getNombreLocalidad() != null
-                    ? ", " + this.ubicacion.getNombreProvincia()
+                    ? ", " + this.ubicacion.getNombreLocalidad()
                     : " ")
                 + " "
                 + (this.ubicacion.getNombreProvincia() != null
@@ -289,12 +286,12 @@ public class DetalleTransportistaGUI extends JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnUbicacion;
     private javax.swing.JButton btn_Guardar;
+    private javax.swing.JLabel lblDetalleUbicacionTransportista;
     private javax.swing.JLabel lblUbicacion;
     private javax.swing.JLabel lbl_Nombre;
     private javax.swing.JLabel lbl_Telefono;
     private javax.swing.JLabel lbl_Web;
     private javax.swing.JPanel panelPrincipal;
-    private javax.swing.JTextField txtUbicacion;
     private javax.swing.JTextField txt_Nombre;
     private javax.swing.JTextField txt_Telefono;
     private javax.swing.JTextField txt_Web;

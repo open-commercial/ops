@@ -73,13 +73,13 @@
                       <Component id="lbl_Telefono" alignment="0" max="32767" attributes="1"/>
                       <Component id="lblUbicacion" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="txt_Web" max="32767" attributes="1"/>
                       <Component id="txt_Telefono" alignment="0" max="32767" attributes="1"/>
                       <Component id="txt_Nombre" alignment="0" max="32767" attributes="1"/>
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="txtUbicacion" pref="322" max="32767" attributes="1"/>
+                          <Component id="lblDetalleUbicacionTransportista" pref="365" max="32767" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Component id="btnUbicacion" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -99,13 +99,13 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lblUbicacion" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtUbicacion" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="btnUbicacion" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblDetalleUbicacionTransportista" linkSize="1" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lbl_Telefono" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txt_Telefono" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txt_Telefono" linkSize="1" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -145,17 +145,11 @@
         </Component>
         <Component class="javax.swing.JTextField" name="txt_Telefono">
         </Component>
-        <Component class="javax.swing.JTextField" name="txtUbicacion">
-          <Properties>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JButton" name="btnUbicacion">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/AddMap_16x16.png"/>
+              <Image iconType="3" name="/sic/icons/EditMap_16x16.png"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Modificar"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUbicacionActionPerformed"/>
@@ -165,6 +159,16 @@
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="Ubicaci&#xf3;n:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblDetalleUbicacionTransportista">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="0"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                <TitledBorder/>
+              </Border>
+            </Property>
           </Properties>
         </Component>
       </SubComponents>

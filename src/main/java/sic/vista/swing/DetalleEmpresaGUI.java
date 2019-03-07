@@ -17,7 +17,6 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.CategoriaIVA;
 import sic.modelo.Empresa;
-import sic.modelo.Localidad;
 import sic.modelo.TipoDeOperacion;
 import sic.modelo.Ubicacion;
 import sic.util.FiltroImagenes;
@@ -70,7 +69,7 @@ public class DetalleEmpresaGUI extends JDialog {
         txt_Email.setText(empresaModificar.getEmail());
         txt_Telefono.setText(empresaModificar.getTelefono());
         if (empresaModificar.getUbicacion() != null) {
-            txtUbicacion.setText(empresaModificar.getUbicacion().getCalle()
+            lblDetalleUbicacionEmpresa.setText(empresaModificar.getUbicacion().getCalle()
                     + " "
                     + empresaModificar.getUbicacion().getNumero()
                     + (empresaModificar.getUbicacion().getPiso() != null
@@ -139,8 +138,8 @@ public class DetalleEmpresaGUI extends JDialog {
         lblAspectRatio = new javax.swing.JLabel();
         lblTamanioMax = new javax.swing.JLabel();
         lblUbicacion = new javax.swing.JLabel();
-        txtUbicacion = new javax.swing.JTextField();
         btnUbicacion = new javax.swing.JButton();
+        lblDetalleUbicacionEmpresa = new javax.swing.JLabel();
         btn_Guardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -229,15 +228,15 @@ public class DetalleEmpresaGUI extends JDialog {
         lblUbicacion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblUbicacion.setText("Ubicación:");
 
-        txtUbicacion.setEnabled(false);
-
-        btnUbicacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
-        btnUbicacion.setText("Modificar");
+        btnUbicacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/EditMap_16x16.png"))); // NOI18N
         btnUbicacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUbicacionActionPerformed(evt);
             }
         });
+
+        lblDetalleUbicacionEmpresa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblDetalleUbicacionEmpresa.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
         panelPrincipal.setLayout(panelPrincipalLayout);
@@ -259,7 +258,7 @@ public class DetalleEmpresaGUI extends JDialog {
                 .addGap(0, 0, 0)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
-                        .addComponent(txtUbicacion)
+                        .addComponent(lblDetalleUbicacionEmpresa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
                         .addComponent(btnUbicacion))
                     .addComponent(txt_Direccion, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -335,10 +334,12 @@ public class DetalleEmpresaGUI extends JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btnUbicacion)
-                    .addComponent(txtUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblUbicacion))
+                    .addComponent(lblUbicacion)
+                    .addComponent(lblDetalleUbicacionEmpresa))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblDetalleUbicacionEmpresa, txt_Telefono});
 
         btn_Guardar.setForeground(java.awt.Color.blue);
         btn_Guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
@@ -501,7 +502,7 @@ public class DetalleEmpresaGUI extends JDialog {
         guiDetalleUbicacion.setVisible(true);
         if (guiDetalleUbicacion.getUbicacionModificada() != null) {
             this.ubicacion = guiDetalleUbicacion.getUbicacionModificada();
-            txtUbicacion.setText(this.ubicacion.getCalle()
+            lblDetalleUbicacionEmpresa.setText(this.ubicacion.getCalle()
                     + " "
                     + this.ubicacion.getNumero()
                     + (this.ubicacion.getPiso() != null
@@ -511,7 +512,7 @@ public class DetalleEmpresaGUI extends JDialog {
                     ? this.ubicacion.getDepartamento()
                     : "")
                     + (this.ubicacion.getNombreLocalidad() != null
-                    ? ", " + this.ubicacion.getNombreProvincia()
+                    ? ", " + this.ubicacion.getNombreLocalidad()
                     : " ")
                     + " "
                     + (this.ubicacion.getNombreProvincia() != null
@@ -528,6 +529,7 @@ public class DetalleEmpresaGUI extends JDialog {
     private javax.swing.JComboBox cmbCategoriaIVA;
     private com.toedter.calendar.JDateChooser dc_FechaInicioActividad;
     private javax.swing.JLabel lblAspectRatio;
+    private javax.swing.JLabel lblDetalleUbicacionEmpresa;
     private javax.swing.JLabel lblTamanioMax;
     private javax.swing.JLabel lblUbicacion;
     private javax.swing.JLabel lbl_CUIP;
@@ -543,7 +545,6 @@ public class DetalleEmpresaGUI extends JDialog {
     private javax.swing.JPanel panelPrincipal;
     private javax.swing.JFormattedTextField txtIdFiscal;
     private javax.swing.JFormattedTextField txtIngresosBrutos;
-    private javax.swing.JTextField txtUbicacion;
     private javax.swing.JTextField txt_Direccion;
     private javax.swing.JTextField txt_Email;
     private javax.swing.JTextField txt_Lema;

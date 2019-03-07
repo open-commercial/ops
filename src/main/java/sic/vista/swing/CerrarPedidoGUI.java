@@ -4,6 +4,9 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -14,8 +17,10 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
+import sic.modelo.Localidad;
 import sic.modelo.NuevoPedido;
 import sic.modelo.Pedido;
+import sic.modelo.Provincia;
 import sic.modelo.Ubicacion;
 import sic.modelo.UsuarioActivo;
 
@@ -23,13 +28,16 @@ public class CerrarPedidoGUI extends JDialog {
 
     private final NuevoPedido nuevoPedido;
     private final Cliente cliente;
+    private Localidad localidadSeleccionada;
     private Pedido pedido;
+    private Ubicacion ubicacionAModificar;
     private boolean actualizacionExitosa = false;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public CerrarPedidoGUI(NuevoPedido nuevoPedido, Cliente cliente) {
         this.nuevoPedido = nuevoPedido;
         this.cliente = cliente;
+        this.ubicacionAModificar = this.cliente.getUbicacionEnvio();
         initComponents();
     }
 
@@ -37,7 +45,61 @@ public class CerrarPedidoGUI extends JDialog {
         this.nuevoPedido = null;
         this.cliente = cliente;
         this.pedido = pedido;
+        this.ubicacionAModificar = this.cliente.getUbicacionEnvio();
         initComponents();
+    }
+    
+    private void cargarProvincias() {
+        try {
+            cmbProvinciasBusqueda.removeAllItems();
+            cmbProvinciasBusqueda.addItem(null);
+            List<Provincia> provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
+                    .getForObject("/ubicaciones/provincias", Provincia[].class)));
+            provincias.stream().forEach(p -> {
+                cmbProvinciasBusqueda.addItem(p);
+            });
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void cargarLocalidadesDeLaProvincia(Provincia provincia) {
+        try {
+            cmbLocalidad.removeAllItems();
+            cmbLocalidad.addItem(null);
+            if (provincia != null) {
+                List<Localidad> localidades = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
+                        .getForObject("/ubicaciones/localidades/provincias/" + provincia.getId_Provincia(),
+                                Localidad[].class)));
+                localidades.stream().forEach(l -> cmbLocalidad.addItem(l));
+            }
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void seleccionarProvinciaYProvinciaDeCliente() {
+        if (this.cliente.getUbicacionEnvio() != null) {
+            if (this.cliente.getUbicacionEnvio().getIdProvincia() != null) {
+                Provincia provinciaASeleccionar = RestClient.getRestTemplate().getForObject("/ubicaciones/provincias/" + this.cliente.getUbicacionEnvio().getIdProvincia(), Provincia.class);
+                cmbProvinciasBusqueda.setSelectedItem(provinciaASeleccionar);
+            }
+            if (this.cliente.getUbicacionEnvio().getIdLocalidad() != null) {
+                Localidad localidadASeleccionar = RestClient.getRestTemplate().getForObject("/ubicaciones/localidades/" + this.cliente.getUbicacionEnvio().getIdLocalidad(), Localidad.class);
+                cmbLocalidad.setSelectedItem(localidadASeleccionar);
+            }
+            localidadSeleccionada = (Localidad) cmbLocalidad.getSelectedItem();
+        }
     }
 
     private void lanzarReportePedido(Pedido pedido) {
@@ -80,18 +142,21 @@ public class CerrarPedidoGUI extends JDialog {
         txtDepartamento = new javax.swing.JTextField();
         lblDescripcion = new javax.swing.JLabel();
         txtDescripcion = new javax.swing.JTextField();
-        lblLocalidad = new javax.swing.JLabel();
-        txtLocalidad = new javax.swing.JTextField();
-        btnModificarLocalidad = new javax.swing.JButton();
         lblLatitud = new javax.swing.JLabel();
         ftfLatitud = new javax.swing.JFormattedTextField();
         lblLongitud = new javax.swing.JLabel();
         ftfLongitud = new javax.swing.JFormattedTextField();
+        txtCodigoPostal = new javax.swing.JTextField();
+        lblCodigoPostal = new javax.swing.JLabel();
+        lblLocalidades = new javax.swing.JLabel();
+        cmbLocalidad = new javax.swing.JComboBox<>();
+        lblProvincia = new javax.swing.JLabel();
+        cmbProvinciasBusqueda = new javax.swing.JComboBox<>();
         btnCerrarPedido = new javax.swing.JButton();
         chkEnviarUbicacionFacturacion = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Detalle de Envío");
+        setTitle("Cerrar Pedido");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -121,20 +186,6 @@ public class CerrarPedidoGUI extends JDialog {
         lblDescripcion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblDescripcion.setText("Descripción:");
 
-        lblLocalidad.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblLocalidad.setText("Localidad:");
-
-        txtLocalidad.setEditable(false);
-        txtLocalidad.setEnabled(false);
-
-        btnModificarLocalidad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
-        btnModificarLocalidad.setText("Modificar");
-        btnModificarLocalidad.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnModificarLocalidadActionPerformed(evt);
-            }
-        });
-
         lblLatitud.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblLatitud.setText("Latitud:");
 
@@ -145,6 +196,29 @@ public class CerrarPedidoGUI extends JDialog {
 
         ftfLongitud.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##0.#######"))));
 
+        txtCodigoPostal.setEditable(false);
+
+        lblCodigoPostal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblCodigoPostal.setText("Código Postal:");
+
+        lblLocalidades.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblLocalidades.setText("Localidad:");
+
+        cmbLocalidad.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbLocalidadItemStateChanged(evt);
+            }
+        });
+
+        lblProvincia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblProvincia.setText("Provincia:");
+
+        cmbProvinciasBusqueda.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbProvinciasBusquedaItemStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout PanelCerrarPedidoLayout = new javax.swing.GroupLayout(PanelCerrarPedido);
         PanelCerrarPedido.setLayout(PanelCerrarPedidoLayout);
         PanelCerrarPedidoLayout.setHorizontalGroup(
@@ -153,40 +227,47 @@ public class CerrarPedidoGUI extends JDialog {
                 .addContainerGap()
                 .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(PanelCerrarPedidoLayout.createSequentialGroup()
+                        .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(lblCodigoPostal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblProvincia, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblLocalidades, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblDepartamento)
-                            .addComponent(lblDescripcion)
-                            .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(lblPiso)
-                                .addComponent(lblNumero))
-                            .addComponent(lblCalle))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(ftfNumero, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtPiso, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtDepartamento, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtCalle, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(PanelCerrarPedidoLayout.createSequentialGroup()
-                        .addComponent(lblLocalidad)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtLocalidad)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnModificarLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cmbProvinciasBusqueda, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cmbLocalidad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtCodigoPostal, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(PanelCerrarPedidoLayout.createSequentialGroup()
                         .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblLatitud)
-                            .addComponent(lblLongitud))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ftfLatitud, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ftfLongitud, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(PanelCerrarPedidoLayout.createSequentialGroup()
+                                .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblDepartamento)
+                                    .addComponent(lblDescripcion)
+                                    .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(lblPiso)
+                                        .addComponent(lblNumero))
+                                    .addComponent(lblCalle))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(ftfNumero, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtPiso, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtDepartamento, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtCalle, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(PanelCerrarPedidoLayout.createSequentialGroup()
+                                .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblLatitud)
+                                    .addComponent(lblLongitud))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(ftfLatitud, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(ftfLongitud, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
-        PanelCerrarPedidoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblCalle, lblDepartamento, lblDescripcion, lblLatitud, lblLocalidad, lblLongitud, lblNumero, lblPiso});
+        PanelCerrarPedidoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblCalle, lblCodigoPostal, lblDepartamento, lblDescripcion, lblLatitud, lblLocalidades, lblLongitud, lblNumero, lblPiso, lblProvincia});
 
-        PanelCerrarPedidoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ftfLatitud, ftfLongitud, ftfNumero, txtCalle, txtDepartamento, txtDescripcion, txtPiso});
+        PanelCerrarPedidoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ftfLatitud, ftfLongitud, ftfNumero, txtCalle, txtCodigoPostal, txtDepartamento, txtDescripcion, txtPiso});
 
         PanelCerrarPedidoLayout.setVerticalGroup(
             PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -211,11 +292,18 @@ public class CerrarPedidoGUI extends JDialog {
                 .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblDescripcion)
                     .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5)
-                .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblLocalidad)
-                    .addComponent(txtLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnModificarLocalidad))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(cmbProvinciasBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblProvincia))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(cmbLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblLocalidades))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(txtCodigoPostal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCodigoPostal, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(PanelCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblLatitud)
@@ -227,10 +315,11 @@ public class CerrarPedidoGUI extends JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        PanelCerrarPedidoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblCalle, lblDepartamento, lblDescripcion, lblLatitud, lblLocalidad, lblLongitud, lblNumero, lblPiso});
+        PanelCerrarPedidoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblCalle, lblCodigoPostal, lblDepartamento, lblDescripcion, lblLatitud, lblLocalidades, lblLongitud, lblNumero, lblPiso, lblProvincia});
 
-        PanelCerrarPedidoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {ftfLatitud, ftfLongitud, ftfNumero, txtCalle, txtDepartamento, txtDescripcion, txtLocalidad, txtPiso});
+        PanelCerrarPedidoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {ftfLatitud, ftfLongitud, ftfNumero, txtCalle, txtCodigoPostal, txtDepartamento, txtDescripcion, txtPiso});
 
+        btnCerrarPedido.setForeground(java.awt.Color.blue);
         btnCerrarPedido.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
         btnCerrarPedido.setText("Cerrar Pedido");
         btnCerrarPedido.addActionListener(new java.awt.event.ActionListener() {
@@ -274,26 +363,11 @@ public class CerrarPedidoGUI extends JDialog {
                 .addComponent(PanelCerrarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCerrarPedido)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnModificarLocalidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarLocalidadActionPerformed
-        DetalleLocalidadGUI gui_DetalleLocalidad = new DetalleLocalidadGUI(this.cliente.getUbicacionEnvio());
-        gui_DetalleLocalidad.setModal(true);
-        gui_DetalleLocalidad.setLocationRelativeTo(this);
-        gui_DetalleLocalidad.setVisible(true);
-        this.cliente.getUbicacionEnvio().setNombreLocalidad(gui_DetalleLocalidad.getLocalidadSeleccionada().getNombre());
-        this.cliente.getUbicacionEnvio().setIdLocalidad(gui_DetalleLocalidad.getLocalidadSeleccionada().getId_Localidad());
-        this.cliente.getUbicacionEnvio().setCodigoPostal(gui_DetalleLocalidad.getLocalidadSeleccionada().getCodigoPostal());
-        this.cliente.getUbicacionEnvio().setNombreProvincia(gui_DetalleLocalidad.getLocalidadSeleccionada().getNombreProvincia());
-        this.cliente.getUbicacionEnvio().setIdProvincia(gui_DetalleLocalidad.getLocalidadSeleccionada().getIdProvincia());
-        txtLocalidad.setText(this.cliente.getUbicacionEnvio().getNombreLocalidad()
-                + " (" + this.cliente.getUbicacionEnvio().getCodigoPostal() + ") "
-                + this.cliente.getUbicacionEnvio().getNombreProvincia());
-    }//GEN-LAST:event_btnModificarLocalidadActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         if (this.cliente.getUbicacionEnvio() != null) {
@@ -308,9 +382,6 @@ public class CerrarPedidoGUI extends JDialog {
             if (this.cliente.getUbicacionEnvio().getDescripcion() != null) {
                 txtDescripcion.setText(this.cliente.getUbicacionEnvio().getDescripcion());
             }
-            if (this.cliente.getUbicacionEnvio().getNombreLocalidad() != null) {
-                txtLocalidad.setText(this.cliente.getUbicacionEnvio().getNombreLocalidad() + " " + this.cliente.getUbicacionEnvio().getNombreProvincia());
-            }
             if (this.cliente.getUbicacionEnvio().getLatitud() != null) {
                 ftfLatitud.setText(this.cliente.getUbicacionEnvio().getLatitud().toString());
             }
@@ -320,6 +391,9 @@ public class CerrarPedidoGUI extends JDialog {
         } else {
             this.cliente.setUbicacionEnvio(new Ubicacion());
         }
+        this.cargarProvincias();
+        this.cargarLocalidadesDeLaProvincia((Provincia) cmbProvinciasBusqueda.getSelectedItem());
+        this.seleccionarProvinciaYProvinciaDeCliente();
     }//GEN-LAST:event_formWindowOpened
 
     private void btnCerrarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarPedidoActionPerformed
@@ -355,7 +429,19 @@ public class CerrarPedidoGUI extends JDialog {
                 } else {
                     RestClient.getRestTemplate().put("/ubicaciones", cliente.getUbicacionEnvio());
                 }
+                if (this.localidadSeleccionada != null) {
+                    ubicacionAModificar.setNombreLocalidad(localidadSeleccionada.getNombre());
+                    ubicacionAModificar.setIdLocalidad(localidadSeleccionada.getId_Localidad());
+                    ubicacionAModificar.setCodigoPostal(localidadSeleccionada.getCodigoPostal());
+                    ubicacionAModificar.setNombreProvincia(localidadSeleccionada.getNombreProvincia());
+                    ubicacionAModificar.setIdProvincia(localidadSeleccionada.getIdProvincia());
+                }
                 try {
+                    if (cliente.getUbicacionEnvio() == null && ubicacionAModificar != null) {
+                        RestClient.getRestTemplate().postForObject("/ubicaciones/clientes/" + cliente.getId_Cliente() + "/envio", ubicacionAModificar, Ubicacion.class);
+                    } else if (cliente.getUbicacionEnvio() != null && ubicacionAModificar != null) {
+                        RestClient.getRestTemplate().put("/ubicaciones", ubicacionAModificar);
+                    }
                     if (nuevoPedido != null) {
                         Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?idEmpresa="
                                 + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
@@ -396,40 +482,67 @@ public class CerrarPedidoGUI extends JDialog {
         lblDepartamento.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
         lblDescripcion.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
         lblLatitud.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
-        lblLocalidad.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
         lblLongitud.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
         lblNumero.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
         lblPiso.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
         txtCalle.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
         txtDepartamento.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
         txtDescripcion.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
-        txtLocalidad.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
         txtPiso.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
         ftfLatitud.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
         ftfLongitud.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
         ftfNumero.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
+        lblProvincia.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
+        cmbProvinciasBusqueda.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
+        lblLocalidades.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
+        cmbLocalidad.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
+        lblCodigoPostal.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
+        txtCodigoPostal.setEnabled(!chkEnviarUbicacionFacturacion.isSelected());
+                
     }//GEN-LAST:event_chkEnviarUbicacionFacturacionItemStateChanged
+
+    private void cmbLocalidadItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbLocalidadItemStateChanged
+        localidadSeleccionada = (Localidad) cmbLocalidad.getSelectedItem();
+        if (localidadSeleccionada != null) {
+            if (this.cliente.getUbicacionEnvio() == null) {
+                this.cliente.setUbicacionEnvio(new Ubicacion());
+            }
+            txtCodigoPostal.setText(localidadSeleccionada.getCodigoPostal());
+            ubicacionAModificar.setNombreLocalidad(localidadSeleccionada.getNombre());
+            ubicacionAModificar.setIdLocalidad(localidadSeleccionada.getId_Localidad());
+            ubicacionAModificar.setCodigoPostal(localidadSeleccionada.getCodigoPostal());
+            ubicacionAModificar.setNombreProvincia(localidadSeleccionada.getNombreProvincia());
+            ubicacionAModificar.setIdProvincia(localidadSeleccionada.getIdProvincia());
+        }
+    }//GEN-LAST:event_cmbLocalidadItemStateChanged
+
+    private void cmbProvinciasBusquedaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbProvinciasBusquedaItemStateChanged
+        this.cargarLocalidadesDeLaProvincia((Provincia) cmbProvinciasBusqueda.getSelectedItem());
+    }//GEN-LAST:event_cmbProvinciasBusquedaItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelCerrarPedido;
     private javax.swing.JButton btnCerrarPedido;
-    private javax.swing.JButton btnModificarLocalidad;
     private javax.swing.JCheckBox chkEnviarUbicacionFacturacion;
+    private javax.swing.JComboBox<Localidad> cmbLocalidad;
+    private javax.swing.JComboBox<Provincia> cmbProvinciasBusqueda;
     private javax.swing.JFormattedTextField ftfLatitud;
     private javax.swing.JFormattedTextField ftfLongitud;
     private javax.swing.JFormattedTextField ftfNumero;
     private javax.swing.JLabel lblCalle;
+    private javax.swing.JLabel lblCodigoPostal;
     private javax.swing.JLabel lblDepartamento;
     private javax.swing.JLabel lblDescripcion;
     private javax.swing.JLabel lblLatitud;
-    private javax.swing.JLabel lblLocalidad;
+    private javax.swing.JLabel lblLocalidades;
     private javax.swing.JLabel lblLongitud;
     private javax.swing.JLabel lblNumero;
     private javax.swing.JLabel lblPiso;
+    private javax.swing.JLabel lblProvincia;
     private javax.swing.JTextField txtCalle;
+    private javax.swing.JTextField txtCodigoPostal;
     private javax.swing.JTextField txtDepartamento;
     private javax.swing.JTextField txtDescripcion;
-    private javax.swing.JTextField txtLocalidad;
     private javax.swing.JFormattedTextField txtPiso;
     // End of variables declaration//GEN-END:variables
 }

@@ -88,10 +88,6 @@
                               <Component id="lblUbicacionFacturacion" linkSize="16" max="32767" attributes="0"/>
                               <Component id="lblUbicacionEnvio" linkSize="16" max="32767" attributes="0"/>
                           </Group>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtUbicacionFacturacion" min="-2" pref="320" max="-2" attributes="1"/>
-                              <Component id="txtUbicacionEnvio" alignment="1" min="-2" pref="320" max="-2" attributes="1"/>
-                          </Group>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
@@ -125,18 +121,11 @@
                               <Component id="txtContacto" alignment="0" max="32767" attributes="2"/>
                               <Component id="txtTelefono" alignment="0" max="32767" attributes="2"/>
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="cmbViajante" max="32767" attributes="1"/>
+                                  <Component id="cmbViajante" pref="357" max="32767" attributes="1"/>
                                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Component id="btnBuscarUsuarioViajante" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Component id="btnNuevoUsuarioViajante" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="btnUbicacionFacturacion" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="btnUbicacionEnvio" alignment="1" min="-2" max="-2" attributes="0"/>
-                                  </Group>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="cmbCredencial" max="32767" attributes="1"/>
@@ -144,6 +133,17 @@
                                   <Component id="btnBuscarCredencial" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Component id="btnNuevaCredencial" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Group type="103" groupAlignment="1" attributes="0">
+                                      <Component id="lblDetalleUbicacionEnvio" max="32767" attributes="0"/>
+                                      <Component id="lblDetalleUbicacionFacturacion" max="32767" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="btnUbicacionFacturacion" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btnUbicacionEnvio" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                       </Group>
@@ -182,27 +182,27 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lblUbicacionFacturacion" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtUbicacionFacturacion" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="btnUbicacionFacturacion" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblDetalleUbicacionFacturacion" linkSize="23" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblUbicacionFacturacion" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="lblDetalleUbicacionEnvio" linkSize="23" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblUbicacionEnvio" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtUbicacionEnvio" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="btnUbicacionEnvio" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="btnNuevoUsuarioViajante" linkSize="15" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnBuscarUsuarioViajante" linkSize="15" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="cmbViajante" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblViajante" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnBuscarUsuarioViajante" linkSize="15" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnNuevoUsuarioViajante" linkSize="15" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lblTelefono" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtTelefono" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtTelefono" linkSize="23" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -301,11 +301,6 @@
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="Ubicaci&#xf3;n Facturaci&#xf3;n:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtUbicacionFacturacion">
-          <Properties>
-            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblViajante">
@@ -425,17 +420,11 @@
             <Property name="text" type="java.lang.String" value="Ubicaci&#xf3;n Env&#xed;o:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtUbicacionEnvio">
-          <Properties>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JButton" name="btnUbicacionFacturacion">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/AddMap_16x16.png"/>
+              <Image iconType="3" name="/sic/icons/EditMap_16x16.png"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Modificar"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUbicacionFacturacionActionPerformed"/>
@@ -444,13 +433,32 @@
         <Component class="javax.swing.JButton" name="btnUbicacionEnvio">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/AddMap_16x16.png"/>
+              <Image iconType="3" name="/sic/icons/EditMap_16x16.png"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Modificar"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUbicacionEnvioActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblDetalleUbicacionFacturacion">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="0"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                <TitledBorder/>
+              </Border>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblDetalleUbicacionEnvio">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="0"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                <TitledBorder/>
+              </Border>
+            </Property>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

@@ -51,7 +51,7 @@ public class DetalleProveedorGUI extends JDialog {
         cmbCategoriaIVA.setSelectedItem(proveedorModificar.getCategoriaIVA());
         txtDireccion.setText(proveedorModificar.getDireccion());
         if (proveedorModificar.getUbicacion() != null) {
-            txtUbicacion.setText(proveedorModificar.getUbicacion().getCalle()
+            lblDetalleUbicacionProveedor.setText(proveedorModificar.getUbicacion().getCalle()
                     + " "
                     + proveedorModificar.getUbicacion().getNumero()
                     + (proveedorModificar.getUbicacion().getPiso() != null
@@ -140,8 +140,8 @@ public class DetalleProveedorGUI extends JDialog {
         txtWeb = new javax.swing.JTextField();
         txtIdFiscal = new javax.swing.JFormattedTextField();
         lblUbicacion = new javax.swing.JLabel();
-        txtUbicacion = new javax.swing.JTextField();
         btnUbicacion = new javax.swing.JButton();
+        lblDetalleUbicacionProveedor = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nuevo Proveedor");
@@ -207,15 +207,15 @@ public class DetalleProveedorGUI extends JDialog {
         lblUbicacion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblUbicacion.setText("Ubicación:");
 
-        txtUbicacion.setEnabled(false);
-
-        btnUbicacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
-        btnUbicacion.setText("Modificar");
+        btnUbicacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/EditMap_16x16.png"))); // NOI18N
         btnUbicacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUbicacionActionPerformed(evt);
             }
         });
+
+        lblDetalleUbicacionProveedor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblDetalleUbicacionProveedor.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
         panelPrincipal.setLayout(panelPrincipalLayout);
@@ -235,7 +235,7 @@ public class DetalleProveedorGUI extends JDialog {
                     .addComponent(lblContacto, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblWeb, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtRazonSocial, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtDireccion, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -245,11 +245,11 @@ public class DetalleProveedorGUI extends JDialog {
                     .addComponent(txtEmail, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtWeb, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtCodigo, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(cmbCategoriaIVA, 0, 436, Short.MAX_VALUE)
+                    .addComponent(cmbCategoriaIVA, 0, 442, Short.MAX_VALUE)
                     .addComponent(txtIdFiscal)
                     .addGroup(panelPrincipalLayout.createSequentialGroup()
-                        .addComponent(txtUbicacion)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblDetalleUbicacionProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, 0)
                         .addComponent(btnUbicacion)))
                 .addContainerGap())
         );
@@ -279,8 +279,8 @@ public class DetalleProveedorGUI extends JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btnUbicacion)
-                    .addComponent(txtUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblUbicacion))
+                    .addComponent(lblUbicacion)
+                    .addComponent(lblDetalleUbicacionProveedor))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblTelPrimario)
@@ -303,6 +303,8 @@ public class DetalleProveedorGUI extends JDialog {
                     .addComponent(txtWeb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblDetalleUbicacionProveedor, txtTelPrimario});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -414,7 +416,7 @@ public class DetalleProveedorGUI extends JDialog {
         guiDetalleUbicacion.setVisible(true);
         if (guiDetalleUbicacion.getUbicacionModificada() != null) {
             this.ubicacion = guiDetalleUbicacion.getUbicacionModificada();
-            txtUbicacion.setText(this.ubicacion.getCalle()
+            lblDetalleUbicacionProveedor.setText(this.ubicacion.getCalle()
                     + " "
                     + this.ubicacion.getNumero()
                     + (this.ubicacion.getPiso() != null
@@ -424,7 +426,7 @@ public class DetalleProveedorGUI extends JDialog {
                     ? this.ubicacion.getDepartamento()
                     : "")
                     + (this.ubicacion.getNombreLocalidad() != null
-                    ? ", " + this.ubicacion.getNombreProvincia()
+                    ? ", " + this.ubicacion.getNombreLocalidad()
                     : " ")
                     + " "
                     + (this.ubicacion.getNombreProvincia() != null
@@ -440,6 +442,7 @@ public class DetalleProveedorGUI extends JDialog {
     private javax.swing.JLabel lblCodigo;
     private javax.swing.JLabel lblCondicionIVA;
     private javax.swing.JLabel lblContacto;
+    private javax.swing.JLabel lblDetalleUbicacionProveedor;
     private javax.swing.JLabel lblDireccion;
     private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblIdFiscal;
@@ -457,7 +460,6 @@ public class DetalleProveedorGUI extends JDialog {
     private javax.swing.JTextField txtRazonSocial;
     private javax.swing.JTextField txtTelPrimario;
     private javax.swing.JTextField txtTelSecundario;
-    private javax.swing.JTextField txtUbicacion;
     private javax.swing.JTextField txtWeb;
     // End of variables declaration//GEN-END:variables
 }

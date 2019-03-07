@@ -93,7 +93,7 @@ public class DetalleClienteGUI extends JDialog {
         txtBonificacion.setValue(cliente.getBonificacion());
         cmbCategoriaIVA.setSelectedItem(cliente.getCategoriaIVA());
         if (cliente.getUbicacionFacturacion() != null) {
-            txtUbicacionFacturacion.setText(cliente.getUbicacionFacturacion().getCalle()
+            lblDetalleUbicacionFacturacion.setText(cliente.getUbicacionFacturacion().getCalle()
                     + " "
                     + cliente.getUbicacionFacturacion().getNumero()
                     + (cliente.getUbicacionFacturacion().getPiso() != null
@@ -103,7 +103,7 @@ public class DetalleClienteGUI extends JDialog {
                     ? cliente.getUbicacionFacturacion().getDepartamento()
                     : "")
                     + (cliente.getUbicacionFacturacion().getNombreLocalidad() != null
-                    ? ", " + cliente.getUbicacionFacturacion().getNombreProvincia()
+                    ? ", " + cliente.getUbicacionFacturacion().getNombreLocalidad()
                     : " ")
                     + " "
                     + (cliente.getUbicacionFacturacion().getNombreProvincia() != null
@@ -111,7 +111,7 @@ public class DetalleClienteGUI extends JDialog {
                     : " "));
         }
         if (cliente.getUbicacionEnvio() != null) {
-            txtUbicacionEnvio.setText(cliente.getUbicacionEnvio().getCalle()
+            lblDetalleUbicacionEnvio.setText(cliente.getUbicacionEnvio().getCalle()
                     + " "
                     + cliente.getUbicacionEnvio().getNumero()
                     + (cliente.getUbicacionEnvio().getPiso() != null
@@ -121,7 +121,7 @@ public class DetalleClienteGUI extends JDialog {
                     ? cliente.getUbicacionEnvio().getDepartamento()
                     : "")
                     + (cliente.getUbicacionEnvio().getNombreLocalidad() != null
-                    ? ", " + cliente.getUbicacionEnvio().getNombreProvincia()
+                    ? ", " + cliente.getUbicacionEnvio().getNombreLocalidad()
                     : " ")
                     + " "
                     + (cliente.getUbicacionEnvio().getNombreProvincia() != null
@@ -202,7 +202,6 @@ public class DetalleClienteGUI extends JDialog {
         lblCondicionIVA = new javax.swing.JLabel();
         cmbCategoriaIVA = new javax.swing.JComboBox<>();
         lblUbicacionFacturacion = new javax.swing.JLabel();
-        txtUbicacionFacturacion = new javax.swing.JTextField();
         lblViajante = new javax.swing.JLabel();
         cmbViajante = new javax.swing.JComboBox<>();
         btnBuscarUsuarioViajante = new javax.swing.JButton();
@@ -218,9 +217,10 @@ public class DetalleClienteGUI extends JDialog {
         btnBuscarCredencial = new javax.swing.JButton();
         btnNuevaCredencial = new javax.swing.JButton();
         lblUbicacionEnvio = new javax.swing.JLabel();
-        txtUbicacionEnvio = new javax.swing.JTextField();
         btnUbicacionFacturacion = new javax.swing.JButton();
         btnUbicacionEnvio = new javax.swing.JButton();
+        lblDetalleUbicacionFacturacion = new javax.swing.JLabel();
+        lblDetalleUbicacionEnvio = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nuevo Cliente");
@@ -271,8 +271,6 @@ public class DetalleClienteGUI extends JDialog {
 
         lblUbicacionFacturacion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblUbicacionFacturacion.setText("Ubicación Facturación:");
-
-        txtUbicacionFacturacion.setEnabled(false);
 
         lblViajante.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblViajante.setText("Viajante:");
@@ -335,23 +333,25 @@ public class DetalleClienteGUI extends JDialog {
         lblUbicacionEnvio.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblUbicacionEnvio.setText("Ubicación Envío:");
 
-        txtUbicacionEnvio.setEnabled(false);
-
-        btnUbicacionFacturacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
-        btnUbicacionFacturacion.setText("Modificar");
+        btnUbicacionFacturacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/EditMap_16x16.png"))); // NOI18N
         btnUbicacionFacturacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUbicacionFacturacionActionPerformed(evt);
             }
         });
 
-        btnUbicacionEnvio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddMap_16x16.png"))); // NOI18N
-        btnUbicacionEnvio.setText("Modificar");
+        btnUbicacionEnvio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/EditMap_16x16.png"))); // NOI18N
         btnUbicacionEnvio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUbicacionEnvioActionPerformed(evt);
             }
         });
+
+        lblDetalleUbicacionFacturacion.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblDetalleUbicacionFacturacion.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+
+        lblDetalleUbicacionEnvio.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblDetalleUbicacionEnvio.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
         panelPrincipal.setLayout(panelPrincipalLayout);
@@ -364,13 +364,6 @@ public class DetalleClienteGUI extends JDialog {
                         .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lblUbicacionFacturacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblUbicacionEnvio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelPrincipalLayout.createSequentialGroup()
-                                .addGap(0, 0, 0)
-                                .addComponent(txtUbicacionFacturacion, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
-                                .addGap(0, 0, 0)
-                                .addComponent(txtUbicacionEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(panelPrincipalLayout.createSequentialGroup()
                         .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -399,22 +392,25 @@ public class DetalleClienteGUI extends JDialog {
                             .addComponent(txtContacto)
                             .addComponent(txtTelefono)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
-                                .addComponent(cmbViajante, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cmbViajante, 0, 357, Short.MAX_VALUE)
                                 .addGap(0, 0, 0)
                                 .addComponent(btnBuscarUsuarioViajante)
                                 .addGap(0, 0, 0)
                                 .addComponent(btnNuevoUsuarioViajante))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnUbicacionFacturacion, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(btnUbicacionEnvio, javax.swing.GroupLayout.Alignment.TRAILING)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
                                 .addComponent(cmbCredencial, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(0, 0, 0)
                                 .addComponent(btnBuscarCredencial)
                                 .addGap(0, 0, 0)
-                                .addComponent(btnNuevaCredencial)))))
+                                .addComponent(btnNuevaCredencial))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
+                                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblDetalleUbicacionEnvio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblDetalleUbicacionFacturacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(0, 0, 0)
+                                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnUbicacionFacturacion, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(btnUbicacionEnvio, javax.swing.GroupLayout.Alignment.TRAILING))))))
                 .addContainerGap())
         );
 
@@ -445,20 +441,20 @@ public class DetalleClienteGUI extends JDialog {
                     .addComponent(cmbCategoriaIVA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblUbicacionFacturacion)
-                    .addComponent(txtUbicacionFacturacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnUbicacionFacturacion))
+                    .addComponent(btnUbicacionFacturacion)
+                    .addComponent(lblDetalleUbicacionFacturacion)
+                    .addComponent(lblUbicacionFacturacion))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblDetalleUbicacionEnvio)
                     .addComponent(lblUbicacionEnvio)
-                    .addComponent(txtUbicacionEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnUbicacionEnvio))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(cmbViajante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblViajante)
+                    .addComponent(btnNuevoUsuarioViajante)
                     .addComponent(btnBuscarUsuarioViajante)
-                    .addComponent(btnNuevoUsuarioViajante))
+                    .addComponent(cmbViajante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblViajante))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblTelefono)
@@ -490,7 +486,7 @@ public class DetalleClienteGUI extends JDialog {
 
         panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtBonificacion, txtIdFiscal});
 
-        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtTelefono, txtUbicacionEnvio, txtUbicacionFacturacion});
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblDetalleUbicacionEnvio, lblDetalleUbicacionFacturacion, txtTelefono});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -669,7 +665,7 @@ public class DetalleClienteGUI extends JDialog {
         guiDetalleUbicacion.setVisible(true);
         if (guiDetalleUbicacion.getUbicacionModificada() != null) {
             this.ubicacionDeFacturacion = guiDetalleUbicacion.getUbicacionModificada();
-            txtUbicacionFacturacion.setText(this.ubicacionDeFacturacion.getCalle()
+            lblDetalleUbicacionFacturacion.setText(this.ubicacionDeFacturacion.getCalle()
                     + " "
                     + this.ubicacionDeFacturacion.getNumero()
                     + (this.ubicacionDeFacturacion.getPiso() != null
@@ -695,7 +691,7 @@ public class DetalleClienteGUI extends JDialog {
         guiDetalleUbicacion.setVisible(true);
         if (guiDetalleUbicacion.getUbicacionModificada() != null) {
             this.ubicacionDeEnvio = guiDetalleUbicacion.getUbicacionModificada();
-            txtUbicacionEnvio.setText(this.ubicacionDeEnvio.getCalle()
+            lblDetalleUbicacionEnvio.setText(this.ubicacionDeEnvio.getCalle()
                     + " "
                     + this.ubicacionDeEnvio.getNumero()
                     + (this.ubicacionDeEnvio.getPiso() != null
@@ -705,7 +701,7 @@ public class DetalleClienteGUI extends JDialog {
                     ? this.ubicacionDeEnvio.getDepartamento()
                     : "")
                     + (this.ubicacionDeEnvio.getNombreLocalidad() != null
-                    ? ", " + this.ubicacionDeEnvio.getNombreProvincia()
+                    ? ", " + this.ubicacionDeEnvio.getNombreLocalidad()
                     : " ")
                     + " "
                     + (this.ubicacionDeEnvio.getNombreProvincia() != null
@@ -729,6 +725,8 @@ public class DetalleClienteGUI extends JDialog {
     private javax.swing.JLabel lblCondicionIVA;
     private javax.swing.JLabel lblContacto;
     private javax.swing.JLabel lblCredencial;
+    private javax.swing.JLabel lblDetalleUbicacionEnvio;
+    private javax.swing.JLabel lblDetalleUbicacionFacturacion;
     private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblIdFiscal;
     private javax.swing.JLabel lblNombreFantasia;
@@ -745,7 +743,5 @@ public class DetalleClienteGUI extends JDialog {
     private javax.swing.JTextField txtNombreFantasia;
     private javax.swing.JTextField txtNombreFiscal;
     private javax.swing.JTextField txtTelefono;
-    private javax.swing.JTextField txtUbicacionEnvio;
-    private javax.swing.JTextField txtUbicacionFacturacion;
     // End of variables declaration//GEN-END:variables
 }
