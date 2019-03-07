@@ -31,7 +31,7 @@ public class CerrarPedidoGUI extends JDialog {
     private Localidad localidadSeleccionada;
     private Pedido pedido;
     private Ubicacion ubicacionAModificar;
-    private boolean actualizacionExitosa = false;
+    private boolean operacionExitosa = false;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public CerrarPedidoGUI(NuevoPedido nuevoPedido, Cliente cliente) {
@@ -87,19 +87,20 @@ public class CerrarPedidoGUI extends JDialog {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    private void seleccionarProvinciaYProvinciaDeCliente() {
-        if (this.cliente.getUbicacionEnvio() != null) {
-            if (this.cliente.getUbicacionEnvio().getIdProvincia() != null) {
-                Provincia provinciaASeleccionar = RestClient.getRestTemplate().getForObject("/ubicaciones/provincias/" + this.cliente.getUbicacionEnvio().getIdProvincia(), Provincia.class);
-                cmbProvinciasBusqueda.setSelectedItem(provinciaASeleccionar);
-            }
-            if (this.cliente.getUbicacionEnvio().getIdLocalidad() != null) {
-                Localidad localidadASeleccionar = RestClient.getRestTemplate().getForObject("/ubicaciones/localidades/" + this.cliente.getUbicacionEnvio().getIdLocalidad(), Localidad.class);
-                cmbLocalidad.setSelectedItem(localidadASeleccionar);
-            }
-            localidadSeleccionada = (Localidad) cmbLocalidad.getSelectedItem();
+    
+    private void seleccionarProvinciaDeCliente() {
+        if (this.cliente.getUbicacionEnvio() != null && this.cliente.getUbicacionEnvio().getIdProvincia() != null) {
+            Provincia provinciaASeleccionar = RestClient.getRestTemplate().getForObject("/ubicaciones/provincias/" + this.cliente.getUbicacionEnvio().getIdProvincia(), Provincia.class);
+            cmbProvinciasBusqueda.setSelectedItem(provinciaASeleccionar);
         }
+    }
+
+    private void seleccionarLocalidadDeCliente() {
+        if (this.cliente.getUbicacionEnvio() != null && this.cliente.getUbicacionEnvio().getIdLocalidad() != null) {
+            Localidad localidadASeleccionar = RestClient.getRestTemplate().getForObject("/ubicaciones/localidades/" + this.cliente.getUbicacionEnvio().getIdLocalidad(), Localidad.class);
+            cmbLocalidad.setSelectedItem(localidadASeleccionar);
+        }
+        localidadSeleccionada = (Localidad) cmbLocalidad.getSelectedItem();
     }
 
     private void lanzarReportePedido(Pedido pedido) {
@@ -123,8 +124,8 @@ public class CerrarPedidoGUI extends JDialog {
         }
     }
     
-    public boolean isActualizacionExitosa() {
-        return this.actualizacionExitosa;
+    public boolean isOperacionExitosa() {
+        return this.operacionExitosa;
     }
 
     @SuppressWarnings("unchecked")
@@ -321,7 +322,7 @@ public class CerrarPedidoGUI extends JDialog {
 
         btnCerrarPedido.setForeground(java.awt.Color.blue);
         btnCerrarPedido.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
-        btnCerrarPedido.setText("Cerrar Pedido");
+        btnCerrarPedido.setText("Finalizar");
         btnCerrarPedido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCerrarPedidoActionPerformed(evt);
@@ -392,8 +393,9 @@ public class CerrarPedidoGUI extends JDialog {
             this.cliente.setUbicacionEnvio(new Ubicacion());
         }
         this.cargarProvincias();
+        this.seleccionarProvinciaDeCliente();
         this.cargarLocalidadesDeLaProvincia((Provincia) cmbProvinciasBusqueda.getSelectedItem());
-        this.seleccionarProvinciaYProvinciaDeCliente();
+        this.seleccionarLocalidadDeCliente();
     }//GEN-LAST:event_formWindowOpened
 
     private void btnCerrarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarPedidoActionPerformed
@@ -448,6 +450,7 @@ public class CerrarPedidoGUI extends JDialog {
                                 + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                                 + "&idCliente=" + cliente.getId_Cliente()
                                 + "&usarUbicacionDeFacturacion=" + chkEnviarUbicacionFacturacion.isSelected(), nuevoPedido, Pedido.class);
+                        this.operacionExitosa = true;
                         int reply = JOptionPane.showConfirmDialog(this,
                                 ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
                                 "Aviso", JOptionPane.YES_NO_OPTION);
@@ -460,7 +463,7 @@ public class CerrarPedidoGUI extends JDialog {
                                 + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                                 + "&idCliente=" + cliente.getId_Cliente()
                                 + "&usarUbicacionDeFacturacion=" + chkEnviarUbicacionFacturacion.isSelected(), pedido);
-                        this.actualizacionExitosa = true;
+                        this.operacionExitosa = true;
                         JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_pedido_actualizado"),
                                 "Aviso", JOptionPane.INFORMATION_MESSAGE);
                     }

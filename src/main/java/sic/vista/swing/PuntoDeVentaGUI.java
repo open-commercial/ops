@@ -1,16 +1,12 @@
 package sic.vista.swing;
 
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
-import java.io.File;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.nio.file.Files;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -671,7 +667,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 cerrarPedido.setModal(true);
                 cerrarPedido.setLocationRelativeTo(this);
                 cerrarPedido.setVisible(true);
-                if (cerrarPedido.isActualizacionExitosa()) {
+                if (cerrarPedido.isOperacionExitosa()) {
                    this.limpiarYRecargarComponentes(); 
                 }
             } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificarPedido == true) {
@@ -697,7 +693,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         cerrarPedido.setModal(true);
         cerrarPedido.setLocationRelativeTo(this);
         cerrarPedido.setVisible(true);
-        if (cerrarPedido.isActualizacionExitosa()) {
+        if (cerrarPedido.isOperacionExitosa()) {
             this.dispose();
         }
     }

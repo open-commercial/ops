@@ -116,7 +116,7 @@ public class DetalleTransportistaGUI extends JDialog {
         lblUbicacion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblUbicacion.setText("Ubicación:");
 
-        lblDetalleUbicacionTransportista.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblDetalleUbicacionTransportista.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblDetalleUbicacionTransportista.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);

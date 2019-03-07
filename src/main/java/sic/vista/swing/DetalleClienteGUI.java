@@ -347,10 +347,10 @@ public class DetalleClienteGUI extends JDialog {
             }
         });
 
-        lblDetalleUbicacionFacturacion.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblDetalleUbicacionFacturacion.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblDetalleUbicacionFacturacion.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        lblDetalleUbicacionEnvio.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblDetalleUbicacionEnvio.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblDetalleUbicacionEnvio.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);

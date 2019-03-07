@@ -49,6 +49,21 @@ public class DetalleUbicacionGUI extends JDialog {
         }
     }
 
+    private void seleccionarProvinciaDelCliente() {
+        if (this.ubicacionAModificar != null && this.ubicacionAModificar.getIdProvincia() != null) {
+            Provincia provinciaASeleccionar = RestClient.getRestTemplate().getForObject("/ubicaciones/provincias/" + this.ubicacionAModificar.getIdProvincia(), Provincia.class);
+            cmbProvinciasBusqueda.setSelectedItem(provinciaASeleccionar);
+        }
+    }
+    
+    private void seleccionarLocalidadDelCliente() {
+        if (this.ubicacionAModificar != null && this.ubicacionAModificar.getIdLocalidad() != null) {
+            Localidad localidadASeleccionar = RestClient.getRestTemplate().getForObject("/ubicaciones/localidades/" + this.ubicacionAModificar.getIdLocalidad(), Localidad.class);
+            cmbLocalidad.setSelectedItem(localidadASeleccionar);
+        }
+        localidadSeleccionada = (Localidad) cmbLocalidad.getSelectedItem();
+    }
+
     private void cargarLocalidadesDeLaProvincia(Provincia provincia) {
         try {
             cmbLocalidad.removeAllItems();
@@ -59,11 +74,6 @@ public class DetalleUbicacionGUI extends JDialog {
                                 Localidad[].class)));
                 localidades.stream().forEach(l -> cmbLocalidad.addItem(l));
             }
-            if (this.ubicacionAModificar != null && this.ubicacionAModificar.getIdLocalidad() != null) {
-                Localidad localidadASeleccionar = RestClient.getRestTemplate().getForObject("/ubicaciones/localidades/" + this.ubicacionAModificar.getIdLocalidad(), Localidad.class);
-                cmbLocalidad.setSelectedItem(localidadASeleccionar);
-            }
-            localidadSeleccionada = (Localidad) cmbLocalidad.getSelectedItem();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -71,20 +81,6 @@ public class DetalleUbicacionGUI extends JDialog {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void seleccionarProvinciaYProvinciaDeCliente() {
-        if (this.ubicacionAModificar != null) {
-            if (this.ubicacionAModificar.getIdProvincia() != null) {
-                Provincia provinciaASeleccionar = RestClient.getRestTemplate().getForObject("/ubicaciones/provincias/" + this.ubicacionAModificar.getIdProvincia(), Provincia.class);
-                cmbProvinciasBusqueda.setSelectedItem(provinciaASeleccionar);
-            }
-            if (this.ubicacionAModificar.getIdLocalidad() != null) {
-                Localidad localidadASeleccionar = RestClient.getRestTemplate().getForObject("/ubicaciones/localidades/" + this.ubicacionAModificar.getIdLocalidad(), Localidad.class);
-                cmbLocalidad.setSelectedItem(localidadASeleccionar);
-            }
-            localidadSeleccionada = (Localidad) cmbLocalidad.getSelectedItem();
         }
     }
 
@@ -334,8 +330,9 @@ public class DetalleUbicacionGUI extends JDialog {
             }
         }
         this.cargarProvincias();
+        this.seleccionarProvinciaDelCliente();
         this.cargarLocalidadesDeLaProvincia((Provincia) cmbProvinciasBusqueda.getSelectedItem());
-        this.seleccionarProvinciaYProvinciaDeCliente();
+        this.seleccionarLocalidadDelCliente();
     }//GEN-LAST:event_formWindowOpened
 
     private void btnSeleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarActionPerformed

@@ -235,7 +235,7 @@ public class DetalleEmpresaGUI extends JDialog {
             }
         });
 
-        lblDetalleUbicacionEmpresa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblDetalleUbicacionEmpresa.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblDetalleUbicacionEmpresa.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
