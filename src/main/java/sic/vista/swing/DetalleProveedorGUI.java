@@ -50,24 +50,19 @@ public class DetalleProveedorGUI extends JDialog {
         txtIdFiscal.setValue(proveedorModificar.getIdFiscal());
         cmbCategoriaIVA.setSelectedItem(proveedorModificar.getCategoriaIVA());
         txtDireccion.setText(proveedorModificar.getDireccion());
-        if (proveedorModificar.getUbicacion() != null) {
-            lblDetalleUbicacionProveedor.setText(proveedorModificar.getUbicacion().getCalle()
-                    + " "
-                    + proveedorModificar.getUbicacion().getNumero()
-                    + (proveedorModificar.getUbicacion().getPiso() != null
-                    ? ", " + proveedorModificar.getUbicacion().getPiso() + " "
-                    : " ")
-                    + (proveedorModificar.getUbicacion().getDepartamento() != null
-                    ? proveedorModificar.getUbicacion().getDepartamento()
-                    : "")
-                    + (proveedorModificar.getUbicacion().getNombreLocalidad() != null
-                    ? ", " + proveedorModificar.getUbicacion().getNombreLocalidad()
-                    : " ")
-                    + " "
-                    + (proveedorModificar.getUbicacion().getNombreProvincia() != null
-                    ? proveedorModificar.getUbicacion().getNombreProvincia()
-                    : " "));
-            this.ubicacion = proveedorModificar.getUbicacion();
+        if (proveedorModificar.getIdUbicacion() != null) {
+            lblDetalleUbicacionProveedor.setText(proveedorModificar.getDetalleUbicacion());
+            this.ubicacion = null;
+            try {
+                this.ubicacion = RestClient.getRestTemplate().getForObject("/ubicaciones/" + proveedorModificar.getIdUbicacion(), Ubicacion.class);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
         txtTelPrimario.setText(proveedorModificar.getTelPrimario());
         txtTelSecundario.setText(proveedorModificar.getTelSecundario());
@@ -373,9 +368,9 @@ public class DetalleProveedorGUI extends JDialog {
                 proveedorModificar.setEmail(txtEmail.getText().trim());
                 proveedorModificar.setWeb(txtWeb.getText().trim());
                 RestClient.getRestTemplate().put("/proveedores?idEmpresa=" + (EmpresaActiva.getInstance().getEmpresa()).getId_Empresa(), proveedorModificar);
-                if (proveedorModificar.getUbicacion() == null && this.ubicacion != null) {
+                if (proveedorModificar.getIdUbicacion()== null && this.ubicacion != null) {
                     RestClient.getRestTemplate().postForObject("/ubicaciones/proveedores/" + proveedorModificar.getId_Proveedor(), this.ubicacion, Ubicacion.class);
-                } else if (proveedorModificar.getUbicacion() != null && this.ubicacion != null) {
+                } else if (proveedorModificar.getIdUbicacion() != null && this.ubicacion != null) {
                     RestClient.getRestTemplate().put("/ubicaciones", this.ubicacion);
                 }
                 JOptionPane.showMessageDialog(this, "El proveedor se modificó correctamente.",

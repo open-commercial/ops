@@ -279,10 +279,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         this.setTitle("Cuenta Corriente del Proveedor: " + proveedor.getRazonSocial());
         txtNombreCliente.setText(proveedor.getRazonSocial());
         try {
-            if (proveedor.getUbicacion() != null) {
-                txtDomicilioFiscalCliente.setText(proveedor.getUbicacion().getCalle() + " " + proveedor.getUbicacion().getNumero()
-                        + " " + ((proveedor.getUbicacion().getNombreLocalidad() != null) ? proveedor.getUbicacion().getNombreLocalidad() : "")
-                        + " " + ((proveedor.getUbicacion().getNombreProvincia() != null) ? proveedor.getUbicacion().getNombreProvincia() : ""));
+            if (proveedor.getIdUbicacion() != null) {
+                txtDomicilioFiscalCliente.setText(proveedor.getDetalleUbicacion());
             }
             if (proveedor.getIdFiscal() != null) {
                 txtIDFiscalCliente.setText(proveedor.getIdFiscal().toString());

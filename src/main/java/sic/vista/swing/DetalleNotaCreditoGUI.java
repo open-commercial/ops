@@ -23,7 +23,6 @@ import sic.modelo.EmpresaActiva;
 import sic.modelo.Factura;
 import sic.modelo.FacturaCompra;
 import sic.modelo.FacturaVenta;
-import sic.modelo.Localidad;
 import sic.modelo.Movimiento;
 import sic.modelo.NotaCredito;
 import sic.modelo.Proveedor;
@@ -204,10 +203,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
 
     private void cargarDetalleProveedor() {
         txtNombre.setText(((FacturaCompra) factura).getRazonSocialProveedor());
-        if (proveedor.getUbicacion() != null) {
-            txtDomicilioFiscalCliente.setText(proveedor.getUbicacion().getCalle() + " " + proveedor.getUbicacion().getNumero()
-                    + " " + ((proveedor.getUbicacion().getNombreLocalidad() != null) ? proveedor.getUbicacion().getNombreLocalidad() : "")
-                    + " " + ((proveedor.getUbicacion().getNombreProvincia() != null) ? proveedor.getUbicacion().getNombreProvincia() : ""));
+        if (proveedor.getIdUbicacion()!= null) {
+            txtDomicilioFiscalCliente.setText(proveedor.getDetalleUbicacion());
         }
         if (proveedor.getIdFiscal() != null) {
             txtIdFiscal.setText(proveedor.getIdFiscal().toString());
@@ -219,10 +216,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
         Proveedor proveedorDeNota = RestClient.getRestTemplate()
                 .getForObject("/proveedores/" + notaCredito.getIdProveedor(), Proveedor.class);
         txtNombre.setText(proveedorDeNota.getRazonSocial());
-        if (proveedor.getUbicacion() != null) {
-            txtDomicilioFiscalCliente.setText(proveedor.getUbicacion().getCalle() + " " + proveedor.getUbicacion().getNumero()
-                    + " " + ((proveedor.getUbicacion().getNombreLocalidad() != null) ? proveedor.getUbicacion().getNombreLocalidad() : "")
-                    + " " + ((proveedor.getUbicacion().getNombreProvincia() != null) ? proveedor.getUbicacion().getNombreProvincia() : ""));
+        if (proveedor.getIdUbicacion() != null) {
+            txtDomicilioFiscalCliente.setText(proveedor.getDetalleUbicacion());
         }
         if (proveedorDeNota.getIdFiscal() != null) {
             txtIdFiscal.setText(proveedorDeNota.getIdFiscal().toString());

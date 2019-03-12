@@ -22,7 +22,6 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
-import sic.modelo.Localidad;
 import sic.modelo.Movimiento;
 import sic.modelo.NotaDebito;
 import sic.modelo.Proveedor;
@@ -103,10 +102,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
 
     private void cargarDetalleProveedor() {
         txtNombre.setText(proveedor.getRazonSocial());
-        if (proveedor.getUbicacion() != null) {
-            txtDomicilioFiscalCliente.setText(proveedor.getUbicacion().getCalle() + " " + proveedor.getUbicacion().getNumero()
-                    + " " + ((proveedor.getUbicacion().getNombreLocalidad() != null) ? proveedor.getUbicacion().getNombreLocalidad() : "")
-                    + " " + ((proveedor.getUbicacion().getNombreProvincia() != null) ? proveedor.getUbicacion().getNombreProvincia() : ""));
+        if (proveedor.getIdUbicacion()!= null) {
+            txtDomicilioFiscalCliente.setText(proveedor.getDetalleUbicacion());
         }
         if (proveedor.getIdFiscal() != null) {
             txtIdFiscal.setText(proveedor.getIdFiscal().toString());
@@ -236,10 +233,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
             txtNombre.setText(proveedorDeNota.getRazonSocial());
             cmbDescripcionRenglon2.removeAllItems();
             cmbDescripcionRenglon2.addItem(notaDebito.getMotivo());
-            if (proveedor.getUbicacion() != null) {
-                txtDomicilioFiscalCliente.setText(proveedor.getUbicacion().getCalle() + " " + proveedor.getUbicacion().getNumero()
-                        + " " + ((proveedor.getUbicacion().getNombreLocalidad() != null) ? proveedor.getUbicacion().getNombreLocalidad() : "")
-                        + " " + ((proveedor.getUbicacion().getNombreProvincia() != null) ? proveedor.getUbicacion().getNombreProvincia() : ""));
+            if (proveedor.getIdUbicacion() != null) {
+                txtDomicilioFiscalCliente.setText(proveedor.getDetalleUbicacion());
             }
             txtCondicionIVA.setText(proveedorDeNota.getCategoriaIVA().toString());
             if (proveedorDeNota.getIdFiscal() != null) {

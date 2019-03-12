@@ -111,7 +111,7 @@ public class ProveedoresGUI extends JInternalFrame {
 
     private void setColumnas() {
         //nombres de columnas
-        String[] encabezados = new String[14];
+        String[] encabezados = new String[13];
         encabezados[0] = "Codigo";
         encabezados[1] = "ID Fiscal";
         encabezados[2] = "Razon Social";
@@ -124,8 +124,7 @@ public class ProveedoresGUI extends JInternalFrame {
         encabezados[9] = "Contacto";
         encabezados[10] = "Email";
         encabezados[11] = "Web";
-        encabezados[12] = "Localidad";
-        encabezados[13] = "Provincia";
+        encabezados[12] = "Ubicacion";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaResultados);
         //tipo de dato columnas
@@ -143,7 +142,6 @@ public class ProveedoresGUI extends JInternalFrame {
         tipos[10] = String.class;
         tipos[11] = String.class;
         tipos[12] = String.class;
-        tipos[13] = String.class;
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
@@ -160,8 +158,7 @@ public class ProveedoresGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(11).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(12).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(13).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(12).setPreferredWidth(400);
         //renderers
         tbl_Resultados.getColumnModel().getColumn(3).setCellRenderer(new ColoresNumerosRenderer());
         tbl_Resultados.setDefaultRenderer(Date.class, new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
@@ -169,7 +166,7 @@ public class ProveedoresGUI extends JInternalFrame {
 
     private void cargarResultadosAlTable() {
         cuentasCorrienteProveedoresParcial.stream().map(p -> {
-            Object[] fila = new Object[14];
+            Object[] fila = new Object[13];
             fila[0] = p.getProveedor().getCodigo();
             fila[1] = p.getProveedor().getIdFiscal();
             fila[2] = p.getProveedor().getRazonSocial();
@@ -182,10 +179,7 @@ public class ProveedoresGUI extends JInternalFrame {
             fila[9] = p.getProveedor().getContacto();
             fila[10] = p.getProveedor().getEmail();
             fila[11] = p.getProveedor().getWeb();
-            fila[12] = (p.getProveedor().getUbicacion() != null
-                    && p.getProveedor().getUbicacion().getNombreLocalidad() != null) ? p.getProveedor().getUbicacion().getNombreLocalidad() : "";
-            fila[13] = (p.getProveedor().getUbicacion() != null
-                    && p.getProveedor().getUbicacion().getNombreProvincia() != null) ? p.getProveedor().getUbicacion().getNombreProvincia() : "";
+            fila[12] = p.getProveedor().getDetalleUbicacion();
             return fila;
         }).forEach(f -> {
             modeloTablaResultados.addRow(f);

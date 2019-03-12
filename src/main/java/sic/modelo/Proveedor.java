@@ -19,10 +19,11 @@ public class Proveedor implements Serializable {
     private String contacto;
     private String email;
     private String web;
-    private Ubicacion ubicacion;
+    private Long idUbicacion;
+    private String detalleUbicacion;
     private Long idEmpresa;
     private String nombreEmpresa;
-    private boolean eliminado;    
+    private boolean eliminado;
 
     @Override
     public String toString() {
