@@ -92,41 +92,11 @@ public class DetalleClienteGUI extends JDialog {
         txtNombreFantasia.setText(cliente.getNombreFantasia());
         txtBonificacion.setValue(cliente.getBonificacion());
         cmbCategoriaIVA.setSelectedItem(cliente.getCategoriaIVA());
-        if (cliente.getUbicacionFacturacion() != null) {
-            lblDetalleUbicacionFacturacion.setText(cliente.getUbicacionFacturacion().getCalle()
-                    + " "
-                    + cliente.getUbicacionFacturacion().getNumero()
-                    + (cliente.getUbicacionFacturacion().getPiso() != null
-                    ? ", " + cliente.getUbicacionFacturacion().getPiso() + " "
-                    : " ")
-                    + (cliente.getUbicacionFacturacion().getDepartamento() != null
-                    ? cliente.getUbicacionFacturacion().getDepartamento()
-                    : "")
-                    + (cliente.getUbicacionFacturacion().getNombreLocalidad() != null
-                    ? ", " + cliente.getUbicacionFacturacion().getNombreLocalidad()
-                    : " ")
-                    + " "
-                    + (cliente.getUbicacionFacturacion().getNombreProvincia() != null
-                    ? cliente.getUbicacionFacturacion().getNombreProvincia()
-                    : " "));
+        if (cliente.getDetalleUbicacionFacturacion() != null) {
+            lblDetalleUbicacionFacturacion.setText(cliente.getDetalleUbicacionFacturacion());
         }
-        if (cliente.getUbicacionEnvio() != null) {
-            lblDetalleUbicacionEnvio.setText(cliente.getUbicacionEnvio().getCalle()
-                    + " "
-                    + cliente.getUbicacionEnvio().getNumero()
-                    + (cliente.getUbicacionEnvio().getPiso() != null
-                    ? ", " + cliente.getUbicacionEnvio().getPiso() + " "
-                    : " ")
-                    + (cliente.getUbicacionEnvio().getDepartamento() != null
-                    ? cliente.getUbicacionEnvio().getDepartamento()
-                    : "")
-                    + (cliente.getUbicacionEnvio().getNombreLocalidad() != null
-                    ? ", " + cliente.getUbicacionEnvio().getNombreLocalidad()
-                    : " ")
-                    + " "
-                    + (cliente.getUbicacionEnvio().getNombreProvincia() != null
-                    ? cliente.getUbicacionEnvio().getNombreProvincia()
-                    : " "));
+        if (cliente.getDetalleUbicacionEnvio() != null) {
+            lblDetalleUbicacionEnvio.setText(cliente.getDetalleUbicacionEnvio());
         }
         this.seleccionarCredencialSegunId(cliente.getIdCredencial());
         this.seleccionarViajanteSegunId(cliente.getIdViajante());
@@ -554,14 +524,14 @@ public class DetalleClienteGUI extends JDialog {
                         "/clientes?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                         + "&idCredencial=" + idCredencial,
                         cliente);
-                if (cliente.getUbicacionFacturacion() == null && this.ubicacionDeFacturacion != null) {
+                if (cliente.getIdUbicacionFacturacion()== null && this.ubicacionDeFacturacion != null) {
                     RestClient.getRestTemplate().postForObject("/ubicaciones/clientes/" + cliente.getId_Cliente() + "/facturacion", this.ubicacionDeFacturacion, Ubicacion.class);
-                } else if (cliente.getUbicacionFacturacion() != null && this.ubicacionDeFacturacion != null) {
+                } else if (cliente.getIdUbicacionFacturacion() != null && this.ubicacionDeFacturacion != null) {
                     RestClient.getRestTemplate().put("/ubicaciones", this.ubicacionDeFacturacion);
                 }
-                if (cliente.getUbicacionEnvio() == null && this.ubicacionDeEnvio != null) {
+                if (cliente.getIdUbicacionEnvio()== null && this.ubicacionDeEnvio != null) {
                     RestClient.getRestTemplate().postForObject("/ubicaciones/clientes/" + cliente.getId_Cliente() + "/envio", this.ubicacionDeEnvio, Ubicacion.class);
-                } else if (cliente.getUbicacionEnvio() != null && this.ubicacionDeEnvio != null) {
+                } else if (cliente.getIdUbicacionEnvio() != null && this.ubicacionDeEnvio != null) {
                     RestClient.getRestTemplate().put("/ubicaciones", this.ubicacionDeEnvio);
                 }
                 JOptionPane.showMessageDialog(this, "El Cliente se modificó correctamente!",
@@ -659,54 +629,78 @@ public class DetalleClienteGUI extends JDialog {
     }//GEN-LAST:event_txtIdFiscalFocusLost
 
     private void btnUbicacionFacturacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbicacionFacturacionActionPerformed
-        DetalleUbicacionGUI guiDetalleUbicacion = new DetalleUbicacionGUI(this.cliente.getUbicacionFacturacion());
-        guiDetalleUbicacion.setModal(true);
-        guiDetalleUbicacion.setLocationRelativeTo(this);
-        guiDetalleUbicacion.setVisible(true);
-        if (guiDetalleUbicacion.getUbicacionModificada() != null) {
-            this.ubicacionDeFacturacion = guiDetalleUbicacion.getUbicacionModificada();
-            lblDetalleUbicacionFacturacion.setText(this.ubicacionDeFacturacion.getCalle()
-                    + " "
-                    + this.ubicacionDeFacturacion.getNumero()
-                    + (this.ubicacionDeFacturacion.getPiso() != null
-                    ? ", " + this.ubicacionDeFacturacion.getPiso() + " "
-                    : " ")
-                    + (this.ubicacionDeFacturacion.getDepartamento() != null
-                    ? this.ubicacionDeFacturacion.getDepartamento()
-                    : "")
-                    + (this.ubicacionDeFacturacion.getNombreLocalidad() != null
-                    ? ", " + this.ubicacionDeFacturacion.getNombreLocalidad()
-                    : " ")
-                    + " "
-                    + (this.ubicacionDeFacturacion.getNombreProvincia() != null
-                    ? this.ubicacionDeFacturacion.getNombreProvincia()
-                    : " "));
+        try {
+            if (this.cliente.getIdUbicacionFacturacion() != null) {
+                ubicacionDeFacturacion = RestClient.getRestTemplate().getForObject("/ubicaciones/" + this.cliente.getIdUbicacionFacturacion(), Ubicacion.class);
+            }
+            DetalleUbicacionGUI guiDetalleUbicacion = new DetalleUbicacionGUI(ubicacionDeFacturacion);
+            guiDetalleUbicacion.setModal(true);
+            guiDetalleUbicacion.setLocationRelativeTo(this);
+            guiDetalleUbicacion.setVisible(true);
+            if (guiDetalleUbicacion.getUbicacionModificada() != null) {
+                this.ubicacionDeFacturacion = guiDetalleUbicacion.getUbicacionModificada();
+                lblDetalleUbicacionFacturacion.setText(this.ubicacionDeFacturacion.getCalle()
+                        + " "
+                        + this.ubicacionDeFacturacion.getNumero()
+                        + (this.ubicacionDeFacturacion.getPiso() != null
+                        ? ", " + this.ubicacionDeFacturacion.getPiso() + " "
+                        : " ")
+                        + (this.ubicacionDeFacturacion.getDepartamento() != null
+                        ? this.ubicacionDeFacturacion.getDepartamento()
+                        : "")
+                        + (this.ubicacionDeFacturacion.getNombreLocalidad() != null
+                        ? ", " + this.ubicacionDeFacturacion.getNombreLocalidad()
+                        : " ")
+                        + " "
+                        + (this.ubicacionDeFacturacion.getNombreProvincia() != null
+                        ? this.ubicacionDeFacturacion.getNombreProvincia()
+                        : " "));
+            }
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnUbicacionFacturacionActionPerformed
 
     private void btnUbicacionEnvioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbicacionEnvioActionPerformed
-        DetalleUbicacionGUI guiDetalleUbicacion = new DetalleUbicacionGUI(this.cliente.getUbicacionEnvio());
-        guiDetalleUbicacion.setModal(true);
-        guiDetalleUbicacion.setLocationRelativeTo(this);
-        guiDetalleUbicacion.setVisible(true);
-        if (guiDetalleUbicacion.getUbicacionModificada() != null) {
-            this.ubicacionDeEnvio = guiDetalleUbicacion.getUbicacionModificada();
-            lblDetalleUbicacionEnvio.setText(this.ubicacionDeEnvio.getCalle()
-                    + " "
-                    + this.ubicacionDeEnvio.getNumero()
-                    + (this.ubicacionDeEnvio.getPiso() != null
-                    ? ", " + this.ubicacionDeEnvio.getPiso() + " "
-                    : " ")
-                    + (this.ubicacionDeEnvio.getDepartamento() != null
-                    ? this.ubicacionDeEnvio.getDepartamento()
-                    : "")
-                    + (this.ubicacionDeEnvio.getNombreLocalidad() != null
-                    ? ", " + this.ubicacionDeEnvio.getNombreLocalidad()
-                    : " ")
-                    + " "
-                    + (this.ubicacionDeEnvio.getNombreProvincia() != null
-                    ? this.ubicacionDeEnvio.getNombreProvincia()
-                    : " "));
+        try {
+            if (this.cliente.getIdUbicacionEnvio() != null) {
+                ubicacionDeEnvio = RestClient.getRestTemplate().getForObject("/ubicaciones/" + this.cliente.getIdUbicacionEnvio(), Ubicacion.class);
+            }
+            DetalleUbicacionGUI guiDetalleUbicacion = new DetalleUbicacionGUI(ubicacionDeEnvio);
+            guiDetalleUbicacion.setModal(true);
+            guiDetalleUbicacion.setLocationRelativeTo(this);
+            guiDetalleUbicacion.setVisible(true);
+            if (guiDetalleUbicacion.getUbicacionModificada() != null) {
+                this.ubicacionDeEnvio = guiDetalleUbicacion.getUbicacionModificada();
+                lblDetalleUbicacionEnvio.setText(this.ubicacionDeEnvio.getCalle()
+                        + " "
+                        + this.ubicacionDeEnvio.getNumero()
+                        + (this.ubicacionDeEnvio.getPiso() != null
+                        ? ", " + this.ubicacionDeEnvio.getPiso() + " "
+                        : " ")
+                        + (this.ubicacionDeEnvio.getDepartamento() != null
+                        ? this.ubicacionDeEnvio.getDepartamento()
+                        : "")
+                        + (this.ubicacionDeEnvio.getNombreLocalidad() != null
+                        ? ", " + this.ubicacionDeEnvio.getNombreLocalidad()
+                        : " ")
+                        + " "
+                        + (this.ubicacionDeEnvio.getNombreProvincia() != null
+                        ? this.ubicacionDeEnvio.getNombreProvincia()
+                        : " "));
+            }
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnUbicacionEnvioActionPerformed
 

@@ -19,8 +19,6 @@ public class Cliente implements Serializable {
     private Long idFiscal;
     private String email;
     private String telefono;    
-    private Ubicacion ubicacionFacturacion;
-    private Ubicacion ubicacionEnvio;
     private String contacto;
     private Date fechaAlta;    
     private Long idEmpresa;
@@ -30,6 +28,10 @@ public class Cliente implements Serializable {
     private Long idCredencial;
     private String nombreCredencial;    
     private boolean predeterminado;
+    private Long idUbicacionFacturacion;
+    private String detalleUbicacionFacturacion;
+    private Long idUbicacionEnvio;
+    private String detalleUbicacionEnvio;
 
     @Override
     public String toString() {

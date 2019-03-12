@@ -70,7 +70,7 @@ public class ProveedoresGUI extends JInternalFrame {
         cmb_Provincia.removeAllItems();
         try {
             List<Provincia> provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/provincias",
+                    .getForObject("/ubicaciones/provincias",
                             Provincia[].class)));
             Provincia provinciaTodas = new Provincia();
             provinciaTodas.setNombre("Todas");
@@ -92,7 +92,7 @@ public class ProveedoresGUI extends JInternalFrame {
         cmb_Localidad.removeAllItems();
         try {
             List<Localidad> Localidades = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/localidades/provincias/" + provSeleccionada.getId_Provincia(), Localidad[].class)));
+                    .getForObject("/ubicaciones/localidades/provincias/" + provSeleccionada.getId_Provincia(), Localidad[].class)));
             Localidad localidadTodas = new Localidad();
             localidadTodas.setNombre("Todas");
             cmb_Localidad.addItem(localidadTodas);

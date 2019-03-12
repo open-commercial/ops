@@ -34,7 +34,6 @@ import sic.modelo.CuentaCorrienteProveedor;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.FacturaCompra;
 import sic.modelo.FacturaVenta;
-import sic.modelo.Localidad;
 import sic.modelo.NotaCredito;
 import sic.modelo.NotaDebito;
 import sic.modelo.PaginaRespuestaRest;
@@ -258,14 +257,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         String nombreCliente = cliente.getNombreFiscal() + " (" + cliente.getNroCliente() + ")";
         this.setTitle("Cuenta Corriente del Cliente: " + nombreCliente);
         txtNombreCliente.setText(nombreCliente);        
-        txtDomicilioFiscalCliente.setText((cliente.getUbicacionFacturacion().getCalle() != null ? cliente.getUbicacionFacturacion().getCalle() : "")
-                + " "
-                + (cliente.getUbicacionFacturacion().getNumero() != null ? cliente.getUbicacionFacturacion().getNumero() : "")
-                + ", "
-                + (cliente.getUbicacionFacturacion().getPiso() != null ? cliente.getUbicacionFacturacion().getPiso() + "," : "")
-                + (cliente.getUbicacionFacturacion().getNombreLocalidad() != null ? cliente.getUbicacionFacturacion().getNombreProvincia() : "")
-                + " "
-                + (cliente.getUbicacionFacturacion().getNombreProvincia() != null ? cliente.getUbicacionFacturacion().getNombreProvincia() : ""));
+        txtDomicilioFiscalCliente.setText(cliente.getDetalleUbicacionFacturacion());
         if (cliente.getIdFiscal() != null) {
             txtIDFiscalCliente.setText(cliente.getIdFiscal().toString());
         }

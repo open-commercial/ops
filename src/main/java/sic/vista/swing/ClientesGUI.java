@@ -65,7 +65,7 @@ public class ClientesGUI extends JInternalFrame {
         cmbProvincia.removeAllItems();
         try {
             List<Provincia> provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/provincias",
+                    .getForObject("/ubicaciones/provincias",
                             Provincia[].class)));
             Provincia provinciaTodas = new Provincia();
             provinciaTodas.setNombre("Todas");
@@ -87,7 +87,7 @@ public class ClientesGUI extends JInternalFrame {
         cmbLocalidad.removeAllItems();
         try {
             List<Localidad> Localidades = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/localidades/provincias/" + ((Provincia) cmbProvincia.getSelectedItem()).getId_Provincia(),
+                    .getForObject("/ubicaciones/localidades/provincias/" + ((Provincia) cmbProvincia.getSelectedItem()).getId_Provincia(),
                             Localidad[].class)));
             Localidad localidadTodas = new Localidad();
             localidadTodas.setNombre("Todas");
@@ -107,7 +107,7 @@ public class ClientesGUI extends JInternalFrame {
 
     private void setColumnas() {
         //nombres de columnas
-        String[] encabezados = new String[17];
+        String[] encabezados = new String[16];
         encabezados[0] = "Predeterminado";
         encabezados[1] = "Nº Cliente";
         encabezados[2] = "CUIT o DNI";
@@ -123,8 +123,7 @@ public class ClientesGUI extends JInternalFrame {
         encabezados[12] = "Contacto";
         encabezados[13] = "Email";
         encabezados[14] = "Fecha Alta";
-        encabezados[15] = "Localidad";
-        encabezados[16] = "Provincia";
+        encabezados[15] = "Ubicacion";
         modeloTablaDeResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaDeResultados);
         //tipo de dato columnas
@@ -145,7 +144,6 @@ public class ClientesGUI extends JInternalFrame {
         tipos[13] = String.class;
         tipos[14] = Date.class;
         tipos[15] = String.class;
-        tipos[16] = String.class;
         modeloTablaDeResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
@@ -165,8 +163,7 @@ public class ClientesGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(12).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(13).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(14).setPreferredWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(15).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(16).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(15).setPreferredWidth(400);
         //renderers
         tbl_Resultados.getColumnModel().getColumn(5).setCellRenderer(new ColoresNumerosRenderer());
         tbl_Resultados.getColumnModel().getColumn(6).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
@@ -176,7 +173,7 @@ public class ClientesGUI extends JInternalFrame {
 
     private void cargarResultadosAlTable() {
         cuentasCorrienteClienteParcial.stream().map(c -> {
-            Object[] fila = new Object[17];
+            Object[] fila = new Object[16];
             fila[0] = c.getCliente().isPredeterminado();
             fila[1] = c.getCliente().getNroCliente();
             fila[2] = c.getCliente().getIdFiscal();
@@ -192,8 +189,7 @@ public class ClientesGUI extends JInternalFrame {
             fila[12] = c.getCliente().getContacto();
             fila[13] = c.getCliente().getEmail();
             fila[14] = c.getCliente().getFechaAlta();
-            fila[15] = c.getCliente().getUbicacionFacturacion() != null ? c.getCliente().getUbicacionFacturacion().getNombreLocalidad() : "";
-            fila[16] = c.getCliente().getUbicacionFacturacion() != null ? c.getCliente().getUbicacionFacturacion().getNombreProvincia(): "";
+            fila[15] = c.getCliente().getDetalleUbicacionFacturacion();
             return fila;
         }).forEach(fila -> {
             modeloTablaDeResultados.addRow(fila);
@@ -498,16 +494,16 @@ public class ClientesGUI extends JInternalFrame {
                     .addComponent(txtViajante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscarViajante))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chk_Ubicacion)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmbProvincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmbLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(chk_Ubicacion)
+                    .addGroup(panelFiltrosLayout.createSequentialGroup()
+                        .addComponent(cmbProvincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btn_Buscar)
-                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmbLocalidad, cmbProvincia});
@@ -660,9 +656,9 @@ public class ClientesGUI extends JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(42, 42, 42)
                 .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
