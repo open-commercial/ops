@@ -68,24 +68,18 @@ public class DetalleEmpresaGUI extends JDialog {
         dc_FechaInicioActividad.setDate(empresaModificar.getFechaInicioActividad());
         txt_Email.setText(empresaModificar.getEmail());
         txt_Telefono.setText(empresaModificar.getTelefono());
-        if (empresaModificar.getUbicacion() != null) {
-            lblDetalleUbicacionEmpresa.setText(empresaModificar.getUbicacion().getCalle()
-                    + " "
-                    + empresaModificar.getUbicacion().getNumero()
-                    + (empresaModificar.getUbicacion().getPiso() != null
-                    ? ", " + empresaModificar.getUbicacion().getPiso() + " "
-                    : " ")
-                    + (empresaModificar.getUbicacion().getDepartamento() != null
-                    ? empresaModificar.getUbicacion().getDepartamento()
-                    : "")
-                    + (empresaModificar.getUbicacion().getNombreLocalidad() != null
-                    ? ", " + empresaModificar.getUbicacion().getNombreLocalidad()
-                    : " ")
-                    + " "
-                    + (empresaModificar.getUbicacion().getNombreProvincia() != null
-                    ? empresaModificar.getUbicacion().getNombreProvincia()
-                    : " "));
-            this.ubicacion = empresaModificar.getUbicacion();
+        if (empresaModificar.getIdUbicacion() != null) {
+            lblDetalleUbicacionEmpresa.setText(empresaModificar.getDetalleUbicacion());
+            try {
+                this.ubicacion = RestClient.getRestTemplate().getForObject("/ubicaciones/" + empresaModificar.getIdUbicacion(), Ubicacion.class);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
         } 
         if (empresaModificar.getLogo() == null || "".equals(empresaModificar.getLogo())) {
             lbl_Logo.setText("SIN IMAGEN");
@@ -420,9 +414,9 @@ public class DetalleEmpresaGUI extends JDialog {
                     empresaModificar.setLogo(null);
                 }
                 RestClient.getRestTemplate().put("/empresas", empresaModificar);
-                if (empresaModificar.getUbicacion() == null && this.ubicacion != null) {
+                if (empresaModificar.getIdUbicacion() == null && this.ubicacion != null) {
                     RestClient.getRestTemplate().postForObject("/ubicaciones/empresas/" + empresaModificar.getId_Empresa(), this.ubicacion, Ubicacion.class);
-                } else if (empresaModificar.getUbicacion() != null && this.ubicacion != null) {
+                } else if (empresaModificar.getIdUbicacion() != null && this.ubicacion != null) {
                     RestClient.getRestTemplate().put("/ubicaciones", this.ubicacion);
                 }
                 mensaje = "La Empresa " + txt_Nombre.getText().trim() + " se modificó correctamente.";

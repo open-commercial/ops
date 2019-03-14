@@ -41,24 +41,18 @@ public class DetalleTransportistaGUI extends JDialog {
 
     private void cargarTransportistaParaModificar() {
         txt_Nombre.setText(transportistaModificar.getNombre());
-                if (transportistaModificar.getUbicacion() != null) {
-            lblDetalleUbicacionTransportista.setText(transportistaModificar.getUbicacion().getCalle()
-                    + " "
-                    + transportistaModificar.getUbicacion().getNumero()
-                    + (transportistaModificar.getUbicacion().getPiso() != null
-                    ? ", " + transportistaModificar.getUbicacion().getPiso() + " "
-                    : " ")
-                    + (transportistaModificar.getUbicacion().getDepartamento() != null
-                    ? transportistaModificar.getUbicacion().getDepartamento()
-                    : "")
-                    + (transportistaModificar.getUbicacion().getNombreLocalidad() != null
-                    ? ", " + transportistaModificar.getUbicacion().getNombreLocalidad()
-                    : " ")
-                    + " "
-                    + (transportistaModificar.getUbicacion().getNombreProvincia() != null
-                    ? transportistaModificar.getUbicacion().getNombreProvincia()
-                    : " "));
-            this.ubicacion = transportistaModificar.getUbicacion();
+        if (transportistaModificar.getDetalleUbicacion() != null) {
+            lblDetalleUbicacionTransportista.setText(transportistaModificar.getDetalleUbicacion());
+            try {
+                this.ubicacion = RestClient.getRestTemplate().getForObject("/ubicaciones/" + transportistaModificar.getIdUbicacion(), Ubicacion.class);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
         txt_Telefono.setText(transportistaModificar.getTelefono());
         txt_Web.setText(transportistaModificar.getWeb());
@@ -229,9 +223,9 @@ public class DetalleTransportistaGUI extends JDialog {
                     transportistaModificar.setWeb(txt_Web.getText().trim());
                     transportistaModificar.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
                     RestClient.getRestTemplate().put("/transportistas", transportistaModificar);
-                    if (transportistaModificar.getUbicacion() == null && this.ubicacion != null) {
+                    if (transportistaModificar.getIdUbicacion() == null && this.ubicacion != null) {
                         RestClient.getRestTemplate().postForObject("/ubicaciones/transportistas/" + transportistaModificar.getId_Transportista(), this.ubicacion, Ubicacion.class);
-                    } else if (transportistaModificar.getUbicacion() != null && this.ubicacion != null) {
+                    } else if (transportistaModificar.getIdUbicacion() != null && this.ubicacion != null) {
                         RestClient.getRestTemplate().put("/ubicaciones", this.ubicacion);
                     }
                     JOptionPane.showMessageDialog(this, "El transportista se modificó correctamente!",

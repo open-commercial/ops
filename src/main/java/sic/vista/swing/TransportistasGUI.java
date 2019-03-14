@@ -90,13 +90,11 @@ public class TransportistasGUI extends JInternalFrame {
         tbl_Resultados.setAutoCreateRowSorter(true);
 
         //nombres de columnas
-        String[] encabezados = new String[6];
+        String[] encabezados = new String[4];
         encabezados[0] = "Nombre";
-        encabezados[1] = "Direccion";
-        encabezados[2] = "Telefono";
-        encabezados[3] = "Web";
-        encabezados[4] = "Localidad";
-        encabezados[5] = "Provincia";
+        encabezados[1] = "Telefono";
+        encabezados[2] = "Web";
+        encabezados[3] = "Ubicacion";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaResultados);
 
@@ -106,34 +104,25 @@ public class TransportistasGUI extends JInternalFrame {
         tipos[1] = String.class;
         tipos[2] = String.class;
         tipos[3] = String.class;
-        tipos[4] = String.class;
-        tipos[5] = String.class;
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
 
         //Tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(300);
-        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(300);
+        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(400);
     }
 
     private void cargarResultadosAlTable() {
         this.limpiarJTable();
         transportistas.stream().map((transportista) -> {
-            Object[] fila = new Object[7];
+            Object[] fila = new Object[4];
             fila[0] = transportista.getNombre();
-            fila[1] = (transportista.getUbicacion() != null) ? 
-                    transportista.getUbicacion().getCalle() + transportista.getUbicacion().getNumero() : "";
-            fila[2] = transportista.getTelefono();
-            fila[3] = transportista.getWeb();
-            fila[4] = (transportista.getUbicacion() != null 
-                    && transportista.getUbicacion().getNombreLocalidad() != null) ? transportista.getUbicacion().getNombreLocalidad(): "";
-            fila[5] = (transportista.getUbicacion() != null 
-                    && transportista.getUbicacion().getNombreLocalidad() != null) ? transportista.getUbicacion().getNombreProvincia(): "";
+            fila[1] = transportista.getTelefono();
+            fila[2] = transportista.getWeb();
+            fila[3] = transportista.getDetalleUbicacion();
             return fila;
         }).forEach((fila) -> {
             modeloTablaResultados.addRow(fila);

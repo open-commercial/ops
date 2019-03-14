@@ -10,7 +10,8 @@ public class Transportista implements Serializable {
 
     private long id_Transportista;
     private String nombre;
-    private Ubicacion ubicacion;
+    private Long idUbicacion;
+    private String detalleUbicacion;
     private String web;
     private String telefono;
     private Long idEmpresa;
