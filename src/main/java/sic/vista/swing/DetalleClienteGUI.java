@@ -633,7 +633,7 @@ public class DetalleClienteGUI extends JDialog {
             if (this.cliente.getIdUbicacionFacturacion() != null) {
                 ubicacionDeFacturacion = RestClient.getRestTemplate().getForObject("/ubicaciones/" + this.cliente.getIdUbicacionFacturacion(), Ubicacion.class);
             }
-            DetalleUbicacionGUI guiDetalleUbicacion = new DetalleUbicacionGUI(ubicacionDeFacturacion);
+            DetalleUbicacionGUI guiDetalleUbicacion = new DetalleUbicacionGUI(ubicacionDeFacturacion, "Ubicación Facturación");
             guiDetalleUbicacion.setModal(true);
             guiDetalleUbicacion.setLocationRelativeTo(this);
             guiDetalleUbicacion.setVisible(true);
@@ -671,7 +671,7 @@ public class DetalleClienteGUI extends JDialog {
             if (this.cliente.getIdUbicacionEnvio() != null) {
                 ubicacionDeEnvio = RestClient.getRestTemplate().getForObject("/ubicaciones/" + this.cliente.getIdUbicacionEnvio(), Ubicacion.class);
             }
-            DetalleUbicacionGUI guiDetalleUbicacion = new DetalleUbicacionGUI(ubicacionDeEnvio);
+            DetalleUbicacionGUI guiDetalleUbicacion = new DetalleUbicacionGUI(ubicacionDeEnvio, "Ubicación Envío");
             guiDetalleUbicacion.setModal(true);
             guiDetalleUbicacion.setLocationRelativeTo(this);
             guiDetalleUbicacion.setVisible(true);

@@ -252,7 +252,7 @@ public class DetalleTransportistaGUI extends JDialog {
     }//GEN-LAST:event_formWindowOpened
 
     private void btnUbicacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbicacionActionPerformed
-        DetalleUbicacionGUI guiDetalleUbicacion = new DetalleUbicacionGUI(this.ubicacion);
+        DetalleUbicacionGUI guiDetalleUbicacion = new DetalleUbicacionGUI(this.ubicacion, "Ubicación Transportista");
         guiDetalleUbicacion.setModal(true);
         guiDetalleUbicacion.setLocationRelativeTo(this);
         guiDetalleUbicacion.setVisible(true);

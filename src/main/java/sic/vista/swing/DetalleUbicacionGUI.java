@@ -21,9 +21,10 @@ public class DetalleUbicacionGUI extends JDialog {
     private Localidad localidadSeleccionada;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public DetalleUbicacionGUI(Ubicacion ubicacionAModificar) {
+    public DetalleUbicacionGUI(Ubicacion ubicacionAModificar, String tituloVentana) {
         this.ubicacionAModificar = ubicacionAModificar;
         initComponents();
+        this.modificarTituloVentana(tituloVentana);
     }
 
     public Ubicacion getUbicacionModificada() {
@@ -83,6 +84,10 @@ public class DetalleUbicacionGUI extends JDialog {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    private void modificarTituloVentana(String tituloVentana) {
+        this.setTitle(tituloVentana);
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -112,7 +117,6 @@ public class DetalleUbicacionGUI extends JDialog {
         btnSeleccionar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Administrar Ubicación");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);

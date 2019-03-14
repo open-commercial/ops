@@ -162,7 +162,7 @@
             <Component class="javax.swing.JLabel" name="lblDomicilioFiscalCliente">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="2"/>
-                <Property name="text" type="java.lang.String" value="Ubicaci&#xf3;n Fiscal:"/>
+                <Property name="text" type="java.lang.String" value="Ubicaci&#xf3;n :"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lbl_IDFiscalCliente">
@@ -757,7 +757,7 @@
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Component id="btn_BuscarCliente" linkSize="25" min="-2" pref="198" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                              <Component id="btnModificar" linkSize="25" min="-2" pref="108" max="-2" attributes="0"/>
+                              <Component id="btnModificarCliente" linkSize="25" min="-2" pref="108" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
                               <Component id="lbl_fechaDeVencimiento" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -796,7 +796,7 @@
                               <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="2" attributes="0">
                                   <Component id="btn_BuscarCliente" linkSize="16" alignment="2" min="-2" pref="15" max="-2" attributes="0"/>
-                                  <Component id="btnModificar" linkSize="16" alignment="2" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnModificarCliente" linkSize="16" alignment="2" min="-2" max="-2" attributes="0"/>
                                   <Component id="btn_NuevoCliente" linkSize="16" alignment="2" min="-2" pref="32" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -895,7 +895,7 @@
                 <Property name="horizontalAlignment" type="int" value="4"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btnModificar">
+            <Component class="javax.swing.JButton" name="btnModificarCliente">
               <Properties>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
@@ -904,10 +904,9 @@
                   <Image iconType="3" name="/sic/icons/EditClient_16x16.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Modificar Cliente"/>
-                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnModificarActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnModificarClienteActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

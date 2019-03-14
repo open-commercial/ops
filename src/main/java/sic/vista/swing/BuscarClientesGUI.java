@@ -103,7 +103,7 @@ public class BuscarClientesGUI extends JDialog {
         encabezados[1] = "CUIT o DNI";
         encabezados[2] = "R. Social o Nombre";
         encabezados[3] = "Nombre Fantasia";
-        encabezados[4] = "Direccion";        
+        encabezados[4] = "Ubicación Facturación";        
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tblResultados.setModel(modeloTablaResultados);        
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];

@@ -87,7 +87,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         txt_Recargo_porcentaje.addKeyListener(keyHandler);
         btn_Continuar.addKeyListener(keyHandler);
         tbtn_marcarDesmarcar.addKeyListener(keyHandler);        
-        dc_fechaVencimiento.addKeyListener(keyHandler);        
+        dc_fechaVencimiento.addKeyListener(keyHandler);     
+        btnModificarCliente.addKeyListener(keyHandler); 
     }   
     
     public void cargarPedidoParaFacturar() {
@@ -715,6 +716,10 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             if (evt.getKeyCode() == KeyEvent.VK_F5) {
                 btn_NuevoClienteActionPerformed(null);
             }
+            
+            if (evt.getKeyCode() == KeyEvent.VK_F6) {
+                btnModificarClienteActionPerformed(null);
+            }
 
             if (evt.getKeyCode() == KeyEvent.VK_F9) {
                 btn_ContinuarActionPerformed(null);
@@ -788,7 +793,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         btn_BuscarCliente = new javax.swing.JButton();
         lblSeparadorIzquierdo = new javax.swing.JLabel();
         lblSeparadorDerecho = new javax.swing.JLabel();
-        btnModificar = new javax.swing.JButton();
+        btnModificarCliente = new javax.swing.JButton();
 
         setResizable(true);
         setTitle("S.I.C. Punto de Venta");
@@ -817,7 +822,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         lblNombreCliente.setText("Nombre:");
 
         lblDomicilioFiscalCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblDomicilioFiscalCliente.setText("Ubicación Fiscal:");
+        lblDomicilioFiscalCliente.setText("Ubicación :");
 
         lbl_IDFiscalCliente.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_IDFiscalCliente.setText("CUIT o DNI:");
@@ -1298,13 +1303,12 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
         lblSeparadorDerecho.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
-        btnModificar.setForeground(java.awt.Color.blue);
-        btnModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/EditClient_16x16.png"))); // NOI18N
-        btnModificar.setText("Modificar Cliente");
-        btnModificar.setEnabled(false);
-        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+        btnModificarCliente.setForeground(java.awt.Color.blue);
+        btnModificarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/EditClient_16x16.png"))); // NOI18N
+        btnModificarCliente.setText("Modificar Cliente");
+        btnModificarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnModificarActionPerformed(evt);
+                btnModificarClienteActionPerformed(evt);
             }
         });
 
@@ -1319,7 +1323,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         .addGap(0, 0, 0)
                         .addComponent(btn_BuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
-                        .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnModificarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lbl_fechaDeVencimiento)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1336,7 +1340,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 .addContainerGap())
         );
 
-        panelEncabezadoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnModificar, btn_BuscarCliente, btn_NuevoCliente});
+        panelEncabezadoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnModificarCliente, btn_BuscarCliente, btn_NuevoCliente});
 
         panelEncabezadoLayout.setVerticalGroup(
             panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1354,7 +1358,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         .addGap(4, 4, 4)
                         .addGroup(panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(btn_BuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnModificar)
+                            .addComponent(btnModificarCliente)
                             .addComponent(btn_NuevoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(panelEncabezadoLayout.createSequentialGroup()
                         .addGap(6, 6, 6)
@@ -1367,7 +1371,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panelEncabezadoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnModificar, btn_BuscarCliente, btn_NuevoCliente});
+        panelEncabezadoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnModificarCliente, btn_BuscarCliente, btn_NuevoCliente});
 
         javax.swing.GroupLayout panelGeneralLayout = new javax.swing.GroupLayout(panelGeneral);
         panelGeneral.setLayout(panelGeneralLayout);
@@ -1428,7 +1432,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             this.cargarCliente(buscarClientesGUI.getClienteSeleccionado());
             this.cargarTiposDeComprobantesDisponibles();
             cmb_TipoComprobante.setSelectedIndex(0);
-            btnModificar.setEnabled(true);
         }
     }//GEN-LAST:event_btn_BuscarClienteActionPerformed
 
@@ -1440,7 +1443,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         if (gui_DetalleCliente.getClienteDadoDeAlta() != null) {
             this.cargarCliente(gui_DetalleCliente.getClienteDadoDeAlta());
             this.cargarTiposDeComprobantesDisponibles();
-            btnModificar.setEnabled(true);
+            btnModificarCliente.setEnabled(true);
         }
     }//GEN-LAST:event_btn_NuevoClienteActionPerformed
 
@@ -1640,7 +1643,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                             .getForObject("/clientes/predeterminado/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                                     Cliente.class);
                     this.cargarCliente(clientePredeterminado);
-                    this.btnModificar.setEnabled(true);
+                    this.btnModificarCliente.setEnabled(true);
                 } 
             }
             if (!this.existeFormaDePagoPredeterminada() || !this.existeTransportistaCargado()) {
@@ -1673,17 +1676,21 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_formInternalFrameOpened
 
-    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+    private void btnModificarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarClienteActionPerformed
         if (cliente != null) {
             DetalleClienteGUI gui_DetalleCliente = new DetalleClienteGUI(cliente);
             gui_DetalleCliente.setModal(true);
             gui_DetalleCliente.setLocationRelativeTo(this);
             gui_DetalleCliente.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_seleccionar_cliente"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_btnModificarActionPerformed
+    }//GEN-LAST:event_btnModificarClienteActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnModificar;
+    private javax.swing.JButton btnModificarCliente;
     private javax.swing.JButton btn_AddComment;
     private javax.swing.JButton btn_BuscarCliente;
     private javax.swing.JButton btn_BuscarPorCodigoProducto;
