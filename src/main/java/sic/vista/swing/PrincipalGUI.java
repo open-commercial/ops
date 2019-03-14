@@ -803,9 +803,9 @@ public class PrincipalGUI extends JFrame {
     }//GEN-LAST:event_mnuItmMedidasActionPerformed
 
     private void mnuItmLocalidadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmLocalidadesActionPerformed
-        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), AdministrarLocalidadesGUI.class);
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), LocalidadesGUI.class);
         if (gui == null) {
-            gui = new AdministrarLocalidadesGUI();
+            gui = new LocalidadesGUI();
             gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
                     getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
             getDesktopPane().add(gui);
