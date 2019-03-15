@@ -314,7 +314,7 @@ public class CerrarPedidoGUI extends JDialog {
         });
 
         buttonGroup1.add(rbDireccionFacturacion);
-        rbDireccionFacturacion.setText("Enviar a la Ubicación de Facturación.");
+        rbDireccionFacturacion.setText("Enviar a la Ubicación de Facturación");
         rbDireccionFacturacion.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 rbDireccionFacturacionItemStateChanged(evt);
@@ -322,7 +322,7 @@ public class CerrarPedidoGUI extends JDialog {
         });
 
         buttonGroup1.add(rbDireccionEnvio);
-        rbDireccionEnvio.setText("Enviar a la Ubicación de Envío.");
+        rbDireccionEnvio.setText("Enviar a la Ubicación de Envío");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -390,7 +390,7 @@ public class CerrarPedidoGUI extends JDialog {
             this.seleccionarProvinciaDeCliente();
             this.cargarLocalidadesDeLaProvincia((Provincia) cmbProvinciasBusqueda.getSelectedItem());
             this.seleccionarLocalidadDeCliente();
-            rbDireccionEnvio.setSelected(true);
+            rbDireccionFacturacion.setSelected(true);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
