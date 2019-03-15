@@ -199,7 +199,6 @@ public class CajasGUI extends JInternalFrame {
             if (saldoApertura != null) {
                 try {
                     RestClient.getRestTemplate().postForObject("/cajas/apertura/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                            + "/usuarios/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                             + "?saldoApertura=" + new BigDecimal(saldoApertura), null, Caja.class);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
