@@ -257,7 +257,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         String nombreCliente = cliente.getNombreFiscal() + " (" + cliente.getNroCliente() + ")";
         this.setTitle("Cuenta Corriente del Cliente: " + nombreCliente);
         txtNombreCliente.setText(nombreCliente);        
-        txtDomicilioFiscalCliente.setText(cliente.getDetalleUbicacionFacturacion());
+        txtUbicacion.setText(cliente.getDetalleUbicacionFacturacion());
         if (cliente.getIdFiscal() != null) {
             txtIDFiscalCliente.setText(cliente.getIdFiscal().toString());
         }
@@ -280,7 +280,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         txtNombreCliente.setText(proveedor.getRazonSocial());
         try {
             if (proveedor.getIdUbicacion() != null) {
-                txtDomicilioFiscalCliente.setText(proveedor.getDetalleUbicacion());
+                txtUbicacion.setText(proveedor.getDetalleUbicacion());
             }
             if (proveedor.getIdFiscal() != null) {
                 txtIDFiscalCliente.setText(proveedor.getIdFiscal().toString());
@@ -512,10 +512,10 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         lblCondicionIVACliente = new javax.swing.JLabel();
         txtIDFiscalCliente = new javax.swing.JTextField();
         lblIDFiscalCliente = new javax.swing.JLabel();
-        lblDomicilioFiscalCliente = new javax.swing.JLabel();
+        lblUbicacion = new javax.swing.JLabel();
         lblNombreCliente = new javax.swing.JLabel();
         txtNombreCliente = new javax.swing.JTextField();
-        txtDomicilioFiscalCliente = new javax.swing.JTextField();
+        txtUbicacion = new javax.swing.JTextField();
         btnRefresh = new javax.swing.JButton();
 
         setClosable(true);
@@ -687,8 +687,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         lblIDFiscalCliente.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblIDFiscalCliente.setText("CUIT o DNI:");
 
-        lblDomicilioFiscalCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblDomicilioFiscalCliente.setText("Domicilio Fiscal:");
+        lblUbicacion.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblUbicacion.setText("Ubicación:");
 
         lblNombreCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblNombreCliente.setText("Nombre:");
@@ -696,8 +696,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         txtNombreCliente.setEditable(false);
         txtNombreCliente.setFocusable(false);
 
-        txtDomicilioFiscalCliente.setEditable(false);
-        txtDomicilioFiscalCliente.setFocusable(false);
+        txtUbicacion.setEditable(false);
+        txtUbicacion.setFocusable(false);
 
         btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Refresh_16x16.png"))); // NOI18N
         btnRefresh.setFocusable(false);
@@ -720,7 +720,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lblCondicionIVACliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblDomicilioFiscalCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblUbicacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblNombreCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -730,7 +730,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                                 .addComponent(lblIDFiscalCliente)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtIDFiscalCliente))
-                            .addComponent(txtDomicilioFiscalCliente, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtUbicacion, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(txtNombreCliente, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
             .addComponent(pnlResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -744,8 +744,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     .addComponent(txtNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblDomicilioFiscalCliente)
-                    .addComponent(txtDomicilioFiscalCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblUbicacion)
+                    .addComponent(txtUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblCondicionIVACliente)
@@ -1042,17 +1042,17 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JFormattedTextField ftxtSaldoFinal;
     private javax.swing.JLabel lblCondicionIVACliente;
-    private javax.swing.JLabel lblDomicilioFiscalCliente;
     private javax.swing.JLabel lblIDFiscalCliente;
     private javax.swing.JLabel lblNombreCliente;
+    private javax.swing.JLabel lblUbicacion;
     private javax.swing.JLabel lbl_saldoFinal;
     private javax.swing.JPanel pnlResultados;
     private javax.swing.JScrollPane sp_Resultados;
     private javax.swing.JTable tbl_Resultados;
     private javax.swing.JTextField txtCondicionIVACliente;
-    private javax.swing.JTextField txtDomicilioFiscalCliente;
     private javax.swing.JTextField txtIDFiscalCliente;
     private javax.swing.JTextField txtNombreCliente;
+    private javax.swing.JTextField txtUbicacion;
     // End of variables declaration//GEN-END:variables
 
 }
