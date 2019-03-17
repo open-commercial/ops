@@ -103,7 +103,7 @@ public class BuscarProveedoresGUI extends JDialog {
         encabezados[0] = "Codigo";
         encabezados[1] = "ID Fiscal";
         encabezados[2] = "Razon Social";
-        encabezados[3] = "Direccion";               
+        encabezados[3] = "Ubicación";               
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tblResultados.setModel(modeloTablaResultados);        
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
@@ -130,7 +130,7 @@ public class BuscarProveedoresGUI extends JDialog {
             fila[0] = proveedor.getCodigo();
             fila[1] = proveedor.getIdFiscal();
             fila[2] = proveedor.getRazonSocial();
-            fila[3] = proveedor.getDireccion();            
+            fila[3] = proveedor.getDetalleUbicacion();            
             return fila;
         }).forEachOrdered(fila -> {
             modeloTablaResultados.addRow(fila);

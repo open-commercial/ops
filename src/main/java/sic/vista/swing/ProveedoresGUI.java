@@ -111,20 +111,19 @@ public class ProveedoresGUI extends JInternalFrame {
 
     private void setColumnas() {
         //nombres de columnas
-        String[] encabezados = new String[13];
+        String[] encabezados = new String[12];
         encabezados[0] = "Codigo";
         encabezados[1] = "ID Fiscal";
         encabezados[2] = "Razon Social";
         encabezados[3] = "Saldo C/C";
         encabezados[4] = "Ultimo Movimiento C/C";
-        encabezados[5] = "Direccion";
-        encabezados[6] = "Condicion IVA";
-        encabezados[7] = "Tel. Primario";
-        encabezados[8] = "Tel. Secundario";
-        encabezados[9] = "Contacto";
-        encabezados[10] = "Email";
-        encabezados[11] = "Web";
-        encabezados[12] = "Ubicacion";
+        encabezados[5] = "Condicion IVA";
+        encabezados[6] = "Tel. Primario";
+        encabezados[7] = "Tel. Secundario";
+        encabezados[8] = "Contacto";
+        encabezados[9] = "Email";
+        encabezados[10] = "Web";
+        encabezados[11] = "Ubicacion";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaResultados);
         //tipo de dato columnas
@@ -141,7 +140,6 @@ public class ProveedoresGUI extends JInternalFrame {
         tipos[9] = String.class;
         tipos[10] = String.class;
         tipos[11] = String.class;
-        tipos[12] = String.class;
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
@@ -151,14 +149,13 @@ public class ProveedoresGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(300);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(110);
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(150);
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(310);
+        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(11).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(12).setPreferredWidth(400);
+        tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(250);
+        tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(240);
+        tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(240);
+        tbl_Resultados.getColumnModel().getColumn(11).setPreferredWidth(440);
         //renderers
         tbl_Resultados.getColumnModel().getColumn(3).setCellRenderer(new ColoresNumerosRenderer());
         tbl_Resultados.setDefaultRenderer(Date.class, new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
@@ -166,20 +163,19 @@ public class ProveedoresGUI extends JInternalFrame {
 
     private void cargarResultadosAlTable() {
         cuentasCorrienteProveedoresParcial.stream().map(p -> {
-            Object[] fila = new Object[13];
+            Object[] fila = new Object[12];
             fila[0] = p.getProveedor().getCodigo();
             fila[1] = p.getProveedor().getIdFiscal();
             fila[2] = p.getProveedor().getRazonSocial();
             fila[3] = p.getSaldo();
             fila[4] = p.getFechaUltimoMovimiento();
-            fila[5] = p.getProveedor().getDireccion();
-            fila[6] = p.getProveedor().getCategoriaIVA();
-            fila[7] = p.getProveedor().getTelPrimario();
-            fila[8] = p.getProveedor().getTelSecundario();
-            fila[9] = p.getProveedor().getContacto();
-            fila[10] = p.getProveedor().getEmail();
-            fila[11] = p.getProveedor().getWeb();
-            fila[12] = p.getProveedor().getDetalleUbicacion();
+            fila[5] = p.getProveedor().getCategoriaIVA();
+            fila[6] = p.getProveedor().getTelPrimario();
+            fila[7] = p.getProveedor().getTelSecundario();
+            fila[8] = p.getProveedor().getContacto();
+            fila[9] = p.getProveedor().getEmail();
+            fila[10] = p.getProveedor().getWeb();
+            fila[11] = p.getProveedor().getDetalleUbicacion();
             return fila;
         }).forEach(f -> {
             modeloTablaResultados.addRow(f);

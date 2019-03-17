@@ -186,7 +186,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
 
     private void cargarDetalleCliente() {
         txtNombre.setText(((FacturaVenta) factura).getNombreFiscalCliente() + " (" + cliente.getNroCliente() + ")");
-        txtDomicilioFiscalCliente.setText(cliente.getDetalleUbicacionFacturacion());
+        txtUbicacion.setText(cliente.getDetalleUbicacionFacturacion());
         if (cliente.getIdFiscal() != null) {
             txtIdFiscal.setText(cliente.getIdFiscal().toString());
         }
@@ -204,7 +204,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private void cargarDetalleProveedor() {
         txtNombre.setText(((FacturaCompra) factura).getRazonSocialProveedor());
         if (proveedor.getIdUbicacion()!= null) {
-            txtDomicilioFiscalCliente.setText(proveedor.getDetalleUbicacion());
+            txtUbicacion.setText(proveedor.getDetalleUbicacion());
         }
         if (proveedor.getIdFiscal() != null) {
             txtIdFiscal.setText(proveedor.getIdFiscal().toString());
@@ -217,7 +217,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
                 .getForObject("/proveedores/" + notaCredito.getIdProveedor(), Proveedor.class);
         txtNombre.setText(proveedorDeNota.getRazonSocial());
         if (proveedor.getIdUbicacion() != null) {
-            txtDomicilioFiscalCliente.setText(proveedor.getDetalleUbicacion());
+            txtUbicacion.setText(proveedor.getDetalleUbicacion());
         }
         if (proveedorDeNota.getIdFiscal() != null) {
             txtIdFiscal.setText(proveedorDeNota.getIdFiscal().toString());
@@ -403,12 +403,12 @@ public class DetalleNotaCreditoGUI extends JDialog {
 
         panelCliente = new javax.swing.JPanel();
         lblNombreCliente = new javax.swing.JLabel();
-        lblDomicilioFiscalCliente = new javax.swing.JLabel();
+        lblUbicacion = new javax.swing.JLabel();
         lblIDFiscalCliente = new javax.swing.JLabel();
         lblCondicionIVACliente = new javax.swing.JLabel();
         txtCondicionIVA = new javax.swing.JTextField();
         txtIdFiscal = new javax.swing.JTextField();
-        txtDomicilioFiscalCliente = new javax.swing.JTextField();
+        txtUbicacion = new javax.swing.JTextField();
         txtNombre = new javax.swing.JTextField();
         panelDetalle = new javax.swing.JPanel();
         spResultados = new javax.swing.JScrollPane();
@@ -456,8 +456,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
         lblNombreCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblNombreCliente.setText("Nombre:");
 
-        lblDomicilioFiscalCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblDomicilioFiscalCliente.setText("Domicilio Fiscal:");
+        lblUbicacion.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblUbicacion.setText("Ubicación:");
 
         lblIDFiscalCliente.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblIDFiscalCliente.setText("CUIT o DNI:");
@@ -471,8 +471,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
         txtIdFiscal.setEditable(false);
         txtIdFiscal.setFocusable(false);
 
-        txtDomicilioFiscalCliente.setEditable(false);
-        txtDomicilioFiscalCliente.setFocusable(false);
+        txtUbicacion.setEditable(false);
+        txtUbicacion.setFocusable(false);
 
         txtNombre.setEditable(false);
         txtNombre.setFocusable(false);
@@ -485,11 +485,11 @@ public class DetalleNotaCreditoGUI extends JDialog {
                 .addContainerGap()
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblNombreCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblDomicilioFiscalCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblUbicacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblCondicionIVACliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtDomicilioFiscalCliente, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtUbicacion, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtNombre)
                     .addGroup(panelClienteLayout.createSequentialGroup()
                         .addComponent(txtCondicionIVA)
@@ -507,8 +507,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
                     .addComponent(lblNombreCliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtDomicilioFiscalCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblDomicilioFiscalCliente))
+                    .addComponent(txtUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblUbicacion))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCondicionIVA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -898,12 +898,12 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private javax.swing.JComboBox<String> cmbMotivo;
     private com.toedter.calendar.JDateChooser dc_FechaNota;
     private javax.swing.JLabel lblCondicionIVACliente;
-    private javax.swing.JLabel lblDomicilioFiscalCliente;
     private javax.swing.JLabel lblFecha;
     private javax.swing.JLabel lblIDFiscalCliente;
     private javax.swing.JLabel lblMotivo;
     private javax.swing.JLabel lblNombreCliente;
     private javax.swing.JLabel lblSeparador;
+    private javax.swing.JLabel lblUbicacion;
     private javax.swing.JLabel lbl_105;
     private javax.swing.JLabel lbl_22;
     private javax.swing.JLabel lbl_DescuentoRecargo;
@@ -922,9 +922,9 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private javax.swing.JScrollPane spResultados;
     private javax.swing.JTable tblResultados;
     private javax.swing.JTextField txtCondicionIVA;
-    private javax.swing.JTextField txtDomicilioFiscalCliente;
     private javax.swing.JTextField txtIdFiscal;
     private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtUbicacion;
     private javax.swing.JFormattedTextField txt_CAE;
     private javax.swing.JFormattedTextField txt_Decuento_neto;
     private javax.swing.JFormattedTextField txt_Decuento_porcentaje;

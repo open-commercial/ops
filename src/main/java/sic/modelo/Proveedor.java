@@ -11,7 +11,6 @@ public class Proveedor implements Serializable {
     private long id_Proveedor;
     private String codigo;
     private String razonSocial;
-    private String direccion;
     private CategoriaIVA categoriaIVA;
     private Long idFiscal;
     private String telPrimario;

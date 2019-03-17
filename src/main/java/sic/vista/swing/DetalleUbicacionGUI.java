@@ -121,6 +121,9 @@ public class DetalleUbicacionGUI extends JDialog {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
             }
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
         });
 
         pnlDetalleUbicacion.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
@@ -332,6 +335,8 @@ public class DetalleUbicacionGUI extends JDialog {
             if (ubicacionAModificar.getLongitud() != null) {
                 ftfLongitud.setText(ubicacionAModificar.getLongitud().toString());
             }
+        } else {
+            ubicacionAModificar = new Ubicacion();
         }
         this.cargarProvincias();
         this.seleccionarProvinciaDelCliente();
@@ -340,9 +345,6 @@ public class DetalleUbicacionGUI extends JDialog {
     }//GEN-LAST:event_formWindowOpened
 
     private void btnSeleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarActionPerformed
-        if (ubicacionAModificar == null) {
-            ubicacionAModificar = new Ubicacion();
-        }
         if (txtCalle.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_ubicacion_calle_vacia"),
@@ -399,6 +401,13 @@ public class DetalleUbicacionGUI extends JDialog {
             ubicacionAModificar.setIdProvincia(null);
         }
     }//GEN-LAST:event_cmbLocalidadItemStateChanged
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if ((ubicacionAModificar.getCalle() == null || ubicacionAModificar.getCalle().isEmpty())
+                || (ubicacionAModificar.getNumero() == null)) {
+            ubicacionAModificar = null;
+        }
+    }//GEN-LAST:event_formWindowClosing
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSeleccionar;

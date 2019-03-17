@@ -49,7 +49,6 @@ public class DetalleProveedorGUI extends JDialog {
         txtRazonSocial.setText(proveedorModificar.getRazonSocial());
         txtIdFiscal.setValue(proveedorModificar.getIdFiscal());
         cmbCategoriaIVA.setSelectedItem(proveedorModificar.getCategoriaIVA());
-        txtDireccion.setText(proveedorModificar.getDireccion());
         if (proveedorModificar.getIdUbicacion() != null) {
             lblDetalleUbicacionProveedor.setText(proveedorModificar.getDetalleUbicacion());
             this.ubicacion = null;
@@ -76,7 +75,6 @@ public class DetalleProveedorGUI extends JDialog {
         txtCodigo.setText("");
         txtRazonSocial.setText("");
         txtIdFiscal.setText("");
-        txtDireccion.setText("");
         txtTelPrimario.setText("");
         txtTelSecundario.setText("");
         txtContacto.setText("");
@@ -121,8 +119,6 @@ public class DetalleProveedorGUI extends JDialog {
         lblIdFiscal = new javax.swing.JLabel();
         lblCondicionIVA = new javax.swing.JLabel();
         cmbCategoriaIVA = new javax.swing.JComboBox();
-        lblDireccion = new javax.swing.JLabel();
-        txtDireccion = new javax.swing.JTextField();
         lblTelPrimario = new javax.swing.JLabel();
         txtTelPrimario = new javax.swing.JTextField();
         txtTelSecundario = new javax.swing.JTextField();
@@ -174,9 +170,6 @@ public class DetalleProveedorGUI extends JDialog {
 
         cmbCategoriaIVA.setMaximumRowCount(5);
 
-        lblDireccion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblDireccion.setText("Dirección:");
-
         lblTelPrimario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblTelPrimario.setText("Teléfono #1:");
 
@@ -224,7 +217,6 @@ public class DetalleProveedorGUI extends JDialog {
                     .addComponent(lblRazonSocial, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblIdFiscal, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblCondicionIVA, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblTelPrimario, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblTelSecundario, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblContacto, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -233,7 +225,6 @@ public class DetalleProveedorGUI extends JDialog {
                 .addGap(0, 0, 0)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtRazonSocial, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtDireccion, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtTelPrimario, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtTelSecundario, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtContacto, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -248,6 +239,9 @@ public class DetalleProveedorGUI extends JDialog {
                         .addComponent(btnUbicacion)))
                 .addContainerGap())
         );
+
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblCodigo, lblCondicionIVA, lblContacto, lblEmail, lblIdFiscal, lblRazonSocial, lblTelPrimario, lblTelSecundario, lblUbicacion, lblWeb});
+
         panelPrincipalLayout.setVerticalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPrincipalLayout.createSequentialGroup()
@@ -267,10 +261,6 @@ public class DetalleProveedorGUI extends JDialog {
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblCondicionIVA)
                     .addComponent(cmbCategoriaIVA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblDireccion)
-                    .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btnUbicacion)
@@ -336,7 +326,6 @@ public class DetalleProveedorGUI extends JDialog {
                 proveedor.setRazonSocial(txtRazonSocial.getText().trim());
                 proveedor.setIdFiscal((Long) txtIdFiscal.getValue());
                 proveedor.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
-                proveedor.setDireccion(txtDireccion.getText().trim());
                 proveedor.setTelPrimario(txtTelPrimario.getText().trim());
                 proveedor.setTelSecundario(txtTelSecundario.getText().trim());
                 proveedor.setContacto(txtContacto.getText().trim());
@@ -361,7 +350,6 @@ public class DetalleProveedorGUI extends JDialog {
                 proveedorModificar.setRazonSocial(txtRazonSocial.getText().trim());
                 proveedorModificar.setIdFiscal((Long) txtIdFiscal.getValue());
                 proveedorModificar.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
-                proveedorModificar.setDireccion(txtDireccion.getText().trim());
                 proveedorModificar.setTelPrimario(txtTelPrimario.getText().trim());
                 proveedorModificar.setTelSecundario(txtTelSecundario.getText().trim());
                 proveedorModificar.setContacto(txtContacto.getText().trim());
@@ -438,7 +426,6 @@ public class DetalleProveedorGUI extends JDialog {
     private javax.swing.JLabel lblCondicionIVA;
     private javax.swing.JLabel lblContacto;
     private javax.swing.JLabel lblDetalleUbicacionProveedor;
-    private javax.swing.JLabel lblDireccion;
     private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblIdFiscal;
     private javax.swing.JLabel lblRazonSocial;
@@ -449,7 +436,6 @@ public class DetalleProveedorGUI extends JDialog {
     private javax.swing.JPanel panelPrincipal;
     private javax.swing.JTextField txtCodigo;
     private javax.swing.JTextField txtContacto;
-    private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JFormattedTextField txtIdFiscal;
     private javax.swing.JTextField txtRazonSocial;
