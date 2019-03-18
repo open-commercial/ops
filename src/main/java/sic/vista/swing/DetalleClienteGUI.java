@@ -630,7 +630,7 @@ public class DetalleClienteGUI extends JDialog {
 
     private void btnUbicacionFacturacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbicacionFacturacionActionPerformed
         try {
-            if (this.cliente.getIdUbicacionFacturacion() != null) {
+            if (this.cliente.getIdUbicacionFacturacion() != null && ubicacionDeFacturacion == null) {
                 ubicacionDeFacturacion = RestClient.getRestTemplate().getForObject("/ubicaciones/" + this.cliente.getIdUbicacionFacturacion(), Ubicacion.class);
             }
             DetalleUbicacionGUI guiDetalleUbicacion = new DetalleUbicacionGUI(ubicacionDeFacturacion, "Ubicación Facturación");

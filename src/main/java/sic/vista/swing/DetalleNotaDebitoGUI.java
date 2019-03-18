@@ -233,8 +233,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
             txtNombre.setText(proveedorDeNota.getRazonSocial());
             cmbDescripcionRenglon2.removeAllItems();
             cmbDescripcionRenglon2.addItem(notaDebito.getMotivo());
-            if (proveedor.getIdUbicacion() != null) {
-                txtUbicacion.setText(proveedor.getDetalleUbicacion());
+            if (proveedorDeNota.getIdUbicacion() != null) {
+                txtUbicacion.setText(proveedorDeNota.getDetalleUbicacion());
             }
             txtCondicionIVA.setText(proveedorDeNota.getCategoriaIVA().toString());
             if (proveedorDeNota.getIdFiscal() != null) {

@@ -348,7 +348,7 @@
         <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
           <ComponentRef name="buttonGroup1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Enviar a la Ubicaci&#xf3;n de Facturaci&#xf3;n"/>
+        <Property name="text" type="java.lang.String" value="Usar ubicaci&#xf3;n de facturaci&#xf3;n"/>
       </Properties>
       <Events>
         <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbDireccionFacturacionItemStateChanged"/>
@@ -359,7 +359,7 @@
         <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
           <ComponentRef name="buttonGroup1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Enviar a la Ubicaci&#xf3;n de Env&#xed;o"/>
+        <Property name="text" type="java.lang.String" value="Usar ubicaci&#xf3;n de env&#xed;o"/>
       </Properties>
     </Component>
   </SubComponents>

@@ -216,8 +216,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
         Proveedor proveedorDeNota = RestClient.getRestTemplate()
                 .getForObject("/proveedores/" + notaCredito.getIdProveedor(), Proveedor.class);
         txtNombre.setText(proveedorDeNota.getRazonSocial());
-        if (proveedor.getIdUbicacion() != null) {
-            txtUbicacion.setText(proveedor.getDetalleUbicacion());
+        if (proveedorDeNota.getIdUbicacion() != null) {
+            txtUbicacion.setText(proveedorDeNota.getDetalleUbicacion());
         }
         if (proveedorDeNota.getIdFiscal() != null) {
             txtIdFiscal.setText(proveedorDeNota.getIdFiscal().toString());

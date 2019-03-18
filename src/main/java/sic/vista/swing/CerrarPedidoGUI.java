@@ -314,7 +314,7 @@ public class CerrarPedidoGUI extends JDialog {
         });
 
         buttonGroup1.add(rbDireccionFacturacion);
-        rbDireccionFacturacion.setText("Enviar a la Ubicación de Facturación");
+        rbDireccionFacturacion.setText("Usar ubicación de facturación");
         rbDireccionFacturacion.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 rbDireccionFacturacionItemStateChanged(evt);
@@ -322,7 +322,7 @@ public class CerrarPedidoGUI extends JDialog {
         });
 
         buttonGroup1.add(rbDireccionEnvio);
-        rbDireccionEnvio.setText("Enviar a la Ubicación de Envío");
+        rbDireccionEnvio.setText("Usar ubicación de envío");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
