@@ -230,6 +230,7 @@ public class LocalidadesGUI extends JInternalFrame {
         } else {
             btnModificarLocalidad.setEnabled(false);
         }
+        rbGratuito.setSelected(true);
     }
 
     @SuppressWarnings("unchecked")
@@ -423,7 +424,7 @@ public class LocalidadesGUI extends JInternalFrame {
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar Por"));
 
-        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nombre Localidad", "Nombre Provincia" }));
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nombre", "Provincia" }));
         cmbOrden.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbOrdenItemStateChanged(evt);

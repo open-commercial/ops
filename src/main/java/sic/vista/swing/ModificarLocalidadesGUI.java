@@ -56,7 +56,7 @@ public class ModificarLocalidadesGUI extends javax.swing.JDialog {
         pnlDetalle.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         lblLocalidad.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblLocalidad.setText("Locadidad:");
+        lblLocalidad.setText("Nombre:");
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Codigo Postal:");
@@ -68,7 +68,7 @@ public class ModificarLocalidadesGUI extends javax.swing.JDialog {
         lblEnvio.setText("Envío gratuito:");
 
         lblCostoDeEnvio.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblCostoDeEnvio.setText("Costo de envío:");
+        lblCostoDeEnvio.setText("Costo envío:");
 
         lblDetalleLocalidad.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
@@ -77,7 +77,7 @@ public class ModificarLocalidadesGUI extends javax.swing.JDialog {
         lblDetalleProvincia.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         ftfCostoDeEnvio.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
-        ftfCostoDeEnvio.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        ftfCostoDeEnvio.setHorizontalAlignment(javax.swing.JTextField.LEFT);
 
         javax.swing.GroupLayout pnlDetalleLayout = new javax.swing.GroupLayout(pnlDetalle);
         pnlDetalle.setLayout(pnlDetalleLayout);
@@ -194,7 +194,11 @@ public class ModificarLocalidadesGUI extends javax.swing.JDialog {
         lblDetalleProvincia.setText(this.localidadSeleccionada.getNombreProvincia());
         lblDetalleCodigoPostal.setText(this.localidadSeleccionada.getCodigoPostal());
         chkEnvioGratuito.setSelected(this.localidadSeleccionada.isEnvioGratuito());
-        ftfCostoDeEnvio.setValue(this.localidadSeleccionada.getCostoEnvio());
+        if (this.localidadSeleccionada.getCostoEnvio() != null) {
+            ftfCostoDeEnvio.setValue(this.localidadSeleccionada.getCostoEnvio());
+        } else {
+            ftfCostoDeEnvio.setValue(BigDecimal.ZERO);
+        }
     }//GEN-LAST:event_formWindowOpened
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
