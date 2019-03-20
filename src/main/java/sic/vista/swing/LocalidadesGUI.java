@@ -57,9 +57,6 @@ public class LocalidadesGUI extends JInternalFrame {
             List<Provincia> provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/ubicaciones/provincias",
                             Provincia[].class)));
-            Provincia provinciaTodas = new Provincia();
-            provinciaTodas.setNombre("Todas");
-            cmbProvincia.addItem(provinciaTodas);
             provincias.stream().forEach((p) -> {
                 cmbProvincia.addItem(p);
             });
@@ -230,7 +227,6 @@ public class LocalidadesGUI extends JInternalFrame {
         } else {
             btnModificarLocalidad.setEnabled(false);
         }
-        rbGratuito.setSelected(true);
     }
 
     @SuppressWarnings("unchecked")
@@ -524,6 +520,7 @@ public class LocalidadesGUI extends JInternalFrame {
             this.setColumnas();
             this.setMaximum(true);
             this.cambiarEstadoDeComponentesSegunRolUsuario();
+            rbGratuito.setSelected(true);
         } catch (PropertyVetoException ex) {
             String msjError = "Se produjo un error al intentar maximizar la ventana.";
             LOGGER.error(msjError + " - " + ex.getMessage());

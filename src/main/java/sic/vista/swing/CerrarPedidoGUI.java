@@ -118,7 +118,7 @@ public class CerrarPedidoGUI extends JDialog {
             empresas = Arrays.asList(RestClient.getRestTemplate().getForObject("/empresas", Empresa[].class));
             empresas.stream().forEach(e -> {
                 cmbEmpresas.addItem(e.getNombre() + " (" + e.getDetalleUbicacion() + ")");
-            });
+            });            
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();
@@ -358,28 +358,31 @@ public class CerrarPedidoGUI extends JDialog {
             }
         });
 
+        cmbEmpresas.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbEmpresasItemStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(rbRetiroEnSucursal)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmbEmpresas, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGap(413, 413, 413)
-                                .addComponent(btnCerrarPedido))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                                .addComponent(rbDireccionFacturacion)
                                 .addComponent(rbDireccionEnvio)
-                                .addComponent(rbDireccionFacturacion))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(PanelCerrarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addComponent(rbRetiroEnSucursal))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cmbEmpresas, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(PanelCerrarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnCerrarPedido)))
                 .addContainerGap())
         );
 
@@ -631,7 +634,8 @@ public class CerrarPedidoGUI extends JDialog {
         txtCodigoPostal.setEnabled(!rbRetiroEnSucursal.isSelected());
         if (rbRetiroEnSucursal.isSelected()) {
             try {
-                Ubicacion ubicacionEnvio = RestClient.getRestTemplate().getForObject("/ubicaciones/" + this.cliente.getIdUbicacionEnvio(), Ubicacion.class);
+                Ubicacion ubicacionEnvio = RestClient.getRestTemplate().getForObject("/ubicaciones/"
+                        + empresas.get(cmbEmpresas.getSelectedIndex()).getIdUbicacion(), Ubicacion.class);
                 txtCalle.setText(ubicacionEnvio.getCalle());
                 txtDepartamento.setText(ubicacionEnvio.getCalle() != null ? ubicacionEnvio.getCalle() : "");
                 txtDescripcion.setText(ubicacionEnvio.getDescripcion() != null ? ubicacionEnvio.getDescripcion() : "");
@@ -690,6 +694,36 @@ public class CerrarPedidoGUI extends JDialog {
             }
         }
     }//GEN-LAST:event_rbDireccionEnvioItemStateChanged
+
+    private void cmbEmpresasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbEmpresasItemStateChanged
+        try {
+            Ubicacion ubicacionEnvio = RestClient.getRestTemplate().getForObject("/ubicaciones/"
+                    + empresas.get(cmbEmpresas.getSelectedIndex()).getIdUbicacion(), Ubicacion.class);
+            txtCalle.setText(ubicacionEnvio.getCalle());
+            txtDepartamento.setText(ubicacionEnvio.getCalle() != null ? ubicacionEnvio.getCalle() : "");
+            txtDescripcion.setText(ubicacionEnvio.getDescripcion() != null ? ubicacionEnvio.getDescripcion() : "");
+            txtPiso.setText(ubicacionEnvio.getPiso() != null ? ubicacionEnvio.getPiso().toString() : "");
+            ftfLatitud.setValue(ubicacionEnvio.getLatitud() != null ? ubicacionEnvio.getLatitud() : null);
+            ftfLongitud.setValue(ubicacionEnvio.getLongitud() != null ? ubicacionEnvio.getLongitud() : null);
+            ftfNumero.setValue(ubicacionEnvio.getNumero());
+            if (ubicacionEnvio.getIdProvincia() != null) {
+                Provincia provincia = RestClient.getRestTemplate().getForObject("/ubicaciones/provincias/" + ubicacionEnvio.getIdProvincia(), Provincia.class);
+                cmbProvinciasBusqueda.setSelectedItem(provincia);
+            }
+            if (ubicacionEnvio.getIdLocalidad() != null) {
+                Localidad localidad = RestClient.getRestTemplate().getForObject("/ubicaciones/localidades/" + ubicacionEnvio.getIdLocalidad(), Localidad.class);
+                cmbLocalidad.setSelectedItem(localidad);
+            }
+            txtCodigoPostal.setText(ubicacionEnvio.getCodigoPostal() != null ? ubicacionEnvio.getCodigoPostal() : "");
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_cmbEmpresasItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelCerrarPedido;

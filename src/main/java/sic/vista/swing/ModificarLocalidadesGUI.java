@@ -173,7 +173,7 @@ public class ModificarLocalidadesGUI extends javax.swing.JDialog {
         localidadSeleccionada.setEnvioGratuito(chkEnvioGratuito.isSelected());
         try {
             if (ftfCostoDeEnvio.getText() != null && !ftfCostoDeEnvio.getText().isEmpty()) {
-                localidadSeleccionada.setCostoEnvio(new BigDecimal(ftfCostoDeEnvio.getText().trim()));
+                localidadSeleccionada.setCostoEnvio(new BigDecimal(ftfCostoDeEnvio.getValue().toString()));
             }
             RestClient.getRestTemplate().put("/ubicaciones/localidades", this.localidadSeleccionada);
             JOptionPane.showMessageDialog(this, "La Localidad se modificó correctamente!",
