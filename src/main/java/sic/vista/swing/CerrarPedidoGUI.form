@@ -2,7 +2,7 @@
 
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
   <NonVisualComponents>
-    <Component class="javax.swing.ButtonGroup" name="buttonGroup1">
+    <Component class="javax.swing.ButtonGroup" name="grupoOpcionesEnvio">
     </Component>
   </NonVisualComponents>
   <Properties>
@@ -31,34 +31,47 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="rbDireccionEnvio" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="rbDireccionFacturacion" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
-                      </Group>
+          <Group type="102" alignment="1" attributes="0">
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="rbRetiroEnSucursal" linkSize="5" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="cmbEmpresas" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="btnCerrarPedido" min="-2" max="-2" attributes="0"/>
-                          <Component id="PanelCerrarPedido" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="413" max="-2" attributes="0"/>
+                              <Component id="btnCerrarPedido" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="103" alignment="0" groupAlignment="2" attributes="0">
+                              <Component id="rbDireccionEnvio" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="rbDireccionFacturacion" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="PanelCerrarPedido" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="12" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="rbDireccionFacturacion" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="2" attributes="0">
+                  <Component id="cmbEmpresas" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="rbRetiroEnSucursal" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="rbDireccionEnvio" min="-2" max="-2" attributes="0"/>
+              <Component id="rbDireccionFacturacion" linkSize="6" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="rbDireccionEnvio" linkSize="6" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="PanelCerrarPedido" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -91,49 +104,46 @@
                               <Component id="lblLocalidades" linkSize="1" alignment="0" min="-2" pref="104" max="-2" attributes="1"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="txtCodigoPostal" linkSize="3" alignment="0" pref="390" max="32767" attributes="2"/>
+                              <Component id="cmbLocalidad" max="32767" attributes="0"/>
                               <Component id="cmbProvinciasBusqueda" alignment="0" max="32767" attributes="1"/>
-                              <Component id="cmbLocalidad" alignment="0" max="32767" attributes="0"/>
-                              <Component id="txtCodigoPostal" linkSize="3" alignment="0" min="-2" pref="390" max="-2" attributes="2"/>
                           </Group>
                       </Group>
-                      <Group type="102" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="lblDepartamento" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblDescripcion" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                                          <Component id="lblPiso" linkSize="1" min="-2" max="-2" attributes="0"/>
-                                          <Component id="lblNumero" linkSize="1" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Component id="lblCalle" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="ftfNumero" linkSize="3" alignment="0" min="-2" pref="390" max="-2" attributes="0"/>
-                                      <Component id="txtPiso" linkSize="3" alignment="0" min="-2" pref="390" max="-2" attributes="0"/>
-                                      <Component id="txtDepartamento" linkSize="3" alignment="0" min="-2" pref="390" max="-2" attributes="0"/>
-                                      <Component id="txtDescripcion" linkSize="3" min="-2" pref="390" max="-2" attributes="0"/>
-                                      <Component id="txtCalle" linkSize="3" min="-2" pref="390" max="-2" attributes="0"/>
-                                  </Group>
+                              <Component id="lblDepartamento" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblDescripcion" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" alignment="0" groupAlignment="1" attributes="0">
+                                  <Component id="lblPiso" linkSize="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblNumero" linkSize="1" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="lblLatitud" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblLongitud" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="ftfLatitud" linkSize="3" min="-2" pref="390" max="-2" attributes="0"/>
-                                      <Component id="ftfLongitud" linkSize="3" min="-2" pref="390" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
+                              <Component id="lblCalle" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="ftfNumero" linkSize="3" alignment="0" min="-2" pref="390" max="-2" attributes="0"/>
+                                  <Component id="txtPiso" linkSize="3" alignment="0" min="-2" pref="390" max="-2" attributes="0"/>
+                                  <Component id="txtDepartamento" linkSize="3" alignment="0" min="-2" pref="390" max="-2" attributes="0"/>
+                                  <Component id="txtCalle" linkSize="3" min="-2" pref="390" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="txtDescripcion" linkSize="3" alignment="0" min="-2" pref="585" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="lblLatitud" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblLongitud" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="ftfLatitud" linkSize="3" min="-2" pref="390" max="-2" attributes="0"/>
+                              <Component id="ftfLongitud" linkSize="3" min="-2" pref="390" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="11" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -346,7 +356,7 @@
     <Component class="javax.swing.JRadioButton" name="rbDireccionFacturacion">
       <Properties>
         <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-          <ComponentRef name="buttonGroup1"/>
+          <ComponentRef name="grupoOpcionesEnvio"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Usar ubicaci&#xf3;n de facturaci&#xf3;n"/>
       </Properties>
@@ -357,10 +367,34 @@
     <Component class="javax.swing.JRadioButton" name="rbDireccionEnvio">
       <Properties>
         <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-          <ComponentRef name="buttonGroup1"/>
+          <ComponentRef name="grupoOpcionesEnvio"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Usar ubicaci&#xf3;n de env&#xed;o"/>
       </Properties>
+      <Events>
+        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbDireccionEnvioItemStateChanged"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="rbRetiroEnSucursal">
+      <Properties>
+        <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+          <ComponentRef name="grupoOpcionesEnvio"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Retiro en sucursal"/>
+      </Properties>
+      <Events>
+        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbRetiroEnSucursalItemStateChanged"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="cmbEmpresas">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="0"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>
