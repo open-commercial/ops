@@ -1,5 +1,6 @@
 package sic.vista.swing;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
@@ -16,9 +17,8 @@ import sic.modelo.EmpresaActiva;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeOperacion;
 import sic.modelo.Usuario;
-import sic.modelo.UsuarioActivo;
-import java.math.BigDecimal;
 import sic.modelo.Ubicacion;
+import sic.modelo.UsuarioActivo;
 
 public class DetalleClienteGUI extends JDialog {
 
@@ -74,7 +74,7 @@ public class DetalleClienteGUI extends JDialog {
                 Usuario usuario = RestClient.getRestTemplate().getForObject("/usuarios/"
                         + idViajante, Usuario.class);
                 cmbViajante.addItem(usuario);
-                cmbViajante.addItem(null);
+                cmbViajante.addItem(null);                
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             } catch (ResourceAccessException ex) {
@@ -111,18 +111,14 @@ public class DetalleClienteGUI extends JDialog {
             cmbCategoriaIVA.addItem(c);
         }
     }
-
+    
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
-            btnNuevaCredencial.setEnabled(true);
-            btnBuscarCredencial.setEnabled(true);
             btnNuevoUsuarioViajante.setEnabled(true);
             lblCredencial.setEnabled(true);
             cmbCredencial.setEnabled(true);
         } else {
-            btnNuevaCredencial.setEnabled(false);
-            btnBuscarCredencial.setEnabled(false);
             btnNuevoUsuarioViajante.setEnabled(false);
             lblCredencial.setEnabled(false);
             cmbCredencial.setEnabled(false);
@@ -147,11 +143,16 @@ public class DetalleClienteGUI extends JDialog {
             lblBonificacion.setEnabled(false);
             txtBonificacion.setEnabled(false);
         }
-        if (rolesDeUsuarioActivo.contains(Rol.VIAJANTE)
-                && !rolesDeUsuarioActivo.contains(Rol.VENDEDOR)
-                && !rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
-                && !rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
-            this.seleccionarViajanteSegunId(UsuarioActivo.getInstance().getUsuario().getId_Usuario());
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
+                || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+            btnNuevaCredencial.setEnabled(true);
+            btnBuscarCredencial.setEnabled(true);
+            lblCredencial.setEnabled(true);
+            cmbCredencial.setEnabled(true);
+        } else {
+            btnNuevaCredencial.setEnabled(false);
+            btnBuscarCredencial.setEnabled(false);
         }
     }
 
@@ -522,6 +523,7 @@ public class DetalleClienteGUI extends JDialog {
             if (operacion == TipoDeOperacion.ACTUALIZACION) {
                 RestClient.getRestTemplate().put(
                         "/clientes?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        + "&idViajante=" + idViajante
                         + "&idCredencial=" + idCredencial,
                         cliente);
                 if (cliente.getIdUbicacionFacturacion()== null && this.ubicacionDeFacturacion != null) {
@@ -560,7 +562,7 @@ public class DetalleClienteGUI extends JDialog {
     }//GEN-LAST:event_formWindowOpened
 
     private void btnNuevaCredencialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaCredencialActionPerformed
-        DetalleUsuarioGUI gui_DetalleUsuario = new DetalleUsuarioGUI();
+        DetalleUsuarioGUI gui_DetalleUsuario = new DetalleUsuarioGUI(Rol.COMPRADOR);
         gui_DetalleUsuario.setModal(true);
         gui_DetalleUsuario.setLocationRelativeTo(this);
         gui_DetalleUsuario.setVisible(true);
@@ -573,7 +575,7 @@ public class DetalleClienteGUI extends JDialog {
     }//GEN-LAST:event_btnNuevaCredencialActionPerformed
 
     private void btnBuscarUsuarioViajanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarUsuarioViajanteActionPerformed
-        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(new Rol[]{Rol.VIAJANTE});
+        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(new Rol[]{Rol.VIAJANTE}, "Buscar Viajante");
         buscarUsuariosGUI.setModal(true);
         buscarUsuariosGUI.setLocationRelativeTo(this);
         buscarUsuariosGUI.setVisible(true);
@@ -598,7 +600,7 @@ public class DetalleClienteGUI extends JDialog {
 
     private void btnBuscarCredencialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarCredencialActionPerformed
         Rol[] rolesParaFiltrar = new Rol[]{Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR, Rol.VIAJANTE, Rol.COMPRADOR};
-        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar);
+        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar, "Buscar Usuario");
         buscarUsuariosGUI.setModal(true);
         buscarUsuariosGUI.setLocationRelativeTo(this);
         buscarUsuariosGUI.setVisible(true);
@@ -610,11 +612,11 @@ public class DetalleClienteGUI extends JDialog {
     }//GEN-LAST:event_btnBuscarCredencialActionPerformed
 
     private void btnNuevoUsuarioViajanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoUsuarioViajanteActionPerformed
-        DetalleUsuarioGUI gui_DetalleUsuario = new DetalleUsuarioGUI();
+        DetalleUsuarioGUI gui_DetalleUsuario = new DetalleUsuarioGUI(Rol.VIAJANTE);
         gui_DetalleUsuario.setModal(true);
         gui_DetalleUsuario.setLocationRelativeTo(this);
         gui_DetalleUsuario.setVisible(true);
-        if (gui_DetalleUsuario.getUsuarioCreado() != null && gui_DetalleUsuario.getUsuarioCreado().getRoles().contains(Rol.VIAJANTE)) {
+        if (gui_DetalleUsuario.getUsuarioCreado() != null) {
             cmbViajante.removeAllItems();
             cmbViajante.addItem(gui_DetalleUsuario.getUsuarioCreado());
             cmbViajante.addItem(null);

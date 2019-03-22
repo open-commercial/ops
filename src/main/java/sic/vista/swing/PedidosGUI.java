@@ -43,7 +43,8 @@ public class PedidosGUI extends JInternalFrame {
     private List<Pedido> pedidosParcial = new ArrayList<>();
     private ModeloTabla modeloTablaPedidos;    
     private Cliente clienteSeleccionado;
-    private Usuario usuarioSeleccionado;    
+    private Usuario usuarioSeleccionado;  
+    private Usuario viajanteSeleccionado;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame =  new Dimension(880, 600);
     private static int totalElementosBusqueda;
@@ -81,6 +82,9 @@ public class PedidosGUI extends JInternalFrame {
         }
         if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
             criteria += "&idUsuario=" + usuarioSeleccionado.getId_Usuario();
+        }
+        if (chk_Viajante.isSelected() && viajanteSeleccionado != null) {
+            criteria += "&idViajante=" + viajanteSeleccionado.getId_Usuario();
         }
         criteria += "&pagina=" + NUMERO_PAGINA;
         try {
@@ -165,14 +169,15 @@ public class PedidosGUI extends JInternalFrame {
     
     private void cargarResultadosAlTable() {
         pedidosParcial.stream().map(p -> {
-            Object[] fila = new Object[7];
+            Object[] fila = new Object[8];
             fila[0] = p.getEstado();
             fila[1] = p.getFecha();
             fila[2] = p.getNroPedido();
             fila[3] = p.getNombreFiscalCliente();
             fila[4] = p.getNombreUsuario();
-            fila[5] = p.getTotalEstimado();
-            fila[6] = p.getTotalActual();
+            fila[5] = p.getNombreViajante();
+            fila[6] = p.getTotalEstimado();
+            fila[7] = p.getTotalActual();
             return fila;
         }).forEach(f -> {
             modeloTablaPedidos.addRow(f);
@@ -198,14 +203,15 @@ public class PedidosGUI extends JInternalFrame {
 
     private void setColumnas() {
         //nombres de columnas
-        String[] encabezados = new String[7];
+        String[] encabezados = new String[8];
         encabezados[0] = "Estado";
         encabezados[1] = "Fecha Pedido";
         encabezados[2] = "Nº Pedido";
         encabezados[3] = "Cliente";
         encabezados[4] = "Usuario";
-        encabezados[5] = "Total Estimado";
-        encabezados[6] = "Total Actual";
+        encabezados[5] = "Viajante";
+        encabezados[6] = "Total Estimado";
+        encabezados[7] = "Total Actual";
         modeloTablaPedidos.setColumnIdentifiers(encabezados);
         tbl_Pedidos.setModel(modeloTablaPedidos);
         //tipo de dato columnas
@@ -215,8 +221,9 @@ public class PedidosGUI extends JInternalFrame {
         tipos[2] = Long.class;
         tipos[3] = String.class;
         tipos[4] = String.class;
-        tipos[5] = BigDecimal.class;
+        tipos[5] = String.class;
         tipos[6] = BigDecimal.class;
+        tipos[7] = BigDecimal.class;
         modeloTablaPedidos.setClaseColumnas(tipos);
         tbl_Pedidos.getTableHeader().setReorderingAllowed(false);
         tbl_Pedidos.getTableHeader().setResizingAllowed(true);
@@ -227,10 +234,17 @@ public class PedidosGUI extends JInternalFrame {
         tbl_Pedidos.getColumnModel().getColumn(1).setMaxWidth(140);
         tbl_Pedidos.getColumnModel().getColumn(2).setPreferredWidth(100);
         tbl_Pedidos.getColumnModel().getColumn(2).setMaxWidth(100);
-        tbl_Pedidos.getColumnModel().getColumn(3).setPreferredWidth(150);
-        tbl_Pedidos.getColumnModel().getColumn(4).setPreferredWidth(100);
-        tbl_Pedidos.getColumnModel().getColumn(5).setPreferredWidth(25);
+        tbl_Pedidos.getColumnModel().getColumn(3).setPreferredWidth(220);
+        tbl_Pedidos.getColumnModel().getColumn(3).setMaxWidth(220);
+        tbl_Pedidos.getColumnModel().getColumn(3).setMinWidth(220);
+        tbl_Pedidos.getColumnModel().getColumn(4).setPreferredWidth(220);
+        tbl_Pedidos.getColumnModel().getColumn(4).setMaxWidth(220);
+        tbl_Pedidos.getColumnModel().getColumn(4).setMinWidth(220);
+        tbl_Pedidos.getColumnModel().getColumn(5).setPreferredWidth(220);
+        tbl_Pedidos.getColumnModel().getColumn(5).setMaxWidth(220);
+        tbl_Pedidos.getColumnModel().getColumn(5).setMinWidth(220);
         tbl_Pedidos.getColumnModel().getColumn(6).setPreferredWidth(25);
+        tbl_Pedidos.getColumnModel().getColumn(7).setPreferredWidth(25);
         //renderers
         tbl_Pedidos.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         tbl_Pedidos.getColumnModel().getColumn(1).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
@@ -296,10 +310,8 @@ public class PedidosGUI extends JInternalFrame {
         panelFiltros = new javax.swing.JPanel();
         chk_NumeroPedido = new javax.swing.JCheckBox();
         chk_Fecha = new javax.swing.JCheckBox();
-        lbl_Desde = new javax.swing.JLabel();
         dc_FechaDesde = new com.toedter.calendar.JDateChooser();
         dc_FechaHasta = new com.toedter.calendar.JDateChooser();
-        lbl_Hasta = new javax.swing.JLabel();
         chk_Cliente = new javax.swing.JCheckBox();
         chk_Usuario = new javax.swing.JCheckBox();
         btn_Buscar = new javax.swing.JButton();
@@ -311,6 +323,9 @@ public class PedidosGUI extends JInternalFrame {
         btnBuscarCliente = new javax.swing.JButton();
         txtUsuario = new javax.swing.JTextField();
         btnBuscarUsuarios = new javax.swing.JButton();
+        chk_Viajante = new javax.swing.JCheckBox();
+        txtViajante = new javax.swing.JTextField();
+        btnBuscarViajantes = new javax.swing.JButton();
         panelResultados = new javax.swing.JPanel();
         sp_Pedidos = new javax.swing.JScrollPane();
         tbl_Pedidos = new javax.swing.JTable();
@@ -359,15 +374,11 @@ public class PedidosGUI extends JInternalFrame {
             }
         });
 
-        lbl_Desde.setText("Desde:");
-
         dc_FechaDesde.setDateFormatString("dd/MM/yyyy");
         dc_FechaDesde.setEnabled(false);
 
         dc_FechaHasta.setDateFormatString("dd/MM/yyyy");
         dc_FechaHasta.setEnabled(false);
-
-        lbl_Hasta.setText("Hasta:");
 
         chk_Cliente.setText("Cliente:");
         chk_Cliente.addItemListener(new java.awt.event.ItemListener() {
@@ -442,6 +453,26 @@ public class PedidosGUI extends JInternalFrame {
             }
         });
 
+        chk_Viajante.setText("Viajante:");
+        chk_Viajante.setToolTipText("");
+        chk_Viajante.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chk_ViajanteItemStateChanged(evt);
+            }
+        });
+
+        txtViajante.setEditable(false);
+        txtViajante.setEnabled(false);
+        txtViajante.setOpaque(false);
+
+        btnBuscarViajantes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
+        btnBuscarViajantes.setEnabled(false);
+        btnBuscarViajantes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarViajantesActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelFiltrosLayout = new javax.swing.GroupLayout(panelFiltros);
         panelFiltros.setLayout(panelFiltrosLayout);
         panelFiltrosLayout.setHorizontalGroup(
@@ -450,71 +481,72 @@ public class PedidosGUI extends JInternalFrame {
                 .addContainerGap()
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(chk_Usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(chk_Cliente, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(chk_Fecha))
+                        .addComponent(btn_Buscar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFiltrosLayout.createSequentialGroup()
-                                .addComponent(txtUsuario)
-                                .addGap(0, 0, 0)
-                                .addComponent(btnBuscarUsuarios))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFiltrosLayout.createSequentialGroup()
-                                .addComponent(txtCliente)
-                                .addGap(0, 0, 0)
-                                .addComponent(btnBuscarCliente))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFiltrosLayout.createSequentialGroup()
-                                .addComponent(lbl_Desde)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lbl_Hasta)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelFiltrosLayout.createSequentialGroup()
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(chk_Usuario)
+                            .addComponent(chk_Cliente)
+                            .addComponent(chk_Viajante))
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtUsuario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
+                            .addComponent(txtCliente, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtViajante))
+                        .addGap(0, 0, 0)
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(btnBuscarCliente)
+                            .addComponent(btnBuscarUsuarios)
+                            .addComponent(btnBuscarViajantes))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(panelFiltrosLayout.createSequentialGroup()
-                                .addComponent(chkEstado, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFiltrosLayout.createSequentialGroup()
                                 .addComponent(chk_NumeroPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txt_NumeroPedido))))
-                    .addGroup(panelFiltrosLayout.createSequentialGroup()
-                        .addComponent(btn_Buscar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(txt_NumeroPedido))
+                            .addGroup(panelFiltrosLayout.createSequentialGroup()
+                                .addComponent(chkEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cmbEstado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(panelFiltrosLayout.createSequentialGroup()
+                                .addComponent(chk_Fecha)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chk_Cliente, chk_Viajante});
+
+        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chkEstado, chk_Fecha, chk_NumeroPedido});
 
         panelFiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {dc_FechaDesde, dc_FechaHasta});
 
         panelFiltrosLayout.setVerticalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFiltrosLayout.createSequentialGroup()
-                .addGap(2, 2, 2)
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(chk_Fecha)
-                    .addComponent(lbl_Desde)
-                    .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Hasta)
-                    .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chkEstado)
-                    .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_Cliente)
                     .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscarCliente)
-                    .addComponent(chk_NumeroPedido)
-                    .addComponent(txt_NumeroPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(chk_Fecha)
+                    .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarCliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_Usuario)
                     .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscarUsuarios))
+                    .addComponent(btnBuscarUsuarios)
+                    .addComponent(chkEstado)
+                    .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(chk_Viajante)
+                    .addComponent(txtViajante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarViajantes)
+                    .addComponent(chk_NumeroPedido)
+                    .addComponent(txt_NumeroPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -522,7 +554,11 @@ public class PedidosGUI extends JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarCliente, btnBuscarUsuarios, txtCliente, txtUsuario});
+        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarCliente, btnBuscarUsuarios, txtCliente, txtUsuario, txtViajante});
+
+        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {chk_Cliente, chk_Usuario, chk_Viajante});
+
+        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {dc_FechaDesde, dc_FechaHasta});
 
         panelResultados.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados"));
 
@@ -607,12 +643,12 @@ public class PedidosGUI extends JInternalFrame {
                 .addComponent(btnFacturar)
                 .addGap(0, 0, 0)
                 .addComponent(btnImprimirPedido)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 479, Short.MAX_VALUE))
         );
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Pedidos, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
+                .addComponent(sp_Pedidos, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNuevoPedido)
@@ -630,7 +666,9 @@ public class PedidosGUI extends JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -899,7 +937,7 @@ public class PedidosGUI extends JInternalFrame {
 
     private void btnBuscarUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarUsuariosActionPerformed
         Rol[] rolesParaFiltrar = new Rol[]{Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR, Rol.VIAJANTE, Rol.COMPRADOR};
-        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar);
+        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar, "Buscar Usuario");
         buscarUsuariosGUI.setModal(true);
         buscarUsuariosGUI.setLocationRelativeTo(this);
         buscarUsuariosGUI.setVisible(true);
@@ -909,9 +947,33 @@ public class PedidosGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btnBuscarUsuariosActionPerformed
 
+    private void chk_ViajanteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ViajanteItemStateChanged
+        if (chk_Viajante.isSelected() == true) {
+            btnBuscarViajantes.setEnabled(true);
+            btnBuscarViajantes.requestFocus();
+            txtViajante.setEnabled(true);
+        } else {
+            btnBuscarViajantes.setEnabled(false);
+            txtViajante.setEnabled(false);
+        }
+    }//GEN-LAST:event_chk_ViajanteItemStateChanged
+
+    private void btnBuscarViajantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarViajantesActionPerformed
+        Rol[] rolesParaFiltrar = new Rol[]{Rol.VIAJANTE};
+        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar, "Buscar Viajante");
+        buscarUsuariosGUI.setModal(true);
+        buscarUsuariosGUI.setLocationRelativeTo(this);
+        buscarUsuariosGUI.setVisible(true);
+        if (buscarUsuariosGUI.getUsuarioSeleccionado() != null) {
+            viajanteSeleccionado = buscarUsuariosGUI.getUsuarioSeleccionado();
+            txtViajante.setText(viajanteSeleccionado.toString());
+        }
+    }//GEN-LAST:event_btnBuscarViajantesActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarCliente;
     private javax.swing.JButton btnBuscarUsuarios;
+    private javax.swing.JButton btnBuscarViajantes;
     private javax.swing.JButton btnEliminarPedido;
     private javax.swing.JButton btnFacturar;
     private javax.swing.JButton btnImprimirPedido;
@@ -924,11 +986,10 @@ public class PedidosGUI extends JInternalFrame {
     private javax.swing.JCheckBox chk_Fecha;
     private javax.swing.JCheckBox chk_NumeroPedido;
     private javax.swing.JCheckBox chk_Usuario;
+    private javax.swing.JCheckBox chk_Viajante;
     private javax.swing.JComboBox<String> cmbEstado;
     private com.toedter.calendar.JDateChooser dc_FechaDesde;
     private com.toedter.calendar.JDateChooser dc_FechaHasta;
-    private javax.swing.JLabel lbl_Desde;
-    private javax.swing.JLabel lbl_Hasta;
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;
     private javax.swing.JPanel panelResultados;
@@ -936,6 +997,7 @@ public class PedidosGUI extends JInternalFrame {
     private javax.swing.JTable tbl_Pedidos;
     private javax.swing.JTextField txtCliente;
     private javax.swing.JTextField txtUsuario;
+    private javax.swing.JTextField txtViajante;
     private javax.swing.JFormattedTextField txt_NumeroPedido;
     // End of variables declaration//GEN-END:variables
 }

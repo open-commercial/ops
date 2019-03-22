@@ -34,16 +34,17 @@ public class BuscarUsuariosGUI extends JDialog {
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int NUMERO_PAGINA = 0;    
     private final Rol[] rolesParaFiltrar;
+    private String title;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeDialog = new Dimension(1000, 600);
 
-    public BuscarUsuariosGUI(Rol[] rolesParaFiltrar) {
+    public BuscarUsuariosGUI(Rol[] rolesParaFiltrar, String title) {
         this.initComponents();
         this.setIcon();
-        this.setColumnas();
         txtCriteriaBusqueda.addKeyListener(keyHandler);
         tblResultados.addKeyListener(keyHandler);
         this.rolesParaFiltrar = rolesParaFiltrar;
+        this.title = title;
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
             int va = scrollBar.getVisibleAmount() + 10;
@@ -323,7 +324,7 @@ public class BuscarUsuariosGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.setSize(sizeDialog);
-        this.setTitle("Buscar Usuario");
+        this.setTitle(title);
         this.setColumnas();
     }//GEN-LAST:event_formWindowOpened
 

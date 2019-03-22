@@ -156,6 +156,8 @@ public class RecibosCompraGUI extends JInternalFrame {
             recibosParcial = response.getContent();
             recibosTotal.addAll(recibosParcial);
             this.cargarResultadosAlTable();
+            txtTotal.setValue(RestClient.getRestTemplate()
+                .getForObject("/recibos/compra/total/criteria?" + uriCriteria, BigDecimal.class));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -285,6 +287,8 @@ public class RecibosCompraGUI extends JInternalFrame {
         btn_VerDetalle = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
         btnCrearNotaDebito = new javax.swing.JButton();
+        lblTotal = new javax.swing.JLabel();
+        txtTotal = new javax.swing.JFormattedTextField();
         panelFiltros = new javax.swing.JPanel();
         subPanelFiltros1 = new javax.swing.JPanel();
         chk_Fecha = new javax.swing.JCheckBox();
@@ -373,6 +377,12 @@ public class RecibosCompraGUI extends JInternalFrame {
             }
         });
 
+        lblTotal.setText("Total:");
+
+        txtTotal.setEditable(false);
+        txtTotal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        txtTotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
@@ -380,16 +390,18 @@ public class RecibosCompraGUI extends JInternalFrame {
             .addGroup(panelResultadosLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelResultadosLayout.createSequentialGroup()
-                        .addComponent(sp_Resultados)
-                        .addContainerGap())
+                    .addComponent(sp_Resultados)
                     .addGroup(panelResultadosLayout.createSequentialGroup()
                         .addComponent(btnCrearNotaDebito)
                         .addGap(0, 0, 0)
                         .addComponent(btn_VerDetalle)
                         .addGap(0, 0, 0)
                         .addComponent(btn_Eliminar)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblTotal)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCrearNotaDebito, btn_Eliminar, btn_VerDetalle});
@@ -400,10 +412,14 @@ public class RecibosCompraGUI extends JInternalFrame {
                 .addContainerGap()
                 .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_VerDetalle)
-                    .addComponent(btn_Eliminar)
-                    .addComponent(btnCrearNotaDebito)))
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblTotal)
+                        .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btn_VerDetalle)
+                        .addComponent(btn_Eliminar)
+                        .addComponent(btnCrearNotaDebito))))
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaDebito, btn_Eliminar, btn_VerDetalle});
@@ -628,7 +644,8 @@ public class RecibosCompraGUI extends JInternalFrame {
                 .addContainerGap()
                 .addComponent(btn_Buscar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         panelFiltrosLayout.setVerticalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -800,7 +817,7 @@ public class RecibosCompraGUI extends JInternalFrame {
 
     private void btnBuscarUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarUsuariosActionPerformed
         Rol[] rolesParaFiltrar = new Rol[]{Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR};
-        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar);
+        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar, "Buscar Usuario");
         buscarUsuariosGUI.setModal(true);
         buscarUsuariosGUI.setLocationRelativeTo(this);
         buscarUsuariosGUI.setVisible(true);
@@ -883,6 +900,7 @@ public class RecibosCompraGUI extends JInternalFrame {
     private javax.swing.JComboBox<String> cmbSentido;
     private com.toedter.calendar.JDateChooser dc_FechaDesde;
     private com.toedter.calendar.JDateChooser dc_FechaHasta;
+    private javax.swing.JLabel lblTotal;
     private javax.swing.JLabel lbl_Desde;
     private javax.swing.JLabel lbl_Hasta;
     private javax.swing.JLabel lbl_cantResultados;
@@ -895,6 +913,7 @@ public class RecibosCompraGUI extends JInternalFrame {
     private javax.swing.JPanel subPanelFiltros2;
     private javax.swing.JTable tbl_Resultados;
     private javax.swing.JTextField txtProveedor;
+    private javax.swing.JFormattedTextField txtTotal;
     private javax.swing.JTextField txtUsuario;
     private javax.swing.JTextField txt_Concepto;
     private javax.swing.JFormattedTextField txt_NroRecibo;

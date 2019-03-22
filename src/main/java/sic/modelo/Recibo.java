@@ -23,6 +23,8 @@ public class Recibo implements Serializable {
     private String nombreFiscalCliente;
     private Long idProveedor;
     private String razonSocialProveedor;
+    private Long idViajante;
+    private String nombreViajante;
     private String nombreUsuario;
     
 }
