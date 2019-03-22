@@ -68,7 +68,6 @@ public class DetalleUbicacionGUI extends JDialog {
     private void cargarLocalidadesDeLaProvincia(Provincia provincia) {
         try {
             cmbLocalidad.removeAllItems();
-            cmbLocalidad.addItem(null);
             if (provincia != null) {
                 List<Localidad> localidades = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                         .getForObject("/ubicaciones/localidades/provincias/" + provincia.getId_Provincia(),
