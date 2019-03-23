@@ -655,21 +655,16 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }
     
     private void finalizarPedido() {
-        if (cliente != null) {
-            if (nuevoPedido != null) {
-                CerrarPedidoGUI cerrarPedido = new CerrarPedidoGUI(nuevoPedido, cliente);
-                cerrarPedido.setModal(true);
-                cerrarPedido.setLocationRelativeTo(this);
-                cerrarPedido.setVisible(true);
-                if (cerrarPedido.isOperacionExitosa()) {
-                   this.limpiarYRecargarComponentes(); 
-                }
-            } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificarPedido == true) {
-                this.actualizarPedido(pedido);
+        if (nuevoPedido != null) {
+            CerrarPedidoGUI cerrarPedido = new CerrarPedidoGUI(nuevoPedido, cliente);
+            cerrarPedido.setModal(true);
+            cerrarPedido.setLocationRelativeTo(this);
+            cerrarPedido.setVisible(true);
+            if (cerrarPedido.isOperacionExitosa()) {
+                this.limpiarYRecargarComponentes();
             }
-        } else {
-            JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_seleccionar_cliente"),
-                    "Aviso", JOptionPane.ERROR_MESSAGE);
+        } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificarPedido == true) {
+            this.actualizarPedido(pedido);
         }
     }
 
@@ -1490,48 +1485,53 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_txt_Descuento_porcentajeActionPerformed
 
     private void btn_ContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ContinuarActionPerformed
-        if (renglones.isEmpty()) {
-            JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                    .getString("mensaje_factura_sin_renglones"), "Error", JOptionPane.ERROR_MESSAGE);
-        } else {
-            if (new BigDecimal(txt_Descuento_porcentaje.getValue().toString()).compareTo(CIEN) > 0) {
+        if (cliente != null) {
+            if (renglones.isEmpty()) {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                        .getString("mensaje_factura_descuento_mayor_cien"), "Error", JOptionPane.ERROR_MESSAGE);
+                        .getString("mensaje_factura_sin_renglones"), "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                this.calcularResultados();
-                try {
-                    Map<Long, BigDecimal> faltantes;
-                    if (cmb_TipoComprobante.getSelectedItem() == TipoDeComprobante.PEDIDO) {
-                        // Es null cuando, se genera un pedido desde el punto de venta entrando por el menu sistemas.
-                        // El Id es 0 cuando, se genera un pedido desde el punto de venta entrando por el botón nuevo de administrar pedidos.
-                        if (pedido == null || pedido.getId_Pedido() == 0) {
-                            this.construirPedido();
-                        }
-                        this.finalizarPedido();
-                    } else {
-                        faltantes = this.getProductosSinStockDisponible(renglones);
-                        if (faltantes.isEmpty()) {
-                            CerrarVentaGUI cerrarVentaGUI = new CerrarVentaGUI(this, true);
-                            cerrarVentaGUI.setLocationRelativeTo(this);
-                            cerrarVentaGUI.setVisible(true);
-                            if (cerrarVentaGUI.isExito()) {
-                                this.limpiarYRecargarComponentes();
+                if (new BigDecimal(txt_Descuento_porcentaje.getValue().toString()).compareTo(CIEN) > 0) {
+                    JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                            .getString("mensaje_factura_descuento_mayor_cien"), "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    this.calcularResultados();
+                    try {
+                        Map<Long, BigDecimal> faltantes;
+                        if (cmb_TipoComprobante.getSelectedItem() == TipoDeComprobante.PEDIDO) {
+                            // Es null cuando, se genera un pedido desde el punto de venta entrando por el menu sistemas.
+                            // El Id es 0 cuando, se genera un pedido desde el punto de venta entrando por el botón nuevo de administrar pedidos.
+                            if (pedido == null || pedido.getId_Pedido() == 0) {
+                                this.construirPedido();
                             }
+                            this.finalizarPedido();
                         } else {
-                            ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(faltantes);
-                            productosFaltantesGUI.setLocationRelativeTo(this);
-                            productosFaltantesGUI.setVisible(true);
+                            faltantes = this.getProductosSinStockDisponible(renglones);
+                            if (faltantes.isEmpty()) {
+                                CerrarVentaGUI cerrarVentaGUI = new CerrarVentaGUI(this, true);
+                                cerrarVentaGUI.setLocationRelativeTo(this);
+                                cerrarVentaGUI.setVisible(true);
+                                if (cerrarVentaGUI.isExito()) {
+                                    this.limpiarYRecargarComponentes();
+                                }
+                            } else {
+                                ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(faltantes);
+                                productosFaltantesGUI.setLocationRelativeTo(this);
+                                productosFaltantesGUI.setVisible(true);
+                            }
                         }
+                    } catch (RestClientResponseException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    } catch (ResourceAccessException ex) {
+                        LOGGER.error(ex.getMessage());
+                        JOptionPane.showMessageDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
+        } else {
+            JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_seleccionar_cliente"),
+                    "Aviso", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_ContinuarActionPerformed
 
