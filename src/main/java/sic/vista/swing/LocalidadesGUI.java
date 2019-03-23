@@ -506,7 +506,7 @@ public class LocalidadesGUI extends JInternalFrame {
     private void btnModificarLocalidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarLocalidadActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-            ModificarLocalidadesGUI modificarLocalidadGUI = new ModificarLocalidadesGUI(localidadesTotal.get(indexFilaSeleccionada));
+            DetalleLocalidadGUI modificarLocalidadGUI = new DetalleLocalidadGUI(localidadesTotal.get(indexFilaSeleccionada));
             modificarLocalidadGUI.setModal(true);
             modificarLocalidadGUI.setLocationRelativeTo(this);
             modificarLocalidadGUI.setVisible(true);
