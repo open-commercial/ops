@@ -30,10 +30,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="panelPrincipal" max="32767" attributes="1"/>
-                  <Component id="lbl_MisEmpresas" max="32767" attributes="0"/>
-              </Group>
+              <Component id="panelPrincipal" min="-2" max="-2" attributes="1"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -41,8 +38,6 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="lbl_MisEmpresas" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="panelPrincipal" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
@@ -82,15 +77,15 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="sp_Empresas" min="-2" pref="99" max="-2" attributes="3"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Component id="sp_Empresas" pref="120" max="32767" attributes="3"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btn_NuevaEmpresa" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btn_ModificarEmpresa" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btn_EliminarEmpresa" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -160,10 +155,5 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JLabel" name="lbl_MisEmpresas">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Empresas:"/>
-      </Properties>
-    </Component>
   </SubComponents>
 </Form>

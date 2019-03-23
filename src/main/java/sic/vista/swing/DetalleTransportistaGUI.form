@@ -43,9 +43,9 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="32767" attributes="0"/>
-              <Component id="panelPrincipal" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="panelPrincipal" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
               <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
@@ -68,23 +68,23 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="lbl_Nombre" alignment="1" max="32767" attributes="1"/>
-                      <Component id="lbl_Web" alignment="0" pref="109" max="32767" attributes="1"/>
+                      <Component id="lblUbicacion" alignment="0" max="32767" attributes="0"/>
                       <Component id="lbl_Telefono" alignment="0" max="32767" attributes="1"/>
-                      <Component id="lblUbicacion" max="32767" attributes="0"/>
+                      <Component id="lbl_Web" alignment="0" max="32767" attributes="1"/>
+                      <Component id="lbl_Nombre" max="32767" attributes="1"/>
                   </Group>
-                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="txt_Web" max="32767" attributes="1"/>
-                      <Component id="txt_Telefono" alignment="0" max="32767" attributes="1"/>
-                      <Component id="txt_Nombre" alignment="0" max="32767" attributes="1"/>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="lblDetalleUbicacionTransportista" pref="365" max="32767" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="lblDetalleUbicacionTransportista" min="-2" pref="364" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           <Component id="btnUbicacion" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="txt_Nombre" alignment="1" max="32767" attributes="1"/>
+                      <Component id="txt_Web" alignment="1" max="32767" attributes="1"/>
+                      <Component id="txt_Telefono" alignment="0" max="32767" attributes="1"/>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -92,25 +92,25 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="txt_Nombre" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbl_Nombre" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="lbl_Nombre" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txt_Nombre" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lblUbicacion" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnUbicacion" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblDetalleUbicacionTransportista" linkSize="1" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnUbicacion" linkSize="1" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lbl_Telefono" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txt_Telefono" linkSize="1" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txt_Telefono" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lbl_Web" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txt_Web" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="lbl_Web" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txt_Web" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -143,8 +143,6 @@
             <Property name="text" type="java.lang.String" value="Tel&#xe9;fono:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txt_Telefono">
-        </Component>
         <Component class="javax.swing.JButton" name="btnUbicacion">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
@@ -170,6 +168,8 @@
               </Border>
             </Property>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txt_Telefono">
         </Component>
       </SubComponents>
     </Container>

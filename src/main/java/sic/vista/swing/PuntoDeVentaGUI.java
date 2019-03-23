@@ -214,7 +214,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         this.cliente = cliente;
         txtNombreCliente.setText(cliente.getNombreFiscal() + " (" + cliente.getNroCliente() + ")");
         txtBonificacion.setText(cliente.getBonificacion().setScale(2, RoundingMode.HALF_UP) + " %");
-        txtDomicilioFiscalCliente.setText(cliente.getDetalleUbicacionFacturacion());
+        txtUbicacionCliente.setText(cliente.getDetalleUbicacionFacturacion());
         txt_CondicionIVACliente.setText(cliente.getCategoriaIVA().toString());
         if (cliente.getIdFiscal() != null) {
             txtIdFiscalCliente.setText(cliente.getIdFiscal().toString());
@@ -742,11 +742,11 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         panelGeneral = new javax.swing.JPanel();
         panelCliente = new javax.swing.JPanel();
         lblNombreCliente = new javax.swing.JLabel();
-        lblDomicilioFiscalCliente = new javax.swing.JLabel();
+        lblUbicacionCliente = new javax.swing.JLabel();
         lbl_IDFiscalCliente = new javax.swing.JLabel();
         lbl_CondicionIVACliente = new javax.swing.JLabel();
         txt_CondicionIVACliente = new javax.swing.JTextField();
-        txtDomicilioFiscalCliente = new javax.swing.JTextField();
+        txtUbicacionCliente = new javax.swing.JTextField();
         txtNombreCliente = new javax.swing.JTextField();
         lblBonificacion = new javax.swing.JLabel();
         txtIdFiscalCliente = new javax.swing.JTextField();
@@ -821,8 +821,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         lblNombreCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblNombreCliente.setText("Nombre:");
 
-        lblDomicilioFiscalCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblDomicilioFiscalCliente.setText("Ubicación :");
+        lblUbicacionCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblUbicacionCliente.setText("Ubicación:");
 
         lbl_IDFiscalCliente.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_IDFiscalCliente.setText("CUIT o DNI:");
@@ -833,8 +833,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         txt_CondicionIVACliente.setEditable(false);
         txt_CondicionIVACliente.setFocusable(false);
 
-        txtDomicilioFiscalCliente.setEditable(false);
-        txtDomicilioFiscalCliente.setFocusable(false);
+        txtUbicacionCliente.setEditable(false);
+        txtUbicacionCliente.setFocusable(false);
 
         txtNombreCliente.setEditable(false);
         txtNombreCliente.setFocusable(false);
@@ -855,7 +855,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 .addContainerGap()
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblNombreCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblDomicilioFiscalCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblUbicacionCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_CondicionIVACliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -871,7 +871,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         .addComponent(lblBonificacion)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtBonificacion))
-                    .addComponent(txtDomicilioFiscalCliente, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(txtUbicacionCliente, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(0, 0, 0))
         );
 
@@ -887,18 +887,17 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                     .addComponent(txtBonificacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtDomicilioFiscalCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblDomicilioFiscalCliente))
+                    .addComponent(txtUbicacionCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblUbicacionCliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(txtIdFiscalCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txt_CondicionIVACliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_IDFiscalCliente)
-                    .addComponent(lbl_CondicionIVACliente))
-                .addGap(0, 12, Short.MAX_VALUE))
+                    .addComponent(lbl_CondicionIVACliente)))
         );
 
-        panelClienteLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtDomicilioFiscalCliente, txtIdFiscalCliente, txtNombreCliente, txt_CondicionIVACliente});
+        panelClienteLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtIdFiscalCliente, txtNombreCliente, txtUbicacionCliente, txt_CondicionIVACliente});
 
         panelClienteLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblBonificacion, lbl_IDFiscalCliente});
 
@@ -1714,10 +1713,10 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private com.toedter.calendar.JDateChooser dc_fechaVencimiento;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblBonificacion;
-    private javax.swing.JLabel lblDomicilioFiscalCliente;
     private javax.swing.JLabel lblNombreCliente;
     private javax.swing.JLabel lblSeparadorDerecho;
     private javax.swing.JLabel lblSeparadorIzquierdo;
+    private javax.swing.JLabel lblUbicacionCliente;
     private javax.swing.JLabel lbl_105;
     private javax.swing.JLabel lbl_21;
     private javax.swing.JLabel lbl_CondicionIVACliente;
@@ -1742,9 +1741,9 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private javax.swing.JTable tbl_Resultado;
     private javax.swing.JToggleButton tbtn_marcarDesmarcar;
     private javax.swing.JTextField txtBonificacion;
-    private javax.swing.JTextField txtDomicilioFiscalCliente;
     private javax.swing.JTextField txtIdFiscalCliente;
     private javax.swing.JTextField txtNombreCliente;
+    private javax.swing.JTextField txtUbicacionCliente;
     private javax.swing.JTextField txt_CodigoProducto;
     private javax.swing.JTextField txt_CondicionIVACliente;
     private javax.swing.JFormattedTextField txt_Descuento_neto;

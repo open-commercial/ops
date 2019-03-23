@@ -66,7 +66,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -76,18 +76,13 @@
                               <Component id="lblDepartamento" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="lblDescripcion" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="txtDescripcion" linkSize="5" alignment="0" min="-2" pref="328" max="-2" attributes="0"/>
-                                      <Component id="txtDepartamento" linkSize="5" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="ftfPiso" linkSize="5" alignment="0" min="-2" pref="328" max="-2" attributes="0"/>
-                                      <Component id="ftfNumero" linkSize="5" alignment="0" min="-2" pref="305" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <Component id="txtCalle" linkSize="5" alignment="0" min="-2" pref="364" max="-2" attributes="0"/>
+                              <Component id="txtCalle" max="32767" attributes="0"/>
+                              <Component id="ftfNumero" alignment="0" max="32767" attributes="0"/>
+                              <Component id="txtDepartamento" max="32767" attributes="0"/>
+                              <Component id="txtDescripcion" max="32767" attributes="0"/>
+                              <Component id="ftfPiso" alignment="1" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
@@ -95,10 +90,10 @@
                               <Component id="lblLatitud" linkSize="1" min="-2" max="-2" attributes="0"/>
                               <Component id="lblLongitud" linkSize="1" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="ftfLatitud" linkSize="5" alignment="0" min="-2" pref="328" max="-2" attributes="0"/>
-                              <Component id="ftfLongitud" linkSize="5" alignment="0" min="-2" pref="328" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="ftfLatitud" max="32767" attributes="0"/>
+                              <Component id="ftfLongitud" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
@@ -107,15 +102,15 @@
                               <Component id="lblProvincia" linkSize="1" alignment="0" max="32767" attributes="1"/>
                               <Component id="lblLocalidades" linkSize="1" alignment="0" max="32767" attributes="1"/>
                           </Group>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cmbProvinciasBusqueda" max="32767" attributes="1"/>
-                              <Component id="cmbLocalidad" max="32767" attributes="0"/>
-                              <Component id="txtCodigoPostal" max="32767" attributes="2"/>
+                              <Component id="cmbLocalidad" alignment="1" pref="440" max="32767" attributes="0"/>
+                              <Component id="cmbProvinciasBusqueda" alignment="1" max="32767" attributes="1"/>
+                              <Component id="txtCodigoPostal" alignment="1" max="32767" attributes="2"/>
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -123,34 +118,34 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblCalle" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtCalle" linkSize="4" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblNumero" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="ftfNumero" linkSize="4" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblPiso" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="ftfPiso" linkSize="4" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblDepartamento" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtDepartamento" linkSize="4" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblDescripcion" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtDescripcion" linkSize="4" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="lblCalle" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtCalle" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="cmbProvinciasBusqueda" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblNumero" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftfNumero" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="lblPiso" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftfPiso" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="lblDepartamento" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtDepartamento" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="lblDescripcion" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtDescripcion" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lblProvincia" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="cmbProvinciasBusqueda" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -159,7 +154,7 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lblCP" alignment="2" min="-2" pref="23" max="-2" attributes="0"/>
+                      <Component id="lblCP" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="txtCodigoPostal" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -168,9 +163,9 @@
                       <Component id="ftfLatitud" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblLongitud" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="ftfLongitud" linkSize="4" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="lblLongitud" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftfLongitud" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>

@@ -44,8 +44,8 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="panelFiltros" min="-2" max="-2" attributes="0"/>
                   <Component id="panelOrden" min="-2" max="-2" attributes="0"/>
+                  <Component id="panelFiltros" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="panelResultados" max="32767" attributes="0"/>
@@ -70,10 +70,10 @@
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="chk_Id_Fiscal" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="chk_RazonSocial" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="chk_Codigo" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="chk_RazonSocial" alignment="0" max="32767" attributes="0"/>
+                              <Component id="chk_Codigo" alignment="0" max="32767" attributes="0"/>
+                              <Component id="chk_Id_Fiscal" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
@@ -110,10 +110,10 @@
                       <Component id="cmb_Provincia" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="chk_RazonSocial" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txt_RazonSocial" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmb_Localidad" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="cmb_Localidad" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="chk_RazonSocial" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txt_RazonSocial" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -255,7 +255,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="sp_Resultados" pref="236" max="32767" attributes="0"/>
+                  <Component id="sp_Resultados" max="32767" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="btnCuentaCorriente" alignment="1" min="-2" max="-2" attributes="0"/>

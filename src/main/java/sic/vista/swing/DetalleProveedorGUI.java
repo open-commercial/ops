@@ -120,7 +120,6 @@ public class DetalleProveedorGUI extends JDialog {
         lblCondicionIVA = new javax.swing.JLabel();
         cmbCategoriaIVA = new javax.swing.JComboBox();
         lblTelPrimario = new javax.swing.JLabel();
-        txtTelPrimario = new javax.swing.JTextField();
         txtTelSecundario = new javax.swing.JTextField();
         lblTelSecundario = new javax.swing.JLabel();
         lblContacto = new javax.swing.JLabel();
@@ -133,6 +132,7 @@ public class DetalleProveedorGUI extends JDialog {
         lblUbicacion = new javax.swing.JLabel();
         btnUbicacion = new javax.swing.JButton();
         lblDetalleUbicacionProveedor = new javax.swing.JLabel();
+        txtTelPrimario = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nuevo Proveedor");
@@ -222,21 +222,21 @@ public class DetalleProveedorGUI extends JDialog {
                     .addComponent(lblContacto, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblWeb, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtCodigo, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtRazonSocial, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtTelPrimario, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtIdFiscal, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(cmbCategoriaIVA, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
+                        .addComponent(lblDetalleUbicacionProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnUbicacion))
                     .addComponent(txtTelSecundario, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtContacto, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtEmail, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtEmail)
                     .addComponent(txtWeb, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtCodigo, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(cmbCategoriaIVA, 0, 442, Short.MAX_VALUE)
-                    .addComponent(txtIdFiscal)
-                    .addGroup(panelPrincipalLayout.createSequentialGroup()
-                        .addComponent(lblDetalleUbicacionProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btnUbicacion)))
+                    .addComponent(txtTelPrimario))
                 .addContainerGap())
         );
 
@@ -267,7 +267,7 @@ public class DetalleProveedorGUI extends JDialog {
                     .addComponent(lblUbicacion)
                     .addComponent(lblDetalleUbicacionProveedor))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTelPrimario)
                     .addComponent(txtTelPrimario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -289,7 +289,7 @@ public class DetalleProveedorGUI extends JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblDetalleUbicacionProveedor, txtTelPrimario});
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnUbicacion, lblDetalleUbicacionProveedor});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -297,12 +297,12 @@ public class DetalleProveedorGUI extends JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 466, Short.MAX_VALUE)
-                        .addComponent(btn_Guardar))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btn_Guardar)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(

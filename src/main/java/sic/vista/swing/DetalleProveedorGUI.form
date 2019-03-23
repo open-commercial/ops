@@ -30,16 +30,16 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="466" max="32767" attributes="0"/>
-                      <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="panelPrincipal" max="32767" attributes="0"/>
                   </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -96,22 +96,22 @@
                       <Component id="lblEmail" linkSize="2" alignment="1" min="-2" pref="110" max="-2" attributes="0"/>
                       <Component id="lblWeb" linkSize="2" alignment="1" min="-2" pref="110" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="txtRazonSocial" alignment="1" max="32767" attributes="1"/>
-                      <Component id="txtTelPrimario" alignment="1" max="32767" attributes="1"/>
-                      <Component id="txtTelSecundario" alignment="1" max="32767" attributes="1"/>
-                      <Component id="txtContacto" alignment="1" max="32767" attributes="1"/>
-                      <Component id="txtEmail" alignment="1" max="32767" attributes="1"/>
-                      <Component id="txtWeb" alignment="1" max="32767" attributes="1"/>
                       <Component id="txtCodigo" alignment="1" max="32767" attributes="1"/>
-                      <Component id="cmbCategoriaIVA" alignment="0" pref="442" max="32767" attributes="1"/>
-                      <Component id="txtIdFiscal" alignment="0" max="32767" attributes="0"/>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="lblDetalleUbicacionProveedor" max="32767" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Component id="txtRazonSocial" alignment="1" max="32767" attributes="1"/>
+                      <Component id="txtIdFiscal" alignment="1" max="32767" attributes="0"/>
+                      <Component id="cmbCategoriaIVA" alignment="1" max="32767" attributes="1"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="lblDetalleUbicacionProveedor" min="-2" pref="390" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           <Component id="btnUbicacion" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="txtTelSecundario" alignment="1" max="32767" attributes="1"/>
+                      <Component id="txtContacto" alignment="1" max="32767" attributes="1"/>
+                      <Component id="txtEmail" max="32767" attributes="1"/>
+                      <Component id="txtWeb" alignment="1" max="32767" attributes="1"/>
+                      <Component id="txtTelPrimario" alignment="0" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -142,14 +142,14 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="btnUbicacion" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnUbicacion" linkSize="1" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblUbicacion" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblDetalleUbicacionProveedor" linkSize="1" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lblTelPrimario" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtTelPrimario" linkSize="1" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblTelPrimario" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtTelPrimario" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -225,8 +225,6 @@
             <Property name="text" type="java.lang.String" value="Tel&#xe9;fono #1:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtTelPrimario">
-        </Component>
         <Component class="javax.swing.JTextField" name="txtTelSecundario">
         </Component>
         <Component class="javax.swing.JLabel" name="lblTelSecundario">
@@ -294,6 +292,8 @@
               </Border>
             </Property>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtTelPrimario">
         </Component>
       </SubComponents>
     </Container>
