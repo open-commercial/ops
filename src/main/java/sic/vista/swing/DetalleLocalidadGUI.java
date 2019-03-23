@@ -33,8 +33,8 @@ public class DetalleLocalidadGUI extends javax.swing.JDialog {
 
         pnlDetalle = new javax.swing.JPanel();
         lblLocalidad = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        lblCodigoPostal = new javax.swing.JLabel();
+        lblProvincia = new javax.swing.JLabel();
         lblEnvio = new javax.swing.JLabel();
         lblCostoDeEnvio = new javax.swing.JLabel();
         lblDetalleLocalidad = new javax.swing.JLabel();
@@ -53,16 +53,16 @@ public class DetalleLocalidadGUI extends javax.swing.JDialog {
             }
         });
 
-        pnlDetalle.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        pnlDetalle.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         lblLocalidad.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblLocalidad.setText("Nombre:");
 
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setText("Codigo Postal:");
+        lblCodigoPostal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblCodigoPostal.setText("Codigo Postal:");
 
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel3.setText("Provincia:");
+        lblProvincia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblProvincia.setText("Provincia:");
 
         lblEnvio.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblEnvio.setText("Envío gratuito:");
@@ -87,22 +87,21 @@ public class DetalleLocalidadGUI extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(pnlDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblLocalidad)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
+                    .addComponent(lblCodigoPostal)
+                    .addComponent(lblProvincia)
                     .addComponent(lblEnvio)
                     .addComponent(lblCostoDeEnvio))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnlDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                        .addComponent(ftfCostoDeEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblDetalleProvincia, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblDetalleCodigoPostal, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblDetalleLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(chkEnvioGratuito))
+                .addGroup(pnlDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(ftfCostoDeEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDetalleProvincia, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDetalleCodigoPostal, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDetalleLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chkEnvioGratuito, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        pnlDetalleLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel2, jLabel3, lblCostoDeEnvio, lblEnvio, lblLocalidad});
+        pnlDetalleLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblCodigoPostal, lblCostoDeEnvio, lblEnvio, lblLocalidad, lblProvincia});
 
         pnlDetalleLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ftfCostoDeEnvio, lblDetalleCodigoPostal, lblDetalleLocalidad, lblDetalleProvincia});
 
@@ -116,11 +115,11 @@ public class DetalleLocalidadGUI extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblDetalleCodigoPostal)
-                    .addComponent(jLabel2))
+                    .addComponent(lblCodigoPostal))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblDetalleProvincia)
-                    .addComponent(jLabel3))
+                    .addComponent(lblProvincia))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblEnvio)
@@ -205,14 +204,14 @@ public class DetalleLocalidadGUI extends javax.swing.JDialog {
     private javax.swing.JButton btnAceptar;
     private javax.swing.JCheckBox chkEnvioGratuito;
     private javax.swing.JFormattedTextField ftfCostoDeEnvio;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel lblCodigoPostal;
     private javax.swing.JLabel lblCostoDeEnvio;
     private javax.swing.JLabel lblDetalleCodigoPostal;
     private javax.swing.JLabel lblDetalleLocalidad;
     private javax.swing.JLabel lblDetalleProvincia;
     private javax.swing.JLabel lblEnvio;
     private javax.swing.JLabel lblLocalidad;
+    private javax.swing.JLabel lblProvincia;
     private javax.swing.JPanel pnlDetalle;
     // End of variables declaration//GEN-END:variables
 }
