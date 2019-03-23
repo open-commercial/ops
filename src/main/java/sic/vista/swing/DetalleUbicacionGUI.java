@@ -55,14 +55,6 @@ public class DetalleUbicacionGUI extends JDialog {
             cmbProvinciasBusqueda.setSelectedItem(provinciaASeleccionar);
         }
     }
-    
-    private void seleccionarLocalidadDelCliente() {
-        if (this.ubicacionAModificar != null && this.ubicacionAModificar.getIdLocalidad() != null) {
-            Localidad localidadASeleccionar = RestClient.getRestTemplate().getForObject("/ubicaciones/localidades/" + this.ubicacionAModificar.getIdLocalidad(), Localidad.class);
-            cmbLocalidad.setSelectedItem(localidadASeleccionar);
-        }
-        localidadSeleccionada = (Localidad) cmbLocalidad.getSelectedItem();
-    }
 
     private void cargarLocalidadesDeLaProvincia(Provincia provincia) {
         try {
@@ -73,6 +65,11 @@ public class DetalleUbicacionGUI extends JDialog {
                                 Localidad[].class)));
                 localidades.stream().forEach(l -> cmbLocalidad.addItem(l));
             }
+            if (this.ubicacionAModificar != null && this.ubicacionAModificar.getIdLocalidad() != null) {
+                Localidad localidadASeleccionar = RestClient.getRestTemplate().getForObject("/ubicaciones/localidades/" + this.ubicacionAModificar.getIdLocalidad(), Localidad.class);
+                cmbLocalidad.setSelectedItem(localidadASeleccionar);
+            }
+            localidadSeleccionada = (Localidad) cmbLocalidad.getSelectedItem();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -170,12 +167,6 @@ public class DetalleUbicacionGUI extends JDialog {
         lblLocalidades.setForeground(java.awt.Color.red);
         lblLocalidades.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblLocalidades.setText("* Localidad:");
-
-        cmbLocalidad.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cmbLocalidadItemStateChanged(evt);
-            }
-        });
 
         txtCodigoPostal.setEditable(false);
 
@@ -336,10 +327,10 @@ public class DetalleUbicacionGUI extends JDialog {
         this.cargarProvincias();
         this.seleccionarProvinciaDelCliente();
         this.cargarLocalidadesDeLaProvincia((Provincia) cmbProvinciasBusqueda.getSelectedItem());
-        this.seleccionarLocalidadDelCliente();
     }//GEN-LAST:event_formWindowOpened
 
     private void btnSeleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarActionPerformed
+        
         if (txtCalle.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_ubicacion_calle_vacia"),
@@ -374,6 +365,7 @@ public class DetalleUbicacionGUI extends JDialog {
                             ubicacionAModificar.setLongitud(Double.valueOf(ftfLongitud.getText().trim()));
                         }
                         ubicacionAModificar.setDescripcion(txtDescripcion.getText().trim());
+                        localidadSeleccionada = (Localidad) cmbLocalidad.getSelectedItem();
                         if (localidadSeleccionada != null) {
                             ubicacionAModificar.setNombreLocalidad(localidadSeleccionada.getNombre());
                             ubicacionAModificar.setCodigoPostal(localidadSeleccionada.getCodigoPostal());
@@ -389,25 +381,6 @@ public class DetalleUbicacionGUI extends JDialog {
     private void cmbProvinciasBusquedaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbProvinciasBusquedaItemStateChanged
         this.cargarLocalidadesDeLaProvincia((Provincia) cmbProvinciasBusqueda.getSelectedItem());
     }//GEN-LAST:event_cmbProvinciasBusquedaItemStateChanged
-
-    private void cmbLocalidadItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbLocalidadItemStateChanged
-        localidadSeleccionada = (Localidad) cmbLocalidad.getSelectedItem();
-        if (localidadSeleccionada != null) {
-            txtCodigoPostal.setText(localidadSeleccionada.getCodigoPostal());
-            ubicacionAModificar.setNombreLocalidad(localidadSeleccionada.getNombre());
-            ubicacionAModificar.setIdLocalidad(localidadSeleccionada.getId_Localidad());
-            ubicacionAModificar.setCodigoPostal(localidadSeleccionada.getCodigoPostal());
-            ubicacionAModificar.setNombreProvincia(localidadSeleccionada.getNombreProvincia());
-            ubicacionAModificar.setIdProvincia(localidadSeleccionada.getIdProvincia());
-        } else {
-            txtCodigoPostal.setText(null);
-            ubicacionAModificar.setNombreLocalidad(null);
-            ubicacionAModificar.setIdLocalidad(null);
-            ubicacionAModificar.setCodigoPostal(null);
-            ubicacionAModificar.setNombreProvincia(null);
-            ubicacionAModificar.setIdProvincia(null);
-        }
-    }//GEN-LAST:event_cmbLocalidadItemStateChanged
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         if ((ubicacionAModificar.getCalle() == null || ubicacionAModificar.getCalle().isEmpty())
