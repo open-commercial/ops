@@ -72,9 +72,6 @@ public class ProveedoresGUI extends JInternalFrame {
             List<Provincia> provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/ubicaciones/provincias",
                             Provincia[].class)));
-            Provincia provinciaTodas = new Provincia();
-            provinciaTodas.setNombre("Todas");
-            cmb_Provincia.addItem(provinciaTodas);
             provincias.stream().forEach((p) -> {
                 cmb_Provincia.addItem(p);
             });
@@ -253,9 +250,7 @@ public class ProveedoresGUI extends JInternalFrame {
             criteria += "idFiscal=" + txt_Id_Fiscal.getText().trim() + "&";
         }
         if (chk_Ubicacion.isSelected()) {
-            if (!((Provincia) (cmb_Provincia.getSelectedItem())).getNombre().equals("Todas")) {
-                criteria += "idProvincia=" + String.valueOf(((Provincia) (cmb_Provincia.getSelectedItem())).getId_Provincia()) + "&";
-            }
+            criteria += "idProvincia=" + String.valueOf(((Provincia) (cmb_Provincia.getSelectedItem())).getId_Provincia()) + "&";
             if (!((Localidad) cmb_Localidad.getSelectedItem()).getNombre().equals("Todas")) {
                 criteria += "idLocalidad=" + String.valueOf((((Localidad) cmb_Localidad.getSelectedItem()).getId_Localidad())) + "&";
             }

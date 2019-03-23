@@ -67,9 +67,6 @@ public class ClientesGUI extends JInternalFrame {
             List<Provincia> provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/ubicaciones/provincias",
                             Provincia[].class)));
-            Provincia provinciaTodas = new Provincia();
-            provinciaTodas.setNombre("Todas");
-            cmbProvincia.addItem(provinciaTodas);
             provincias.stream().forEach((p) -> {
                 cmbProvincia.addItem(p);
             });
@@ -256,9 +253,7 @@ public class ClientesGUI extends JInternalFrame {
             criteriaBusqueda += "idViajante=" + viajanteSeleccionado.getId_Usuario() + "&";
         }
         if (chk_Ubicacion.isSelected()) {
-            if (!((Provincia) (cmbProvincia.getSelectedItem())).getNombre().equals("Todas")) {
-                criteriaBusqueda += "idProvincia=" + String.valueOf(((Provincia) (cmbProvincia.getSelectedItem())).getId_Provincia()) + "&";
-            }
+            criteriaBusqueda += "idProvincia=" + String.valueOf(((Provincia) (cmbProvincia.getSelectedItem())).getId_Provincia()) + "&";
             if (!((Localidad) cmbLocalidad.getSelectedItem()).getNombre().equals("Todas")) {
                 criteriaBusqueda += "idLocalidad=" + String.valueOf((((Localidad) cmbLocalidad.getSelectedItem()).getId_Localidad())) + "&";
             }
