@@ -34,7 +34,6 @@ public class DetalleUbicacionGUI extends JDialog {
     private void cargarProvincias() {
         try {
             cmbProvinciasBusqueda.removeAllItems();
-            cmbProvinciasBusqueda.addItem(null);
             List<Provincia> provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/ubicaciones/provincias", Provincia[].class)));
             provincias.stream().forEach(p -> {
@@ -158,8 +157,9 @@ public class DetalleUbicacionGUI extends JDialog {
 
         ftfPiso.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
 
+        lblProvincia.setForeground(java.awt.Color.red);
         lblProvincia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblProvincia.setText("Provincia:");
+        lblProvincia.setText("* Provincia:");
 
         cmbProvinciasBusqueda.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -167,8 +167,9 @@ public class DetalleUbicacionGUI extends JDialog {
             }
         });
 
+        lblLocalidades.setForeground(java.awt.Color.red);
         lblLocalidades.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblLocalidades.setText("Localidad:");
+        lblLocalidades.setText("* Localidad:");
 
         cmbLocalidad.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -349,26 +350,38 @@ public class DetalleUbicacionGUI extends JDialog {
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_ubicacion_numero_vacio"),
                         "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                ubicacionAModificar.setCalle(txtCalle.getText());
-                ubicacionAModificar.setNumero(Integer.valueOf(ftfNumero.getText()));
-                if (!ftfPiso.getText().isEmpty() && !ftfPiso.getText().isEmpty()) {
-                    ubicacionAModificar.setPiso(Integer.valueOf(ftfPiso.getText().trim()));
+                if (cmbProvinciasBusqueda.getSelectedItem() == null) {
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_ubicacion_provincia_vacia"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    if (cmbLocalidad.getSelectedItem() == null) {
+                        JOptionPane.showMessageDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_ubicacion_localidad_vacia"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        ubicacionAModificar.setCalle(txtCalle.getText());
+                        ubicacionAModificar.setNumero(Integer.valueOf(ftfNumero.getText()));
+                        if (!ftfPiso.getText().isEmpty() && !ftfPiso.getText().isEmpty()) {
+                            ubicacionAModificar.setPiso(Integer.valueOf(ftfPiso.getText().trim()));
+                        }
+                        ubicacionAModificar.setDepartamento(txtDepartamento.getText().trim());
+                        ubicacionAModificar.setDescripcion(txtDescripcion.getText().trim());
+                        if (!ftfLatitud.getText().isEmpty() && !ftfLatitud.getText().isEmpty()) {
+                            ubicacionAModificar.setLatitud(Double.valueOf(ftfLatitud.getText().trim()));
+                        }
+                        if (!ftfLongitud.getText().isEmpty() && !ftfLongitud.getText().isEmpty()) {
+                            ubicacionAModificar.setLongitud(Double.valueOf(ftfLongitud.getText().trim()));
+                        }
+                        ubicacionAModificar.setDescripcion(txtDescripcion.getText().trim());
+                        if (localidadSeleccionada != null) {
+                            ubicacionAModificar.setNombreLocalidad(localidadSeleccionada.getNombre());
+                            ubicacionAModificar.setCodigoPostal(localidadSeleccionada.getCodigoPostal());
+                            ubicacionAModificar.setNombreProvincia(localidadSeleccionada.getNombreProvincia());
+                        }
+                        this.dispose();
+                    }
                 }
-                ubicacionAModificar.setDepartamento(txtDepartamento.getText().trim());
-                ubicacionAModificar.setDescripcion(txtDescripcion.getText().trim());
-                if (!ftfLatitud.getText().isEmpty() && !ftfLatitud.getText().isEmpty()) {
-                    ubicacionAModificar.setLatitud(Double.valueOf(ftfLatitud.getText().trim()));
-                }
-                if (!ftfLongitud.getText().isEmpty() && !ftfLongitud.getText().isEmpty()) {
-                    ubicacionAModificar.setLongitud(Double.valueOf(ftfLongitud.getText().trim()));
-                }
-                ubicacionAModificar.setDescripcion(txtDescripcion.getText().trim());
-                if (localidadSeleccionada != null) {
-                    ubicacionAModificar.setNombreLocalidad(localidadSeleccionada.getNombre());
-                    ubicacionAModificar.setCodigoPostal(localidadSeleccionada.getCodigoPostal());
-                    ubicacionAModificar.setNombreProvincia(localidadSeleccionada.getNombreProvincia());
-                }
-                this.dispose();
             }
         }
     }//GEN-LAST:event_btnSeleccionarActionPerformed
