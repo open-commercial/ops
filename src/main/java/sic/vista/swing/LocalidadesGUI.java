@@ -112,7 +112,7 @@ public class LocalidadesGUI extends JInternalFrame {
             modeloTablaDeResultados.addRow(fila);
         });
         tbl_Resultados.setModel(modeloTablaDeResultados);
-        lbl_cantResultados.setText(totalElementosBusqueda + " localidades encontradas.");
+        lbl_cantResultados.setText(totalElementosBusqueda + " localidades encontradas");
     }
 
     private void resetScroll() {
@@ -366,14 +366,14 @@ public class LocalidadesGUI extends JInternalFrame {
                     .addComponent(rbGratuito))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(chk_Provincia)
                     .addComponent(cmbProvincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(rbNoGratuito)
-                    .addComponent(chk_Provincia))
-                .addGap(2, 2, 2)
+                    .addComponent(rbNoGratuito))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_Buscar))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmbProvincia, txtCriteria});
@@ -413,7 +413,7 @@ public class LocalidadesGUI extends JInternalFrame {
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnModificarLocalidad))
         );
