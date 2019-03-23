@@ -11,12 +11,12 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Localidad;
 
-public class ModificarLocalidadesGUI extends javax.swing.JDialog {
+public class DetalleLocalidadGUI extends javax.swing.JDialog {
 
     private final Localidad localidadSeleccionada;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     
-    public ModificarLocalidadesGUI(Localidad localidad) {
+    public DetalleLocalidadGUI(Localidad localidad) {
         initComponents();
         this.setIcon(); 
         localidadSeleccionada = localidad;
