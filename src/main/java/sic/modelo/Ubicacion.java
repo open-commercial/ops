@@ -16,7 +16,6 @@ public class Ubicacion implements Serializable {
     private Integer numero;
     private Integer piso;
     private String departamento;
-    private boolean eliminada;
     private Long idLocalidad;
     private String nombreLocalidad;
     private Long idProvincia;

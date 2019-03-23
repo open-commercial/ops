@@ -16,7 +16,6 @@ public class Localidad implements Serializable {
     private String nombreProvincia;
     private boolean envioGratuito;
     private BigDecimal costoEnvio;
-    private boolean eliminada = false;
 
     @Override
     public String toString() {

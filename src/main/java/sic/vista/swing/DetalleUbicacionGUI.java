@@ -367,6 +367,7 @@ public class DetalleUbicacionGUI extends JDialog {
                         ubicacionAModificar.setDescripcion(txtDescripcion.getText().trim());
                         localidadSeleccionada = (Localidad) cmbLocalidad.getSelectedItem();
                         if (localidadSeleccionada != null) {
+                            ubicacionAModificar.setIdLocalidad(localidadSeleccionada.getId_Localidad());
                             ubicacionAModificar.setNombreLocalidad(localidadSeleccionada.getNombre());
                             ubicacionAModificar.setCodigoPostal(localidadSeleccionada.getCodigoPostal());
                             ubicacionAModificar.setNombreProvincia(localidadSeleccionada.getNombreProvincia());
