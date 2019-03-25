@@ -61,7 +61,7 @@ public class DetalleUbicacionGUI extends JDialog {
             cmbLocalidad.removeAllItems();
             if (provincia != null) {
                 List<Localidad> localidades = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                        .getForObject("/ubicaciones/localidades/provincias/" + provincia.getId_Provincia(),
+                        .getForObject("/ubicaciones/localidades/provincias/" + provincia.getIdProvincia(),
                                 Localidad[].class)));
                 localidades.stream().forEach(l -> cmbLocalidad.addItem(l));
             }
@@ -367,7 +367,7 @@ public class DetalleUbicacionGUI extends JDialog {
                         ubicacionAModificar.setDescripcion(txtDescripcion.getText().trim());
                         localidadSeleccionada = (Localidad) cmbLocalidad.getSelectedItem();
                         if (localidadSeleccionada != null) {
-                            ubicacionAModificar.setIdLocalidad(localidadSeleccionada.getId_Localidad());
+                            ubicacionAModificar.setIdLocalidad(localidadSeleccionada.getIdLocalidad());
                             ubicacionAModificar.setNombreLocalidad(localidadSeleccionada.getNombre());
                             ubicacionAModificar.setCodigoPostal(localidadSeleccionada.getCodigoPostal());
                             ubicacionAModificar.setNombreProvincia(localidadSeleccionada.getNombreProvincia());

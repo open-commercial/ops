@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(of = {"nombre"})
 public class Provincia implements Serializable {
 
-    private long id_Provincia;
+    private long idProvincia;
     private String nombre;     
 
     @Override

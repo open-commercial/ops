@@ -64,7 +64,7 @@ public class TransportistasGUI extends JInternalFrame {
         cmb_Localidad.removeAllItems();
         try {
             List<Localidad> Localidades = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/ubicaciones/localidades/provincias/" + provSeleccionada.getId_Provincia(),
+                    .getForObject("/ubicaciones/localidades/provincias/" + provSeleccionada.getIdProvincia(),
                     Localidad[].class)));
             Localidad localidadTodas = new Localidad();
             localidadTodas.setNombre("Todas");
@@ -165,9 +165,9 @@ public class TransportistasGUI extends JInternalFrame {
             criteria += "nombre=" + txt_Nombre.getText().trim() + "&";
         }
         if (chk_Ubicacion.isSelected()) {
-            criteria += "idProvincia=" + String.valueOf(((Provincia) (cmb_Provincia.getSelectedItem())).getId_Provincia()) + "&";
+            criteria += "idProvincia=" + String.valueOf(((Provincia) (cmb_Provincia.getSelectedItem())).getIdProvincia()) + "&";
             if (!((Localidad) cmb_Localidad.getSelectedItem()).getNombre().equals("Todas")) {
-                criteria += "idLocalidad=" + String.valueOf((((Localidad) cmb_Localidad.getSelectedItem()).getId_Localidad())) + "&";
+                criteria += "idLocalidad=" + String.valueOf((((Localidad) cmb_Localidad.getSelectedItem()).getIdLocalidad())) + "&";
             }
         }
         criteria += "idEmpresa=" + String.valueOf(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());

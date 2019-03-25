@@ -84,7 +84,7 @@ public class ClientesGUI extends JInternalFrame {
         cmbLocalidad.removeAllItems();
         try {
             List<Localidad> Localidades = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/ubicaciones/localidades/provincias/" + ((Provincia) cmbProvincia.getSelectedItem()).getId_Provincia(),
+                    .getForObject("/ubicaciones/localidades/provincias/" + ((Provincia) cmbProvincia.getSelectedItem()).getIdProvincia(),
                             Localidad[].class)));
             Localidad localidadTodas = new Localidad();
             localidadTodas.setNombre("Todas");
@@ -253,9 +253,9 @@ public class ClientesGUI extends JInternalFrame {
             criteriaBusqueda += "idViajante=" + viajanteSeleccionado.getId_Usuario() + "&";
         }
         if (chk_Ubicacion.isSelected()) {
-            criteriaBusqueda += "idProvincia=" + String.valueOf(((Provincia) (cmbProvincia.getSelectedItem())).getId_Provincia()) + "&";
+            criteriaBusqueda += "idProvincia=" + String.valueOf(((Provincia) (cmbProvincia.getSelectedItem())).getIdProvincia()) + "&";
             if (!((Localidad) cmbLocalidad.getSelectedItem()).getNombre().equals("Todas")) {
-                criteriaBusqueda += "idLocalidad=" + String.valueOf((((Localidad) cmbLocalidad.getSelectedItem()).getId_Localidad())) + "&";
+                criteriaBusqueda += "idLocalidad=" + String.valueOf((((Localidad) cmbLocalidad.getSelectedItem()).getIdLocalidad())) + "&";
             }
         }
         int seleccionOrden = cmbOrden.getSelectedIndex();

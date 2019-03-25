@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(of = {"nombre"})
 public class Localidad implements Serializable {
 
-    private long id_Localidad;
+    private long idLocalidad;
     private String nombre;
     private String codigoPostal;
     private Long idProvincia;
