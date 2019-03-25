@@ -81,7 +81,7 @@ public class CerrarPedidoGUI extends JDialog {
         try {
             empresas = Arrays.asList(RestClient.getRestTemplate().getForObject("/empresas", Empresa[].class));
             empresas.stream().forEach(e -> {
-                cmbEmpresas.addItem(e.getNombre() + " (" + e.getDetalleUbicacion() + ")");
+                cmbEmpresas.addItem(e.getNombre() + ((e.getDetalleUbicacion() != null) ? (" (" + e.getDetalleUbicacion() + ")") : ""));
             });
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -255,16 +255,6 @@ public class CerrarPedidoGUI extends JDialog {
 
     private void btnCerrarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarPedidoActionPerformed
         try {
-//            if (this.ubicacionDeFacturacion != null && this.ubicacionDeFacturacion.getIdUbicacion() == 0L) {
-//                RestClient.getRestTemplate().postForObject("/ubicaciones/clientes/" + cliente.getId_Cliente() + "/facturacion", this.ubicacionDeFacturacion, Ubicacion.class);
-//            } else {
-//                RestClient.getRestTemplate().put("/ubicaciones", this.ubicacionDeFacturacion);
-//            }
-//            if (this.ubicacionDeEnvio != null && this.ubicacionDeEnvio.getIdUbicacion() == 0L) {
-//                RestClient.getRestTemplate().postForObject("/ubicaciones/clientes/" + cliente.getId_Cliente() + "/envio", this.ubicacionDeEnvio, Ubicacion.class);
-//            } else {
-//                RestClient.getRestTemplate().put("/ubicaciones", this.ubicacionDeEnvio);
-//            }
             TipoDeEnvio tipoDeEnvio;
             Long idEmpresa = null;
             if (rbDireccionFacturacion.isSelected()) {
