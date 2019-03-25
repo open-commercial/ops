@@ -22,7 +22,6 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
-import sic.modelo.Localidad;
 import sic.modelo.Movimiento;
 import sic.modelo.NotaDebito;
 import sic.modelo.Proveedor;
@@ -35,11 +34,12 @@ import sic.util.FormatterFechaHora;
 import sic.util.FormatterNumero;
 
 public class DetalleNotaDebitoGUI extends JDialog {
+
     private final Cliente cliente;
     private Recibo recibo;
     private final Proveedor proveedor;
     private long idRecibo;
-    private boolean notaDebitoCreada;      
+    private boolean notaDebitoCreada;
     private long idNotaDebito;
     private NotaDebito notaDebito;
     private final FormatterFechaHora formatter = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO);
@@ -55,7 +55,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
         this.proveedor = null;
         this.idRecibo = idRecibo;
     }
-    
+
     public DetalleNotaDebitoGUI(Proveedor proveedor, long idRecibo) {
         this.initComponents();
         this.setIcon();
@@ -64,7 +64,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
         this.cliente = null;
         this.idRecibo = idRecibo;
     }
-    
+
     public DetalleNotaDebitoGUI(long idNotaDebitoProveedor) {
         this.initComponents();
         this.setIcon();
@@ -73,23 +73,22 @@ public class DetalleNotaDebitoGUI extends JDialog {
         this.cliente = null;
         this.idNotaDebito = idNotaDebitoProveedor;
     }
-    
+
     public boolean isNotaDebitoCreada() {
         return notaDebitoCreada;
     }
-        
+
     private void setIcon() {
         ImageIcon iconoVentana = new ImageIcon(DetalleNotaDebitoGUI.class.getResource("/sic/icons/SIC_24_square.png"));
         this.setIconImage(iconoVentana.getImage());
     }
-    
+
     private void cargarDetalleCliente() {
         txtNombre.setText(cliente.getNombreFiscal() + " (" + cliente.getNroCliente() + ")");
-        txtDomicilio.setText(cliente.getDireccion()
-                + " " + cliente.getNombreLocalidad()
-                + " " + cliente.getNombreProvincia()                
-                + " " + cliente.getNombrePais());
-        if (cliente.getIdFiscal() != null) txtIdFiscal.setText(cliente.getIdFiscal().toString());        
+        txtUbicacion.setText(cliente.getDetalleUbicacionFacturacion());
+        if (cliente.getIdFiscal() != null) {
+            txtIdFiscal.setText(cliente.getIdFiscal().toString());
+        }
         txtCondicionIVA.setText(cliente.getCategoriaIVA().toString());
         lblFecha.setVisible(false);
         dcFechaNota.setVisible(false);
@@ -98,20 +97,20 @@ public class DetalleNotaDebitoGUI extends JDialog {
         lbl_separador.setVisible(false);
         txt_Numero.setVisible(false);
         lbl_NumCAE.setVisible(false);
-        txt_CAE.setVisible(false);        
+        txt_CAE.setVisible(false);
     }
 
     private void cargarDetalleProveedor() {
         txtNombre.setText(proveedor.getRazonSocial());
-        Localidad localidadDelProveedor = RestClient.getRestTemplate().getForObject("/localidades/" + proveedor.getIdLocalidad(), Localidad.class);
-        txtDomicilio.setText(proveedor.getDireccion()
-                + " " + localidadDelProveedor.getNombre()
-                + " " + localidadDelProveedor.getNombreProvincia()
-                + " " + localidadDelProveedor.getNombrePais());        
-        if (proveedor.getIdFiscal() != null) txtIdFiscal.setText(proveedor.getIdFiscal().toString());
+        if (proveedor.getIdUbicacion()!= null) {
+            txtUbicacion.setText(proveedor.getDetalleUbicacion());
+        }
+        if (proveedor.getIdFiscal() != null) {
+            txtIdFiscal.setText(proveedor.getIdFiscal().toString());
+        }
         txtCondicionIVA.setText(proveedor.getCategoriaIVA().toString());
     }
-    
+
     private void cargarDetalleRecibo() {
         lblDetallePago.setText("Nº Recibo: " + recibo.getNumSerie() + " - " + recibo.getNumRecibo() + " - " + recibo.getConcepto());
         lblMontoPago.setText("$" + FormatterNumero.formatConRedondeo(recibo.getMonto()));
@@ -119,7 +118,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
         txtNoGravado.setValue(recibo.getMonto());
         txtTotal.setValue(recibo.getMonto());
     }
-    
+
     private void cargarDetalleComprobante() {
         txtMontoRenglon2.setValue(new BigDecimal(txtMontoRenglon2.getText()));
         BigDecimal iva = ((BigDecimal) txtMontoRenglon2.getValue()).multiply(IVA_21.divide(CIEN, 15, RoundingMode.HALF_UP));
@@ -128,9 +127,9 @@ public class DetalleNotaDebitoGUI extends JDialog {
         txtSubTotalBruto.setValue(new BigDecimal(txtMontoRenglon2.getValue().toString()));
         txtIVA21Neto.setValue(iva);
         txtNoGravado.setValue(recibo.getMonto());
-        txtTotal.setValue(recibo.getMonto().add(new BigDecimal(txtMontoRenglon2.getValue().toString())).add(iva)); 
+        txtTotal.setValue(recibo.getMonto().add(new BigDecimal(txtMontoRenglon2.getValue().toString())).add(iva));
     }
-    
+
     private void guardar() throws IOException {
         NotaDebito notaDebitoNueva = new NotaDebito();
         notaDebitoNueva.setFecha(new Date());
@@ -208,46 +207,46 @@ public class DetalleNotaDebitoGUI extends JDialog {
                             null, NotaDebito.class);
             return notaDebito.getCAE() != 0L;
         }
-        return false;        
+        return false;
     }
-    
+
     private void cargarDetalleNotaDebitoProveedor() {
         try {
             notaDebito = RestClient.getRestTemplate().getForObject("/notas/" + idNotaDebito, NotaDebito.class);
             Proveedor proveedorDeNota = RestClient.getRestTemplate()
-                .getForObject("/proveedores/" + notaDebito.getIdProveedor(), Proveedor.class);
+                    .getForObject("/proveedores/" + notaDebito.getIdProveedor(), Proveedor.class);
             this.setTitle(notaDebito.getTipoComprobante() + " Nº " + notaDebito.getSerie() + " - " + notaDebito.getNroNota()
                     + " con fecha " + formatter.format(notaDebito.getFecha()) + " del Proveedor: " + proveedorDeNota.getRazonSocial());
             dcFechaNota.setEnabled(false);
             txt_Serie.setEnabled(false);
-            txt_Numero.setEnabled(false);                        
+            txt_Numero.setEnabled(false);
             txt_CAE.setEnabled(false);
             dcFechaNota.setDate(notaDebito.getFecha());
             txt_Serie.setText(String.valueOf(notaDebito.getSerie()));
             txt_Numero.setText(String.valueOf(notaDebito.getNroNota()));
-            txt_CAE.setText(String.valueOf(notaDebito.getCAE()));            
+            txt_CAE.setText(String.valueOf(notaDebito.getCAE()));
             if (notaDebito.getCAE() == 0L) {
                 txt_CAE.setText("");
             } else {
                 txt_CAE.setText(String.valueOf(notaDebito.getCAE()));
-            }            
+            }
             txtNombre.setText(proveedorDeNota.getRazonSocial());
             cmbDescripcionRenglon2.removeAllItems();
             cmbDescripcionRenglon2.addItem(notaDebito.getMotivo());
-            Localidad localidadDeNotaProveedor = RestClient.getRestTemplate().getForObject("/localidades/" + proveedorDeNota.getIdLocalidad(), Localidad.class);
-            txtDomicilio.setText(proveedorDeNota.getDireccion()
-                    + " " + localidadDeNotaProveedor.getNombre()
-                    + " " + localidadDeNotaProveedor.getNombreProvincia()
-                    + " " + localidadDeNotaProveedor.getNombrePais());
+            if (proveedorDeNota.getIdUbicacion() != null) {
+                txtUbicacion.setText(proveedorDeNota.getDetalleUbicacion());
+            }
             txtCondicionIVA.setText(proveedorDeNota.getCategoriaIVA().toString());
-            if (proveedorDeNota.getIdFiscal() != null) txtIdFiscal.setText(proveedorDeNota.getIdFiscal().toString());            
+            if (proveedorDeNota.getIdFiscal() != null) {
+                txtIdFiscal.setText(proveedorDeNota.getIdFiscal().toString());
+            }
             Recibo reciboNotaDebitoProveedor = RestClient.getRestTemplate().getForObject("/recibos/" + notaDebito.getIdRecibo(), Recibo.class);
-            lblDetallePago.setText("Nº Recibo: " + reciboNotaDebitoProveedor.getNumSerie() + " - " + reciboNotaDebitoProveedor.getNumRecibo() 
+            lblDetallePago.setText("Nº Recibo: " + reciboNotaDebitoProveedor.getNumSerie() + " - " + reciboNotaDebitoProveedor.getNumRecibo()
                     + " - " + reciboNotaDebitoProveedor.getConcepto());
             lblMontoPago.setText("$" + FormatterNumero.formatConRedondeo(reciboNotaDebitoProveedor.getMonto()));
             lblImportePago.setText("$" + FormatterNumero.formatConRedondeo(reciboNotaDebitoProveedor.getMonto()));
             List<RenglonNotaDebito> renglonesNotaDebito = Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/notas/renglones/debito/" + idNotaDebito, RenglonNotaDebito[].class));                                                            
+                    .getForObject("/notas/renglones/debito/" + idNotaDebito, RenglonNotaDebito[].class));
             txtMontoRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(1).getImporteBruto()));
             lblIvaNetoRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(1).getIvaNeto()));
             lblImporteRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(1).getImporteNeto()));
@@ -256,7 +255,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
             txtNoGravado.setValue(notaDebito.getMontoNoGravado());
             txtTotal.setValue(notaDebito.getTotal());
             txtMontoRenglon2.setEnabled(false);
-            cmbDescripcionRenglon2.setEnabled(false);            
+            cmbDescripcionRenglon2.setEnabled(false);
             btnGuardar.setVisible(false);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -267,19 +266,19 @@ public class DetalleNotaDebitoGUI extends JDialog {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         panelCliente = new javax.swing.JPanel();
         lblNombreCliente = new javax.swing.JLabel();
-        lblDomicilioCliente = new javax.swing.JLabel();
+        lblUbicacion = new javax.swing.JLabel();
         lblIDFiscalCliente = new javax.swing.JLabel();
         lblCondicionIVACliente = new javax.swing.JLabel();
         txtCondicionIVA = new javax.swing.JTextField();
         txtIdFiscal = new javax.swing.JTextField();
-        txtDomicilio = new javax.swing.JTextField();
+        txtUbicacion = new javax.swing.JTextField();
         txtNombre = new javax.swing.JTextField();
         panelDetalle = new javax.swing.JPanel();
         lblDescripcion = new javax.swing.JLabel();
@@ -332,8 +331,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
         lblNombreCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblNombreCliente.setText("Nombre:");
 
-        lblDomicilioCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblDomicilioCliente.setText("Domicilio:");
+        lblUbicacion.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblUbicacion.setText("Ubicación:");
 
         lblIDFiscalCliente.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblIDFiscalCliente.setText("CUIT o DNI:");
@@ -347,8 +346,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
         txtIdFiscal.setEditable(false);
         txtIdFiscal.setFocusable(false);
 
-        txtDomicilio.setEditable(false);
-        txtDomicilio.setFocusable(false);
+        txtUbicacion.setEditable(false);
+        txtUbicacion.setFocusable(false);
 
         txtNombre.setEditable(false);
         txtNombre.setFocusable(false);
@@ -360,7 +359,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelClienteLayout.createSequentialGroup()
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblNombreCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblDomicilioCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblUbicacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblCondicionIVACliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -370,7 +369,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
                         .addComponent(lblIDFiscalCliente)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtIdFiscal, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txtDomicilio)
+                    .addComponent(txtUbicacion)
                     .addComponent(txtNombre))
                 .addContainerGap())
         );
@@ -383,8 +382,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
                     .addComponent(lblNombreCliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtDomicilio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblDomicilioCliente))
+                    .addComponent(txtUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblUbicacion))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCondicionIVA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -782,7 +781,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
-      
+
     private void txtMontoRenglon2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMontoRenglon2FocusGained
         SwingUtilities.invokeLater(() -> {
             txtMontoRenglon2.selectAll();
@@ -819,7 +818,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
                     + " con fecha " + formatter.format(notaDebito.getFecha()) + " del Proveedor: " + notaDebito.getRazonSocialProveedor());
         }
     }//GEN-LAST:event_formWindowOpened
-    
+
     private void txtMontoRenglon2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMontoRenglon2KeyTyped
         if (evt.getKeyChar() == KeyEvent.VK_MINUS) {
             evt.consume();
@@ -829,7 +828,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private void txtMontoRenglon2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMontoRenglon2ActionPerformed
         this.cargarDetalleComprobante();
     }//GEN-LAST:event_txtMontoRenglon2ActionPerformed
-        
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar;
     private javax.swing.JComboBox<String> cmbDescripcionRenglon2;
@@ -837,7 +836,6 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private javax.swing.JLabel lblCondicionIVACliente;
     private javax.swing.JLabel lblDescripcion;
     private javax.swing.JLabel lblDetallePago;
-    private javax.swing.JLabel lblDomicilioCliente;
     private javax.swing.JLabel lblFecha;
     private javax.swing.JLabel lblGastoAdministrativo;
     private javax.swing.JLabel lblIDFiscalCliente;
@@ -857,6 +855,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private javax.swing.JLabel lblNombreCliente;
     private javax.swing.JLabel lblSubTotalBruto;
     private javax.swing.JLabel lblTotal;
+    private javax.swing.JLabel lblUbicacion;
     private javax.swing.JLabel lbl_IVA105;
     private javax.swing.JLabel lbl_Monto;
     private javax.swing.JLabel lbl_NumCAE;
@@ -868,7 +867,6 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private javax.swing.JPanel panelMotivo;
     private javax.swing.JPanel panelResultados;
     private javax.swing.JTextField txtCondicionIVA;
-    private javax.swing.JTextField txtDomicilio;
     private javax.swing.JFormattedTextField txtIVA21Neto;
     private javax.swing.JTextField txtIdFiscal;
     private javax.swing.JFormattedTextField txtMontoRenglon2;
@@ -876,6 +874,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private javax.swing.JTextField txtNombre;
     private javax.swing.JFormattedTextField txtSubTotalBruto;
     private javax.swing.JFormattedTextField txtTotal;
+    private javax.swing.JTextField txtUbicacion;
     private javax.swing.JFormattedTextField txt_CAE;
     private javax.swing.JFormattedTextField txt_Numero;
     private javax.swing.JFormattedTextField txt_Serie;

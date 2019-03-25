@@ -121,6 +121,7 @@ public class PrincipalGUI extends JFrame {
         mnu_Cajas = new javax.swing.JMenuItem();
         mnuItmRubros = new javax.swing.JMenuItem();
         mnuItmMedidas = new javax.swing.JMenuItem();
+        mnuItmLocalidades = new javax.swing.JMenuItem();
         mnu_Stock = new javax.swing.JMenu();
         mnuItm_Productos = new javax.swing.JMenuItem();
 
@@ -334,6 +335,15 @@ public class PrincipalGUI extends JFrame {
             }
         });
         mnu_Administracion.add(mnuItmMedidas);
+
+        mnuItmLocalidades.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Map_16x16.png"))); // NOI18N
+        mnuItmLocalidades.setText("Localidades");
+        mnuItmLocalidades.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuItmLocalidadesActionPerformed(evt);
+            }
+        });
+        mnu_Administracion.add(mnuItmLocalidades);
 
         mb_BarraMenues.add(mnu_Administracion);
 
@@ -792,9 +802,29 @@ public class PrincipalGUI extends JFrame {
         }
     }//GEN-LAST:event_mnuItmMedidasActionPerformed
 
+    private void mnuItmLocalidadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmLocalidadesActionPerformed
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), LocalidadesGUI.class);
+        if (gui == null) {
+            gui = new LocalidadesGUI();
+            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+            getDesktopPane().add(gui);
+            gui.setVisible(true);
+        } else {
+            try {
+                gui.setSelected(true);
+            } catch (PropertyVetoException ex) {
+                String msjError = "No se pudo seleccionar la ventana requerida.";
+                LOGGER.error(msjError + " - " + ex.getMessage());
+                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_mnuItmLocalidadesActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane dp_Escritorio;
     private javax.swing.JMenuBar mb_BarraMenues;
+    private javax.swing.JMenuItem mnuItmLocalidades;
     private javax.swing.JMenuItem mnuItmMedidas;
     private javax.swing.JMenuItem mnuItmRubros;
     private javax.swing.JMenuItem mnuItm_CambiarEmpresa;

@@ -64,26 +64,20 @@
               <Group type="102" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="chk_Ubicacion" max="32767" attributes="0"/>
-                              <Component id="chk_Nombre" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cmb_Provincia" alignment="0" pref="351" max="32767" attributes="0"/>
-                              <Component id="cmb_Pais" alignment="0" max="32767" attributes="0"/>
-                              <Component id="cmb_Localidad" max="32767" attributes="0"/>
-                              <Component id="txt_Nombre" alignment="0" max="32767" attributes="2"/>
-                          </Group>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="chk_Ubicacion" max="32767" attributes="0"/>
+                          <Component id="chk_Nombre" max="32767" attributes="0"/>
                       </Group>
-                      <Group type="102" attributes="0">
-                          <Component id="btn_Buscar" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="lbl_cantResultados" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="btn_Buscar" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="cmb_Provincia" alignment="0" pref="351" max="32767" attributes="0"/>
+                      <Component id="cmb_Localidad" max="32767" attributes="0"/>
+                      <Component id="txt_Nombre" alignment="0" max="32767" attributes="2"/>
+                      <Component id="lbl_cantResultados" alignment="0" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -95,18 +89,18 @@
                       <Component id="txt_Nombre" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="chk_Ubicacion" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmb_Pais" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="cmb_Provincia" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="cmb_Localidad" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="chk_Ubicacion" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="cmb_Provincia" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="cmb_Localidad" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="btn_Buscar" max="32767" attributes="0"/>
-                      <Component id="lbl_cantResultados" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="btn_Buscar" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbl_cantResultados" alignment="2" min="-2" pref="32" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -147,17 +141,6 @@
           </Properties>
           <Events>
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmb_ProvinciaItemStateChanged"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cmb_Pais">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmb_PaisItemStateChanged"/>
           </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="cmb_Localidad">
@@ -215,7 +198,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="sp_Resultados" pref="118" max="32767" attributes="0"/>
+                  <Component id="sp_Resultados" pref="155" max="32767" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btn_Nuevo" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>

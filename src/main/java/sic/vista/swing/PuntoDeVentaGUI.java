@@ -1,16 +1,12 @@
 package sic.vista.swing;
 
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
-import java.io.File;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.nio.file.Files;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,7 +39,6 @@ import sic.modelo.FacturaVenta;
 import sic.modelo.FormaDePago;
 import sic.modelo.Movimiento;
 import sic.modelo.NuevoRenglonPedido;
-import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Pedido;
 import sic.modelo.Producto;
 import sic.modelo.Rol;
@@ -92,7 +87,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         txt_Recargo_porcentaje.addKeyListener(keyHandler);
         btn_Continuar.addKeyListener(keyHandler);
         tbtn_marcarDesmarcar.addKeyListener(keyHandler);        
-        dc_fechaVencimiento.addKeyListener(keyHandler);        
+        dc_fechaVencimiento.addKeyListener(keyHandler);     
+        btnModificarCliente.addKeyListener(keyHandler); 
     }   
     
     public void cargarPedidoParaFacturar() {
@@ -218,15 +214,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         this.cliente = cliente;
         txtNombreCliente.setText(cliente.getNombreFiscal() + " (" + cliente.getNroCliente() + ")");
         txtBonificacion.setText(cliente.getBonificacion().setScale(2, RoundingMode.HALF_UP) + " %");
-        String direccion = "";
-        if (cliente.getDireccion() != null) direccion = cliente.getDireccion() + " ";
-        if (cliente.getNombreLocalidad() != null) {
-            direccion += cliente.getNombreLocalidad() 
-                    + " " + cliente.getNombreProvincia()
-                    + " " + cliente.getNombrePais();
-        }
-        txtDomicilioCliente.setText(direccion);        
-        txt_CondicionIVACliente.setText(cliente.getCategoriaIVA().toString());                                
+        txtUbicacionCliente.setText(cliente.getDetalleUbicacionFacturacion());
+        txt_CondicionIVACliente.setText(cliente.getCategoriaIVA().toString());
         if (cliente.getIdFiscal() != null) {
             txtIdFiscalCliente.setText(cliente.getIdFiscal().toString());
         } else {
@@ -666,49 +655,16 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }
     
     private void finalizarPedido() {
-        if (cliente != null) {
-            if (nuevoPedido != null) {
-                Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?idEmpresa="
-                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                        + "&idCliente=" + cliente.getId_Cliente(), nuevoPedido, Pedido.class);
-                int reply = JOptionPane.showConfirmDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
-                        "Aviso", JOptionPane.YES_NO_OPTION);
-                if (reply == JOptionPane.YES_OPTION) {
-                    this.lanzarReportePedido(p);
-                }
+        if (nuevoPedido != null) {
+            CerrarPedidoGUI cerrarPedido = new CerrarPedidoGUI(nuevoPedido, cliente);
+            cerrarPedido.setModal(true);
+            cerrarPedido.setLocationRelativeTo(this);
+            cerrarPedido.setVisible(true);
+            if (cerrarPedido.isOperacionExitosa()) {
                 this.limpiarYRecargarComponentes();
-            } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificarPedido == true) {
-                this.actualizarPedido(pedido);
-                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_pedido_actualizado"),
-                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
-                this.dispose();
             }
-        } else {
-            JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_seleccionar_cliente"),
-                    "Aviso", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void lanzarReportePedido(Pedido pedido) {
-        if (Desktop.isDesktopSupported()) {
-            try {
-                byte[] reporte = RestClient.getRestTemplate()
-                        .getForObject("/pedidos/" + pedido.getId_Pedido() + "/reporte", byte[].class);
-                File f = new File(System.getProperty("user.home") + "/Pedido.pdf");
-                Files.write(f.toPath(), reporte);
-                Desktop.getDesktop().open(f);
-            } catch (IOException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+        } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificarPedido == true) {
+            this.actualizarPedido(pedido);
         }
     }
 
@@ -722,10 +678,13 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         pedido.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
         pedido.setTotalEstimado(new BigDecimal(txt_Total.getValue().toString()));
         pedido.setObservaciones(txt_Observaciones.getText());
-        RestClient.getRestTemplate().put("/pedidos?idEmpresa="
-                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                + "&idCliente=" + cliente.getId_Cliente(), pedido);
+        CerrarPedidoGUI cerrarPedido = new CerrarPedidoGUI(pedido, cliente);
+        cerrarPedido.setModal(true);
+        cerrarPedido.setLocationRelativeTo(this);
+        cerrarPedido.setVisible(true);
+        if (cerrarPedido.isOperacionExitosa()) {
+            this.dispose();
+        }
     }
 
     public List<RenglonPedido> calcularRenglonesPedido() {
@@ -752,6 +711,10 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             if (evt.getKeyCode() == KeyEvent.VK_F5) {
                 btn_NuevoClienteActionPerformed(null);
             }
+            
+            if (evt.getKeyCode() == KeyEvent.VK_F6) {
+                btnModificarClienteActionPerformed(null);
+            }
 
             if (evt.getKeyCode() == KeyEvent.VK_F9) {
                 btn_ContinuarActionPerformed(null);
@@ -774,11 +737,11 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         panelGeneral = new javax.swing.JPanel();
         panelCliente = new javax.swing.JPanel();
         lblNombreCliente = new javax.swing.JLabel();
-        lblDireccionCliente = new javax.swing.JLabel();
+        lblUbicacionCliente = new javax.swing.JLabel();
         lbl_IDFiscalCliente = new javax.swing.JLabel();
         lbl_CondicionIVACliente = new javax.swing.JLabel();
         txt_CondicionIVACliente = new javax.swing.JTextField();
-        txtDomicilioCliente = new javax.swing.JTextField();
+        txtUbicacionCliente = new javax.swing.JTextField();
         txtNombreCliente = new javax.swing.JTextField();
         lblBonificacion = new javax.swing.JLabel();
         txtIdFiscalCliente = new javax.swing.JTextField();
@@ -825,6 +788,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         btn_BuscarCliente = new javax.swing.JButton();
         lblSeparadorIzquierdo = new javax.swing.JLabel();
         lblSeparadorDerecho = new javax.swing.JLabel();
+        btnModificarCliente = new javax.swing.JButton();
 
         setResizable(true);
         setTitle("S.I.C. Punto de Venta");
@@ -852,8 +816,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         lblNombreCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblNombreCliente.setText("Nombre:");
 
-        lblDireccionCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblDireccionCliente.setText("Direccion:");
+        lblUbicacionCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblUbicacionCliente.setText("Ubicación:");
 
         lbl_IDFiscalCliente.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_IDFiscalCliente.setText("CUIT o DNI:");
@@ -864,8 +828,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         txt_CondicionIVACliente.setEditable(false);
         txt_CondicionIVACliente.setFocusable(false);
 
-        txtDomicilioCliente.setEditable(false);
-        txtDomicilioCliente.setFocusable(false);
+        txtUbicacionCliente.setEditable(false);
+        txtUbicacionCliente.setFocusable(false);
 
         txtNombreCliente.setEditable(false);
         txtNombreCliente.setFocusable(false);
@@ -886,7 +850,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 .addContainerGap()
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblNombreCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblDireccionCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblUbicacionCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_CondicionIVACliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -902,7 +866,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         .addComponent(lblBonificacion)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtBonificacion))
-                    .addComponent(txtDomicilioCliente, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(txtUbicacionCliente, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(0, 0, 0))
         );
 
@@ -918,18 +882,17 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                     .addComponent(txtBonificacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtDomicilioCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblDireccionCliente))
+                    .addComponent(txtUbicacionCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblUbicacionCliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(txtIdFiscalCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txt_CondicionIVACliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_IDFiscalCliente)
-                    .addComponent(lbl_CondicionIVACliente))
-                .addGap(0, 12, Short.MAX_VALUE))
+                    .addComponent(lbl_CondicionIVACliente)))
         );
 
-        panelClienteLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtDomicilioCliente, txtIdFiscalCliente, txtNombreCliente, txt_CondicionIVACliente});
+        panelClienteLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtIdFiscalCliente, txtNombreCliente, txtUbicacionCliente, txt_CondicionIVACliente});
 
         panelClienteLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblBonificacion, lbl_IDFiscalCliente});
 
@@ -1334,6 +1297,15 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
         lblSeparadorDerecho.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
+        btnModificarCliente.setForeground(java.awt.Color.blue);
+        btnModificarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/EditClient_16x16.png"))); // NOI18N
+        btnModificarCliente.setText("Modificar Cliente (F6)");
+        btnModificarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarClienteActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelEncabezadoLayout = new javax.swing.GroupLayout(panelEncabezado);
         panelEncabezado.setLayout(panelEncabezadoLayout);
         panelEncabezadoLayout.setHorizontalGroup(
@@ -1344,6 +1316,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         .addComponent(btn_NuevoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
                         .addComponent(btn_BuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnModificarCliente)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lbl_fechaDeVencimiento)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1359,29 +1333,39 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         .addComponent(lblSeparadorDerecho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
+
+        panelEncabezadoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnModificarCliente, btn_BuscarCliente, btn_NuevoCliente});
+
         panelEncabezadoLayout.setVerticalGroup(
             panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.CENTER, panelEncabezadoLayout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addComponent(lbl_fechaDeVencimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(6, 6, 6))
             .addGroup(panelEncabezadoLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_TipoDeComprobante)
-                    .addComponent(cmb_TipoComprobante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(4, 4, 4)
-                .addGroup(panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btn_NuevoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_BuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_fechaDeVencimiento, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
-                    .addComponent(dc_fechaVencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-            .addGroup(panelEncabezadoLayout.createSequentialGroup()
-                .addGap(6, 6, 6)
                 .addGroup(panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblSeparadorDerecho, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSeparadorIzquierdo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelEncabezadoLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(lbl_TipoDeComprobante)
+                            .addComponent(cmb_TipoComprobante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(4, 4, 4)
+                        .addGroup(panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(btn_BuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnModificarCliente)
+                            .addComponent(btn_NuevoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(panelEncabezadoLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblSeparadorDerecho, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblSeparadorIzquierdo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.CENTER, panelEncabezadoLayout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addComponent(dc_fechaVencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panelEncabezadoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_BuscarCliente, btn_NuevoCliente});
+        panelEncabezadoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnModificarCliente, btn_BuscarCliente, btn_NuevoCliente});
 
         javax.swing.GroupLayout panelGeneralLayout = new javax.swing.GroupLayout(panelGeneral);
         panelGeneral.setLayout(panelGeneralLayout);
@@ -1453,6 +1437,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         if (gui_DetalleCliente.getClienteDadoDeAlta() != null) {
             this.cargarCliente(gui_DetalleCliente.getClienteDadoDeAlta());
             this.cargarTiposDeComprobantesDisponibles();
+            btnModificarCliente.setEnabled(true);
         }
     }//GEN-LAST:event_btn_NuevoClienteActionPerformed
 
@@ -1500,48 +1485,53 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_txt_Descuento_porcentajeActionPerformed
 
     private void btn_ContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ContinuarActionPerformed
-        if (renglones.isEmpty()) {
-            JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                    .getString("mensaje_factura_sin_renglones"), "Error", JOptionPane.ERROR_MESSAGE);
-        } else {
-            if (new BigDecimal(txt_Descuento_porcentaje.getValue().toString()).compareTo(CIEN) > 0) {
+        if (cliente != null) {
+            if (renglones.isEmpty()) {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                        .getString("mensaje_factura_descuento_mayor_cien"), "Error", JOptionPane.ERROR_MESSAGE);
+                        .getString("mensaje_factura_sin_renglones"), "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                this.calcularResultados();
-                try {
-                    Map<Long, BigDecimal> faltantes;
-                    if (cmb_TipoComprobante.getSelectedItem() == TipoDeComprobante.PEDIDO) {
-                        // Es null cuando, se genera un pedido desde el punto de venta entrando por el menu sistemas.
-                        // El Id es 0 cuando, se genera un pedido desde el punto de venta entrando por el botón nuevo de administrar pedidos.
-                        if (pedido == null || pedido.getId_Pedido() == 0) {
-                            this.construirPedido();
-                        }
-                        this.finalizarPedido();
-                    } else {
-                        faltantes = this.getProductosSinStockDisponible(renglones);
-                        if (faltantes.isEmpty()) {
-                            CerrarVentaGUI cerrarVentaGUI = new CerrarVentaGUI(this, true);
-                            cerrarVentaGUI.setLocationRelativeTo(this);
-                            cerrarVentaGUI.setVisible(true);
-                            if (cerrarVentaGUI.isExito()) {
-                                this.limpiarYRecargarComponentes();
+                if (new BigDecimal(txt_Descuento_porcentaje.getValue().toString()).compareTo(CIEN) > 0) {
+                    JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                            .getString("mensaje_factura_descuento_mayor_cien"), "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    this.calcularResultados();
+                    try {
+                        Map<Long, BigDecimal> faltantes;
+                        if (cmb_TipoComprobante.getSelectedItem() == TipoDeComprobante.PEDIDO) {
+                            // Es null cuando, se genera un pedido desde el punto de venta entrando por el menu sistemas.
+                            // El Id es 0 cuando, se genera un pedido desde el punto de venta entrando por el botón nuevo de administrar pedidos.
+                            if (pedido == null || pedido.getId_Pedido() == 0) {
+                                this.construirPedido();
                             }
+                            this.finalizarPedido();
                         } else {
-                            ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(faltantes);
-                            productosFaltantesGUI.setLocationRelativeTo(this);
-                            productosFaltantesGUI.setVisible(true);
+                            faltantes = this.getProductosSinStockDisponible(renglones);
+                            if (faltantes.isEmpty()) {
+                                CerrarVentaGUI cerrarVentaGUI = new CerrarVentaGUI(this, true);
+                                cerrarVentaGUI.setLocationRelativeTo(this);
+                                cerrarVentaGUI.setVisible(true);
+                                if (cerrarVentaGUI.isExito()) {
+                                    this.limpiarYRecargarComponentes();
+                                }
+                            } else {
+                                ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(faltantes);
+                                productosFaltantesGUI.setLocationRelativeTo(this);
+                                productosFaltantesGUI.setVisible(true);
+                            }
                         }
+                    } catch (RestClientResponseException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    } catch (ResourceAccessException ex) {
+                        LOGGER.error(ex.getMessage());
+                        JOptionPane.showMessageDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
+        } else {
+            JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_seleccionar_cliente"),
+                    "Aviso", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_ContinuarActionPerformed
 
@@ -1652,6 +1642,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                             .getForObject("/clientes/predeterminado/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                                     Cliente.class);
                     this.cargarCliente(clientePredeterminado);
+                    this.btnModificarCliente.setEnabled(true);
                 } 
             }
             if (!this.existeFormaDePagoPredeterminada() || !this.existeTransportistaCargado()) {
@@ -1684,7 +1675,33 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_formInternalFrameOpened
 
+    private void btnModificarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarClienteActionPerformed
+        if (cliente != null) {
+            DetalleClienteGUI gui_DetalleCliente = new DetalleClienteGUI(cliente);
+            gui_DetalleCliente.setModal(true);
+            gui_DetalleCliente.setLocationRelativeTo(this);
+            gui_DetalleCliente.setVisible(true);
+            try {
+                this.cargarCliente(RestClient.getRestTemplate().getForObject("/clientes/" + this.cliente.getId_Cliente(), Cliente.class));
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                this.dispose();
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                this.dispose();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_seleccionar_cliente"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnModificarClienteActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnModificarCliente;
     private javax.swing.JButton btn_AddComment;
     private javax.swing.JButton btn_BuscarCliente;
     private javax.swing.JButton btn_BuscarPorCodigoProducto;
@@ -1696,10 +1713,10 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private com.toedter.calendar.JDateChooser dc_fechaVencimiento;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblBonificacion;
-    private javax.swing.JLabel lblDireccionCliente;
     private javax.swing.JLabel lblNombreCliente;
     private javax.swing.JLabel lblSeparadorDerecho;
     private javax.swing.JLabel lblSeparadorIzquierdo;
+    private javax.swing.JLabel lblUbicacionCliente;
     private javax.swing.JLabel lbl_105;
     private javax.swing.JLabel lbl_21;
     private javax.swing.JLabel lbl_CondicionIVACliente;
@@ -1724,9 +1741,9 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private javax.swing.JTable tbl_Resultado;
     private javax.swing.JToggleButton tbtn_marcarDesmarcar;
     private javax.swing.JTextField txtBonificacion;
-    private javax.swing.JTextField txtDomicilioCliente;
     private javax.swing.JTextField txtIdFiscalCliente;
     private javax.swing.JTextField txtNombreCliente;
+    private javax.swing.JTextField txtUbicacionCliente;
     private javax.swing.JTextField txt_CodigoProducto;
     private javax.swing.JTextField txt_CondicionIVACliente;
     private javax.swing.JFormattedTextField txt_Descuento_neto;

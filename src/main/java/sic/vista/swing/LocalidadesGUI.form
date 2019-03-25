@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.6" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
+  <NonVisualComponents>
+    <Component class="javax.swing.ButtonGroup" name="bgEnvio">
+    </Component>
+  </NonVisualComponents>
   <Properties>
     <Property name="closable" type="boolean" value="true"/>
     <Property name="maximizable" type="boolean" value="true"/>
     <Property name="resizable" type="boolean" value="true"/>
-    <Property name="title" type="java.lang.String" value="Administrar Clientes"/>
+    <Property name="title" type="java.lang.String" value="Administrar Localidades"/>
     <Property name="frameIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-      <Image iconType="3" name="/sic/icons/Client_16x16.png"/>
+      <Image iconType="3" name="/sic/icons/Map_16x16.png"/>
     </Property>
   </Properties>
   <SyntheticProperties>
@@ -32,7 +36,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="panelResultados" max="32767" attributes="2"/>
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" attributes="0">
               <Component id="panelFiltros" min="-2" max="-2" attributes="2"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="panelOrden" min="-2" max="-2" attributes="0"/>
@@ -69,28 +73,28 @@
               <Group type="102" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="chkNombreLocalidad" alignment="0" max="32767" attributes="0"/>
+                              <Component id="chk_Provincia" alignment="0" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="txtCriteria" linkSize="1" max="32767" attributes="2"/>
+                              <Component id="cmbProvincia" linkSize="1" pref="292" max="32767" attributes="2"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="chkEnvio" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="rbGratuito" alignment="0" max="32767" attributes="0"/>
+                              <Component id="rbNoGratuito" alignment="0" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Group type="102" attributes="0">
                           <Component id="btn_Buscar" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="lbl_cantResultados" max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="chkViajante" alignment="0" max="32767" attributes="0"/>
-                              <Component id="chkCriteria" alignment="0" max="32767" attributes="0"/>
-                              <Component id="chk_Ubicacion" alignment="0" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cmbLocalidad" max="32767" attributes="2"/>
-                              <Component id="cmbProvincia" alignment="0" max="32767" attributes="2"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="txtViajante" pref="267" max="32767" attributes="0"/>
-                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                                  <Component id="btnBuscarViajante" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="txtCriteria" max="32767" attributes="2"/>
-                          </Group>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -101,28 +105,21 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="chkCriteria" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtCriteria" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="chkNombreLocalidad" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtCriteria" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="chkEnvio" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="rbGratuito" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="chkViajante" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtViajante" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnBuscarViajante" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="chk_Ubicacion" min="-2" max="-2" attributes="0"/>
-                      <Group type="102" attributes="0">
-                          <Component id="cmbProvincia" linkSize="7" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="cmbLocalidad" linkSize="7" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="chk_Provincia" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="cmbProvincia" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="rbNoGratuito" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="btn_Buscar" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lbl_cantResultados" alignment="2" min="-2" pref="25" max="-2" attributes="0"/>
+                      <Component id="btn_Buscar" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -130,12 +127,12 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JCheckBox" name="chkCriteria">
+        <Component class="javax.swing.JCheckBox" name="chkNombreLocalidad">
           <Properties>
-            <Property name="text" type="java.lang.String" value="N&#xba; Cliente o Nombre:"/>
+            <Property name="text" type="java.lang.String" value="Nombre Localidad:"/>
           </Properties>
           <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkCriteriaItemStateChanged"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkNombreLocalidadItemStateChanged"/>
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="txtCriteria">
@@ -146,12 +143,12 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtCriteriaActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="chk_Ubicacion">
+        <Component class="javax.swing.JCheckBox" name="chk_Provincia">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Ubicaci&#xf3;n:"/>
+            <Property name="text" type="java.lang.String" value="Provincia:"/>
           </Properties>
           <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_UbicacionItemStateChanged"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_ProvinciaItemStateChanged"/>
           </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="cmbProvincia">
@@ -161,17 +158,9 @@
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmbProvinciaItemStateChanged"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cmbLocalidad">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Provincia&gt;"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="btn_Buscar">
           <Properties>
@@ -192,30 +181,30 @@
             <Property name="horizontalAlignment" type="int" value="4"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="chkViajante">
+        <Component class="javax.swing.JRadioButton" name="rbGratuito">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Viajante:"/>
-          </Properties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkViajanteItemStateChanged"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtViajante">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="enabled" type="boolean" value="false"/>
-            <Property name="opaque" type="boolean" value="false"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="btnBuscarViajante">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/Search_16x16.png"/>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="bgEnvio"/>
             </Property>
+            <Property name="text" type="java.lang.String" value="Gratuito"/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JRadioButton" name="rbNoGratuito">
+          <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="bgEnvio"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="No Gratuito"/>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="chkEnvio">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Env&#xed;o:"/>
+          </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarViajanteActionPerformed"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkEnvioItemStateChanged"/>
           </Events>
         </Component>
       </SubComponents>
@@ -233,32 +222,18 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Component id="sp_Resultados" max="32767" attributes="0"/>
-              <Group type="102" attributes="0">
-                  <Component id="btn_Nuevo" linkSize="4" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                  <Component id="btn_Modificar" linkSize="4" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                  <Component id="btn_Eliminar" linkSize="4" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                  <Component id="btn_setPredeterminado" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="btnCuentaCorriente" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="56" max="32767" attributes="0"/>
+              <Group type="102" alignment="0" attributes="0">
+                  <Component id="btnModificarLocalidad" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="sp_Resultados" pref="258" max="32767" attributes="0"/>
+                  <Component id="sp_Resultados" pref="314" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="btn_setPredeterminado" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnCuentaCorriente" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btn_Eliminar" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btn_Modificar" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btn_Nuevo" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="btnModificarLocalidad" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -290,74 +265,18 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JButton" name="btn_Nuevo">
+        <Component class="javax.swing.JButton" name="btnModificarLocalidad">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/AddClient_16x16.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Nuevo"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_NuevoActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="btn_Modificar">
-          <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
-            </Property>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/EditClient_16x16.png"/>
+              <Image iconType="3" name="/sic/icons/EditMap_16x16.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Modificar"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_ModificarActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="btn_Eliminar">
-          <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
-            </Property>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/DeleteClient_16x16.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Eliminar"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_EliminarActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="btn_setPredeterminado">
-          <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
-            </Property>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/ClientArrow_16x16.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Establecer como Predeterminado"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_setPredeterminadoActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="btnCuentaCorriente">
-          <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
-            </Property>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/CC_16x16.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Cuenta Corriente"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCuentaCorrienteActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnModificarLocalidadActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
@@ -400,13 +319,9 @@
         <Component class="javax.swing.JComboBox" name="cmbOrden">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="6">
-                <StringItem index="0" value="R. Social o Nombre"/>
-                <StringItem index="1" value="Fecha Alta"/>
-                <StringItem index="2" value="Nombre Fantasia"/>
-                <StringItem index="3" value="Saldo C/C"/>
-                <StringItem index="4" value="Ultimo Movimiento C/C"/>
-                <StringItem index="5" value="Bonificaci&#xf3;n"/>
+              <StringArray count="2">
+                <StringItem index="0" value="Nombre"/>
+                <StringItem index="1" value="Provincia"/>
               </StringArray>
             </Property>
           </Properties>

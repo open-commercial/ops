@@ -103,7 +103,7 @@ public class BuscarClientesGUI extends JDialog {
         encabezados[1] = "CUIT o DNI";
         encabezados[2] = "R. Social o Nombre";
         encabezados[3] = "Nombre Fantasia";
-        encabezados[4] = "Direccion";        
+        encabezados[4] = "Ubicación";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tblResultados.setModel(modeloTablaResultados);        
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
@@ -129,7 +129,7 @@ public class BuscarClientesGUI extends JDialog {
             fila[1] = cliente.getIdFiscal();
             fila[2] = cliente.getNombreFiscal();
             fila[3] = cliente.getNombreFantasia();
-            fila[4] = cliente.getDireccion();            
+            fila[4] = cliente.getDetalleUbicacionFacturacion();
             return fila;
         }).forEachOrdered(fila -> {
             modeloTablaResultados.addRow(fila);

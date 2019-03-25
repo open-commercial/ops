@@ -34,7 +34,6 @@ import sic.modelo.CuentaCorrienteProveedor;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.FacturaCompra;
 import sic.modelo.FacturaVenta;
-import sic.modelo.Localidad;
 import sic.modelo.NotaCredito;
 import sic.modelo.NotaDebito;
 import sic.modelo.PaginaRespuestaRest;
@@ -258,15 +257,10 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         String nombreCliente = cliente.getNombreFiscal() + " (" + cliente.getNroCliente() + ")";
         this.setTitle("Cuenta Corriente del Cliente: " + nombreCliente);
         txtNombreCliente.setText(nombreCliente);        
-        String direccion = "";
-        if (cliente.getDireccion() != null) direccion = cliente.getDireccion() + " ";
-        if (cliente.getNombreLocalidad() != null) {
-            direccion += cliente.getNombreLocalidad() 
-                    + " " + cliente.getNombreProvincia()
-                    + " " + cliente.getNombrePais();
+        txtUbicacion.setText(cliente.getDetalleUbicacionFacturacion());
+        if (cliente.getIdFiscal() != null) {
+            txtIDFiscalCliente.setText(cliente.getIdFiscal().toString());
         }
-        txtDomicilioCliente.setText(direccion);
-        if (cliente.getIdFiscal() != null) txtIDFiscalCliente.setText(cliente.getIdFiscal().toString());
         txtCondicionIVACliente.setText(cliente.getCategoriaIVA().toString());
         try {
             cuentaCorriente = RestClient.getRestTemplate()
@@ -285,11 +279,9 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         this.setTitle("Cuenta Corriente del Proveedor: " + proveedor.getRazonSocial());
         txtNombreCliente.setText(proveedor.getRazonSocial());
         try {
-            Localidad localidadDelProveedor = RestClient.getRestTemplate().getForObject("/localidades/" + proveedor.getIdLocalidad(), Localidad.class);
-            txtDomicilioCliente.setText(proveedor.getDireccion()
-                    + " " + localidadDelProveedor.getNombre()
-                    + " " + localidadDelProveedor.getNombreProvincia()
-                    + " " + localidadDelProveedor.getNombrePais());
+            if (proveedor.getIdUbicacion() != null) {
+                txtUbicacion.setText(proveedor.getDetalleUbicacion());
+            }
             if (proveedor.getIdFiscal() != null) {
                 txtIDFiscalCliente.setText(proveedor.getIdFiscal().toString());
             }
@@ -520,10 +512,10 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         lblCondicionIVACliente = new javax.swing.JLabel();
         txtIDFiscalCliente = new javax.swing.JTextField();
         lblIDFiscalCliente = new javax.swing.JLabel();
-        lblDomicilioCliente = new javax.swing.JLabel();
+        lblUbicacion = new javax.swing.JLabel();
         lblNombreCliente = new javax.swing.JLabel();
         txtNombreCliente = new javax.swing.JTextField();
-        txtDomicilioCliente = new javax.swing.JTextField();
+        txtUbicacion = new javax.swing.JTextField();
         btnRefresh = new javax.swing.JButton();
 
         setClosable(true);
@@ -695,8 +687,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         lblIDFiscalCliente.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblIDFiscalCliente.setText("CUIT o DNI:");
 
-        lblDomicilioCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblDomicilioCliente.setText("Domicilio:");
+        lblUbicacion.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblUbicacion.setText("Ubicación:");
 
         lblNombreCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblNombreCliente.setText("Nombre:");
@@ -704,8 +696,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         txtNombreCliente.setEditable(false);
         txtNombreCliente.setFocusable(false);
 
-        txtDomicilioCliente.setEditable(false);
-        txtDomicilioCliente.setFocusable(false);
+        txtUbicacion.setEditable(false);
+        txtUbicacion.setFocusable(false);
 
         btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Refresh_16x16.png"))); // NOI18N
         btnRefresh.setFocusable(false);
@@ -728,7 +720,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lblCondicionIVACliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblDomicilioCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblUbicacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblNombreCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -738,7 +730,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                                 .addComponent(lblIDFiscalCliente)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtIDFiscalCliente))
-                            .addComponent(txtDomicilioCliente, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtUbicacion, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(txtNombreCliente, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
             .addComponent(pnlResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -752,8 +744,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     .addComponent(txtNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblDomicilioCliente)
-                    .addComponent(txtDomicilioCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblUbicacion)
+                    .addComponent(txtUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblCondicionIVACliente)
@@ -1050,17 +1042,17 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JFormattedTextField ftxtSaldoFinal;
     private javax.swing.JLabel lblCondicionIVACliente;
-    private javax.swing.JLabel lblDomicilioCliente;
     private javax.swing.JLabel lblIDFiscalCliente;
     private javax.swing.JLabel lblNombreCliente;
+    private javax.swing.JLabel lblUbicacion;
     private javax.swing.JLabel lbl_saldoFinal;
     private javax.swing.JPanel pnlResultados;
     private javax.swing.JScrollPane sp_Resultados;
     private javax.swing.JTable tbl_Resultados;
     private javax.swing.JTextField txtCondicionIVACliente;
-    private javax.swing.JTextField txtDomicilioCliente;
     private javax.swing.JTextField txtIDFiscalCliente;
     private javax.swing.JTextField txtNombreCliente;
+    private javax.swing.JTextField txtUbicacion;
     // End of variables declaration//GEN-END:variables
 
 }

@@ -25,7 +25,6 @@ import sic.modelo.CuentaCorrienteCliente;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Localidad;
 import sic.modelo.PaginaRespuestaRest;
-import sic.modelo.Pais;
 import sic.modelo.Provincia;
 import sic.modelo.Rol;
 import sic.modelo.Usuario;
@@ -42,14 +41,14 @@ public class ClientesGUI extends JInternalFrame {
     private List<CuentaCorrienteCliente> cuentasCorrienteClienteParcial = new ArrayList<>();
     private Usuario viajanteSeleccionado;
     private boolean tienePermisoSegunRoles;
-    private ModeloTabla modeloTablaDeResultados = new ModeloTabla();    
+    private ModeloTabla modeloTablaDeResultados = new ModeloTabla();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(880, 600);
     private static int totalElementosBusqueda;
-    private static int NUMERO_PAGINA = 0;    
+    private static int NUMERO_PAGINA = 0;
 
     public ClientesGUI() {
-        this.initComponents();        
+        this.initComponents();
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
             int va = scrollBar.getVisibleAmount() + 10;
@@ -62,36 +61,12 @@ public class ClientesGUI extends JInternalFrame {
         });
     }
 
-    private void cargarComboBoxPaises() {
-        cmbPais.removeAllItems();
-        try {
-            List<Pais> paises = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/paises", Pais[].class)));
-            Pais paisTodos = new Pais();
-            paisTodos.setNombre("Todos");
-            cmbPais.addItem(paisTodos);
-            paises.stream().forEach(p -> {
-                cmbPais.addItem(p);
-            });
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void cargarComboBoxProvinciasDelPais() {
+    private void cargarComboBoxProvincias() {
         cmbProvincia.removeAllItems();
         try {
             List<Provincia> provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/provincias/paises/" + ((Pais) cmbPais.getSelectedItem()).getId_Pais(),
-                    Provincia[].class)));
-            Provincia provinciaTodas = new Provincia();
-            provinciaTodas.setNombre("Todas");
-            cmbProvincia.addItem(provinciaTodas);
+                    .getForObject("/ubicaciones/provincias",
+                            Provincia[].class)));
             provincias.stream().forEach((p) -> {
                 cmbProvincia.addItem(p);
             });
@@ -109,8 +84,8 @@ public class ClientesGUI extends JInternalFrame {
         cmbLocalidad.removeAllItems();
         try {
             List<Localidad> Localidades = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/localidades/provincias/" + ((Provincia) cmbProvincia.getSelectedItem()).getId_Provincia(),
-                    Localidad[].class)));
+                    .getForObject("/ubicaciones/localidades/provincias/" + ((Provincia) cmbProvincia.getSelectedItem()).getIdProvincia(),
+                            Localidad[].class)));
             Localidad localidadTodas = new Localidad();
             localidadTodas.setNombre("Todas");
             cmbLocalidad.addItem(localidadTodas);
@@ -129,31 +104,28 @@ public class ClientesGUI extends JInternalFrame {
 
     private void setColumnas() {
         //nombres de columnas
-        String[] encabezados = new String[19];
-        encabezados[0] = "Predeterminado";        
+        String[] encabezados = new String[16];
+        encabezados[0] = "Predeterminado";
         encabezados[1] = "Nº Cliente";
         encabezados[2] = "CUIT o DNI";
         encabezados[3] = "R. Social o Nombre";
         encabezados[4] = "Nombre Fantasia";
         encabezados[5] = "Saldo C/C";
-        encabezados[6] = "Ultimo Movimiento C/C";        
+        encabezados[6] = "Ultimo Movimiento C/C";
         encabezados[7] = "Bonificación";
         encabezados[8] = "Credencial";
-        encabezados[9] = "Viajante";        
-        encabezados[10] = "Direccion";
-        encabezados[11] = "Condicion IVA";
-        encabezados[12] = "Telefono";
-        encabezados[13] = "Contacto";
-        encabezados[14] = "Email";
-        encabezados[15] = "Fecha Alta";
-        encabezados[16] = "Localidad";
-        encabezados[17] = "Provincia";
-        encabezados[18] = "Pais";
+        encabezados[9] = "Viajante";
+        encabezados[10] = "Condicion IVA";
+        encabezados[11] = "Telefono";
+        encabezados[12] = "Contacto";
+        encabezados[13] = "Email";
+        encabezados[14] = "Fecha Alta";
+        encabezados[15] = "Ubicacion";
         modeloTablaDeResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaDeResultados);
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaDeResultados.getColumnCount()];
-        tipos[0] = Boolean.class;        
+        tipos[0] = Boolean.class;
         tipos[1] = String.class;
         tipos[2] = String.class;
         tipos[3] = String.class;
@@ -162,76 +134,67 @@ public class ClientesGUI extends JInternalFrame {
         tipos[6] = Date.class;
         tipos[7] = BigDecimal.class;
         tipos[8] = String.class;
-        tipos[9] = String.class;        
+        tipos[9] = String.class;
         tipos[10] = String.class;
         tipos[11] = String.class;
-        tipos[12] = String.class;        
+        tipos[12] = String.class;
         tipos[13] = String.class;
-        tipos[14] = String.class;
-        tipos[15] = Date.class;
-        tipos[16] = String.class;
-        tipos[17] = String.class;
-        tipos[18] = String.class;
+        tipos[14] = Date.class;
+        tipos[15] = String.class;
         modeloTablaDeResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
-        tbl_Resultados.getTableHeader().setResizingAllowed(true);        
+        tbl_Resultados.getTableHeader().setResizingAllowed(true);
         //tamanios de columnas
-        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(120);        
+        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(80);
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(250);       
+        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(110);
         tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(150);
         tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(90);
         tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(250);        
+        tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(11).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(12).setPreferredWidth(150);        
-        tbl_Resultados.getColumnModel().getColumn(13).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(14).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(15).setPreferredWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(16).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(17).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(18).setPreferredWidth(200);        
+        tbl_Resultados.getColumnModel().getColumn(11).setPreferredWidth(150);
+        tbl_Resultados.getColumnModel().getColumn(12).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(13).setPreferredWidth(250);
+        tbl_Resultados.getColumnModel().getColumn(14).setPreferredWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(15).setPreferredWidth(400);
         //renderers
         tbl_Resultados.getColumnModel().getColumn(5).setCellRenderer(new ColoresNumerosRenderer());
         tbl_Resultados.getColumnModel().getColumn(6).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
         tbl_Resultados.getColumnModel().getColumn(7).setCellRenderer(new PorcentajeRenderer());
-        tbl_Resultados.getColumnModel().getColumn(15).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(14).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 
     private void cargarResultadosAlTable() {
         cuentasCorrienteClienteParcial.stream().map(c -> {
-            Object[] fila = new Object[19];
-            fila[0] = c.getCliente().isPredeterminado();            
+            Object[] fila = new Object[16];
+            fila[0] = c.getCliente().isPredeterminado();
             fila[1] = c.getCliente().getNroCliente();
             fila[2] = c.getCliente().getIdFiscal();
             fila[3] = c.getCliente().getNombreFiscal();
             fila[4] = c.getCliente().getNombreFantasia();
             fila[5] = c.getSaldo();
-            fila[6] = c.getFechaUltimoMovimiento();            
+            fila[6] = c.getFechaUltimoMovimiento();
             fila[7] = c.getCliente().getBonificacion();
             fila[8] = c.getCliente().getNombreCredencial();
-            fila[9] = c.getCliente().getNombreViajante();            
-            fila[10] = c.getCliente().getDireccion();
-            fila[11] = c.getCliente().getCategoriaIVA();
-            fila[12] = c.getCliente().getTelefono();            
-            fila[13] = c.getCliente().getContacto();
-            fila[14] = c.getCliente().getEmail();
-            fila[15] = c.getCliente().getFechaAlta();
-            fila[16] = c.getCliente().getNombreLocalidad();
-            fila[17] = c.getCliente().getNombreProvincia();
-            fila[18] = c.getCliente().getNombrePais();
+            fila[9] = c.getCliente().getNombreViajante();
+            fila[10] = c.getCliente().getCategoriaIVA();
+            fila[11] = c.getCliente().getTelefono();
+            fila[12] = c.getCliente().getContacto();
+            fila[13] = c.getCliente().getEmail();
+            fila[14] = c.getCliente().getFechaAlta();
+            fila[15] = c.getCliente().getDetalleUbicacionFacturacion();
             return fila;
         }).forEach(fila -> {
             modeloTablaDeResultados.addRow(fila);
-        });        
-        tbl_Resultados.setModel(modeloTablaDeResultados);                
+        });
+        tbl_Resultados.setModel(modeloTablaDeResultados);
         lbl_cantResultados.setText(totalElementosBusqueda + " clientes encontrados");
     }
-    
+
     private void resetScroll() {
         NUMERO_PAGINA = 0;
         cuentasCorrienteClienteTotal.clear();
@@ -252,18 +215,16 @@ public class ClientesGUI extends JInternalFrame {
             txtCriteria.setEnabled(true);
         } else {
             txtCriteria.setEnabled(false);
-        }        
+        }
         chk_Ubicacion.setEnabled(status);
         if (status == true && chk_Ubicacion.isSelected() == true) {
-            cmbPais.setEnabled(true);
             cmbProvincia.setEnabled(true);
             cmbLocalidad.setEnabled(true);
         } else {
-            cmbPais.setEnabled(false);
             cmbProvincia.setEnabled(false);
             cmbLocalidad.setEnabled(false);
         }
-        btn_Buscar.setEnabled(status);  
+        btn_Buscar.setEnabled(status);
         btnCuentaCorriente.setEnabled(status);
         btn_Nuevo.setEnabled(status);
         btn_Eliminar.setEnabled(status);
@@ -273,33 +234,28 @@ public class ClientesGUI extends JInternalFrame {
         sp_Resultados.setEnabled(status);
         tbl_Resultados.requestFocus();
     }
-    
+
     private void limpiarYBuscar() {
         this.resetScroll();
         this.limpiarJTable();
         this.buscar();
     }
-    
+
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
         String criteriaBusqueda = "/cuentas-corriente/clientes/busqueda/criteria?";
         if (chkCriteria.isSelected()) {
             criteriaBusqueda += "nombreFiscal=" + txtCriteria.getText().trim() + "&";
-            criteriaBusqueda += "nombreFantasia=" + txtCriteria.getText().trim() + "&";            
+            criteriaBusqueda += "nombreFantasia=" + txtCriteria.getText().trim() + "&";
             criteriaBusqueda += "nroCliente=" + txtCriteria.getText().trim() + "&";
         }
         if (chkViajante.isSelected() && viajanteSeleccionado != null) {
             criteriaBusqueda += "idViajante=" + viajanteSeleccionado.getId_Usuario() + "&";
         }
         if (chk_Ubicacion.isSelected()) {
-            if (!((Pais) cmbPais.getSelectedItem()).getNombre().equals("Todos")) {
-                criteriaBusqueda += "idPais=" + String.valueOf(((Pais) cmbPais.getSelectedItem()).getId_Pais()) + "&";
-            }
-            if (!((Provincia) (cmbProvincia.getSelectedItem())).getNombre().equals("Todas")) {
-                criteriaBusqueda += "idProvincia=" + String.valueOf(((Provincia) (cmbProvincia.getSelectedItem())).getId_Provincia()) + "&";
-            }
+            criteriaBusqueda += "idProvincia=" + String.valueOf(((Provincia) (cmbProvincia.getSelectedItem())).getIdProvincia()) + "&";
             if (!((Localidad) cmbLocalidad.getSelectedItem()).getNombre().equals("Todas")) {
-                criteriaBusqueda += "idLocalidad=" + String.valueOf((((Localidad) cmbLocalidad.getSelectedItem()).getId_Localidad())) + "&";
+                criteriaBusqueda += "idLocalidad=" + String.valueOf((((Localidad) cmbLocalidad.getSelectedItem()).getIdLocalidad())) + "&";
             }
         }
         int seleccionOrden = cmbOrden.getSelectedIndex();
@@ -337,7 +293,8 @@ public class ClientesGUI extends JInternalFrame {
         try {
             PaginaRespuestaRest<CuentaCorrienteCliente> response = RestClient.getRestTemplate()
                     .exchange(criteriaBusqueda, HttpMethod.GET, null,
-                            new ParameterizedTypeReference<PaginaRespuestaRest<CuentaCorrienteCliente>>() {})
+                            new ParameterizedTypeReference<PaginaRespuestaRest<CuentaCorrienteCliente>>() {
+                    })
                     .getBody();
             totalElementosBusqueda = response.getTotalElements();
             cuentasCorrienteClienteParcial = response.getContent();
@@ -390,7 +347,6 @@ public class ClientesGUI extends JInternalFrame {
         txtCriteria = new javax.swing.JTextField();
         chk_Ubicacion = new javax.swing.JCheckBox();
         cmbProvincia = new javax.swing.JComboBox();
-        cmbPais = new javax.swing.JComboBox();
         cmbLocalidad = new javax.swing.JComboBox();
         btn_Buscar = new javax.swing.JButton();
         lbl_cantResultados = new javax.swing.JLabel();
@@ -462,13 +418,6 @@ public class ClientesGUI extends JInternalFrame {
             }
         });
 
-        cmbPais.setEnabled(false);
-        cmbPais.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cmbPaisItemStateChanged(evt);
-            }
-        });
-
         cmbLocalidad.setEnabled(false);
 
         btn_Buscar.setForeground(java.awt.Color.blue);
@@ -525,8 +474,7 @@ public class ClientesGUI extends JInternalFrame {
                                 .addComponent(txtViajante, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
                                 .addGap(0, 0, 0)
                                 .addComponent(btnBuscarViajante))
-                            .addComponent(txtCriteria)
-                            .addComponent(cmbPais, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(txtCriteria))))
                 .addContainerGap())
         );
         panelFiltrosLayout.setVerticalGroup(
@@ -541,13 +489,12 @@ public class ClientesGUI extends JInternalFrame {
                     .addComponent(txtViajante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscarViajante))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(chk_Ubicacion)
-                    .addComponent(cmbPais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmbProvincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmbLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelFiltrosLayout.createSequentialGroup()
+                        .addComponent(cmbProvincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btn_Buscar)
@@ -555,7 +502,7 @@ public class ClientesGUI extends JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmbLocalidad, cmbPais, cmbProvincia});
+        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmbLocalidad, cmbProvincia});
 
         panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarViajante, txtViajante});
 
@@ -633,7 +580,7 @@ public class ClientesGUI extends JInternalFrame {
                 .addComponent(btn_setPredeterminado)
                 .addGap(0, 0, 0)
                 .addComponent(btnCuentaCorriente)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 56, Short.MAX_VALUE))
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Eliminar, btn_Modificar, btn_Nuevo});
@@ -641,7 +588,7 @@ public class ClientesGUI extends JInternalFrame {
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btn_setPredeterminado)
@@ -705,8 +652,8 @@ public class ClientesGUI extends JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -725,37 +672,17 @@ public class ClientesGUI extends JInternalFrame {
 
     private void chk_UbicacionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UbicacionItemStateChanged
         if (chk_Ubicacion.isSelected()) {
-            this.cargarComboBoxPaises();
-            cmbPais.setEnabled(true);
+            this.cargarComboBoxProvincias();
             cmbProvincia.setEnabled(true);
             cmbLocalidad.setEnabled(true);
-            cmbPais.requestFocus();
+            cmbProvincia.requestFocus();
         } else {
-            cmbPais.removeAllItems();
-            cmbPais.setEnabled(false);
             cmbProvincia.removeAllItems();
             cmbProvincia.setEnabled(false);
             cmbLocalidad.setEnabled(false);
             cmbLocalidad.removeAllItems();
         }
     }//GEN-LAST:event_chk_UbicacionItemStateChanged
-
-    private void cmbPaisItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbPaisItemStateChanged
-        if (cmbPais.getItemCount() > 0) {
-            if (!cmbPais.getSelectedItem().toString().equals("Todos")) {
-                this.cargarComboBoxProvinciasDelPais();
-            } else {
-                cmbProvincia.removeAllItems();
-                Provincia provinciaTodas = new Provincia();
-                provinciaTodas.setNombre("Todas");
-                cmbProvincia.addItem(provinciaTodas);
-                cmbLocalidad.removeAllItems();
-                Localidad localidadTodas = new Localidad();
-                localidadTodas.setNombre("Todas");
-                cmbLocalidad.addItem(localidadTodas);
-            }
-        }
-    }//GEN-LAST:event_cmbPaisItemStateChanged
 
     private void cmbProvinciaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbProvinciaItemStateChanged
         if (cmbProvincia.getItemCount() > 0) {
@@ -830,7 +757,7 @@ public class ClientesGUI extends JInternalFrame {
             if (tienePermisoSegunRoles) {
                 boolean existeClientePredeterminado = RestClient.getRestTemplate()
                         .getForObject("/clientes/existe-predeterminado/empresas/"
-                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), boolean.class);
+                                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), boolean.class);
                 if (!existeClientePredeterminado) {
                     JOptionPane.showMessageDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_no_existe_cliente_predeterminado"),
@@ -852,7 +779,7 @@ public class ClientesGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();
-        }        
+        }
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void btn_setPredeterminadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_setPredeterminadoActionPerformed
@@ -941,7 +868,7 @@ public class ClientesGUI extends JInternalFrame {
     private void cmbOrdenItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbOrdenItemStateChanged
         this.limpiarYBuscar();
     }//GEN-LAST:event_cmbOrdenItemStateChanged
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarViajante;
     private javax.swing.JButton btnCuentaCorriente;
@@ -955,7 +882,6 @@ public class ClientesGUI extends JInternalFrame {
     private javax.swing.JCheckBox chk_Ubicacion;
     private javax.swing.JComboBox cmbLocalidad;
     private javax.swing.JComboBox<String> cmbOrden;
-    private javax.swing.JComboBox cmbPais;
     private javax.swing.JComboBox cmbProvincia;
     private javax.swing.JComboBox<String> cmbSentido;
     private javax.swing.JLabel lbl_cantResultados;
