@@ -136,13 +136,11 @@ public class DetalleUbicacionGUI extends JDialog {
 
         ftfLongitud.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##0.#######"))));
 
-        lblCalle.setForeground(java.awt.Color.red);
         lblCalle.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblCalle.setText("* Calle:");
+        lblCalle.setText("Calle:");
 
-        lblNumero.setForeground(java.awt.Color.red);
         lblNumero.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblNumero.setText("* Número:");
+        lblNumero.setText("Número:");
 
         lblPiso.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblPiso.setText("Piso:");
@@ -150,7 +148,7 @@ public class DetalleUbicacionGUI extends JDialog {
         lblDepartamento.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblDepartamento.setText("Departamento:");
 
-        ftfNumero.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        ftfNumero.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#"))));
 
         ftfPiso.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
 
@@ -305,10 +303,10 @@ public class DetalleUbicacionGUI extends JDialog {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         if (ubicacionAModificar != null) {
             txtCalle.setText(ubicacionAModificar.getCalle());
-            ftfNumero.setText(ubicacionAModificar.getNumero().toString());
-            if (ubicacionAModificar.getPiso() != null) {
-                ftfPiso.setText(ubicacionAModificar.getPiso().toString());
+            if (ubicacionAModificar.getNumero()!= null) {
+                ftfNumero.setText(ubicacionAModificar.getNumero().toString());
             }
+            ftfPiso.setText(ubicacionAModificar.getPiso());
             if (ubicacionAModificar.getDepartamento() != null) {
                 txtDepartamento.setText(ubicacionAModificar.getDepartamento());
             }
@@ -330,51 +328,56 @@ public class DetalleUbicacionGUI extends JDialog {
     }//GEN-LAST:event_formWindowOpened
 
     private void btnSeleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarActionPerformed
-        
-        if (txtCalle.getText().isEmpty()) {
+        if (cmbProvinciasBusqueda.getSelectedItem() == null) {
             JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_ubicacion_calle_vacia"),
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_ubicacion_provincia_vacia"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            if (ftfNumero.getText().isEmpty()) {
+            if (cmbLocalidad.getSelectedItem() == null) {
                 JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_ubicacion_numero_vacio"),
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_ubicacion_localidad_vacia"),
                         "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                if (cmbProvinciasBusqueda.getSelectedItem() == null) {
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_ubicacion_provincia_vacia"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                if (!txtCalle.getText().isEmpty()) {
+                    ubicacionAModificar.setCalle(txtCalle.getText().trim());
                 } else {
-                    if (cmbLocalidad.getSelectedItem() == null) {
-                        JOptionPane.showMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_ubicacion_localidad_vacia"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        ubicacionAModificar.setCalle(txtCalle.getText());
-                        ubicacionAModificar.setNumero(Integer.valueOf(ftfNumero.getText()));
-                        if (!ftfPiso.getText().isEmpty() && !ftfPiso.getText().isEmpty()) {
-                            ubicacionAModificar.setPiso(Integer.valueOf(ftfPiso.getText().trim()));
-                        }
-                        ubicacionAModificar.setDepartamento(txtDepartamento.getText().trim());
-                        ubicacionAModificar.setDescripcion(txtDescripcion.getText().trim());
-                        if (!ftfLatitud.getText().isEmpty() && !ftfLatitud.getText().isEmpty()) {
-                            ubicacionAModificar.setLatitud(Double.valueOf(ftfLatitud.getText().trim()));
-                        }
-                        if (!ftfLongitud.getText().isEmpty() && !ftfLongitud.getText().isEmpty()) {
-                            ubicacionAModificar.setLongitud(Double.valueOf(ftfLongitud.getText().trim()));
-                        }
-                        ubicacionAModificar.setDescripcion(txtDescripcion.getText().trim());
-                        localidadSeleccionada = (Localidad) cmbLocalidad.getSelectedItem();
-                        if (localidadSeleccionada != null) {
-                            ubicacionAModificar.setIdLocalidad(localidadSeleccionada.getIdLocalidad());
-                            ubicacionAModificar.setNombreLocalidad(localidadSeleccionada.getNombre());
-                            ubicacionAModificar.setCodigoPostal(localidadSeleccionada.getCodigoPostal());
-                            ubicacionAModificar.setNombreProvincia(localidadSeleccionada.getNombreProvincia());
-                        }
-                        this.dispose();
-                    }
+                    ubicacionAModificar.setCalle(null);
                 }
+                if (!ftfNumero.getText().isEmpty()) {
+                    ubicacionAModificar.setNumero(Integer.valueOf(ftfNumero.getText()));
+                } else {
+                    ubicacionAModificar.setNumero(null);
+                }
+                if (!ftfPiso.getText().isEmpty()) {
+                    ubicacionAModificar.setPiso(ftfPiso.getText().trim());
+                } else {
+                    ubicacionAModificar.setPiso(null);
+                }
+                if (!txtDepartamento.getText().isEmpty()) {
+                    ubicacionAModificar.setDepartamento(txtDepartamento.getText().trim());
+                } else {
+                    ubicacionAModificar.setDepartamento(null);
+                }
+                if (!txtDescripcion.getText().isEmpty()) {
+                    ubicacionAModificar.setDescripcion(txtDescripcion.getText().trim());
+                } else {
+                    ubicacionAModificar.setDescripcion(null);
+                }
+                if (!ftfLatitud.getText().isEmpty()) {
+                    ubicacionAModificar.setLatitud(Double.valueOf(ftfLatitud.getText().trim()));
+                }
+                if (!ftfLongitud.getText().isEmpty()) {
+                    ubicacionAModificar.setLongitud(Double.valueOf(ftfLongitud.getText().trim()));
+                }
+                ubicacionAModificar.setDescripcion(txtDescripcion.getText().trim());
+                localidadSeleccionada = (Localidad) cmbLocalidad.getSelectedItem();
+                if (localidadSeleccionada != null) {
+                    ubicacionAModificar.setIdLocalidad(localidadSeleccionada.getIdLocalidad());
+                    ubicacionAModificar.setNombreLocalidad(localidadSeleccionada.getNombre());
+                    ubicacionAModificar.setCodigoPostal(localidadSeleccionada.getCodigoPostal());
+                    ubicacionAModificar.setNombreProvincia(localidadSeleccionada.getNombreProvincia());
+                }
+                this.dispose();
             }
         }
     }//GEN-LAST:event_btnSeleccionarActionPerformed

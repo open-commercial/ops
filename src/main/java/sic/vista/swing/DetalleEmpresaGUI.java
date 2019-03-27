@@ -495,22 +495,23 @@ public class DetalleEmpresaGUI extends JDialog {
         guiDetalleUbicacion.setVisible(true);
         if (guiDetalleUbicacion.getUbicacionModificada() != null) {
             this.ubicacion = guiDetalleUbicacion.getUbicacionModificada();
-            lblDetalleUbicacionEmpresa.setText(this.ubicacion.getCalle()
-                    + " "
-                    + this.ubicacion.getNumero()
+            lblDetalleUbicacionEmpresa.setText(
+                    (this.ubicacion.getCalle() != null
+                    ? this.ubicacion.getCalle() + " " : "")
+                    + (this.ubicacion.getNumero() != null
+                    ? this.ubicacion.getNumero() + " " : "")
                     + (this.ubicacion.getPiso() != null
-                    ? ", " + this.ubicacion.getPiso() + " "
-                    : " ")
+                    ? this.ubicacion.getPiso() + " "
+                    : "")
                     + (this.ubicacion.getDepartamento() != null
-                    ? this.ubicacion.getDepartamento()
+                    ? this.ubicacion.getDepartamento() + " "
                     : "")
                     + (this.ubicacion.getNombreLocalidad() != null
-                    ? ", " + this.ubicacion.getNombreLocalidad()
-                    : " ")
-                    + " "
+                    ? this.ubicacion.getNombreLocalidad() + " "
+                    : "")
                     + (this.ubicacion.getNombreProvincia() != null
                     ? this.ubicacion.getNombreProvincia()
-                    : " "));
+                    : ""));
         }
     }//GEN-LAST:event_btnUbicacionActionPerformed
 

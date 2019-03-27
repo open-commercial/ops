@@ -641,22 +641,23 @@ public class DetalleClienteGUI extends JDialog {
             guiDetalleUbicacion.setVisible(true);
             if (guiDetalleUbicacion.getUbicacionModificada() != null) {
                 this.ubicacionDeFacturacion = guiDetalleUbicacion.getUbicacionModificada();
-                lblDetalleUbicacionFacturacion.setText(this.ubicacionDeFacturacion.getCalle()
-                        + " "
-                        + this.ubicacionDeFacturacion.getNumero()
+                lblDetalleUbicacionFacturacion.setText(
+                        (this.ubicacionDeFacturacion.getCalle() != null
+                        ? this.ubicacionDeFacturacion.getCalle() + " " : "")
+                        + (this.ubicacionDeFacturacion.getNumero() != null
+                        ? this.ubicacionDeFacturacion.getNumero() + " " : "")
                         + (this.ubicacionDeFacturacion.getPiso() != null
-                        ? ", " + this.ubicacionDeFacturacion.getPiso() + " "
-                        : " ")
+                        ? this.ubicacionDeFacturacion.getPiso() + " "
+                        : "")
                         + (this.ubicacionDeFacturacion.getDepartamento() != null
-                        ? this.ubicacionDeFacturacion.getDepartamento()
+                        ? this.ubicacionDeFacturacion.getDepartamento() + " "
                         : "")
                         + (this.ubicacionDeFacturacion.getNombreLocalidad() != null
-                        ? ", " + this.ubicacionDeFacturacion.getNombreLocalidad()
-                        : " ")
-                        + " "
+                        ? this.ubicacionDeFacturacion.getNombreLocalidad() + " "
+                        : "")
                         + (this.ubicacionDeFacturacion.getNombreProvincia() != null
                         ? this.ubicacionDeFacturacion.getNombreProvincia()
-                        : " "));
+                        : ""));
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
