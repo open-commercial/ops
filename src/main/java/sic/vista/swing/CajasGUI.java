@@ -191,7 +191,7 @@ public class CajasGUI extends JInternalFrame {
 
     private void abrirNuevaCaja() {
         boolean ultimaCajaAbierta = RestClient.getRestTemplate()
-                .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/estado-ultima-caja",
+                .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/ultima-caja-abierta",
                         boolean.class);
         if (!ultimaCajaAbierta) {
             String saldoApertura = JOptionPane.showInputDialog(this,
@@ -556,7 +556,7 @@ public class CajasGUI extends JInternalFrame {
             try {
                 Caja caja = RestClient.getRestTemplate()
                         .getForObject("/cajas/ " + this.cajasTotal.get(indice).getId_Caja(), Caja.class);
-                JInternalFrame iFrameCaja = new CajaGUI(caja);
+                JInternalFrame iFrameCaja = new DetalleCajaGUI(caja);
                 iFrameCaja.setLocation(getDesktopPane().getWidth() / 2 - iFrameCaja.getWidth() / 2,
                         getDesktopPane().getHeight() / 2 - iFrameCaja.getHeight() / 2);
                 getDesktopPane().add(iFrameCaja);

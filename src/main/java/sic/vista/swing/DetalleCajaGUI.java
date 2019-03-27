@@ -29,7 +29,6 @@ import sic.modelo.Caja;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.FormaDePago;
 import sic.modelo.Gasto;
-import sic.modelo.UsuarioActivo;
 import sic.modelo.EstadoCaja;
 import sic.modelo.MovimientoCaja;
 import sic.modelo.TipoDeComprobante;
@@ -39,7 +38,7 @@ import sic.util.FormatosFechaHora;
 import sic.util.FormatterFechaHora;
 import sic.util.Utilidades;
 
-public class CajaGUI extends JInternalFrame {
+public class DetalleCajaGUI extends JInternalFrame {
 
     private final FormatterFechaHora formatter = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO);
     private ModeloTabla modeloTablaBalance = new ModeloTabla();
@@ -50,7 +49,7 @@ public class CajaGUI extends JInternalFrame {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(880, 600);    
 
-    public CajaGUI(Caja caja) {
+    public DetalleCajaGUI(Caja caja) {
         this.initComponents();
         this.caja = caja;        
     }  
@@ -528,7 +527,8 @@ public class CajaGUI extends JInternalFrame {
 
     private void btn_AgregarGastoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AgregarGastoActionPerformed
         try {
-            if (this.caja.getEstado().equals(EstadoCaja.ABIERTA)) {
+            if (RestClient.getRestTemplate().getForObject("/cajas/empresas/"
+                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/ultima-caja-abierta", boolean.class)) {
                 List<FormaDePago> formasDePago = Arrays.asList(RestClient.getRestTemplate().getForObject("/formas-de-pago/empresas/"
                         + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), FormaDePago[].class));
                 AgregarGastoGUI agregarGasto = new AgregarGastoGUI(formasDePago);
@@ -559,26 +559,36 @@ public class CajaGUI extends JInternalFrame {
         if (tbl_Movimientos.getSelectedRow() != -1) {
             long idMovimientoTabla = this.movimientos.get(idFormaDePagoSeleccionada).get(Utilidades.getSelectedRowModelIndice(tbl_Movimientos)).getIdMovimiento();
             TipoDeComprobante tipoDeComprobante = this.movimientos.get(idFormaDePagoSeleccionada).get(Utilidades.getSelectedRowModelIndice(tbl_Movimientos)).getTipoComprobante();
-            if (tipoDeComprobante.equals(TipoDeComprobante.GASTO) && this.caja.getEstado().equals(EstadoCaja.ABIERTA)) {
-                int confirmacionEliminacion = JOptionPane.showConfirmDialog(this,
-                        "¿Esta seguro que desea eliminar el gasto seleccionado?",
-                        "Eliminar", JOptionPane.YES_NO_OPTION);
-                if (confirmacionEliminacion == JOptionPane.YES_OPTION) {
-                    try {
-                        RestClient.getRestTemplate().delete("/gastos/" + idMovimientoTabla);
-                        this.limpiarYCargarTablas();
-                    } catch (RestClientResponseException ex) {
-                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    } catch (ResourceAccessException ex) {
-                        LOGGER.error(ex.getMessage());
-                        JOptionPane.showMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
+            try {
+                if (tipoDeComprobante.equals(TipoDeComprobante.GASTO) && RestClient.getRestTemplate().getForObject("/cajas/empresas/"
+                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/ultima-caja-abierta", boolean.class)) {
+                    int confirmacionEliminacion = JOptionPane.showConfirmDialog(this,
+                            "¿Esta seguro que desea eliminar el gasto seleccionado?",
+                            "Eliminar", JOptionPane.YES_NO_OPTION);
+                    if (confirmacionEliminacion == JOptionPane.YES_OPTION) {
+                        try {
+                            RestClient.getRestTemplate().delete("/gastos/" + idMovimientoTabla);
+                            this.limpiarYCargarTablas();
+                        } catch (RestClientResponseException ex) {
+                            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                        } catch (ResourceAccessException ex) {
+                            LOGGER.error(ex.getMessage());
+                            JOptionPane.showMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
+                } else if (this.caja.getEstado().equals(EstadoCaja.CERRADA)) {
+                    JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_caja_cerrada"),
+                            "Aviso", JOptionPane.INFORMATION_MESSAGE);
                 }
-            } else if (this.caja.getEstado().equals(EstadoCaja.CERRADA)) {
-                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_caja_cerrada"),
-                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btn_EliminarGastoActionPerformed
