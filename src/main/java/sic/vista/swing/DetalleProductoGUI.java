@@ -130,6 +130,8 @@ public class DetalleProductoGUI extends JDialog {
         lblPublico = new javax.swing.JLabel();
         rbPublico = new javax.swing.JRadioButton();
         rbPrivado = new javax.swing.JRadioButton();
+        lblDestacado = new javax.swing.JLabel();
+        chkDestacado = new javax.swing.JCheckBox();
         panel6 = new javax.swing.JPanel();
         lbl_FUM = new javax.swing.JLabel();
         lbl_FechaUltimaModificacion = new javax.swing.JLabel();
@@ -215,7 +217,7 @@ public class DetalleProductoGUI extends JDialog {
                     .addComponent(txt_Codigo)
                     .addComponent(txt_Descripcion)
                     .addGroup(panelSuperiorLayout.createSequentialGroup()
-                        .addComponent(txtProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
+                        .addComponent(txtProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
                         .addComponent(btnBuscarProveedor)
                         .addGap(0, 0, 0)
@@ -575,38 +577,49 @@ public class DetalleProductoGUI extends JDialog {
         bgVisibilidad.add(rbPrivado);
         rbPrivado.setText("Privado");
 
+        lblDestacado.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblDestacado.setText("Destacado:");
+
         javax.swing.GroupLayout panel5Layout = new javax.swing.GroupLayout(panel5);
         panel5.setLayout(panel5Layout);
         panel5Layout.setHorizontalGroup(
             panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel5Layout.createSequentialGroup()
-                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(lbl_Estante, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblPublico, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Estanteria, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Ven, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Nota, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(panel5Layout.createSequentialGroup()
+                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblDestacado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_Estante, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblPublico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_Estanteria, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_Ven, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_Nota, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txt_Estanteria)
                     .addComponent(dc_Vencimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(panel5Layout.createSequentialGroup()
-                        .addComponent(rbPublico)
-                        .addGap(18, 18, 18)
-                        .addComponent(rbPrivado)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(txt_Estante)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 466, Short.MAX_VALUE)
+                    .addGroup(panel5Layout.createSequentialGroup()
+                        .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panel5Layout.createSequentialGroup()
+                                .addComponent(rbPublico)
+                                .addGap(8, 8, 8)
+                                .addComponent(rbPrivado))
+                            .addComponent(chkDestacado))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panel5Layout.setVerticalGroup(
             panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblPublico)
                     .addComponent(rbPublico)
                     .addComponent(rbPrivado))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(chkDestacado)
+                    .addComponent(lblDestacado))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_Ven)
@@ -625,6 +638,10 @@ public class DetalleProductoGUI extends JDialog {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        panel5Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblDestacado, lblPublico});
+
+        panel5Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {rbPrivado, rbPublico});
 
         panel6.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -656,15 +673,14 @@ public class DetalleProductoGUI extends JDialog {
         panel6Layout.setVerticalGroup(
             panel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel6Layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_FUM)
                     .addComponent(lbl_FechaUltimaModificacion, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_FA)
-                    .addComponent(lbl_FechaAlta, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbl_FechaAlta, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         javax.swing.GroupLayout panelPropiedadesLayout = new javax.swing.GroupLayout(panelPropiedades);
@@ -685,7 +701,7 @@ public class DetalleProductoGUI extends JDialog {
                 .addComponent(panel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(285, 285, 285))
+                .addGap(304, 304, 304))
         );
 
         tpTabs.addTab("Propiedades", panelPropiedades);
@@ -789,6 +805,7 @@ public class DetalleProductoGUI extends JDialog {
         chkSinLimite.setSelected(productoParaModificar.isIlimitado());
         rbPublico.setSelected(productoParaModificar.isPublico());
         rbPrivado.setSelected(!productoParaModificar.isPublico());
+        chkDestacado.setSelected(productoParaModificar.isDestacado());
         txt_Cantidad.setValue(productoParaModificar.getCantidad());
         txt_CantMinima.setValue(productoParaModificar.getCantMinima());
         txt_Bulto.setValue(productoParaModificar.getBulto());
@@ -991,6 +1008,7 @@ public class DetalleProductoGUI extends JDialog {
                     producto.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
                     producto.setIlimitado(chkSinLimite.isSelected());
                     producto.setPublico(rbPublico.isSelected());
+                    producto.setDestacado(chkDestacado.isSelected());
                     producto.setEstanteria(txt_Estanteria.getText().trim());
                     producto.setEstante(txt_Estante.getText().trim());
                     producto.setNota(txt_Nota.getText().trim());
@@ -1030,6 +1048,7 @@ public class DetalleProductoGUI extends JDialog {
                     productoParaModificar.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
                     productoParaModificar.setIlimitado(chkSinLimite.isSelected());   
                     productoParaModificar.setPublico(rbPublico.isSelected());
+                    productoParaModificar.setDestacado(chkDestacado.isSelected());
                     productoParaModificar.setEstanteria(txt_Estanteria.getText().trim());
                     productoParaModificar.setEstante(txt_Estante.getText().trim());
                     productoParaModificar.setNota(txt_Nota.getText().trim());
@@ -1293,6 +1312,7 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JButton btn_EliminarImagen;
     private javax.swing.JButton btn_ExaminarArchivos;
     private javax.swing.JButton btn_NuevoProveedor;
+    private javax.swing.JCheckBox chkDestacado;
     private javax.swing.JCheckBox chkSinLimite;
     private javax.swing.JComboBox cmbIVAPorcentaje;
     private javax.swing.JComboBox cmb_Medida;
@@ -1300,6 +1320,7 @@ public class DetalleProductoGUI extends JDialog {
     private com.toedter.calendar.JDateChooser dc_Vencimiento;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblAspectRatio;
+    private javax.swing.JLabel lblDestacado;
     private javax.swing.JLabel lblPublico;
     private javax.swing.JLabel lblSinLimite;
     private javax.swing.JLabel lblTamanioMax;
