@@ -1496,6 +1496,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 } else {
                     this.calcularResultados();
                     try {
+                        cliente = RestClient.getRestTemplate().getForObject("/clientes/" + this.cliente.getId_Cliente(), Cliente.class);
                         Map<Long, BigDecimal> faltantes;
                         if (cmb_TipoComprobante.getSelectedItem() == TipoDeComprobante.PEDIDO) {
                             // Es null cuando, se genera un pedido desde el punto de venta entrando por el menu sistemas.
