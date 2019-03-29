@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.ActualizarProductos;
+import sic.modelo.ProductosParaActualizar;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Medida;
 import sic.modelo.Producto;
@@ -696,10 +696,10 @@ public class ModificacionMultipleProductosGUI extends JDialog {
 
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
         String mensajeError = "";
-        ActualizarProductos actualizarProductos = ActualizarProductos.builder().build();
+        ProductosParaActualizar productosParaActualizar = ProductosParaActualizar.builder().build();
         if (chk_UnidadDeMedida.isSelected()) {
             if (cmb_Medida.getSelectedItem() != null) {
-                actualizarProductos.setIdMedida(((Medida) cmb_Medida.getSelectedItem()).getId_Medida());
+                productosParaActualizar.setIdMedida(((Medida) cmb_Medida.getSelectedItem()).getId_Medida());
             } else {
                 mensajeError = mensajeError.concat(ResourceBundle.getBundle("Mensajes")
                         .getString("mensaje_producto_vacio_medida") + "\n");
@@ -707,7 +707,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         }
         if (chk_Rubro.isSelected()) {
             if (cmb_Rubro.getSelectedItem() != null) {
-                actualizarProductos.setIdRubro(((Rubro) cmb_Rubro.getSelectedItem()).getId_Rubro());
+                productosParaActualizar.setIdRubro(((Rubro) cmb_Rubro.getSelectedItem()).getId_Rubro());
             } else {
                 mensajeError = mensajeError.concat(ResourceBundle.getBundle("Mensajes")
                         .getString("mensaje_producto_vacio_rubro") + "\n");
@@ -721,22 +721,22 @@ public class ModificacionMultipleProductosGUI extends JDialog {
             JOptionPane.showMessageDialog(this, mensajeError, "Error", JOptionPane.ERROR_MESSAGE);
         } else {
             if (chk_Precios.isSelected() == true) {
-                actualizarProductos.setPrecioCosto(new BigDecimal(txtPrecioCosto.getValue().toString()));
-                actualizarProductos.setGananciaPorcentaje(new BigDecimal(txtGananciaPorcentaje.getValue().toString()));
-                actualizarProductos.setGananciaNeto(new BigDecimal(txtGananciaNeto.getValue().toString()));
-                actualizarProductos.setPrecioVentaPublico(new BigDecimal(txtPVP.getValue().toString()));
-                actualizarProductos.setIvaPorcentaje(new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()));
-                actualizarProductos.setIvaNeto(new BigDecimal(txtIVANeto.getValue().toString()));
-                actualizarProductos.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
+                productosParaActualizar.setPrecioCosto(new BigDecimal(txtPrecioCosto.getValue().toString()));
+                productosParaActualizar.setGananciaPorcentaje(new BigDecimal(txtGananciaPorcentaje.getValue().toString()));
+                productosParaActualizar.setGananciaNeto(new BigDecimal(txtGananciaNeto.getValue().toString()));
+                productosParaActualizar.setPrecioVentaPublico(new BigDecimal(txtPVP.getValue().toString()));
+                productosParaActualizar.setIvaPorcentaje(new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()));
+                productosParaActualizar.setIvaNeto(new BigDecimal(txtIVANeto.getValue().toString()));
+                productosParaActualizar.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
             }
             if (chkVisibilidad.isSelected() == true) {
-                actualizarProductos.setPublico(rbPublico.isSelected());
+                productosParaActualizar.setPublico(rbPublico.isSelected());
             }
             if (chkRecargoDescuento.isSelected() == true) {
                 if (rbRecargo.isSelected()) {
-                    actualizarProductos.setDescuentoRecargoPorcentaje(new BigDecimal(txtDescuentoRecargoPorcentaje.getValue().toString()));
+                    productosParaActualizar.setDescuentoRecargoPorcentaje(new BigDecimal(txtDescuentoRecargoPorcentaje.getValue().toString()));
                 } else if (rbDescuento.isSelected()) {
-                    actualizarProductos.setDescuentoRecargoPorcentaje(new BigDecimal(txtDescuentoRecargoPorcentaje.getValue().toString())
+                    productosParaActualizar.setDescuentoRecargoPorcentaje(new BigDecimal(txtDescuentoRecargoPorcentaje.getValue().toString())
                             .multiply(new BigDecimal(-1L)));
                 }
             }
@@ -747,11 +747,11 @@ public class ModificacionMultipleProductosGUI extends JDialog {
                     idsProductos[i] = producto.getIdProducto();
                     i++;
                 }
-                actualizarProductos.setIdProducto(idsProductos);
+                productosParaActualizar.setIdProducto(idsProductos);
                 if (proveedorSeleccionado != null) {
-                    actualizarProductos.setIdProveedor(proveedorSeleccionado.getId_Proveedor());
+                    productosParaActualizar.setIdProveedor(proveedorSeleccionado.getId_Proveedor());
                 }
-                RestClient.getRestTemplate().put("/productos/multiples?", actualizarProductos);
+                RestClient.getRestTemplate().put("/productos/multiples?", productosParaActualizar);
                 JOptionPane.showMessageDialog(this, "Los productos se modificaron correctamente.",
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();

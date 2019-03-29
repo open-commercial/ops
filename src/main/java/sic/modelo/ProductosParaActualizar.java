@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ActualizarProductos {
+public class ProductosParaActualizar {
 
     private long[] idProducto;
     private BigDecimal descuentoRecargoPorcentaje;
