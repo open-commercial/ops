@@ -58,7 +58,6 @@ public class DetalleProductoGUI extends JDialog {
         this.initComponents();
         this.setIcon();                
         operacion = TipoDeOperacion.ALTA;
-        panel6.setVisible(false);
     }       
 
     public DetalleProductoGUI(Producto producto) {
@@ -576,9 +575,20 @@ public class DetalleProductoGUI extends JDialog {
 
         bgVisibilidad.add(rbPrivado);
         rbPrivado.setText("Privado");
+        rbPrivado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbPrivadoActionPerformed(evt);
+            }
+        });
 
         lblDestacado.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblDestacado.setText("Destacado:");
+
+        chkDestacado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkDestacadoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panel5Layout = new javax.swing.GroupLayout(panel5);
         panel5.setLayout(panel5Layout);
@@ -673,14 +683,15 @@ public class DetalleProductoGUI extends JDialog {
         panel6Layout.setVerticalGroup(
             panel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel6Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(panel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_FUM)
                     .addComponent(lbl_FechaUltimaModificacion, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_FA)
-                    .addComponent(lbl_FechaAlta, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(lbl_FechaAlta, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(8, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout panelPropiedadesLayout = new javax.swing.GroupLayout(panelPropiedades);
@@ -701,7 +712,7 @@ public class DetalleProductoGUI extends JDialog {
                 .addComponent(panel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(304, 304, 304))
+                .addGap(296, 296, 296))
         );
 
         tpTabs.addTab("Propiedades", panelPropiedades);
@@ -1088,6 +1099,12 @@ public class DetalleProductoGUI extends JDialog {
         this.cargarRubros();
         if (operacion == TipoDeOperacion.ALTA) {
             this.setTitle("Nuevo Producto");
+            lblDestacado.setEnabled(false);
+            chkDestacado.setEnabled(false);
+            lbl_FUM.setEnabled(false);
+            lbl_FA.setEnabled(false);
+            lbl_FechaUltimaModificacion.setVisible(false);
+            lbl_FechaAlta.setVisible(false);
         } else if (operacion == TipoDeOperacion.ACTUALIZACION) {
             this.setTitle("Modificar Producto");
             this.cargarProductoParaModificar();
@@ -1304,6 +1321,24 @@ public class DetalleProductoGUI extends JDialog {
             txtProveedor.setText(proveedorSeleccionado.getRazonSocial());
         }
     }//GEN-LAST:event_btnBuscarProveedorActionPerformed
+
+    private void rbPrivadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbPrivadoActionPerformed
+        if (rbPrivado.isSelected() && chkDestacado.isSelected()) {
+            rbPublico.setSelected(true);
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_producto_privado_no_destacado"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_rbPrivadoActionPerformed
+
+    private void chkDestacadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkDestacadoActionPerformed
+        if (rbPrivado.isSelected() && chkDestacado.isSelected()) {
+            chkDestacado.setSelected(false);
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_producto_privado_no_destacado"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_chkDestacadoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgVisibilidad;

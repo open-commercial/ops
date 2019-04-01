@@ -725,12 +725,10 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         } else {
             boolean checkPrecios = false;
             boolean checkVisibilidad = false;
-            boolean checkDestacado =  false;
             boolean checkDescuentoRecargo = false;
             String preciosProducto = "";
             String descuentoRecargoPorcentaje = "";
             String visibilidad = "";
-            String destacado = "";
             if (chk_Precios.isSelected() == true) {
                 checkPrecios = true;
                 preciosProducto = "&precioCosto=" + new BigDecimal(txtPrecioCosto.getValue().toString())
