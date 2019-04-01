@@ -256,21 +256,22 @@ public class CerrarPedidoGUI extends JDialog {
     private void btnCerrarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarPedidoActionPerformed
         try {
             TipoDeEnvio tipoDeEnvio;
-            Long idEmpresa = null;
+            Long idSucursal = null;
             if (rbDireccionFacturacion.isSelected()) {
                 tipoDeEnvio = TipoDeEnvio.USAR_UBICACION_FACTURACION;
             } else if (rbDireccionEnvio.isSelected()) {
                 tipoDeEnvio = TipoDeEnvio.USAR_UBICACION_ENVIO;
             } else {
                 tipoDeEnvio = TipoDeEnvio.RETIRO_EN_SUCURSAL;
-                idEmpresa = empresas.get(cmbEmpresas.getSelectedIndex()).getId_Empresa();
+                idSucursal = empresas.get(cmbEmpresas.getSelectedIndex()).getId_Empresa();
             }
             if (nuevoPedido != null) {
-                Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?idEmpresa="
-                        + (idEmpresa != null ? idEmpresa : EmpresaActiva.getInstance().getEmpresa().getId_Empresa())
-                        + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                        + "&idCliente=" + cliente.getId_Cliente()
-                        + "&tipoDeEnvio=" + tipoDeEnvio, nuevoPedido, Pedido.class);
+                nuevoPedido.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+                nuevoPedido.setIdUsuario(UsuarioActivo.getInstance().getUsuario().getId_Usuario());
+                nuevoPedido.setIdCliente(cliente.getId_Cliente());
+                nuevoPedido.setTipoDeEnvio(tipoDeEnvio);
+                nuevoPedido.setIdSucursal(idSucursal);
+                Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?", nuevoPedido, Pedido.class);
                 this.operacionExitosa = true;
                 int reply = JOptionPane.showConfirmDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
@@ -283,7 +284,8 @@ public class CerrarPedidoGUI extends JDialog {
                         + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                         + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                         + "&idCliente=" + cliente.getId_Cliente()
-                        + "&tipoDeEnvio=" + tipoDeEnvio, pedido);
+                        + "&tipoDeEnvio=" + tipoDeEnvio
+                        + "&idSucursal=" + idSucursal, pedido);
                 this.operacionExitosa = true;
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_pedido_actualizado"),
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);

@@ -10,6 +10,11 @@ public class NuevoPedido {
  
     private Date fechaVencimiento;    
     private String observaciones;        
+    private Long idEmpresa;
+    private Long idUsuario;
+    private Long idCliente;
+    private Long idSucursal;
+    private TipoDeEnvio tipoDeEnvio;
     private List<RenglonPedido> renglones;
     private BigDecimal subTotal;
     private BigDecimal recargoPorcentaje;
