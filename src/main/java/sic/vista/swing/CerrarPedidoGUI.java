@@ -285,7 +285,7 @@ public class CerrarPedidoGUI extends JDialog {
                         + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                         + "&idCliente=" + cliente.getId_Cliente()
                         + "&tipoDeEnvio=" + tipoDeEnvio
-                        + "&idSucursal=" + idSucursal, pedido);
+                        + "&idSucursal=" + (idSucursal != null ? idSucursal : ""), pedido);
                 this.operacionExitosa = true;
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_pedido_actualizado"),
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);
