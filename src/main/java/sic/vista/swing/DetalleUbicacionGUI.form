@@ -82,7 +82,7 @@
                               <Component id="ftfNumero" alignment="0" max="32767" attributes="0"/>
                               <Component id="txtDepartamento" max="32767" attributes="0"/>
                               <Component id="txtDescripcion" max="32767" attributes="0"/>
-                              <Component id="ftfPiso" alignment="1" max="32767" attributes="0"/>
+                              <Component id="txtPiso" alignment="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
@@ -128,9 +128,9 @@
                       <Component id="ftfNumero" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lblPiso" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="ftfPiso" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblPiso" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtPiso" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -242,13 +242,6 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="ftfPiso">
-          <Properties>
-            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-              <Format format="#0" subtype="-1" type="0"/>
-            </Property>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JLabel" name="lblProvincia">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -301,6 +294,8 @@
             <Property name="text" type="java.lang.String" value="C&#xf3;digo Postal:"/>
           </Properties>
         </Component>
+        <Component class="javax.swing.JTextField" name="txtPiso">
+        </Component>
       </SubComponents>
     </Container>
     <Component class="javax.swing.JButton" name="btnSeleccionar">
@@ -311,7 +306,7 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/sic/icons/ArrowRight_16x16.png"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Continuar"/>
+        <Property name="text" type="java.lang.String" value="Guardar"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSeleccionarActionPerformed"/>

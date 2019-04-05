@@ -91,8 +91,8 @@ public class LocalidadesGUI extends JInternalFrame {
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
         //tamanios de columnas
-        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(320);
+        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(200);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(200);

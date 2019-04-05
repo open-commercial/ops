@@ -132,7 +132,7 @@ public class DetalleLocalidadGUI extends javax.swing.JDialog {
 
         btnAceptar.setForeground(java.awt.Color.blue);
         btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
-        btnAceptar.setText("Aceptar");
+        btnAceptar.setText("Guardar");
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAceptarActionPerformed(evt);
