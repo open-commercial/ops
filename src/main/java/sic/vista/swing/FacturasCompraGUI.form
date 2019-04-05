@@ -391,8 +391,6 @@
               <Group type="102" attributes="0">
                   <Component id="btn_Nuevo" linkSize="7" min="-2" pref="102" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="btn_Eliminar" linkSize="7" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="btn_VerDetalle" linkSize="7" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="btnCrearNotaCredito" min="-2" max="-2" attributes="0"/>
@@ -428,11 +426,12 @@
                           </Group>
                       </Group>
                       <Group type="103" alignment="1" groupAlignment="3" attributes="0">
-                          <Component id="btn_Eliminar" linkSize="8" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btn_VerDetalle" linkSize="8" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnCrearNotaCredito" linkSize="8" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_Nuevo" linkSize="8" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" alignment="3" groupAlignment="3" attributes="0">
+                              <Component id="btn_VerDetalle" linkSize="8" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnCrearNotaCredito" linkSize="8" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
-                      <Component id="btn_Nuevo" linkSize="8" alignment="1" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -488,20 +487,6 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_VerDetalleActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="btn_Eliminar">
-          <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
-            </Property>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/Cancel_16x16.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Eliminar"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_EliminarActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lbl_TotalIVACompra">

@@ -26,10 +26,8 @@ import sic.modelo.FacturaCompra;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
 import sic.modelo.Proveedor;
-import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.TipoDeOperacion;
-import sic.modelo.UsuarioActivo;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
@@ -169,7 +167,6 @@ public class FacturasCompraGUI extends JInternalFrame {
         tbl_Resultados.setEnabled(status);
         sp_Resultados.setEnabled(status);
         btn_Nuevo.setEnabled(status);
-        btn_Eliminar.setEnabled(status);
         btn_VerDetalle.setEnabled(status);
         tbl_Resultados.requestFocus();
     }
@@ -242,7 +239,6 @@ public class FacturasCompraGUI extends JInternalFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
         this.cambiarEstadoEnabledComponentes(true);
-        this.cambiarEstadoDeComponentesSegunRolUsuario();
     }
 
     private void calcularResultados(String criteria) {
@@ -318,15 +314,6 @@ public class FacturasCompraGUI extends JInternalFrame {
         }
     }
     
-    private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
-        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
-            btn_Eliminar.setEnabled(true);
-        } else {
-            btn_Eliminar.setEnabled(false);
-        }
-    }
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -358,7 +345,6 @@ public class FacturasCompraGUI extends JInternalFrame {
         tbl_Resultados = new javax.swing.JTable();
         btn_Nuevo = new javax.swing.JButton();
         btn_VerDetalle = new javax.swing.JButton();
-        btn_Eliminar = new javax.swing.JButton();
         lbl_TotalIVACompra = new javax.swing.JLabel();
         txt_ResultTotalIVACompra = new javax.swing.JFormattedTextField();
         txt_ResultGastoTotal = new javax.swing.JFormattedTextField();
@@ -669,15 +655,6 @@ public class FacturasCompraGUI extends JInternalFrame {
             }
         });
 
-        btn_Eliminar.setForeground(java.awt.Color.blue);
-        btn_Eliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Cancel_16x16.png"))); // NOI18N
-        btn_Eliminar.setText("Eliminar");
-        btn_Eliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_EliminarActionPerformed(evt);
-            }
-        });
-
         lbl_TotalIVACompra.setText("Total IVA Compra:");
 
         txt_ResultTotalIVACompra.setEditable(false);
@@ -705,8 +682,6 @@ public class FacturasCompraGUI extends JInternalFrame {
             .addGroup(panelResultadosLayout.createSequentialGroup()
                 .addComponent(btn_Nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(btn_Eliminar)
-                .addGap(0, 0, 0)
                 .addComponent(btn_VerDetalle)
                 .addGap(0, 0, 0)
                 .addComponent(btnCrearNotaCredito)
@@ -721,7 +696,7 @@ public class FacturasCompraGUI extends JInternalFrame {
             .addComponent(sp_Resultados)
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Eliminar, btn_Nuevo, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Nuevo, btn_VerDetalle});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -738,13 +713,13 @@ public class FacturasCompraGUI extends JInternalFrame {
                             .addComponent(txt_ResultTotalIVACompra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbl_TotalIVACompra)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btn_Eliminar)
-                        .addComponent(btn_VerDetalle)
-                        .addComponent(btnCrearNotaCredito))
-                    .addComponent(btn_Nuevo, javax.swing.GroupLayout.Alignment.TRAILING)))
+                        .addComponent(btn_Nuevo)
+                        .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn_VerDetalle)
+                            .addComponent(btnCrearNotaCredito)))))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaCredito, btn_Eliminar, btn_Nuevo, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaCredito, btn_Nuevo, btn_VerDetalle});
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
 
@@ -811,7 +786,6 @@ public class FacturasCompraGUI extends JInternalFrame {
         this.setColumnas();
         dc_FechaDesde.setDate(new Date());
         dc_FechaHasta.setDate(new Date());
-        this.cambiarEstadoDeComponentesSegunRolUsuario();
         try {
             this.setMaximum(true);            
         } catch (PropertyVetoException ex) {
@@ -867,35 +841,6 @@ public class FacturasCompraGUI extends JInternalFrame {
     private void txt_NroFacturaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_NroFacturaKeyTyped
         Utilidades.controlarEntradaSoloNumerico(evt);
     }//GEN-LAST:event_txt_NroFacturaKeyTyped
-
-    private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1) {
-            int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle
-                    .getBundle("Mensajes").getString("mensaje_eliminar_multiples_facturas"),
-                    "Eliminar", JOptionPane.YES_NO_OPTION);
-            if (respuesta == JOptionPane.YES_OPTION) {
-                int[] indexFilasSeleccionadas = Utilidades.getSelectedRowsModelIndices(tbl_Resultados);
-                long[] idsFacturas = new long[indexFilasSeleccionadas.length];
-                int i = 0;
-                for (int indice : indexFilasSeleccionadas) {
-                    idsFacturas[i] = facturasTotal.get(indice).getId_Factura();
-                    i++;
-                }
-                try {
-                    RestClient.getRestTemplate().delete("/facturas?idFactura="
-                            + Arrays.toString(idsFacturas).substring(1, Arrays.toString(idsFacturas).length() - 1));
-                    this.limpiarYBuscar(true);
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }
-    }//GEN-LAST:event_btn_EliminarActionPerformed
 
     private void btn_VerDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VerDetalleActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
@@ -1041,7 +986,6 @@ public class FacturasCompraGUI extends JInternalFrame {
     private javax.swing.JButton btnBuscarProveedor;
     private javax.swing.JButton btnCrearNotaCredito;
     private javax.swing.JButton btn_Buscar;
-    private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_Nuevo;
     private javax.swing.JButton btn_VerDetalle;
     private javax.swing.JCheckBox chk_Fecha;

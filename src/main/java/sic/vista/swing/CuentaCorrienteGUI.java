@@ -953,8 +953,9 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                         case FACTURA_X:
                         case FACTURA_Y:
                         case PRESUPUESTO: {
-                            RestClient.getRestTemplate().delete("/facturas?idFactura=" + renglonCC.getIdMovimiento());
-                            refrescar = true;
+                            JOptionPane.showInternalMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
                         }
                         break;
                         case RECIBO: {
