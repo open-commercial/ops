@@ -102,13 +102,13 @@ public class DetalleUbicacionGUI extends JDialog {
         txtCalle = new javax.swing.JTextField();
         txtDepartamento = new javax.swing.JTextField();
         ftfNumero = new javax.swing.JFormattedTextField();
-        ftfPiso = new javax.swing.JFormattedTextField();
         lblProvincia = new javax.swing.JLabel();
         cmbProvinciasBusqueda = new javax.swing.JComboBox<>();
         lblLocalidades = new javax.swing.JLabel();
         cmbLocalidad = new javax.swing.JComboBox<>();
         txtCodigoPostal = new javax.swing.JTextField();
         lblCP = new javax.swing.JLabel();
+        txtPiso = new javax.swing.JTextField();
         btnSeleccionar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -136,13 +136,11 @@ public class DetalleUbicacionGUI extends JDialog {
 
         ftfLongitud.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##0.#######"))));
 
-        lblCalle.setForeground(java.awt.Color.red);
         lblCalle.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblCalle.setText("* Calle:");
+        lblCalle.setText("Calle:");
 
-        lblNumero.setForeground(java.awt.Color.red);
         lblNumero.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblNumero.setText("* Número:");
+        lblNumero.setText("Número:");
 
         lblPiso.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblPiso.setText("Piso:");
@@ -150,9 +148,7 @@ public class DetalleUbicacionGUI extends JDialog {
         lblDepartamento.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblDepartamento.setText("Departamento:");
 
-        ftfNumero.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-
-        ftfPiso.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        ftfNumero.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#"))));
 
         lblProvincia.setForeground(java.awt.Color.red);
         lblProvincia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -193,7 +189,7 @@ public class DetalleUbicacionGUI extends JDialog {
                             .addComponent(ftfNumero)
                             .addComponent(txtDepartamento)
                             .addComponent(txtDescripcion)
-                            .addComponent(ftfPiso, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addComponent(txtPiso)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDetalleUbicacionLayout.createSequentialGroup()
                         .addGroup(pnlDetalleUbicacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblLatitud)
@@ -229,9 +225,9 @@ public class DetalleUbicacionGUI extends JDialog {
                     .addComponent(lblNumero)
                     .addComponent(ftfNumero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlDetalleUbicacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(pnlDetalleUbicacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPiso)
-                    .addComponent(ftfPiso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPiso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDetalleUbicacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblDepartamento)
@@ -265,11 +261,11 @@ public class DetalleUbicacionGUI extends JDialog {
 
         pnlDetalleUbicacionLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblDescripcion, lblLatitud, lblLongitud});
 
-        pnlDetalleUbicacionLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {ftfLatitud, ftfLongitud, ftfNumero, ftfPiso, txtCalle, txtDepartamento, txtDescripcion});
+        pnlDetalleUbicacionLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {ftfLatitud, ftfLongitud, ftfNumero, txtCalle, txtDepartamento, txtDescripcion});
 
         btnSeleccionar.setForeground(java.awt.Color.blue);
         btnSeleccionar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/ArrowRight_16x16.png"))); // NOI18N
-        btnSeleccionar.setText("Continuar");
+        btnSeleccionar.setText("Guardar");
         btnSeleccionar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSeleccionarActionPerformed(evt);
@@ -305,10 +301,10 @@ public class DetalleUbicacionGUI extends JDialog {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         if (ubicacionAModificar != null) {
             txtCalle.setText(ubicacionAModificar.getCalle());
-            ftfNumero.setText(ubicacionAModificar.getNumero().toString());
-            if (ubicacionAModificar.getPiso() != null) {
-                ftfPiso.setText(ubicacionAModificar.getPiso().toString());
+            if (ubicacionAModificar.getNumero()!= null) {
+                ftfNumero.setText(ubicacionAModificar.getNumero().toString());
             }
+            txtPiso.setText(ubicacionAModificar.getPiso());
             if (ubicacionAModificar.getDepartamento() != null) {
                 txtDepartamento.setText(ubicacionAModificar.getDepartamento());
             }
@@ -330,51 +326,56 @@ public class DetalleUbicacionGUI extends JDialog {
     }//GEN-LAST:event_formWindowOpened
 
     private void btnSeleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarActionPerformed
-        
-        if (txtCalle.getText().isEmpty()) {
+        if (cmbProvinciasBusqueda.getSelectedItem() == null) {
             JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_ubicacion_calle_vacia"),
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_ubicacion_provincia_vacia"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            if (ftfNumero.getText().isEmpty()) {
+            if (cmbLocalidad.getSelectedItem() == null) {
                 JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_ubicacion_numero_vacio"),
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_ubicacion_localidad_vacia"),
                         "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                if (cmbProvinciasBusqueda.getSelectedItem() == null) {
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_ubicacion_provincia_vacia"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                if (!txtCalle.getText().isEmpty()) {
+                    ubicacionAModificar.setCalle(txtCalle.getText().trim());
                 } else {
-                    if (cmbLocalidad.getSelectedItem() == null) {
-                        JOptionPane.showMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_ubicacion_localidad_vacia"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        ubicacionAModificar.setCalle(txtCalle.getText());
-                        ubicacionAModificar.setNumero(Integer.valueOf(ftfNumero.getText()));
-                        if (!ftfPiso.getText().isEmpty() && !ftfPiso.getText().isEmpty()) {
-                            ubicacionAModificar.setPiso(Integer.valueOf(ftfPiso.getText().trim()));
-                        }
-                        ubicacionAModificar.setDepartamento(txtDepartamento.getText().trim());
-                        ubicacionAModificar.setDescripcion(txtDescripcion.getText().trim());
-                        if (!ftfLatitud.getText().isEmpty() && !ftfLatitud.getText().isEmpty()) {
-                            ubicacionAModificar.setLatitud(Double.valueOf(ftfLatitud.getText().trim()));
-                        }
-                        if (!ftfLongitud.getText().isEmpty() && !ftfLongitud.getText().isEmpty()) {
-                            ubicacionAModificar.setLongitud(Double.valueOf(ftfLongitud.getText().trim()));
-                        }
-                        ubicacionAModificar.setDescripcion(txtDescripcion.getText().trim());
-                        localidadSeleccionada = (Localidad) cmbLocalidad.getSelectedItem();
-                        if (localidadSeleccionada != null) {
-                            ubicacionAModificar.setIdLocalidad(localidadSeleccionada.getIdLocalidad());
-                            ubicacionAModificar.setNombreLocalidad(localidadSeleccionada.getNombre());
-                            ubicacionAModificar.setCodigoPostal(localidadSeleccionada.getCodigoPostal());
-                            ubicacionAModificar.setNombreProvincia(localidadSeleccionada.getNombreProvincia());
-                        }
-                        this.dispose();
-                    }
+                    ubicacionAModificar.setCalle(null);
                 }
+                if (!ftfNumero.getText().isEmpty()) {
+                    ubicacionAModificar.setNumero(Integer.valueOf(ftfNumero.getText()));
+                } else {
+                    ubicacionAModificar.setNumero(null);
+                }
+                if (!txtPiso.getText().isEmpty()) {
+                    ubicacionAModificar.setPiso(txtPiso.getText().trim());
+                } else {
+                    ubicacionAModificar.setPiso(null);
+                }
+                if (!txtDepartamento.getText().isEmpty()) {
+                    ubicacionAModificar.setDepartamento(txtDepartamento.getText().trim());
+                } else {
+                    ubicacionAModificar.setDepartamento(null);
+                }
+                if (!txtDescripcion.getText().isEmpty()) {
+                    ubicacionAModificar.setDescripcion(txtDescripcion.getText().trim());
+                } else {
+                    ubicacionAModificar.setDescripcion(null);
+                }
+                if (!ftfLatitud.getText().isEmpty()) {
+                    ubicacionAModificar.setLatitud(Double.valueOf(ftfLatitud.getText().trim()));
+                }
+                if (!ftfLongitud.getText().isEmpty()) {
+                    ubicacionAModificar.setLongitud(Double.valueOf(ftfLongitud.getText().trim()));
+                }
+                ubicacionAModificar.setDescripcion(txtDescripcion.getText().trim());
+                localidadSeleccionada = (Localidad) cmbLocalidad.getSelectedItem();
+                if (localidadSeleccionada != null) {
+                    ubicacionAModificar.setIdLocalidad(localidadSeleccionada.getIdLocalidad());
+                    ubicacionAModificar.setNombreLocalidad(localidadSeleccionada.getNombre());
+                    ubicacionAModificar.setCodigoPostal(localidadSeleccionada.getCodigoPostal());
+                    ubicacionAModificar.setNombreProvincia(localidadSeleccionada.getNombreProvincia());
+                }
+                this.dispose();
             }
         }
     }//GEN-LAST:event_btnSeleccionarActionPerformed
@@ -397,7 +398,6 @@ public class DetalleUbicacionGUI extends JDialog {
     private javax.swing.JFormattedTextField ftfLatitud;
     private javax.swing.JFormattedTextField ftfLongitud;
     private javax.swing.JFormattedTextField ftfNumero;
-    private javax.swing.JFormattedTextField ftfPiso;
     private javax.swing.JLabel lblCP;
     private javax.swing.JLabel lblCalle;
     private javax.swing.JLabel lblDepartamento;
@@ -413,5 +413,6 @@ public class DetalleUbicacionGUI extends JDialog {
     private javax.swing.JTextField txtCodigoPostal;
     private javax.swing.JTextField txtDepartamento;
     private javax.swing.JTextField txtDescripcion;
+    private javax.swing.JTextField txtPiso;
     // End of variables declaration//GEN-END:variables
 }
