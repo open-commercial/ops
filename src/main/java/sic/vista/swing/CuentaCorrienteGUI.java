@@ -947,33 +947,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 boolean refrescar = false;
                 try {
                     switch (renglonCC.getTipoComprobante()) {
-                        case FACTURA_A:
-                        case FACTURA_B:
-                        case FACTURA_C:
-                        case FACTURA_X:
-                        case FACTURA_Y:
-                        case PRESUPUESTO: {
-                            JOptionPane.showInternalMessageDialog(this,
-                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
-                                    "Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                        break;
                         case RECIBO: {
                             RestClient.getRestTemplate().delete("/recibos/" + renglonCC.getIdMovimiento());
-                            refrescar = true;
-                        }
-                        break;
-                        case NOTA_CREDITO_A:
-                        case NOTA_CREDITO_B:
-                        case NOTA_CREDITO_PRESUPUESTO:
-                        case NOTA_CREDITO_X:
-                        case NOTA_CREDITO_Y:
-                        case NOTA_DEBITO_A:
-                        case NOTA_DEBITO_B:
-                        case NOTA_DEBITO_PRESUPUESTO:
-                        case NOTA_DEBITO_X:
-                        case NOTA_DEBITO_Y: {
-                            RestClient.getRestTemplate().delete("/notas?idsNota=" + renglonCC.getIdMovimiento());
                             refrescar = true;
                         }
                         break;
