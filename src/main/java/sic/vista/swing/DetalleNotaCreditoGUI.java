@@ -187,7 +187,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
 
     private void cargarDetalleCliente() {
         txtNombre.setText(((FacturaVenta) factura).getNombreFiscalCliente() + " (" + cliente.getNroCliente() + ")");
-        txtUbicacion.setText(cliente.getDetalleUbicacionFacturacion());
+        txtUbicacion.setText(cliente.getUbicacionFacturacion().toString());
         if (cliente.getIdFiscal() != null) {
             txtIdFiscal.setText(cliente.getIdFiscal().toString());
         }

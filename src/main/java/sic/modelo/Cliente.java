@@ -24,15 +24,13 @@ public class Cliente implements Serializable {
     private Long idEmpresa;
     private String nombreEmpresa;    
     private Long idViajante;
-    private String nombreViajante;    
+    private String nombreViajante;
     private Long idCredencial;
-    private String nombreCredencial;    
+    private String nombreCredencial;
     private boolean predeterminado;
-    private Long idUbicacionFacturacion;
-    private String detalleUbicacionFacturacion;
-    private Long idUbicacionEnvio;
-    private String detalleUbicacionEnvio;
-
+    private Ubicacion ubicacionFacturacion;
+    private Ubicacion ubicacionEnvio;
+  
     @Override
     public String toString() {
         return nombreFiscal;

@@ -129,7 +129,7 @@ public class BuscarClientesGUI extends JDialog {
             fila[1] = cliente.getIdFiscal();
             fila[2] = cliente.getNombreFiscal();
             fila[3] = cliente.getNombreFantasia();
-            fila[4] = cliente.getDetalleUbicacionFacturacion();
+            fila[4] = cliente.getUbicacionFacturacion().toString();
             return fila;
         }).forEachOrdered(fila -> {
             modeloTablaResultados.addRow(fila);

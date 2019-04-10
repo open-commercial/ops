@@ -186,7 +186,7 @@ public class ClientesGUI extends JInternalFrame {
             fila[12] = c.getCliente().getContacto();
             fila[13] = c.getCliente().getEmail();
             fila[14] = c.getCliente().getFechaAlta();
-            fila[15] = c.getCliente().getDetalleUbicacionFacturacion();
+            fila[15] = c.getCliente().getUbicacionFacturacion().toString();
             return fila;
         }).forEach(fila -> {
             modeloTablaDeResultados.addRow(fila);

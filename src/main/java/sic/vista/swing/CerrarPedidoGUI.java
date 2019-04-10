@@ -231,13 +231,13 @@ public class CerrarPedidoGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {
-            if (this.cliente.getIdUbicacionEnvio() != null) {
-                lblDetalleUbicacionEnvio.setText(this.cliente.getDetalleUbicacionEnvio());
+            if (this.cliente.getUbicacionEnvio() != null) {
+                lblDetalleUbicacionEnvio.setText(this.cliente.getUbicacionEnvio().toString());
             } else {
                 rbDireccionEnvio.setEnabled(false);
             }
-            if (this.cliente.getIdUbicacionFacturacion() != null) {
-                lblDetalleUbicacionFacturacion.setText(this.cliente.getDetalleUbicacionFacturacion());
+            if (this.cliente.getUbicacionFacturacion() != null) {
+                lblDetalleUbicacionFacturacion.setText(this.cliente.getUbicacionFacturacion().toString());
             } else {
                 rbDireccionFacturacion.setEnabled(false);
             }
@@ -306,8 +306,8 @@ public class CerrarPedidoGUI extends JDialog {
         lblDetalleUbicacionEnvio.setEnabled(!rbDireccionFacturacion.isSelected());
         lblDetalleUbicacionFacturacion.setEnabled(rbDireccionFacturacion.isSelected());
         if (rbDireccionFacturacion.isSelected()) {
-            if (this.cliente.getDetalleUbicacionFacturacion() != null) {
-                lblDetalleUbicacionFacturacion.setText(this.cliente.getDetalleUbicacionFacturacion());
+            if (this.cliente.getUbicacionFacturacion() != null) {
+                lblDetalleUbicacionFacturacion.setText(this.cliente.getUbicacionFacturacion().toString());
             }
         }
     }//GEN-LAST:event_rbDireccionFacturacionItemStateChanged
@@ -322,8 +322,8 @@ public class CerrarPedidoGUI extends JDialog {
         cmbEmpresas.setEnabled(!rbDireccionEnvio.isSelected());
         lblDetalleUbicacionEnvio.setEnabled(rbDireccionEnvio.isSelected());
         lblDetalleUbicacionFacturacion.setEnabled(!rbDireccionEnvio.isSelected());
-        if (this.cliente.getDetalleUbicacionEnvio() != null) {
-            lblDetalleUbicacionEnvio.setText(this.cliente.getDetalleUbicacionEnvio());
+        if (this.cliente.getUbicacionEnvio() != null) {
+            lblDetalleUbicacionEnvio.setText(this.cliente.getUbicacionEnvio().toString());
         }
     }//GEN-LAST:event_rbDireccionEnvioItemStateChanged
 

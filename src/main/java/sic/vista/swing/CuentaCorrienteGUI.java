@@ -257,7 +257,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         String nombreCliente = cliente.getNombreFiscal() + " (" + cliente.getNroCliente() + ")";
         this.setTitle("Cuenta Corriente del Cliente: " + nombreCliente);
         txtNombreCliente.setText(nombreCliente);        
-        txtUbicacion.setText(cliente.getDetalleUbicacionFacturacion());
+        txtUbicacion.setText(cliente.getUbicacionFacturacion().toString());
         if (cliente.getIdFiscal() != null) {
             txtIDFiscalCliente.setText(cliente.getIdFiscal().toString());
         }
