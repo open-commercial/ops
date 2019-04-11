@@ -814,8 +814,8 @@ public class RecibosVentaGUI extends JInternalFrame {
                     "Eliminar", JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
                 try {
-                    RestClient.getRestTemplate().delete("/recibos?idRecibo="
-                            + recibosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)));
+                    RestClient.getRestTemplate().delete("/recibos/"
+                            + recibosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getIdRecibo());
                     this.limpiarYBuscar();
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

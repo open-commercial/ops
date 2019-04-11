@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -318,7 +317,6 @@ public class FacturasVentaGUI extends JInternalFrame {
         }
         btn_Buscar.setEnabled(status);
         btn_Nueva.setEnabled(status);
-        btn_Eliminar.setEnabled(status);
         btn_VerDetalle.setEnabled(status);
         btn_Autorizar.setEnabled(status);
         tbl_Resultados.setEnabled(status);
@@ -443,11 +441,6 @@ public class FacturasVentaGUI extends JInternalFrame {
 
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
-        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
-            btn_Eliminar.setEnabled(true);
-        } else {
-            btn_Eliminar.setEnabled(false);
-        }
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
             txt_ResultGananciaTotal.setVisible(true);
@@ -483,7 +476,6 @@ public class FacturasVentaGUI extends JInternalFrame {
         sp_Resultados = new javax.swing.JScrollPane();
         tbl_Resultados = new javax.swing.JTable();
         btn_VerDetalle = new javax.swing.JButton();
-        btn_Eliminar = new javax.swing.JButton();
         panelNumeros = new javax.swing.JPanel();
         lbl_TotalFacturado = new javax.swing.JLabel();
         lbl_GananciaTotal = new javax.swing.JLabel();
@@ -571,15 +563,6 @@ public class FacturasVentaGUI extends JInternalFrame {
             }
         });
 
-        btn_Eliminar.setForeground(java.awt.Color.blue);
-        btn_Eliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Cancel_16x16.png"))); // NOI18N
-        btn_Eliminar.setText("Eliminar ");
-        btn_Eliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_EliminarActionPerformed(evt);
-            }
-        });
-
         lbl_TotalFacturado.setText("Total Facturado:");
 
         lbl_GananciaTotal.setText("Ganancia Total:");
@@ -662,8 +645,6 @@ public class FacturasVentaGUI extends JInternalFrame {
             .addGroup(panelResultadosLayout.createSequentialGroup()
                 .addComponent(btn_Nueva, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
-                .addComponent(btn_Eliminar)
-                .addGap(0, 0, 0)
                 .addComponent(btn_Autorizar)
                 .addGap(0, 0, 0)
                 .addComponent(btn_VerDetalle)
@@ -674,7 +655,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             .addComponent(sp_Resultados)
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Autorizar, btn_Eliminar, btn_Nueva, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Autorizar, btn_Nueva, btn_VerDetalle});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -685,14 +666,13 @@ public class FacturasVentaGUI extends JInternalFrame {
                     .addComponent(panelNumeros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(btn_Nueva)
-                        .addComponent(btn_Eliminar)
                         .addComponent(btn_Autorizar)
                         .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btn_VerDetalle)
                             .addComponent(btnCrearNotaCredito)))))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaCredito, btn_Autorizar, btn_Eliminar, btn_Nueva, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaCredito, btn_Autorizar, btn_Nueva, btn_VerDetalle});
 
         panelFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
 
@@ -796,9 +776,7 @@ public class FacturasVentaGUI extends JInternalFrame {
                         .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnBuscarUsuarios)
                             .addComponent(btnBuscarProductos)
-                            .addGroup(subPanelFiltros1Layout.createSequentialGroup()
-                                .addGap(0, 0, 0)
-                                .addComponent(btnBuscarViajantes))))
+                            .addComponent(btnBuscarViajantes)))
                     .addGroup(subPanelFiltros1Layout.createSequentialGroup()
                         .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
@@ -1103,35 +1081,6 @@ public class FacturasVentaGUI extends JInternalFrame {
         }
 }//GEN-LAST:event_btn_VerDetalleActionPerformed
 
-    private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1) {
-            int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
-                    .getString("mensaje_eliminar_multiples_facturas"),
-                    "Eliminar", JOptionPane.YES_NO_OPTION);
-            if (respuesta == JOptionPane.YES_OPTION) {
-                int[] indexFilasSeleccionadas = Utilidades.getSelectedRowsModelIndices(tbl_Resultados);
-                long[] idsFacturas = new long[indexFilasSeleccionadas.length];
-                int i = 0;
-                for (int indice : indexFilasSeleccionadas) {
-                    idsFacturas[i] = facturasTotal.get(indice).getId_Factura();
-                    i++;
-                }
-                try {
-                    RestClient.getRestTemplate().delete("/facturas?idFactura="
-                            + Arrays.toString(idsFacturas).substring(1, Arrays.toString(idsFacturas).length() - 1));
-                    this.limpiarYBuscar(true);
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }
-}//GEN-LAST:event_btn_EliminarActionPerformed
-
     private void chk_NumFacturaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_NumFacturaItemStateChanged
         if (chk_NumFactura.isSelected() == true) {
             txt_NroFactura.setEnabled(true);
@@ -1397,7 +1346,6 @@ public class FacturasVentaGUI extends JInternalFrame {
     private javax.swing.JButton btnCrearNotaCredito;
     private javax.swing.JButton btn_Autorizar;
     private javax.swing.JButton btn_Buscar;
-    private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_Nueva;
     private javax.swing.JButton btn_VerDetalle;
     private javax.swing.JCheckBox chk_Cliente;
