@@ -487,8 +487,6 @@ public class DetalleClienteGUI extends JDialog {
 
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
         try {
-            String idViajante = "";
-            String idCredencial = "";
             cliente.setIdFiscal((Long) txtIdFiscal.getValue());
             cliente.setNombreFiscal(txtNombreFiscal.getText().trim());
             cliente.setNombreFantasia(txtNombreFantasia.getText().trim());
@@ -497,45 +495,31 @@ public class DetalleClienteGUI extends JDialog {
             cliente.setTelefono(txtTelefono.getText().trim());
             cliente.setContacto(txtContacto.getText().trim());
             cliente.setEmail(txtEmail.getText().trim());
+            cliente.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
             if (cmbViajante.getSelectedItem() != null) {
-                idViajante = String.valueOf(
-                        ((Usuario) cmbViajante.getSelectedItem()).getId_Usuario());
+                cliente.setIdViajante(((Usuario) cmbViajante.getSelectedItem()).getId_Usuario());
             }
             if (cmbCredencial.getSelectedItem() != null) {
-                idCredencial = String.valueOf(
-                        ((Usuario) cmbCredencial.getSelectedItem()).getId_Usuario());
+                cliente.setIdCredencial(((Usuario) cmbCredencial.getSelectedItem()).getId_Usuario());
+            }
+            if (this.ubicacionDeFacturacion != null) {
+                cliente.setUbicacionFacturacion(this.ubicacionDeFacturacion);
+            }
+            if (this.ubicacionDeEnvio != null) {
+                cliente.setUbicacionEnvio(this.ubicacionDeEnvio);
             }
             if (operacion == TipoDeOperacion.ALTA) {
-                if (this.ubicacionDeFacturacion != null) {
-                    cliente.setUbicacionFacturacion(this.ubicacionDeFacturacion);
-                }
-                if (this.ubicacionDeEnvio != null) {
-                    cliente.setUbicacionEnvio(this.ubicacionDeEnvio);
-                }
                 cliente = RestClient.getRestTemplate().postForObject(
-                        "/clientes?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "&idViajante=" + idViajante
-                        + "&idCredencial=" + idCredencial,
+                        "/clientes",
                         cliente, Cliente.class);
                 JOptionPane.showMessageDialog(this, "El Cliente se guardó correctamente!",
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);
             }
             if (operacion == TipoDeOperacion.ACTUALIZACION) {
+                cliente.setUbicacionFacturacion(null);
                 RestClient.getRestTemplate().put(
-                        "/clientes?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "&idViajante=" + idViajante
-                        + "&idCredencial=" + idCredencial,
+                        "/clientes",
                         cliente);
-                if (cliente.getUbicacionFacturacion() == null && this.ubicacionDeFacturacion != null) { //revisar
-                    RestClient.getRestTemplate().postForObject("/ubicaciones/clientes/" + cliente.getId_Cliente() + "/facturacion", this.ubicacionDeFacturacion, Ubicacion.class);
-                } else if (cliente.getUbicacionFacturacion() != null && this.ubicacionDeFacturacion != null) {
-                    RestClient.getRestTemplate().put("/ubicaciones", this.ubicacionDeFacturacion);
-                }
-                if (cliente.getUbicacionEnvio() == null && this.ubicacionDeEnvio != null) {
-                    RestClient.getRestTemplate().postForObject("/ubicaciones/clientes/" + cliente.getId_Cliente() + "/envio", this.ubicacionDeEnvio, Ubicacion.class);
-                } else if (cliente.getUbicacionEnvio() != null && this.ubicacionDeEnvio != null) {
-                    RestClient.getRestTemplate().put("/ubicaciones", this.ubicacionDeEnvio);
-                }
                 JOptionPane.showMessageDialog(this, "El Cliente se modificó correctamente!",
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -637,23 +621,7 @@ public class DetalleClienteGUI extends JDialog {
         guiDetalleUbicacion.setVisible(true);
         if (guiDetalleUbicacion.getUbicacionModificada() != null) {
             this.ubicacionDeFacturacion = guiDetalleUbicacion.getUbicacionModificada();
-            lblDetalleUbicacionFacturacion.setText(
-                    (this.ubicacionDeFacturacion.getCalle() != null
-                    ? this.ubicacionDeFacturacion.getCalle() + " " : "")
-                    + (this.ubicacionDeFacturacion.getNumero() != null
-                    ? this.ubicacionDeFacturacion.getNumero() + " " : "")
-                    + (this.ubicacionDeFacturacion.getPiso() != null
-                    ? this.ubicacionDeFacturacion.getPiso() + " "
-                    : "")
-                    + (this.ubicacionDeFacturacion.getDepartamento() != null
-                    ? this.ubicacionDeFacturacion.getDepartamento() + " "
-                    : "")
-                    + (this.ubicacionDeFacturacion.getNombreLocalidad() != null
-                    ? this.ubicacionDeFacturacion.getNombreLocalidad() + " "
-                    : "")
-                    + (this.ubicacionDeFacturacion.getNombreProvincia() != null
-                    ? this.ubicacionDeFacturacion.getNombreProvincia()
-                    : ""));
+            lblDetalleUbicacionFacturacion.setText(this.ubicacionDeFacturacion.toString());
         }
     }//GEN-LAST:event_btnUbicacionFacturacionActionPerformed
 
@@ -664,22 +632,7 @@ public class DetalleClienteGUI extends JDialog {
         guiDetalleUbicacion.setVisible(true);
         if (guiDetalleUbicacion.getUbicacionModificada() != null) {
             this.ubicacionDeEnvio = guiDetalleUbicacion.getUbicacionModificada();
-            lblDetalleUbicacionEnvio.setText(this.ubicacionDeEnvio.getCalle()
-                    + " "
-                    + this.ubicacionDeEnvio.getNumero()
-                    + (this.ubicacionDeEnvio.getPiso() != null
-                    ? ", " + this.ubicacionDeEnvio.getPiso() + " "
-                    : " ")
-                    + (this.ubicacionDeEnvio.getDepartamento() != null
-                    ? this.ubicacionDeEnvio.getDepartamento()
-                    : "")
-                    + (this.ubicacionDeEnvio.getNombreLocalidad() != null
-                    ? ", " + this.ubicacionDeEnvio.getNombreLocalidad()
-                    : " ")
-                    + " "
-                    + (this.ubicacionDeEnvio.getNombreProvincia() != null
-                    ? this.ubicacionDeEnvio.getNombreProvincia()
-                    : " "));
+            lblDetalleUbicacionEnvio.setText(this.ubicacionDeEnvio.toString());
         }
     }//GEN-LAST:event_btnUbicacionEnvioActionPerformed
 
