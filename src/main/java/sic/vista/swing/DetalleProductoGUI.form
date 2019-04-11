@@ -142,7 +142,7 @@
                               <Component id="txt_Codigo" max="32767" attributes="2"/>
                               <Component id="txt_Descripcion" alignment="0" max="32767" attributes="2"/>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="txtProveedor" pref="373" max="32767" attributes="0"/>
+                                  <Component id="txtProveedor" pref="386" max="32767" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Component id="btnBuscarProveedor" linkSize="16" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
@@ -648,7 +648,7 @@
                       <Component id="panel5" min="-2" max="-2" attributes="1"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="panel6" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="285" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="296" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -666,26 +666,32 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="lblDestacado" max="32767" attributes="0"/>
                               <Component id="lbl_Estante" alignment="0" max="32767" attributes="1"/>
                               <Component id="lblPublico" alignment="0" max="32767" attributes="0"/>
                               <Component id="lbl_Estanteria" alignment="0" max="32767" attributes="1"/>
                               <Component id="lbl_Ven" alignment="0" max="32767" attributes="1"/>
-                              <Component id="lbl_Nota" min="-2" pref="142" max="-2" attributes="1"/>
+                              <Component id="lbl_Nota" alignment="0" pref="142" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="txt_Estanteria" alignment="0" max="32767" attributes="3"/>
                               <Component id="dc_Vencimiento" max="32767" attributes="1"/>
+                              <Component id="txt_Estante" alignment="0" max="32767" attributes="3"/>
+                              <Component id="jScrollPane1" alignment="0" pref="466" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
-                                  <Component id="rbPublico" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="rbPrivado" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="rbPublico" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                                          <Component id="rbPrivado" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="chkDestacado" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
-                              <Component id="txt_Estante" alignment="0" max="32767" attributes="3"/>
-                              <Component id="jScrollPane1" alignment="0" pref="453" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -695,10 +701,15 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblPublico" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="rbPublico" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="rbPrivado" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="lblPublico" linkSize="17" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="rbPublico" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="rbPrivado" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="chkDestacado" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblDestacado" linkSize="17" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
@@ -796,6 +807,20 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="Privado"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbPrivadoActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblDestacado">
+                  <Properties>
+                    <Property name="horizontalAlignment" type="int" value="4"/>
+                    <Property name="text" type="java.lang.String" value="Destacado:"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="chkDestacado">
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chkDestacadoActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -839,7 +864,7 @@
                               <Component id="lbl_FA" alignment="2" min="-2" max="-2" attributes="1"/>
                               <Component id="lbl_FechaAlta" alignment="2" min="-2" pref="23" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="8" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
