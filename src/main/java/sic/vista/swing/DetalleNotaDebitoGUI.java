@@ -102,8 +102,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
 
     private void cargarDetalleProveedor() {
         txtNombre.setText(proveedor.getRazonSocial());
-        if (proveedor.getIdUbicacion()!= null) {
-            txtUbicacion.setText(proveedor.getDetalleUbicacion());
+        if (proveedor.getUbicacion() != null) {
+            txtUbicacion.setText(proveedor.getUbicacion().toString());
         }
         if (proveedor.getIdFiscal() != null) {
             txtIdFiscal.setText(proveedor.getIdFiscal().toString());
@@ -233,8 +233,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
             txtNombre.setText(proveedorDeNota.getRazonSocial());
             cmbDescripcionRenglon2.removeAllItems();
             cmbDescripcionRenglon2.addItem(notaDebito.getMotivo());
-            if (proveedorDeNota.getIdUbicacion() != null) {
-                txtUbicacion.setText(proveedorDeNota.getDetalleUbicacion());
+            if (proveedorDeNota.getUbicacion() != null) {
+                txtUbicacion.setText(proveedorDeNota.getUbicacion().toString());
             }
             txtCondicionIVA.setText(proveedorDeNota.getCategoriaIVA().toString());
             if (proveedorDeNota.getIdFiscal() != null) {

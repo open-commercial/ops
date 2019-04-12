@@ -130,7 +130,7 @@ public class BuscarProveedoresGUI extends JDialog {
             fila[0] = proveedor.getCodigo();
             fila[1] = proveedor.getIdFiscal();
             fila[2] = proveedor.getRazonSocial();
-            fila[3] = proveedor.getDetalleUbicacion();            
+            fila[3] = proveedor.getUbicacion();            
             return fila;
         }).forEachOrdered(fila -> {
             modeloTablaResultados.addRow(fila);

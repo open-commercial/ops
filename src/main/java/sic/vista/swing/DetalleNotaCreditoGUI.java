@@ -204,8 +204,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
 
     private void cargarDetalleProveedor() {
         txtNombre.setText(((FacturaCompra) factura).getRazonSocialProveedor());
-        if (proveedor.getIdUbicacion()!= null) {
-            txtUbicacion.setText(proveedor.getDetalleUbicacion());
+        if (proveedor.getUbicacion() != null) {
+            txtUbicacion.setText(proveedor.getUbicacion().toString());
         }
         if (proveedor.getIdFiscal() != null) {
             txtIdFiscal.setText(proveedor.getIdFiscal().toString());
@@ -217,8 +217,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
         Proveedor proveedorDeNota = RestClient.getRestTemplate()
                 .getForObject("/proveedores/" + notaCredito.getIdProveedor(), Proveedor.class);
         txtNombre.setText(proveedorDeNota.getRazonSocial());
-        if (proveedorDeNota.getIdUbicacion() != null) {
-            txtUbicacion.setText(proveedorDeNota.getDetalleUbicacion());
+        if (proveedorDeNota.getUbicacion() != null) {
+            txtUbicacion.setText(proveedorDeNota.getUbicacion().toString());
         }
         if (proveedorDeNota.getIdFiscal() != null) {
             txtIdFiscal.setText(proveedorDeNota.getIdFiscal().toString());
