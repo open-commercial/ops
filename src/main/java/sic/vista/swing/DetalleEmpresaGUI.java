@@ -68,18 +68,9 @@ public class DetalleEmpresaGUI extends JDialog {
         dc_FechaInicioActividad.setDate(empresaModificar.getFechaInicioActividad());
         txt_Email.setText(empresaModificar.getEmail());
         txt_Telefono.setText(empresaModificar.getTelefono());
-        if (empresaModificar.getIdUbicacion() != null) {
-            lblDetalleUbicacionEmpresa.setText(empresaModificar.getDetalleUbicacion());
-            try {
-                this.ubicacion = RestClient.getRestTemplate().getForObject("/ubicaciones/" + empresaModificar.getIdUbicacion(), Ubicacion.class);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
+        if (empresaModificar.getUbicacion() != null) {
+            lblDetalleUbicacionEmpresa.setText(empresaModificar.getUbicacion().toString());
+            this.ubicacion = empresaModificar.getUbicacion();
         } 
         if (empresaModificar.getLogo() == null || "".equals(empresaModificar.getLogo())) {
             lbl_Logo.setText("SIN IMAGEN");
@@ -382,11 +373,11 @@ public class DetalleEmpresaGUI extends JDialog {
                 empresa.setIngresosBrutos((Long) txtIngresosBrutos.getValue());
                 empresa.setFechaInicioActividad(dc_FechaInicioActividad.getDate());
                 empresa.setEmail(txt_Email.getText().trim());
-                empresa.setTelefono(txt_Telefono.getText().trim());               
-                empresa = RestClient.getRestTemplate().postForObject("/empresas", empresa, Empresa.class);            
+                empresa.setTelefono(txt_Telefono.getText().trim());    
                 if (this.ubicacion != null) {
-                    RestClient.getRestTemplate().postForObject("/ubicaciones/empresas/" + empresa.getId_Empresa(), this.ubicacion, Ubicacion.class);
+                    empresa.setUbicacion(this.ubicacion);
                 }
+                empresa = RestClient.getRestTemplate().postForObject("/empresas", empresa, Empresa.class);            
                 mensaje = "La Empresa " + txt_Nombre.getText().trim() + " se guardó correctamente.";
                 if (logo == null) {
                     empresa.setLogo("");
@@ -406,6 +397,9 @@ public class DetalleEmpresaGUI extends JDialog {
                 empresaModificar.setFechaInicioActividad(dc_FechaInicioActividad.getDate());
                 empresaModificar.setEmail(txt_Email.getText().trim());
                 empresaModificar.setTelefono(txt_Telefono.getText().trim());
+                if (this.ubicacion != null) {
+                    empresaModificar.setUbicacion(this.ubicacion);
+                }
                 if (cambioLogo && logo != null) {
                     empresaModificar.setLogo(RestClient.getRestTemplate()
                             .postForObject("/empresas/" + empresaModificar.getId_Empresa() + "/logo", logo, String.class));
@@ -413,11 +407,6 @@ public class DetalleEmpresaGUI extends JDialog {
                     empresaModificar.setLogo(null);
                 }
                 RestClient.getRestTemplate().put("/empresas", empresaModificar);
-                if (empresaModificar.getIdUbicacion() == null && this.ubicacion != null) {
-                    RestClient.getRestTemplate().postForObject("/ubicaciones/empresas/" + empresaModificar.getId_Empresa(), this.ubicacion, Ubicacion.class);
-                } else if (empresaModificar.getIdUbicacion() != null && this.ubicacion != null) {
-                    RestClient.getRestTemplate().put("/ubicaciones", this.ubicacion);
-                }
                 mensaje = "La Empresa " + txt_Nombre.getText().trim() + " se modificó correctamente.";
             }
             LOGGER.warn(mensaje);

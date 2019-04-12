@@ -81,7 +81,7 @@ public class CerrarPedidoGUI extends JDialog {
         try {
             empresas = Arrays.asList(RestClient.getRestTemplate().getForObject("/empresas", Empresa[].class));
             empresas.stream().forEach(e -> {
-                cmbEmpresas.addItem(e.getNombre() + ((e.getDetalleUbicacion() != null) ? (" (" + e.getDetalleUbicacion() + ")") : ""));
+                cmbEmpresas.addItem(e.getNombre() + ((e.getUbicacion() != null) ? (" (" + e.getUbicacion() + ")") : ""));
             });
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
