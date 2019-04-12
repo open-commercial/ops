@@ -51,17 +51,7 @@ public class DetalleProveedorGUI extends JDialog {
         cmbCategoriaIVA.setSelectedItem(proveedorModificar.getCategoriaIVA());
         if (proveedorModificar.getUbicacion() != null) {
             lblDetalleUbicacionProveedor.setText(proveedorModificar.getUbicacion().toString());
-            this.ubicacion = null;
-            try {
-                this.ubicacion = RestClient.getRestTemplate().getForObject("/ubicaciones/" + proveedorModificar.getUbicacion().getIdUbicacion(), Ubicacion.class);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            this.ubicacion = proveedorModificar.getUbicacion();
         }
         txtTelPrimario.setText(proveedorModificar.getTelPrimario());
         txtTelSecundario.setText(proveedorModificar.getTelSecundario());
