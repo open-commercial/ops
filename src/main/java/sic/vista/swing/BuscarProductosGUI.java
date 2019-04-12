@@ -364,7 +364,7 @@ public class BuscarProductosGUI extends JDialog {
         });
 
         btnBuscar.setForeground(java.awt.Color.blue);
-        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/22x22_LupaBuscar.png"))); // NOI18N
+        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Refresh_16x16.png"))); // NOI18N
         btnBuscar.setFocusable(false);
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

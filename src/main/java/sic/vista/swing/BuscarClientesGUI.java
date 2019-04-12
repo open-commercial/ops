@@ -206,7 +206,7 @@ public class BuscarClientesGUI extends JDialog {
         });
 
         btnBuscar.setForeground(java.awt.Color.blue);
-        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/22x22_LupaBuscar.png"))); // NOI18N
+        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Refresh_16x16.png"))); // NOI18N
         btnBuscar.setFocusable(false);
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -254,13 +254,12 @@ public class BuscarClientesGUI extends JDialog {
                 .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(sp_Resultados, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 797, Short.MAX_VALUE)
                     .addGroup(panelFondoLayout.createSequentialGroup()
-                        .addComponent(txtCriteriaBusqueda)
-                        .addGap(55, 55, 55))
-                    .addGroup(panelFondoLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnBuscar)
-                            .addComponent(btnAceptar))))
+                        .addComponent(btnAceptar))
+                    .addGroup(panelFondoLayout.createSequentialGroup()
+                        .addComponent(txtCriteriaBusqueda)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnBuscar)))
                 .addContainerGap())
         );
         panelFondoLayout.setVerticalGroup(
@@ -271,7 +270,7 @@ public class BuscarClientesGUI extends JDialog {
                     .addComponent(txtCriteriaBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnAceptar)
                 .addContainerGap())
