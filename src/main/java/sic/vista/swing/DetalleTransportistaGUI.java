@@ -121,9 +121,9 @@ public class DetalleTransportistaGUI extends JDialog {
                         .addComponent(lblDetalleUbicacionTransportista, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnUbicacion))
-                    .addComponent(txt_Nombre, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txt_Web, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txt_Telefono))
+                    .addComponent(txt_Nombre, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_Web, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_Telefono, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         panelPrincipalLayout.setVerticalGroup(

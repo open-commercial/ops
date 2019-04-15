@@ -27,15 +27,18 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="472" max="-2" attributes="0"/>
-              <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
-          </Group>
           <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="panelPrincipal" max="32767" attributes="1"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="472" max="-2" attributes="0"/>
+                      <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="panelPrincipal" min="-2" max="-2" attributes="1"/>
+                  </Group>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -78,7 +81,7 @@
                       <Component id="lbl_FIA" alignment="1" max="32767" attributes="0"/>
                       <Component id="lblUbicacion" min="-2" pref="132" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="lbl_Logo" min="-2" pref="180" max="-2" attributes="0"/>
@@ -89,23 +92,29 @@
                               <Component id="lblTamanioMax" min="-2" max="-2" attributes="0"/>
                               <Component id="lblAspectRatio" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
-                      <Component id="txt_Nombre" alignment="1" max="32767" attributes="1"/>
-                      <Component id="txt_Lema" alignment="1" max="32767" attributes="1"/>
                       <Group type="102" alignment="1" attributes="0">
-                          <Component id="lblDetalleUbicacionEmpresa" max="32767" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                          <Component id="lblDetalleUbicacionEmpresa" min="-2" pref="376" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           <Component id="btnUbicacion" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="txt_Direccion" alignment="1" max="32767" attributes="1"/>
-                      <Component id="cmbCategoriaIVA" alignment="1" max="32767" attributes="0"/>
-                      <Component id="txtIdFiscal" alignment="1" max="32767" attributes="0"/>
-                      <Component id="txtIngresosBrutos" alignment="1" max="32767" attributes="0"/>
-                      <Component id="dc_FechaInicioActividad" alignment="1" max="32767" attributes="0"/>
-                      <Component id="txt_Email" alignment="1" max="32767" attributes="0"/>
-                      <Component id="txt_Telefono" alignment="0" max="32767" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="txt_Nombre" alignment="1" pref="428" max="32767" attributes="1"/>
+                              <Component id="txt_Lema" alignment="1" pref="428" max="32767" attributes="1"/>
+                              <Component id="txt_Direccion" alignment="1" pref="428" max="32767" attributes="1"/>
+                              <Component id="cmbCategoriaIVA" alignment="1" pref="428" max="32767" attributes="0"/>
+                              <Component id="txtIdFiscal" alignment="1" pref="428" max="32767" attributes="0"/>
+                              <Component id="txtIngresosBrutos" alignment="1" pref="428" max="32767" attributes="0"/>
+                              <Component id="dc_FechaInicioActividad" alignment="1" pref="428" max="32767" attributes="0"/>
+                              <Component id="txt_Email" alignment="1" pref="428" max="32767" attributes="0"/>
+                              <Component id="txt_Telefono" alignment="1" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

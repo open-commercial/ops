@@ -117,34 +117,34 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtContacto" alignment="1" max="32767" attributes="2"/>
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="cmbViajante" max="32767" attributes="1"/>
-                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                  <Component id="cmbViajante" min="-2" pref="354" max="-2" attributes="1"/>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   <Component id="btnBuscarUsuarioViajante" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Component id="btnNuevoUsuarioViajante" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="lblDetalleUbicacionFacturacion" min="-2" pref="400" max="-2" attributes="0"/>
-                                      <Component id="lblDetalleUbicacionEnvio" min="-2" pref="400" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="cmbCredencial" min="-2" pref="354" max="-2" attributes="1"/>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  <Component id="btnBuscarCredencial" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                  <Component id="btnNuevaCredencial" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="lblDetalleUbicacionEnvio" min="-2" pref="400" max="-2" attributes="0"/>
+                                      <Component id="lblDetalleUbicacionFacturacion" alignment="0" min="-2" pref="400" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="btnUbicacionFacturacion" alignment="1" min="-2" max="-2" attributes="0"/>
                                       <Component id="btnUbicacionEnvio" alignment="1" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <Component id="txtEmail" alignment="1" max="32767" attributes="2"/>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="cmbCredencial" max="32767" attributes="1"/>
-                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                                  <Component id="btnBuscarCredencial" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                                  <Component id="btnNuevaCredencial" min="-2" max="-2" attributes="0"/>
-                              </Group>
                               <Component id="txtTelefono" alignment="0" max="32767" attributes="2"/>
+                              <Component id="txtContacto" max="32767" attributes="2"/>
+                              <Component id="txtEmail" alignment="0" max="32767" attributes="2"/>
                           </Group>
                       </Group>
                   </Group>
@@ -205,14 +205,14 @@
                       <Component id="lblTelefono" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lblContacto" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtContacto" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblContacto" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtContacto" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lblEmail" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtEmail" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblEmail" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtEmail" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
