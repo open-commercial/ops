@@ -148,11 +148,13 @@ public class DetalleUbicacionGUI extends JDialog {
         lblDepartamento.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblDepartamento.setText("Departamento:");
 
-        try {
-            ftfNumero.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("#########")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
+        ftfNumero.setColumns(9);
+        ftfNumero.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#"))));
+        ftfNumero.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                ftfNumeroKeyTyped(evt);
+            }
+        });
 
         lblProvincia.setForeground(java.awt.Color.red);
         lblProvincia.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -345,8 +347,8 @@ public class DetalleUbicacionGUI extends JDialog {
                 } else {
                     ubicacionAModificar.setCalle(null);
                 }
-                if (!ftfNumero.getText().isEmpty()) {
-                    ubicacionAModificar.setNumero(Integer.valueOf(ftfNumero.getText()));
+                if (!ftfNumero.getText().trim().isEmpty()) {
+                    ubicacionAModificar.setNumero(Integer.valueOf(ftfNumero.getText().trim()));
                 } else {
                     ubicacionAModificar.setNumero(null);
                 }
@@ -394,6 +396,12 @@ public class DetalleUbicacionGUI extends JDialog {
             ubicacionAModificar = null;
         }
     }//GEN-LAST:event_formWindowClosing
+
+    private void ftfNumeroKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ftfNumeroKeyTyped
+        if (ftfNumero.getText().length() >= 9) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_ftfNumeroKeyTyped
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSeleccionar;
