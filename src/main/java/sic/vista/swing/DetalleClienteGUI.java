@@ -509,7 +509,6 @@ public class DetalleClienteGUI extends JDialog {
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);
             }
             if (operacion == TipoDeOperacion.ACTUALIZACION) {
-                cliente.setUbicacionFacturacion(null);
                 RestClient.getRestTemplate().put(
                         "/clientes",
                         cliente);
