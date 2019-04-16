@@ -214,13 +214,9 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         this.cliente = cliente;
         txtNombreCliente.setText(cliente.getNombreFiscal() + " (" + cliente.getNroCliente() + ")");
         txtBonificacion.setText(cliente.getBonificacion().setScale(2, RoundingMode.HALF_UP) + " %");
-        txtUbicacionCliente.setText(cliente.getUbicacionFacturacion().toString());
+        txtUbicacionCliente.setText(cliente.getUbicacionFacturacion() != null ? cliente.getUbicacionFacturacion().toString() : "");
         txt_CondicionIVACliente.setText(cliente.getCategoriaIVA().toString());
-        if (cliente.getIdFiscal() != null) {
-            txtIdFiscalCliente.setText(cliente.getIdFiscal().toString());
-        } else {
-            txtIdFiscalCliente.setText("");
-        }
+        txtIdFiscalCliente.setText(cliente.getIdFiscal() != null ? cliente.getIdFiscal().toString() : "");
         txt_Descuento_porcentaje.setValue(cliente.getBonificacion());
     }
 
