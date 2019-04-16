@@ -149,7 +149,7 @@ public class DetalleUbicacionGUI extends JDialog {
         lblDepartamento.setText("Departamento:");
 
         ftfNumero.setColumns(9);
-        ftfNumero.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#"))));
+        ftfNumero.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("##0"))));
         ftfNumero.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 ftfNumeroKeyTyped(evt);
