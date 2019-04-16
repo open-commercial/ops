@@ -31,7 +31,7 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="panelPrincipal" max="32767" attributes="0"/>
+                  <Component id="panelPrincipal" min="-2" max="-2" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
@@ -80,75 +80,64 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="lblBonificacion" linkSize="16" alignment="1" max="32767" attributes="0"/>
+                      <Component id="lblNombreFiscal" linkSize="16" alignment="1" max="32767" attributes="1"/>
+                      <Component id="lblNombreFantasia" linkSize="16" alignment="1" max="32767" attributes="0"/>
+                      <Component id="lblIdFiscal" linkSize="16" alignment="1" max="32767" attributes="0"/>
+                      <Component id="lblCondicionIVA" linkSize="16" alignment="1" min="-2" pref="150" max="-2" attributes="1"/>
+                      <Component id="lblUbicacionFacturacion" linkSize="16" alignment="1" max="32767" attributes="0"/>
+                      <Component id="lblUbicacionEnvio" linkSize="16" alignment="1" max="32767" attributes="0"/>
+                      <Component id="lblViajante" linkSize="16" alignment="1" min="-2" pref="150" max="-2" attributes="1"/>
+                      <Component id="lblTelefono" linkSize="16" alignment="1" min="-2" pref="150" max="-2" attributes="1"/>
+                      <Component id="lblContacto" linkSize="16" alignment="1" min="-2" pref="150" max="-2" attributes="1"/>
+                      <Component id="lblEmail" linkSize="16" alignment="1" min="-2" pref="150" max="-2" attributes="1"/>
+                      <Component id="lblCredencial" linkSize="16" alignment="1" min="-2" pref="111" max="-2" attributes="1"/>
+                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="lblUbicacionFacturacion" linkSize="16" max="32767" attributes="0"/>
-                              <Component id="lblUbicacionEnvio" linkSize="16" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="txtBonificacion" alignment="0" max="32767" attributes="0"/>
+                      <Component id="txtNombreFiscal" alignment="0" max="32767" attributes="1"/>
+                      <Component id="txtNombreFantasia" alignment="0" max="32767" attributes="1"/>
+                      <Component id="txtIdFiscal" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lblCondicionIVA" linkSize="16" alignment="1" min="-2" pref="150" max="-2" attributes="1"/>
-                              <Component id="lblBonificacion" linkSize="16" alignment="1" max="32767" attributes="0"/>
-                              <Component id="lblNombreFiscal" linkSize="16" alignment="1" max="32767" attributes="1"/>
-                              <Component id="lblNombreFantasia" linkSize="16" alignment="1" max="32767" attributes="0"/>
-                              <Component id="lblIdFiscal" linkSize="16" alignment="1" max="32767" attributes="0"/>
+                              <Component id="lblDetalleUbicacionEnvio" min="-2" pref="394" max="-2" attributes="0"/>
+                              <Component id="lblDetalleUbicacionFacturacion" min="-2" pref="394" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtBonificacion" alignment="1" max="32767" attributes="0"/>
-                              <Component id="txtNombreFiscal" alignment="1" max="32767" attributes="1"/>
-                              <Component id="txtNombreFantasia" alignment="1" max="32767" attributes="1"/>
-                              <Component id="txtIdFiscal" max="32767" attributes="0"/>
-                              <Component id="cmbCategoriaIVA" alignment="1" max="32767" attributes="0"/>
+                              <Component id="btnUbicacionFacturacion" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnUbicacionEnvio" alignment="1" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
+                      <Component id="cmbCategoriaIVA" alignment="0" max="32767" attributes="0"/>
+                      <Component id="txtContacto" alignment="0" max="32767" attributes="2"/>
+                      <Component id="txtTelefono" alignment="0" max="32767" attributes="2"/>
                       <Group type="102" alignment="1" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lblEmail" linkSize="16" min="-2" pref="150" max="-2" attributes="1"/>
-                              <Component id="lblContacto" linkSize="16" min="-2" pref="150" max="-2" attributes="1"/>
-                              <Component id="lblTelefono" linkSize="16" alignment="0" min="-2" pref="150" max="-2" attributes="1"/>
-                              <Component id="lblViajante" linkSize="16" alignment="0" min="-2" pref="150" max="-2" attributes="1"/>
-                              <Component id="lblCredencial" linkSize="16" min="-2" pref="111" max="-2" attributes="1"/>
+                              <Component id="cmbCredencial" min="-2" pref="348" max="-2" attributes="1"/>
+                              <Component id="cmbViajante" min="-2" pref="348" max="-2" attributes="1"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="cmbViajante" min="-2" pref="354" max="-2" attributes="1"/>
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   <Component id="btnBuscarUsuarioViajante" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Component id="btnNuevoUsuarioViajante" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="cmbCredencial" min="-2" pref="354" max="-2" attributes="1"/>
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   <Component id="btnBuscarCredencial" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Component id="btnNuevaCredencial" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="lblDetalleUbicacionEnvio" min="-2" pref="400" max="-2" attributes="0"/>
-                                      <Component id="lblDetalleUbicacionFacturacion" alignment="0" min="-2" pref="400" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="btnUbicacionFacturacion" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="btnUbicacionEnvio" alignment="1" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <Component id="txtTelefono" alignment="0" max="32767" attributes="2"/>
-                              <Component id="txtContacto" max="32767" attributes="2"/>
-                              <Component id="txtEmail" alignment="0" max="32767" attributes="2"/>
                           </Group>
                       </Group>
+                      <Component id="txtEmail" alignment="0" max="32767" attributes="2"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -182,9 +171,9 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lblUbicacionFacturacion" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblDetalleUbicacionFacturacion" linkSize="23" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="btnUbicacionFacturacion" linkSize="23" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblDetalleUbicacionFacturacion" linkSize="23" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblUbicacionFacturacion" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -216,10 +205,10 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="btnNuevaCredencial" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnBuscarCredencial" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmbCredencial" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblCredencial" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="cmbCredencial" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnBuscarCredencial" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnNuevaCredencial" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>

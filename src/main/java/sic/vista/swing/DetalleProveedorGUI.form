@@ -29,17 +29,14 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="panelPrincipal" max="32767" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="panelPrincipal" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -82,36 +79,36 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="lblUbicacion" linkSize="2" min="-2" pref="102" max="-2" attributes="0"/>
-                      <Component id="lblCodigo" linkSize="2" alignment="1" min="-2" pref="110" max="-2" attributes="0"/>
-                      <Component id="lblRazonSocial" linkSize="2" alignment="1" min="-2" pref="110" max="-2" attributes="0"/>
-                      <Component id="lblIdFiscal" linkSize="2" alignment="1" min="-2" pref="110" max="-2" attributes="1"/>
-                      <Component id="lblCondicionIVA" linkSize="2" alignment="1" min="-2" pref="110" max="-2" attributes="1"/>
-                      <Component id="lblTelPrimario" linkSize="2" alignment="1" min="-2" pref="110" max="-2" attributes="1"/>
-                      <Component id="lblTelSecundario" linkSize="2" alignment="1" min="-2" pref="110" max="-2" attributes="1"/>
-                      <Component id="lblContacto" linkSize="2" alignment="1" min="-2" pref="110" max="-2" attributes="0"/>
-                      <Component id="lblEmail" linkSize="2" alignment="1" min="-2" pref="110" max="-2" attributes="0"/>
-                      <Component id="lblWeb" linkSize="2" alignment="1" min="-2" pref="110" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                      <Component id="lblIdFiscal" alignment="1" max="32767" attributes="1"/>
+                      <Component id="lblCodigo" alignment="0" max="32767" attributes="0"/>
+                      <Component id="lblRazonSocial" alignment="0" max="32767" attributes="0"/>
+                      <Component id="lblTelPrimario" alignment="0" max="32767" attributes="1"/>
+                      <Component id="lblUbicacion" alignment="1" max="32767" attributes="0"/>
+                      <Component id="lblTelSecundario" alignment="0" max="32767" attributes="1"/>
+                      <Component id="lblContacto" alignment="0" max="32767" attributes="0"/>
+                      <Component id="lblEmail" alignment="0" max="32767" attributes="0"/>
+                      <Component id="lblWeb" alignment="1" max="32767" attributes="0"/>
+                      <Component id="lblCondicionIVA" alignment="1" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="txtCodigo" alignment="1" min="-2" pref="436" max="-2" attributes="1"/>
-                      <Component id="txtRazonSocial" alignment="1" min="-2" pref="436" max="-2" attributes="1"/>
-                      <Component id="txtIdFiscal" alignment="1" min="-2" pref="436" max="-2" attributes="0"/>
-                      <Component id="cmbCategoriaIVA" alignment="1" min="-2" pref="436" max="-2" attributes="1"/>
+                      <Component id="txtCodigo" alignment="1" max="32767" attributes="1"/>
+                      <Component id="txtRazonSocial" alignment="1" max="32767" attributes="1"/>
+                      <Component id="txtIdFiscal" alignment="1" max="32767" attributes="0"/>
+                      <Component id="cmbCategoriaIVA" alignment="1" max="32767" attributes="1"/>
                       <Group type="102" alignment="1" attributes="0">
-                          <Component id="lblDetalleUbicacionProveedor" min="-2" pref="390" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <Component id="lblDetalleUbicacionProveedor" min="-2" pref="406" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Component id="btnUbicacion" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="txtTelSecundario" alignment="1" min="-2" pref="436" max="-2" attributes="1"/>
-                      <Component id="txtContacto" alignment="1" min="-2" pref="436" max="-2" attributes="1"/>
-                      <Component id="txtEmail" min="-2" pref="436" max="-2" attributes="1"/>
-                      <Component id="txtWeb" alignment="1" min="-2" pref="436" max="-2" attributes="1"/>
-                      <Component id="txtTelPrimario" alignment="0" min="-2" pref="436" max="-2" attributes="1"/>
+                      <Component id="txtTelPrimario" alignment="1" max="32767" attributes="1"/>
+                      <Component id="txtTelSecundario" alignment="1" max="32767" attributes="1"/>
+                      <Component id="txtContacto" alignment="1" max="32767" attributes="1"/>
+                      <Component id="txtEmail" max="32767" attributes="1"/>
+                      <Component id="txtWeb" alignment="1" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -122,8 +119,8 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lblCodigo" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="txtCodigo" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblCodigo" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -136,9 +133,9 @@
                       <Component id="txtIdFiscal" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lblCondicionIVA" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmbCategoriaIVA" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="cmbCategoriaIVA" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblCondicionIVA" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
