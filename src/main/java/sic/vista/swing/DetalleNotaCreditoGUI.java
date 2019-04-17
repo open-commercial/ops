@@ -187,10 +187,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
 
     private void cargarDetalleCliente() {
         txtNombre.setText(((FacturaVenta) factura).getNombreFiscalCliente() + " (" + cliente.getNroCliente() + ")");
-        txtUbicacion.setText(cliente.getUbicacionFacturacion().toString());
-        if (cliente.getIdFiscal() != null) {
-            txtIdFiscal.setText(cliente.getIdFiscal().toString());
-        }
+        txtUbicacion.setText(cliente.getUbicacionFacturacion() != null ? cliente.getUbicacionFacturacion().toString() : "");
+        txtIdFiscal.setText(cliente.getIdFiscal() != null ? cliente.getIdFiscal().toString() : "");
         txtCondicionIVA.setText(cliente.getCategoriaIVA().toString());
         lbl_NumComprobante.setVisible(false);
         txt_Serie.setVisible(false);
