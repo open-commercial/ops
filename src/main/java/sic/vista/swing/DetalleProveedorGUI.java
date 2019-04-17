@@ -49,19 +49,9 @@ public class DetalleProveedorGUI extends JDialog {
         txtRazonSocial.setText(proveedorModificar.getRazonSocial());
         txtIdFiscal.setValue(proveedorModificar.getIdFiscal());
         cmbCategoriaIVA.setSelectedItem(proveedorModificar.getCategoriaIVA());
-        if (proveedorModificar.getIdUbicacion() != null) {
-            lblDetalleUbicacionProveedor.setText(proveedorModificar.getDetalleUbicacion());
-            this.ubicacion = null;
-            try {
-                this.ubicacion = RestClient.getRestTemplate().getForObject("/ubicaciones/" + proveedorModificar.getIdUbicacion(), Ubicacion.class);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
+        if (proveedorModificar.getUbicacion() != null) {
+            lblDetalleUbicacionProveedor.setText(proveedorModificar.getUbicacion().toString());
+            this.ubicacion = proveedorModificar.getUbicacion();
         }
         txtTelPrimario.setText(proveedorModificar.getTelPrimario());
         txtTelSecundario.setText(proveedorModificar.getTelSecundario());
@@ -209,19 +199,19 @@ public class DetalleProveedorGUI extends JDialog {
         panelPrincipal.setLayout(panelPrincipalLayout);
         panelPrincipalLayout.setHorizontalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelPrincipalLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblRazonSocial, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblIdFiscal, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblCondicionIVA, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblTelPrimario, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblTelSecundario, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblContacto, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblWeb, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(lblIdFiscal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblCodigo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblRazonSocial, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTelPrimario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblUbicacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTelSecundario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblContacto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblEmail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblWeb, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblCondicionIVA, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtCodigo, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -229,26 +219,23 @@ public class DetalleProveedorGUI extends JDialog {
                     .addComponent(txtIdFiscal, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(cmbCategoriaIVA, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
-                        .addComponent(lblDetalleUbicacionProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(lblDetalleUbicacionProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
                         .addComponent(btnUbicacion))
+                    .addComponent(txtTelPrimario, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtTelSecundario, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtContacto, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtEmail)
-                    .addComponent(txtWeb, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtTelPrimario))
+                    .addComponent(txtWeb, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
-
-        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblCodigo, lblCondicionIVA, lblContacto, lblEmail, lblIdFiscal, lblRazonSocial, lblTelPrimario, lblTelSecundario, lblUbicacion, lblWeb});
-
         panelPrincipalLayout.setVerticalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPrincipalLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblCodigo)
-                    .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCodigo))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblRazonSocial)
@@ -258,9 +245,9 @@ public class DetalleProveedorGUI extends JDialog {
                     .addComponent(lblIdFiscal)
                     .addComponent(txtIdFiscal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblCondicionIVA)
-                    .addComponent(cmbCategoriaIVA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbCategoriaIVA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCondicionIVA))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btnUbicacion)
@@ -296,14 +283,13 @@ public class DetalleProveedorGUI extends JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btn_Guardar)))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btn_Guardar)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(panelPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -331,11 +317,11 @@ public class DetalleProveedorGUI extends JDialog {
                 proveedor.setContacto(txtContacto.getText().trim());
                 proveedor.setEmail(txtEmail.getText().trim());
                 proveedor.setWeb(txtWeb.getText().trim());
-                proveedor = RestClient.getRestTemplate().postForObject("/proveedores?idEmpresa="
-                        + (EmpresaActiva.getInstance().getEmpresa()).getId_Empresa(), proveedor, Proveedor.class);
+                proveedor.setIdEmpresa((EmpresaActiva.getInstance().getEmpresa()).getId_Empresa());
                 if (this.ubicacion != null) {
-                    RestClient.getRestTemplate().postForObject("/ubicaciones/proveedores/" + proveedor.getId_Proveedor(), this.ubicacion, Ubicacion.class);
+                    proveedor.setUbicacion(this.ubicacion);
                 }
+                RestClient.getRestTemplate().postForObject("/proveedores", proveedor, Proveedor.class);
                 int respuesta = JOptionPane.showConfirmDialog(this,
                         "El proveedor se guardó correctamente.\n¿Desea dar de alta otro proveedor?",
                         "Aviso", JOptionPane.YES_NO_OPTION);
@@ -344,7 +330,6 @@ public class DetalleProveedorGUI extends JDialog {
                     this.dispose();
                 }
             }
-
             if (operacion == TipoDeOperacion.ACTUALIZACION) {
                 proveedorModificar.setCodigo(txtCodigo.getText().trim());
                 proveedorModificar.setRazonSocial(txtRazonSocial.getText().trim());
@@ -355,12 +340,11 @@ public class DetalleProveedorGUI extends JDialog {
                 proveedorModificar.setContacto(txtContacto.getText().trim());
                 proveedorModificar.setEmail(txtEmail.getText().trim());
                 proveedorModificar.setWeb(txtWeb.getText().trim());
-                RestClient.getRestTemplate().put("/proveedores?idEmpresa=" + (EmpresaActiva.getInstance().getEmpresa()).getId_Empresa(), proveedorModificar);
-                if (proveedorModificar.getIdUbicacion()== null && this.ubicacion != null) {
-                    RestClient.getRestTemplate().postForObject("/ubicaciones/proveedores/" + proveedorModificar.getId_Proveedor(), this.ubicacion, Ubicacion.class);
-                } else if (proveedorModificar.getIdUbicacion() != null && this.ubicacion != null) {
-                    RestClient.getRestTemplate().put("/ubicaciones", this.ubicacion);
+                if (this.ubicacion != null) {
+                    proveedorModificar.setUbicacion(this.ubicacion);
                 }
+                proveedorModificar.setIdEmpresa((EmpresaActiva.getInstance().getEmpresa()).getId_Empresa());
+                RestClient.getRestTemplate().put("/proveedores", proveedorModificar);
                 JOptionPane.showMessageDialog(this, "El proveedor se modificó correctamente.",
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
@@ -399,23 +383,7 @@ public class DetalleProveedorGUI extends JDialog {
         guiDetalleUbicacion.setVisible(true);
         if (guiDetalleUbicacion.getUbicacionModificada() != null) {
             this.ubicacion = guiDetalleUbicacion.getUbicacionModificada();
-            lblDetalleUbicacionProveedor.setText(
-                    (this.ubicacion.getCalle() != null
-                    ? this.ubicacion.getCalle() + " " : "")
-                    + (this.ubicacion.getNumero() != null
-                    ? this.ubicacion.getNumero() + " " : "")
-                    + (this.ubicacion.getPiso() != null
-                    ? this.ubicacion.getPiso() + " "
-                    : "")
-                    + (this.ubicacion.getDepartamento() != null
-                    ? this.ubicacion.getDepartamento() + " "
-                    : "")
-                    + (this.ubicacion.getNombreLocalidad() != null
-                    ? this.ubicacion.getNombreLocalidad() + " "
-                    : "")
-                    + (this.ubicacion.getNombreProvincia() != null
-                    ? this.ubicacion.getNombreProvincia()
-                    : ""));
+            lblDetalleUbicacionProveedor.setText(this.ubicacion.toString());
         }
     }//GEN-LAST:event_btnUbicacionActionPerformed
 

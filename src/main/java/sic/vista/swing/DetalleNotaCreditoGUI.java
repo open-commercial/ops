@@ -187,10 +187,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
 
     private void cargarDetalleCliente() {
         txtNombre.setText(((FacturaVenta) factura).getNombreFiscalCliente() + " (" + cliente.getNroCliente() + ")");
-        txtUbicacion.setText(cliente.getDetalleUbicacionFacturacion());
-        if (cliente.getIdFiscal() != null) {
-            txtIdFiscal.setText(cliente.getIdFiscal().toString());
-        }
+        txtUbicacion.setText(cliente.getUbicacionFacturacion() != null ? cliente.getUbicacionFacturacion().toString() : "");
+        txtIdFiscal.setText(cliente.getIdFiscal() != null ? cliente.getIdFiscal().toString() : "");
         txtCondicionIVA.setText(cliente.getCategoriaIVA().toString());
         lbl_NumComprobante.setVisible(false);
         txt_Serie.setVisible(false);
@@ -204,8 +202,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
 
     private void cargarDetalleProveedor() {
         txtNombre.setText(((FacturaCompra) factura).getRazonSocialProveedor());
-        if (proveedor.getIdUbicacion()!= null) {
-            txtUbicacion.setText(proveedor.getDetalleUbicacion());
+        if (proveedor.getUbicacion() != null) {
+            txtUbicacion.setText(proveedor.getUbicacion().toString());
         }
         if (proveedor.getIdFiscal() != null) {
             txtIdFiscal.setText(proveedor.getIdFiscal().toString());
@@ -217,8 +215,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
         Proveedor proveedorDeNota = RestClient.getRestTemplate()
                 .getForObject("/proveedores/" + notaCredito.getIdProveedor(), Proveedor.class);
         txtNombre.setText(proveedorDeNota.getRazonSocial());
-        if (proveedorDeNota.getIdUbicacion() != null) {
-            txtUbicacion.setText(proveedorDeNota.getDetalleUbicacion());
+        if (proveedorDeNota.getUbicacion() != null) {
+            txtUbicacion.setText(proveedorDeNota.getUbicacion().toString());
         }
         if (proveedorDeNota.getIdFiscal() != null) {
             txtIdFiscal.setText(proveedorDeNota.getIdFiscal().toString());

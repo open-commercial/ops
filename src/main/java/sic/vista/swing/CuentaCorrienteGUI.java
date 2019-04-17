@@ -256,8 +256,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     private void cargarDetalleCliente() {
         String nombreCliente = cliente.getNombreFiscal() + " (" + cliente.getNroCliente() + ")";
         this.setTitle("Cuenta Corriente del Cliente: " + nombreCliente);
-        txtNombreCliente.setText(nombreCliente);        
-        txtUbicacion.setText(cliente.getDetalleUbicacionFacturacion());
+        txtNombreCliente.setText(nombreCliente);
+        txtUbicacion.setText(cliente.getUbicacionFacturacion() != null ? cliente.getUbicacionFacturacion().toString() : "");
         if (cliente.getIdFiscal() != null) {
             txtIDFiscalCliente.setText(cliente.getIdFiscal().toString());
         }
@@ -278,14 +278,10 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     private void cargarDetalleProveedor() {
         this.setTitle("Cuenta Corriente del Proveedor: " + proveedor.getRazonSocial());
         txtNombreCliente.setText(proveedor.getRazonSocial());
+        txtUbicacion.setText(proveedor.getUbicacion() != null ? proveedor.getUbicacion().toString() : "");
+        txtIDFiscalCliente.setText(proveedor.getIdFiscal() != null ? proveedor.getIdFiscal().toString() : "");
+        txtCondicionIVACliente.setText(proveedor.getCategoriaIVA().toString());
         try {
-            if (proveedor.getIdUbicacion() != null) {
-                txtUbicacion.setText(proveedor.getDetalleUbicacion());
-            }
-            if (proveedor.getIdFiscal() != null) {
-                txtIDFiscalCliente.setText(proveedor.getIdFiscal().toString());
-            }
-            txtCondicionIVACliente.setText(proveedor.getCategoriaIVA().toString());
             cuentaCorriente = RestClient.getRestTemplate()
                     .getForObject("/cuentas-corriente/proveedores/" + proveedor.getId_Proveedor(), CuentaCorrienteProveedor.class);
         } catch (RestClientResponseException ex) {

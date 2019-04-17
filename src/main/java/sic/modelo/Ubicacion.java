@@ -21,5 +21,14 @@ public class Ubicacion implements Serializable {
     private Long idProvincia;
     private String nombreProvincia;
     private String codigoPostal;
-
+    
+    @Override
+    public String toString() {
+        return (calle != null ? calle + " " : "")
+                + (numero != null ? numero + " " : "")
+                + (piso != null ? piso + " " : "")
+                + (departamento != null ? departamento + " " : "")
+                + (nombreLocalidad != null ? nombreLocalidad + " " : "")
+                + (nombreProvincia != null ? nombreProvincia : "");
+    }
 }

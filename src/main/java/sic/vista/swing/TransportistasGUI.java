@@ -119,7 +119,7 @@ public class TransportistasGUI extends JInternalFrame {
             fila[0] = transportista.getNombre();
             fila[1] = transportista.getTelefono();
             fila[2] = transportista.getWeb();
-            fila[3] = transportista.getDetalleUbicacion();
+            fila[3] = transportista.getUbicacion();
             return fila;
         }).forEach((fila) -> {
             modeloTablaResultados.addRow(fila);
