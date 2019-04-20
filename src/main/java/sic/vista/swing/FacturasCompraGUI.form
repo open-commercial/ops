@@ -331,7 +331,7 @@
             </Component>
             <Component class="javax.swing.JCheckBox" name="chk_NumFactura">
               <Properties>
-                <Property name="text" type="java.lang.String" value="N&#xba; de Factura:"/>
+                <Property name="text" type="java.lang.String" value="N&#xba; Factura:"/>
               </Properties>
               <Events>
                 <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_NumFacturaItemStateChanged"/>
@@ -425,12 +425,12 @@
                               <Component id="lbl_TotalIVACompra" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <Group type="103" alignment="1" groupAlignment="3" attributes="0">
-                          <Component id="btn_Nuevo" linkSize="8" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" alignment="3" groupAlignment="3" attributes="0">
+                      <Group type="103" alignment="1" groupAlignment="0" attributes="0">
+                          <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                               <Component id="btn_VerDetalle" linkSize="8" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btnCrearNotaCredito" linkSize="8" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <Component id="btn_Nuevo" linkSize="8" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>

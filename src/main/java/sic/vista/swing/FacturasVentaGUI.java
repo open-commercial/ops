@@ -819,7 +819,7 @@ public class FacturasVentaGUI extends JInternalFrame {
 
         cmb_TipoFactura.setEnabled(false);
 
-        chk_NumeroPedido.setText("Nº de Pedido:");
+        chk_NumeroPedido.setText("Nº Pedido:");
         chk_NumeroPedido.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 chk_NumeroPedidoItemStateChanged(evt);
@@ -840,7 +840,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             }
         });
 
-        chk_NumFactura.setText("Nº de Factura:");
+        chk_NumFactura.setText("Nº Factura:");
         chk_NumFactura.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 chk_NumFacturaItemStateChanged(evt);
