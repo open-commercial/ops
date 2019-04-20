@@ -570,7 +570,7 @@
             </Component>
             <Component class="javax.swing.JCheckBox" name="chk_NumeroPedido">
               <Properties>
-                <Property name="text" type="java.lang.String" value="N&#xba; de Pedido:"/>
+                <Property name="text" type="java.lang.String" value="N&#xba; Pedido:"/>
               </Properties>
               <Events>
                 <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_NumeroPedidoItemStateChanged"/>
@@ -591,7 +591,7 @@
             </Component>
             <Component class="javax.swing.JCheckBox" name="chk_NumFactura">
               <Properties>
-                <Property name="text" type="java.lang.String" value="N&#xba; de Factura:"/>
+                <Property name="text" type="java.lang.String" value="N&#xba; Factura:"/>
               </Properties>
               <Events>
                 <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_NumFacturaItemStateChanged"/>

@@ -517,7 +517,7 @@ public class FacturasCompraGUI extends JInternalFrame {
 
         cmb_TipoFactura.setEnabled(false);
 
-        chk_NumFactura.setText("Nº de Factura:");
+        chk_NumFactura.setText("Nº Factura:");
         chk_NumFactura.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 chk_NumFacturaItemStateChanged(evt);
@@ -712,11 +712,11 @@ public class FacturasCompraGUI extends JInternalFrame {
                         .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txt_ResultTotalIVACompra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbl_TotalIVACompra)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btn_Nuevo)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btn_VerDetalle)
-                            .addComponent(btnCrearNotaCredito)))))
+                            .addComponent(btnCrearNotaCredito))
+                        .addComponent(btn_Nuevo))))
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaCredito, btn_Nuevo, btn_VerDetalle});
