@@ -10,7 +10,10 @@ public class FacturaVenta extends Factura implements Serializable {
 
     private Long idCliente;
     private String nombreFiscalCliente;
+    private String nroDeCliente;
+    private CategoriaIVA categoriaIVA;
     private Long idViajante;
     private String nombreViajante;
+    private Ubicacion ubicacionFacturacion;
 
 }
