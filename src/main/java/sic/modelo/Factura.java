@@ -29,12 +29,14 @@ public abstract class Factura implements Serializable {
     }
 
     private long id_Factura;
+    private Long idUsuario;
     private String nombreUsuario;
     private Date fecha;
     private TipoDeComprobante tipoComprobante;
     private long numSerie;
     private long numFactura;
-    private Date fechaVencimiento;  
+    private Date fechaVencimiento; 
+    private Long idTransportista;
     private String nombreTransportista;     
     private List<RenglonFactura> renglones;
     private BigDecimal subTotal;
@@ -47,6 +49,7 @@ public abstract class Factura implements Serializable {
     private BigDecimal iva21Neto;
     private BigDecimal total;    
     private String observaciones; 
+    private Long idEmpresa;
     private String nombreEmpresa;
     private boolean eliminada;   
     private long CAE;
