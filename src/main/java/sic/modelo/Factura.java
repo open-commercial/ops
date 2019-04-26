@@ -46,7 +46,8 @@ public abstract class Factura implements Serializable {
     private BigDecimal iva105Neto;
     private BigDecimal iva21Neto;
     private BigDecimal total;    
-    private String observaciones; 
+    private String observaciones;
+    private BigDecimal cantidadArticulos;
     private String nombreEmpresa;
     private boolean eliminada;   
     private long CAE;
