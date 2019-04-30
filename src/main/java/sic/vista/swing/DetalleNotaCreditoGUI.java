@@ -29,6 +29,7 @@ import sic.modelo.Movimiento;
 import sic.modelo.NotaCredito;
 import sic.modelo.Proveedor;
 import sic.modelo.RenglonNotaCredito;
+import sic.modelo.RenglonesDeFacturaParaNotaCredito;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.UsuarioActivo;
 import sic.util.DecimalesRenderer;
@@ -279,9 +280,12 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private void cargarRenglonesAlTable() {
         try {
             if (notaCredito == null) {
-                String uri = "/notas/renglon/credito/producto?"
-                        + "tipoDeComprobante=" + factura.getTipoComprobante().name();
-                renglones = Arrays.asList(RestClient.getRestTemplate().postForObject(uri, idsRenglonesYCantidades, RenglonNotaCredito[].class));
+                String uri = "/notas/renglon/credito/producto";
+                RenglonesDeFacturaParaNotaCredito renglonesDeFacturaParaNotaCredito =
+                        RenglonesDeFacturaParaNotaCredito.builder()
+                                .idsYCantidades(idsRenglonesYCantidades)
+                        .tipoDeComprobante(factura.getTipoComprobante()).build();
+                renglones = Arrays.asList(RestClient.getRestTemplate().postForObject(uri, renglonesDeFacturaParaNotaCredito, RenglonNotaCredito[].class));
             } else {
                 renglones = Arrays.asList(RestClient.getRestTemplate().getForObject("/notas/renglones/credito/" + notaCredito.getIdNota(), RenglonNotaCredito[].class));
             }
