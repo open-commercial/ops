@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -22,9 +23,7 @@ import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Factura;
-import sic.modelo.FacturaCompra;
-import sic.modelo.FacturaVenta;
-import sic.modelo.Movimiento;
+import sic.modelo.FacturaCompra;;
 import sic.modelo.NotaCredito;
 import sic.modelo.Proveedor;
 import sic.modelo.RenglonNotaCredito;
@@ -42,6 +41,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private Factura factura;
     private Cliente cliente;
     private Proveedor proveedor;
+    private TipoDeComprobante tipoDeComprobante;
     private long idNotaCredito;
     private NotaCredito notaCredito;
     private HashMap<Long, BigDecimal> idsRenglonesYCantidades = new HashMap<>();
@@ -62,6 +62,26 @@ public class DetalleNotaCreditoGUI extends JDialog {
         this.notaCreditoCreada = false;
         this.cliente = cliente;
         this.idFactura = idFactura;
+    }
+
+    public DetalleNotaCreditoGUI(RenglonNotaCredito renglonNotaCredito, Cliente cliente, TipoDeComprobante tipoDeComprobante) {
+        this.initComponents();
+        this.setIcon();
+        renglones = new ArrayList<>();
+        renglones.add(renglonNotaCredito);
+        this.notaCreditoCreada = false;
+        this.cliente = cliente;
+        this.tipoDeComprobante = tipoDeComprobante;
+    }
+
+    public DetalleNotaCreditoGUI(RenglonNotaCredito renglonNotaCredito, Proveedor proveedor, TipoDeComprobante tipoDeComprobante) {
+        this.initComponents();
+        this.setIcon();
+        renglones = new ArrayList<>();
+        renglones.add(renglonNotaCredito);
+        this.notaCreditoCreada = false;
+        this.proveedor = proveedor;
+        this.tipoDeComprobante = tipoDeComprobante;
     }
 
     public DetalleNotaCreditoGUI(HashMap<Long, BigDecimal> idsRenglonesYCantidades, long idFactura,
@@ -100,71 +120,90 @@ public class DetalleNotaCreditoGUI extends JDialog {
 
     private void cargarResultados() {
         if (notaCredito == null) {
-            BigDecimal[] importes = new BigDecimal[renglones.size()];
-            BigDecimal[] cantidades = new BigDecimal[renglones.size()];
-            BigDecimal[] ivaPorcentajeRenglones = new BigDecimal[renglones.size()];
-            BigDecimal[] ivaNetoRenglones = new BigDecimal[renglones.size()];
-            int indice = 0;
-            for (RenglonNotaCredito renglon : renglones) {
-                importes[indice] = renglon.getImporteBruto();
-                cantidades[indice] = renglon.getCantidad();
-                ivaPorcentajeRenglones[indice] = renglon.getIvaPorcentaje();
-                ivaNetoRenglones[indice] = renglon.getIvaNeto();
-                indice++;
-            }
-            try {
-                txt_Subtotal.setValue(RestClient.getRestTemplate().getForObject("/notas/credito/sub-total?importe="
-                        + Arrays.toString(importes).substring(1, Arrays.toString(importes).length() - 1), BigDecimal.class));
-                txt_Decuento_porcentaje.setValue(factura.getDescuentoPorcentaje());
-                txt_Decuento_neto.setValue(RestClient.getRestTemplate().getForObject("/notas/credito/descuento-neto?subTotal="
-                        + txt_Subtotal.getValue().toString()
-                        + "&descuentoPorcentaje=" + factura.getDescuentoPorcentaje(), BigDecimal.class));
-                txt_Recargo_porcentaje.setValue(factura.getRecargoPorcentaje());
-                txt_Recargo_neto.setValue(RestClient.getRestTemplate().getForObject("/notas/credito/recargo-neto?subTotal="
-                        + txt_Subtotal.getValue().toString()
-                        + "&recargoPorcentaje=" + factura.getRecargoPorcentaje(), BigDecimal.class));
-                iva_105_netoFactura = RestClient.getRestTemplate().getForObject("/notas/credito/iva-neto?"
-                        + "tipoDeComprobante=" + factura.getTipoComprobante().name()
-                        + "&cantidades=" + Arrays.toString(cantidades).substring(1, Arrays.toString(cantidades).length() - 1)
-                        + "&ivaPorcentajeRenglones=" + Arrays.toString(ivaPorcentajeRenglones).substring(1, Arrays.toString(ivaPorcentajeRenglones).length() - 1)
-                        + "&ivaNetoRenglones=" + Arrays.toString(ivaNetoRenglones).substring(1, Arrays.toString(ivaNetoRenglones).length() - 1)
-                        + "&ivaPorcentaje=10.5"
-                        + "&descuentoPorcentaje=" + factura.getDescuentoPorcentaje()
-                        + "&recargoPorcentaje=" + factura.getRecargoPorcentaje(), BigDecimal.class);
-                iva_21_netoFactura = RestClient.getRestTemplate().getForObject("/notas/credito/iva-neto?"
-                        + "tipoDeComprobante=" + factura.getTipoComprobante().name()
-                        + "&cantidades=" + Arrays.toString(cantidades).substring(1, Arrays.toString(cantidades).length() - 1)
-                        + "&ivaPorcentajeRenglones=" + Arrays.toString(ivaPorcentajeRenglones).substring(1, Arrays.toString(ivaPorcentajeRenglones).length() - 1)
-                        + "&ivaNetoRenglones=" + Arrays.toString(ivaNetoRenglones).substring(1, Arrays.toString(ivaNetoRenglones).length() - 1)
-                        + "&ivaPorcentaje=21"
-                        + "&descuentoPorcentaje=" + factura.getDescuentoPorcentaje()
-                        + "&recargoPorcentaje=" + factura.getRecargoPorcentaje(), BigDecimal.class);
-                txt_IVA105_neto.setValue(iva_105_netoFactura);
-                txt_IVA21_neto.setValue(iva_21_netoFactura);
-                subTotalBruto = RestClient.getRestTemplate().getForObject("/notas/credito/sub-total-bruto?"
-                        + "tipoDeComprobante=" + factura.getTipoComprobante().name()
-                        + "&subTotal=" + txt_Subtotal.getValue().toString()
-                        + "&recargoNeto=" + txt_Recargo_neto.getValue().toString()
-                        + "&descuentoNeto=" + txt_Decuento_neto.getValue().toString()
-                        + "&iva105Neto=" + iva_105_netoFactura
-                        + "&iva21Neto=" + iva_21_netoFactura, BigDecimal.class);
-                txt_Total.setValue(RestClient.getRestTemplate().getForObject("/notas/credito/total?"
-                        + "subTotalBruto=" + subTotalBruto
-                        + "&iva105Neto=" + iva_105_netoFactura
-                        + "&iva21Neto=" + iva_21_netoFactura, BigDecimal.class));
-                if (factura.getTipoComprobante() == TipoDeComprobante.FACTURA_B || factura.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
-                    txt_IVA105_neto.setValue(BigDecimal.ZERO);
-                    txt_IVA21_neto.setValue(BigDecimal.ZERO);
-                    txt_SubTotalBruto.setValue(txt_Total.getValue());
-                } else {
-                    txt_SubTotalBruto.setValue(subTotalBruto);
+            if (factura != null) {
+                BigDecimal[] importes = new BigDecimal[renglones.size()];
+                BigDecimal[] cantidades = new BigDecimal[renglones.size()];
+                BigDecimal[] ivaPorcentajeRenglones = new BigDecimal[renglones.size()];
+                BigDecimal[] ivaNetoRenglones = new BigDecimal[renglones.size()];
+                int indice = 0;
+                for (RenglonNotaCredito renglon : renglones) {
+                    importes[indice] = renglon.getImporteBruto();
+                    cantidades[indice] = renglon.getCantidad();
+                    ivaPorcentajeRenglones[indice] = renglon.getIvaPorcentaje();
+                    ivaNetoRenglones[indice] = renglon.getIvaNeto();
+                    indice++;
                 }
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"), "Error", JOptionPane.ERROR_MESSAGE);
+                try {
+                    txt_Subtotal.setValue(RestClient.getRestTemplate().getForObject("/notas/credito/sub-total?importe="
+                            + Arrays.toString(importes).substring(1, Arrays.toString(importes).length() - 1), BigDecimal.class));
+                    txt_Decuento_porcentaje.setValue(factura.getDescuentoPorcentaje());
+                    txt_Decuento_neto.setValue(RestClient.getRestTemplate().getForObject("/notas/credito/descuento-neto?subTotal="
+                            + txt_Subtotal.getValue().toString()
+                            + "&descuentoPorcentaje=" + factura.getDescuentoPorcentaje(), BigDecimal.class));
+                    txt_Recargo_porcentaje.setValue(factura.getRecargoPorcentaje());
+                    txt_Recargo_neto.setValue(RestClient.getRestTemplate().getForObject("/notas/credito/recargo-neto?subTotal="
+                            + txt_Subtotal.getValue().toString()
+                            + "&recargoPorcentaje=" + factura.getRecargoPorcentaje(), BigDecimal.class));
+                    iva_105_netoFactura = RestClient.getRestTemplate().getForObject("/notas/credito/iva-neto?"
+                            + "tipoDeComprobante=" + factura.getTipoComprobante().name()
+                            + "&cantidades=" + Arrays.toString(cantidades).substring(1, Arrays.toString(cantidades).length() - 1)
+                            + "&ivaPorcentajeRenglones=" + Arrays.toString(ivaPorcentajeRenglones).substring(1, Arrays.toString(ivaPorcentajeRenglones).length() - 1)
+                            + "&ivaNetoRenglones=" + Arrays.toString(ivaNetoRenglones).substring(1, Arrays.toString(ivaNetoRenglones).length() - 1)
+                            + "&ivaPorcentaje=10.5"
+                            + "&descuentoPorcentaje=" + factura.getDescuentoPorcentaje()
+                            + "&recargoPorcentaje=" + factura.getRecargoPorcentaje(), BigDecimal.class);
+                    iva_21_netoFactura = RestClient.getRestTemplate().getForObject("/notas/credito/iva-neto?"
+                            + "tipoDeComprobante=" + factura.getTipoComprobante().name()
+                            + "&cantidades=" + Arrays.toString(cantidades).substring(1, Arrays.toString(cantidades).length() - 1)
+                            + "&ivaPorcentajeRenglones=" + Arrays.toString(ivaPorcentajeRenglones).substring(1, Arrays.toString(ivaPorcentajeRenglones).length() - 1)
+                            + "&ivaNetoRenglones=" + Arrays.toString(ivaNetoRenglones).substring(1, Arrays.toString(ivaNetoRenglones).length() - 1)
+                            + "&ivaPorcentaje=21"
+                            + "&descuentoPorcentaje=" + factura.getDescuentoPorcentaje()
+                            + "&recargoPorcentaje=" + factura.getRecargoPorcentaje(), BigDecimal.class);
+                    txt_IVA105_neto.setValue(iva_105_netoFactura);
+                    txt_IVA21_neto.setValue(iva_21_netoFactura);
+                    subTotalBruto = RestClient.getRestTemplate().getForObject("/notas/credito/sub-total-bruto?"
+                            + "tipoDeComprobante=" + factura.getTipoComprobante().name()
+                            + "&subTotal=" + txt_Subtotal.getValue().toString()
+                            + "&recargoNeto=" + txt_Recargo_neto.getValue().toString()
+                            + "&descuentoNeto=" + txt_Decuento_neto.getValue().toString()
+                            + "&iva105Neto=" + iva_105_netoFactura
+                            + "&iva21Neto=" + iva_21_netoFactura, BigDecimal.class);
+                    txt_Total.setValue(RestClient.getRestTemplate().getForObject("/notas/credito/total?"
+                            + "subTotalBruto=" + subTotalBruto
+                            + "&iva105Neto=" + iva_105_netoFactura
+                            + "&iva21Neto=" + iva_21_netoFactura, BigDecimal.class));
+                    if (factura.getTipoComprobante() == TipoDeComprobante.FACTURA_B || factura.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
+                        txt_IVA105_neto.setValue(BigDecimal.ZERO);
+                        txt_IVA21_neto.setValue(BigDecimal.ZERO);
+                        txt_SubTotalBruto.setValue(txt_Total.getValue());
+                    } else {
+                        txt_SubTotalBruto.setValue(subTotalBruto);
+                    }
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                txt_Subtotal.setValue(renglones.get(0).getImporte());
+                subTotalBruto = renglones.get(0).getImporte();
+                txt_Decuento_porcentaje.setValue(BigDecimal.ZERO);
+                txt_Decuento_neto.setValue(BigDecimal.ZERO);
+                txt_Recargo_porcentaje.setValue(BigDecimal.ZERO);
+                txt_Recargo_neto.setValue(BigDecimal.ZERO);
+                txt_IVA105_neto.setValue(BigDecimal.ZERO);
+                iva_105_netoFactura = BigDecimal.ZERO;
+                iva_21_netoFactura = renglones.get(0).getIvaNeto();
+                if (this.tipoDeComprobante == TipoDeComprobante.NOTA_DEBITO_B || this.tipoDeComprobante == TipoDeComprobante.NOTA_CREDITO_PRESUPUESTO) {
+                    txt_IVA21_neto.setValue(BigDecimal.ZERO);
+                } else {
+                    txt_IVA21_neto.setValue(renglones.get(0).getIvaNeto());
+                }
+                txt_SubTotalBruto.setValue(renglones.get(0).getImporteBruto());
+                txt_Total.setValue(renglones.get(0).getImporteNeto());
             }
         } else {
             txt_Subtotal.setValue(notaCredito.getSubTotal());
@@ -186,7 +225,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
     }
 
     private void cargarDetalleCliente() {
-        txtNombre.setText(((FacturaVenta) factura).getNombreFiscalCliente() + " (" + cliente.getNroCliente() + ")");
+        txtNombre.setText(cliente.getNombreFiscal() + " (" + cliente.getNroCliente() + ")");
         txtUbicacion.setText(cliente.getUbicacionFacturacion() != null ? cliente.getUbicacionFacturacion().toString() : "");
         txtIdFiscal.setText(cliente.getIdFiscal() != null ? cliente.getIdFiscal().toString() : "");
         txtCondicionIVA.setText(cliente.getCategoriaIVA().toString());
@@ -277,15 +316,17 @@ public class DetalleNotaCreditoGUI extends JDialog {
 
     private void cargarRenglonesAlTable() {
         try {
-            if (notaCredito == null) {
-                String uri = "/notas/renglon/credito/producto?"
-                        + "tipoDeComprobante=" + factura.getTipoComprobante().name()
-                        + "&cantidad=" + idsRenglonesYCantidades.values().toString().substring(1, idsRenglonesYCantidades.values().toString().length() - 1)
-                        + "&idRenglonFactura=" + idsRenglonesYCantidades.keySet().toString().substring(1, idsRenglonesYCantidades.keySet().toString().length() - 1);
-                renglones = Arrays.asList(RestClient.getRestTemplate().getForObject(uri, RenglonNotaCredito[].class));
-            } else {
-                renglones = Arrays.asList(RestClient.getRestTemplate().getForObject("/notas/renglones/credito/" + notaCredito.getIdNota(), RenglonNotaCredito[].class));
-            }
+            if (renglones == null || renglones.isEmpty()) {
+                if (notaCredito == null) {
+                    String uri = "/notas/renglon/credito/producto?"
+                            + "tipoDeComprobante=" + factura.getTipoComprobante().name()
+                            + "&cantidad=" + idsRenglonesYCantidades.values().toString().substring(1, idsRenglonesYCantidades.values().toString().length() - 1)
+                            + "&idRenglonFactura=" + idsRenglonesYCantidades.keySet().toString().substring(1, idsRenglonesYCantidades.keySet().toString().length() - 1);
+                    renglones = Arrays.asList(RestClient.getRestTemplate().getForObject(uri, RenglonNotaCredito[].class));
+                } else {
+                    renglones = Arrays.asList(RestClient.getRestTemplate().getForObject("/notas/renglones/credito/" + notaCredito.getIdNota(), RenglonNotaCredito[].class));
+                }
+            } 
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -328,10 +369,18 @@ public class DetalleNotaCreditoGUI extends JDialog {
         notaCreditoNueva.setIva21Neto(iva_21_netoFactura);
         notaCreditoNueva.setTotal(new BigDecimal(txt_Total.getValue().toString()));
         notaCreditoNueva.setRenglonesNotaCredito(renglones);
-        String uri = "/notas/credito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                + "/usuario/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                + "/factura/" + factura.getId_Factura()
-                + "?modificarStock=" + modificarStock;
+        notaCreditoNueva.setTipoComprobante(tipoDeComprobante);
+        String uri = "";
+        if (cliente != null) {
+            notaCreditoNueva.setFecha(new Date());
+            uri += "/notas/credito/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + "/usuarios/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
+                    + "/clientes/" + this.cliente.getId_Cliente();
+            if (factura != null && cliente != null) {
+                uri += "/facturas/" + factura.getId_Factura()
+                        + "?modificarStock=" + modificarStock;
+            }
+        }
         if (proveedor != null) {
             Calendar fechaActual = Calendar.getInstance();
             Calendar fechaNotaCredito = Calendar.getInstance();
@@ -343,12 +392,14 @@ public class DetalleNotaCreditoGUI extends JDialog {
             notaCreditoNueva.setSerie(Long.parseLong(txt_Serie.getValue().toString()));
             notaCreditoNueva.setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
             notaCreditoNueva.setCAE(Long.parseLong(txt_CAE.getValue().toString()));
-            uri += "&movimiento=" + Movimiento.COMPRA
-                    + "&idProveedor=" + proveedor.getId_Proveedor();
-        } else if (cliente != null) {
-            notaCreditoNueva.setFecha(new Date());
-            uri += "&movimiento=" + Movimiento.VENTA
-                    + "&idCliente=" + cliente.getId_Cliente();
+            uri += "/notas/credito/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + "/usuarios/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
+                    + "/proveedores/" + this.proveedor.getId_Proveedor();
+            if (factura != null) {
+                uri += "/facturas/" + factura.getId_Factura()
+                        + "?modificarStock=" + modificarStock;
+            }
+
         }
         NotaCredito nc = RestClient.getRestTemplate()
                 .postForObject(uri, notaCreditoNueva, NotaCredito.class);
@@ -874,14 +925,16 @@ public class DetalleNotaCreditoGUI extends JDialog {
                 this.setTitle(notaCredito.getTipoComprobante() + " Nº " + notaCredito.getSerie() + " - " + notaCredito.getNroNota()
                         + " con fecha " + formatter.format(notaCredito.getFecha()) + " del Proveedor: " + notaCredito.getRazonSocialProveedor());
             } else {
-                factura = RestClient.getRestTemplate().getForObject("/facturas/" + idFactura, Factura.class);
+                if (idFactura != 0L) {
+                    factura = RestClient.getRestTemplate().getForObject("/facturas/" + idFactura, Factura.class);
+                }
                 if (cliente != null) {
                     this.cargarDetalleCliente();
                 } else if (proveedor != null) {
                     this.cargarDetalleProveedor();
                     dc_FechaNota.setDate(new Date());
                 }
-                this.setTitle("Nueva Nota de Credito");
+                this.setTitle("Nueva " + ((tipoDeComprobante.name() != null) ? tipoDeComprobante.toString() : "Nota de Credito"));
             }
             this.setColumnas();
             this.cargarRenglonesAlTable();

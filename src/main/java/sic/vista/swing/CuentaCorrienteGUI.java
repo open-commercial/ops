@@ -778,7 +778,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             this.dispose();
         }
     }//GEN-LAST:event_formInternalFrameOpened
-        
+
     private void btnCrearNotaCreditoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearNotaCreditoActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
@@ -786,34 +786,74 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             if (renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_A || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_B
                     || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_C || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_X
                     || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_Y || renglonCC.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
-                SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(renglonCC.getIdMovimiento(), renglonCC.getTipoComprobante());
-                seleccionDeProductosGUI.setModal(true);
-                seleccionDeProductosGUI.setLocationRelativeTo(this);
-                seleccionDeProductosGUI.setVisible(true);
-                if (!seleccionDeProductosGUI.getRenglonesConCantidadNueva().isEmpty()) {
-                    if (cliente != null) {
-                        DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(
-                                seleccionDeProductosGUI.getRenglonesConCantidadNueva(),
-                                seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock(),
-                                this.cliente);
-                        detalleNotaCredito.setModal(true);
-                        detalleNotaCredito.setLocationRelativeTo(this);
-                        detalleNotaCredito.setVisible(true);
-                        if (detalleNotaCredito.isNotaCreada()) {
-                            this.refrescarVista();
+                int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_confirmacion_nota_credito"), "Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
+                switch (respuesta) {
+                    case 0:
+                        SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(renglonCC.getIdMovimiento(), renglonCC.getTipoComprobante());
+                        seleccionDeProductosGUI.setModal(true);
+                        seleccionDeProductosGUI.setLocationRelativeTo(this);
+                        seleccionDeProductosGUI.setVisible(true);
+                        if (!seleccionDeProductosGUI.getRenglonesConCantidadNueva().isEmpty()) {
+                            if (cliente != null) {
+                                DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(
+                                        seleccionDeProductosGUI.getRenglonesConCantidadNueva(),
+                                        seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock(),
+                                        this.cliente);
+                                detalleNotaCredito.setModal(true);
+                                detalleNotaCredito.setLocationRelativeTo(this);
+                                detalleNotaCredito.setVisible(true);
+                                if (detalleNotaCredito.isNotaCreada()) {
+                                    this.refrescarVista();
+                                }
+                            } else if (proveedor != null) {
+                                DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(
+                                        seleccionDeProductosGUI.getRenglonesConCantidadNueva(),
+                                        seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock(),
+                                        this.proveedor);
+                                detalleNotaCredito.setModal(true);
+                                detalleNotaCredito.setLocationRelativeTo(this);
+                                detalleNotaCredito.setVisible(true);
+                                if (detalleNotaCredito.isNotaCreada()) {
+                                    this.refrescarVista();
+                                }
+                            }
                         }
-                    } else if (proveedor != null) {
-                        DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(
-                                seleccionDeProductosGUI.getRenglonesConCantidadNueva(),
-                                seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock(),
-                                this.proveedor);
-                        detalleNotaCredito.setModal(true);
-                        detalleNotaCredito.setLocationRelativeTo(this);
-                        detalleNotaCredito.setVisible(true);
-                        if (detalleNotaCredito.isNotaCreada()) {
-                            this.refrescarVista();
+                        break;
+                    case 1:
+                        if (cliente != null) {
+                            NuevoRenglonNotaCreditoGUI nuevoRenglonNotaCreditoGUI = new NuevoRenglonNotaCreditoGUI(this.cliente);
+                            nuevoRenglonNotaCreditoGUI.setModal(true);
+                            nuevoRenglonNotaCreditoGUI.setLocationRelativeTo(this);
+                            nuevoRenglonNotaCreditoGUI.setVisible(true);
+                            if (nuevoRenglonNotaCreditoGUI.getRenglonNotaCredito() != null) {
+                                DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(nuevoRenglonNotaCreditoGUI.getRenglonNotaCredito(),
+                                        this.cliente, nuevoRenglonNotaCreditoGUI.getTipoDeComprobante());
+                                detalleNotaCredito.setModal(true);
+                                detalleNotaCredito.setLocationRelativeTo(this);
+                                detalleNotaCredito.setVisible(true);
+                                if (detalleNotaCredito.isNotaCreada()) {
+                                    this.refrescarVista();
+                                }
+                            }
                         }
-                    }
+                        if (proveedor != null) {
+                            NuevoRenglonNotaCreditoGUI nuevoRenglonNotaCreditoGUI = new NuevoRenglonNotaCreditoGUI(this.proveedor);
+                            nuevoRenglonNotaCreditoGUI.setModal(true);
+                            nuevoRenglonNotaCreditoGUI.setLocationRelativeTo(this);
+                            nuevoRenglonNotaCreditoGUI.setVisible(true);
+                            DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(nuevoRenglonNotaCreditoGUI.getRenglonNotaCredito(),
+                                    this.proveedor, nuevoRenglonNotaCreditoGUI.getTipoDeComprobante());
+                            detalleNotaCredito.setModal(true);
+                            detalleNotaCredito.setLocationRelativeTo(this);
+                            detalleNotaCredito.setVisible(true);
+                            if (detalleNotaCredito.isNotaCreada()) {
+                                this.refrescarVista();
+                            }
+                        }
+                    case 2:
+                        break;
+                    default:
+                        break;
                 }
             } else {
                 JOptionPane.showInternalMessageDialog(this,
