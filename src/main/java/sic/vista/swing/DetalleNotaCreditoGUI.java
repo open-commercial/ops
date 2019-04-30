@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -279,10 +280,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
         try {
             if (notaCredito == null) {
                 String uri = "/notas/renglon/credito/producto?"
-                        + "tipoDeComprobante=" + factura.getTipoComprobante().name()
-                        + "&cantidad=" + idsRenglonesYCantidades.values().toString().substring(1, idsRenglonesYCantidades.values().toString().length() - 1)
-                        + "&idRenglonFactura=" + idsRenglonesYCantidades.keySet().toString().substring(1, idsRenglonesYCantidades.keySet().toString().length() - 1);
-                renglones = Arrays.asList(RestClient.getRestTemplate().getForObject(uri, RenglonNotaCredito[].class));
+                        + "tipoDeComprobante=" + factura.getTipoComprobante().name();
+                renglones = Arrays.asList(RestClient.getRestTemplate().postForObject(uri, idsRenglonesYCantidades, RenglonNotaCredito[].class));
             } else {
                 renglones = Arrays.asList(RestClient.getRestTemplate().getForObject("/notas/renglones/credito/" + notaCredito.getIdNota(), RenglonNotaCredito[].class));
             }
