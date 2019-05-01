@@ -1,7 +1,6 @@
 package sic.modelo;
 
 import java.math.BigDecimal;
-import java.util.Map;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,6 +8,7 @@ import lombok.Data;
 @Builder
 public class RenglonesDeFacturaParaNotaCredito {
 
-    Map<Long, BigDecimal> idsYCantidades;
+    private Long[] idsRenglonesFactura;
+    private BigDecimal[] cantidades;
     TipoDeComprobante tipoDeComprobante;
 }

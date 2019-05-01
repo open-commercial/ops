@@ -281,10 +281,11 @@ public class DetalleNotaCreditoGUI extends JDialog {
         try {
             if (notaCredito == null) {
                 String uri = "/notas/renglon/credito/producto";
-                RenglonesDeFacturaParaNotaCredito renglonesDeFacturaParaNotaCredito =
-                        RenglonesDeFacturaParaNotaCredito.builder()
-                                .idsYCantidades(idsRenglonesYCantidades)
-                        .tipoDeComprobante(factura.getTipoComprobante()).build();
+                RenglonesDeFacturaParaNotaCredito renglonesDeFacturaParaNotaCredito
+                        = RenglonesDeFacturaParaNotaCredito.builder()
+                                .idsRenglonesFactura(idsRenglonesYCantidades.keySet().toArray(new Long[idsRenglonesYCantidades.size()]))
+                                .cantidades(idsRenglonesYCantidades.values().toArray(new BigDecimal[idsRenglonesYCantidades.size()]))
+                                .tipoDeComprobante(factura.getTipoComprobante()).build();
                 renglones = Arrays.asList(RestClient.getRestTemplate().postForObject(uri, renglonesDeFacturaParaNotaCredito, RenglonNotaCredito[].class));
             } else {
                 renglones = Arrays.asList(RestClient.getRestTemplate().getForObject("/notas/renglones/credito/" + notaCredito.getIdNota(), RenglonNotaCredito[].class));
