@@ -189,7 +189,6 @@ public class DetalleNotaCreditoGUI extends JDialog {
                 }
             } else {
                 txt_Subtotal.setValue(renglones.get(0).getImporte());
-                subTotalBruto = renglones.get(0).getImporte();
                 txt_Decuento_porcentaje.setValue(BigDecimal.ZERO);
                 txt_Decuento_neto.setValue(BigDecimal.ZERO);
                 txt_Recargo_porcentaje.setValue(BigDecimal.ZERO);
@@ -197,13 +196,20 @@ public class DetalleNotaCreditoGUI extends JDialog {
                 txt_IVA105_neto.setValue(BigDecimal.ZERO);
                 iva_105_netoFactura = BigDecimal.ZERO;
                 iva_21_netoFactura = renglones.get(0).getIvaNeto();
-                if (this.tipoDeComprobante == TipoDeComprobante.NOTA_DEBITO_B || this.tipoDeComprobante == TipoDeComprobante.NOTA_CREDITO_PRESUPUESTO) {
-                    txt_IVA21_neto.setValue(BigDecimal.ZERO);
+                if (tipoDeComprobante == TipoDeComprobante.NOTA_CREDITO_B || tipoDeComprobante == TipoDeComprobante.NOTA_CREDITO_PRESUPUESTO) {
+                    txt_IVA105_neto.setValue(0);
+                    txt_IVA21_neto.setValue(0);
                 } else {
-                    txt_IVA21_neto.setValue(renglones.get(0).getIvaNeto());
+                    txt_IVA105_neto.setValue(iva_105_netoFactura);
+                    txt_IVA21_neto.setValue(iva_21_netoFactura);
                 }
-                txt_SubTotalBruto.setValue(renglones.get(0).getImporteBruto());
-                txt_Total.setValue(renglones.get(0).getImporteNeto());
+                subTotalBruto = renglones.get(0).getImporteBruto();
+                txt_Total.setValue(subTotalBruto.add(iva_105_netoFactura).add(iva_21_netoFactura));
+                if (tipoDeComprobante == TipoDeComprobante.NOTA_CREDITO_B || tipoDeComprobante == TipoDeComprobante.NOTA_CREDITO_PRESUPUESTO) {
+                    txt_SubTotalBruto.setValue(renglones.get(0).getImporte());
+                } else {
+                    txt_SubTotalBruto.setValue(subTotalBruto);
+                }
             }
         } else {
             txt_Subtotal.setValue(notaCredito.getSubTotal());
@@ -343,7 +349,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
             fila[3] = r.getCantidad();
             fila[4] = r.getPrecioUnitario();
             fila[5] = r.getDescuentoPorcentaje();
-            fila[6] = r.getImporteBruto();
+            fila[6] = r.getImporte();
             return fila;
         }).forEach(fila -> {
             modeloTablaRenglones.addRow(fila);
