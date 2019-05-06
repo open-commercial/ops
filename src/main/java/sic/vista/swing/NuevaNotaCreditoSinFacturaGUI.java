@@ -1,8 +1,8 @@
 package sic.vista.swing;
 
 import java.awt.event.KeyEvent;
+import java.math.BigDecimal;
 import java.util.ResourceBundle;
-import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -13,43 +13,32 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
+import sic.modelo.NotaCredito;
+import sic.modelo.NuevaNotaCreditoSinFactura;
 import sic.modelo.Proveedor;
-import sic.modelo.RenglonNotaCredito;
 import sic.modelo.TipoDeComprobante;
 
-public class NuevoRenglonNotaCreditoGUI extends JDialog {
+public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
     
-    private final Cliente clienteSeleccionado;
-    private final Proveedor proveedorSeleccionado;
-    private RenglonNotaCredito renglonNotaCredito;
-    private TipoDeComprobante tipoDeComprobante;
+    private final Long idCliente;
+    private final Long idProveedor;
+    private NotaCredito notaCreditoCalculada;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public NuevoRenglonNotaCreditoGUI(Cliente cliente) {
+    public NuevaNotaCreditoSinFacturaGUI(Cliente cliente) {
         this.initComponents();
-        this.setIcon();
-        this.clienteSeleccionado = cliente;
-        this.proveedorSeleccionado = null;
+        this.idCliente = cliente.getId_Cliente();
+        this.idProveedor = null;
     }
 
-    public NuevoRenglonNotaCreditoGUI(Proveedor proveedor) {
+    public NuevaNotaCreditoSinFacturaGUI(Proveedor proveedor) {
         this.initComponents();
-        this.setIcon();
-        this.clienteSeleccionado = null;
-        this.proveedorSeleccionado = proveedor;
+        this.idCliente = null;
+        this.idProveedor = proveedor.getId_Proveedor();
     }
 
-    private void setIcon() {
-       // ImageIcon iconoVentana = new ImageIcon(AgregarGastoGUI.class.getResource("/sic/icons/CoinsAdd_16x16.png"));
-      //  this.setIconImage(iconoVentana.getImage());
-    }
-    
-    public RenglonNotaCredito getRenglonNotaCredito() {
-        return this.renglonNotaCredito;
-    }
-    
-    public TipoDeComprobante getTipoDeComprobante() {
-        return this.tipoDeComprobante;
+    public NotaCredito getNotaCreditoCalculadaSinFactura() {
+        return notaCreditoCalculada;
     }
 
     @SuppressWarnings("unchecked")
@@ -181,12 +170,12 @@ public class NuevoRenglonNotaCreditoGUI extends JDialog {
         try {
             cmbTipoDeComprobante.removeAllItems();
             TipoDeComprobante[] tiposDeComprobante = null;
-            if (this.clienteSeleccionado != null) {
+            if (this.idCliente != null) {
                 tiposDeComprobante = RestClient.getRestTemplate()
                         .getForObject("/notas/tipos/credito?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                                + "&idCliente=" + this.clienteSeleccionado.getId_Cliente(), TipoDeComprobante[].class);
+                                + "&idCliente=" + this.idCliente, TipoDeComprobante[].class);
             }
-            if (this.proveedorSeleccionado != null) {
+            if (this.idProveedor != null) {
                 tiposDeComprobante = RestClient.getRestTemplate()
                         .getForObject("/notas/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), TipoDeComprobante[].class);
             }
@@ -213,14 +202,18 @@ public class NuevoRenglonNotaCreditoGUI extends JDialog {
             ftxtDetalle.setText("");
         }
         try {
-            renglonNotaCredito = RestClient.getRestTemplate().getForObject("/notas/renglon/credito?tipoDeComprobante="
-                    + ((TipoDeComprobante) cmbTipoDeComprobante.getSelectedItem()).name()
-                    + "&detalle=" + ftxtDetalle.getText().trim()
-                    + "&monto=" + ftxt_Monto.getValue(), RenglonNotaCredito.class);
-            this.tipoDeComprobante = (TipoDeComprobante) cmbTipoDeComprobante.getSelectedItem();
+            NuevaNotaCreditoSinFactura nuevaNotaCreditoSinFactura = NuevaNotaCreditoSinFactura
+                    .builder()
+                    .idCliente(idCliente)
+                    .idProveedor(idProveedor)
+                    .idEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())
+                    .monto(new BigDecimal(ftxt_Monto.getValue().toString()))
+                    .tipo(((TipoDeComprobante) cmbTipoDeComprobante.getSelectedItem()))
+                    .detalle(ftxtDetalle.getText().trim())
+                    .build();
+            notaCreditoCalculada = RestClient.getRestTemplate().postForObject("/notas/credito/calculos-sin-factura", nuevaNotaCreditoSinFactura, NotaCredito.class);
             this.dispose();
-        }
-        catch (RestClientResponseException ex) {
+        } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
             LOGGER.error(ex.getMessage());
