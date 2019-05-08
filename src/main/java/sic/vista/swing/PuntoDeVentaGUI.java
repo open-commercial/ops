@@ -155,7 +155,9 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         factura.setSubTotalBruto(subTotalBruto);
         factura.setIva105Neto(iva_105_netoFactura);
         factura.setIva21Neto(iva_21_netoFactura);
-        factura.setTotal(new BigDecimal(txt_Total.getValue().toString()));                                             
+        factura.setTotal(new BigDecimal(txt_Total.getValue().toString()));     
+        factura.setIdCliente(this.cliente.getId_Cliente());
+        factura.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
         return factura;
     }
     
