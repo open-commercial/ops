@@ -119,6 +119,7 @@ public class PrincipalGUI extends JFrame {
         mnuItm_Transportistas = new javax.swing.JMenuItem();
         mnuItm_FormasDePago = new javax.swing.JMenuItem();
         mnu_Cajas = new javax.swing.JMenuItem();
+        mnuItmGastos = new javax.swing.JMenuItem();
         mnuItmRubros = new javax.swing.JMenuItem();
         mnuItmMedidas = new javax.swing.JMenuItem();
         mnuItmLocalidades = new javax.swing.JMenuItem();
@@ -317,6 +318,15 @@ public class PrincipalGUI extends JFrame {
             }
         });
         mnu_Administracion.add(mnu_Cajas);
+
+        mnuItmGastos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Coins_16x16.png"))); // NOI18N
+        mnuItmGastos.setText("Gastos");
+        mnuItmGastos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuItmGastosActionPerformed(evt);
+            }
+        });
+        mnu_Administracion.add(mnuItmGastos);
 
         mnuItmRubros.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Block.png"))); // NOI18N
         mnuItmRubros.setText("Rubros");
@@ -821,9 +831,29 @@ public class PrincipalGUI extends JFrame {
         }
     }//GEN-LAST:event_mnuItmLocalidadesActionPerformed
 
+    private void mnuItmGastosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmGastosActionPerformed
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), LocalidadesGUI.class);
+        if (gui == null) {
+            gui = new GastosGUI();
+            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+            getDesktopPane().add(gui);
+            gui.setVisible(true);
+        } else {
+            try {
+                gui.setSelected(true);
+            } catch (PropertyVetoException ex) {
+                String msjError = "No se pudo seleccionar la ventana requerida.";
+                LOGGER.error(msjError + " - " + ex.getMessage());
+                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_mnuItmGastosActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane dp_Escritorio;
     private javax.swing.JMenuBar mb_BarraMenues;
+    private javax.swing.JMenuItem mnuItmGastos;
     private javax.swing.JMenuItem mnuItmLocalidades;
     private javax.swing.JMenuItem mnuItmMedidas;
     private javax.swing.JMenuItem mnuItmRubros;
