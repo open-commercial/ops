@@ -192,12 +192,11 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         facturaCompra.setTotal(totalComprobante);
         facturaCompra.setObservaciones(txta_Observaciones.getText().trim());
         facturaCompra.setEliminada(false);
+        facturaCompra.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        facturaCompra.setIdProveedor(proveedorSeleccionado.getId_Proveedor());
+        facturaCompra.setIdTransportista(((Transportista) cmb_Transportista.getSelectedItem()).getId_Transportista());
         try {
-            RestClient.getRestTemplate().postForObject("/facturas/compra"
-                    + "?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                    + "&idProveedor=" + proveedorSeleccionado.getId_Proveedor()
-                    + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                    + "&idTransportista=" + ((Transportista) cmb_Transportista.getSelectedItem()).getId_Transportista(),
+            RestClient.getRestTemplate().postForObject("/facturas/compra",
                     facturaCompra, FacturaCompra[].class);
             return true;
         } catch (RestClientResponseException ex) {
