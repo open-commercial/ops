@@ -185,21 +185,19 @@ public class CerrarVentaGUI extends JDialog {
 
     private void finalizarVenta() {
         FacturaVenta facturaVenta = gui_puntoDeVenta.construirFactura();
+        facturaVenta.setIdTransportista(((Transportista) cmb_Transporte.getSelectedItem()).getId_Transportista());
         this.armarMontosConFormasDePago();
         try {
-            String uri = "/facturas/venta?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                    + "&idCliente=" + gui_puntoDeVenta.getIdCliente()
-                    + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                    + "&idTransportista=" + ((Transportista) cmb_Transporte.getSelectedItem()).getId_Transportista();                    
+            String uri = "/facturas/venta?";
             if (idsFormasDePago.isEmpty() == false) {
-                uri += "&idsFormaDePago=" + Arrays.toString(idsFormasDePago.toArray()).substring(1, Arrays.toString(idsFormasDePago.toArray()).length() - 1)
-                    + "&montos=" + Arrays.toString(montos.toArray()).substring(1, Arrays.toString(montos.toArray()).length() - 1);
+                uri += "idsFormaDePago=" + Arrays.toString(idsFormasDePago.toArray()).substring(1, Arrays.toString(idsFormasDePago.toArray()).length() - 1)
+                        + "&montos=" + Arrays.toString(montos.toArray()).substring(1, Arrays.toString(montos.toArray()).length() - 1) + "&";
             }
             if (gui_puntoDeVenta.getPedido() != null && gui_puntoDeVenta.getPedido().getId_Pedido() != 0) {
-                uri += "&idPedido=" + gui_puntoDeVenta.getPedido().getId_Pedido();
+                uri += "idPedido=" + gui_puntoDeVenta.getPedido().getId_Pedido() + "&";
             }
             if (dividir) {
-                String indices = "&indices=" + Arrays.toString(indicesParaDividir).substring(1, Arrays.toString(indicesParaDividir).length() - 1);
+                String indices = "indices=" + Arrays.toString(indicesParaDividir).substring(1, Arrays.toString(indicesParaDividir).length() - 1);
                 List<FacturaVenta> facturasDivididas = Arrays.asList(RestClient.getRestTemplate()
                         .postForObject(uri + indices, facturaVenta, FacturaVenta[].class));
                 facturasDivididas.forEach(fv -> {

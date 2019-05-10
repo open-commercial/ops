@@ -45,7 +45,7 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
     private void cargarConfiguracionParaModificar() {
         chk_PreImpresas.setSelected(cdsModificar.isUsarFacturaVentaPreImpresa());
         txt_CantMaximaRenglones.setValue(cdsModificar.getCantidadMaximaDeRenglonesEnFactura());
-        if (cdsModificar.isFacturaElectronicaHabilitada() && (cdsModificar.getCertificadoAfip() != null)) {
+        if (cdsModificar.isFacturaElectronicaHabilitada() && cdsModificar.isExisteCertificado()) {
               chk_UsarFE.setSelected(true);
               lbl_certEstado.setText("Cargado");
               lbl_certEstado.setForeground(Color.GREEN);
