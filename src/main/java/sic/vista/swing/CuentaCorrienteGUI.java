@@ -499,12 +499,20 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     }
     
     private void crearNotaCreditoSinFacturaRelacionada() {
-        NuevaNotaCreditoSinFacturaGUI nuevoRenglonNotaCreditoGUI = new NuevaNotaCreditoSinFacturaGUI(this.cliente);
-        nuevoRenglonNotaCreditoGUI.setModal(true);
-        nuevoRenglonNotaCreditoGUI.setLocationRelativeTo(this);
-        nuevoRenglonNotaCreditoGUI.setVisible(true);
-        if (nuevoRenglonNotaCreditoGUI.getNotaCreditoCalculadaSinFactura() != null) {
-            DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(nuevoRenglonNotaCreditoGUI.getNotaCreditoCalculadaSinFactura());
+        NuevaNotaCreditoSinFacturaGUI nuevaNotaDeCreditoSinFactura = null;
+        if (this.cliente != null) {
+            nuevaNotaDeCreditoSinFactura = new NuevaNotaCreditoSinFacturaGUI(this.cliente);
+            nuevaNotaDeCreditoSinFactura.setModal(true);
+            nuevaNotaDeCreditoSinFactura.setLocationRelativeTo(this);
+            nuevaNotaDeCreditoSinFactura.setVisible(true);
+        } else if (this.proveedor != null) {
+            nuevaNotaDeCreditoSinFactura = new NuevaNotaCreditoSinFacturaGUI(this.proveedor);
+            nuevaNotaDeCreditoSinFactura.setModal(true);
+            nuevaNotaDeCreditoSinFactura.setLocationRelativeTo(this);
+            nuevaNotaDeCreditoSinFactura.setVisible(true);
+        }
+        if (nuevaNotaDeCreditoSinFactura != null && nuevaNotaDeCreditoSinFactura.getNotaCreditoCalculadaSinFactura() != null) {
+            DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(nuevaNotaDeCreditoSinFactura.getNotaCreditoCalculadaSinFactura());
             detalleNotaCredito.setModal(true);
             detalleNotaCredito.setLocationRelativeTo(this);
             detalleNotaCredito.setVisible(true);
