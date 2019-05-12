@@ -832,7 +832,7 @@ public class PrincipalGUI extends JFrame {
     }//GEN-LAST:event_mnuItmLocalidadesActionPerformed
 
     private void mnuItmGastosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmGastosActionPerformed
-        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), LocalidadesGUI.class);
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), GastosGUI.class);
         if (gui == null) {
             gui = new GastosGUI();
             gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,

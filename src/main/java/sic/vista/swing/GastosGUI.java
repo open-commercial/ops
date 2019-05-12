@@ -648,7 +648,7 @@ public class GastosGUI extends JInternalFrame {
             try {
                 Gasto gasto = RestClient.getRestTemplate().getForObject("/gastos/" + gastosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getId_Gasto(), Gasto.class);
                 String mensaje = "En Concepto de: " + gasto.getConcepto()
-                        + "\nMonto: " + gasto.getMonto() + "\nUsuario: " + gasto.getNombreUsuario();
+                        + "\nMonto: " + gasto.getMonto().doubleValue() + "\nUsuario: " + gasto.getNombreUsuario();
                 JOptionPane.showMessageDialog(this, mensaje, "Resumen de Gasto", JOptionPane.INFORMATION_MESSAGE);
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -740,6 +740,7 @@ public class GastosGUI extends JInternalFrame {
                         + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), FormaDePago[].class));
                 AgregarGastoGUI agregarGasto = new AgregarGastoGUI(formasDePago);
                 agregarGasto.setLocationRelativeTo(this);
+                agregarGasto.setModal(true);
                 agregarGasto.setEnabled(true);
                 agregarGasto.setVisible(true);
                 this.limpiarYBuscar();
