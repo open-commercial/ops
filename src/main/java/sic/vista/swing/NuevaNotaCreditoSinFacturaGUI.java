@@ -46,7 +46,7 @@ public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
     private void initComponents() {
 
         pnl_Parametros = new javax.swing.JPanel();
-        lbl_Concepto = new javax.swing.JLabel();
+        lblDescripcion = new javax.swing.JLabel();
         ftxtDetalle = new javax.swing.JTextField();
         lbl_Monto = new javax.swing.JLabel();
         ftxt_Monto = new javax.swing.JFormattedTextField();
@@ -55,7 +55,7 @@ public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
         lbl_Aceptar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Nueva Nota de Credito no Relacionada");
+        setTitle("Nueva Nota de Credito");
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
@@ -65,9 +65,9 @@ public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
 
         pnl_Parametros.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        lbl_Concepto.setForeground(java.awt.Color.red);
-        lbl_Concepto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Concepto.setText("* Detalle:");
+        lblDescripcion.setForeground(java.awt.Color.red);
+        lblDescripcion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblDescripcion.setText("* Descripcion:");
 
         lbl_Monto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Monto.setText("Monto:");
@@ -95,7 +95,7 @@ public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
             .addGroup(pnl_ParametrosLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnl_ParametrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Concepto, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_Monto, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_TipoDeComprobante))
                 .addGap(6, 6, 6)
@@ -108,7 +108,7 @@ public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
 
         pnl_ParametrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cmbTipoDeComprobante, ftxtDetalle, ftxt_Monto});
 
-        pnl_ParametrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lbl_Concepto, lbl_Monto, lbl_TipoDeComprobante});
+        pnl_ParametrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblDescripcion, lbl_Monto, lbl_TipoDeComprobante});
 
         pnl_ParametrosLayout.setVerticalGroup(
             pnl_ParametrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -119,7 +119,7 @@ public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
                     .addComponent(cmbTipoDeComprobante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_ParametrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Concepto)
+                    .addComponent(lblDescripcion)
                     .addComponent(ftxtDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_ParametrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
@@ -130,7 +130,7 @@ public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
 
         pnl_ParametrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmbTipoDeComprobante, ftxtDetalle, ftxt_Monto});
 
-        pnl_ParametrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lbl_Concepto, lbl_Monto, lbl_TipoDeComprobante});
+        pnl_ParametrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblDescripcion, lbl_Monto, lbl_TipoDeComprobante});
 
         lbl_Aceptar.setForeground(java.awt.Color.blue);
         lbl_Aceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
@@ -239,8 +239,8 @@ public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
     private javax.swing.JComboBox cmbTipoDeComprobante;
     private javax.swing.JTextField ftxtDetalle;
     private javax.swing.JFormattedTextField ftxt_Monto;
+    private javax.swing.JLabel lblDescripcion;
     private javax.swing.JButton lbl_Aceptar;
-    private javax.swing.JLabel lbl_Concepto;
     private javax.swing.JLabel lbl_Monto;
     private javax.swing.JLabel lbl_TipoDeComprobante;
     private javax.swing.JPanel pnl_Parametros;
