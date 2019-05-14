@@ -1260,19 +1260,13 @@ public class FacturasVentaGUI extends JInternalFrame {
                     || factura.getTipoComprobante() == TipoDeComprobante.FACTURA_Y
                     || factura.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
                 SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(
-                        factura.getId_Factura(), factura.getTipoComprobante());
+                        factura.getId_Factura());
                 seleccionDeProductosGUI.setModal(true);
                 seleccionDeProductosGUI.setLocationRelativeTo(this);
                 seleccionDeProductosGUI.setVisible(true);
                 try {
-                    Cliente cliente = RestClient.getRestTemplate()
-                            .getForObject("/clientes/" + factura.getIdCliente(),
-                                    Cliente.class);
-                    if (!seleccionDeProductosGUI.getRenglonesConCantidadNueva().isEmpty()) {
-                        DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(
-                                seleccionDeProductosGUI.getRenglonesConCantidadNueva(),
-                                seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock(),
-                                cliente);
+                    if (seleccionDeProductosGUI.getNotaCreditoCalculada() != null) {
+                        DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(seleccionDeProductosGUI.getNotaCreditoCalculada());
                         detalleNotaCredito.setModal(true);
                         detalleNotaCredito.setLocationRelativeTo(this);
                         detalleNotaCredito.setVisible(true);

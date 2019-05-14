@@ -926,22 +926,16 @@ public class FacturasCompraGUI extends JInternalFrame {
                     || factura.getTipoComprobante() == TipoDeComprobante.FACTURA_Y
                     || factura.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
                 SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(
-                        factura.getId_Factura(), factura.getTipoComprobante());
+                        factura.getId_Factura());
                 seleccionDeProductosGUI.setModal(true);
                 seleccionDeProductosGUI.setLocationRelativeTo(this);
                 seleccionDeProductosGUI.setVisible(true);
                 try {
-                    Proveedor proveedor = RestClient.getRestTemplate()
-                            .getForObject("/proveedores/" + factura.getIdProveedor(),
-                                    Proveedor.class);
-                    if (!seleccionDeProductosGUI.getRenglonesConCantidadNueva().isEmpty()) {
-                        DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(
-                                seleccionDeProductosGUI.getRenglonesConCantidadNueva(),
-                                seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock(),
-                                proveedor);
+                    if (seleccionDeProductosGUI.getNotaCreditoCalculada() != null) {
+                        DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(seleccionDeProductosGUI.getNotaCreditoCalculada());
                         detalleNotaCredito.setModal(true);
                         detalleNotaCredito.setLocationRelativeTo(this);
-                        detalleNotaCredito.setVisible(true);                        
+                        detalleNotaCredito.setVisible(true);
                     }
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

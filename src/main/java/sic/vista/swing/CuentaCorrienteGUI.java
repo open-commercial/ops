@@ -488,6 +488,40 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         }
     }
     
+    private void crearNotaCreditoConFacturaRelacionada(SeleccionDeProductosGUI seleccionDeProductosGUI) {
+        DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(seleccionDeProductosGUI.getNotaCreditoCalculada());
+        detalleNotaCredito.setModal(true);
+        detalleNotaCredito.setLocationRelativeTo(this);
+        detalleNotaCredito.setVisible(true);
+        if (detalleNotaCredito.isNotaCreada()) {
+            this.refrescarVista();
+        }
+    }
+    
+    private void crearNotaCreditoSinFacturaRelacionada() {
+        NuevaNotaCreditoSinFacturaGUI nuevaNotaDeCreditoSinFactura = null;
+        if (this.cliente != null) {
+            nuevaNotaDeCreditoSinFactura = new NuevaNotaCreditoSinFacturaGUI(this.cliente);
+            nuevaNotaDeCreditoSinFactura.setModal(true);
+            nuevaNotaDeCreditoSinFactura.setLocationRelativeTo(this);
+            nuevaNotaDeCreditoSinFactura.setVisible(true);
+        } else if (this.proveedor != null) {
+            nuevaNotaDeCreditoSinFactura = new NuevaNotaCreditoSinFacturaGUI(this.proveedor);
+            nuevaNotaDeCreditoSinFactura.setModal(true);
+            nuevaNotaDeCreditoSinFactura.setLocationRelativeTo(this);
+            nuevaNotaDeCreditoSinFactura.setVisible(true);
+        }
+        if (nuevaNotaDeCreditoSinFactura != null && nuevaNotaDeCreditoSinFactura.getNotaCreditoCalculadaSinFactura() != null) {
+            DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(nuevaNotaDeCreditoSinFactura.getNotaCreditoCalculadaSinFactura());
+            detalleNotaCredito.setModal(true);
+            detalleNotaCredito.setLocationRelativeTo(this);
+            detalleNotaCredito.setVisible(true);
+            if (detalleNotaCredito.isNotaCreada()) {
+                this.refrescarVista();
+            }
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -778,7 +812,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             this.dispose();
         }
     }//GEN-LAST:event_formInternalFrameOpened
-        
+
     private void btnCrearNotaCreditoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearNotaCreditoActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
@@ -786,40 +820,27 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             if (renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_A || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_B
                     || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_C || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_X
                     || renglonCC.getTipoComprobante() == TipoDeComprobante.FACTURA_Y || renglonCC.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
-                SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(renglonCC.getIdMovimiento(), renglonCC.getTipoComprobante());
-                seleccionDeProductosGUI.setModal(true);
-                seleccionDeProductosGUI.setLocationRelativeTo(this);
-                seleccionDeProductosGUI.setVisible(true);
-                if (!seleccionDeProductosGUI.getRenglonesConCantidadNueva().isEmpty()) {
-                    if (cliente != null) {
-                        DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(
-                                seleccionDeProductosGUI.getRenglonesConCantidadNueva(),
-                                seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock(),
-                                this.cliente);
-                        detalleNotaCredito.setModal(true);
-                        detalleNotaCredito.setLocationRelativeTo(this);
-                        detalleNotaCredito.setVisible(true);
-                        if (detalleNotaCredito.isNotaCreada()) {
-                            this.refrescarVista();
+                int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_confirmacion_nota_credito"), "Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
+                switch (respuesta) {
+                    case 0:
+                        SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(renglonCC.getIdMovimiento());
+                        seleccionDeProductosGUI.setModal(true);
+                        seleccionDeProductosGUI.setLocationRelativeTo(this);
+                        seleccionDeProductosGUI.setVisible(true);
+                        if (seleccionDeProductosGUI.getNotaCreditoCalculada() != null) {
+                            this.crearNotaCreditoConFacturaRelacionada(seleccionDeProductosGUI);
                         }
-                    } else if (proveedor != null) {
-                        DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(
-                                seleccionDeProductosGUI.getRenglonesConCantidadNueva(),
-                                seleccionDeProductosGUI.getIdFactura(), seleccionDeProductosGUI.modificarStock(),
-                                this.proveedor);
-                        detalleNotaCredito.setModal(true);
-                        detalleNotaCredito.setLocationRelativeTo(this);
-                        detalleNotaCredito.setVisible(true);
-                        if (detalleNotaCredito.isNotaCreada()) {
-                            this.refrescarVista();
-                        }
-                    }
+                        break;
+                    case 1:
+                        this.crearNotaCreditoSinFacturaRelacionada();
+                    default:
+                        break;
                 }
             } else {
-                JOptionPane.showInternalMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+                this.crearNotaCreditoSinFacturaRelacionada();
             }
+        } else {
+            this.crearNotaCreditoSinFacturaRelacionada();
         }
     }//GEN-LAST:event_btnCrearNotaCreditoActionPerformed
 
