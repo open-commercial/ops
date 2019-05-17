@@ -85,7 +85,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
 
     private void cargarDetalleCliente() {
         txtNombre.setText(cliente.getNombreFiscal() + " (" + cliente.getNroCliente() + ")");
-        txtUbicacion.setText(cliente.getDetalleUbicacionFacturacion());
+        txtUbicacion.setText(cliente.getUbicacionFacturacion().toString());
         if (cliente.getIdFiscal() != null) {
             txtIdFiscal.setText(cliente.getIdFiscal().toString());
         }
@@ -102,8 +102,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
 
     private void cargarDetalleProveedor() {
         txtNombre.setText(proveedor.getRazonSocial());
-        if (proveedor.getIdUbicacion()!= null) {
-            txtUbicacion.setText(proveedor.getDetalleUbicacion());
+        if (proveedor.getUbicacion() != null) {
+            txtUbicacion.setText(proveedor.getUbicacion().toString());
         }
         if (proveedor.getIdFiscal() != null) {
             txtIdFiscal.setText(proveedor.getIdFiscal().toString());
@@ -146,18 +146,18 @@ public class DetalleNotaDebitoGUI extends JDialog {
                 + "?subTotalBruto=" + new BigDecimal(txtSubTotalBruto.getValue().toString())
                 + "&iva21Neto=" + notaDebitoNueva.getIva21Neto()
                 + "&montoNoGravado=" + notaDebitoNueva.getMontoNoGravado(), BigDecimal.class));
-        String uri = "/notas/debito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                + "/usuario/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                + "/recibo/" + recibo.getIdRecibo();
+        notaDebitoNueva.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        notaDebitoNueva.setIdRecibo(recibo.getIdRecibo());
+        String uri = "/notas/debito/";
         if (cliente != null) {
-            uri += "?movimiento=" + Movimiento.VENTA
-                    + "&idCliente=" + cliente.getId_Cliente();
+            uri += "clientes";
+            notaDebitoNueva.setIdCliente(cliente.getId_Cliente());
         } else if (proveedor != null) {
+            uri += "proveedores";
             notaDebitoNueva.setSerie(Long.parseLong(txt_Serie.getValue().toString()));
             notaDebitoNueva.setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
             notaDebitoNueva.setCAE(Long.parseLong(txt_CAE.getValue().toString()));
-            uri += "?movimiento=" + Movimiento.COMPRA
-                    + "&idProveedor=" + proveedor.getId_Proveedor();
+            notaDebitoNueva.setIdProveedor(proveedor.getId_Proveedor());
         }
         NotaDebito nd = RestClient.getRestTemplate()
                 .postForObject(uri, notaDebitoNueva, NotaDebito.class);
@@ -233,8 +233,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
             txtNombre.setText(proveedorDeNota.getRazonSocial());
             cmbDescripcionRenglon2.removeAllItems();
             cmbDescripcionRenglon2.addItem(notaDebito.getMotivo());
-            if (proveedorDeNota.getIdUbicacion() != null) {
-                txtUbicacion.setText(proveedorDeNota.getDetalleUbicacion());
+            if (proveedorDeNota.getUbicacion() != null) {
+                txtUbicacion.setText(proveedorDeNota.getUbicacion().toString());
             }
             txtCondicionIVA.setText(proveedorDeNota.getCategoriaIVA().toString());
             if (proveedorDeNota.getIdFiscal() != null) {

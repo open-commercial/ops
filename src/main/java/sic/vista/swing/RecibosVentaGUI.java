@@ -37,7 +37,7 @@ import sic.util.Utilidades;
 
 public class RecibosVentaGUI extends JInternalFrame {
 
-    private ModeloTabla modeloTablaFacturas = new ModeloTabla();
+    private ModeloTabla modeloTablaRecibos = new ModeloTabla();
     private List<Recibo> recibosTotal = new ArrayList<>();
     private List<Recibo> recibosParcial = new ArrayList<>();
     private Cliente clienteSeleccionado;
@@ -123,10 +123,10 @@ public class RecibosVentaGUI extends JInternalFrame {
         encabezados[5] = "Forma de Pago";
         encabezados[6] = "Monto";
         encabezados[7] = "Concepto";
-        modeloTablaFacturas.setColumnIdentifiers(encabezados);
-        tbl_Resultados.setModel(modeloTablaFacturas);
+        modeloTablaRecibos.setColumnIdentifiers(encabezados);
+        tbl_Resultados.setModel(modeloTablaRecibos);
         //tipo de dato columnas
-        Class[] tipos = new Class[modeloTablaFacturas.getColumnCount()];
+        Class[] tipos = new Class[modeloTablaRecibos.getColumnCount()];
         tipos[0] = Date.class;
         tipos[1] = String.class;
         tipos[2] = String.class;
@@ -135,7 +135,7 @@ public class RecibosVentaGUI extends JInternalFrame {
         tipos[5] = String.class;
         tipos[6] = BigDecimal.class;
         tipos[7] = String.class;
-        modeloTablaFacturas.setClaseColumnas(tipos);
+        modeloTablaRecibos.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
         //tamanios de columnas
@@ -246,9 +246,9 @@ public class RecibosVentaGUI extends JInternalFrame {
             fila[7] = recibo.getConcepto();
             return fila;
         }).forEach(fila -> {
-            modeloTablaFacturas.addRow(fila);
+            modeloTablaRecibos.addRow(fila);
         });
-        tbl_Resultados.setModel(modeloTablaFacturas);
+        tbl_Resultados.setModel(modeloTablaRecibos);
         lbl_cantResultados.setText(totalElementosBusqueda + " recibos encontrados");
     }
 
@@ -261,8 +261,8 @@ public class RecibosVentaGUI extends JInternalFrame {
     }
 
     private void limpiarJTable() {
-        modeloTablaFacturas = new ModeloTabla();
-        tbl_Resultados.setModel(modeloTablaFacturas);
+        modeloTablaRecibos = new ModeloTabla();
+        tbl_Resultados.setModel(modeloTablaRecibos);
         this.setColumnas();
     }
 
@@ -814,8 +814,8 @@ public class RecibosVentaGUI extends JInternalFrame {
                     "Eliminar", JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
                 try {
-                    RestClient.getRestTemplate().delete("/recibos?idRecibo="
-                            + recibosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)));
+                    RestClient.getRestTemplate().delete("/recibos/"
+                            + recibosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getIdRecibo());
                     this.limpiarYBuscar();
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

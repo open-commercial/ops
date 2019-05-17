@@ -155,7 +155,9 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         factura.setSubTotalBruto(subTotalBruto);
         factura.setIva105Neto(iva_105_netoFactura);
         factura.setIva21Neto(iva_21_netoFactura);
-        factura.setTotal(new BigDecimal(txt_Total.getValue().toString()));                                             
+        factura.setTotal(new BigDecimal(txt_Total.getValue().toString()));                      
+        factura.setIdCliente(this.cliente.getId_Cliente());
+        factura.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
         return factura;
     }
     
@@ -214,13 +216,9 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         this.cliente = cliente;
         txtNombreCliente.setText(cliente.getNombreFiscal() + " (" + cliente.getNroCliente() + ")");
         txtBonificacion.setText(cliente.getBonificacion().setScale(2, RoundingMode.HALF_UP) + " %");
-        txtUbicacionCliente.setText(cliente.getDetalleUbicacionFacturacion());
+        txtUbicacionCliente.setText(cliente.getUbicacionFacturacion() != null ? cliente.getUbicacionFacturacion().toString() : "");
         txt_CondicionIVACliente.setText(cliente.getCategoriaIVA().toString());
-        if (cliente.getIdFiscal() != null) {
-            txtIdFiscalCliente.setText(cliente.getIdFiscal().toString());
-        } else {
-            txtIdFiscalCliente.setText("");
-        }
+        txtIdFiscalCliente.setText(cliente.getIdFiscal() != null ? cliente.getIdFiscal().toString() : "");
         txt_Descuento_porcentaje.setValue(cliente.getBonificacion());
     }
 
@@ -269,15 +267,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             //busca entre los renglones al producto, aumenta la cantidad y recalcula el descuento        
             for (int i = 0; i < renglones.size(); i++) {
                 if (renglones.get(i).getIdProductoItem() == renglon.getIdProductoItem()) {
-                    Producto producto = RestClient.getRestTemplate()
-                            .getForObject("/productos/" + renglon.getIdProductoItem(), Producto.class);
-                    renglones.set(i, RestClient.getRestTemplate().getForObject("/facturas/renglon?"
-                            + "idProducto=" + producto.getIdProducto()
-                            + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
-                            + "&movimiento=" + Movimiento.VENTA
-                            + "&cantidad=" + renglones.get(i).getCantidad().add(renglon.getCantidad())
-                            + "&descuentoPorcentaje=" + renglon.getDescuentoPorcentaje(),
-                            RenglonFactura.class));
+                    renglones.set(i, renglon);
                     agregado = true;
                 }
             }

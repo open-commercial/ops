@@ -81,7 +81,7 @@ public class CerrarPedidoGUI extends JDialog {
         try {
             empresas = Arrays.asList(RestClient.getRestTemplate().getForObject("/empresas", Empresa[].class));
             empresas.stream().forEach(e -> {
-                cmbEmpresas.addItem(e.getNombre() + ((e.getDetalleUbicacion() != null) ? (" (" + e.getDetalleUbicacion() + ")") : ""));
+                cmbEmpresas.addItem(e.getNombre() + ((e.getUbicacion() != null) ? (" (" + e.getUbicacion() + ")") : ""));
             });
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -231,13 +231,13 @@ public class CerrarPedidoGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {
-            if (this.cliente.getIdUbicacionEnvio() != null) {
-                lblDetalleUbicacionEnvio.setText(this.cliente.getDetalleUbicacionEnvio());
+            if (this.cliente.getUbicacionEnvio() != null) {
+                lblDetalleUbicacionEnvio.setText(this.cliente.getUbicacionEnvio().toString());
             } else {
                 rbDireccionEnvio.setEnabled(false);
             }
-            if (this.cliente.getIdUbicacionFacturacion() != null) {
-                lblDetalleUbicacionFacturacion.setText(this.cliente.getDetalleUbicacionFacturacion());
+            if (this.cliente.getUbicacionFacturacion() != null) {
+                lblDetalleUbicacionFacturacion.setText(this.cliente.getUbicacionFacturacion().toString());
             } else {
                 rbDireccionFacturacion.setEnabled(false);
             }
@@ -256,21 +256,22 @@ public class CerrarPedidoGUI extends JDialog {
     private void btnCerrarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarPedidoActionPerformed
         try {
             TipoDeEnvio tipoDeEnvio;
-            Long idEmpresa = null;
+            Long idSucursal = null;
             if (rbDireccionFacturacion.isSelected()) {
                 tipoDeEnvio = TipoDeEnvio.USAR_UBICACION_FACTURACION;
             } else if (rbDireccionEnvio.isSelected()) {
                 tipoDeEnvio = TipoDeEnvio.USAR_UBICACION_ENVIO;
             } else {
                 tipoDeEnvio = TipoDeEnvio.RETIRO_EN_SUCURSAL;
-                idEmpresa = empresas.get(cmbEmpresas.getSelectedIndex()).getId_Empresa();
+                idSucursal = empresas.get(cmbEmpresas.getSelectedIndex()).getId_Empresa();
             }
             if (nuevoPedido != null) {
-                Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?idEmpresa="
-                        + (idEmpresa != null ? idEmpresa : EmpresaActiva.getInstance().getEmpresa().getId_Empresa())
-                        + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                        + "&idCliente=" + cliente.getId_Cliente()
-                        + "&tipoDeEnvio=" + tipoDeEnvio, nuevoPedido, Pedido.class);
+                nuevoPedido.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+                nuevoPedido.setIdUsuario(UsuarioActivo.getInstance().getUsuario().getId_Usuario());
+                nuevoPedido.setIdCliente(cliente.getId_Cliente());
+                nuevoPedido.setTipoDeEnvio(tipoDeEnvio);
+                nuevoPedido.setIdSucursal(idSucursal);
+                Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?", nuevoPedido, Pedido.class);
                 this.operacionExitosa = true;
                 int reply = JOptionPane.showConfirmDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
@@ -283,7 +284,8 @@ public class CerrarPedidoGUI extends JDialog {
                         + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                         + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                         + "&idCliente=" + cliente.getId_Cliente()
-                        + "&tipoDeEnvio=" + tipoDeEnvio, pedido);
+                        + "&tipoDeEnvio=" + tipoDeEnvio
+                        + "&idSucursal=" + (idSucursal != null ? idSucursal : ""), pedido);
                 this.operacionExitosa = true;
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_pedido_actualizado"),
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);
@@ -304,8 +306,8 @@ public class CerrarPedidoGUI extends JDialog {
         lblDetalleUbicacionEnvio.setEnabled(!rbDireccionFacturacion.isSelected());
         lblDetalleUbicacionFacturacion.setEnabled(rbDireccionFacturacion.isSelected());
         if (rbDireccionFacturacion.isSelected()) {
-            if (this.cliente.getDetalleUbicacionFacturacion() != null) {
-                lblDetalleUbicacionFacturacion.setText(this.cliente.getDetalleUbicacionFacturacion());
+            if (this.cliente.getUbicacionFacturacion() != null) {
+                lblDetalleUbicacionFacturacion.setText(this.cliente.getUbicacionFacturacion().toString());
             }
         }
     }//GEN-LAST:event_rbDireccionFacturacionItemStateChanged
@@ -320,8 +322,8 @@ public class CerrarPedidoGUI extends JDialog {
         cmbEmpresas.setEnabled(!rbDireccionEnvio.isSelected());
         lblDetalleUbicacionEnvio.setEnabled(rbDireccionEnvio.isSelected());
         lblDetalleUbicacionFacturacion.setEnabled(!rbDireccionEnvio.isSelected());
-        if (this.cliente.getDetalleUbicacionEnvio() != null) {
-            lblDetalleUbicacionEnvio.setText(this.cliente.getDetalleUbicacionEnvio());
+        if (this.cliente.getUbicacionEnvio() != null) {
+            lblDetalleUbicacionEnvio.setText(this.cliente.getUbicacionEnvio().toString());
         }
     }//GEN-LAST:event_rbDireccionEnvioItemStateChanged
 

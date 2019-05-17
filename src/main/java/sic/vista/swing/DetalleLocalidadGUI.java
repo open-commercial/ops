@@ -38,10 +38,10 @@ public class DetalleLocalidadGUI extends javax.swing.JDialog {
         lblEnvio = new javax.swing.JLabel();
         lblCostoDeEnvio = new javax.swing.JLabel();
         lblDetalleLocalidad = new javax.swing.JLabel();
-        lblDetalleCodigoPostal = new javax.swing.JLabel();
         lblDetalleProvincia = new javax.swing.JLabel();
         chkEnvioGratuito = new javax.swing.JCheckBox();
         ftfCostoDeEnvio = new javax.swing.JFormattedTextField();
+        txtCodigoPostal = new javax.swing.JTextField();
         btnAceptar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -68,11 +68,9 @@ public class DetalleLocalidadGUI extends javax.swing.JDialog {
         lblEnvio.setText("Envío gratuito:");
 
         lblCostoDeEnvio.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblCostoDeEnvio.setText("Costo envío:");
+        lblCostoDeEnvio.setText("Costo de envío:");
 
         lblDetalleLocalidad.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-
-        lblDetalleCodigoPostal.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         lblDetalleProvincia.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
@@ -86,56 +84,55 @@ public class DetalleLocalidadGUI extends javax.swing.JDialog {
             .addGroup(pnlDetalleLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblLocalidad)
-                    .addComponent(lblCodigoPostal)
-                    .addComponent(lblProvincia)
+                    .addComponent(lblCostoDeEnvio)
                     .addComponent(lblEnvio)
-                    .addComponent(lblCostoDeEnvio))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnlDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(ftfCostoDeEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblDetalleProvincia, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblDetalleCodigoPostal, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblDetalleLocalidad, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chkEnvioGratuito, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(lblProvincia)
+                    .addComponent(lblLocalidad)
+                    .addComponent(lblCodigoPostal))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(lblDetalleProvincia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtCodigoPostal, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
+                        .addComponent(lblDetalleLocalidad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(ftfCostoDeEnvio))
+                    .addComponent(chkEnvioGratuito))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pnlDetalleLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblCodigoPostal, lblCostoDeEnvio, lblEnvio, lblLocalidad, lblProvincia});
-
-        pnlDetalleLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ftfCostoDeEnvio, lblDetalleCodigoPostal, lblDetalleLocalidad, lblDetalleProvincia});
 
         pnlDetalleLayout.setVerticalGroup(
             pnlDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDetalleLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblLocalidad)
-                    .addComponent(lblDetalleLocalidad))
+                    .addComponent(txtCodigoPostal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCodigoPostal))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblDetalleCodigoPostal)
-                    .addComponent(lblCodigoPostal))
+                    .addComponent(lblLocalidad)
+                    .addComponent(lblDetalleLocalidad))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblDetalleProvincia)
                     .addComponent(lblProvincia))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblEnvio)
-                    .addComponent(chkEnvioGratuito))
+                    .addComponent(chkEnvioGratuito)
+                    .addComponent(lblEnvio))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblCostoDeEnvio)
-                    .addComponent(ftfCostoDeEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ftfCostoDeEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCostoDeEnvio))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pnlDetalleLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {ftfCostoDeEnvio, lblDetalleCodigoPostal, lblDetalleLocalidad, lblDetalleProvincia});
+        pnlDetalleLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {ftfCostoDeEnvio, lblDetalleLocalidad, lblDetalleProvincia, txtCodigoPostal});
 
         btnAceptar.setForeground(java.awt.Color.blue);
         btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
-        btnAceptar.setText("Aceptar");
+        btnAceptar.setText("Guardar");
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAceptarActionPerformed(evt);
@@ -146,23 +143,23 @@ public class DetalleLocalidadGUI extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnAceptar)
+                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlDetalle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnAceptar)))
-                .addContainerGap())
+                .addComponent(pnlDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(pnlDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnAceptar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -173,6 +170,11 @@ public class DetalleLocalidadGUI extends javax.swing.JDialog {
         try {
             if (ftfCostoDeEnvio.getText() != null && !ftfCostoDeEnvio.getText().isEmpty()) {
                 localidadSeleccionada.setCostoEnvio(new BigDecimal(ftfCostoDeEnvio.getValue().toString()));
+            }
+            if (txtCodigoPostal.getText() != null && !txtCodigoPostal.getText().isEmpty()) {
+                localidadSeleccionada.setCodigoPostal(txtCodigoPostal.getText());
+            } else {
+                localidadSeleccionada.setCodigoPostal(null);
             }
             RestClient.getRestTemplate().put("/ubicaciones/localidades", this.localidadSeleccionada);
             JOptionPane.showMessageDialog(this, "La Localidad se modificó correctamente!",
@@ -191,8 +193,10 @@ public class DetalleLocalidadGUI extends javax.swing.JDialog {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         lblDetalleLocalidad.setText(this.localidadSeleccionada.getNombre());
         lblDetalleProvincia.setText(this.localidadSeleccionada.getNombreProvincia());
-        lblDetalleCodigoPostal.setText(this.localidadSeleccionada.getCodigoPostal());
         chkEnvioGratuito.setSelected(this.localidadSeleccionada.isEnvioGratuito());
+        if (this.localidadSeleccionada.getCodigoPostal() != null) {
+            txtCodigoPostal.setText(this.localidadSeleccionada.getCodigoPostal());
+        }
         if (this.localidadSeleccionada.getCostoEnvio() != null) {
             ftfCostoDeEnvio.setValue(this.localidadSeleccionada.getCostoEnvio());
         } else {
@@ -206,12 +210,12 @@ public class DetalleLocalidadGUI extends javax.swing.JDialog {
     private javax.swing.JFormattedTextField ftfCostoDeEnvio;
     private javax.swing.JLabel lblCodigoPostal;
     private javax.swing.JLabel lblCostoDeEnvio;
-    private javax.swing.JLabel lblDetalleCodigoPostal;
     private javax.swing.JLabel lblDetalleLocalidad;
     private javax.swing.JLabel lblDetalleProvincia;
     private javax.swing.JLabel lblEnvio;
     private javax.swing.JLabel lblLocalidad;
     private javax.swing.JLabel lblProvincia;
     private javax.swing.JPanel pnlDetalle;
+    private javax.swing.JTextField txtCodigoPostal;
     // End of variables declaration//GEN-END:variables
 }

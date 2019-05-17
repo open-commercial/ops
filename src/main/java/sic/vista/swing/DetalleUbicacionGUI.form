@@ -78,11 +78,11 @@
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtCalle" max="32767" attributes="0"/>
-                              <Component id="ftfNumero" alignment="0" max="32767" attributes="0"/>
-                              <Component id="txtDepartamento" max="32767" attributes="0"/>
-                              <Component id="txtDescripcion" max="32767" attributes="0"/>
-                              <Component id="ftfPiso" alignment="1" max="32767" attributes="0"/>
+                              <Component id="txtCalle" min="-2" pref="440" max="-2" attributes="0"/>
+                              <Component id="ftfNumero" alignment="0" min="-2" pref="440" max="-2" attributes="0"/>
+                              <Component id="txtDepartamento" min="-2" pref="440" max="-2" attributes="0"/>
+                              <Component id="txtDescripcion" min="-2" pref="440" max="-2" attributes="0"/>
+                              <Component id="txtPiso" alignment="0" min="-2" pref="440" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
@@ -92,8 +92,8 @@
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="ftfLatitud" max="32767" attributes="0"/>
-                              <Component id="ftfLongitud" max="32767" attributes="0"/>
+                              <Component id="ftfLatitud" min="-2" pref="440" max="-2" attributes="0"/>
+                              <Component id="ftfLongitud" min="-2" pref="440" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
@@ -104,9 +104,9 @@
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cmbLocalidad" alignment="1" pref="440" max="32767" attributes="0"/>
-                              <Component id="cmbProvinciasBusqueda" alignment="1" max="32767" attributes="1"/>
-                              <Component id="txtCodigoPostal" alignment="1" max="32767" attributes="2"/>
+                              <Component id="cmbLocalidad" alignment="1" min="-2" pref="440" max="-2" attributes="0"/>
+                              <Component id="cmbProvinciasBusqueda" alignment="1" min="-2" pref="440" max="-2" attributes="1"/>
+                              <Component id="txtCodigoPostal" alignment="1" min="-2" pref="440" max="-2" attributes="2"/>
                           </Group>
                       </Group>
                   </Group>
@@ -128,9 +128,9 @@
                       <Component id="ftfNumero" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lblPiso" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="ftfPiso" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblPiso" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtPiso" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -209,20 +209,14 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lblCalle">
           <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
-            </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="* Calle:"/>
+            <Property name="text" type="java.lang.String" value="Calle:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblNumero">
           <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
-            </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="* N&#xfa;mero:"/>
+            <Property name="text" type="java.lang.String" value="N&#xfa;mero:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblPiso">
@@ -243,17 +237,14 @@
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="ftfNumero">
           <Properties>
+            <Property name="columns" type="int" value="9"/>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-              <Format format="#0" subtype="-1" type="0"/>
+              <Format format="##0" subtype="-1" type="0"/>
             </Property>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JFormattedTextField" name="ftfPiso">
-          <Properties>
-            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-              <Format format="#0" subtype="-1" type="0"/>
-            </Property>
-          </Properties>
+          <Events>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="ftfNumeroKeyTyped"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblProvincia">
           <Properties>
@@ -307,6 +298,8 @@
             <Property name="text" type="java.lang.String" value="C&#xf3;digo Postal:"/>
           </Properties>
         </Component>
+        <Component class="javax.swing.JTextField" name="txtPiso">
+        </Component>
       </SubComponents>
     </Container>
     <Component class="javax.swing.JButton" name="btnSeleccionar">
@@ -317,7 +310,7 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/sic/icons/ArrowRight_16x16.png"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Continuar"/>
+        <Property name="text" type="java.lang.String" value="Guardar"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSeleccionarActionPerformed"/>

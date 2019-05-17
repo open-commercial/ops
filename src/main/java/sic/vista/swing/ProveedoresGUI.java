@@ -172,7 +172,7 @@ public class ProveedoresGUI extends JInternalFrame {
             fila[8] = p.getProveedor().getContacto();
             fila[9] = p.getProveedor().getEmail();
             fila[10] = p.getProveedor().getWeb();
-            fila[11] = p.getProveedor().getDetalleUbicacion();
+            fila[11] = p.getProveedor().getUbicacion();
             return fila;
         }).forEach(f -> {
             modeloTablaResultados.addRow(f);

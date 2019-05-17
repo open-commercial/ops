@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -191,12 +192,11 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         facturaCompra.setTotal(totalComprobante);
         facturaCompra.setObservaciones(txta_Observaciones.getText().trim());
         facturaCompra.setEliminada(false);
+        facturaCompra.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        facturaCompra.setIdProveedor(proveedorSeleccionado.getId_Proveedor());
+        facturaCompra.setIdTransportista(((Transportista) cmb_Transportista.getSelectedItem()).getId_Transportista());
         try {
-            RestClient.getRestTemplate().postForObject("/facturas/compra"
-                    + "?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                    + "&idProveedor=" + proveedorSeleccionado.getId_Proveedor()
-                    + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                    + "&idTransportista=" + ((Transportista) cmb_Transportista.getSelectedItem()).getId_Transportista(),
+            RestClient.getRestTemplate().postForObject("/facturas/compra",
                     facturaCompra, FacturaCompra[].class);
             return true;
         } catch (RestClientResponseException ex) {
@@ -560,6 +560,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         txt_SerieFactura = new javax.swing.JFormattedTextField();
         txt_NumeroFactura = new javax.swing.JFormattedTextField();
         lbl_separador = new javax.swing.JLabel();
+        lblCantidadDeArticulos = new javax.swing.JLabel();
 
         setClosable(true);
         setMaximizable(true);
@@ -744,7 +745,8 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
                     .addComponent(btn_NuevoProducto)
                     .addComponent(btn_QuitarDeLista))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Renglones, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE))
+                .addComponent(sp_Renglones, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         panelRenglonesLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_BuscarProducto, btn_NuevoProducto, btn_QuitarDeLista});
@@ -1024,16 +1026,17 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(panelRenglones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(panelDatosComprobanteDerecho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(panelDatosComprobanteIzquierdo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(panelMisc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(panelResultados, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btn_Guardar)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(panelDatosComprobanteDerecho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panelDatosComprobanteIzquierdo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(lblCantidadDeArticulos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1045,6 +1048,8 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
                     .addComponent(panelDatosComprobanteDerecho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelRenglones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblCantidadDeArticulos, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelMisc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1150,9 +1155,12 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
             this.setTitle(facturaParaMostrar.getTipoComprobante() + " Nº " + facturaParaMostrar.getNumSerie() + " - " + facturaParaMostrar.getNumFactura()
                     + " con fecha " + formatter.format(facturaParaMostrar.getFecha()) + " del Proveedor: " + facturaParaMostrar.getRazonSocialProveedor());
             this.cargarFactura();
+            DecimalFormat df = new DecimalFormat("#.##");
+            lblCantidadDeArticulos.setText("Cantidad de Articulos: " + df.format(this.facturaParaMostrar.getCantidadArticulos()));
         } else {
             this.setTitle("Nueva Factura Compra");
             this.cargarTransportistas();
+            lblCantidadDeArticulos.setVisible(false);
         }
         try {
             this.setMaximum(true);    
@@ -1190,6 +1198,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     private com.toedter.calendar.JDateChooser dc_FechaFactura;
     private com.toedter.calendar.JDateChooser dc_FechaVencimiento;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblCantidadDeArticulos;
     private javax.swing.JLabel lbl_105;
     private javax.swing.JLabel lbl_21;
     private javax.swing.JLabel lbl_Descuento;

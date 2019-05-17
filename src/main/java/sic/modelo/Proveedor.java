@@ -18,8 +18,7 @@ public class Proveedor implements Serializable {
     private String contacto;
     private String email;
     private String web;
-    private Long idUbicacion;
-    private String detalleUbicacion;
+    private Ubicacion ubicacion;
     private Long idEmpresa;
     private String nombreEmpresa;
     private boolean eliminado;

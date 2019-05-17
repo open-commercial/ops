@@ -15,7 +15,7 @@ public class RenglonNotaCredito implements Serializable {
 
     private long idRenglonNotaCredito;
     
-    private long idProductoItem;
+    private Long idProductoItem;
 
     private String codigoItem;
 

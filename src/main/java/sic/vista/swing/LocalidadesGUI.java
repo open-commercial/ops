@@ -73,11 +73,11 @@ public class LocalidadesGUI extends JInternalFrame {
     private void setColumnas() {
         //nombres de columnas
         String[] encabezados = new String[5];
-        encabezados[0] = "Nombre";
-        encabezados[1] = "Codigo Postal";
+        encabezados[0] = "Codigo Postal";
+        encabezados[1] = "Nombre";
         encabezados[2] = "Provincia";
         encabezados[3] = "Envío Gratuito";
-        encabezados[4] = "Costo Envío";
+        encabezados[4] = "Costo de Envío";
         modeloTablaDeResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaDeResultados);
         //tipo de dato columnas
@@ -91,19 +91,19 @@ public class LocalidadesGUI extends JInternalFrame {
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
         //tamanios de columnas
-        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(320);
+        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(220);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(110);
         tbl_Resultados.getColumnModel().getColumn(4).setCellRenderer(new DecimalesRenderer());
     }
 
     private void cargarResultadosAlTable() {
         localidadesParcial.stream().map(l -> {
             Object[] fila = new Object[5];
-            fila[0] = l.getNombre();
-            fila[1] = l.getCodigoPostal();
+            fila[0] = l.getCodigoPostal();
+            fila[1] = l.getNombre();
             fila[2] = l.getNombreProvincia();
             fila[3] = l.isEnvioGratuito();
             fila[4] = l.getCostoEnvio();

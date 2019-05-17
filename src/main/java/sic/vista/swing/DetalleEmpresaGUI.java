@@ -68,18 +68,9 @@ public class DetalleEmpresaGUI extends JDialog {
         dc_FechaInicioActividad.setDate(empresaModificar.getFechaInicioActividad());
         txt_Email.setText(empresaModificar.getEmail());
         txt_Telefono.setText(empresaModificar.getTelefono());
-        if (empresaModificar.getIdUbicacion() != null) {
-            lblDetalleUbicacionEmpresa.setText(empresaModificar.getDetalleUbicacion());
-            try {
-                this.ubicacion = RestClient.getRestTemplate().getForObject("/ubicaciones/" + empresaModificar.getIdUbicacion(), Ubicacion.class);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
+        if (empresaModificar.getUbicacion() != null) {
+            lblDetalleUbicacionEmpresa.setText(empresaModificar.getUbicacion().toString());
+            this.ubicacion = empresaModificar.getUbicacion();
         } 
         if (empresaModificar.getLogo() == null || "".equals(empresaModificar.getLogo())) {
             lbl_Logo.setText("SIN IMAGEN");
@@ -258,20 +249,24 @@ public class DetalleEmpresaGUI extends JDialog {
                             .addComponent(btn_ExaminarArchivos)
                             .addComponent(btn_EliminarLogo)
                             .addComponent(lblTamanioMax)
-                            .addComponent(lblAspectRatio)))
-                    .addComponent(txt_Nombre, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txt_Lema, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblAspectRatio))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
-                        .addComponent(lblDetalleUbicacionEmpresa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btnUbicacion))
-                    .addComponent(txt_Direccion, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(cmbCategoriaIVA, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtIdFiscal, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtIngresosBrutos, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(dc_FechaInicioActividad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txt_Email, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txt_Telefono))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
+                                .addComponent(lblDetalleUbicacionEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, 0)
+                                .addComponent(btnUbicacion))
+                            .addComponent(txt_Nombre, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txt_Lema, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txt_Direccion, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(cmbCategoriaIVA, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtIdFiscal, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtIngresosBrutos, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(dc_FechaInicioActividad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txt_Email, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txt_Telefono, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
         );
         panelPrincipalLayout.setVerticalGroup(
@@ -348,12 +343,12 @@ public class DetalleEmpresaGUI extends JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(472, 472, 472)
-                .addComponent(btn_Guardar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panelPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_Guardar)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -382,11 +377,11 @@ public class DetalleEmpresaGUI extends JDialog {
                 empresa.setIngresosBrutos((Long) txtIngresosBrutos.getValue());
                 empresa.setFechaInicioActividad(dc_FechaInicioActividad.getDate());
                 empresa.setEmail(txt_Email.getText().trim());
-                empresa.setTelefono(txt_Telefono.getText().trim());               
-                empresa = RestClient.getRestTemplate().postForObject("/empresas", empresa, Empresa.class);            
+                empresa.setTelefono(txt_Telefono.getText().trim());    
                 if (this.ubicacion != null) {
-                    RestClient.getRestTemplate().postForObject("/ubicaciones/empresas/" + empresa.getId_Empresa(), this.ubicacion, Ubicacion.class);
+                    empresa.setUbicacion(this.ubicacion);
                 }
+                empresa = RestClient.getRestTemplate().postForObject("/empresas", empresa, Empresa.class);            
                 mensaje = "La Empresa " + txt_Nombre.getText().trim() + " se guardó correctamente.";
                 if (logo == null) {
                     empresa.setLogo("");
@@ -406,6 +401,9 @@ public class DetalleEmpresaGUI extends JDialog {
                 empresaModificar.setFechaInicioActividad(dc_FechaInicioActividad.getDate());
                 empresaModificar.setEmail(txt_Email.getText().trim());
                 empresaModificar.setTelefono(txt_Telefono.getText().trim());
+                if (this.ubicacion != null) {
+                    empresaModificar.setUbicacion(this.ubicacion);
+                }
                 if (cambioLogo && logo != null) {
                     empresaModificar.setLogo(RestClient.getRestTemplate()
                             .postForObject("/empresas/" + empresaModificar.getId_Empresa() + "/logo", logo, String.class));
@@ -413,11 +411,6 @@ public class DetalleEmpresaGUI extends JDialog {
                     empresaModificar.setLogo(null);
                 }
                 RestClient.getRestTemplate().put("/empresas", empresaModificar);
-                if (empresaModificar.getIdUbicacion() == null && this.ubicacion != null) {
-                    RestClient.getRestTemplate().postForObject("/ubicaciones/empresas/" + empresaModificar.getId_Empresa(), this.ubicacion, Ubicacion.class);
-                } else if (empresaModificar.getIdUbicacion() != null && this.ubicacion != null) {
-                    RestClient.getRestTemplate().put("/ubicaciones", this.ubicacion);
-                }
                 mensaje = "La Empresa " + txt_Nombre.getText().trim() + " se modificó correctamente.";
             }
             LOGGER.warn(mensaje);
@@ -495,22 +488,7 @@ public class DetalleEmpresaGUI extends JDialog {
         guiDetalleUbicacion.setVisible(true);
         if (guiDetalleUbicacion.getUbicacionModificada() != null) {
             this.ubicacion = guiDetalleUbicacion.getUbicacionModificada();
-            lblDetalleUbicacionEmpresa.setText(this.ubicacion.getCalle()
-                    + " "
-                    + this.ubicacion.getNumero()
-                    + (this.ubicacion.getPiso() != null
-                    ? ", " + this.ubicacion.getPiso() + " "
-                    : " ")
-                    + (this.ubicacion.getDepartamento() != null
-                    ? this.ubicacion.getDepartamento()
-                    : "")
-                    + (this.ubicacion.getNombreLocalidad() != null
-                    ? ", " + this.ubicacion.getNombreLocalidad()
-                    : " ")
-                    + " "
-                    + (this.ubicacion.getNombreProvincia() != null
-                    ? this.ubicacion.getNombreProvincia()
-                    : " "));
+            lblDetalleUbicacionEmpresa.setText(this.ubicacion.toString());
         }
     }//GEN-LAST:event_btnUbicacionActionPerformed
 
