@@ -405,6 +405,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             switch (renglonCC.getTipoComprobante()) {
                 case NOTA_DEBITO_A:
                 case NOTA_DEBITO_B:
+                case NOTA_DEBITO_C:
                 case NOTA_DEBITO_PRESUPUESTO:
                 case NOTA_DEBITO_X:
                 case NOTA_DEBITO_Y:
@@ -414,6 +415,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     break;
                 case NOTA_CREDITO_A:
                 case NOTA_CREDITO_B:
+                case NOTA_CREDITO_C:
                 case NOTA_CREDITO_PRESUPUESTO:
                 case NOTA_CREDITO_X:
                 case NOTA_CREDITO_Y:
@@ -902,17 +904,21 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     switch (renglonCC.getTipoComprobante()) {
                         case NOTA_CREDITO_A:
                         case NOTA_CREDITO_B:
+                        case NOTA_CREDITO_C:
                         case NOTA_DEBITO_A:
                         case NOTA_DEBITO_B:
+                        case NOTA_DEBITO_C:
                             if (renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_A
-                                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B) {
+                                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B
+                                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_C) {
                                 RestClient.getRestTemplate().postForObject("/notas/" + renglonCC.getIdMovimiento() + "/autorizacion",
                                         null, NotaCredito.class);
                                 JOptionPane.showMessageDialog(this,
                                         ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
                                         "Aviso", JOptionPane.INFORMATION_MESSAGE);
                             } else if (renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_A
-                                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B) {
+                                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B
+                                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_C) {
                                 RestClient.getRestTemplate().postForObject("/notas/" + renglonCC.getIdMovimiento() + "/autorizacion",
                                         null, NotaDebito.class);
                                 JOptionPane.showMessageDialog(this,

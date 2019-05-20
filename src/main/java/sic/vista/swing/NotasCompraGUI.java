@@ -303,13 +303,10 @@ public class NotasCompraGUI extends JInternalFrame {
     private boolean isNotaCredito(TipoDeComprobante tipoDeComprobante) {
         switch (tipoDeComprobante) {
             case NOTA_CREDITO_A:
-                return true;
             case NOTA_CREDITO_B:
-                return true;
+            case NOTA_CREDITO_C:
             case NOTA_CREDITO_PRESUPUESTO:
-                return true;
             case NOTA_CREDITO_X:
-                return true;
             case NOTA_CREDITO_Y:
                 return true;
             default:

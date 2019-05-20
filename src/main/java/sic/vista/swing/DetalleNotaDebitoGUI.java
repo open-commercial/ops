@@ -201,7 +201,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
 
     private boolean autorizarNotaDebito(NotaDebito notaDebito) {
         if (notaDebito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_A
-                || notaDebito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B) {
+                || notaDebito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B
+                || notaDebito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_C) {
             notaDebito = RestClient.getRestTemplate()
                     .postForObject("/notas/" + notaDebito.getIdNota() + "/autorizacion",
                             null, NotaDebito.class);
