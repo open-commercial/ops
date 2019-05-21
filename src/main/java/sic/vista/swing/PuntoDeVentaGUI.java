@@ -267,7 +267,13 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             //busca entre los renglones al producto, aumenta la cantidad y recalcula el descuento        
             for (int i = 0; i < renglones.size(); i++) {
                 if (renglones.get(i).getIdProductoItem() == renglon.getIdProductoItem()) {
-                    renglones.set(i, renglon);
+                    renglones.set(i, RestClient.getRestTemplate().getForObject("/facturas/renglon?"
+                            + "idProducto=" + renglones.get(i).getIdProductoItem()
+                            + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
+                            + "&movimiento=" + Movimiento.VENTA
+                            + "&cantidad=" + renglones.get(i).getCantidad().add(renglon.getCantidad())
+                            + "&descuentoPorcentaje=" + renglon.getDescuentoPorcentaje(),
+                            RenglonFactura.class));
                     agregado = true;
                 }
             }
