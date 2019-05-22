@@ -35,6 +35,7 @@ public abstract class Factura implements Serializable {
     private long numSerie;
     private long numFactura;
     private Date fechaVencimiento;  
+    private Long nroPedido;
     private long idTransportista;
     private String nombreTransportista;     
     private List<RenglonFactura> renglones;
