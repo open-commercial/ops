@@ -72,32 +72,37 @@ public class GastosGUI extends JInternalFrame {
         if (chkNumGasto.isSelected()) {
             uriCriteria += "&nroGasto=" + Long.valueOf(txtNroGasto.getText());
         }
+        return uriCriteria;
+    }
+    
+    private String getUriPaginado() {
+        String uriPaginado = "";
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
             case 0:
-                uriCriteria += "&ordenarPor=fecha";
+                uriPaginado += "&ordenarPor=fecha";
                 break;
             case 1:
-                uriCriteria += "&ordenarPor=concepto";
+                uriPaginado += "&ordenarPor=concepto";
                 break;
             case 2:
-                uriCriteria += "&ordenarPor=formaDePago";
+                uriPaginado += "&ordenarPor=formaDePago";
                 break;
             case 3:
-                uriCriteria += "&ordenarPor=monto";
+                uriPaginado += "&ordenarPor=monto";
                 break;
         }
         int seleccionDireccion = cmbSentido.getSelectedIndex();
         switch (seleccionDireccion) {
             case 0:
-                uriCriteria += "&sentido=DESC";
+                uriPaginado += "&sentido=DESC";
                 break;
             case 1:
-                uriCriteria += "&sentido=ASC";
+                uriPaginado += "&sentido=ASC";
                 break;
         }
-        uriCriteria += "&pagina=" + NUMERO_PAGINA;
-        return uriCriteria;
+        uriPaginado += "&pagina=" + NUMERO_PAGINA;
+        return uriPaginado;
     }
     
     private void setColumnas() {
@@ -143,7 +148,9 @@ public class GastosGUI extends JInternalFrame {
         String uriCriteria = this.getUriCriteria();
         try {
             PaginaRespuestaRest<Gasto> response = RestClient.getRestTemplate()
-                    .exchange("/gastos/busqueda/criteria?" + uriCriteria, HttpMethod.GET, null,
+                    .exchange("/gastos/busqueda/criteria?"
+                            + uriCriteria
+                            + this.getUriPaginado(), HttpMethod.GET, null,
                             new ParameterizedTypeReference<PaginaRespuestaRest<Gasto>>() {
                     })
                     .getBody();
@@ -152,7 +159,7 @@ public class GastosGUI extends JInternalFrame {
             gastosTotal.addAll(gastosParcial);
             this.cargarResultadosAlTable();
             txtTotal.setValue(RestClient.getRestTemplate()
-                .getForObject("/gastos/total/criteria?" + uriCriteria, BigDecimal.class));
+                    .getForObject("/gastos/total/criteria?" + uriCriteria, BigDecimal.class));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
