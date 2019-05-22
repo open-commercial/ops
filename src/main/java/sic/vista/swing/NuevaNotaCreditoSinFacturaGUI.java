@@ -172,12 +172,13 @@ public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
             TipoDeComprobante[] tiposDeComprobante = null;
             if (this.idCliente != null) {
                 tiposDeComprobante = RestClient.getRestTemplate()
-                        .getForObject("/notas/tipos/credito?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        .getForObject("/notas/clientes/tipos/credito?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                                 + "&idCliente=" + this.idCliente, TipoDeComprobante[].class);
             }
             if (this.idProveedor != null) {
                 tiposDeComprobante = RestClient.getRestTemplate()
-                        .getForObject("/notas/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), TipoDeComprobante[].class);
+                        .getForObject("/notas/proveedores/tipos/credito?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                                + "&idProveedor=" + this.idProveedor, TipoDeComprobante[].class);
             }
             if (tiposDeComprobante != null) {
                 for (int i = 0; tiposDeComprobante.length > i; i++) {
