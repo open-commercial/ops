@@ -45,7 +45,6 @@ public class DetalleProveedorGUI extends JDialog {
     }
 
     private void cargarProveedorParaModificar() {
-        txtCodigo.setText(proveedorModificar.getCodigo());
         txtRazonSocial.setText(proveedorModificar.getRazonSocial());
         txtIdFiscal.setValue(proveedorModificar.getIdFiscal());
         cmbCategoriaIVA.setSelectedItem(proveedorModificar.getCategoriaIVA());
@@ -62,7 +61,6 @@ public class DetalleProveedorGUI extends JDialog {
     }
 
     private void limpiarYRecargarComponentes() {
-        txtCodigo.setText("");
         txtRazonSocial.setText("");
         txtIdFiscal.setText("");
         txtTelPrimario.setText("");
@@ -102,8 +100,6 @@ public class DetalleProveedorGUI extends JDialog {
 
         btn_Guardar = new javax.swing.JButton();
         panelPrincipal = new javax.swing.JPanel();
-        lblCodigo = new javax.swing.JLabel();
-        txtCodigo = new javax.swing.JTextField();
         lblRazonSocial = new javax.swing.JLabel();
         txtRazonSocial = new javax.swing.JTextField();
         lblIdFiscal = new javax.swing.JLabel();
@@ -143,9 +139,6 @@ public class DetalleProveedorGUI extends JDialog {
         });
 
         panelPrincipal.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        lblCodigo.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblCodigo.setText("Código:");
 
         lblRazonSocial.setForeground(java.awt.Color.red);
         lblRazonSocial.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -203,7 +196,6 @@ public class DetalleProveedorGUI extends JDialog {
                 .addContainerGap()
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(lblIdFiscal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblCodigo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblRazonSocial, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblTelPrimario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblUbicacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -214,7 +206,6 @@ public class DetalleProveedorGUI extends JDialog {
                     .addComponent(lblCondicionIVA, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtCodigo, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtRazonSocial, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtIdFiscal, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(cmbCategoriaIVA, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -233,10 +224,6 @@ public class DetalleProveedorGUI extends JDialog {
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPrincipalLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblCodigo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblRazonSocial)
                     .addComponent(txtRazonSocial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -308,7 +295,6 @@ public class DetalleProveedorGUI extends JDialog {
         try {
             if (operacion == TipoDeOperacion.ALTA) {
                 Proveedor proveedor = new Proveedor();
-                proveedor.setCodigo(txtCodigo.getText().trim());
                 proveedor.setRazonSocial(txtRazonSocial.getText().trim());
                 proveedor.setIdFiscal((Long) txtIdFiscal.getValue());
                 proveedor.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
@@ -331,7 +317,6 @@ public class DetalleProveedorGUI extends JDialog {
                 }
             }
             if (operacion == TipoDeOperacion.ACTUALIZACION) {
-                proveedorModificar.setCodigo(txtCodigo.getText().trim());
                 proveedorModificar.setRazonSocial(txtRazonSocial.getText().trim());
                 proveedorModificar.setIdFiscal((Long) txtIdFiscal.getValue());
                 proveedorModificar.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
@@ -391,7 +376,6 @@ public class DetalleProveedorGUI extends JDialog {
     private javax.swing.JButton btnUbicacion;
     private javax.swing.JButton btn_Guardar;
     private javax.swing.JComboBox cmbCategoriaIVA;
-    private javax.swing.JLabel lblCodigo;
     private javax.swing.JLabel lblCondicionIVA;
     private javax.swing.JLabel lblContacto;
     private javax.swing.JLabel lblDetalleUbicacionProveedor;
@@ -403,7 +387,6 @@ public class DetalleProveedorGUI extends JDialog {
     private javax.swing.JLabel lblUbicacion;
     private javax.swing.JLabel lblWeb;
     private javax.swing.JPanel panelPrincipal;
-    private javax.swing.JTextField txtCodigo;
     private javax.swing.JTextField txtContacto;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JFormattedTextField txtIdFiscal;

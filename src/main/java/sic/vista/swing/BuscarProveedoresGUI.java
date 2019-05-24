@@ -74,7 +74,7 @@ public class BuscarProveedoresGUI extends JDialog {
                 this.limpiarJTable();
             } else {
                 String uri = "/proveedores/busqueda/criteria?"
-                        + "codigo=" + txtCriteriaBusqueda.getText().trim()
+                        + "nroProveedor=" + txtCriteriaBusqueda.getText().trim()
                         + "&razonSocial=" + txtCriteriaBusqueda.getText().trim()                        
                         + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                         + "&pagina=" + NUMERO_PAGINA
@@ -100,7 +100,7 @@ public class BuscarProveedoresGUI extends JDialog {
 
     private void setColumnas() {
         String[] encabezados = new String[4];
-        encabezados[0] = "Codigo";
+        encabezados[0] = "Nº Proveedor";
         encabezados[1] = "ID Fiscal";
         encabezados[2] = "Razon Social";
         encabezados[3] = "Ubicación";               
@@ -114,9 +114,9 @@ public class BuscarProveedoresGUI extends JDialog {
         modeloTablaResultados.setClaseColumnas(tipos);
         tblResultados.getTableHeader().setReorderingAllowed(false);
         tblResultados.getTableHeader().setResizingAllowed(true);     
-        tblResultados.getColumnModel().getColumn(0).setPreferredWidth(80);
-        tblResultados.getColumnModel().getColumn(0).setMinWidth(80);
-        tblResultados.getColumnModel().getColumn(0).setMaxWidth(80);
+        tblResultados.getColumnModel().getColumn(0).setPreferredWidth(100);
+        tblResultados.getColumnModel().getColumn(0).setMinWidth(100);
+        tblResultados.getColumnModel().getColumn(0).setMaxWidth(100);
         tblResultados.getColumnModel().getColumn(1).setPreferredWidth(100);
         tblResultados.getColumnModel().getColumn(1).setMinWidth(100);
         tblResultados.getColumnModel().getColumn(1).setMaxWidth(100);
@@ -127,7 +127,7 @@ public class BuscarProveedoresGUI extends JDialog {
     private void cargarResultadosAlTable() {
         proveedoresParcial.stream().map(proveedor -> {
             Object[] fila = new Object[4];
-            fila[0] = proveedor.getCodigo();
+            fila[0] = proveedor.getNroProveedor();
             fila[1] = proveedor.getIdFiscal();
             fila[2] = proveedor.getRazonSocial();
             fila[3] = proveedor.getUbicacion();            
