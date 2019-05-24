@@ -286,27 +286,27 @@ public class SeleccionDeProductosGUI extends JDialog {
                     idsRenglonesFactura.clear();
                 }
             }
-            NuevaNotaCreditoDeFactura notaCreditoDeFactura = NuevaNotaCreditoDeFactura
-                    .builder()
-                    .idFactura(this.factura.getId_Factura())
-                    .cantidades(cantidades.toArray(new BigDecimal[cantidades.size()]))
-                    .idsRenglonesFactura(idsRenglonesFactura.toArray(new Long[idsRenglonesFactura.size()]))
-                    .modificaStock(chkModificarStock.isSelected())
-                    .build();
-            this.notaCreditoCalculada = RestClient.getRestTemplate().postForObject("/notas/credito/calculos", notaCreditoDeFactura, NotaCredito.class);
+            if (cantidades.isEmpty() || idsRenglonesFactura.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_productos_no_seleccionados"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                NuevaNotaCreditoDeFactura notaCreditoDeFactura = NuevaNotaCreditoDeFactura
+                        .builder()
+                        .idFactura(this.factura.getId_Factura())
+                        .cantidades(cantidades.toArray(new BigDecimal[cantidades.size()]))
+                        .idsRenglonesFactura(idsRenglonesFactura.toArray(new Long[idsRenglonesFactura.size()]))
+                        .modificaStock(chkModificarStock.isSelected())
+                        .build();
+                this.notaCreditoCalculada = RestClient.getRestTemplate().postForObject("/notas/credito/calculos", notaCreditoDeFactura, NotaCredito.class);
+                this.dispose();
+            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
             LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        if (this.notaCreditoCalculada != null) {
-            this.dispose();
-        } else {
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_productos_no_seleccionados"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnContinuarActionPerformed

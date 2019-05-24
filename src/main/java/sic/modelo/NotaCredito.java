@@ -13,6 +13,7 @@ import lombok.EqualsAndHashCode;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 public class NotaCredito extends Nota implements Serializable {
     
+    private boolean modificaStock;
     private List<RenglonNotaCredito> renglonesNotaCredito;    
     private BigDecimal subTotal;
     private BigDecimal recargoPorcentaje;
