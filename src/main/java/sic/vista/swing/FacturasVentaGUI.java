@@ -151,7 +151,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         encabezados[1] = "Fecha Factura";
         encabezados[2] = "Tipo";
         encabezados[3] = "Nº Factura";
-        encabezados[4] = "Fecha Vencimiento";
+        encabezados[4] = "Nº Pedido";
         encabezados[5] = "Cliente";
         encabezados[6] = "Usuario";
         encabezados[7] = "Viajante";
@@ -175,7 +175,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         tipos[1] = Date.class;
         tipos[2] = TipoDeComprobante.class;
         tipos[3] = String.class;
-        tipos[4] = Date.class;
+        tipos[4] = Long.class;
         tipos[5] = String.class;
         tipos[6] = String.class;
         tipos[7] = String.class;
@@ -199,7 +199,8 @@ public class FacturasVentaGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(140);
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(90);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(4).setMaxWidth(100);
         tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(220);
         tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(220);
         tbl_Resultados.getColumnModel().getColumn(5).setMinWidth(220);
@@ -224,7 +225,6 @@ public class FacturasVentaGUI extends JInternalFrame {
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         tbl_Resultados.getColumnModel().getColumn(1).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
-        tbl_Resultados.getColumnModel().getColumn(4).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
         tbl_Resultados.getColumnModel().getColumn(19).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 
@@ -331,7 +331,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             fila[1] = factura.getFecha();
             fila[2] = factura.getTipoComprobante();
             fila[3] = factura.getNumSerie() + " - " + factura.getNumFactura();
-            fila[4] = factura.getFechaVencimiento();
+            fila[4] = factura.getNroPedido();
             fila[5] = factura.getNombreFiscalCliente();
             fila[6] = factura.getNombreUsuario();
             fila[7] = factura.getNombreViajante();
