@@ -687,8 +687,11 @@ public class PedidosGUI extends JInternalFrame {
                 .addComponent(btnFacturar)
                 .addGap(0, 0, 0)
                 .addComponent(btnImprimirPedido)
-                .addGap(0, 479, Short.MAX_VALUE))
+                .addGap(0, 83, Short.MAX_VALUE))
         );
+
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnEliminarPedido, btnFacturar, btnImprimirPedido, btnModificarPedido, btnNuevoPedido, btnVerFacturas});
+
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()

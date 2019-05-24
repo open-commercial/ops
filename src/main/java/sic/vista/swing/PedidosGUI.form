@@ -375,18 +375,18 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Component id="sp_Pedidos" max="32767" attributes="0"/>
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="btnNuevoPedido" min="-2" pref="110" max="-2" attributes="0"/>
+                  <Component id="btnNuevoPedido" linkSize="21" min="-2" pref="110" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="btnModificarPedido" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnModificarPedido" linkSize="21" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="btnEliminarPedido" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnEliminarPedido" linkSize="21" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="btnVerFacturas" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnVerFacturas" linkSize="21" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="btnFacturar" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnFacturar" linkSize="21" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="btnImprimirPedido" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="479" max="32767" attributes="0"/>
+                  <Component id="btnImprimirPedido" linkSize="21" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="83" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
