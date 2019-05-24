@@ -470,19 +470,19 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR) 
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
             btnCrearRecibo.setEnabled(true);
-        } else {
-            btnCrearRecibo.setEnabled(false);
-        }
-        if (rolesDeUsuarioActivo.contains(Rol.VENDEDOR) 
-                || rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
-                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
             btnCrearNotaCredito.setEnabled(true);
             btnCrearNotaDebito.setEnabled(true);
+        } else {
+            btnCrearRecibo.setEnabled(false);
+            btnCrearNotaCredito.setEnabled(false);
+            btnCrearNotaDebito.setEnabled(false);
+        }
+        if (rolesDeUsuarioActivo.contains(Rol.VENDEDOR)
+                || rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
+                || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
             btnVerDetalle.setEnabled(true);
             btnAutorizar.setEnabled(true);
         } else {
-            btnCrearNotaCredito.setEnabled(false);
-            btnCrearNotaDebito.setEnabled(false);
             btnVerDetalle.setEnabled(false);
             btnAutorizar.setEnabled(false);
         }
