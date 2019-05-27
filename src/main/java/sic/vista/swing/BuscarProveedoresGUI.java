@@ -101,7 +101,7 @@ public class BuscarProveedoresGUI extends JDialog {
     private void setColumnas() {
         String[] encabezados = new String[4];
         encabezados[0] = "Nº Proveedor";
-        encabezados[1] = "ID Fiscal";
+        encabezados[1] = "CUIT o DNI";
         encabezados[2] = "Razon Social";
         encabezados[3] = "Ubicación";               
         modeloTablaResultados.setColumnIdentifiers(encabezados);

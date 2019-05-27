@@ -110,7 +110,7 @@ public class ProveedoresGUI extends JInternalFrame {
         //nombres de columnas
         String[] encabezados = new String[12];
         encabezados[0] = "Nº Proveedor";
-        encabezados[1] = "ID Fiscal";
+        encabezados[1] = "CUIT o DNI";
         encabezados[2] = "Razon Social";
         encabezados[3] = "Saldo C/C";
         encabezados[4] = "Ultimo Movimiento C/C";
