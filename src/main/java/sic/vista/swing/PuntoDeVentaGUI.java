@@ -155,10 +155,9 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         factura.setSubTotalBruto(subTotalBruto);
         factura.setIva105Neto(iva_105_netoFactura);
         factura.setIva21Neto(iva_21_netoFactura);
-        factura.setTotal(new BigDecimal(txt_Total.getValue().toString()));     
-        factura.setIdCliente(this.getIdCliente());
+        factura.setTotal(new BigDecimal(txt_Total.getValue().toString()));                      
+        factura.setIdCliente(this.cliente.getId_Cliente());
         factura.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
-        factura.setIdUsuario(UsuarioActivo.getInstance().getUsuario().getId_Usuario());
         return factura;
     }
     
@@ -267,16 +266,16 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             boolean agregado = false;
             //busca entre los renglones al producto, aumenta la cantidad y recalcula el descuento        
             for (int i = 0; i < renglones.size(); i++) {
+                RenglonFactura rf;
                 if (renglones.get(i).getIdProductoItem() == renglon.getIdProductoItem()) {
-                    Producto producto = RestClient.getRestTemplate()
-                            .getForObject("/productos/" + renglon.getIdProductoItem(), Producto.class);
-                    renglones.set(i, RestClient.getRestTemplate().getForObject("/facturas/renglon?"
-                            + "idProducto=" + producto.getIdProducto()
+                    rf = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
+                            + "idProducto=" + renglones.get(i).getIdProductoItem()
                             + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                             + "&movimiento=" + Movimiento.VENTA
                             + "&cantidad=" + renglones.get(i).getCantidad().add(renglon.getCantidad())
                             + "&descuentoPorcentaje=" + renglon.getDescuentoPorcentaje(),
-                            RenglonFactura.class));
+                            RenglonFactura.class);
+                    renglones.set(i, rf);
                     agregado = true;
                 }
             }

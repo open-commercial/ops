@@ -109,8 +109,8 @@ public class ProveedoresGUI extends JInternalFrame {
     private void setColumnas() {
         //nombres de columnas
         String[] encabezados = new String[12];
-        encabezados[0] = "Codigo";
-        encabezados[1] = "ID Fiscal";
+        encabezados[0] = "Nº Proveedor";
+        encabezados[1] = "CUIT o DNI";
         encabezados[2] = "Razon Social";
         encabezados[3] = "Saldo C/C";
         encabezados[4] = "Ultimo Movimiento C/C";
@@ -141,7 +141,7 @@ public class ProveedoresGUI extends JInternalFrame {
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
         //tamanios de columnas
-        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(70);
+        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(300);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(110);
@@ -161,7 +161,7 @@ public class ProveedoresGUI extends JInternalFrame {
     private void cargarResultadosAlTable() {
         cuentasCorrienteProveedoresParcial.stream().map(p -> {
             Object[] fila = new Object[12];
-            fila[0] = p.getProveedor().getCodigo();
+            fila[0] = p.getProveedor().getNroProveedor();
             fila[1] = p.getProveedor().getIdFiscal();
             fila[2] = p.getProveedor().getRazonSocial();
             fila[3] = p.getSaldo();
@@ -197,23 +197,11 @@ public class ProveedoresGUI extends JInternalFrame {
     }
 
     private void cambiarEstadoEnabled(boolean status) {
-        chk_Codigo.setEnabled(status);
-        if (status == true && chk_Codigo.isSelected() == true) {
-            txt_Codigo.setEnabled(true);
+        chkNroProveedorORazonSocial.setEnabled(status);
+        if (status == true && chkNroProveedorORazonSocial.isSelected() == true) {
+            txtNroProveedorORazonSocial.setEnabled(true);
         } else {
-            txt_Codigo.setEnabled(false);
-        }
-        chk_RazonSocial.setEnabled(status);
-        if (status == true && chk_RazonSocial.isSelected() == true) {
-            txt_RazonSocial.setEnabled(true);
-        } else {
-            txt_RazonSocial.setEnabled(false);
-        }
-        chk_Id_Fiscal.setEnabled(status);
-        if (status == true && chk_Id_Fiscal.isSelected() == true) {
-            txt_Id_Fiscal.setEnabled(true);
-        } else {
-            txt_Id_Fiscal.setEnabled(false);
+            txtNroProveedorORazonSocial.setEnabled(false);
         }
         chk_Ubicacion.setEnabled(status);
         if (status == true && chk_Ubicacion.isSelected() == true) {
@@ -240,14 +228,9 @@ public class ProveedoresGUI extends JInternalFrame {
     private void buscar() {
         this.cambiarEstadoEnabled(false);
         String criteria = "/cuentas-corriente/proveedores/busqueda/criteria?";
-        if (chk_Codigo.isSelected()) {
-            criteria += "codigo=" + txt_Codigo.getText().trim() + "&";
-        }
-        if (chk_RazonSocial.isSelected()) {
-            criteria += "razonSocial=" + txt_RazonSocial.getText().trim() + "&";
-        }
-        if (chk_Id_Fiscal.isSelected()) {
-            criteria += "idFiscal=" + txt_Id_Fiscal.getText().trim() + "&";
+        if (chkNroProveedorORazonSocial.isSelected()) {
+            criteria += "nroProveedor=" + txtNroProveedorORazonSocial.getText().trim()
+                    + "&razonSocial=" + txtNroProveedorORazonSocial.getText().trim() + "&";
         }
         if (chk_Ubicacion.isSelected()) {
             criteria += "idProvincia=" + String.valueOf(((Provincia) (cmb_Provincia.getSelectedItem())).getIdProvincia()) + "&";
@@ -315,16 +298,12 @@ public class ProveedoresGUI extends JInternalFrame {
     private void initComponents() {
 
         panelFiltros = new javax.swing.JPanel();
-        chk_Codigo = new javax.swing.JCheckBox();
-        txt_Codigo = new javax.swing.JTextField();
+        chkNroProveedorORazonSocial = new javax.swing.JCheckBox();
+        txtNroProveedorORazonSocial = new javax.swing.JTextField();
         chk_Ubicacion = new javax.swing.JCheckBox();
         cmb_Provincia = new javax.swing.JComboBox();
         cmb_Localidad = new javax.swing.JComboBox();
         btn_Buscar = new javax.swing.JButton();
-        txt_RazonSocial = new javax.swing.JTextField();
-        chk_RazonSocial = new javax.swing.JCheckBox();
-        txt_Id_Fiscal = new javax.swing.JTextField();
-        chk_Id_Fiscal = new javax.swing.JCheckBox();
         lbl_cantResultados = new javax.swing.JLabel();
         panelResultados = new javax.swing.JPanel();
         sp_Resultados = new javax.swing.JScrollPane();
@@ -362,17 +341,17 @@ public class ProveedoresGUI extends JInternalFrame {
 
         panelFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
 
-        chk_Codigo.setText("Código:");
-        chk_Codigo.addItemListener(new java.awt.event.ItemListener() {
+        chkNroProveedorORazonSocial.setText("Nº Proveedor o Razón Social:");
+        chkNroProveedorORazonSocial.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                chk_CodigoItemStateChanged(evt);
+                chkNroProveedorORazonSocialItemStateChanged(evt);
             }
         });
 
-        txt_Codigo.setEnabled(false);
-        txt_Codigo.addActionListener(new java.awt.event.ActionListener() {
+        txtNroProveedorORazonSocial.setEnabled(false);
+        txtNroProveedorORazonSocial.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_CodigoActionPerformed(evt);
+                txtNroProveedorORazonSocialActionPerformed(evt);
             }
         });
 
@@ -401,34 +380,6 @@ public class ProveedoresGUI extends JInternalFrame {
             }
         });
 
-        txt_RazonSocial.setEnabled(false);
-        txt_RazonSocial.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_RazonSocialActionPerformed(evt);
-            }
-        });
-
-        chk_RazonSocial.setText("Razón Social:");
-        chk_RazonSocial.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                chk_RazonSocialItemStateChanged(evt);
-            }
-        });
-
-        txt_Id_Fiscal.setEnabled(false);
-        txt_Id_Fiscal.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_Id_FiscalActionPerformed(evt);
-            }
-        });
-
-        chk_Id_Fiscal.setText("ID Fiscal:");
-        chk_Id_Fiscal.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                chk_Id_FiscalItemStateChanged(evt);
-            }
-        });
-
         lbl_cantResultados.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
         javax.swing.GroupLayout panelFiltrosLayout = new javax.swing.GroupLayout(panelFiltros);
@@ -439,49 +390,36 @@ public class ProveedoresGUI extends JInternalFrame {
                 .addContainerGap()
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(chk_RazonSocial, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(chk_Codigo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(chk_Id_Fiscal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txt_RazonSocial, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
-                            .addComponent(txt_Codigo, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txt_Id_Fiscal))
-                        .addGap(18, 18, 18)
-                        .addComponent(chk_Ubicacion)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cmb_Localidad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmb_Provincia, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(panelFiltrosLayout.createSequentialGroup()
                         .addComponent(btn_Buscar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 549, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelFiltrosLayout.createSequentialGroup()
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(chkNroProveedorORazonSocial, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(chk_Ubicacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtNroProveedorORazonSocial)
+                            .addComponent(cmb_Provincia, 0, 435, Short.MAX_VALUE)
+                            .addComponent(cmb_Localidad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
         );
         panelFiltrosLayout.setVerticalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFiltrosLayout.createSequentialGroup()
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(chk_Codigo)
-                    .addComponent(txt_Codigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chk_Ubicacion)
-                    .addComponent(cmb_Provincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(cmb_Localidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chk_RazonSocial)
-                    .addComponent(txt_RazonSocial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(chk_Id_Fiscal)
-                    .addComponent(txt_Id_Fiscal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(chkNroProveedorORazonSocial)
+                    .addComponent(txtNroProveedorORazonSocial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btn_Buscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(cmb_Provincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chk_Ubicacion))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmb_Localidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_Buscar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -547,7 +485,7 @@ public class ProveedoresGUI extends JInternalFrame {
                 .addComponent(btn_Eliminar)
                 .addGap(0, 0, 0)
                 .addComponent(btnCuentaCorriente)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(351, Short.MAX_VALUE))
             .addComponent(sp_Resultados)
         );
 
@@ -616,8 +554,8 @@ public class ProveedoresGUI extends JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -625,15 +563,15 @@ public class ProveedoresGUI extends JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void chk_CodigoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_CodigoItemStateChanged
+    private void chkNroProveedorORazonSocialItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkNroProveedorORazonSocialItemStateChanged
         //Pregunta el estado actual del checkBox
-        if (chk_Codigo.isSelected() == true) {
-            txt_Codigo.setEnabled(true);
-            txt_Codigo.requestFocus();
+        if (chkNroProveedorORazonSocial.isSelected() == true) {
+            txtNroProveedorORazonSocial.setEnabled(true);
+            txtNroProveedorORazonSocial.requestFocus();
         } else {
-            txt_Codigo.setEnabled(false);
+            txtNroProveedorORazonSocial.setEnabled(false);
         }
-    }//GEN-LAST:event_chk_CodigoItemStateChanged
+    }//GEN-LAST:event_chkNroProveedorORazonSocialItemStateChanged
 
     private void chk_UbicacionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UbicacionItemStateChanged
         //Pregunta el estado actual del checkBox
@@ -711,26 +649,6 @@ public class ProveedoresGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btn_ModificarActionPerformed
 
-    private void chk_RazonSocialItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_RazonSocialItemStateChanged
-        //Pregunta el estado actual del checkBox
-        if (chk_RazonSocial.isSelected() == true) {
-            txt_RazonSocial.setEnabled(true);
-            txt_RazonSocial.requestFocus();
-        } else {
-            txt_RazonSocial.setEnabled(false);
-        }
-    }//GEN-LAST:event_chk_RazonSocialItemStateChanged
-
-    private void chk_Id_FiscalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_Id_FiscalItemStateChanged
-        //Pregunta el estado actual del checkBox
-        if (chk_Id_Fiscal.isSelected() == true) {
-            txt_Id_Fiscal.setEnabled(true);
-            txt_Id_Fiscal.requestFocus();
-        } else {
-            txt_Id_Fiscal.setEnabled(false);
-        }
-    }//GEN-LAST:event_chk_Id_FiscalItemStateChanged
-
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         this.setSize(sizeInternalFrame);
         this.setColumnas();
@@ -768,17 +686,9 @@ public class ProveedoresGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btnCuentaCorrienteActionPerformed
 
-    private void txt_CodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_CodigoActionPerformed
+    private void txtNroProveedorORazonSocialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNroProveedorORazonSocialActionPerformed
         btn_BuscarActionPerformed(null);
-    }//GEN-LAST:event_txt_CodigoActionPerformed
-
-    private void txt_RazonSocialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_RazonSocialActionPerformed
-        btn_BuscarActionPerformed(null);
-    }//GEN-LAST:event_txt_RazonSocialActionPerformed
-
-    private void txt_Id_FiscalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_Id_FiscalActionPerformed
-        btn_BuscarActionPerformed(null);
-    }//GEN-LAST:event_txt_Id_FiscalActionPerformed
+    }//GEN-LAST:event_txtNroProveedorORazonSocialActionPerformed
 
     private void cmbOrdenItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbOrdenItemStateChanged
         this.limpiarYBuscar();
@@ -794,9 +704,7 @@ public class ProveedoresGUI extends JInternalFrame {
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_Modificar;
     private javax.swing.JButton btn_Nuevo;
-    private javax.swing.JCheckBox chk_Codigo;
-    private javax.swing.JCheckBox chk_Id_Fiscal;
-    private javax.swing.JCheckBox chk_RazonSocial;
+    private javax.swing.JCheckBox chkNroProveedorORazonSocial;
     private javax.swing.JCheckBox chk_Ubicacion;
     private javax.swing.JComboBox<String> cmbOrden;
     private javax.swing.JComboBox<String> cmbSentido;
@@ -808,8 +716,6 @@ public class ProveedoresGUI extends JInternalFrame {
     private javax.swing.JPanel panelResultados;
     private javax.swing.JScrollPane sp_Resultados;
     private javax.swing.JTable tbl_Resultados;
-    private javax.swing.JTextField txt_Codigo;
-    private javax.swing.JTextField txt_Id_Fiscal;
-    private javax.swing.JTextField txt_RazonSocial;
+    private javax.swing.JTextField txtNroProveedorORazonSocial;
     // End of variables declaration//GEN-END:variables
 }

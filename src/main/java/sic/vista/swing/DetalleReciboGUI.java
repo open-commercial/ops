@@ -68,14 +68,14 @@ public class DetalleReciboGUI extends JDialog {
     
     private void guardarComprobante() {
         try {
+            Recibo recibo = new Recibo();
+            recibo.setMonto(new BigDecimal(txtMonto.getValue().toString()));
+            recibo.setConcepto(txtObservaciones.getText().trim());
+            recibo.setIdFormaDePago(((FormaDePago) cmbFormaDePago.getSelectedItem()).getId_FormaDePago());
+            recibo.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
             if (cliente != null) {
-                Recibo recibo = new Recibo();
-                recibo.setMonto(new BigDecimal(txtMonto.getValue().toString()));
-                recibo.setConcepto(txtObservaciones.getText().trim());
-                recibo = RestClient.getRestTemplate().postForObject("/recibos/clientes?idCliente=" + cliente.getId_Cliente()
-                        + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                        + "&idFormaDePago=" + ((FormaDePago) cmbFormaDePago.getSelectedItem()).getId_FormaDePago()
-                        + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                recibo.setIdCliente(cliente.getId_Cliente());
+                recibo = RestClient.getRestTemplate().postForObject("/recibos/clientes",
                         recibo, Recibo.class);
                 int reply = JOptionPane.showConfirmDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
@@ -84,13 +84,8 @@ public class DetalleReciboGUI extends JDialog {
                     this.lanzarReporteRecibo(recibo);
                 }
             } else {
-                Recibo recibo = new Recibo();
-                recibo.setMonto(new BigDecimal(txtMonto.getValue().toString()));
-                recibo.setConcepto(txtObservaciones.getText().trim());
-                RestClient.getRestTemplate().postForObject("/recibos/proveedores?idProveedor=" + proveedor.getId_Proveedor()
-                        + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                        + "&idFormaDePago=" + ((FormaDePago) cmbFormaDePago.getSelectedItem()).getId_FormaDePago()
-                        + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                recibo.setIdProveedor(proveedor.getId_Proveedor());
+                RestClient.getRestTemplate().postForObject("/recibos/proveedores",
                         recibo, Recibo.class);
             }
             this.dispose();

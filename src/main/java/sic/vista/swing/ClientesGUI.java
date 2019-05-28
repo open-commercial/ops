@@ -471,7 +471,7 @@ public class ClientesGUI extends JInternalFrame {
                             .addComponent(cmbLocalidad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cmbProvincia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(panelFiltrosLayout.createSequentialGroup()
-                                .addComponent(txtViajante, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+                                .addComponent(txtViajante, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
                                 .addGap(0, 0, 0)
                                 .addComponent(btnBuscarViajante))
                             .addComponent(txtCriteria))))
@@ -580,7 +580,7 @@ public class ClientesGUI extends JInternalFrame {
                 .addComponent(btn_setPredeterminado)
                 .addGap(0, 0, 0)
                 .addComponent(btnCuentaCorriente)
-                .addGap(0, 56, Short.MAX_VALUE))
+                .addGap(0, 98, Short.MAX_VALUE))
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Eliminar, btn_Modificar, btn_Nuevo});

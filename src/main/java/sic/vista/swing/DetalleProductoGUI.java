@@ -846,7 +846,7 @@ public class DetalleProductoGUI extends JDialog {
                 image = ImageIO.read(url);
             } catch (IOException ex) {
                 LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_404_logo"),
+                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_error_al_recuperar_imagen"),
                         "Error", JOptionPane.ERROR_MESSAGE);
                 this.dispose();
             }

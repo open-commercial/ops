@@ -17,7 +17,9 @@ public class Recibo implements Serializable {
     private String concepto;
     private Date fecha;
     private BigDecimal monto;
+    private long idFormaDePago;
     private String nombreFormaDePago;   
+    private long idEmpresa;
     private String nombreEmpresa;
     private Long idCliente;
     private String nombreFiscalCliente;

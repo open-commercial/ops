@@ -21,7 +21,7 @@ public class RestClient {
                 .errorHandler(new ApiResponseErrorHandler())
                 //.setConnectTimeout(10000)
                 //.setReadTimeout(10000)
-                .requestFactory(new HttpComponentsClientHttpRequestFactory())
+                //.requestFactory(new HttpComponentsClientHttpRequestFactory())
                 .build();
         List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
         interceptors.add(new AuthorizationHeaderRequestInterceptor());

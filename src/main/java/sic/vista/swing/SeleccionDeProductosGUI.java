@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -24,8 +24,9 @@ import sic.RestClient;
 import sic.modelo.Factura;
 import sic.modelo.FacturaCompra;
 import sic.modelo.FacturaVenta;
+import sic.modelo.NotaCredito;
+import sic.modelo.NuevaNotaCreditoDeFactura;
 import sic.modelo.RenglonFactura;
-import sic.modelo.TipoDeComprobante;
 import sic.util.DecimalesRenderer;
 import sic.util.FormatosFechaHora;
 import sic.util.FormatterFechaHora;
@@ -35,9 +36,9 @@ public class SeleccionDeProductosGUI extends JDialog {
 
     private final ModeloTabla modeloTablaResultados = new ModeloTabla();
     private Factura factura;
-    private final HashMap<Long, BigDecimal> idsRenglonesYCantidades = new HashMap<>();
-    private boolean modificarStock;
-    private TipoDeComprobante tipoDeComprobante;    
+    private final List<BigDecimal> cantidades;
+    private final List<Long> idsRenglonesFactura;  
+    private NotaCredito notaCreditoCalculada;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public SeleccionDeProductosGUI(long idFactura) {        
@@ -45,26 +46,12 @@ public class SeleccionDeProductosGUI extends JDialog {
         this.setIcon();
         this.setColumnas();
         this.recuperarFactura(idFactura);
+        cantidades = new ArrayList();
+        idsRenglonesFactura = new ArrayList();
     }
     
-    public SeleccionDeProductosGUI(long idFactura, TipoDeComprobante tipoDeComprobante) {        
-        this.initComponents();
-        this.setIcon();
-        this.setColumnas();
-        this.tipoDeComprobante = tipoDeComprobante;
-        this.recuperarFactura(idFactura);
-    }
-    
-    public HashMap<Long, BigDecimal> getRenglonesConCantidadNueva() {
-        return idsRenglonesYCantidades;
-    }
-    
-    public long getIdFactura() {
-        return factura.getId_Factura();
-    }
-    
-    public boolean modificarStock() {
-        return modificarStock;
+    public NotaCredito getNotaCreditoCalculada() {
+        return notaCreditoCalculada;
     }
     
     private void setIcon() {
@@ -142,24 +129,6 @@ public class SeleccionDeProductosGUI extends JDialog {
         tblResultados.getColumnModel().getColumn(6).setPreferredWidth(20);
     }
     
-    private void recalcularRenglonesFactura() {
-        for (int i = 0; i < tblResultados.getRowCount(); i++) {
-            BigDecimal cantidadElegida = new BigDecimal((tblResultados.getValueAt(i, 6)).toString());
-            if (!(cantidadElegida.compareTo(BigDecimal.ZERO) < 0)) {
-                if ((cantidadElegida.compareTo(BigDecimal.ZERO) > 0 && (cantidadElegida.compareTo((BigDecimal) tblResultados.getValueAt(i, 5)) < 1))) {
-                    idsRenglonesYCantidades.put(factura.getRenglones().get(i).getId_RenglonFactura(), ((BigDecimal) tblResultados.getValueAt(i, 6)));
-                }
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        MessageFormat.format(ResourceBundle.getBundle("Mensajes").getString(
-                                "mensaje_nota_credito_renglon_no_valido"), factura.getRenglones().get(i).getDescripcionItem()),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-                i = tblResultados.getRowCount();
-                idsRenglonesYCantidades.clear();
-            }
-        }
-    }
-    
     private void cargarRenglonesAlTable() {
         factura.getRenglones().stream().map(r -> {
             Object[] fila = new Object[7];
@@ -180,15 +149,8 @@ public class SeleccionDeProductosGUI extends JDialog {
     private void recuperarFactura(long idFactura) {
         try {
             factura = RestClient.getRestTemplate().getForObject("/facturas/" + idFactura, Factura.class);
-            if (tipoDeComprobante == null) {
-                factura.setRenglones(new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                        .getForObject("/facturas/" + factura.getId_Factura() + "/renglones", RenglonFactura[].class))));
-            } else if (tipoDeComprobante == TipoDeComprobante.FACTURA_A || tipoDeComprobante == TipoDeComprobante.FACTURA_B
-                    || tipoDeComprobante == TipoDeComprobante.FACTURA_C || tipoDeComprobante == TipoDeComprobante.FACTURA_X
-                    || tipoDeComprobante == TipoDeComprobante.FACTURA_Y || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
-                factura.setRenglones(new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                        .getForObject("/facturas/" + factura.getId_Factura() + "/renglones/notas/credito", RenglonFactura[].class))));
-            }
+            factura.setRenglones(new ArrayList(Arrays.asList(RestClient.getRestTemplate()
+                    .getForObject("/facturas/" + factura.getId_Factura() + "/renglones/notas/credito", RenglonFactura[].class))));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -306,13 +268,45 @@ public class SeleccionDeProductosGUI extends JDialog {
     }//GEN-LAST:event_formWindowOpened
 
     private void btnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContinuarActionPerformed
-        modificarStock = chkModificarStock.isSelected();
-        this.recalcularRenglonesFactura();
-        if (!this.getRenglonesConCantidadNueva().isEmpty()) {
-            this.dispose();
-        } else {
+        try {
+            for (int i = 0; i < tblResultados.getRowCount(); i++) {
+                BigDecimal cantidadElegida = new BigDecimal((tblResultados.getValueAt(i, 6)).toString());
+                if (!(cantidadElegida.compareTo(BigDecimal.ZERO) < 0)) {
+                    if ((cantidadElegida.compareTo(BigDecimal.ZERO) > 0 && (cantidadElegida.compareTo((BigDecimal) tblResultados.getValueAt(i, 5)) < 1))) {
+                        cantidades.add(cantidadElegida);
+                        idsRenglonesFactura.add(factura.getRenglones().get(i).getId_RenglonFactura());
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            MessageFormat.format(ResourceBundle.getBundle("Mensajes").getString(
+                                    "mensaje_nota_credito_renglon_no_valido"), factura.getRenglones().get(i).getDescripcionItem()),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    i = tblResultados.getRowCount();
+                    cantidades.clear();
+                    idsRenglonesFactura.clear();
+                }
+            }
+            if (cantidades.isEmpty() || idsRenglonesFactura.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_productos_no_seleccionados"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                NuevaNotaCreditoDeFactura notaCreditoDeFactura = NuevaNotaCreditoDeFactura
+                        .builder()
+                        .idFactura(this.factura.getId_Factura())
+                        .cantidades(cantidades.toArray(new BigDecimal[cantidades.size()]))
+                        .idsRenglonesFactura(idsRenglonesFactura.toArray(new Long[idsRenglonesFactura.size()]))
+                        .modificaStock(chkModificarStock.isSelected())
+                        .build();
+                this.notaCreditoCalculada = RestClient.getRestTemplate().postForObject("/notas/credito/calculos", notaCreditoDeFactura, NotaCredito.class);
+                this.dispose();
+            }
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_productos_no_seleccionados"),
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnContinuarActionPerformed

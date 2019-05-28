@@ -146,18 +146,18 @@ public class DetalleNotaDebitoGUI extends JDialog {
                 + "?subTotalBruto=" + new BigDecimal(txtSubTotalBruto.getValue().toString())
                 + "&iva21Neto=" + notaDebitoNueva.getIva21Neto()
                 + "&montoNoGravado=" + notaDebitoNueva.getMontoNoGravado(), BigDecimal.class));
-        String uri = "/notas/debito/empresa/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                + "/usuario/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                + "/recibo/" + recibo.getIdRecibo();
+        notaDebitoNueva.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        notaDebitoNueva.setIdRecibo(recibo.getIdRecibo());
+        String uri = "/notas/debito/";
         if (cliente != null) {
-            uri += "?movimiento=" + Movimiento.VENTA
-                    + "&idCliente=" + cliente.getId_Cliente();
+            uri += "clientes";
+            notaDebitoNueva.setIdCliente(cliente.getId_Cliente());
         } else if (proveedor != null) {
+            uri += "proveedores";
             notaDebitoNueva.setSerie(Long.parseLong(txt_Serie.getValue().toString()));
             notaDebitoNueva.setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
             notaDebitoNueva.setCAE(Long.parseLong(txt_CAE.getValue().toString()));
-            uri += "?movimiento=" + Movimiento.COMPRA
-                    + "&idProveedor=" + proveedor.getId_Proveedor();
+            notaDebitoNueva.setIdProveedor(proveedor.getId_Proveedor());
         }
         NotaDebito nd = RestClient.getRestTemplate()
                 .postForObject(uri, notaDebitoNueva, NotaDebito.class);
