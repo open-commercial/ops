@@ -190,7 +190,7 @@ public class NotasCompraGUI extends JInternalFrame {
     private void cargarResultadosAlTable() {
         notasParcial.stream().map(nota -> {
             Object[] fila = new Object[8];
-            fila[0] = nota.getCAE() == 0 ? "" : nota.getCAE();
+            fila[0] = nota.getCae() == 0 ? "" : nota.getCae();
             fila[1] = nota.getFecha();
             fila[2] = nota.getTipoComprobante();
             fila[3] = nota.getSerie() + " - " + nota.getNroNota();

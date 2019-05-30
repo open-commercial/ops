@@ -54,8 +54,8 @@ public abstract class Factura implements Serializable {
     private long idEmpresa;
     private String nombreEmpresa;
     private boolean eliminada;   
-    private long CAE;
-    private Date vencimientoCAE;
+    private long cae;
+    private Date vencimientoCae;
     private long numSerieAfip;
     private long numFacturaAfip;
 }

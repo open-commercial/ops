@@ -293,7 +293,7 @@ public class CerrarVentaGUI extends JDialog {
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-        if (facturaVenta.getCAE() != 0L) facturaAutorizada = true;
+        if (facturaVenta.getCae() != 0L) facturaAutorizada = true;
     }
 
     private void armarMontosConFormasDePago() {

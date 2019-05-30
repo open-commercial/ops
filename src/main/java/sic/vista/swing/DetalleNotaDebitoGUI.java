@@ -22,13 +22,11 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
-import sic.modelo.Movimiento;
 import sic.modelo.NotaDebito;
 import sic.modelo.Proveedor;
 import sic.modelo.Recibo;
 import sic.modelo.RenglonNotaDebito;
 import sic.modelo.TipoDeComprobante;
-import sic.modelo.UsuarioActivo;
 import sic.util.FormatosFechaHora;
 import sic.util.FormatterFechaHora;
 import sic.util.FormatterNumero;
@@ -156,7 +154,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
             uri += "proveedores";
             notaDebitoNueva.setSerie(Long.parseLong(txt_Serie.getValue().toString()));
             notaDebitoNueva.setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
-            notaDebitoNueva.setCAE(Long.parseLong(txt_CAE.getValue().toString()));
+            notaDebitoNueva.setCae(Long.parseLong(txt_CAE.getValue().toString()));
             notaDebitoNueva.setIdProveedor(proveedor.getId_Proveedor());
         }
         NotaDebito nd = RestClient.getRestTemplate()
@@ -205,7 +203,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
             notaDebito = RestClient.getRestTemplate()
                     .postForObject("/notas/" + notaDebito.getIdNota() + "/autorizacion",
                             null, NotaDebito.class);
-            return notaDebito.getCAE() != 0L;
+            return notaDebito.getCae() != 0L;
         }
         return false;
     }
@@ -224,11 +222,11 @@ public class DetalleNotaDebitoGUI extends JDialog {
             dcFechaNota.setDate(notaDebito.getFecha());
             txt_Serie.setText(String.valueOf(notaDebito.getSerie()));
             txt_Numero.setText(String.valueOf(notaDebito.getNroNota()));
-            txt_CAE.setText(String.valueOf(notaDebito.getCAE()));
-            if (notaDebito.getCAE() == 0L) {
+            txt_CAE.setText(String.valueOf(notaDebito.getCae()));
+            if (notaDebito.getCae() == 0L) {
                 txt_CAE.setText("");
             } else {
-                txt_CAE.setText(String.valueOf(notaDebito.getCAE()));
+                txt_CAE.setText(String.valueOf(notaDebito.getCae()));
             }
             txtNombre.setText(proveedorDeNota.getRazonSocial());
             cmbDescripcionRenglon2.removeAllItems();
