@@ -22,13 +22,11 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
-import sic.modelo.Movimiento;
 import sic.modelo.NotaDebito;
 import sic.modelo.Proveedor;
 import sic.modelo.Recibo;
 import sic.modelo.RenglonNotaDebito;
 import sic.modelo.TipoDeComprobante;
-import sic.modelo.UsuarioActivo;
 import sic.util.FormatosFechaHora;
 import sic.util.FormatterFechaHora;
 import sic.util.FormatterNumero;
@@ -121,12 +119,27 @@ public class DetalleNotaDebitoGUI extends JDialog {
 
     private void cargarDetalleComprobante() {
         txtMontoRenglon2.setValue(new BigDecimal(txtMontoRenglon2.getText()));
-        BigDecimal iva = ((BigDecimal) txtMontoRenglon2.getValue()).multiply(IVA_21.divide(CIEN, 15, RoundingMode.HALF_UP));
+        TipoDeComprobante tipoNotaDebito;
+        if (this.cliente != null) {
+            tipoNotaDebito = RestClient.getRestTemplate()
+                    .getForObject("/notas/clientes/tipos/debito?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                            + "&idCliente=" + cliente.getId_Cliente(), TipoDeComprobante[].class)[0];
+        } else {
+            tipoNotaDebito = RestClient.getRestTemplate()
+                    .getForObject("/notas/proveedores/tipos/debito?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                            + "&idProveedor=" + proveedor.getId_Proveedor(), TipoDeComprobante[].class)[0];
+        }
+        BigDecimal iva = tipoNotaDebito == TipoDeComprobante.NOTA_DEBITO_C ? BigDecimal.ZERO
+                : ((BigDecimal) txtMontoRenglon2.getValue()).multiply(IVA_21.divide(CIEN, 15, RoundingMode.HALF_UP));
         lblIvaNetoRenglon2.setText("$" + FormatterNumero.formatConRedondeo(iva));
         lblImporteRenglon2.setText("$" + FormatterNumero.formatConRedondeo((new BigDecimal(txtMontoRenglon2.getValue().toString()).add(iva))));
-        txtSubTotalBruto.setValue(new BigDecimal(txtMontoRenglon2.getValue().toString()));
+        if (tipoNotaDebito == TipoDeComprobante.NOTA_DEBITO_C) {
+            txtSubTotalBruto.setValue(recibo.getMonto().add(new BigDecimal(txtMontoRenglon2.getValue().toString())));
+        } else {
+            txtSubTotalBruto.setValue(new BigDecimal(txtMontoRenglon2.getValue().toString()));
+        }
         txtIVA21Neto.setValue(iva);
-        txtNoGravado.setValue(recibo.getMonto());
+        txtNoGravado.setValue(tipoNotaDebito == TipoDeComprobante.NOTA_DEBITO_C ? 0 : recibo.getMonto());
         txtTotal.setValue(recibo.getMonto().add(new BigDecimal(txtMontoRenglon2.getValue().toString())).add(iva));
     }
 
@@ -135,7 +148,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
         notaDebitoNueva.setFecha(new Date());
         notaDebitoNueva.setIva21Neto(new BigDecimal(txtIVA21Neto.getValue().toString()));
         notaDebitoNueva.setIva105Neto(BigDecimal.ZERO);
-        notaDebitoNueva.setMontoNoGravado(recibo.getMonto());
+        notaDebitoNueva.setMontoNoGravado(new BigDecimal(txtNoGravado.getValue().toString()));
         notaDebitoNueva.setMotivo(cmbDescripcionRenglon2.getSelectedItem().toString());
         notaDebitoNueva.setRenglonesNotaDebito(Arrays.asList(RestClient.getRestTemplate()
                 .getForObject("/notas/renglon/debito/recibo/" + recibo.getIdRecibo()
