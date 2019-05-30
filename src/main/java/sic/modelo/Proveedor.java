@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 public class Proveedor implements Serializable {
 
     private long id_Proveedor;
-    private String codigo;
+    private String nroProveedor;
     private String razonSocial;
     private CategoriaIVA categoriaIVA;
     private Long idFiscal;

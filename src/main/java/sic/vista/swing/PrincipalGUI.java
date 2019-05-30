@@ -40,15 +40,18 @@ public class PrincipalGUI extends JFrame {
         this.setIconImage(iconoVentana.getImage());
     }
     
+    private void setInfoEnTituloDeVentana() {
+        this.setTitle("S.I.C. OPS"
+                + " - Empresa: " + EmpresaActiva.getInstance().getEmpresa().getNombre()
+                + " - Usuario: " + UsuarioActivo.getInstance().getUsuario().getUsername());
+    }
+    
     private void llamarSeleccionEmpresaGUI() {
         SeleccionEmpresaGUI seleccionEmpresaGUI = new SeleccionEmpresaGUI();
         seleccionEmpresaGUI.setModal(true);
         seleccionEmpresaGUI.setLocationRelativeTo(this);
         seleccionEmpresaGUI.setVisible(true);
-        this.setTitle("S.I.C. Ops "
-                + ResourceBundle.getBundle("Mensajes").getString("version")
-                + " - Empresa: " + EmpresaActiva.getInstance().getEmpresa().getNombre()
-                + " - Usuario: " + UsuarioActivo.getInstance().getUsuario().getUsername());
+        this.setInfoEnTituloDeVentana();
     }
     
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
@@ -445,12 +448,11 @@ public class PrincipalGUI extends JFrame {
             this.llamarSeleccionEmpresaGUI();
         } else {
             try {
-                Empresa empresa = RestClient.getRestTemplate().getForObject("/empresas/" + UsuarioActivo.getInstance().getUsuario().getIdEmpresaPredeterminada(), Empresa.class);
+                Empresa empresa = RestClient.getRestTemplate()
+                        .getForObject("/empresas/" + UsuarioActivo.getInstance().getUsuario().getIdEmpresaPredeterminada(),
+                                Empresa.class);
                 EmpresaActiva.getInstance().setEmpresa(empresa);
-                this.setTitle("S.I.C. Ops "
-                        + ResourceBundle.getBundle("Mensajes").getString("version")
-                        + " - Empresa: " + EmpresaActiva.getInstance().getEmpresa().getNombre()
-                        + " - Usuario: " + UsuarioActivo.getInstance().getUsuario().getUsername());
+                this.setInfoEnTituloDeVentana();
             } catch (RestClientResponseException ex) {
                 this.llamarSeleccionEmpresaGUI();
             } catch (ResourceAccessException ex) {

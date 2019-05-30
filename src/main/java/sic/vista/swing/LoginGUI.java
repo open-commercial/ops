@@ -227,7 +227,7 @@ public class LoginGUI extends JFrame {
     }//GEN-LAST:event_txt_UsuarioKeyPressed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        this.setTitle("S.I.C. Ops " + ResourceBundle.getBundle("Mensajes").getString("version"));
+        this.setTitle("S.I.C. OPS");
         this.setLocationRelativeTo(null);        
     }//GEN-LAST:event_formWindowOpened
 
