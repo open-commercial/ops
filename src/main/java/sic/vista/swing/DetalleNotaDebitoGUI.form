@@ -333,7 +333,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lblDetallePago">
           <Properties>
-            <Property name="text" type="java.lang.String" value="nroPago + nota"/>
+            <Property name="text" type="java.lang.String" value="nroRecibo + nota"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblMontoPago">
