@@ -59,6 +59,8 @@ public class NuevaNotaDebitoSinReciboGUI extends JDialog {
             }
         });
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+
         lbl_TipoDeComprobante.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_TipoDeComprobante.setText("Tipo de Comprobante:");
 
