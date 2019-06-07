@@ -192,11 +192,11 @@
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="txtMontoRenglon2" max="32767" attributes="0"/>
                       <Component id="lbl_Monto" pref="90" max="32767" attributes="0"/>
                       <Component id="lblMontoPago" max="32767" attributes="0"/>
+                      <Component id="lblMontoRenglon2" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="lblIvaPorcentaje" pref="76" max="32767" attributes="0"/>
                       <Component id="lblIVA21" max="32767" attributes="0"/>
@@ -239,8 +239,8 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="lblMontoRenglon2" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblGastoAdministrativo" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtMontoRenglon2" alignment="2" min="-2" pref="25" max="-2" attributes="0"/>
                       <Component id="lblIVA21" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblIvaNetoRenglon2" alignment="2" min="-2" pref="25" max="-2" attributes="0"/>
                       <Component id="lblImporteRenglon2" alignment="2" min="-2" pref="25" max="-2" attributes="0"/>
@@ -293,21 +293,6 @@
             <Property name="text" type="java.lang.String" value="Monto"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txtMontoRenglon2">
-          <Properties>
-            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-              <Format format="#,##0.##" subtype="-1" type="0"/>
-            </Property>
-            <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="0"/>
-          </Properties>
-          <Events>
-            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtMontoRenglon2FocusGained"/>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtMontoRenglon2FocusLost"/>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtMontoRenglon2ActionPerformed"/>
-            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtMontoRenglon2KeyTyped"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JLabel" name="lblIvaNetoRenglon2">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
@@ -346,6 +331,12 @@
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" value="-"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblMontoRenglon2">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="0"/>
+            <Property name="text" type="java.lang.String" value="$0"/>
           </Properties>
         </Component>
       </SubComponents>

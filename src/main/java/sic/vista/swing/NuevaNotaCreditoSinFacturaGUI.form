@@ -66,9 +66,9 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lblDescripcion" linkSize="3" alignment="2" min="-2" pref="157" max="-2" attributes="0"/>
-                      <Component id="lbl_Monto" linkSize="3" alignment="2" min="-2" pref="157" max="-2" attributes="0"/>
+                      <Component id="lblDescripcion" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lbl_TipoDeComprobante" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbl_Monto" linkSize="3" alignment="0" min="-2" pref="52" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -117,8 +117,11 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lbl_Monto">
           <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
+            </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Monto:"/>
+            <Property name="text" type="java.lang.String" value="* Monto:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="ftxt_Monto">
@@ -145,8 +148,11 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lbl_TipoDeComprobante">
           <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
+            </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Tipo de Comprobante:"/>
+            <Property name="text" type="java.lang.String" value="* Tipo de Nota:"/>
           </Properties>
         </Component>
       </SubComponents>

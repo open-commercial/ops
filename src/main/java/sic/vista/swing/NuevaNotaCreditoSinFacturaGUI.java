@@ -69,8 +69,9 @@ public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
         lblDescripcion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblDescripcion.setText("* Descripcion:");
 
+        lbl_Monto.setForeground(java.awt.Color.red);
         lbl_Monto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Monto.setText("Monto:");
+        lbl_Monto.setText("* Monto:");
 
         ftxt_Monto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
         ftxt_Monto.setText("0");
@@ -85,8 +86,9 @@ public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
             }
         });
 
+        lbl_TipoDeComprobante.setForeground(java.awt.Color.red);
         lbl_TipoDeComprobante.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_TipoDeComprobante.setText("Tipo de Comprobante:");
+        lbl_TipoDeComprobante.setText("* Tipo de Nota:");
 
         javax.swing.GroupLayout pnl_ParametrosLayout = new javax.swing.GroupLayout(pnl_Parametros);
         pnl_Parametros.setLayout(pnl_ParametrosLayout);
@@ -95,9 +97,9 @@ public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
             .addGroup(pnl_ParametrosLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnl_ParametrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Monto, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_TipoDeComprobante))
+                    .addComponent(lblDescripcion)
+                    .addComponent(lbl_TipoDeComprobante)
+                    .addComponent(lbl_Monto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(6, 6, 6)
                 .addGroup(pnl_ParametrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(ftxtDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)

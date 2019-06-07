@@ -14,27 +14,43 @@ import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.NotaDebito;
+import sic.modelo.NuevaNotaDebitoDeRecibo;
 import sic.modelo.NuevaNotaDebitoSinRecibo;
 import sic.modelo.Proveedor;
 import sic.modelo.TipoDeComprobante;
 
-public class NuevaNotaDebitoSinReciboGUI extends JDialog {
+public class NuevaNotaDebitoGUI extends JDialog {
     
-    private final Long idCliente;
-    private final Long idProveedor;
+    private final Cliente cliente;
+    private final Proveedor proveedor;
     private NotaDebito notaDebitoCalculada;
+    private Long idRecibo;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public NuevaNotaDebitoSinReciboGUI(Cliente cliente) {
+    public NuevaNotaDebitoGUI(Cliente cliente) {
         this.initComponents();
-        this.idCliente = cliente.getId_Cliente();
-        this.idProveedor = null;
+        this.cliente = cliente;
+        this.proveedor = null;
     }
-    
-    public NuevaNotaDebitoSinReciboGUI(Proveedor proveedor) {
+
+    public NuevaNotaDebitoGUI(Proveedor proveedor) {
         this.initComponents();
-        this.idCliente = null;
-        this.idProveedor = proveedor.getId_Proveedor();
+        this.cliente = null;
+        this.proveedor = proveedor;
+    }
+
+    public NuevaNotaDebitoGUI(Cliente cliente, Long idRecibo) {
+        this.initComponents();
+        this.cliente = cliente;
+        this.proveedor = null;
+        this.idRecibo = idRecibo;
+    }
+
+    public NuevaNotaDebitoGUI(Proveedor proveedor, Long idRecibo) {
+        this.initComponents();
+        this.cliente = null;
+        this.proveedor = proveedor;
+        this.idRecibo = idRecibo;
     }
     
     public NotaDebito getNotaDebitoCalculadaSinRecibo() {
@@ -48,11 +64,12 @@ public class NuevaNotaDebitoSinReciboGUI extends JDialog {
         jPanel1 = new javax.swing.JPanel();
         lbl_TipoDeComprobante = new javax.swing.JLabel();
         cmbTipoDeComprobante = new javax.swing.JComboBox();
-        lbl_Monto = new javax.swing.JLabel();
+        lblGastoAdministrativo = new javax.swing.JLabel();
         ftxt_Monto = new javax.swing.JFormattedTextField();
         lbl_Aceptar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Nueva Nota de Debito");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -61,11 +78,13 @@ public class NuevaNotaDebitoSinReciboGUI extends JDialog {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
+        lbl_TipoDeComprobante.setForeground(java.awt.Color.red);
         lbl_TipoDeComprobante.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_TipoDeComprobante.setText("Tipo de Comprobante:");
+        lbl_TipoDeComprobante.setText("* Tipo de Nota:");
 
-        lbl_Monto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Monto.setText("Monto:");
+        lblGastoAdministrativo.setForeground(java.awt.Color.red);
+        lblGastoAdministrativo.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblGastoAdministrativo.setText("* Gasto Administrativo:");
 
         ftxt_Monto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
         ftxt_Monto.setText("0");
@@ -86,15 +105,20 @@ public class NuevaNotaDebitoSinReciboGUI extends JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_TipoDeComprobante)
-                    .addComponent(lbl_Monto, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lbl_TipoDeComprobante)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(lblGastoAdministrativo, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(cmbTipoDeComprobante, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ftxt_Monto, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
+
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblGastoAdministrativo, lbl_TipoDeComprobante});
+
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -105,7 +129,7 @@ public class NuevaNotaDebitoSinReciboGUI extends JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(ftxt_Monto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Monto))
+                    .addComponent(lblGastoAdministrativo))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -124,10 +148,12 @@ public class NuevaNotaDebitoSinReciboGUI extends JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lbl_Aceptar)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(lbl_Aceptar)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -159,14 +185,25 @@ public class NuevaNotaDebitoSinReciboGUI extends JDialog {
             ftxt_Monto.setValue(0.00);
         }
         try {
-            NuevaNotaDebitoSinRecibo nuevaNotaCreditoSinRecibo = NuevaNotaDebitoSinRecibo
-                    .builder()
-                    .idCliente(idCliente)
-                    .idProveedor(idProveedor)
-                    .gastoAdministrativo(new BigDecimal(ftxt_Monto.getValue().toString()))
-                    .tipoDeComprobante(((TipoDeComprobante) cmbTipoDeComprobante.getSelectedItem()))
-                    .build();
-            notaDebitoCalculada = RestClient.getRestTemplate().postForObject("/notas/debito/calculos-sin-recibo", nuevaNotaCreditoSinRecibo, NotaDebito.class);
+            if (idRecibo == null) {
+                NuevaNotaDebitoSinRecibo nuevaNotaCreditoSinRecibo = NuevaNotaDebitoSinRecibo
+                        .builder()
+                        .idCliente(cliente != null ? cliente.getId_Cliente() : null)
+                        .idProveedor(proveedor != null ? proveedor.getId_Proveedor() : null)
+                        .gastoAdministrativo(new BigDecimal(ftxt_Monto.getValue().toString()))
+                        .tipoDeComprobante(((TipoDeComprobante) cmbTipoDeComprobante.getSelectedItem()))
+                        .build();
+                notaDebitoCalculada = RestClient.getRestTemplate().postForObject("/notas/debito/calculos-sin-recibo", nuevaNotaCreditoSinRecibo, NotaDebito.class);
+            } else {
+                NuevaNotaDebitoDeRecibo nuevaNotaDebitoDeRecibo = NuevaNotaDebitoDeRecibo
+                        .builder()
+                        .idRecibo(idRecibo)
+                        .gastoAdministrativo(new BigDecimal(ftxt_Monto.getValue().toString()))
+                        //.motivo("Tiene una deuda muy vieja que no paga.")
+                        .tipoDeComprobante(((TipoDeComprobante) cmbTipoDeComprobante.getSelectedItem()))
+                        .build();
+                notaDebitoCalculada = RestClient.getRestTemplate().postForObject("/notas/debito/calculos", nuevaNotaDebitoDeRecibo, NotaDebito.class);
+            } 
             this.dispose();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -183,15 +220,15 @@ public class NuevaNotaDebitoSinReciboGUI extends JDialog {
         try {
             cmbTipoDeComprobante.removeAllItems();
             TipoDeComprobante[] tiposDeComprobante = null;
-            if (this.idCliente != null) {
+            if (cliente != null) {
                 tiposDeComprobante = RestClient.getRestTemplate()
                         .getForObject("/notas/clientes/tipos/debito?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                                + "&idCliente=" + this.idCliente, TipoDeComprobante[].class);
+                                + "&idCliente=" + this.cliente.getId_Cliente(), TipoDeComprobante[].class);
             }
-            if (this.idProveedor != null) {
+            if (proveedor != null) {
                 tiposDeComprobante = RestClient.getRestTemplate()
                         .getForObject("/notas/proveedores/tipos/debito?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                                + "&idProveedor=" + this.idProveedor, TipoDeComprobante[].class);
+                                + "&idProveedor=" + this.proveedor.getId_Proveedor(), TipoDeComprobante[].class);
             }
             if (tiposDeComprobante != null) {
                 for (int i = 0; tiposDeComprobante.length > i; i++) {
@@ -212,8 +249,8 @@ public class NuevaNotaDebitoSinReciboGUI extends JDialog {
     private javax.swing.JComboBox cmbTipoDeComprobante;
     private javax.swing.JFormattedTextField ftxt_Monto;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblGastoAdministrativo;
     private javax.swing.JButton lbl_Aceptar;
-    private javax.swing.JLabel lbl_Monto;
     private javax.swing.JLabel lbl_TipoDeComprobante;
     // End of variables declaration//GEN-END:variables
 }

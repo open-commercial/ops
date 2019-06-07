@@ -525,20 +525,44 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     }
     
     private void crearNotaDebitoSinRecibo() {
-        NuevaNotaDebitoSinReciboGUI nuevaNotaDebitoSinRecibo = null;
+        NuevaNotaDebitoGUI nuevaNotaDebitoSinRecibo = null;
         if (this.cliente != null) {
-            nuevaNotaDebitoSinRecibo = new NuevaNotaDebitoSinReciboGUI(this.cliente);
+            nuevaNotaDebitoSinRecibo = new NuevaNotaDebitoGUI(this.cliente);
             nuevaNotaDebitoSinRecibo.setModal(true);
             nuevaNotaDebitoSinRecibo.setLocationRelativeTo(this);
             nuevaNotaDebitoSinRecibo.setVisible(true);
         } else if (this.proveedor != null) {
-            nuevaNotaDebitoSinRecibo = new NuevaNotaDebitoSinReciboGUI(this.proveedor);
+            nuevaNotaDebitoSinRecibo = new NuevaNotaDebitoGUI(this.proveedor);
             nuevaNotaDebitoSinRecibo.setModal(true);
             nuevaNotaDebitoSinRecibo.setLocationRelativeTo(this);
             nuevaNotaDebitoSinRecibo.setVisible(true);
         }
         if (nuevaNotaDebitoSinRecibo != null && nuevaNotaDebitoSinRecibo.getNotaDebitoCalculadaSinRecibo() != null) {
             DetalleNotaDebitoGUI detalleNotaDebito = new DetalleNotaDebitoGUI(nuevaNotaDebitoSinRecibo.getNotaDebitoCalculadaSinRecibo());
+            detalleNotaDebito.setModal(true);
+            detalleNotaDebito.setLocationRelativeTo(this);
+            detalleNotaDebito.setVisible(true);
+            if (detalleNotaDebito.isNotaCreada()) {
+                this.refrescarVista();
+            }
+        }
+    }
+    
+    private void crearNotaDebitoConRecibo(long idRecibo) {
+        NuevaNotaDebitoGUI nuevaNotaDebito = null;
+        if (this.cliente != null) {
+            nuevaNotaDebito = new NuevaNotaDebitoGUI(this.cliente, idRecibo);
+            nuevaNotaDebito.setModal(true);
+            nuevaNotaDebito.setLocationRelativeTo(this);
+            nuevaNotaDebito.setVisible(true);
+        } else if (this.proveedor != null) {
+            nuevaNotaDebito = new NuevaNotaDebitoGUI(this.proveedor, idRecibo);
+            nuevaNotaDebito.setModal(true);
+            nuevaNotaDebito.setLocationRelativeTo(this);
+            nuevaNotaDebito.setVisible(true);
+        }
+        if (nuevaNotaDebito != null && nuevaNotaDebito.getNotaDebitoCalculadaSinRecibo() != null) {
+            DetalleNotaDebitoGUI detalleNotaDebito = new DetalleNotaDebitoGUI(nuevaNotaDebito.getNotaDebitoCalculadaSinRecibo());
             detalleNotaDebito.setModal(true);
             detalleNotaDebito.setLocationRelativeTo(this);
             detalleNotaDebito.setVisible(true);
@@ -883,21 +907,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                                     ResourceBundle.getBundle("Mensajes").getString("mensaje_recibo_con_nota_debito"),
                                     "Error", JOptionPane.ERROR_MESSAGE);
                         } else {
-                            if (cliente != null) {
-                                DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(cliente, renglonCC.getIdMovimiento());
-                                detalleNotaDebitoGUI.setLocationRelativeTo(this);
-                                detalleNotaDebitoGUI.setVisible(true);
-                                if (detalleNotaDebitoGUI.isNotaCreada()) {
-                                    this.refrescarVista();
-                                }
-                            } else if (proveedor != null) {
-                                DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(proveedor, renglonCC.getIdMovimiento());
-                                detalleNotaDebitoGUI.setLocationRelativeTo(this);
-                                detalleNotaDebitoGUI.setVisible(true);
-                                if (detalleNotaDebitoGUI.isNotaCreada()) {
-                                    this.refrescarVista();
-                                }
-                            }
+                            this.crearNotaDebitoConRecibo(renglonCC.getIdMovimiento());
                         }
                         break;
                     case 1:

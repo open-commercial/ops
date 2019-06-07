@@ -105,6 +105,33 @@ public class RecibosCompraGUI extends JInternalFrame {
         uriCriteria += "&pagina=" + NUMERO_PAGINA;
         return uriCriteria;
     }
+    
+    private void crearNotaDebitoConRecibo(long idRecibo) {
+        NuevaNotaDebitoGUI nuevaNotaDebitoSinRecibo = new NuevaNotaDebitoGUI(this.proveedorSeleccionado, idRecibo);
+        nuevaNotaDebitoSinRecibo.setModal(true);
+        nuevaNotaDebitoSinRecibo.setLocationRelativeTo(this);
+        nuevaNotaDebitoSinRecibo.setVisible(true);
+        if (nuevaNotaDebitoSinRecibo.getNotaDebitoCalculadaSinRecibo() != null) {
+            DetalleNotaDebitoGUI detalleNotaDebito = new DetalleNotaDebitoGUI(nuevaNotaDebitoSinRecibo.getNotaDebitoCalculadaSinRecibo());
+            detalleNotaDebito.setModal(true);
+            detalleNotaDebito.setLocationRelativeTo(this);
+            detalleNotaDebito.setVisible(true);
+        }
+    }
+
+    private void crearNotaDebitoSinRecibo() {
+        NuevaNotaDebitoGUI nuevaNotaDebitoSinRecibo = new NuevaNotaDebitoGUI(this.proveedorSeleccionado);
+        nuevaNotaDebitoSinRecibo.setModal(true);
+        nuevaNotaDebitoSinRecibo.setLocationRelativeTo(this);
+        nuevaNotaDebitoSinRecibo.setVisible(true);
+
+        if (nuevaNotaDebitoSinRecibo.getNotaDebitoCalculadaSinRecibo() != null) {
+            DetalleNotaDebitoGUI detalleNotaDebito = new DetalleNotaDebitoGUI(nuevaNotaDebitoSinRecibo.getNotaDebitoCalculadaSinRecibo());
+            detalleNotaDebito.setModal(true);
+            detalleNotaDebito.setLocationRelativeTo(this);
+            detalleNotaDebito.setVisible(true);
+        }
+    }
 
     private void setColumnas() {     
         //nombres de columnas
@@ -871,12 +898,27 @@ public class RecibosCompraGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_NumReciboItemStateChanged
 
     private void btnCrearNotaDebitoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearNotaDebitoActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1) {
-            Recibo reciboDeProveedor = recibosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados));
-            Proveedor proveedor = RestClient.getRestTemplate().getForObject("/proveedores/" + reciboDeProveedor.getIdProveedor(), Proveedor.class);
-            DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(proveedor, reciboDeProveedor.getIdProveedor());
-            detalleNotaDebitoGUI.setLocationRelativeTo(this);
-            detalleNotaDebitoGUI.setVisible(true);
+        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
+            int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
+                    .getString("mensaje_confirmacion_nota_debito"), "Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
+            switch (respuesta) {
+                case 0:
+                    if (RestClient.getRestTemplate().getForObject("/notas/debito/recibo/" 
+                            + recibosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getIdRecibo() + "/existe", boolean.class)) {
+                        JOptionPane.showInternalMessageDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_recibo_con_nota_debito"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        this.crearNotaDebitoConRecibo(recibosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getIdRecibo());
+                    }
+                    break;
+                case 1:
+                    this.crearNotaDebitoSinRecibo();
+                default:
+                    break;
+            }
+        } else {
+            this.crearNotaDebitoSinRecibo();
         }
     }//GEN-LAST:event_btnCrearNotaDebitoActionPerformed
 
