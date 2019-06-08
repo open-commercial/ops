@@ -71,6 +71,14 @@ public class DetalleNotaDebitoGUI extends JDialog {
         txtCondicionIVA.setText(cliente.getCategoriaIVA().toString());
         this.setVisibleFalseComponentesDeCompra();
     }
+    
+    private void desactivarComponentesRecibo() {
+        lblDetallePago.setVisible(false);
+        lblMontoPago.setVisible(false);
+        lblIVADetallePago.setVisible(false);
+        lblIVAnetoDetallePago.setVisible(false);
+        lblImportePago.setVisible(false);
+    }
 
     private void setVisibleFalseComponentesDeCompra() {
         lblFecha.setVisible(false);
@@ -102,17 +110,19 @@ public class DetalleNotaDebitoGUI extends JDialog {
 
     private void cargarNotaDeDebitoCalculada() {
         this.setTitle("Nueva " + notaDebito.getTipoComprobante());
-        lblMontoRenglon2.setText(String.valueOf(notaDebito.getRenglonesNotaDebito().get(notaDebito.getRenglonesNotaDebito().size() - 1).getImporteBruto()));
+        lblMontoRenglon2.setText("$" + String.valueOf(FormatterNumero
+                .formatConRedondeo(notaDebito.getRenglonesNotaDebito()
+                        .get(notaDebito.getRenglonesNotaDebito().size() - 1).getImporteBruto())));
         if (notaDebito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_C
                 || notaDebito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_X) {
             lblIVA21.setText("-");
             lblIvaNetoRenglon2.setText("-");
         } else {
-            lblIvaNetoRenglon2.setText(String.valueOf(notaDebito.getRenglonesNotaDebito()
-                    .get(notaDebito.getRenglonesNotaDebito().size() - 1).getIvaNeto().setScale(2, RoundingMode.UP).doubleValue()));
+            lblIvaNetoRenglon2.setText("$" + String.valueOf(FormatterNumero.formatConRedondeo(notaDebito.getRenglonesNotaDebito()
+                    .get(notaDebito.getRenglonesNotaDebito().size() - 1).getIvaNeto())));
         }
-        lblImporteRenglon2.setText(String.valueOf(notaDebito.getRenglonesNotaDebito()
-                .get(notaDebito.getRenglonesNotaDebito().size() - 1).getImporteNeto().doubleValue()));
+        lblImporteRenglon2.setText("$" + String.valueOf(FormatterNumero.formatConRedondeo(notaDebito.getRenglonesNotaDebito()
+                .get(notaDebito.getRenglonesNotaDebito().size() - 1).getImporteNeto())));
         txtSubTotalBruto.setValue(notaDebito.getSubTotalBruto());
         txtIVA21Neto.setValue(notaDebito.getIva21Neto());
         txtNoGravado.setValue(notaDebito.getMontoNoGravado());
@@ -218,22 +228,33 @@ public class DetalleNotaDebitoGUI extends JDialog {
         if (proveedorDeNota.getIdFiscal() != null) {
             txtIdFiscal.setText(proveedorDeNota.getIdFiscal().toString());
         }
-        Recibo reciboNotaDebitoProveedor = RestClient.getRestTemplate().getForObject("/recibos/" + notaDebito.getIdRecibo(), Recibo.class);
-        lblDetallePago.setText("Nº Recibo: " + reciboNotaDebitoProveedor.getNumSerie() + " - " + reciboNotaDebitoProveedor.getNumRecibo()
-                + " - " + reciboNotaDebitoProveedor.getConcepto());
-        lblMontoPago.setText("$" + FormatterNumero.formatConRedondeo(reciboNotaDebitoProveedor.getMonto()));
-        lblImportePago.setText("$" + FormatterNumero.formatConRedondeo(reciboNotaDebitoProveedor.getMonto()));
+        if (notaDebito.getIdRecibo() != null) {
+            Recibo reciboNotaDebitoProveedor = RestClient.getRestTemplate().getForObject("/recibos/" + notaDebito.getIdRecibo(), Recibo.class);
+            lblDetallePago.setText("Nº Recibo: " + reciboNotaDebitoProveedor.getNumSerie() + " - " + reciboNotaDebitoProveedor.getNumRecibo()
+                    + " - " + reciboNotaDebitoProveedor.getConcepto());
+            lblMontoPago.setText("$" + FormatterNumero.formatConRedondeo(reciboNotaDebitoProveedor.getMonto()));
+            lblImportePago.setText("$" + FormatterNumero.formatConRedondeo(reciboNotaDebitoProveedor.getMonto()));
+        } else {
+            this.desactivarComponentesRecibo();
+        }
         List<RenglonNotaDebito> renglonesNotaDebito = Arrays.asList(RestClient.getRestTemplate()
                 .getForObject("/notas/renglones/debito/" + idNotaDebito, RenglonNotaDebito[].class));
-        lblMontoRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(1).getImporteBruto()));
-        lblIvaNetoRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(1).getIvaNeto()));
-        lblImporteRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(1).getImporteNeto()));
+        lblMontoRenglon2.setText("$"
+                + String.valueOf(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(renglonesNotaDebito.size() - 1)
+                        .getImporteBruto())));
+        lblIvaNetoRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(renglonesNotaDebito.size() - 1).getIvaNeto()));
+        lblImporteRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(renglonesNotaDebito.size() - 1).getImporteNeto()));
         txtSubTotalBruto.setValue(notaDebito.getSubTotalBruto());
         txtIVA21Neto.setValue(notaDebito.getIva21Neto());
         txtNoGravado.setValue(notaDebito.getMontoNoGravado());
         txtTotal.setValue(notaDebito.getTotal());
         cmbDescripcionRenglon2.setEnabled(false);
         btnGuardar.setVisible(false);
+        if (notaDebito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_C
+                || notaDebito.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_X) {
+            lblIVA21.setText("-");
+            lblIvaNetoRenglon2.setText("-");
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -740,11 +761,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
                     recibo = RestClient.getRestTemplate().getForObject("/recibos/" + notaDebito.getIdRecibo(), Recibo.class);
                     this.cargarDetalleRecibo();
                 } else {
-                    lblDetallePago.setVisible(false);
-                    lblMontoPago.setVisible(false);
-                    lblIVADetallePago.setVisible(false);
-                    lblIVAnetoDetallePago.setVisible(false);
-                    lblImportePago.setVisible(false);
+                    this.desactivarComponentesRecibo();
                 }
             } else {
                 this.cargarDetalleNotaDebitoProveedor();

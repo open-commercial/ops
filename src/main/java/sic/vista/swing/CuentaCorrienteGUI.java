@@ -304,6 +304,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 switch (renglonCC.getTipoComprobante()) {
                     case NOTA_DEBITO_A:
                     case NOTA_DEBITO_B:
+                    case NOTA_DEBITO_C:
                     case NOTA_DEBITO_PRESUPUESTO:
                     case NOTA_DEBITO_X:
                     case NOTA_DEBITO_Y:
@@ -321,6 +322,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                         break;
                     case NOTA_CREDITO_A:
                     case NOTA_CREDITO_B:
+                    case NOTA_CREDITO_C:
                     case NOTA_CREDITO_PRESUPUESTO:
                     case NOTA_CREDITO_X:
                     case NOTA_CREDITO_Y:
