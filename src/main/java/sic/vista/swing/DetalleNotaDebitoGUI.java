@@ -242,8 +242,8 @@ public class DetalleNotaDebitoGUI extends JDialog {
         lblMontoRenglon2.setText("$"
                 + String.valueOf(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(renglonesNotaDebito.size() - 1)
                         .getImporteBruto())));
-        lblIvaNetoRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(renglonesNotaDebito.size() - 1).getIvaNeto()));
-        lblImporteRenglon2.setText(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(renglonesNotaDebito.size() - 1).getImporteNeto()));
+        lblIvaNetoRenglon2.setText("$" + String.valueOf(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(renglonesNotaDebito.size() - 1).getIvaNeto())));
+        lblImporteRenglon2.setText("$" + String.valueOf(FormatterNumero.formatConRedondeo(renglonesNotaDebito.get(renglonesNotaDebito.size() - 1).getImporteNeto())));
         txtSubTotalBruto.setValue(notaDebito.getSubTotalBruto());
         txtIVA21Neto.setValue(notaDebito.getIva21Neto());
         txtNoGravado.setValue(notaDebito.getMontoNoGravado());
