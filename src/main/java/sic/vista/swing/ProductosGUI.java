@@ -239,10 +239,10 @@ public class ProductosGUI extends JInternalFrame {
         }
         chk_Disponibilidad.setEnabled(status);
         if (status == true && chk_Disponibilidad.isSelected() == true) {
-            rb_Todos.setEnabled(true);
+            rbEnStock.setEnabled(true);
             rb_Faltantes.setEnabled(true);
         } else {
-            rb_Todos.setEnabled(false);
+            rbEnStock.setEnabled(false);
             rb_Faltantes.setEnabled(false);
         }
         btn_Buscar.setEnabled(status);        
@@ -333,8 +333,14 @@ public class ProductosGUI extends JInternalFrame {
             criteriaCosto += "&idProveedor=" + this.getIdProveedorSeleccionado();
         }
         if (chk_Disponibilidad.isSelected()) {
-            criteriaBusqueda += "&soloFantantes=" + rb_Faltantes.isSelected();
-            criteriaCosto += "&soloFantantes=" + rb_Faltantes.isSelected();
+            if (rb_Faltantes.isSelected()) {
+                criteriaBusqueda += "&soloFantantes=true";
+                criteriaCosto += "&soloFantantes=true";
+            }
+            if (rbEnStock.isSelected()) {
+                criteriaBusqueda += "&soloEnStock=true";
+                criteriaCosto += "&soloEnStock=true";
+            }
         }
         if (chk_visibilidad.isSelected()) {
             if (rb_publico.isSelected()) {
@@ -426,7 +432,7 @@ public class ProductosGUI extends JInternalFrame {
         cmb_Rubro = new javax.swing.JComboBox();
         lbl_cantResultados = new javax.swing.JLabel();
         chk_Disponibilidad = new javax.swing.JCheckBox();
-        rb_Todos = new javax.swing.JRadioButton();
+        rbEnStock = new javax.swing.JRadioButton();
         rb_Faltantes = new javax.swing.JRadioButton();
         chk_visibilidad = new javax.swing.JCheckBox();
         rb_publico = new javax.swing.JRadioButton();
@@ -514,9 +520,9 @@ public class ProductosGUI extends JInternalFrame {
             }
         });
 
-        bgDisponibilidad.add(rb_Todos);
-        rb_Todos.setText("Todos");
-        rb_Todos.setEnabled(false);
+        bgDisponibilidad.add(rbEnStock);
+        rbEnStock.setText("En Stock");
+        rbEnStock.setEnabled(false);
 
         bgDisponibilidad.add(rb_Faltantes);
         rb_Faltantes.setText("Faltantes");
@@ -586,7 +592,7 @@ public class ProductosGUI extends JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(rb_privado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(rb_Todos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(rbEnStock, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(rb_Faltantes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(rb_publico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(6, 6, 6))
@@ -606,7 +612,7 @@ public class ProductosGUI extends JInternalFrame {
                     .addComponent(chkCodigoODescripcion)
                     .addComponent(txtCodigoODescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chk_Disponibilidad)
-                    .addComponent(rb_Todos))
+                    .addComponent(rbEnStock))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_Rubro)
@@ -883,7 +889,7 @@ public class ProductosGUI extends JInternalFrame {
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         this.setSize(sizeInternalFrame);
-        rb_Todos.setSelected(true);
+        rbEnStock.setSelected(true);
         rb_publico.setSelected(true);
         this.setColumnas();
         this.cambiarEstadoDeComponentesSegunRolUsuario();
@@ -899,10 +905,10 @@ public class ProductosGUI extends JInternalFrame {
 
     private void chk_DisponibilidadItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_DisponibilidadItemStateChanged
         if (chk_Disponibilidad.isSelected() == true) {
-            rb_Todos.setEnabled(true);
+            rbEnStock.setEnabled(true);
             rb_Faltantes.setEnabled(true);
         } else {
-            rb_Todos.setEnabled(false);
+            rbEnStock.setEnabled(false);
             rb_Faltantes.setEnabled(false);
         }
     }//GEN-LAST:event_chk_DisponibilidadItemStateChanged
@@ -975,8 +981,8 @@ public class ProductosGUI extends JInternalFrame {
     private javax.swing.JPanel panelFiltros;
     private javax.swing.JPanel panelOrden;
     private javax.swing.JPanel panelResultados;
+    private javax.swing.JRadioButton rbEnStock;
     private javax.swing.JRadioButton rb_Faltantes;
-    private javax.swing.JRadioButton rb_Todos;
     private javax.swing.JRadioButton rb_privado;
     private javax.swing.JRadioButton rb_publico;
     private javax.swing.JScrollPane sp_Resultados;
