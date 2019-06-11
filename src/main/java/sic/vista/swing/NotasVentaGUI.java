@@ -497,7 +497,7 @@ public class NotasVentaGUI extends JInternalFrame {
             }
         ));
         tbl_Resultados.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        tbl_Resultados.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        tbl_Resultados.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         sp_Resultados.setViewportView(tbl_Resultados);
 
         btn_VerDetalle.setForeground(java.awt.Color.blue);
