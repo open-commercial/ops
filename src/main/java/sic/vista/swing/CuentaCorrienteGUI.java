@@ -304,6 +304,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 switch (renglonCC.getTipoComprobante()) {
                     case NOTA_DEBITO_A:
                     case NOTA_DEBITO_B:
+                    case NOTA_DEBITO_C:
                     case NOTA_DEBITO_PRESUPUESTO:
                     case NOTA_DEBITO_X:
                     case NOTA_DEBITO_Y:
@@ -321,6 +322,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                         break;
                     case NOTA_CREDITO_A:
                     case NOTA_CREDITO_B:
+                    case NOTA_CREDITO_C:
                     case NOTA_CREDITO_PRESUPUESTO:
                     case NOTA_CREDITO_X:
                     case NOTA_CREDITO_Y:
@@ -405,6 +407,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             switch (renglonCC.getTipoComprobante()) {
                 case NOTA_DEBITO_A:
                 case NOTA_DEBITO_B:
+                case NOTA_DEBITO_C:
                 case NOTA_DEBITO_PRESUPUESTO:
                 case NOTA_DEBITO_X:
                 case NOTA_DEBITO_Y:
@@ -414,6 +417,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     break;
                 case NOTA_CREDITO_A:
                 case NOTA_CREDITO_B:
+                case NOTA_CREDITO_C:
                 case NOTA_CREDITO_PRESUPUESTO:
                 case NOTA_CREDITO_X:
                 case NOTA_CREDITO_Y:
@@ -517,6 +521,54 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             detalleNotaCredito.setLocationRelativeTo(this);
             detalleNotaCredito.setVisible(true);
             if (detalleNotaCredito.isNotaCreada()) {
+                this.refrescarVista();
+            }
+        }
+    }
+    
+    private void crearNotaDebitoSinRecibo() {
+        NuevaNotaDebitoGUI nuevaNotaDebitoSinRecibo = null;
+        if (this.cliente != null) {
+            nuevaNotaDebitoSinRecibo = new NuevaNotaDebitoGUI(this.cliente);
+            nuevaNotaDebitoSinRecibo.setModal(true);
+            nuevaNotaDebitoSinRecibo.setLocationRelativeTo(this);
+            nuevaNotaDebitoSinRecibo.setVisible(true);
+        } else if (this.proveedor != null) {
+            nuevaNotaDebitoSinRecibo = new NuevaNotaDebitoGUI(this.proveedor);
+            nuevaNotaDebitoSinRecibo.setModal(true);
+            nuevaNotaDebitoSinRecibo.setLocationRelativeTo(this);
+            nuevaNotaDebitoSinRecibo.setVisible(true);
+        }
+        if (nuevaNotaDebitoSinRecibo != null && nuevaNotaDebitoSinRecibo.getNotaDebitoCalculadaSinRecibo() != null) {
+            DetalleNotaDebitoGUI detalleNotaDebito = new DetalleNotaDebitoGUI(nuevaNotaDebitoSinRecibo.getNotaDebitoCalculadaSinRecibo());
+            detalleNotaDebito.setModal(true);
+            detalleNotaDebito.setLocationRelativeTo(this);
+            detalleNotaDebito.setVisible(true);
+            if (detalleNotaDebito.isNotaCreada()) {
+                this.refrescarVista();
+            }
+        }
+    }
+    
+    private void crearNotaDebitoConRecibo(long idRecibo) {
+        NuevaNotaDebitoGUI nuevaNotaDebito = null;
+        if (this.cliente != null) {
+            nuevaNotaDebito = new NuevaNotaDebitoGUI(this.cliente, idRecibo);
+            nuevaNotaDebito.setModal(true);
+            nuevaNotaDebito.setLocationRelativeTo(this);
+            nuevaNotaDebito.setVisible(true);
+        } else if (this.proveedor != null) {
+            nuevaNotaDebito = new NuevaNotaDebitoGUI(this.proveedor, idRecibo);
+            nuevaNotaDebito.setModal(true);
+            nuevaNotaDebito.setLocationRelativeTo(this);
+            nuevaNotaDebito.setVisible(true);
+        }
+        if (nuevaNotaDebito != null && nuevaNotaDebito.getNotaDebitoCalculadaSinRecibo() != null) {
+            DetalleNotaDebitoGUI detalleNotaDebito = new DetalleNotaDebitoGUI(nuevaNotaDebito.getNotaDebitoCalculadaSinRecibo());
+            detalleNotaDebito.setModal(true);
+            detalleNotaDebito.setLocationRelativeTo(this);
+            detalleNotaDebito.setVisible(true);
+            if (detalleNotaDebito.isNotaCreada()) {
                 this.refrescarVista();
             }
         }
@@ -849,32 +901,27 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
             if (renglonCC.getTipoComprobante() == TipoDeComprobante.RECIBO) {
-                if (RestClient.getRestTemplate().getForObject("/notas/debito/recibo/" + renglonCC.getIdMovimiento() + "/existe", boolean.class)) {
-                    JOptionPane.showInternalMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_recibo_con_nota_debito"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    if (cliente != null) {
-                        DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(cliente, renglonCC.getIdMovimiento());
-                        detalleNotaDebitoGUI.setLocationRelativeTo(this);
-                        detalleNotaDebitoGUI.setVisible(true);
-                        if (detalleNotaDebitoGUI.isNotaDebitoCreada()) {
-                            this.refrescarVista();
+                int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_confirmacion_nota_debito"), "Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
+                switch (respuesta) {
+                    case 0:
+                        if (RestClient.getRestTemplate().getForObject("/notas/debito/recibo/" + renglonCC.getIdMovimiento() + "/existe", boolean.class)) {
+                            JOptionPane.showInternalMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_recibo_con_nota_debito"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            this.crearNotaDebitoConRecibo(renglonCC.getIdMovimiento());
                         }
-                    } else if (proveedor != null) {
-                        DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(proveedor, renglonCC.getIdMovimiento());
-                        detalleNotaDebitoGUI.setLocationRelativeTo(this);
-                        detalleNotaDebitoGUI.setVisible(true);
-                        if (detalleNotaDebitoGUI.isNotaDebitoCreada()) {
-                            this.refrescarVista();
-                        }
-                    }
+                        break;
+                    case 1:
+                        this.crearNotaDebitoSinRecibo();
+                    default:
+                        break;
                 }
             } else {
-                JOptionPane.showInternalMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+                this.crearNotaDebitoSinRecibo();
             }
+        } else {
+            this.crearNotaDebitoSinRecibo();
         }
     }//GEN-LAST:event_btnCrearNotaDebitoActionPerformed
 
@@ -902,17 +949,21 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     switch (renglonCC.getTipoComprobante()) {
                         case NOTA_CREDITO_A:
                         case NOTA_CREDITO_B:
+                        case NOTA_CREDITO_C:
                         case NOTA_DEBITO_A:
                         case NOTA_DEBITO_B:
+                        case NOTA_DEBITO_C:
                             if (renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_A
-                                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B) {
+                                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B
+                                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_C) {
                                 RestClient.getRestTemplate().postForObject("/notas/" + renglonCC.getIdMovimiento() + "/autorizacion",
                                         null, NotaCredito.class);
                                 JOptionPane.showMessageDialog(this,
                                         ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
                                         "Aviso", JOptionPane.INFORMATION_MESSAGE);
                             } else if (renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_A
-                                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B) {
+                                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B
+                                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_C) {
                                 RestClient.getRestTemplate().postForObject("/notas/" + renglonCC.getIdMovimiento() + "/autorizacion",
                                         null, NotaDebito.class);
                                 JOptionPane.showMessageDialog(this,
