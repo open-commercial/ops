@@ -1018,13 +1018,20 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     case FACTURA_Y:
                     case FACTURA_X:
                     case PRESUPUESTO:
-                        respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
-                                .getString("mensaje_eliminar_movimientos"),
-                                "Eliminar", JOptionPane.YES_NO_OPTION);
-                        if (respuesta == JOptionPane.YES_OPTION) {
-                            RestClient.getRestTemplate().delete("/facturas/" + renglonCC.getIdMovimiento());
-                            refrescar = true;
+                        if (this.cliente != null) {
+                            respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
+                                    .getString("mensaje_eliminar_movimientos"),
+                                    "Eliminar", JOptionPane.YES_NO_OPTION);
+                            if (respuesta == JOptionPane.YES_OPTION) {
+                                RestClient.getRestTemplate().delete("/facturas/" + renglonCC.getIdMovimiento());
+                                refrescar = true;
+                            }
+                        } else {
+                            JOptionPane.showInternalMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
                         }
+                        break;
                     case NOTA_CREDITO_A:
                     case NOTA_CREDITO_B:
                     case NOTA_CREDITO_C:
@@ -1037,13 +1044,20 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     case NOTA_DEBITO_X:
                     case NOTA_DEBITO_Y:
                     case NOTA_DEBITO_PRESUPUESTO:
-                        respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
-                                .getString("mensaje_eliminar_movimientos"),
-                                "Eliminar", JOptionPane.YES_NO_OPTION);
-                        if (respuesta == JOptionPane.YES_OPTION) {
-                            RestClient.getRestTemplate().delete("/notas/" + renglonCC.getIdMovimiento());
-                            refrescar = true;
+                        if (this.cliente != null) {
+                            respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
+                                    .getString("mensaje_eliminar_movimientos"),
+                                    "Eliminar", JOptionPane.YES_NO_OPTION);
+                            if (respuesta == JOptionPane.YES_OPTION) {
+                                RestClient.getRestTemplate().delete("/notas/" + renglonCC.getIdMovimiento());
+                                refrescar = true;
+                            }
+                        } else {
+                            JOptionPane.showInternalMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
                         }
+                        break;
                     case RECIBO: {
                         respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
                                 .getString("mensaje_eliminar_movimientos"),
