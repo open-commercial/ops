@@ -1009,7 +1009,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
             boolean refrescar = false;
-            int respuesta = 0;
+            int respuesta;
             try {
                 switch (renglonCC.getTipoComprobante()) {
                     case FACTURA_A:
