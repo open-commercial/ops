@@ -1009,10 +1009,43 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
             boolean refrescar = false;
+            int respuesta = 0;
             try {
                 switch (renglonCC.getTipoComprobante()) {
+                    case FACTURA_A:
+                    case FACTURA_B:
+                    case FACTURA_C:
+                    case FACTURA_Y:
+                    case FACTURA_X:
+                    case PRESUPUESTO:
+                        respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_eliminar_movimientos"),
+                                "Eliminar", JOptionPane.YES_NO_OPTION);
+                        if (respuesta == JOptionPane.YES_OPTION) {
+                            RestClient.getRestTemplate().delete("/facturas/" + renglonCC.getIdMovimiento());
+                            refrescar = true;
+                        }
+                    case NOTA_CREDITO_A:
+                    case NOTA_CREDITO_B:
+                    case NOTA_CREDITO_C:
+                    case NOTA_CREDITO_X:
+                    case NOTA_CREDITO_Y:
+                    case NOTA_CREDITO_PRESUPUESTO:
+                    case NOTA_DEBITO_A:
+                    case NOTA_DEBITO_B:
+                    case NOTA_DEBITO_C:
+                    case NOTA_DEBITO_X:
+                    case NOTA_DEBITO_Y:
+                    case NOTA_DEBITO_PRESUPUESTO:
+                        respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_eliminar_movimientos"),
+                                "Eliminar", JOptionPane.YES_NO_OPTION);
+                        if (respuesta == JOptionPane.YES_OPTION) {
+                            RestClient.getRestTemplate().delete("/notas/" + renglonCC.getIdMovimiento());
+                            refrescar = true;
+                        }
                     case RECIBO: {
-                        int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
+                        respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
                                 .getString("mensaje_eliminar_movimientos"),
                                 "Eliminar", JOptionPane.YES_NO_OPTION);
                         if (respuesta == JOptionPane.YES_OPTION) {
