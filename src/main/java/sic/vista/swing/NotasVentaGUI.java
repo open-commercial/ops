@@ -390,7 +390,9 @@ public class NotasVentaGUI extends JInternalFrame {
 
     private void verFacturaVenta() {
         int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-        if (tbl_Resultados.getSelectedRow() != -1 && isNotaCredito(notasTotal.get(indexFilaSeleccionada).getTipoComprobante())) {
+        if (tbl_Resultados.getSelectedRow() != -1 
+                && isNotaCredito(notasTotal.get(indexFilaSeleccionada).getTipoComprobante())
+                && notasTotal.get(indexFilaSeleccionada).getIdFacturaVenta() != null) {
             FacturasVentaGUI gui_facturaVenta = new FacturasVentaGUI();
             gui_facturaVenta.setLocation(getDesktopPane().getWidth() / 2 - gui_facturaVenta.getWidth() / 2,
                     getDesktopPane().getHeight() / 2 - gui_facturaVenta.getHeight() / 2);

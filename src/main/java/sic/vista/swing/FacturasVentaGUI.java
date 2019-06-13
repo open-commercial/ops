@@ -1363,7 +1363,16 @@ public class FacturasVentaGUI extends JInternalFrame {
                     .getString("mensaje_eliminar_movimientos"),
                     "Eliminar", JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
-                RestClient.getRestTemplate().delete("/facturas/" + facturasTotal.get(indexFilaSeleccionada).getId_Factura());
+                try {
+                    RestClient.getRestTemplate().delete("/facturas/" + facturasTotal.get(indexFilaSeleccionada).getId_Factura());
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }//GEN-LAST:event_btn_EliminarActionPerformed
