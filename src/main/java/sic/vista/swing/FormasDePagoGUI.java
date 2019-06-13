@@ -261,7 +261,7 @@ public class FormasDePagoGUI extends JInternalFrame {
 
         btn_SetPredeterminado.setForeground(java.awt.Color.blue);
         btn_SetPredeterminado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/WalletArrow_16x16.png"))); // NOI18N
-        btn_SetPredeterminado.setText("Establecer como Predeterminado");
+        btn_SetPredeterminado.setText("Marcar Predeterminado");
         btn_SetPredeterminado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_SetPredeterminadoActionPerformed(evt);
@@ -286,7 +286,7 @@ public class FormasDePagoGUI extends JInternalFrame {
                 .addContainerGap())
         );
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Agregar, btn_Eliminar});
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Agregar, btn_Eliminar, btn_SetPredeterminado});
 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

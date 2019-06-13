@@ -304,6 +304,7 @@ public class DetalleCajaGUI extends JInternalFrame {
         lbl_movimientos.setText("Movimientos por Forma de Pago (Seleccione una de la lista superior)");
 
         btn_VerDetalle.setForeground(java.awt.Color.blue);
+        btn_VerDetalle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/target_16x16.png"))); // NOI18N
         btn_VerDetalle.setText("Ver Detalle");
         btn_VerDetalle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

@@ -316,7 +316,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             txt_NumeroPedido.setEnabled(false);
         }
         btn_Buscar.setEnabled(status);
-        btn_Nueva.setEnabled(status);
+        btnNuevaFactura.setEnabled(status);
         btn_VerDetalle.setEnabled(status);
         btn_Autorizar.setEnabled(status);
         tbl_Resultados.setEnabled(status);
@@ -462,12 +462,12 @@ public class FacturasVentaGUI extends JInternalFrame {
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
                 || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
             tienePermisoSegunRoles = true;
-            btn_Nueva.setEnabled(true);
+            btnNuevaFactura.setEnabled(true);
             btn_Autorizar.setEnabled(true);
             chk_Usuario.setEnabled(true);
         } else {
             tienePermisoSegunRoles = false;
-            btn_Nueva.setEnabled(false);
+            btnNuevaFactura.setEnabled(false);
             btn_Autorizar.setEnabled(false);
             chk_Usuario.setEnabled(false);
         }
@@ -488,7 +488,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         txt_ResultTotalFacturado = new javax.swing.JFormattedTextField();
         txt_ResultGananciaTotal = new javax.swing.JFormattedTextField();
         txt_ResultTotalIVAVenta = new javax.swing.JFormattedTextField();
-        btn_Nueva = new javax.swing.JButton();
+        btnNuevaFactura = new javax.swing.JButton();
         btn_Autorizar = new javax.swing.JButton();
         btnCrearNotaCredito = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
@@ -562,6 +562,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         sp_Resultados.setViewportView(tbl_Resultados);
 
         btn_VerDetalle.setForeground(java.awt.Color.blue);
+        btn_VerDetalle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/target_16x16.png"))); // NOI18N
         btn_VerDetalle.setText("Ver Detalle");
         btn_VerDetalle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -618,12 +619,12 @@ public class FacturasVentaGUI extends JInternalFrame {
                     .addComponent(txt_ResultTotalFacturado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        btn_Nueva.setForeground(java.awt.Color.blue);
-        btn_Nueva.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Add_16x16.png"))); // NOI18N
-        btn_Nueva.setText("Nueva");
-        btn_Nueva.addActionListener(new java.awt.event.ActionListener() {
+        btnNuevaFactura.setForeground(java.awt.Color.blue);
+        btnNuevaFactura.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Add_16x16.png"))); // NOI18N
+        btnNuevaFactura.setText("Nueva Factura");
+        btnNuevaFactura.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_NuevaActionPerformed(evt);
+                btnNuevaFacturaActionPerformed(evt);
             }
         });
 
@@ -637,6 +638,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         });
 
         btnCrearNotaCredito.setForeground(java.awt.Color.blue);
+        btnCrearNotaCredito.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Add_16x16.png"))); // NOI18N
         btnCrearNotaCredito.setText("Nueva Nota Credito");
         btnCrearNotaCredito.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -658,39 +660,43 @@ public class FacturasVentaGUI extends JInternalFrame {
         panelResultadosLayout.setHorizontalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(btn_Nueva, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0)
-                .addComponent(btn_Autorizar)
-                .addGap(0, 0, 0)
-                .addComponent(btn_VerDetalle)
-                .addGap(0, 0, 0)
-                .addComponent(btnCrearNotaCredito)
-                .addGap(0, 0, 0)
-                .addComponent(btn_Eliminar)
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelResultadosLayout.createSequentialGroup()
+                        .addComponent(btnNuevaFactura, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_VerDetalle))
+                    .addGroup(panelResultadosLayout.createSequentialGroup()
+                        .addComponent(btnCrearNotaCredito)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_Autorizar)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_Eliminar)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panelNumeros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(sp_Resultados)
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCrearNotaCredito, btn_Autorizar, btn_Eliminar, btn_Nueva, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCrearNotaCredito, btnNuevaFactura, btn_Autorizar, btn_Eliminar, btn_VerDetalle});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
-                .addGap(7, 7, 7)
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(panelNumeros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(btn_Nueva)
-                        .addComponent(btn_Autorizar)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelNumeros, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
                         .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btn_VerDetalle)
+                            .addComponent(btnNuevaFactura)
+                            .addComponent(btn_VerDetalle))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnCrearNotaCredito)
+                            .addComponent(btn_Autorizar)
                             .addComponent(btn_Eliminar)))))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaCredito, btn_Autorizar, btn_Nueva, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaCredito, btnNuevaFactura, btn_Autorizar, btn_VerDetalle});
 
         panelFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
 
@@ -1148,7 +1154,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_chk_TipoFacturaItemStateChanged
 
-    private void btn_NuevaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevaActionPerformed
+    private void btnNuevaFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaFacturaActionPerformed
         if (this.existeClienteDisponible()) {
             JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), PuntoDeVentaGUI.class);
             if (gui == null) {
@@ -1174,7 +1180,7 @@ public class FacturasVentaGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_btn_NuevaActionPerformed
+    }//GEN-LAST:event_btnNuevaFacturaActionPerformed
 
     private void txt_SerieFacturaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_SerieFacturaKeyTyped
         Utilidades.controlarEntradaSoloNumerico(evt);
@@ -1368,10 +1374,10 @@ public class FacturasVentaGUI extends JInternalFrame {
     private javax.swing.JButton btnBuscarUsuarios;
     private javax.swing.JButton btnBuscarViajantes;
     private javax.swing.JButton btnCrearNotaCredito;
+    private javax.swing.JButton btnNuevaFactura;
     private javax.swing.JButton btn_Autorizar;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;
-    private javax.swing.JButton btn_Nueva;
     private javax.swing.JButton btn_VerDetalle;
     private javax.swing.JCheckBox chk_Cliente;
     private javax.swing.JCheckBox chk_Fecha;

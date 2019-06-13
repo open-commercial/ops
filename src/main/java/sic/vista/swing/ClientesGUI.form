@@ -240,10 +240,10 @@
                   <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                   <Component id="btn_Eliminar" linkSize="4" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                  <Component id="btn_setPredeterminado" min="-2" max="-2" attributes="0"/>
+                  <Component id="btn_setPredeterminado" linkSize="4" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="btnCuentaCorriente" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="98" max="32767" attributes="0"/>
+                  <Component id="btnCuentaCorriente" linkSize="4" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="94" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -340,7 +340,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/sic/icons/ClientArrow_16x16.png"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Establecer como Predeterminado"/>
+            <Property name="text" type="java.lang.String" value="Marcar Predeterminado"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_setPredeterminadoActionPerformed"/>

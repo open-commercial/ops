@@ -645,6 +645,7 @@ public class PedidosGUI extends JInternalFrame {
         });
 
         btnImprimirPedido.setForeground(new java.awt.Color(0, 0, 255));
+        btnImprimirPedido.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/target_16x16.png"))); // NOI18N
         btnImprimirPedido.setText("Ver Detalle");
         btnImprimirPedido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -706,7 +707,7 @@ public class PedidosGUI extends JInternalFrame {
                     .addComponent(btnEliminarPedido)))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnFacturar, btnImprimirPedido, btnModificarPedido, btnNuevoPedido, btnVerFacturas});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnEliminarPedido, btnFacturar, btnImprimirPedido, btnModificarPedido, btnNuevoPedido, btnVerFacturas});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

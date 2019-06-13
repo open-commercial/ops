@@ -166,7 +166,7 @@ public class FacturasCompraGUI extends JInternalFrame {
         btn_Buscar.setEnabled(status);
         tbl_Resultados.setEnabled(status);
         sp_Resultados.setEnabled(status);
-        btn_Nuevo.setEnabled(status);
+        btnNuevaFactura.setEnabled(status);
         btn_VerDetalle.setEnabled(status);
         tbl_Resultados.requestFocus();
     }
@@ -343,7 +343,7 @@ public class FacturasCompraGUI extends JInternalFrame {
         panelResultados = new javax.swing.JPanel();
         sp_Resultados = new javax.swing.JScrollPane();
         tbl_Resultados = new javax.swing.JTable();
-        btn_Nuevo = new javax.swing.JButton();
+        btnNuevaFactura = new javax.swing.JButton();
         btn_VerDetalle = new javax.swing.JButton();
         lbl_TotalIVACompra = new javax.swing.JLabel();
         txt_ResultTotalIVACompra = new javax.swing.JFormattedTextField();
@@ -638,16 +638,17 @@ public class FacturasCompraGUI extends JInternalFrame {
         tbl_Resultados.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         sp_Resultados.setViewportView(tbl_Resultados);
 
-        btn_Nuevo.setForeground(java.awt.Color.blue);
-        btn_Nuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Add_16x16.png"))); // NOI18N
-        btn_Nuevo.setText("Nueva");
-        btn_Nuevo.addActionListener(new java.awt.event.ActionListener() {
+        btnNuevaFactura.setForeground(java.awt.Color.blue);
+        btnNuevaFactura.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Add_16x16.png"))); // NOI18N
+        btnNuevaFactura.setText("Nueva Factura");
+        btnNuevaFactura.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_NuevoActionPerformed(evt);
+                btnNuevaFacturaActionPerformed(evt);
             }
         });
 
         btn_VerDetalle.setForeground(java.awt.Color.blue);
+        btn_VerDetalle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/target_16x16.png"))); // NOI18N
         btn_VerDetalle.setText("Ver Detalle");
         btn_VerDetalle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -668,6 +669,7 @@ public class FacturasCompraGUI extends JInternalFrame {
         lbl_TotalFacturado.setText("Total Facturado:");
 
         btnCrearNotaCredito.setForeground(java.awt.Color.blue);
+        btnCrearNotaCredito.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Add_16x16.png"))); // NOI18N
         btnCrearNotaCredito.setText("Nueva Nota Credito");
         btnCrearNotaCredito.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -680,7 +682,7 @@ public class FacturasCompraGUI extends JInternalFrame {
         panelResultadosLayout.setHorizontalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(btn_Nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnNuevaFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(btn_VerDetalle)
                 .addGap(0, 0, 0)
@@ -696,7 +698,7 @@ public class FacturasCompraGUI extends JInternalFrame {
             .addComponent(sp_Resultados)
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCrearNotaCredito, btn_Nuevo, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCrearNotaCredito, btnNuevaFactura, btn_VerDetalle});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -716,10 +718,10 @@ public class FacturasCompraGUI extends JInternalFrame {
                         .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btn_VerDetalle)
                             .addComponent(btnCrearNotaCredito))
-                        .addComponent(btn_Nuevo))))
+                        .addComponent(btnNuevaFactura))))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaCredito, btn_Nuevo, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaCredito, btnNuevaFactura, btn_VerDetalle});
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
 
@@ -853,7 +855,7 @@ public class FacturasCompraGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btn_VerDetalleActionPerformed
 
-    private void btn_NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoActionPerformed
+    private void btnNuevaFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaFacturaActionPerformed
         if (this.existeProveedorDisponible()) {
             JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), DetalleFacturaCompraGUI.class);
             if (gui == null) {
@@ -875,7 +877,7 @@ public class FacturasCompraGUI extends JInternalFrame {
             String mensaje = ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_proveedor");
             JOptionPane.showInternalMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_btn_NuevoActionPerformed
+    }//GEN-LAST:event_btnNuevaFacturaActionPerformed
 
     private void chk_TipoFacturaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_TipoFacturaItemStateChanged
         if (chk_TipoFactura.isSelected() == true) {
@@ -979,8 +981,8 @@ public class FacturasCompraGUI extends JInternalFrame {
     private javax.swing.JButton btnBuscarProductos;
     private javax.swing.JButton btnBuscarProveedor;
     private javax.swing.JButton btnCrearNotaCredito;
+    private javax.swing.JButton btnNuevaFactura;
     private javax.swing.JButton btn_Buscar;
-    private javax.swing.JButton btn_Nuevo;
     private javax.swing.JButton btn_VerDetalle;
     private javax.swing.JCheckBox chk_Fecha;
     private javax.swing.JCheckBox chk_NumFactura;

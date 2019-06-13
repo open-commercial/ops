@@ -418,6 +418,7 @@ public class CajasGUI extends JInternalFrame {
         });
 
         btn_verDetalle.setForeground(java.awt.Color.blue);
+        btn_verDetalle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/target_16x16.png"))); // NOI18N
         btn_verDetalle.setText("Ver Detalle");
         btn_verDetalle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -477,7 +478,7 @@ public class CajasGUI extends JInternalFrame {
                         .addComponent(lbl_TotalCierre)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ftxt_TotalReal, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))))
-            .addComponent(sp_Cajas, javax.swing.GroupLayout.DEFAULT_SIZE, 838, Short.MAX_VALUE)
+            .addComponent(sp_Cajas, javax.swing.GroupLayout.DEFAULT_SIZE, 888, Short.MAX_VALUE)
         );
 
         pnl_CajasLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_AbrirCaja, btn_ReabrirCaja, btn_eliminarCaja, btn_verDetalle});
@@ -489,7 +490,7 @@ public class CajasGUI extends JInternalFrame {
         pnl_CajasLayout.setVerticalGroup(
             pnl_CajasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_CajasLayout.createSequentialGroup()
-                .addComponent(sp_Cajas, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
+                .addComponent(sp_Cajas, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_CajasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(pnl_CajasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)

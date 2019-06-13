@@ -549,7 +549,7 @@ public class ClientesGUI extends JInternalFrame {
 
         btn_setPredeterminado.setForeground(java.awt.Color.blue);
         btn_setPredeterminado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/ClientArrow_16x16.png"))); // NOI18N
-        btn_setPredeterminado.setText("Establecer como Predeterminado");
+        btn_setPredeterminado.setText("Marcar Predeterminado");
         btn_setPredeterminado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_setPredeterminadoActionPerformed(evt);
@@ -580,10 +580,10 @@ public class ClientesGUI extends JInternalFrame {
                 .addComponent(btn_setPredeterminado)
                 .addGap(0, 0, 0)
                 .addComponent(btnCuentaCorriente)
-                .addGap(0, 98, Short.MAX_VALUE))
+                .addGap(0, 94, Short.MAX_VALUE))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Eliminar, btn_Modificar, btn_Nuevo});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCuentaCorriente, btn_Eliminar, btn_Modificar, btn_Nuevo, btn_setPredeterminado});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
