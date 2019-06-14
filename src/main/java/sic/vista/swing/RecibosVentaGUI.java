@@ -112,26 +112,14 @@ public class RecibosVentaGUI extends JInternalFrame {
         return uriCriteria;
     }
     
-    private void crearNotaDebitoConRecibo(long idRecibo) {
-        NuevaNotaDebitoGUI nuevaNotaDebitoSinRecibo = new NuevaNotaDebitoGUI(this.clienteSeleccionado, idRecibo);
-        nuevaNotaDebitoSinRecibo.setModal(true);
-        nuevaNotaDebitoSinRecibo.setLocationRelativeTo(this);
-        nuevaNotaDebitoSinRecibo.setVisible(true);
-        if (nuevaNotaDebitoSinRecibo.getNotaDebitoCalculadaSinRecibo() != null) {
-            DetalleNotaDebitoGUI detalleNotaDebito = new DetalleNotaDebitoGUI(nuevaNotaDebitoSinRecibo.getNotaDebitoCalculadaSinRecibo());
-            detalleNotaDebito.setModal(true);
-            detalleNotaDebito.setLocationRelativeTo(this);
-            detalleNotaDebito.setVisible(true);
-        }
-    }
-
-    private void crearNotaDebitoSinRecibo() {
-        NuevaNotaDebitoGUI nuevaNotaDebitoSinRecibo = new NuevaNotaDebitoGUI(this.clienteSeleccionado);
-        nuevaNotaDebitoSinRecibo.setModal(true);
-        nuevaNotaDebitoSinRecibo.setLocationRelativeTo(this);
-        nuevaNotaDebitoSinRecibo.setVisible(true);
-        if (nuevaNotaDebitoSinRecibo.getNotaDebitoCalculadaSinRecibo() != null) {
-            DetalleNotaDebitoGUI detalleNotaDebito = new DetalleNotaDebitoGUI(nuevaNotaDebitoSinRecibo.getNotaDebitoCalculadaSinRecibo());
+    private void crearNotaDebitoConRecibo(Recibo recibo) {
+        Cliente clienteDeRecibo = RestClient.getRestTemplate().getForObject("/clientes/" + recibo.getIdCliente(), Cliente.class);
+        NuevaNotaDebitoGUI nuevaNotaDebitoDeRecibo = new NuevaNotaDebitoGUI(clienteDeRecibo, recibo.getIdRecibo());
+        nuevaNotaDebitoDeRecibo.setModal(true);
+        nuevaNotaDebitoDeRecibo.setLocationRelativeTo(this);
+        nuevaNotaDebitoDeRecibo.setVisible(true);
+        if (nuevaNotaDebitoDeRecibo.getNotaDebitoCalculada() != null) {
+            DetalleNotaDebitoGUI detalleNotaDebito = new DetalleNotaDebitoGUI(nuevaNotaDebitoDeRecibo.getNotaDebitoCalculada());
             detalleNotaDebito.setModal(true);
             detalleNotaDebito.setLocationRelativeTo(this);
             detalleNotaDebito.setVisible(true);
@@ -915,27 +903,24 @@ public class RecibosVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_NumReciboItemStateChanged
 
     private void btnCrearNotaDebitoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearNotaDebitoActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
-            int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
-                    .getString("mensaje_confirmacion_nota_debito"), "Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
-            switch (respuesta) {
-                case 0:
-                    if (RestClient.getRestTemplate().getForObject("/notas/debito/recibo/"
-                            + recibosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getIdRecibo() + "/existe", boolean.class)) {
-                        JOptionPane.showInternalMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_recibo_con_nota_debito"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        this.crearNotaDebitoConRecibo(recibosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getIdRecibo());
-                    }
-                    break;
-                case 1:
-                    this.crearNotaDebitoSinRecibo();
-                default:
-                    break;
+        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {         
+            try {
+                if (RestClient.getRestTemplate().getForObject("/notas/debito/recibo/"
+                        + recibosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getIdRecibo() + "/existe", boolean.class)) {
+                    JOptionPane.showInternalMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_recibo_con_nota_debito"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    this.crearNotaDebitoConRecibo(recibosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)));
+                }
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } else {
-            this.crearNotaDebitoSinRecibo();
         }
     }//GEN-LAST:event_btnCrearNotaDebitoActionPerformed
 

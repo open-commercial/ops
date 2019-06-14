@@ -539,8 +539,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             nuevaNotaDebitoSinRecibo.setLocationRelativeTo(this);
             nuevaNotaDebitoSinRecibo.setVisible(true);
         }
-        if (nuevaNotaDebitoSinRecibo != null && nuevaNotaDebitoSinRecibo.getNotaDebitoCalculadaSinRecibo() != null) {
-            DetalleNotaDebitoGUI detalleNotaDebito = new DetalleNotaDebitoGUI(nuevaNotaDebitoSinRecibo.getNotaDebitoCalculadaSinRecibo());
+        if (nuevaNotaDebitoSinRecibo != null && nuevaNotaDebitoSinRecibo.getNotaDebitoCalculada() != null) {
+            DetalleNotaDebitoGUI detalleNotaDebito = new DetalleNotaDebitoGUI(nuevaNotaDebitoSinRecibo.getNotaDebitoCalculada());
             detalleNotaDebito.setModal(true);
             detalleNotaDebito.setLocationRelativeTo(this);
             detalleNotaDebito.setVisible(true);
@@ -563,8 +563,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             nuevaNotaDebito.setLocationRelativeTo(this);
             nuevaNotaDebito.setVisible(true);
         }
-        if (nuevaNotaDebito != null && nuevaNotaDebito.getNotaDebitoCalculadaSinRecibo() != null) {
-            DetalleNotaDebitoGUI detalleNotaDebito = new DetalleNotaDebitoGUI(nuevaNotaDebito.getNotaDebitoCalculadaSinRecibo());
+        if (nuevaNotaDebito != null && nuevaNotaDebito.getNotaDebitoCalculada() != null) {
+            DetalleNotaDebitoGUI detalleNotaDebito = new DetalleNotaDebitoGUI(nuevaNotaDebito.getNotaDebitoCalculada());
             detalleNotaDebito.setModal(true);
             detalleNotaDebito.setLocationRelativeTo(this);
             detalleNotaDebito.setVisible(true);

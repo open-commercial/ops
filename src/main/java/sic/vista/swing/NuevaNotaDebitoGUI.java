@@ -53,7 +53,7 @@ public class NuevaNotaDebitoGUI extends JDialog {
         this.idRecibo = idRecibo;
     }
     
-    public NotaDebito getNotaDebitoCalculadaSinRecibo() {
+    public NotaDebito getNotaDebitoCalculada() {
         return notaDebitoCalculada;
     }
 
