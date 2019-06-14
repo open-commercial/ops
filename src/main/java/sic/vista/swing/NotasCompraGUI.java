@@ -36,12 +36,12 @@ public class NotasCompraGUI extends JInternalFrame {
 
     private ModeloTabla modeloTablaNotas = new ModeloTabla();
     private List<Nota> notasTotal = new ArrayList<>();
-    private List<Nota> notasParcial = new ArrayList<>();    
+    private List<Nota> notasParcial = new ArrayList<>();
     private boolean tienePermisoSegunRoles;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(970, 600);
     private static int totalElementosBusqueda;
-    private static int NUMERO_PAGINA = 0;    
+    private static int NUMERO_PAGINA = 0;
 
     public NotasCompraGUI() {
         this.initComponents();
@@ -84,7 +84,7 @@ public class NotasCompraGUI extends JInternalFrame {
         encabezados[3] = "Nº Nota";
         encabezados[4] = "Proveedor";
         encabezados[5] = "Usuario";
-        encabezados[6] = "Total";        
+        encabezados[6] = "Total";
         encabezados[7] = "Motivo";
         modeloTablaNotas.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaNotas);
@@ -96,7 +96,7 @@ public class NotasCompraGUI extends JInternalFrame {
         tipos[3] = String.class;
         tipos[4] = String.class;
         tipos[5] = String.class;
-        tipos[6] = BigDecimal.class;        
+        tipos[6] = BigDecimal.class;
         tipos[7] = String.class;
         modeloTablaNotas.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
@@ -115,14 +115,14 @@ public class NotasCompraGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(100);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(250);        
+        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(6).setMinWidth(120);
         tbl_Resultados.getColumnModel().getColumn(6).setMaxWidth(120);
-        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(120);        
+        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(7).setMinWidth(500);
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
-        tbl_Resultados.getColumnModel().getColumn(1).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));        
+        tbl_Resultados.getColumnModel().getColumn(1).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 
     private void buscar(boolean calcularResultados) {
@@ -138,7 +138,9 @@ public class NotasCompraGUI extends JInternalFrame {
             notasParcial = response.getContent();
             notasTotal.addAll(notasParcial);
             this.cargarResultadosAlTable();
-            if (calcularResultados && tienePermisoSegunRoles) this.calcularResultados(uriCriteria);            
+            if (calcularResultados && tienePermisoSegunRoles) {
+                this.calcularResultados(uriCriteria);
+            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -195,8 +197,8 @@ public class NotasCompraGUI extends JInternalFrame {
             fila[2] = nota.getTipoComprobante();
             fila[3] = nota.getSerie() + " - " + nota.getNroNota();
             fila[4] = nota.getRazonSocialProveedor();
-            fila[5] = nota.getNombreUsuario();            
-            fila[6] = nota.getTotal();            
+            fila[5] = nota.getNombreUsuario();
+            fila[6] = nota.getTotal();
             fila[7] = nota.getMotivo();
             return fila;
         }).forEach(fila -> {
@@ -278,24 +280,28 @@ public class NotasCompraGUI extends JInternalFrame {
                 .getForObject("/notas/total-credito/criteria?" + uriCriteria, BigDecimal.class));
     }
 
-    private void verFacturaCompra() {
+    private void verFacturaCompra() throws PropertyVetoException {
         int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-        if (tbl_Resultados.getSelectedRow() != -1 && isNotaCredito(notasTotal.get(indexFilaSeleccionada).getTipoComprobante())) {
-            FacturasCompraGUI gui_facturaCompra = new FacturasCompraGUI();
-            gui_facturaCompra.setLocation(getDesktopPane().getWidth() / 2 - gui_facturaCompra.getWidth() / 2,
-                    getDesktopPane().getHeight() / 2 - gui_facturaCompra.getHeight() / 2);
-            getDesktopPane().add(gui_facturaCompra);
-            Factura factura = RestClient.getRestTemplate()
-                    .getForObject("/facturas/" + notasTotal.get(indexFilaSeleccionada).getIdFacturaCompra(), Factura.class);
-            gui_facturaCompra.setVisible(true);
-            gui_facturaCompra.buscarPorSerieYNroFactura(factura.getNumSerie(), factura.getNumFactura(),
-                    factura.getTipoComprobante(), notasTotal.get(indexFilaSeleccionada).getIdProveedor());
-            try {
-                gui_facturaCompra.setSelected(true);
-            } catch (PropertyVetoException ex) {
-                String mensaje = "No se pudo seleccionar la ventana requerida.";
-                LOGGER.error(mensaje + " - " + ex.getMessage());
-                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+        if (tbl_Resultados.getSelectedRow() != -1) {
+            if (isNotaCredito(notasTotal.get(indexFilaSeleccionada).getTipoComprobante())) {
+                if (notasTotal.get(indexFilaSeleccionada).getIdFacturaCompra() != null) {
+                    FacturasCompraGUI gui_facturaCompra = new FacturasCompraGUI();
+                    gui_facturaCompra.setLocation(getDesktopPane().getWidth() / 2 - gui_facturaCompra.getWidth() / 2,
+                            getDesktopPane().getHeight() / 2 - gui_facturaCompra.getHeight() / 2);
+                    getDesktopPane().add(gui_facturaCompra);
+                    Factura factura = RestClient.getRestTemplate()
+                            .getForObject("/facturas/" + notasTotal.get(indexFilaSeleccionada).getIdFacturaCompra(), Factura.class);
+                    gui_facturaCompra.setVisible(true);
+                    gui_facturaCompra.buscarPorSerieYNroFactura(factura.getNumSerie(), factura.getNumFactura(),
+                            factura.getTipoComprobante(), notasTotal.get(indexFilaSeleccionada).getIdProveedor());
+                    gui_facturaCompra.setSelected(true);
+                } else {
+                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                            .getString("mensaje_nota_credito_sin_factura_relacionada"), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                        .getString("mensaje_nota_debito_sin_factura"), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -687,7 +693,7 @@ public class NotasCompraGUI extends JInternalFrame {
             LOGGER.error(mensaje + " - " + ex.getMessage());
             JOptionPane.showInternalMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();
-        }        
+        }
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void chk_TipoNotaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_TipoNotaItemStateChanged
@@ -736,7 +742,20 @@ public class NotasCompraGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_VerDetalleActionPerformed
 
     private void btnVerFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerFacturaActionPerformed
-        this.verFacturaCompra();
+        try {
+            this.verFacturaCompra();
+        } catch (PropertyVetoException ex) {
+            String mensaje = "No se pudo seleccionar la ventana requerida.";
+            LOGGER.error(mensaje + " - " + ex.getMessage());
+            JOptionPane.showInternalMessageDialog(this.getDesktopPane(), mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnVerFacturaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

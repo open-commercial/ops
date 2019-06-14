@@ -388,26 +388,28 @@ public class NotasVentaGUI extends JInternalFrame {
                 .getForObject("/notas/total-credito/criteria?" + uriCriteria, BigDecimal.class));
     }
 
-    private void verFacturaVenta() {
+    private void verFacturaVenta() throws PropertyVetoException {
         int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-        if (tbl_Resultados.getSelectedRow() != -1 
-                && isNotaCredito(notasTotal.get(indexFilaSeleccionada).getTipoComprobante())
-                && notasTotal.get(indexFilaSeleccionada).getIdFacturaVenta() != null) {
-            FacturasVentaGUI gui_facturaVenta = new FacturasVentaGUI();
-            gui_facturaVenta.setLocation(getDesktopPane().getWidth() / 2 - gui_facturaVenta.getWidth() / 2,
-                    getDesktopPane().getHeight() / 2 - gui_facturaVenta.getHeight() / 2);
-            getDesktopPane().add(gui_facturaVenta);
-            Factura factura = RestClient.getRestTemplate()
-                    .getForObject("/facturas/" + notasTotal.get(indexFilaSeleccionada).getIdFacturaVenta(), Factura.class);
-            gui_facturaVenta.setVisible(true);
-            gui_facturaVenta.buscarPorSerieNroTipo(factura.getNumSerie(), factura.getNumFactura(),
-                    factura.getTipoComprobante(), notasTotal.get(indexFilaSeleccionada).getIdCliente());
-            try {
-                gui_facturaVenta.setSelected(true);
-            } catch (PropertyVetoException ex) {
-                String mensaje = "No se pudo seleccionar la ventana requerida.";
-                LOGGER.error(mensaje + " - " + ex.getMessage());
-                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+        if (tbl_Resultados.getSelectedRow() != -1) {
+            if (isNotaCredito(notasTotal.get(indexFilaSeleccionada).getTipoComprobante())) {
+                if (notasTotal.get(indexFilaSeleccionada).getIdFacturaVenta() != null) {
+                    FacturasVentaGUI gui_facturaVenta = new FacturasVentaGUI();
+                    gui_facturaVenta.setLocation(getDesktopPane().getWidth() / 2 - gui_facturaVenta.getWidth() / 2,
+                            getDesktopPane().getHeight() / 2 - gui_facturaVenta.getHeight() / 2);
+                    getDesktopPane().add(gui_facturaVenta);
+                    Factura factura = RestClient.getRestTemplate()
+                            .getForObject("/facturas/" + notasTotal.get(indexFilaSeleccionada).getIdFacturaVenta(), Factura.class);
+                    gui_facturaVenta.setVisible(true);
+                    gui_facturaVenta.buscarPorSerieNroTipo(factura.getNumSerie(), factura.getNumFactura(),
+                            factura.getTipoComprobante(), notasTotal.get(indexFilaSeleccionada).getIdCliente());
+                    gui_facturaVenta.setSelected(true);
+                } else {
+                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                            .getString("mensaje_nota_credito_sin_factura_relacionada"), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                        .getString("mensaje_nota_debito_sin_factura"), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -988,7 +990,20 @@ public class NotasVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_VerDetalleActionPerformed
 
     private void btnVerFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerFacturaActionPerformed
-        this.verFacturaVenta();
+        try {
+            this.verFacturaVenta();
+        } catch (PropertyVetoException ex) {
+            String mensaje = "No se pudo seleccionar la ventana requerida.";
+            LOGGER.error(mensaje + " - " + ex.getMessage());
+            JOptionPane.showInternalMessageDialog(this.getDesktopPane(), mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnVerFacturaActionPerformed
 
     private void chk_UsuarioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UsuarioItemStateChanged
