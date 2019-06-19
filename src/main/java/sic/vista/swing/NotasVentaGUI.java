@@ -1121,6 +1121,9 @@ public class NotasVentaGUI extends JInternalFrame {
             if (respuesta == JOptionPane.YES_OPTION) {
                 try {
                     RestClient.getRestTemplate().delete("/notas/" + notasTotal.get(indexFilaSeleccionada).getIdNota());
+                    this.resetScroll();
+                    this.limpiarJTable();
+                    this.buscar(true);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (ResourceAccessException ex) {

@@ -1365,6 +1365,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             if (respuesta == JOptionPane.YES_OPTION) {
                 try {
                     RestClient.getRestTemplate().delete("/facturas/" + facturasTotal.get(indexFilaSeleccionada).getId_Factura());
+                    this.limpiarYBuscar(true);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (ResourceAccessException ex) {
