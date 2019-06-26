@@ -125,6 +125,7 @@ public class FormasDePagoGUI extends JInternalFrame {
 
         sp_FormasDePago = new javax.swing.JScrollPane();
         tbl_FormasDePago = new javax.swing.JTable();
+        btn_SetPredeterminado = new javax.swing.JButton();
 
         setClosable(true);
         setTitle("Administrar Formas de Pago");
@@ -157,20 +158,35 @@ public class FormasDePagoGUI extends JInternalFrame {
         ));
         sp_FormasDePago.setViewportView(tbl_FormasDePago);
 
+        btn_SetPredeterminado.setForeground(java.awt.Color.blue);
+        btn_SetPredeterminado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/WalletArrow_16x16.png"))); // NOI18N
+        btn_SetPredeterminado.setText("Marcar Predeterminado");
+        btn_SetPredeterminado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_SetPredeterminadoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(sp_FormasDePago, javax.swing.GroupLayout.DEFAULT_SIZE, 654, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(sp_FormasDePago, javax.swing.GroupLayout.DEFAULT_SIZE, 654, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btn_SetPredeterminado)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(sp_FormasDePago, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
+                .addComponent(sp_FormasDePago, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_SetPredeterminado)
                 .addContainerGap())
         );
 
@@ -194,7 +210,12 @@ public class FormasDePagoGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_formInternalFrameOpened
 
+    private void btn_SetPredeterminadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SetPredeterminadoActionPerformed
+        this.setPredeterminado();
+    }//GEN-LAST:event_btn_SetPredeterminadoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_SetPredeterminado;
     private javax.swing.JScrollPane sp_FormasDePago;
     private javax.swing.JTable tbl_FormasDePago;
     // End of variables declaration//GEN-END:variables
