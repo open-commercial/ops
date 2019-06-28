@@ -281,7 +281,12 @@ public class ProductosGUI extends JInternalFrame {
             uriReporte += "&idProveedor=" + this.getIdProveedorSeleccionado();
         }
         if (chk_Disponibilidad.isSelected()) {
-            uriReporte += "&soloFantantes=" + rb_Faltantes.isSelected();
+            if (rb_Faltantes.isSelected()) {
+                uriReporte += "&soloFantantes=true";
+            }
+            if (rbEnStock.isSelected()) {
+                uriReporte += "&soloEnStock=true";
+            }
         }
         if (chk_visibilidad.isSelected()) {
             if (rb_publico.isSelected()) {
