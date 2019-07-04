@@ -75,7 +75,8 @@ public class FacturasVentaGUI extends JInternalFrame {
         this.limpiarYBuscar(true);
     }
 
-    public void buscarPorSerieNroTipo(long nroSerie, long nroFactura, TipoDeComprobante tipoDeComprobante, long idCliente) {
+    public void buscarPorSerieNroTipo(long nroSerie, long nroFactura,
+            TipoDeComprobante tipoDeComprobante, long idCliente) {
         chk_NumFactura.setSelected(true);
         txt_SerieFactura.setEnabled(true);
         txt_NroFactura.setEnabled(true);

@@ -61,7 +61,8 @@ public class FacturasCompraGUI extends JInternalFrame {
         });
     }
     
-    public void buscarPorSerieYNroFactura(long nroSerie, long nroFactura, TipoDeComprobante tipoDeComprobante, long idProveedor) {
+    public void buscarPorSerieYNroFactura(long nroSerie, long nroFactura,
+            TipoDeComprobante tipoDeComprobante, long idProveedor) {
         chk_NumFactura.setSelected(true);
         txt_SerieFactura.setEnabled(true);
         txt_NroFactura.setEnabled(true);
@@ -246,8 +247,10 @@ public class FacturasCompraGUI extends JInternalFrame {
     }
 
     private void calcularResultados(BusquedaFacturaCompraCriteria criteria) {
-        txt_ResultGastoTotal.setValue(RestClient.getRestTemplate().postForObject("/facturas/total-facturado-compra/criteria",criteria, BigDecimal.class));
-        txt_ResultTotalIVACompra.setValue(RestClient.getRestTemplate().postForObject("/facturas/total-iva-compra/criteria", criteria, BigDecimal.class));
+        txt_ResultGastoTotal.setValue(RestClient.getRestTemplate()
+                .postForObject("/facturas/total-facturado-compra/criteria",criteria, BigDecimal.class));
+        txt_ResultTotalIVACompra.setValue(RestClient.getRestTemplate()
+                .postForObject("/facturas/total-iva-compra/criteria", criteria, BigDecimal.class));
     }
 
     private void cargarResultadosAlTable() {
