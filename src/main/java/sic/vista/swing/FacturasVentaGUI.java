@@ -19,10 +19,12 @@ import javax.swing.JScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.BusquedaFacturaVentaCriteria;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.FacturaVenta;
@@ -73,7 +75,8 @@ public class FacturasVentaGUI extends JInternalFrame {
         this.limpiarYBuscar(true);
     }
 
-    public void buscarPorSerieNroTipo(long nroSerie, long nroFactura, TipoDeComprobante tipoDeComprobante, long idCliente) {
+    public void buscarPorSerieNroTipo(long nroSerie, long nroFactura,
+            TipoDeComprobante tipoDeComprobante, long idCliente) {
         chk_NumFactura.setSelected(true);
         txt_SerieFactura.setEnabled(true);
         txt_NroFactura.setEnabled(true);
@@ -91,57 +94,36 @@ public class FacturasVentaGUI extends JInternalFrame {
         this.buscar(true);
     }
 
-    private String getUriCriteria() {
-        String uriCriteria = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
+    private BusquedaFacturaVentaCriteria getUriCriteria() {
+        BusquedaFacturaVentaCriteria criteria = new BusquedaFacturaVentaCriteria();
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
         if (chk_Cliente.isSelected() && clienteSeleccionado != null) {
-            uriCriteria += "&idCliente=" + clienteSeleccionado.getId_Cliente();
+            criteria.setIdCliente(clienteSeleccionado.getId_Cliente());
         }
         if (chk_Fecha.isSelected()) {
-            uriCriteria += "&desde=" + dc_FechaDesde.getDate().getTime()
-                    + "&hasta=" + dc_FechaHasta.getDate().getTime();
+            criteria.setFechaDesde(dc_FechaDesde.getDate());
+            criteria.setFechaHasta(dc_FechaHasta.getDate());
         }
         if (chk_NumFactura.isSelected()) {
-            uriCriteria += "&nroFactura=" + Long.valueOf(txt_NroFactura.getText())
-                    + "&nroSerie=" + Long.valueOf(txt_SerieFactura.getText());
+            criteria.setNumSerie(Long.valueOf(txt_SerieFactura.getText()));
+            criteria.setNumFactura(Long.valueOf(txt_NroFactura.getText()));
         }
         if (chk_TipoFactura.isSelected()) {
-            uriCriteria += "&tipoDeComprobante=" + ((TipoDeComprobante) cmb_TipoFactura.getSelectedItem()).name();
+            criteria.setTipoComprobante(((TipoDeComprobante) cmb_TipoFactura.getSelectedItem()));
         }
         if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
-            uriCriteria += "&idUsuario=" + usuarioSeleccionado.getId_Usuario();
+            criteria.setIdUsuario(usuarioSeleccionado.getId_Usuario());
         }
         if (chk_Producto.isSelected() && productoSeleccionado != null) {
-            uriCriteria += "&idProducto=" + productoSeleccionado.getIdProducto();
+            criteria.setIdProducto(productoSeleccionado.getIdProducto());
         }
         if (chk_Viajante.isSelected() && viajanteSeleccionado != null) {
-            uriCriteria += "&idViajante=" + viajanteSeleccionado.getId_Usuario();
+            criteria.setIdViajante(viajanteSeleccionado.getId_Usuario());
         }
         if (chk_NumeroPedido.isSelected()) {
-            uriCriteria += "&nroPedido=" + Long.parseLong(txt_NumeroPedido.getText());
+            criteria.setNroPedido(Long.parseLong(txt_NumeroPedido.getText()));
         }
-        int seleccionOrden = cmbOrden.getSelectedIndex();
-        switch (seleccionOrden) {
-            case 0:
-                uriCriteria += "&ordenarPor=fecha";
-                break;
-            case 1:
-                uriCriteria += "&ordenarPor=cliente.nombreFiscal";
-                break;
-            case 2:
-                uriCriteria += "&ordenarPor=total";
-                break;
-        }
-        int seleccionDireccion = cmbSentido.getSelectedIndex();
-        switch (seleccionDireccion) {
-            case 0:
-                uriCriteria += "&sentido=DESC";
-                break;
-            case 1:
-                uriCriteria += "&sentido=ASC";
-                break;
-        }
-        uriCriteria += "&pagina=" + NUMERO_PAGINA;
-        return uriCriteria;
+        return criteria;
     }
 
     private void setColumnas() {
@@ -228,24 +210,47 @@ public class FacturasVentaGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(19).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 
-    private void calcularResultados(String uriCriteria) {
+    private void calcularResultados(BusquedaFacturaVentaCriteria criteria) {
         txt_ResultTotalFacturado.setValue(RestClient.getRestTemplate()
-                .getForObject("/facturas/total-facturado-venta/criteria?" + uriCriteria, BigDecimal.class));
+                .postForObject("/facturas/total-facturado-venta/criteria", criteria, BigDecimal.class));
         if (UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)
                 || UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ENCARGADO)) {
             txt_ResultGananciaTotal.setValue(RestClient.getRestTemplate()
-                    .getForObject("/facturas/ganancia-total/criteria?" + uriCriteria, BigDecimal.class));
+                    .postForObject("/facturas/ganancia-total/criteria", criteria, BigDecimal.class));
             txt_ResultTotalIVAVenta.setValue(RestClient.getRestTemplate()
-                    .getForObject("/facturas/total-iva-venta/criteria?" + uriCriteria, BigDecimal.class));
+                    .postForObject("/facturas/total-iva-venta/criteria", criteria, BigDecimal.class));
         }
     }
 
     private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
-        String uriCriteria = getUriCriteria();
+        BusquedaFacturaVentaCriteria criteria = getUriCriteria();
+        int seleccionOrden = cmbOrden.getSelectedIndex();
+        switch (seleccionOrden) {
+            case 0:
+                criteria.setOrdenarPor("fecha");
+                break;
+            case 1:
+                criteria.setOrdenarPor("cliente.nombreFiscal");
+                break;
+            case 2:
+                criteria.setOrdenarPor("total");
+                break;
+        }
+        int seleccionDireccion = cmbSentido.getSelectedIndex();
+        switch (seleccionDireccion) {
+            case 0:
+                criteria.setSentido("DESC");
+                break;
+            case 1:
+                criteria.setSentido("ASC");
+                break;
+        }
+        criteria.setPagina(NUMERO_PAGINA);
         try {
+            HttpEntity<BusquedaFacturaVentaCriteria> requestEntity = new HttpEntity<>(criteria);
             PaginaRespuestaRest<FacturaVenta> response = RestClient.getRestTemplate()
-                    .exchange("/facturas/venta/busqueda/criteria?" + uriCriteria, HttpMethod.GET, null,
+                    .exchange("/facturas/venta/busqueda/criteria", HttpMethod.POST, requestEntity,
                             new ParameterizedTypeReference<PaginaRespuestaRest<FacturaVenta>>() {
                     })
                     .getBody();
