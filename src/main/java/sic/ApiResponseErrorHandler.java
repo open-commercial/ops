@@ -1,7 +1,7 @@
 package sic;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.apache.commons.io.IOUtils;
@@ -12,7 +12,7 @@ import org.springframework.web.client.RestClientResponseException;
 
 public class ApiResponseErrorHandler implements ResponseErrorHandler {
     
-    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public boolean hasError(ClientHttpResponse response) throws IOException {
@@ -23,10 +23,10 @@ public class ApiResponseErrorHandler implements ResponseErrorHandler {
     @Override
     public void handleError(ClientHttpResponse response) throws IOException {
         String mensaje = IOUtils.toString(response.getBody());      
-        LOGGER.error(response.getStatusCode() + " - " + mensaje);                
+        logger.error(response.getStatusCode() + " - " + mensaje);                
         throw new RestClientResponseException(mensaje, response.getRawStatusCode(),
                                               response.getStatusText(), response.getHeaders(),
-                                              null, Charset.defaultCharset());
+                                              null, StandardCharsets.UTF_8);
     }
     
 }
