@@ -667,6 +667,13 @@ public class CerrarVentaGUI extends JDialog {
                 if (reply == JOptionPane.YES_OPTION) {
                     this.finalizarVenta();
                 }
+            } else if (totalPagos.compareTo(totalAPagar) > 0) {
+                int reply = JOptionPane.showConfirmDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_montos_superiores_al_total_factura"),
+                        "Aviso", JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION) {
+                    this.finalizarVenta();
+                }
             } else {
                 this.finalizarVenta();
             }
