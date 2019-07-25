@@ -94,7 +94,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         this.buscar(true);
     }
 
-    private BusquedaFacturaVentaCriteria getUriCriteria() {
+    private BusquedaFacturaVentaCriteria getCriteria() {
         BusquedaFacturaVentaCriteria criteria = new BusquedaFacturaVentaCriteria();
         criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
         if (chk_Cliente.isSelected() && clienteSeleccionado != null) {
@@ -224,7 +224,7 @@ public class FacturasVentaGUI extends JInternalFrame {
 
     private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
-        BusquedaFacturaVentaCriteria criteria = getUriCriteria();
+        BusquedaFacturaVentaCriteria criteria = getCriteria();
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
             case 0:
@@ -258,7 +258,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             facturasParcial = response.getContent();
             facturasTotal.addAll(facturasParcial);
             if (calcularResultados && tienePermisoSegunRoles) {
-                this.calcularResultados(getUriCriteria());
+                this.calcularResultados(getCriteria());
             }
             this.cargarResultadosAlTable();
         } catch (RestClientResponseException ex) {
