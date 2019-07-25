@@ -50,7 +50,7 @@ public class NotasCreditoGUI extends JInternalFrame {
     private Usuario usuarioSeleccionado;
     private Usuario viajanteSeleccionado;
     private boolean tienePermisoSegunRoles; 
-    private Movimiento movimiento;
+    private final Movimiento movimiento;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(970, 600);
     private static int totalElementosBusqueda;
@@ -89,10 +89,10 @@ public class NotasCreditoGUI extends JInternalFrame {
             criteria.setIdCliente(clienteSeleccionado.getId_Cliente());
         }
         if (chk_Viajante.isSelected() && viajanteSeleccionado != null) {
-            criteria.setIdUsuario(viajanteSeleccionado.getId_Usuario());
+            criteria.setIdViajante(viajanteSeleccionado.getId_Usuario());
         }
         if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
-            criteria.setIdViajante(usuarioSeleccionado.getId_Usuario());
+            criteria.setIdUsuario(usuarioSeleccionado.getId_Usuario());
         }
         criteria.setPagina(NUMERO_PAGINA);
         criteria.setMovimiento(movimiento);
@@ -176,27 +176,27 @@ public class NotasCreditoGUI extends JInternalFrame {
     private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
         BusquedaNotaCriteria criteria = getCriteria();
-//                int seleccionOrden = cmbOrden.getSelectedIndex();
-//        switch (seleccionOrden) {
-//            case 0:
-//                criteria.setOrdenarPor("fecha");
-//                break;
-//            case 1:
-//                criteria.setOrdenarPor("cliente.nombreFiscal");
-//                break;
-//            case 2:
-//                criteria.setOrdenarPor("total");
-//                break;
-//        }
-//        int seleccionDireccion = cmbSentido.getSelectedIndex();
-//        switch (seleccionDireccion) {
-//            case 0:
-//                criteria.setSentido("DESC");
-//                break;
-//            case 1:
-//                criteria.setSentido("ASC");
-//                break;
-//        }
+        int seleccionOrden = cmbOrden.getSelectedIndex();
+        switch (seleccionOrden) {
+            case 0:
+                criteria.setOrdenarPor("fecha");
+                break;
+            case 1:
+                criteria.setOrdenarPor("cliente.nombreFiscal");
+                break;
+            case 2:
+                criteria.setOrdenarPor("total");
+                break;
+        }
+        int seleccionDireccion = cmbSentido.getSelectedIndex();
+        switch (seleccionDireccion) {
+            case 0:
+                criteria.setSentido("DESC");
+                break;
+            case 1:
+                criteria.setSentido("ASC");
+                break;
+        }
         try {
             HttpEntity<BusquedaNotaCriteria> requestEntity = new HttpEntity<>(criteria);
             PaginaRespuestaRest<NotaCredito> response = RestClient.getRestTemplate()
@@ -428,6 +428,12 @@ public class NotasCreditoGUI extends JInternalFrame {
         }
     }
 
+    private void limpiarYBuscar(boolean calcularResultados) {
+        this.resetScroll();
+        this.limpiarJTable();
+        this.buscar(calcularResultados);
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -466,6 +472,9 @@ public class NotasCreditoGUI extends JInternalFrame {
         txtViajante = new javax.swing.JTextField();
         btnBuscarViajantes = new javax.swing.JButton();
         btn_Buscar = new javax.swing.JButton();
+        panelOrden = new javax.swing.JPanel();
+        cmbOrden = new javax.swing.JComboBox<>();
+        cmbSentido = new javax.swing.JComboBox<>();
 
         setClosable(true);
         setMaximizable(true);
@@ -860,6 +869,43 @@ public class NotasCreditoGUI extends JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
+
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha", "Cliente", "Total" }));
+        cmbOrden.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbOrdenItemStateChanged(evt);
+            }
+        });
+
+        cmbSentido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descendente", "Ascendente" }));
+        cmbSentido.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbSentidoItemStateChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelOrdenLayout = new javax.swing.GroupLayout(panelOrden);
+        panelOrden.setLayout(panelOrdenLayout);
+        panelOrdenLayout.setHorizontalGroup(
+            panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOrdenLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cmbOrden, 0, 158, Short.MAX_VALUE)
+                    .addComponent(cmbSentido, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        panelOrdenLayout.setVerticalGroup(
+            panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOrdenLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cmbOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmbSentido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -869,12 +915,18 @@ public class NotasCreditoGUI extends JInternalFrame {
                 .addGap(4, 4, 4))
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(227, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -883,9 +935,7 @@ public class NotasCreditoGUI extends JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarActionPerformed
-        this.resetScroll();
-        this.limpiarJTable();
-        this.buscar(true);
+        this.limpiarYBuscar(true);
 }//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
@@ -896,7 +946,7 @@ public class NotasCreditoGUI extends JInternalFrame {
             dc_FechaDesde.setDate(new Date());
             dc_FechaHasta.setDate(new Date());
             this.cambiarEstadoDeComponentesSegunRolUsuario();
-            this.setTitle("Administrar Notas de Venta");
+            this.setTitle("Administrar Notas de Credito" + (this.movimiento.equals(Movimiento.VENTA) ? " Venta" :  " Compra"));
         } catch (PropertyVetoException ex) {
             String mensaje = "Se produjo un error al intentar maximizar la ventana.";
             LOGGER.error(mensaje + " - " + ex.getMessage());
@@ -1103,6 +1153,14 @@ public class NotasCreditoGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btn_EliminarActionPerformed
 
+    private void cmbOrdenItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbOrdenItemStateChanged
+        this.limpiarYBuscar(true);
+    }//GEN-LAST:event_cmbOrdenItemStateChanged
+
+    private void cmbSentidoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbSentidoItemStateChanged
+        this.limpiarYBuscar(true);
+    }//GEN-LAST:event_cmbSentidoItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarCliente;
     private javax.swing.JButton btnBuscarUsuarios;
@@ -1118,6 +1176,8 @@ public class NotasCreditoGUI extends JInternalFrame {
     private javax.swing.JCheckBox chk_TipoNota;
     private javax.swing.JCheckBox chk_Usuario;
     private javax.swing.JCheckBox chk_Viajante;
+    private javax.swing.JComboBox<String> cmbOrden;
+    private javax.swing.JComboBox<String> cmbSentido;
     private javax.swing.JComboBox cmb_TipoNota;
     private com.toedter.calendar.JDateChooser dc_FechaDesde;
     private com.toedter.calendar.JDateChooser dc_FechaHasta;
@@ -1125,6 +1185,7 @@ public class NotasCreditoGUI extends JInternalFrame {
     private javax.swing.JLabel lbl_TotalNotasCredito;
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;
+    private javax.swing.JPanel panelOrden;
     private javax.swing.JPanel panelResultados;
     private javax.swing.JLabel separador;
     private javax.swing.JScrollPane sp_Resultados;

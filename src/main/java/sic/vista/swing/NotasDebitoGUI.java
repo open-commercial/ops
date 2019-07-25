@@ -49,7 +49,7 @@ public class NotasDebitoGUI extends JInternalFrame {
     private Usuario usuarioSeleccionado;
     private Usuario viajanteSeleccionado;
     private boolean tienePermisoSegunRoles;    
-    private Movimiento movimiento;
+    private final Movimiento movimiento;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(970, 600);
     private static int totalElementosBusqueda;
@@ -88,10 +88,10 @@ public class NotasDebitoGUI extends JInternalFrame {
             criteria.setIdCliente(clienteSeleccionado.getId_Cliente());
         }
         if (chk_Viajante.isSelected() && viajanteSeleccionado != null) {
-            criteria.setIdUsuario(viajanteSeleccionado.getId_Usuario());
+            criteria.setIdViajante(viajanteSeleccionado.getId_Usuario());
         }
         if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
-            criteria.setIdViajante(usuarioSeleccionado.getId_Usuario());
+            criteria.setIdUsuario(usuarioSeleccionado.getId_Usuario());
         }
         criteria.setPagina(NUMERO_PAGINA);
         criteria.setMovimiento(movimiento);
@@ -162,7 +162,6 @@ public class NotasDebitoGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(9).setMaxWidth(140);
         tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(140);
         tbl_Resultados.getColumnModel().getColumn(10).setMinWidth(500);
-        tbl_Resultados.getColumnModel().getColumn(11).setMaxWidth(100);
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         tbl_Resultados.getColumnModel().getColumn(1).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
@@ -172,27 +171,27 @@ public class NotasDebitoGUI extends JInternalFrame {
     private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
         BusquedaNotaCriteria criteria = getCriteria();
-//                int seleccionOrden = cmbOrden.getSelectedIndex();
-//        switch (seleccionOrden) {
-//            case 0:
-//                criteria.setOrdenarPor("fecha");
-//                break;
-//            case 1:
-//                criteria.setOrdenarPor("cliente.nombreFiscal");
-//                break;
-//            case 2:
-//                criteria.setOrdenarPor("total");
-//                break;
-//        }
-//        int seleccionDireccion = cmbSentido.getSelectedIndex();
-//        switch (seleccionDireccion) {
-//            case 0:
-//                criteria.setSentido("DESC");
-//                break;
-//            case 1:
-//                criteria.setSentido("ASC");
-//                break;
-//        }
+                int seleccionOrden = cmbOrden.getSelectedIndex();
+        switch (seleccionOrden) {
+            case 0:
+                criteria.setOrdenarPor("fecha");
+                break;
+            case 1:
+                criteria.setOrdenarPor("cliente.nombreFiscal");
+                break;
+            case 2:
+                criteria.setOrdenarPor("total");
+                break;
+        }
+        int seleccionDireccion = cmbSentido.getSelectedIndex();
+        switch (seleccionDireccion) {
+            case 0:
+                criteria.setSentido("DESC");
+                break;
+            case 1:
+                criteria.setSentido("ASC");
+                break;
+        }
         try {
             HttpEntity<BusquedaNotaCriteria> requestEntity = new HttpEntity<>(criteria);
             PaginaRespuestaRest<NotaDebito> response = RestClient.getRestTemplate()
@@ -402,6 +401,12 @@ public class NotasDebitoGUI extends JInternalFrame {
                 .postForObject("/notas/total-debito/criteria", criteria, BigDecimal.class));
     }
 
+    private void limpiarYBuscar(boolean calcularResultados) {
+        this.resetScroll();
+        this.limpiarJTable();
+        this.buscar(calcularResultados);
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -439,6 +444,9 @@ public class NotasDebitoGUI extends JInternalFrame {
         txtViajante = new javax.swing.JTextField();
         btnBuscarViajantes = new javax.swing.JButton();
         btn_Buscar = new javax.swing.JButton();
+        panelOrden4 = new javax.swing.JPanel();
+        cmbOrden4 = new javax.swing.JComboBox<>();
+        cmbSentido4 = new javax.swing.JComboBox<>();
 
         setClosable(true);
         setMaximizable(true);
@@ -526,7 +534,7 @@ public class NotasDebitoGUI extends JInternalFrame {
                 .addComponent(btn_Autorizar)
                 .addGap(0, 0, 0)
                 .addComponent(btn_VerDetalle)
-                .addGap(0, 0, 0)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_Eliminar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -820,6 +828,42 @@ public class NotasDebitoGUI extends JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        panelOrden4.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
+
+        cmbOrden4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha", "Cliente", "Total" }));
+        cmbOrden4.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbOrden4ItemStateChanged(evt);
+            }
+        });
+
+        cmbSentido4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descendente", "Ascendente" }));
+        cmbSentido4.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbSentido4ItemStateChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelOrden4Layout = new javax.swing.GroupLayout(panelOrden4);
+        panelOrden4.setLayout(panelOrden4Layout);
+        panelOrden4Layout.setHorizontalGroup(
+            panelOrden4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOrden4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelOrden4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cmbOrden4, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cmbSentido4, 0, 157, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        panelOrden4Layout.setVerticalGroup(
+            panelOrden4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOrden4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cmbOrden4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmbSentido4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -829,12 +873,18 @@ public class NotasDebitoGUI extends JInternalFrame {
                 .addGap(4, 4, 4))
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(227, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelOrden4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(panelOrden4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -843,9 +893,7 @@ public class NotasDebitoGUI extends JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarActionPerformed
-        this.resetScroll();
-        this.limpiarJTable();
-        this.buscar(true);
+        this.limpiarYBuscar(true);
 }//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
@@ -856,7 +904,7 @@ public class NotasDebitoGUI extends JInternalFrame {
             dc_FechaDesde.setDate(new Date());
             dc_FechaHasta.setDate(new Date());
             this.cambiarEstadoDeComponentesSegunRolUsuario();
-            this.setTitle("Administrar Notas de Venta");
+            this.setTitle("Administrar Notas de Debito" + (this.movimiento.equals(Movimiento.VENTA) ? " Venta" :  " Compra"));
         } catch (PropertyVetoException ex) {
             String mensaje = "Se produjo un error al intentar maximizar la ventana.";
             LOGGER.error(mensaje + " - " + ex.getMessage());
@@ -1046,6 +1094,14 @@ public class NotasDebitoGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btn_EliminarActionPerformed
 
+    private void cmbOrden4ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbOrden4ItemStateChanged
+        this.limpiarYBuscar(true);
+    }//GEN-LAST:event_cmbOrden4ItemStateChanged
+
+    private void cmbSentido4ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbSentido4ItemStateChanged
+        this.limpiarYBuscar(true);
+    }//GEN-LAST:event_cmbSentido4ItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarCliente;
     private javax.swing.JButton btnBuscarUsuarios;
@@ -1060,6 +1116,16 @@ public class NotasDebitoGUI extends JInternalFrame {
     private javax.swing.JCheckBox chk_TipoNota;
     private javax.swing.JCheckBox chk_Usuario;
     private javax.swing.JCheckBox chk_Viajante;
+    private javax.swing.JComboBox<String> cmbOrden;
+    private javax.swing.JComboBox<String> cmbOrden1;
+    private javax.swing.JComboBox<String> cmbOrden2;
+    private javax.swing.JComboBox<String> cmbOrden3;
+    private javax.swing.JComboBox<String> cmbOrden4;
+    private javax.swing.JComboBox<String> cmbSentido;
+    private javax.swing.JComboBox<String> cmbSentido1;
+    private javax.swing.JComboBox<String> cmbSentido2;
+    private javax.swing.JComboBox<String> cmbSentido3;
+    private javax.swing.JComboBox<String> cmbSentido4;
     private javax.swing.JComboBox cmb_TipoNota;
     private com.toedter.calendar.JDateChooser dc_FechaDesde;
     private com.toedter.calendar.JDateChooser dc_FechaHasta;
@@ -1067,6 +1133,11 @@ public class NotasDebitoGUI extends JInternalFrame {
     private javax.swing.JLabel lbl_TotalNotasDebito;
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;
+    private javax.swing.JPanel panelOrden;
+    private javax.swing.JPanel panelOrden1;
+    private javax.swing.JPanel panelOrden2;
+    private javax.swing.JPanel panelOrden3;
+    private javax.swing.JPanel panelOrden4;
     private javax.swing.JPanel panelResultados;
     private javax.swing.JLabel separador;
     private javax.swing.JScrollPane sp_Resultados;
