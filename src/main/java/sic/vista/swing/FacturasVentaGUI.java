@@ -1198,7 +1198,7 @@ public class FacturasVentaGUI extends JInternalFrame {
     private void txt_NumeroPedidoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_NumeroPedidoKeyTyped
         Utilidades.controlarEntradaSoloNumerico(evt);
     }//GEN-LAST:event_txt_NumeroPedidoKeyTyped
-
+  
     private void chk_NumeroPedidoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_NumeroPedidoItemStateChanged
         txt_NumeroPedido.setEnabled(chk_NumeroPedido.isSelected());
     }//GEN-LAST:event_chk_NumeroPedidoItemStateChanged

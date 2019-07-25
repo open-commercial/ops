@@ -957,9 +957,9 @@ public class NotasVentaGUI extends JInternalFrame {
             if (FEHabilitada) {
                 if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
                     int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados); 
-                    long idNota = ((notasTotal.size() > 0) ? notasTotal.get(indexFilaSeleccionada).getIdNota() : notasTotal.get(indexFilaSeleccionada).getIdNota());
+                    long idNota = notasTotal.get(indexFilaSeleccionada).getIdNota();
                     RestClient.getRestTemplate().postForObject("/notas/" + idNota + "/autorizacion",
-                            null, FacturaVenta.class);
+                            null, Nota.class);
                     JOptionPane.showMessageDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
                             "Aviso", JOptionPane.INFORMATION_MESSAGE);
