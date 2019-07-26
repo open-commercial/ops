@@ -844,9 +844,9 @@ public class PrincipalGUI extends JFrame {
     }//GEN-LAST:event_mnuItmGastosActionPerformed
 
     private void NotasCreditoVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NotasCreditoVentaActionPerformed
-        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), NotasCreditoGUI.class);
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), NotasCreditoVentaGUI.class);
         if (gui == null) {
-            gui = new NotasCreditoGUI(Movimiento.VENTA);
+            gui = new NotasCreditoVentaGUI();
             gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
                     getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
             getDesktopPane().add(gui);
@@ -863,9 +863,9 @@ public class PrincipalGUI extends JFrame {
     }//GEN-LAST:event_NotasCreditoVentaActionPerformed
 
     private void NotasDebitoVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NotasDebitoVentaActionPerformed
-        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), NotasDebitoGUI.class);
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), NotasDebitoVentaGUI.class);
         if (gui == null) {
-            gui = new NotasDebitoGUI(Movimiento.VENTA);
+            gui = new NotasDebitoVentaGUI();
             gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
                     getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
             getDesktopPane().add(gui);
@@ -882,9 +882,9 @@ public class PrincipalGUI extends JFrame {
     }//GEN-LAST:event_NotasDebitoVentaActionPerformed
 
     private void NotasCreditoCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NotasCreditoCompraActionPerformed
-        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), NotasCreditoGUI.class);
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), NotasCreditoCompraGUI.class);
         if (gui == null) {
-            gui = new NotasCreditoGUI(Movimiento.COMPRA);
+            gui = new NotasCreditoCompraGUI();
             gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
                     getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
             getDesktopPane().add(gui);
@@ -901,9 +901,9 @@ public class PrincipalGUI extends JFrame {
     }//GEN-LAST:event_NotasCreditoCompraActionPerformed
 
     private void NotasDebitoCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NotasDebitoCompraActionPerformed
-        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), NotasDebitoGUI.class);
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), NotasDebitoCompraGUI.class);
         if (gui == null) {
-            gui = new NotasDebitoGUI(Movimiento.COMPRA);
+            gui = new NotasDebitoCompraGUI();
             gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
                     getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
             getDesktopPane().add(gui);
