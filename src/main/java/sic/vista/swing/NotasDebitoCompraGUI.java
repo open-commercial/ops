@@ -98,7 +98,7 @@ public class NotasDebitoCompraGUI extends JInternalFrame {
 
     private void setColumnas() {        
         //nombres de columnas
-        String[] encabezados = new String[11];
+        String[] encabezados = new String[12];
         encabezados[0] = "CAE";
         encabezados[1] = "Fecha Nota";
         encabezados[2] = "Tipo";
@@ -109,7 +109,8 @@ public class NotasDebitoCompraGUI extends JInternalFrame {
         encabezados[7] = "Total";
         encabezados[8] = "Nº Nota Afip";
         encabezados[9] = "Vencimiento CAE";
-        encabezados[10] = "Motivo";
+        encabezados[10] = "Nº Recibo";
+        encabezados[11] = "Motivo";
         modeloTablaNotas.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaNotas);
         //tipo de dato columnas
@@ -125,6 +126,7 @@ public class NotasDebitoCompraGUI extends JInternalFrame {
         tipos[8] = String.class;
         tipos[9] = Date.class;
         tipos[10] = String.class;
+        tipos[11] = String.class;
         modeloTablaNotas.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
@@ -159,7 +161,9 @@ public class NotasDebitoCompraGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(9).setMinWidth(140);
         tbl_Resultados.getColumnModel().getColumn(9).setMaxWidth(140);
         tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(140);
-        tbl_Resultados.getColumnModel().getColumn(10).setMinWidth(500);
+        tbl_Resultados.getColumnModel().getColumn(10).setMinWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(10).setMaxWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(11).setMinWidth(500);
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         tbl_Resultados.getColumnModel().getColumn(1).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
@@ -267,7 +271,7 @@ public class NotasDebitoCompraGUI extends JInternalFrame {
 
     private void cargarResultadosAlTable() {
         notasParcial.stream().map(nota -> {
-            Object[] fila = new Object[11];
+            Object[] fila = new Object[12];
             fila[0] = nota.getCAE() == 0 ? "" : nota.getCAE();
             fila[1] = nota.getFecha();
             fila[2] = nota.getTipoComprobante();
@@ -282,7 +286,12 @@ public class NotasDebitoCompraGUI extends JInternalFrame {
                 fila[8] = nota.getNumSerieAfip() + " - " + nota.getNumNotaAfip();
             }
             fila[9] = nota.getVencimientoCAE();
-            fila[10] = nota.getMotivo();
+            if (nota.getNumSerieRecibo() == null && nota.getNroRecibo() == null) {
+                fila[10] = "";
+            } else {
+                fila[10] = nota.getNumSerieRecibo() + " - " + nota.getNroRecibo();
+            }
+            fila[11] = nota.getMotivo();
             return fila;
         }).forEach(fila -> {
             modeloTablaNotas.addRow(fila);
