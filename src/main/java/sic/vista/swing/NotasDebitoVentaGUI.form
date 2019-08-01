@@ -36,14 +36,19 @@
           </Group>
           <Group type="102" alignment="0" attributes="0">
               <Component id="panelFiltros" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="227" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="panelOrden" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Component id="panelFiltros" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="panelFiltros" min="-2" max="-2" attributes="0"/>
+                  <Component id="panelOrden" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="panelResultados" max="32767" attributes="0"/>
           </Group>
@@ -69,28 +74,16 @@
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="btn_VerDetalle" linkSize="2" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="btnVerFactura" linkSize="2" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="btn_Eliminar" linkSize="2" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="lbl_TotalIVANotasDebito" max="32767" attributes="1"/>
-                      <Component id="lbl_TotalNotasDebito" min="-2" pref="118" max="-2" attributes="1"/>
+                      <Component id="lbl_TotalIVANotasDebito" alignment="0" max="32767" attributes="1"/>
+                      <Component id="lbl_TotalNotasDebito" alignment="0" min="-2" pref="118" max="-2" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                      <Component id="txt_ResultTotalIVANotaDebito" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="txt_ResultTotalIVANotaDebito" min="-2" pref="140" max="-2" attributes="0"/>
                       <Component id="txt_ResultTotalDebito" min="-2" pref="140" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="lbl_TotalIVANotasCredito" max="32767" attributes="1"/>
-                      <Component id="lbl_TotalNotasCredito" min="-2" pref="123" max="-2" attributes="1"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                      <Component id="txt_ResultTotalCredito" max="32767" attributes="0"/>
-                      <Component id="txt_ResultTotalIVANotaCredito" min="-2" pref="140" max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -98,29 +91,25 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="sp_Resultados" pref="287" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
-                          <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="lbl_TotalIVANotasDebito" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="txt_ResultTotalIVANotaDebito" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbl_TotalIVANotasCredito" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="txt_ResultTotalIVANotaCredito" alignment="2" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="lbl_TotalNotasDebito" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="txt_ResultTotalDebito" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbl_TotalNotasCredito" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="txt_ResultTotalCredito" alignment="2" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
+                  <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="103" alignment="1" groupAlignment="3" attributes="0">
                           <Component id="btn_VerDetalle" linkSize="3" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btn_Autorizar" linkSize="3" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnVerFactura" linkSize="3" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                           <Component id="btn_Eliminar" linkSize="3" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="sp_Resultados" pref="281" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="lbl_TotalIVANotasDebito" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="txt_ResultTotalIVANotaDebito" alignment="1" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lbl_TotalNotasDebito" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txt_ResultTotalDebito" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
               </Group>
@@ -182,49 +171,25 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_AutorizarActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txt_ResultTotalCredito">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-              <Format subtype="0" type="4"/>
-            </Property>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txt_ResultTotalIVANotaCredito">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-              <Format subtype="0" type="4"/>
-            </Property>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lbl_TotalIVANotasCredito">
-          <Properties>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Total IVA Credito:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lbl_TotalNotasCredito">
-          <Properties>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Total Credito:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="btnVerFactura">
+        <Component class="javax.swing.JButton" name="btn_Eliminar">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/PedidoFacturas_16x16.png"/>
+              <Image iconType="3" name="/sic/icons/Cancel_16x16.png"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Ver Factura"/>
+            <Property name="text" type="java.lang.String" value="Eliminar "/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVerFacturaActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_EliminarActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lbl_TotalIVANotasDebito">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="Total IVA Debito:"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="txt_ResultTotalIVANotaDebito">
           <Properties>
@@ -233,12 +198,6 @@
               <Format subtype="0" type="4"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lbl_TotalIVANotasDebito">
-          <Properties>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Total IVA Debito:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lbl_TotalNotasDebito">
@@ -255,20 +214,6 @@
             </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="btn_Eliminar">
-          <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
-            </Property>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/Cancel_16x16.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Eliminar "/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_EliminarActionPerformed"/>
-          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -617,6 +562,76 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_BuscarActionPerformed"/>
           </Events>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPanel" name="panelOrden">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Ordenar por"/>
+          </Border>
+        </Property>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="cmbOrden" alignment="0" max="32767" attributes="0"/>
+                      <Component id="cmbSentido" alignment="0" pref="157" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="cmbOrden" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="cmbSentido" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JComboBox" name="cmbOrden">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="3">
+                <StringItem index="0" value="Fecha"/>
+                <StringItem index="1" value="Cliente"/>
+                <StringItem index="2" value="Total"/>
+              </StringArray>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmbOrdenItemStateChanged"/>
+          </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cmbSentido">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="2">
+                <StringItem index="0" value="Descendente"/>
+                <StringItem index="1" value="Ascendente"/>
+              </StringArray>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmbSentidoItemStateChanged"/>
+          </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

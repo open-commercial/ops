@@ -16,6 +16,8 @@ public class NotaDebito extends Nota implements Serializable {
     private List<RenglonNotaDebito> renglonesNotaDebito;
     private BigDecimal montoNoGravado;
     private Long idRecibo;
+    private Long numSerieRecibo;
+    private Long nroRecibo;
     
     public NotaDebito() {}
 

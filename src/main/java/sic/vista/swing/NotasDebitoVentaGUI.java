@@ -19,16 +19,17 @@ import javax.swing.JScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.BusquedaNotaCriteria;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
-import sic.modelo.Factura;
 import sic.modelo.FacturaVenta;
 import sic.modelo.Movimiento;
-import sic.modelo.Nota;
+import sic.modelo.NotaDebito;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
@@ -39,11 +40,11 @@ import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
 import sic.util.Utilidades;
 
-public class NotasVentaGUI extends JInternalFrame {
+public class NotasDebitoVentaGUI extends JInternalFrame {
 
     private ModeloTabla modeloTablaNotas = new ModeloTabla();
-    private List<Nota> notasTotal = new ArrayList<>();
-    private List<Nota> notasParcial = new ArrayList<>();
+    private List<NotaDebito> notasTotal = new ArrayList<>();
+    private List<NotaDebito> notasParcial = new ArrayList<>();
     private Cliente clienteSeleccionado;
     private Usuario usuarioSeleccionado;
     private Usuario viajanteSeleccionado;
@@ -53,7 +54,7 @@ public class NotasVentaGUI extends JInternalFrame {
     private static int totalElementosBusqueda;
     private static int NUMERO_PAGINA = 0;    
 
-    public NotasVentaGUI() {
+    public NotasDebitoVentaGUI() {
         this.initComponents();
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
@@ -67,36 +68,37 @@ public class NotasVentaGUI extends JInternalFrame {
         });
     }
 
-    private String getUriCriteria() {
-        String uriCriteria = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                + "&movimiento=" + Movimiento.VENTA;
+    private BusquedaNotaCriteria getCriteria() {
+        BusquedaNotaCriteria criteria = new BusquedaNotaCriteria();
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
         if (chk_Fecha.isSelected()) {
-            uriCriteria += "&desde=" + dc_FechaDesde.getDate().getTime()
-                    + "&hasta=" + dc_FechaHasta.getDate().getTime();
+            criteria.setFechaDesde(dc_FechaDesde.getDate());
+            criteria.setFechaHasta(dc_FechaDesde.getDate());
         }
         if (chk_NumNota.isSelected()) {
-            uriCriteria += "&nroNota=" + Long.valueOf(txt_NroNota.getText())
-                    + "&nroSerie=" + Long.valueOf(txt_SerieNota.getText());
+            criteria.setNumNota(Long.valueOf(txt_NroNota.getText()));
+            criteria.setNumSerie(Long.valueOf(txt_SerieNota.getText()));
         }
         if (chk_TipoNota.isSelected()) {
-            uriCriteria += "&tipoDeComprobante=" + ((TipoDeComprobante) cmb_TipoNota.getSelectedItem()).name();
+            criteria.setTipoComprobante((TipoDeComprobante) cmb_TipoNota.getSelectedItem());
         }
         if (chk_Cliente.isSelected() && clienteSeleccionado != null) {
-            uriCriteria += "&idCliente=" + clienteSeleccionado.getId_Cliente();
+            criteria.setIdCliente(clienteSeleccionado.getId_Cliente());
         }
         if (chk_Viajante.isSelected() && viajanteSeleccionado != null) {
-            uriCriteria += "&idViajante=" + viajanteSeleccionado.getId_Usuario();
+            criteria.setIdViajante(viajanteSeleccionado.getId_Usuario());
         }
         if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
-            uriCriteria += "&idUsuario=" + usuarioSeleccionado.getId_Usuario();
+            criteria.setIdUsuario(usuarioSeleccionado.getId_Usuario());
         }
-        uriCriteria += "&pagina=" + NUMERO_PAGINA;
-        return uriCriteria;
+        criteria.setPagina(NUMERO_PAGINA);
+        criteria.setMovimiento(Movimiento.VENTA);
+        return criteria;
     }
 
     private void setColumnas() {        
         //nombres de columnas
-        String[] encabezados = new String[11];
+        String[] encabezados = new String[12];
         encabezados[0] = "CAE";
         encabezados[1] = "Fecha Nota";
         encabezados[2] = "Tipo";
@@ -107,7 +109,8 @@ public class NotasVentaGUI extends JInternalFrame {
         encabezados[7] = "Total";
         encabezados[8] = "Nº Nota Afip";
         encabezados[9] = "Vencimiento CAE";
-        encabezados[10] = "Motivo";
+        encabezados[10] = "Nº Recibo";
+        encabezados[11] = "Motivo";
         modeloTablaNotas.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaNotas);
         //tipo de dato columnas
@@ -123,6 +126,7 @@ public class NotasVentaGUI extends JInternalFrame {
         tipos[8] = String.class;
         tipos[9] = Date.class;
         tipos[10] = String.class;
+        tipos[11] = String.class;
         modeloTablaNotas.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
@@ -157,7 +161,9 @@ public class NotasVentaGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(9).setMinWidth(140);
         tbl_Resultados.getColumnModel().getColumn(9).setMaxWidth(140);
         tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(140);
-        tbl_Resultados.getColumnModel().getColumn(10).setMinWidth(500);
+        tbl_Resultados.getColumnModel().getColumn(10).setMinWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(10).setMaxWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(11).setMinWidth(500);
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         tbl_Resultados.getColumnModel().getColumn(1).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
@@ -166,18 +172,40 @@ public class NotasVentaGUI extends JInternalFrame {
 
     private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
-        String uriCriteria = getUriCriteria();
+        BusquedaNotaCriteria criteria = getCriteria();
+        int seleccionOrden = cmbOrden.getSelectedIndex();
+        switch (seleccionOrden) {
+            case 0:
+                criteria.setOrdenarPor("fecha");
+                break;
+            case 1:
+                criteria.setOrdenarPor("cliente.nombreFiscal");
+                break;
+            case 2:
+                criteria.setOrdenarPor("total");
+                break;
+        }
+        int seleccionDireccion = cmbSentido.getSelectedIndex();
+        switch (seleccionDireccion) {
+            case 0:
+                criteria.setSentido("DESC");
+                break;
+            case 1:
+                criteria.setSentido("ASC");
+                break;
+        }
         try {
-            PaginaRespuestaRest<Nota> response = RestClient.getRestTemplate()
-                    .exchange("/notas/busqueda/criteria?" + uriCriteria, HttpMethod.GET, null,
-                            new ParameterizedTypeReference<PaginaRespuestaRest<Nota>>() {
+            HttpEntity<BusquedaNotaCriteria> requestEntity = new HttpEntity<>(criteria);
+            PaginaRespuestaRest<NotaDebito> response = RestClient.getRestTemplate()
+                    .exchange("/notas/debito/busqueda/criteria", HttpMethod.POST, requestEntity,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<NotaDebito>>() {
                     })
                     .getBody();
             totalElementosBusqueda = response.getTotalElements();
             notasParcial = response.getContent();
             notasTotal.addAll(notasParcial);
             this.cargarResultadosAlTable();
-            if (calcularResultados && tienePermisoSegunRoles) this.calcularResultados(uriCriteria);            
+            if (calcularResultados && tienePermisoSegunRoles) this.calcularResultados(criteria);            
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -243,7 +271,7 @@ public class NotasVentaGUI extends JInternalFrame {
 
     private void cargarResultadosAlTable() {
         notasParcial.stream().map(nota -> {
-            Object[] fila = new Object[11];
+            Object[] fila = new Object[12];
             fila[0] = nota.getCAE() == 0 ? "" : nota.getCAE();
             fila[1] = nota.getFecha();
             fila[2] = nota.getTipoComprobante();
@@ -258,7 +286,12 @@ public class NotasVentaGUI extends JInternalFrame {
                 fila[8] = nota.getNumSerieAfip() + " - " + nota.getNumNotaAfip();
             }
             fila[9] = nota.getVencimientoCAE();
-            fila[10] = nota.getMotivo();
+            if (nota.getNumSerieRecibo() == null && nota.getNroRecibo() == null) {
+                fila[10] = "";
+            } else {
+                fila[10] = nota.getNumSerieRecibo() + " - " + nota.getNroRecibo();
+            }
+            fila[11] = nota.getMotivo();
             return fila;
         }).forEach(fila -> {
             modeloTablaNotas.addRow(fila);
@@ -286,7 +319,7 @@ public class NotasVentaGUI extends JInternalFrame {
     private void cargarTiposDeNota() {
         try {
             TipoDeComprobante[] tiposDeComprobantes = RestClient.getRestTemplate()
-                    .getForObject("/notas/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                    .getForObject("/notas/debito/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                             TipoDeComprobante[].class);
             for (int i = 0; tiposDeComprobantes.length > i; i++) {
                 cmb_TipoNota.addItem(tiposDeComprobantes[i]);
@@ -311,7 +344,7 @@ public class NotasVentaGUI extends JInternalFrame {
                                     + ((notasTotal.size() > 0)
                                     ? notasTotal.get(indexFilaSeleccionada).getIdNota() : notasTotal.get(indexFilaSeleccionada).getIdNota())
                                     + "/reporte", byte[].class);
-                    File f = new File(System.getProperty("user.home") + "/NotaCredito.pdf");
+                    File f = new File(System.getProperty("user.home") + "/NotaDebito.pdf");
                     Files.write(f.toPath(), reporte);
                     Desktop.getDesktop().open(f);
                 } else {
@@ -352,83 +385,33 @@ public class NotasVentaGUI extends JInternalFrame {
             btn_Autorizar.setEnabled(true);
             tienePermisoSegunRoles = true;
             lbl_TotalIVANotasDebito.setVisible(true);
-            lbl_TotalIVANotasCredito.setVisible(true);
             lbl_TotalNotasDebito.setVisible(true);
-            lbl_TotalNotasCredito.setVisible(true);
             txt_ResultTotalIVANotaDebito.setVisible(true);
-            txt_ResultTotalIVANotaCredito.setVisible(true);
             txt_ResultTotalIVANotaDebito.setVisible(true);
-            txt_ResultTotalIVANotaCredito.setVisible(true);
             txt_ResultTotalDebito.setVisible(true);
-            txt_ResultTotalCredito.setVisible(true);
             chk_Usuario.setEnabled(true);
         } else {
             btn_Autorizar.setEnabled(false);
             tienePermisoSegunRoles = false;
             lbl_TotalIVANotasDebito.setVisible(false);
-            lbl_TotalIVANotasCredito.setVisible(false);
             lbl_TotalNotasDebito.setVisible(false);
-            lbl_TotalNotasCredito.setVisible(false);
             txt_ResultTotalIVANotaDebito.setVisible(false);
-            txt_ResultTotalIVANotaCredito.setVisible(false);
             txt_ResultTotalDebito.setVisible(false);
-            txt_ResultTotalCredito.setVisible(false);
             chk_Usuario.setEnabled(false);
         }
     }
 
-    private void calcularResultados(String uriCriteria) {
+    private void calcularResultados(BusquedaNotaCriteria criteria) {
         txt_ResultTotalIVANotaDebito.setValue(RestClient.getRestTemplate()
-                .getForObject("/notas/total-iva-debito/criteria?" + uriCriteria, BigDecimal.class));
-        txt_ResultTotalIVANotaCredito.setValue(RestClient.getRestTemplate()
-                .getForObject("/notas/total-iva-credito/criteria?" + uriCriteria, BigDecimal.class));
+                .postForObject("/notas/total-iva-debito/criteria", criteria, BigDecimal.class));
         txt_ResultTotalDebito.setValue(RestClient.getRestTemplate()
-                .getForObject("/notas/total-debito/criteria?" + uriCriteria, BigDecimal.class));
-        txt_ResultTotalCredito.setValue(RestClient.getRestTemplate()
-                .getForObject("/notas/total-credito/criteria?" + uriCriteria, BigDecimal.class));
+                .postForObject("/notas/total-debito/criteria", criteria, BigDecimal.class));
     }
 
-    private void verFacturaVenta() throws PropertyVetoException {
-        int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-        if (tbl_Resultados.getSelectedRow() != -1) {
-            if (isNotaCredito(notasTotal.get(indexFilaSeleccionada).getTipoComprobante())) {
-                if (notasTotal.get(indexFilaSeleccionada).getIdFacturaVenta() != null) {
-                    FacturasVentaGUI gui_facturaVenta = new FacturasVentaGUI();
-                    gui_facturaVenta.setLocation(getDesktopPane().getWidth() / 2 - gui_facturaVenta.getWidth() / 2,
-                            getDesktopPane().getHeight() / 2 - gui_facturaVenta.getHeight() / 2);
-                    getDesktopPane().add(gui_facturaVenta);
-                    Factura factura = RestClient.getRestTemplate()
-                            .getForObject("/facturas/" + notasTotal.get(indexFilaSeleccionada).getIdFacturaVenta(), Factura.class);
-                    gui_facturaVenta.setVisible(true);
-                    gui_facturaVenta.buscarPorSerieNroTipo(factura.getNumSerie(), factura.getNumFactura(),
-                            factura.getTipoComprobante(), notasTotal.get(indexFilaSeleccionada).getIdCliente());
-                    gui_facturaVenta.setSelected(true);
-                } else {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_nota_credito_sin_factura_relacionada"), "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                        .getString("mensaje_nota_debito_sin_factura"), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
-
-    private boolean isNotaCredito(TipoDeComprobante tipoDeComprobante) {
-        switch (tipoDeComprobante) {
-            case NOTA_CREDITO_A:
-                return true;
-            case NOTA_CREDITO_B:
-                return true;
-            case NOTA_CREDITO_PRESUPUESTO:
-                return true;
-            case NOTA_CREDITO_X:
-                return true;
-            case NOTA_CREDITO_Y:
-                return true;
-            default:
-                return false;
-        }
+    private void limpiarYBuscar(boolean calcularResultados) {
+        this.resetScroll();
+        this.limpiarJTable();
+        this.buscar(calcularResultados);
     }
 
     @SuppressWarnings("unchecked")
@@ -440,16 +423,11 @@ public class NotasVentaGUI extends JInternalFrame {
         tbl_Resultados = new javax.swing.JTable();
         btn_VerDetalle = new javax.swing.JButton();
         btn_Autorizar = new javax.swing.JButton();
-        txt_ResultTotalCredito = new javax.swing.JFormattedTextField();
-        txt_ResultTotalIVANotaCredito = new javax.swing.JFormattedTextField();
-        lbl_TotalIVANotasCredito = new javax.swing.JLabel();
-        lbl_TotalNotasCredito = new javax.swing.JLabel();
-        btnVerFactura = new javax.swing.JButton();
-        txt_ResultTotalIVANotaDebito = new javax.swing.JFormattedTextField();
+        btn_Eliminar = new javax.swing.JButton();
         lbl_TotalIVANotasDebito = new javax.swing.JLabel();
+        txt_ResultTotalIVANotaDebito = new javax.swing.JFormattedTextField();
         lbl_TotalNotasDebito = new javax.swing.JLabel();
         txt_ResultTotalDebito = new javax.swing.JFormattedTextField();
-        btn_Eliminar = new javax.swing.JButton();
         panelFiltros = new javax.swing.JPanel();
         subPanelFiltros2 = new javax.swing.JPanel();
         chk_TipoNota = new javax.swing.JCheckBox();
@@ -473,6 +451,9 @@ public class NotasVentaGUI extends JInternalFrame {
         txtViajante = new javax.swing.JTextField();
         btnBuscarViajantes = new javax.swing.JButton();
         btn_Buscar = new javax.swing.JButton();
+        panelOrden = new javax.swing.JPanel();
+        cmbOrden = new javax.swing.JComboBox<>();
+        cmbSentido = new javax.swing.JComboBox<>();
 
         setClosable(true);
         setMaximizable(true);
@@ -528,43 +509,6 @@ public class NotasVentaGUI extends JInternalFrame {
             }
         });
 
-        txt_ResultTotalCredito.setEditable(false);
-        txt_ResultTotalCredito.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
-        txt_ResultTotalCredito.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-
-        txt_ResultTotalIVANotaCredito.setEditable(false);
-        txt_ResultTotalIVANotaCredito.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
-        txt_ResultTotalIVANotaCredito.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-
-        lbl_TotalIVANotasCredito.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_TotalIVANotasCredito.setText("Total IVA Credito:");
-
-        lbl_TotalNotasCredito.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_TotalNotasCredito.setText("Total Credito:");
-
-        btnVerFactura.setForeground(java.awt.Color.blue);
-        btnVerFactura.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/PedidoFacturas_16x16.png"))); // NOI18N
-        btnVerFactura.setText("Ver Factura");
-        btnVerFactura.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVerFacturaActionPerformed(evt);
-            }
-        });
-
-        txt_ResultTotalIVANotaDebito.setEditable(false);
-        txt_ResultTotalIVANotaDebito.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
-        txt_ResultTotalIVANotaDebito.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-
-        lbl_TotalIVANotasDebito.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_TotalIVANotasDebito.setText("Total IVA Debito:");
-
-        lbl_TotalNotasDebito.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_TotalNotasDebito.setText("Total Debito:");
-
-        txt_ResultTotalDebito.setEditable(false);
-        txt_ResultTotalDebito.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
-        txt_ResultTotalDebito.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-
         btn_Eliminar.setForeground(java.awt.Color.blue);
         btn_Eliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Cancel_16x16.png"))); // NOI18N
         btn_Eliminar.setText("Eliminar ");
@@ -573,6 +517,20 @@ public class NotasVentaGUI extends JInternalFrame {
                 btn_EliminarActionPerformed(evt);
             }
         });
+
+        lbl_TotalIVANotasDebito.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbl_TotalIVANotasDebito.setText("Total IVA Debito:");
+
+        txt_ResultTotalIVANotaDebito.setEditable(false);
+        txt_ResultTotalIVANotaDebito.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        txt_ResultTotalIVANotaDebito.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        lbl_TotalNotasDebito.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbl_TotalNotasDebito.setText("Total Debito:");
+
+        txt_ResultTotalDebito.setEditable(false);
+        txt_ResultTotalDebito.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        txt_ResultTotalDebito.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
@@ -584,57 +542,41 @@ public class NotasVentaGUI extends JInternalFrame {
                 .addGap(0, 0, 0)
                 .addComponent(btn_VerDetalle)
                 .addGap(0, 0, 0)
-                .addComponent(btnVerFactura)
-                .addGap(0, 0, 0)
                 .addComponent(btn_Eliminar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lbl_TotalIVANotasDebito, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_TotalNotasDebito, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(txt_ResultTotalIVANotaDebito)
-                    .addComponent(txt_ResultTotalDebito, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lbl_TotalIVANotasCredito, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_TotalNotasCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(txt_ResultTotalCredito)
-                    .addComponent(txt_ResultTotalIVANotaCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txt_ResultTotalIVANotaDebito, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_ResultTotalDebito, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnVerFactura, btn_Autorizar, btn_Eliminar, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Autorizar, btn_Eliminar, btn_VerDetalle});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
-                        .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(lbl_TotalIVANotasDebito)
-                            .addComponent(txt_ResultTotalIVANotaDebito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbl_TotalIVANotasCredito)
-                            .addComponent(txt_ResultTotalIVANotaCredito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(lbl_TotalNotasDebito)
-                            .addComponent(txt_ResultTotalDebito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbl_TotalNotasCredito)
-                            .addComponent(txt_ResultTotalCredito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addContainerGap()
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btn_VerDetalle)
                         .addComponent(btn_Autorizar)
-                        .addComponent(btnVerFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btn_Eliminar))))
+                        .addComponent(btn_Eliminar))
+                    .addGroup(panelResultadosLayout.createSequentialGroup()
+                        .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbl_TotalIVANotasDebito, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txt_ResultTotalIVANotaDebito, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbl_TotalNotasDebito)
+                            .addComponent(txt_ResultTotalDebito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnVerFactura, btn_Autorizar, btn_Eliminar, btn_VerDetalle});
-
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lbl_TotalIVANotasCredito, lbl_TotalIVANotasDebito, lbl_TotalNotasCredito, lbl_TotalNotasDebito});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Autorizar, btn_Eliminar, btn_VerDetalle});
 
         panelFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
 
@@ -893,6 +835,43 @@ public class NotasVentaGUI extends JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
+
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha", "Cliente", "Total" }));
+        cmbOrden.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbOrdenItemStateChanged(evt);
+            }
+        });
+
+        cmbSentido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descendente", "Ascendente" }));
+        cmbSentido.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbSentidoItemStateChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelOrdenLayout = new javax.swing.GroupLayout(panelOrden);
+        panelOrden.setLayout(panelOrdenLayout);
+        panelOrdenLayout.setHorizontalGroup(
+            panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOrdenLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cmbOrden, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cmbSentido, 0, 157, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        panelOrdenLayout.setVerticalGroup(
+            panelOrdenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelOrdenLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(cmbOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmbSentido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -902,12 +881,16 @@ public class NotasVentaGUI extends JInternalFrame {
                 .addGap(4, 4, 4))
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(227, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -916,9 +899,7 @@ public class NotasVentaGUI extends JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarActionPerformed
-        this.resetScroll();
-        this.limpiarJTable();
-        this.buscar(true);
+        this.limpiarYBuscar(true);
 }//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
@@ -929,7 +910,7 @@ public class NotasVentaGUI extends JInternalFrame {
             dc_FechaDesde.setDate(new Date());
             dc_FechaHasta.setDate(new Date());
             this.cambiarEstadoDeComponentesSegunRolUsuario();
-            this.setTitle("Administrar Notas de Venta");
+            this.setTitle("Administrar Notas de Debito Venta");
         } catch (PropertyVetoException ex) {
             String mensaje = "Se produjo un error al intentar maximizar la ventana.";
             LOGGER.error(mensaje + " - " + ex.getMessage());
@@ -957,9 +938,9 @@ public class NotasVentaGUI extends JInternalFrame {
             if (FEHabilitada) {
                 if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
                     int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados); 
-                    long idNota = notasTotal.get(indexFilaSeleccionada).getIdNota();
+                    long idNota = ((notasTotal.size() > 0) ? notasTotal.get(indexFilaSeleccionada).getIdNota() : notasTotal.get(indexFilaSeleccionada).getIdNota());
                     RestClient.getRestTemplate().postForObject("/notas/" + idNota + "/autorizacion",
-                            null, Nota.class);
+                            null, FacturaVenta.class);
                     JOptionPane.showMessageDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
                             "Aviso", JOptionPane.INFORMATION_MESSAGE);
@@ -988,23 +969,6 @@ public class NotasVentaGUI extends JInternalFrame {
             this.lanzarReporteNota();
         }
     }//GEN-LAST:event_btn_VerDetalleActionPerformed
-
-    private void btnVerFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerFacturaActionPerformed
-        try {
-            this.verFacturaVenta();
-        } catch (PropertyVetoException ex) {
-            String mensaje = "No se pudo seleccionar la ventana requerida.";
-            LOGGER.error(mensaje + " - " + ex.getMessage());
-            JOptionPane.showInternalMessageDialog(this.getDesktopPane(), mensaje, "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_btnVerFacturaActionPerformed
 
     private void chk_UsuarioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UsuarioItemStateChanged
         if (chk_Usuario.isSelected() == true) {
@@ -1136,11 +1100,18 @@ public class NotasVentaGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btn_EliminarActionPerformed
 
+    private void cmbOrdenItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbOrdenItemStateChanged
+        this.limpiarYBuscar(true);
+    }//GEN-LAST:event_cmbOrdenItemStateChanged
+
+    private void cmbSentidoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbSentidoItemStateChanged
+        this.limpiarYBuscar(true);
+    }//GEN-LAST:event_cmbSentidoItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarCliente;
     private javax.swing.JButton btnBuscarUsuarios;
     private javax.swing.JButton btnBuscarViajantes;
-    private javax.swing.JButton btnVerFactura;
     private javax.swing.JButton btn_Autorizar;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;
@@ -1151,15 +1122,16 @@ public class NotasVentaGUI extends JInternalFrame {
     private javax.swing.JCheckBox chk_TipoNota;
     private javax.swing.JCheckBox chk_Usuario;
     private javax.swing.JCheckBox chk_Viajante;
+    private javax.swing.JComboBox<String> cmbOrden;
+    private javax.swing.JComboBox<String> cmbSentido;
     private javax.swing.JComboBox cmb_TipoNota;
     private com.toedter.calendar.JDateChooser dc_FechaDesde;
     private com.toedter.calendar.JDateChooser dc_FechaHasta;
-    private javax.swing.JLabel lbl_TotalIVANotasCredito;
     private javax.swing.JLabel lbl_TotalIVANotasDebito;
-    private javax.swing.JLabel lbl_TotalNotasCredito;
     private javax.swing.JLabel lbl_TotalNotasDebito;
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;
+    private javax.swing.JPanel panelOrden;
     private javax.swing.JPanel panelResultados;
     private javax.swing.JLabel separador;
     private javax.swing.JScrollPane sp_Resultados;
@@ -1170,9 +1142,7 @@ public class NotasVentaGUI extends JInternalFrame {
     private javax.swing.JTextField txtUsuario;
     private javax.swing.JTextField txtViajante;
     private javax.swing.JFormattedTextField txt_NroNota;
-    private javax.swing.JFormattedTextField txt_ResultTotalCredito;
     private javax.swing.JFormattedTextField txt_ResultTotalDebito;
-    private javax.swing.JFormattedTextField txt_ResultTotalIVANotaCredito;
     private javax.swing.JFormattedTextField txt_ResultTotalIVANotaDebito;
     private javax.swing.JFormattedTextField txt_SerieNota;
     // End of variables declaration//GEN-END:variables
