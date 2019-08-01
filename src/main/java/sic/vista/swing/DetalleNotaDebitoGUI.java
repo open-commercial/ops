@@ -3,7 +3,6 @@ package sic.vista.swing;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Date;
