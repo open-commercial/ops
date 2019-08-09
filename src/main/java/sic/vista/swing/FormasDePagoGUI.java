@@ -48,8 +48,7 @@ public class FormasDePagoGUI extends JInternalFrame {
     }
 
     private void cargarFormasDePago() {
-        formasDePago = new ArrayList(Arrays.asList(RestClient.getRestTemplate().getForObject("/formas-de-pago/empresas/"
-                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), FormaDePago[].class)));
+        formasDePago = new ArrayList(Arrays.asList(RestClient.getRestTemplate().getForObject("/formas-de-pago", FormaDePago[].class)));
         this.limpiarJTable();
         formasDePago.stream().map(fdp -> {
             Object[] fila = new Object[3];

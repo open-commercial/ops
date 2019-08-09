@@ -51,8 +51,7 @@ public class DetalleReciboGUI extends JDialog {
 
     private void cargarFormasDePago() {
         try {
-            List<FormaDePago> formasDePago = Arrays.asList(RestClient.getRestTemplate().getForObject("/formas-de-pago/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), FormaDePago[].class));
+            List<FormaDePago> formasDePago = Arrays.asList(RestClient.getRestTemplate().getForObject("/formas-de-pago", FormaDePago[].class));
             formasDePago.stream().forEach(formaDePago -> {
                 cmbFormaDePago.addItem(formaDePago);
             });
