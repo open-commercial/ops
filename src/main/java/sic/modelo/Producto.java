@@ -3,16 +3,18 @@ package sic.modelo;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = {"descripcion", "nombreEmpresa"})
+@EqualsAndHashCode(of = {"descripcion"})
 public class Producto implements Serializable {
 
     private long idProducto;
     private String codigo;
     private String descripcion;
+    private List<CantidadEnSucursal> cantidadEnSucursales;
     private BigDecimal cantidad;
     private BigDecimal cantMinima;
     private BigDecimal bulto;

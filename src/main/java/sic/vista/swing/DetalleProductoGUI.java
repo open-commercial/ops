@@ -817,7 +817,11 @@ public class DetalleProductoGUI extends JDialog {
         rbPublico.setSelected(productoParaModificar.isPublico());
         rbPrivado.setSelected(!productoParaModificar.isPublico());
         chkDestacado.setSelected(productoParaModificar.isDestacado());
-        txt_Cantidad.setValue(productoParaModificar.getCantidad());
+        productoParaModificar.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
+            if (cantidadesEnSucursal.getIdSucursal().equals(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())) {
+                txt_Cantidad.setValue(cantidadesEnSucursal.getCantidad());
+            }
+        });
         txt_CantMinima.setValue(productoParaModificar.getCantMinima());
         txt_Bulto.setValue(productoParaModificar.getBulto());
         cmb_Rubro.setSelectedItem(productoParaModificar.getNombreRubro());
@@ -874,16 +878,16 @@ public class DetalleProductoGUI extends JDialog {
         cmb_Medida.removeAllItems();
         try {
             medidas = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                .getForObject("/medidas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                Medida[].class)));
+                    .getForObject("/medidas",
+                            Medida[].class)));
             medidas.stream().forEach(m -> cmb_Medida.addItem(m.getNombre()));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
             LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this,
-                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                "Error", JOptionPane.ERROR_MESSAGE);
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -891,16 +895,16 @@ public class DetalleProductoGUI extends JDialog {
         cmb_Rubro.removeAllItems();
         try {
             rubros = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                .getForObject("/rubros/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                Rubro[].class)));
+                    .getForObject("/rubros",
+                            Rubro[].class)));
             rubros.stream().forEach(r -> cmb_Rubro.addItem(r.getNombre()));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
             LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this,
-                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                "Error", JOptionPane.ERROR_MESSAGE);
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -1027,7 +1031,7 @@ public class DetalleProductoGUI extends JDialog {
                     Producto productoRecuperado = RestClient.getRestTemplate().postForObject("/productos?idMedida=" + idMedida
                             + "&idRubro=" + idRubro
                             + "&idProveedor=" + ((idProveedor != null) ? idProveedor : "")
-                            + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                            + "&idSucursal=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
                             producto, Producto.class);
                     LOGGER.warn("El producto " + productoRecuperado + " se guardó correctamente");
                     if (imagenProducto != null) {
@@ -1045,9 +1049,12 @@ public class DetalleProductoGUI extends JDialog {
                 if (operacion == TipoDeOperacion.ACTUALIZACION) {
                     productoParaModificar.setCodigo(txt_Codigo.getText());
                     productoParaModificar.setDescripcion(txt_Descripcion.getText().trim());
-                    productoParaModificar.setCantidad(new BigDecimal(txt_Cantidad.getValue().toString()));
                     productoParaModificar.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
-                    productoParaModificar.setCantidad(new BigDecimal(txt_Cantidad.getValue().toString()));
+                    productoParaModificar.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
+                        if (cantidadesEnSucursal.getIdSucursal().equals(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())) {                      
+                            cantidadesEnSucursal.setCantidad(new BigDecimal(txt_Cantidad.getValue().toString()));
+                        }
+                    });
                     productoParaModificar.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
                     productoParaModificar.setBulto(new BigDecimal(txt_Bulto.getValue().toString()));
                     productoParaModificar.setPrecioCosto(new BigDecimal(txtPrecioCosto.getValue().toString()));

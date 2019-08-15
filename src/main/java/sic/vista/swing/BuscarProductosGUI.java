@@ -23,6 +23,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.CantidadEnSucursal;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Movimiento;
 import sic.modelo.Producto;
@@ -36,13 +37,13 @@ public class BuscarProductosGUI extends JDialog {
 
     private TipoDeComprobante tipoDeComprobante;
     private ModeloTabla modeloTablaResultados = new ModeloTabla();
-    private List<Producto> productosTotal = new ArrayList<>();
+    private final List<Producto> productosTotal = new ArrayList<>();
     private List<Producto> productosParcial = new ArrayList<>();
     private List<RenglonFactura> renglones;
     private Producto productoSeleccionado;
     private RenglonFactura renglon;
     private boolean debeCargarRenglon;    
-    private boolean busquedaParaCompraOVenta;
+    private final boolean busquedaParaCompraOVenta;
     private Movimiento movimiento;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int NUMERO_PAGINA = 0;    
@@ -104,7 +105,7 @@ public class BuscarProductosGUI extends JDialog {
             } else {
                 String uri = "descripcion=" + txtCriteriaBusqueda.getText().trim()
                         + "&codigo=" + txtCriteriaBusqueda.getText().trim()
-                        + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        + "&idSucursal=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                         + "&pagina=" + NUMERO_PAGINA;
                 PaginaRespuestaRest<Producto> response = RestClient.getRestTemplate()
                         .exchange("/productos/busqueda/criteria?" + uri, HttpMethod.GET, null,
@@ -187,7 +188,11 @@ public class BuscarProductosGUI extends JDialog {
             renglones.forEach((r) -> {
                 productosTotal.stream().filter((p) -> (r.getDescripcionItem().equals(p.getDescripcion()) && p.isIlimitado() == false))
                         .forEachOrdered((p) -> {
-                            p.setCantidad(p.getCantidad().subtract(r.getCantidad()));
+                            p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
+                                if (cantidadEnSucursal.getIdSucursal().equals(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())) {
+                                    cantidadEnSucursal.setCantidad(cantidadEnSucursal.getCantidad().subtract(r.getCantidad()));
+                                }
+                            });
                         });
             });
         }
@@ -216,17 +221,26 @@ public class BuscarProductosGUI extends JDialog {
 
     private void cargarResultadosAlTable() {
         productosParcial.stream().map(p -> {
-            Object[] fila = new Object[busquedaParaCompraOVenta ? 6 : 2];
+            Object[] fila = new Object[busquedaParaCompraOVenta ? 7 : 2];
             fila[0] = p.getCodigo();
             fila[1] = p.getDescripcion();
             if (busquedaParaCompraOVenta) {
-                fila[2] = p.getCantidad();
-                fila[3] = p.getBulto();
-                fila[4] = p.getNombreMedida();
+                p.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
+                    if (cantidadesEnSucursal.getIdSucursal().equals(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())) {
+                        fila[2] = cantidadesEnSucursal.getCantidad();
+                    } else {
+                        fila[2] = BigDecimal.ZERO;
+                    }
+                });
+                fila[3] = p.getCantidadEnSucursales().stream()
+                        .filter(cantidadEnSucursales -> !cantidadEnSucursales.idSucursal.equals(EmpresaActiva.getInstance().getEmpresa().getId_Empresa()))
+                        .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);
+                fila[4] = p.getBulto();
+                fila[5] = p.getNombreMedida();
                 BigDecimal precio = (movimiento == Movimiento.VENTA) ? p.getPrecioLista()
                         : (movimiento == Movimiento.PEDIDO) ? p.getPrecioLista()
                                 : (movimiento == Movimiento.COMPRA) ? p.getPrecioCosto() : BigDecimal.ZERO;
-                fila[5] = precio;
+                fila[6] = precio;
             }
             return fila;
         }).forEach(fila -> {
@@ -250,17 +264,18 @@ public class BuscarProductosGUI extends JDialog {
     }
 
     private void setColumnas() {
-        String[] encabezados = new String[busquedaParaCompraOVenta ? 6 : 2];
+        String[] encabezados = new String[busquedaParaCompraOVenta ? 7 : 2];
         encabezados[0] = "Codigo";
         encabezados[1] = "Descripción";
         if (busquedaParaCompraOVenta) {
             encabezados[2] = "Cant. Disponible";
-            encabezados[3] = "Cant. por Bulto";
-            encabezados[4] = "Unidad";
+            encabezados[3] = "Otras Sucursales";
+            encabezados[4] = "Cant. por Bulto";
+            encabezados[5] = "Unidad";
             String encabezadoPrecio = (movimiento == Movimiento.VENTA) ? "P. Lista"
                     : (movimiento == Movimiento.PEDIDO) ? "P. Lista"
                             : (movimiento == Movimiento.COMPRA) ? "P.Costo" : "";
-            encabezados[5] = encabezadoPrecio;
+            encabezados[6] = encabezadoPrecio;
         }
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaResultados);
@@ -270,8 +285,9 @@ public class BuscarProductosGUI extends JDialog {
         if (busquedaParaCompraOVenta) {
             tipos[2] = BigDecimal.class;
             tipos[3] = BigDecimal.class;
-            tipos[4] = String.class;
-            tipos[5] = BigDecimal.class;
+            tipos[4] = BigDecimal.class;
+            tipos[5] = String.class;
+            tipos[6] = BigDecimal.class;
         }
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
@@ -281,14 +297,16 @@ public class BuscarProductosGUI extends JDialog {
         tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(130);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(380);
         if (busquedaParaCompraOVenta) {
-            tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(110);
-            tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(110);
-            tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(110);
-            tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(110);
-            tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(70);
-            tbl_Resultados.getColumnModel().getColumn(4).setMaxWidth(70);
-            tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(80);
-            tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(80);
+            tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(140);
+            tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(140);
+            tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(140);
+            tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(140);
+            tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(110);
+            tbl_Resultados.getColumnModel().getColumn(4).setMaxWidth(110);
+            tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(70);
+            tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(70);
+            tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(80);
+            tbl_Resultados.getColumnModel().getColumn(6).setMaxWidth(80);
         }
     }
 

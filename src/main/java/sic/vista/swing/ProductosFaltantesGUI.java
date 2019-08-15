@@ -78,7 +78,7 @@ public class ProductosFaltantesGUI extends JDialog {
             fila[0] = p.getCodigo();
             fila[1] = p.getDescripcion();
             fila[2] = cantidad;          
-            fila[3] = p.getCantidad();
+            //fila[3] = p.getCantidad();
             modeloTablaFaltantes.addRow(fila);
         });        
         tbl_Faltantes.setModel(modeloTablaFaltantes);
