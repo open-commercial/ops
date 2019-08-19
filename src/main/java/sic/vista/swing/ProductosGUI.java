@@ -22,7 +22,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.CantidadEnSucursal;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
 import sic.modelo.Proveedor;
@@ -63,8 +63,7 @@ public class ProductosGUI extends JInternalFrame {
     private void cargarRubros() {
         try {
             rubros = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/rubros/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                            Rubro[].class)));
+                    .getForObject("/rubros", Rubro[].class)));
             cmb_Rubro.removeAllItems();
             rubros.stream().forEach(r -> {
                 cmb_Rubro.addItem(r.getNombre());
@@ -181,14 +180,14 @@ public class ProductosGUI extends JInternalFrame {
             fila[2] = producto.getCodigo();
             fila[3] = producto.getDescripcion();
             producto.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
-                if (cantidadesEnSucursal.getIdSucursal().equals(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())) {
+                if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
                     fila[4] = cantidadesEnSucursal.getCantidad();
                 } else {
                     fila[4] = BigDecimal.ZERO;
                 }
             });
             fila[5] = producto.getCantidadEnSucursales().stream()
-                    .filter(cantidadEnSucursales -> !cantidadEnSucursales.idSucursal.equals(EmpresaActiva.getInstance().getEmpresa().getId_Empresa()))
+                    .filter(cantidadEnSucursales -> !cantidadEnSucursales.idSucursal.equals(SucursalActiva.getInstance().getSucursal().getIdSucursal()))
                     .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);
             fila[6] = producto.getCantMinima();
             fila[7] = producto.getBulto();
@@ -282,7 +281,7 @@ public class ProductosGUI extends JInternalFrame {
 
     private void exportar() {
         String uriReporte = "/productos/reporte/criteria?"
-                + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
+                + "&idSucursal=" + SucursalActiva.getInstance().getSucursal().getIdSucursal();
         if (chkCodigoODescripcion.isSelected()) {
             uriReporte += "&codigo=" + txtCodigoODescripcion.getText().trim();
             uriReporte += "&descripcion=" + txtCodigoODescripcion.getText().trim();
@@ -333,9 +332,9 @@ public class ProductosGUI extends JInternalFrame {
     
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
-        long idEmpresa = EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
-        String criteriaBusqueda = "/productos/busqueda/criteria?idSucursal=" + idEmpresa;
-        String criteriaCosto = "/productos/valor-stock/criteria?idSucursal=" + idEmpresa;
+        long idSucursal = SucursalActiva.getInstance().getSucursal().getIdSucursal();
+        String criteriaBusqueda = "/productos/busqueda/criteria?idSucursal=" + idSucursal;
+        String criteriaCosto = "/productos/valor-stock/criteria?idSucursal=" + idSucursal;
         if (chkCodigoODescripcion.isSelected()) {
             criteriaBusqueda += "&codigo=" + txtCodigoODescripcion.getText().trim();
             criteriaCosto += "&codigo=" + txtCodigoODescripcion.getText().trim();

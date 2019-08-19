@@ -20,7 +20,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.PaginaRespuestaRest;
 import sic.util.Utilidades;
 
@@ -76,7 +76,7 @@ public class BuscarClientesGUI extends JDialog {
                         + "nombreFiscal=" + txtCriteriaBusqueda.getText().trim()
                         + "&nombreFantasia=" + txtCriteriaBusqueda.getText().trim()                        
                         + "&nroCliente=" + txtCriteriaBusqueda.getText().trim()
-                        + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        + "&idSucursal=" + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                         + "&pagina=" + NUMERO_PAGINA;
                 PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
                         .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {})

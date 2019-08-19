@@ -15,7 +15,7 @@ public class Usuario implements Serializable {
     private String nombre;   
     private String apellido;   
     private String email;       
-    private long idEmpresaPredeterminada;    
+    private long idSucursalPredeterminada;    
     private List<Rol> roles;
     private boolean habilitado;        
 

@@ -12,7 +12,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.NotaDebito;
 import sic.modelo.NuevaNotaDebitoDeRecibo;
 import sic.modelo.NuevaNotaDebitoSinRecibo;
@@ -222,12 +222,12 @@ public class NuevaNotaDebitoGUI extends JDialog {
             TipoDeComprobante[] tiposDeComprobante = null;
             if (cliente != null) {
                 tiposDeComprobante = RestClient.getRestTemplate()
-                        .getForObject("/notas/clientes/tipos/debito?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        .getForObject("/notas/clientes/tipos/debito?idSucursal=" + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                                 + "&idCliente=" + this.cliente.getId_Cliente(), TipoDeComprobante[].class);
             }
             if (proveedor != null) {
                 tiposDeComprobante = RestClient.getRestTemplate()
-                        .getForObject("/notas/proveedores/tipos/debito?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        .getForObject("/notas/proveedores/tipos/debito?idSucursal=" + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                                 + "&idProveedor=" + this.proveedor.getId_Proveedor(), TipoDeComprobante[].class);
             }
             if (tiposDeComprobante != null) {

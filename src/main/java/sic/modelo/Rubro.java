@@ -5,13 +5,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = {"nombre", "empresa"})
+@EqualsAndHashCode(of = "nombre")
 public class Rubro implements Serializable {
 
     private long id_Rubro;
     private String nombre;
-    private Long idEmpresa;
-    private String nombreEmpresa;
     private boolean eliminado;
 
     @Override

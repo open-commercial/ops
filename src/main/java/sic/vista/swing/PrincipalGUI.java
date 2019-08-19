@@ -14,8 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.Empresa;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.Sucursal;
+import sic.modelo.SucursalActiva;
 import sic.modelo.Movimiento;
 import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
@@ -43,26 +43,26 @@ public class PrincipalGUI extends JFrame {
     
     private void setInfoEnTituloDeVentana() {
         this.setTitle("S.I.C. OPS"
-                + " - Empresa: " + EmpresaActiva.getInstance().getEmpresa().getNombre()
+                + " - Sucursal: " + SucursalActiva.getInstance().getSucursal().getNombre()
                 + " - Usuario: " + UsuarioActivo.getInstance().getUsuario().getUsername());
     }
     
-    private void llamarSeleccionEmpresaGUI() {
-        SeleccionEmpresaGUI seleccionEmpresaGUI = new SeleccionEmpresaGUI();
-        seleccionEmpresaGUI.setModal(true);
-        seleccionEmpresaGUI.setLocationRelativeTo(this);
-        seleccionEmpresaGUI.setVisible(true);
+    private void llamarSeleccionSucursalGUI() {
+        SeleccionSucursalGUI seleccionSucursalGUI = new SeleccionSucursalGUI();
+        seleccionSucursalGUI.setModal(true);
+        seleccionSucursalGUI.setLocationRelativeTo(this);
+        seleccionSucursalGUI.setVisible(true);
         this.setInfoEnTituloDeVentana();
     }
     
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
-            mnuItm_Empresas.setVisible(true);
+            mnuItm_Sucursales.setVisible(true);
             mnuItm_Configuracion.setVisible(true);
             mnuItm_Usuarios.setVisible(true);
         } else {
-            mnuItm_Empresas.setVisible(false);
+            mnuItm_Sucursales.setVisible(false);
             mnuItm_Configuracion.setVisible(false);
             mnuItm_Usuarios.setVisible(false);
         }
@@ -84,7 +84,7 @@ public class PrincipalGUI extends JFrame {
     private void checkCajaAbierta() {
         if (tienePermisoSegunRoles) {
             boolean existeCajaAbierta = RestClient.getRestTemplate()
-                    .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/ultima-caja-abierta",
+                    .getForObject("/cajas/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal() + "/ultima-caja-abierta",
                             boolean.class);
             if (!existeCajaAbierta) {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
@@ -102,8 +102,8 @@ public class PrincipalGUI extends JFrame {
         mb_BarraMenues = new javax.swing.JMenuBar();
         mnu_Sistema = new javax.swing.JMenu();
         mnuItm_IrTPV = new javax.swing.JMenuItem();
-        mnuItm_Empresas = new javax.swing.JMenuItem();
-        mnuItm_CambiarEmpresa = new javax.swing.JMenuItem();
+        mnuItm_Sucursales = new javax.swing.JMenuItem();
+        mnuItm_CambiarSucursal = new javax.swing.JMenuItem();
         mnuItm_Usuarios = new javax.swing.JMenuItem();
         mnuItm_CambiarUser = new javax.swing.JMenuItem();
         mnuItm_Configuracion = new javax.swing.JMenuItem();
@@ -157,23 +157,23 @@ public class PrincipalGUI extends JFrame {
         });
         mnu_Sistema.add(mnuItm_IrTPV);
 
-        mnuItm_Empresas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Empresa_16x16.png"))); // NOI18N
-        mnuItm_Empresas.setText("Empresas");
-        mnuItm_Empresas.addActionListener(new java.awt.event.ActionListener() {
+        mnuItm_Sucursales.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Sucursal_16x16.png"))); // NOI18N
+        mnuItm_Sucursales.setText("Sucursales");
+        mnuItm_Sucursales.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuItm_EmpresasActionPerformed(evt);
+                mnuItm_SucursalesActionPerformed(evt);
             }
         });
-        mnu_Sistema.add(mnuItm_Empresas);
+        mnu_Sistema.add(mnuItm_Sucursales);
 
-        mnuItm_CambiarEmpresa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/EmpresaGo_16x16.png"))); // NOI18N
-        mnuItm_CambiarEmpresa.setText("Cambiar Empresa");
-        mnuItm_CambiarEmpresa.addActionListener(new java.awt.event.ActionListener() {
+        mnuItm_CambiarSucursal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/SucursalGo_16x16.png"))); // NOI18N
+        mnuItm_CambiarSucursal.setText("Cambiar Sucursal");
+        mnuItm_CambiarSucursal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuItm_CambiarEmpresaActionPerformed(evt);
+                mnuItm_CambiarSucursalActionPerformed(evt);
             }
         });
-        mnu_Sistema.add(mnuItm_CambiarEmpresa);
+        mnu_Sistema.add(mnuItm_CambiarSucursal);
 
         mnuItm_Usuarios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Group_16x16.png"))); // NOI18N
         mnuItm_Usuarios.setText("Usuarios");
@@ -442,14 +442,14 @@ public class PrincipalGUI extends JFrame {
         }
     }//GEN-LAST:event_formWindowClosing
 
-    private void mnuItm_EmpresasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_EmpresasActionPerformed
-        EmpresasGUI empresasGUI = new EmpresasGUI();
-        empresasGUI.setModal(true);
-        empresasGUI.setLocationRelativeTo(this);
-        empresasGUI.setVisible(true);
+    private void mnuItm_SucursalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_SucursalesActionPerformed
+        SucursalesGUI sucursalesGUI = new SucursalesGUI();
+        sucursalesGUI.setModal(true);
+        sucursalesGUI.setLocationRelativeTo(this);
+        sucursalesGUI.setVisible(true);
         Utilidades.cerrarTodasVentanas(dp_Escritorio);
-        this.llamarSeleccionEmpresaGUI();
-    }//GEN-LAST:event_mnuItm_EmpresasActionPerformed
+        this.llamarSeleccionSucursalGUI();
+    }//GEN-LAST:event_mnuItm_SucursalesActionPerformed
 
     private void mnuItm_CambiarUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_CambiarUserActionPerformed
         try {
@@ -473,17 +473,17 @@ public class PrincipalGUI extends JFrame {
         this.setLocationRelativeTo(null);
         this.setSize(sizeFrame);
         this.setExtendedState(MAXIMIZED_BOTH);
-        if (UsuarioActivo.getInstance().getUsuario().getIdEmpresaPredeterminada()== 0) {
-            this.llamarSeleccionEmpresaGUI();
+        if (UsuarioActivo.getInstance().getUsuario().getIdSucursalPredeterminada()== 0) {
+            this.llamarSeleccionSucursalGUI();
         } else {
             try {
-                Empresa empresa = RestClient.getRestTemplate()
-                        .getForObject("/empresas/" + UsuarioActivo.getInstance().getUsuario().getIdEmpresaPredeterminada(),
-                                Empresa.class);
-                EmpresaActiva.getInstance().setEmpresa(empresa);
+                Sucursal sucursal = RestClient.getRestTemplate()
+                        .getForObject("/sucursales/" + UsuarioActivo.getInstance().getUsuario().getIdSucursalPredeterminada(),
+                                Sucursal.class);
+                SucursalActiva.getInstance().setSucursal(sucursal);
                 this.setInfoEnTituloDeVentana();
             } catch (RestClientResponseException ex) {
-                this.llamarSeleccionEmpresaGUI();
+                this.llamarSeleccionSucursalGUI();
             } catch (ResourceAccessException ex) {
                 LOGGER.error(ex.getMessage());
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
@@ -608,10 +608,10 @@ public class PrincipalGUI extends JFrame {
         }
     }//GEN-LAST:event_mnuItm_ClientesActionPerformed
 
-    private void mnuItm_CambiarEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_CambiarEmpresaActionPerformed
+    private void mnuItm_CambiarSucursalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_CambiarSucursalActionPerformed
         Utilidades.cerrarTodasVentanas(dp_Escritorio);
-        this.llamarSeleccionEmpresaGUI();
-    }//GEN-LAST:event_mnuItm_CambiarEmpresaActionPerformed
+        this.llamarSeleccionSucursalGUI();
+    }//GEN-LAST:event_mnuItm_CambiarSucursalActionPerformed
 
     private void mnuItm_FormasDePagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_FormasDePagoActionPerformed
         JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), FormasDePagoGUI.class);
@@ -932,11 +932,10 @@ public class PrincipalGUI extends JFrame {
     private javax.swing.JMenuItem mnuItmLocalidades;
     private javax.swing.JMenuItem mnuItmMedidas;
     private javax.swing.JMenuItem mnuItmRubros;
-    private javax.swing.JMenuItem mnuItm_CambiarEmpresa;
+    private javax.swing.JMenuItem mnuItm_CambiarSucursal;
     private javax.swing.JMenuItem mnuItm_CambiarUser;
     private javax.swing.JMenuItem mnuItm_Clientes;
     private javax.swing.JMenuItem mnuItm_Configuracion;
-    private javax.swing.JMenuItem mnuItm_Empresas;
     private javax.swing.JMenuItem mnuItm_FacturasCompra;
     private javax.swing.JMenuItem mnuItm_FacturasVenta;
     private javax.swing.JMenuItem mnuItm_FormasDePago;
@@ -947,6 +946,7 @@ public class PrincipalGUI extends JFrame {
     private javax.swing.JMenuItem mnuItm_RecibosCompra;
     private javax.swing.JMenuItem mnuItm_RecibosVenta;
     private javax.swing.JMenuItem mnuItm_Salir;
+    private javax.swing.JMenuItem mnuItm_Sucursales;
     private javax.swing.JMenuItem mnuItm_Transportistas;
     private javax.swing.JMenuItem mnuItm_Usuarios;
     private javax.swing.JMenu mnu_Administracion;

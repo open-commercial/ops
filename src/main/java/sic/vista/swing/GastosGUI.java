@@ -20,7 +20,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.FormaDePago;
 import sic.modelo.Gasto;
 import sic.modelo.Usuario;
@@ -58,7 +58,7 @@ public class GastosGUI extends JInternalFrame {
     }
 
     private String getUriCriteria() {
-        String uriCriteria = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
+        String uriCriteria = "idSucursal=" + SucursalActiva.getInstance().getSucursal().getIdSucursal();
         if (chkFecha.isSelected()) {
             uriCriteria += "&desde=" + dc_FechaDesde.getDate().getTime()
                     + "&hasta=" + dc_FechaHasta.getDate().getTime();
@@ -739,10 +739,9 @@ public class GastosGUI extends JInternalFrame {
 
     private void btnCrearGastoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearGastoActionPerformed
         try {
-            if (RestClient.getRestTemplate().getForObject("/cajas/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/ultima-caja-abierta", boolean.class)) {
-                List<FormaDePago> formasDePago = Arrays.asList(RestClient.getRestTemplate().getForObject("/formas-de-pago/empresas/"
-                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), FormaDePago[].class));
+            if (RestClient.getRestTemplate().getForObject("/cajas/sucursales/"
+                    + SucursalActiva.getInstance().getSucursal().getIdSucursal() + "/ultima-caja-abierta", boolean.class)) {
+                List<FormaDePago> formasDePago = Arrays.asList(RestClient.getRestTemplate().getForObject("/formas-de-pago", FormaDePago[].class));
                 AgregarGastoGUI agregarGasto = new AgregarGastoGUI(formasDePago);
                 agregarGasto.setLocationRelativeTo(this);
                 agregarGasto.setModal(true);

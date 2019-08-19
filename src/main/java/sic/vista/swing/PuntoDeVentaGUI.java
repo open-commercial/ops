@@ -29,7 +29,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.NuevoPedido;
 import sic.modelo.RenglonFactura;
 import sic.modelo.RenglonPedido;
@@ -157,7 +157,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         factura.setIva21Neto(iva_21_netoFactura);
         factura.setTotal(new BigDecimal(txt_Total.getValue().toString()));                      
         factura.setIdCliente(this.cliente.getId_Cliente());
-        factura.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        factura.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         return factura;
     }
     
@@ -188,21 +188,21 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }
 
     private boolean existeClientePredeterminado() {
-        return RestClient.getRestTemplate().getForObject("/clientes/existe-predeterminado/empresas/"
-                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), boolean.class);
+        return RestClient.getRestTemplate().getForObject("/clientes/existe-predeterminado/sucursales/"
+                + SucursalActiva.getInstance().getSucursal().getIdSucursal(), boolean.class);
     }
 
     private boolean existeFormaDePagoPredeterminada() {
         FormaDePago formaDePago = RestClient.getRestTemplate()
-                .getForObject("/formas-de-pago/predeterminada/empresas/"
-                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                .getForObject("/formas-de-pago/predeterminada/sucursales/"
+                        + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
                         FormaDePago.class);
         return (formaDePago != null);
     }
 
     private boolean existeTransportistaCargado() {
         if (Arrays.asList(RestClient.getRestTemplate().
-                getForObject("/transportistas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                getForObject("/transportistas/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
                         Transportista[].class)).isEmpty()) {
             JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                     .getString("mensaje_transportista_ninguno_cargado"), "Error", JOptionPane.ERROR_MESSAGE);
@@ -402,7 +402,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private void buscarProductoPorCodigo() {
         try {
             Producto producto = RestClient.getRestTemplate().getForObject("/productos/busqueda?"
-                    + "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + "idSucursal=" + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                     + "&codigo=" + txt_CodigoProducto.getText().trim(), Producto.class);
             if (producto == null) {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
@@ -555,7 +555,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 try {
                     cmb_TipoComprobante.removeAllItems();
                     tiposDeComprobante = RestClient.getRestTemplate()
-                            .getForObject("/facturas/venta/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                            .getForObject("/facturas/venta/tipos/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                                     + "/clientes/" + cliente.getId_Cliente(), TipoDeComprobante[].class);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -1630,15 +1630,15 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             this.setColumnas();
             this.setMaximum(true);
             this.setTitle("Punto de Venta");
-            cantidadMaximaRenglones = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+            cantidadMaximaRenglones = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/sucursales/"
+                    + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                     + "/cantidad-renglones", Integer.class); 
             if (rolesDeUsuario.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuario.contains(Rol.ENCARGADO)
                 || rolesDeUsuario.contains(Rol.VENDEDOR)) {
                 if (this.existeClientePredeterminado()) {
                     Cliente clientePredeterminado = RestClient.getRestTemplate()
-                            .getForObject("/clientes/predeterminado/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                            .getForObject("/clientes/predeterminado/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
                                     Cliente.class);
                     this.cargarCliente(clientePredeterminado);
                     this.btnModificarCliente.setEnabled(true);

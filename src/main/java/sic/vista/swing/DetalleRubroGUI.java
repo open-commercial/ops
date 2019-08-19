@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.Rol;
 import sic.modelo.Rubro;
 import sic.modelo.UsuarioActivo;
@@ -193,7 +193,7 @@ public class DetalleRubroGUI extends JInternalFrame {
         try {
             Rubro rubro = new Rubro();
             rubro.setNombre(txt_Nuevo.getText().trim());
-            RestClient.getRestTemplate().postForObject("/rubros?idEmpresa= " + (EmpresaActiva.getInstance().getEmpresa()).getId_Empresa(), rubro, Rubro.class);
+            RestClient.getRestTemplate().postForObject("/rubros?idSucursal= " + (SucursalActiva.getInstance().getSucursal()).getIdSucursal(), rubro, Rubro.class);
             txt_Nuevo.setText("");
             this.cargarListRubros();
         } catch (RestClientResponseException ex) {
@@ -224,7 +224,7 @@ public class DetalleRubroGUI extends JInternalFrame {
                 Rubro rubroModificado = new Rubro();
                 rubroModificado.setId_Rubro(rubroSeleccionado.getId_Rubro());
                 rubroModificado.setNombre(txt_Nuevo.getText().trim());
-                RestClient.getRestTemplate().put("/rubros?idEmpresa= " + (EmpresaActiva.getInstance().getEmpresa()).getId_Empresa(), rubroModificado);
+                RestClient.getRestTemplate().put("/rubros?idSucursal= " + (SucursalActiva.getInstance().getSucursal()).getIdSucursal(), rubroModificado);
                 txt_Nuevo.setText("");
                 rubroSeleccionado = null;
                 this.cargarListRubros();
@@ -274,7 +274,7 @@ public class DetalleRubroGUI extends JInternalFrame {
     private void cargarListRubros() {
         modeloList.clear();
         List<Rubro> rubros = Arrays.asList(RestClient.getRestTemplate()
-                .getForObject("/rubros/empresas/"  + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                .getForObject("/rubros/sucursales/"  + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
                 Rubro[].class));
         rubros.stream().forEach(r -> {
             modeloList.addElement(r);

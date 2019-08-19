@@ -101,7 +101,7 @@
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="lblDetalleUbicacionEmpresa" max="32767" attributes="0"/>
+                                  <Component id="lblDetalleUbicacionSucursal" max="32767" attributes="0"/>
                                   <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                                   <Component id="btnUbicacion" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -178,7 +178,7 @@
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="btnUbicacion" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblUbicacion" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblDetalleUbicacionEmpresa" linkSize="2" alignment="2" min="-2" pref="23" max="-2" attributes="0"/>
+                      <Component id="lblDetalleUbicacionSucursal" linkSize="2" alignment="2" min="-2" pref="23" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -350,7 +350,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="txt_Telefono">
         </Component>
-        <Component class="javax.swing.JLabel" name="lblDetalleUbicacionEmpresa">
+        <Component class="javax.swing.JLabel" name="lblDetalleUbicacionSucursal">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="2"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">

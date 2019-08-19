@@ -18,7 +18,7 @@ public class ConfiguracionDelSistema implements Serializable {
     private boolean emailSenderHabilitado;
     private String emailUsername;
     private String emailPassword;
-    private long idEmpresa;
-    private String nombreEmpresa;
+    private long idSucursal;
+    private String nombreSucursal;
 
 }

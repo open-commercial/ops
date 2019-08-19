@@ -23,7 +23,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.BusquedaFacturaCompraCriteria;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.FacturaCompra;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
@@ -177,7 +177,7 @@ public class FacturasCompraGUI extends JInternalFrame {
     private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
         BusquedaFacturaCompraCriteria criteria = new BusquedaFacturaCompraCriteria();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteria.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         if (chk_Fecha.isSelected()) {
             criteria.setFechaDesde(dc_FechaDesde.getDate());
             criteria.setFechaHasta(dc_FechaHasta.getDate());
@@ -299,14 +299,14 @@ public class FacturasCompraGUI extends JInternalFrame {
 
     private boolean existeProveedorDisponible() {
         return !Arrays.asList(RestClient.getRestTemplate()
-            .getForObject("/proveedores/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+            .getForObject("/proveedores/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
             Proveedor[].class)).isEmpty();
     }
        
     private void cargarTiposDeFactura() {
         try {
             TipoDeComprobante[] tiposDeComprobantes = RestClient.getRestTemplate()
-                    .getForObject("/facturas/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                    .getForObject("/facturas/tipos/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
                             TipoDeComprobante[].class);
             for (int i = 0; tiposDeComprobantes.length > i; i++) {
                 cmb_TipoFactura.addItem(tiposDeComprobantes[i]);

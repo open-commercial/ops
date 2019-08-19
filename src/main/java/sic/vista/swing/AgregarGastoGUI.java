@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.FormaDePago;
 import sic.modelo.Gasto;
 
@@ -175,8 +175,8 @@ public class AgregarGastoGUI extends JDialog {
         }
         Gasto gasto = null;
         try {
-            gasto = RestClient.getRestTemplate().postForObject("/gastos?idEmpresa="
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+            gasto = RestClient.getRestTemplate().postForObject("/gastos?idSucursal="
+                    + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                     + "&idFormaDePago=" + ((FormaDePago) cmb_FormaDePago.getSelectedItem()).getId_FormaDePago(), this.construirGasto(ftxt_Concepto.getText(),
                     new BigDecimal(ftxt_Monto.getValue().toString())), Gasto.class);
         } catch (RestClientResponseException ex) {

@@ -25,7 +25,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.Pedido;
 import sic.modelo.Usuario;
 import sic.modelo.EstadoPedido;
@@ -68,7 +68,7 @@ public class PedidosGUI extends JInternalFrame {
 
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
-        String criteria = "/pedidos/busqueda/criteria?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
+        String criteria = "/pedidos/busqueda/criteria?idSucursal=" + SucursalActiva.getInstance().getSucursal().getIdSucursal();
         if (chk_Fecha.isSelected()) {
             criteria += "&desde=" + dc_FechaDesde.getDate().getTime();
             criteria += "&hasta=" + dc_FechaHasta.getDate().getTime();
@@ -257,8 +257,8 @@ public class PedidosGUI extends JInternalFrame {
 
     private boolean existeClienteDisponible() {
         PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
-                .exchange("/clientes/busqueda/criteria?idEmpresa="
-                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                .exchange("/clientes/busqueda/criteria?idSucursal="
+                        + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                         + "&pagina=0&tamanio=1", HttpMethod.GET, null,
                         new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {
                 })

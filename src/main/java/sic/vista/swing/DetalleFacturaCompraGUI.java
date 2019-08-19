@@ -18,18 +18,17 @@ import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;;
+import sic.modelo.SucursalActiva;
+import sic.modelo.Transportista;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.EmpresaActiva;
 import sic.modelo.FacturaCompra;
 import sic.modelo.Movimiento;
 import sic.modelo.Producto;
 import sic.modelo.Proveedor;
 import sic.modelo.RenglonFactura;
 import sic.modelo.TipoDeComprobante;
-import sic.modelo.Transportista;
-import sic.modelo.UsuarioActivo;
 import sic.util.DecimalesRenderer;
 import sic.util.FormatosFechaHora;
 import sic.util.FormatterFechaHora;
@@ -158,7 +157,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         cmb_Transportista.removeAllItems();
         try {
             List<Transportista> transportistas = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/transportistas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                    .getForObject("/transportistas/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
                     Transportista[].class)));
             transportistas.stream().forEach(t -> cmb_Transportista.addItem(t));
         } catch (RestClientResponseException ex) {
@@ -192,7 +191,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         facturaCompra.setTotal(totalComprobante);
         facturaCompra.setObservaciones(txta_Observaciones.getText().trim());
         facturaCompra.setEliminada(false);
-        facturaCompra.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        facturaCompra.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         facturaCompra.setIdProveedor(proveedorSeleccionado.getId_Proveedor());
         facturaCompra.setIdTransportista(((Transportista) cmb_Transportista.getSelectedItem()).getId_Transportista());
         try {
@@ -404,8 +403,8 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     private void cargarTiposDeFacturaDisponibles() {
         try {
             TipoDeComprobante[] tiposFactura = RestClient.getRestTemplate()
-                    .getForObject("/facturas/compra/tipos/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    .getForObject("/facturas/compra/tipos/sucursales/"
+                    + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                     + "/proveedores/" + proveedorSeleccionado.getId_Proveedor(),
                     TipoDeComprobante[].class);
             cmb_TipoFactura.removeAllItems();

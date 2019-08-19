@@ -16,38 +16,38 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.CategoriaIVA;
-import sic.modelo.Empresa;
+import sic.modelo.Sucursal;
 import sic.modelo.TipoDeOperacion;
 import sic.modelo.Ubicacion;
 import sic.util.FiltroImagenes;
 import sic.util.Utilidades;
 
-public class DetalleEmpresaGUI extends JDialog {
+public class DetalleSucursalGUI extends JDialog {
     
     private byte[] logo = null;
     private boolean cambioLogo = false;
     private final int anchoImagenContainer = 180;
     private final int altoImagenContainer = 135;            
-    private Empresa empresaModificar;
+    private Sucursal sucursalModificar;
     private final TipoDeOperacion operacion;
     private Ubicacion ubicacion;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public DetalleEmpresaGUI() {
+    public DetalleSucursalGUI() {
         this.initComponents();
         this.setIcon();        
         operacion = TipoDeOperacion.ALTA;
     }
 
-    public DetalleEmpresaGUI(Empresa empresa) {
+    public DetalleSucursalGUI(Sucursal sucursal) {
         this.initComponents();
         this.setIcon();        
         operacion = TipoDeOperacion.ACTUALIZACION;
-        empresaModificar = empresa;
+        sucursalModificar = sucursal;
     }
     
     private void setIcon() {
-        ImageIcon iconoVentana = new ImageIcon(DetalleEmpresaGUI.class.getResource("/sic/icons/Empresa_16x16.png"));
+        ImageIcon iconoVentana = new ImageIcon(DetalleSucursalGUI.class.getResource("/sic/icons/Sucursal_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
     }   
     
@@ -58,27 +58,27 @@ public class DetalleEmpresaGUI extends JDialog {
         } 
     }
     
-    private void cargarEmpresaParaModificar() {
-        txt_Nombre.setText(empresaModificar.getNombre());
-        txt_Lema.setText(empresaModificar.getLema());        
-        cmbCategoriaIVA.setSelectedItem(empresaModificar.getCategoriaIVA());                    
-        txtIdFiscal.setValue(empresaModificar.getIdFiscal());                            
-        txtIngresosBrutos.setValue(empresaModificar.getIngresosBrutos());        
-        dc_FechaInicioActividad.setDate(empresaModificar.getFechaInicioActividad());
-        txt_Email.setText(empresaModificar.getEmail());
-        txt_Telefono.setText(empresaModificar.getTelefono());
-        if (empresaModificar.getUbicacion() != null) {
-            lblDetalleUbicacionEmpresa.setText(empresaModificar.getUbicacion().toString());
-            this.ubicacion = empresaModificar.getUbicacion();
+    private void cargarSucursalParaModificar() {
+        txt_Nombre.setText(sucursalModificar.getNombre());
+        txt_Lema.setText(sucursalModificar.getLema());        
+        cmbCategoriaIVA.setSelectedItem(sucursalModificar.getCategoriaIVA());                    
+        txtIdFiscal.setValue(sucursalModificar.getIdFiscal());                            
+        txtIngresosBrutos.setValue(sucursalModificar.getIngresosBrutos());        
+        dc_FechaInicioActividad.setDate(sucursalModificar.getFechaInicioActividad());
+        txt_Email.setText(sucursalModificar.getEmail());
+        txt_Telefono.setText(sucursalModificar.getTelefono());
+        if (sucursalModificar.getUbicacion() != null) {
+            lblDetalleUbicacionSucursal.setText(sucursalModificar.getUbicacion().toString());
+            this.ubicacion = sucursalModificar.getUbicacion();
         } 
-        if (empresaModificar.getLogo() == null || "".equals(empresaModificar.getLogo())) {
+        if (sucursalModificar.getLogo() == null || "".equals(sucursalModificar.getLogo())) {
             lbl_Logo.setText("SIN IMAGEN");
             logo = null;
         } else {
             lbl_Logo.setText("");
             Image image = null;
             try {
-                URL url = new URL(empresaModificar.getLogo());
+                URL url = new URL(sucursalModificar.getLogo());
                 image = ImageIO.read(url);
             } catch (IOException ex) {
                 LOGGER.error(ex.getMessage());
@@ -121,7 +121,7 @@ public class DetalleEmpresaGUI extends JDialog {
         lblUbicacion = new javax.swing.JLabel();
         btnUbicacion = new javax.swing.JButton();
         txt_Telefono = new javax.swing.JTextField();
-        lblDetalleUbicacionEmpresa = new javax.swing.JLabel();
+        lblDetalleUbicacionSucursal = new javax.swing.JLabel();
         btn_Guardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -213,8 +213,8 @@ public class DetalleEmpresaGUI extends JDialog {
             }
         });
 
-        lblDetalleUbicacionEmpresa.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblDetalleUbicacionEmpresa.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        lblDetalleUbicacionSucursal.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblDetalleUbicacionSucursal.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         javax.swing.GroupLayout panelPrincipalLayout = new javax.swing.GroupLayout(panelPrincipal);
         panelPrincipal.setLayout(panelPrincipalLayout);
@@ -251,7 +251,7 @@ public class DetalleEmpresaGUI extends JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
-                                .addComponent(lblDetalleUbicacionEmpresa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblDetalleUbicacionSucursal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(0, 0, 0)
                                 .addComponent(btnUbicacion))
                             .addComponent(txtIdFiscal, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -312,11 +312,11 @@ public class DetalleEmpresaGUI extends JDialog {
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btnUbicacion)
                     .addComponent(lblUbicacion)
-                    .addComponent(lblDetalleUbicacionEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblDetalleUbicacionSucursal, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnUbicacion, lblDetalleUbicacionEmpresa});
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnUbicacion, lblDetalleUbicacionSucursal});
 
         btn_Guardar.setForeground(java.awt.Color.blue);
         btn_Guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
@@ -357,48 +357,48 @@ public class DetalleEmpresaGUI extends JDialog {
         try {
             String mensaje = "";
             if (operacion == TipoDeOperacion.ALTA) {
-                Empresa empresa = new Empresa();
-                empresa.setNombre(txt_Nombre.getText().trim());
-                empresa.setLema(txt_Lema.getText().trim());                
-                empresa.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
-                empresa.setIdFiscal((Long) txtIdFiscal.getValue());
-                empresa.setIngresosBrutos((Long) txtIngresosBrutos.getValue());
-                empresa.setFechaInicioActividad(dc_FechaInicioActividad.getDate());
-                empresa.setEmail(txt_Email.getText().trim());
-                empresa.setTelefono(txt_Telefono.getText().trim());    
+                Sucursal sucursal = new Sucursal();
+                sucursal.setNombre(txt_Nombre.getText().trim());
+                sucursal.setLema(txt_Lema.getText().trim());                
+                sucursal.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
+                sucursal.setIdFiscal((Long) txtIdFiscal.getValue());
+                sucursal.setIngresosBrutos((Long) txtIngresosBrutos.getValue());
+                sucursal.setFechaInicioActividad(dc_FechaInicioActividad.getDate());
+                sucursal.setEmail(txt_Email.getText().trim());
+                sucursal.setTelefono(txt_Telefono.getText().trim());    
                 if (this.ubicacion != null) {
-                    empresa.setUbicacion(this.ubicacion);
+                    sucursal.setUbicacion(this.ubicacion);
                 }
-                empresa = RestClient.getRestTemplate().postForObject("/empresas", empresa, Empresa.class);            
-                mensaje = "La Empresa " + txt_Nombre.getText().trim() + " se guardó correctamente.";
+                sucursal = RestClient.getRestTemplate().postForObject("/sucursales", sucursal, Sucursal.class);            
+                mensaje = "La Sucursal " + txt_Nombre.getText().trim() + " se guardó correctamente.";
                 if (logo == null) {
-                    empresa.setLogo("");
+                    sucursal.setLogo("");
                 } else {
-                    empresa.setLogo(RestClient.getRestTemplate()
-                            .postForObject("/empresas/" + empresa.getId_Empresa() + "/logo", logo, String.class));
-                    RestClient.getRestTemplate().put("/empresas", empresa);
+                    sucursal.setLogo(RestClient.getRestTemplate()
+                            .postForObject("/sucursales/" + sucursal.getIdSucursal() + "/logo", logo, String.class));
+                    RestClient.getRestTemplate().put("/sucursales", sucursal);
                 }
             }
             if (operacion == TipoDeOperacion.ACTUALIZACION) {
-                empresaModificar.setNombre(txt_Nombre.getText().trim());
-                empresaModificar.setLema(txt_Lema.getText().trim());                
-                empresaModificar.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
-                empresaModificar.setIdFiscal((Long) txtIdFiscal.getValue());
-                empresaModificar.setIngresosBrutos((Long) txtIngresosBrutos.getValue());
-                empresaModificar.setFechaInicioActividad(dc_FechaInicioActividad.getDate());
-                empresaModificar.setEmail(txt_Email.getText().trim());
-                empresaModificar.setTelefono(txt_Telefono.getText().trim());
+                sucursalModificar.setNombre(txt_Nombre.getText().trim());
+                sucursalModificar.setLema(txt_Lema.getText().trim());                
+                sucursalModificar.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
+                sucursalModificar.setIdFiscal((Long) txtIdFiscal.getValue());
+                sucursalModificar.setIngresosBrutos((Long) txtIngresosBrutos.getValue());
+                sucursalModificar.setFechaInicioActividad(dc_FechaInicioActividad.getDate());
+                sucursalModificar.setEmail(txt_Email.getText().trim());
+                sucursalModificar.setTelefono(txt_Telefono.getText().trim());
                 if (this.ubicacion != null) {
-                    empresaModificar.setUbicacion(this.ubicacion);
+                    sucursalModificar.setUbicacion(this.ubicacion);
                 }
                 if (cambioLogo && logo != null) {
-                    empresaModificar.setLogo(RestClient.getRestTemplate()
-                            .postForObject("/empresas/" + empresaModificar.getId_Empresa() + "/logo", logo, String.class));
+                    sucursalModificar.setLogo(RestClient.getRestTemplate()
+                            .postForObject("/sucursales/" + sucursalModificar.getIdSucursal() + "/logo", logo, String.class));
                 } else if (cambioLogo && logo == null) {
-                    empresaModificar.setLogo(null);
+                    sucursalModificar.setLogo(null);
                 }
-                RestClient.getRestTemplate().put("/empresas", empresaModificar);
-                mensaje = "La Empresa " + txt_Nombre.getText().trim() + " se modificó correctamente.";
+                RestClient.getRestTemplate().put("/sucursales", sucursalModificar);
+                mensaje = "La Sucursal " + txt_Nombre.getText().trim() + " se modificó correctamente.";
             }
             LOGGER.warn(mensaje);
             JOptionPane.showMessageDialog(this, mensaje, "Información", JOptionPane.INFORMATION_MESSAGE);
@@ -416,10 +416,10 @@ public class DetalleEmpresaGUI extends JDialog {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cargarComboBoxCondicionesIVA();
         if (operacion == TipoDeOperacion.ACTUALIZACION) {
-            this.setTitle("Modificar Empresa");
-            this.cargarEmpresaParaModificar();
+            this.setTitle("Modificar Sucursal");
+            this.cargarSucursalParaModificar();
         } else {
-            this.setTitle("Nueva Empresa");
+            this.setTitle("Nueva Sucursal");
         }
     }//GEN-LAST:event_formWindowOpened
 
@@ -469,13 +469,13 @@ public class DetalleEmpresaGUI extends JDialog {
     }//GEN-LAST:event_txtIngresosBrutosFocusLost
 
     private void btnUbicacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbicacionActionPerformed
-        DetalleUbicacionGUI guiDetalleUbicacion = new DetalleUbicacionGUI(this.ubicacion, "Ubicación Empresa");
+        DetalleUbicacionGUI guiDetalleUbicacion = new DetalleUbicacionGUI(this.ubicacion, "Ubicación Sucursal");
         guiDetalleUbicacion.setModal(true);
         guiDetalleUbicacion.setLocationRelativeTo(this);
         guiDetalleUbicacion.setVisible(true);
         if (guiDetalleUbicacion.getUbicacionModificada() != null) {
             this.ubicacion = guiDetalleUbicacion.getUbicacionModificada();
-            lblDetalleUbicacionEmpresa.setText(this.ubicacion.toString());
+            lblDetalleUbicacionSucursal.setText(this.ubicacion.toString());
         }
     }//GEN-LAST:event_btnUbicacionActionPerformed
 
@@ -487,7 +487,7 @@ public class DetalleEmpresaGUI extends JDialog {
     private javax.swing.JComboBox cmbCategoriaIVA;
     private com.toedter.calendar.JDateChooser dc_FechaInicioActividad;
     private javax.swing.JLabel lblAspectRatio;
-    private javax.swing.JLabel lblDetalleUbicacionEmpresa;
+    private javax.swing.JLabel lblDetalleUbicacionSucursal;
     private javax.swing.JLabel lblTamanioMax;
     private javax.swing.JLabel lblUbicacion;
     private javax.swing.JLabel lbl_CUIP;

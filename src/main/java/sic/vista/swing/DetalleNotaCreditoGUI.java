@@ -17,7 +17,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.NotaCredito;
 import sic.modelo.Proveedor;
 import sic.modelo.TipoDeComprobante;
@@ -224,8 +224,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
         if (nc != null) {
             notaCreditoCreada = true;
             boolean FEHabilitada = RestClient.getRestTemplate()
-                    .getForObject("/configuraciones-del-sistema/empresas/"
-                            + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    .getForObject("/configuraciones-del-sistema/sucursales/"
+                            + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                             + "/factura-electronica-habilitada", Boolean.class);
             if (cliente != null && FEHabilitada) {
                 this.autorizarNotaCredito(nc);

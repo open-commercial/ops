@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.Medida;
 import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
@@ -32,8 +32,8 @@ public class DetalleMedidaGUI extends JInternalFrame {
     private void cargarListMedidas() {
         modeloList.clear();
         try {
-            List<Medida> medidas = new ArrayList(Arrays.asList(RestClient.getRestTemplate().getForObject("/medidas/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), Medida[].class)));
+            List<Medida> medidas = new ArrayList(Arrays.asList(RestClient.getRestTemplate().getForObject("/medidas/sucursales/"
+                    + SucursalActiva.getInstance().getSucursal().getIdSucursal(), Medida[].class)));
             medidas.stream().forEach(m -> {
                 modeloList.addElement(m);
             });
@@ -214,7 +214,7 @@ public class DetalleMedidaGUI extends JInternalFrame {
         try {
             Medida medida = new Medida();
             medida.setNombre(txt_Nuevo.getText().trim());
-            RestClient.getRestTemplate().postForObject("/medidas?idEmpresa=" + (EmpresaActiva.getInstance().getEmpresa()).getId_Empresa(), medida, Medida.class);
+            RestClient.getRestTemplate().postForObject("/medidas?idSucursal=" + (SucursalActiva.getInstance().getSucursal()).getIdSucursal(), medida, Medida.class);
             txt_Nuevo.setText("");
             this.cargarListMedidas();
         } catch (RestClientResponseException ex) {
@@ -245,7 +245,7 @@ public class DetalleMedidaGUI extends JInternalFrame {
                 Medida medidaModificada = new Medida();
                 medidaModificada.setId_Medida(medidaSeleccionada.getId_Medida());
                 medidaModificada.setNombre(txt_Nuevo.getText().trim());
-                RestClient.getRestTemplate().put("/medidas?idEmpresa=" + (EmpresaActiva.getInstance().getEmpresa()).getId_Empresa(), medidaModificada);
+                RestClient.getRestTemplate().put("/medidas?idSucursal=" + (SucursalActiva.getInstance().getSucursal()).getIdSucursal(), medidaModificada);
                 txt_Nuevo.setText("");
                 medidaSeleccionada = null;
                 this.cargarListMedidas();

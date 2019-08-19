@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = {"nroPedido", "nombreEmpresa"})
+@EqualsAndHashCode(of = {"nroPedido", "nombreSucursal"})
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id_Pedido", scope = Pedido.class)
 public class Pedido implements Serializable {
     
@@ -19,7 +19,7 @@ public class Pedido implements Serializable {
     private Date fecha;    
     private Date fechaVencimiento;    
     private String observaciones;  
-    private String nombreEmpresa;
+    private String nombreSucursal;
     private boolean eliminado;    
     private String nombreFiscalCliente;  
     private String nombreUsuario;

@@ -31,7 +31,7 @@ import sic.modelo.Cliente;
 import sic.modelo.CuentaCorriente;
 import sic.modelo.CuentaCorrienteCliente;
 import sic.modelo.CuentaCorrienteProveedor;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.FacturaCompra;
 import sic.modelo.FacturaVenta;
 import sic.modelo.NotaCredito;
@@ -942,8 +942,8 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     
     private void btnAutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAutorizarActionPerformed
         try {
-            boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+            boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/sucursales/"
+                    + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                     + "/factura-electronica-habilitada", Boolean.class);
             if (FEHabilitada) {
                 if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {

@@ -12,10 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.FormaDePago;
-import sic.modelo.Rol;
-import sic.modelo.UsuarioActivo;
 
 public class FormasDePagoGUI extends JInternalFrame {
 
@@ -48,8 +46,8 @@ public class FormasDePagoGUI extends JInternalFrame {
     }
 
     private void cargarFormasDePago() {
-        formasDePago = new ArrayList(Arrays.asList(RestClient.getRestTemplate().getForObject("/formas-de-pago/empresas/"
-                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), FormaDePago[].class)));
+        formasDePago = new ArrayList(Arrays.asList(RestClient.getRestTemplate().getForObject("/formas-de-pago/sucursales/"
+                + SucursalActiva.getInstance().getSucursal().getIdSucursal(), FormaDePago[].class)));
         this.limpiarJTable();
         formasDePago.stream().map(fdp -> {
             Object[] fila = new Object[3];

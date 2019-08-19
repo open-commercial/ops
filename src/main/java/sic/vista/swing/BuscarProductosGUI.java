@@ -24,7 +24,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.CantidadEnSucursal;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.Movimiento;
 import sic.modelo.Producto;
 import sic.modelo.RenglonFactura;
@@ -105,7 +105,7 @@ public class BuscarProductosGUI extends JDialog {
             } else {
                 String uri = "descripcion=" + txtCriteriaBusqueda.getText().trim()
                         + "&codigo=" + txtCriteriaBusqueda.getText().trim()
-                        + "&idSucursal=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        + "&idSucursal=" + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                         + "&pagina=" + NUMERO_PAGINA;
                 PaginaRespuestaRest<Producto> response = RestClient.getRestTemplate()
                         .exchange("/productos/busqueda/criteria?" + uri, HttpMethod.GET, null,
@@ -189,7 +189,7 @@ public class BuscarProductosGUI extends JDialog {
                 productosTotal.stream().filter((p) -> (r.getDescripcionItem().equals(p.getDescripcion()) && p.isIlimitado() == false))
                         .forEachOrdered((p) -> {
                             p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
-                                if (cantidadEnSucursal.getIdSucursal().equals(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())) {
+                                if (cantidadEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
                                     cantidadEnSucursal.setCantidad(cantidadEnSucursal.getCantidad().subtract(r.getCantidad()));
                                 }
                             });
@@ -226,14 +226,14 @@ public class BuscarProductosGUI extends JDialog {
             fila[1] = p.getDescripcion();
             if (busquedaParaCompraOVenta) {
                 p.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
-                    if (cantidadesEnSucursal.getIdSucursal().equals(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())) {
+                    if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
                         fila[2] = cantidadesEnSucursal.getCantidad();
                     } else {
                         fila[2] = BigDecimal.ZERO;
                     }
                 });
                 fila[3] = p.getCantidadEnSucursales().stream()
-                        .filter(cantidadEnSucursales -> !cantidadEnSucursales.idSucursal.equals(EmpresaActiva.getInstance().getEmpresa().getId_Empresa()))
+                        .filter(cantidadEnSucursales -> !cantidadEnSucursales.idSucursal.equals(SucursalActiva.getInstance().getSucursal().getIdSucursal()))
                         .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);
                 fila[4] = p.getBulto();
                 fila[5] = p.getNombreMedida();

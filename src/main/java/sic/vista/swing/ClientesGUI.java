@@ -22,7 +22,7 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.CuentaCorrienteCliente;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.Localidad;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Provincia;
@@ -288,7 +288,7 @@ public class ClientesGUI extends JInternalFrame {
                 criteriaBusqueda += "sentido=DESC&";
                 break;
         }
-        criteriaBusqueda += "idEmpresa=" + String.valueOf(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteriaBusqueda += "idSucursal=" + String.valueOf(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         criteriaBusqueda += "&pagina=" + NUMERO_PAGINA;
         try {
             PaginaRespuestaRest<CuentaCorrienteCliente> response = RestClient.getRestTemplate()
@@ -756,8 +756,8 @@ public class ClientesGUI extends JInternalFrame {
             this.setMaximum(true);
             if (tienePermisoSegunRoles) {
                 boolean existeClientePredeterminado = RestClient.getRestTemplate()
-                        .getForObject("/clientes/existe-predeterminado/empresas/"
-                                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), boolean.class);
+                        .getForObject("/clientes/existe-predeterminado/sucursales/"
+                                + SucursalActiva.getInstance().getSucursal().getIdSucursal(), boolean.class);
                 if (!existeClientePredeterminado) {
                     JOptionPane.showMessageDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_no_existe_cliente_predeterminado"),

@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.Medida;
 import sic.modelo.NuevoProducto;
 import sic.modelo.Producto;
@@ -818,7 +818,7 @@ public class DetalleProductoGUI extends JDialog {
         rbPrivado.setSelected(!productoParaModificar.isPublico());
         chkDestacado.setSelected(productoParaModificar.isDestacado());
         productoParaModificar.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
-            if (cantidadesEnSucursal.getIdSucursal().equals(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())) {
+            if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
                 txt_Cantidad.setValue(cantidadesEnSucursal.getCantidad());
             }
         });
@@ -1031,7 +1031,7 @@ public class DetalleProductoGUI extends JDialog {
                     Producto productoRecuperado = RestClient.getRestTemplate().postForObject("/productos?idMedida=" + idMedida
                             + "&idRubro=" + idRubro
                             + "&idProveedor=" + ((idProveedor != null) ? idProveedor : "")
-                            + "&idSucursal=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                            + "&idSucursal=" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
                             producto, Producto.class);
                     LOGGER.warn("El producto " + productoRecuperado + " se guardó correctamente");
                     if (imagenProducto != null) {
@@ -1051,7 +1051,7 @@ public class DetalleProductoGUI extends JDialog {
                     productoParaModificar.setDescripcion(txt_Descripcion.getText().trim());
                     productoParaModificar.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
                     productoParaModificar.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
-                        if (cantidadesEnSucursal.getIdSucursal().equals(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())) {                      
+                        if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {                      
                             cantidadesEnSucursal.setCantidad(new BigDecimal(txt_Cantidad.getValue().toString()));
                         }
                     });
@@ -1080,7 +1080,7 @@ public class DetalleProductoGUI extends JDialog {
                     RestClient.getRestTemplate().put("/productos?idMedida=" + idMedida
                             + "&idRubro=" + idRubro
                             + "&idProveedor=" + ((idProveedor != null) ? idProveedor : "")
-                            + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                            + "&idSucursal=" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
                             productoParaModificar);
                     LOGGER.warn("El producto " + productoParaModificar + " se modificó correctamente");
                     JOptionPane.showMessageDialog(this, "El producto se modificó correctamente.",

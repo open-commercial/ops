@@ -12,7 +12,7 @@ public class BusquedaNotaCriteria {
 
     private Date fechaDesde;
     private Date fechaHasta;
-    private Long idEmpresa;
+    private Long idSucursal;
     private int cantidadDeRegistros;
     private long numSerie;
     private long numNota;

@@ -13,7 +13,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.ConfiguracionDelSistema;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.util.FiltroCertificados;
 import sic.util.Utilidades;
 
@@ -354,7 +354,7 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
         );
 
         lbl_Leyenda.setFont(new java.awt.Font("DejaVu Sans", 1, 15)); // NOI18N
-        lbl_Leyenda.setText("La siguiente configuración se aplica a la empresa seleccionada:");
+        lbl_Leyenda.setText("La siguiente configuración se aplica a la sucursal seleccionada:");
 
         btn_Guardar.setForeground(java.awt.Color.blue);
         btn_Guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
@@ -453,8 +453,8 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         try {
-            cdsModificar = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), ConfiguracionDelSistema.class);
+            cdsModificar = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/sucursales/"
+                    + SucursalActiva.getInstance().getSucursal().getIdSucursal(), ConfiguracionDelSistema.class);
             this.cargarConfiguracionParaModificar();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

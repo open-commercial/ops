@@ -21,7 +21,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.Usuario;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Proveedor;
@@ -60,7 +60,7 @@ public class RecibosCompraGUI extends JInternalFrame {
     }
     
     private String getUriCriteria() {
-        String uriCriteria = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
+        String uriCriteria = "idSucursal=" + SucursalActiva.getInstance().getSucursal().getIdSucursal();
         if (chk_Proveedor.isSelected() && proveedorSeleccionado != null) {
             uriCriteria += "&idProveedor=" + proveedorSeleccionado.getId_Proveedor();
         }

@@ -21,7 +21,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.CuentaCorrienteProveedor;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.Localidad;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Proveedor;
@@ -259,7 +259,7 @@ public class ProveedoresGUI extends JInternalFrame {
                 criteria += "sentido=DESC&";
                 break;
         }
-        criteria += "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
+        criteria += "idSucursal=" + SucursalActiva.getInstance().getSucursal().getIdSucursal();
         criteria += "&pagina=" + NUMERO_PAGINA;
         try {
             PaginaRespuestaRest<CuentaCorrienteProveedor> response = RestClient.getRestTemplate()

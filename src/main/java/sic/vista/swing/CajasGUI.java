@@ -20,7 +20,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Caja;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.Usuario;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
@@ -99,7 +99,7 @@ public class CajasGUI extends JInternalFrame {
     private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
         String busqueda = "/cajas/busqueda/criteria?";
-        String criteria = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
+        String criteria = "idSucursal=" + SucursalActiva.getInstance().getSucursal().getIdSucursal();
         if (chk_Fecha.isSelected()) criteria += "&desde=" + dc_FechaDesde.getDate().getTime() + "&hasta=" + dc_FechaHasta.getDate().getTime();
         if (chk_UsuarioApertura.isSelected()) criteria += "&idUsuarioApertura=" + ((Usuario) cmb_UsuariosApertura.getSelectedItem()).getId_Usuario();
         if (chk_UsuarioCierre.isSelected()) criteria += "&idUsuarioCierre=" + ((Usuario) cmb_UsuariosCierre.getSelectedItem()).getId_Usuario();
@@ -191,14 +191,14 @@ public class CajasGUI extends JInternalFrame {
 
     private void abrirNuevaCaja() {
         boolean ultimaCajaAbierta = RestClient.getRestTemplate()
-                .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/ultima-caja-abierta",
+                .getForObject("/cajas/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal() + "/ultima-caja-abierta",
                         boolean.class);
         if (!ultimaCajaAbierta) {
             String saldoApertura = JOptionPane.showInputDialog(this,
                     "Saldo Apertura: \n", "Abrir Caja", JOptionPane.QUESTION_MESSAGE);
             if (saldoApertura != null) {
                 try {
-                    RestClient.getRestTemplate().postForObject("/cajas/apertura/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    RestClient.getRestTemplate().postForObject("/cajas/apertura/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                             + "?saldoApertura=" + new BigDecimal(saldoApertura), null, Caja.class);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

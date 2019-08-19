@@ -12,7 +12,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.NotaCredito;
 import sic.modelo.NuevaNotaCreditoSinFactura;
 import sic.modelo.Proveedor;
@@ -174,12 +174,12 @@ public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
             TipoDeComprobante[] tiposDeComprobante = null;
             if (this.idCliente != null) {
                 tiposDeComprobante = RestClient.getRestTemplate()
-                        .getForObject("/notas/clientes/tipos/credito?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        .getForObject("/notas/clientes/tipos/credito?idSucursal=" + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                                 + "&idCliente=" + this.idCliente, TipoDeComprobante[].class);
             }
             if (this.idProveedor != null) {
                 tiposDeComprobante = RestClient.getRestTemplate()
-                        .getForObject("/notas/proveedores/tipos/credito?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        .getForObject("/notas/proveedores/tipos/credito?idSucursal=" + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                                 + "&idProveedor=" + this.idProveedor, TipoDeComprobante[].class);
             }
             if (tiposDeComprobante != null) {
@@ -209,7 +209,7 @@ public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
                     .builder()
                     .idCliente(idCliente)
                     .idProveedor(idProveedor)
-                    .idEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())
+                    .idSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal())
                     .monto(new BigDecimal(ftxt_Monto.getValue().toString()))
                     .tipo(((TipoDeComprobante) cmbTipoDeComprobante.getSelectedItem()))
                     .detalle(ftxtDetalle.getText().trim())

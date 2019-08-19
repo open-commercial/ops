@@ -26,7 +26,7 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.BusquedaNotaCriteria;
 import sic.modelo.Cliente;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.Movimiento;
 import sic.modelo.NotaDebito;
 import sic.modelo.PaginaRespuestaRest;
@@ -69,7 +69,7 @@ public class NotasDebitoCompraGUI extends JInternalFrame {
 
     private BusquedaNotaCriteria getCriteria() {
         BusquedaNotaCriteria criteria = new BusquedaNotaCriteria();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteria.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         if (chk_Fecha.isSelected()) {
             criteria.setFechaDesde(dc_FechaDesde.getDate());
             criteria.setFechaHasta(dc_FechaDesde.getDate());
@@ -317,7 +317,7 @@ public class NotasDebitoCompraGUI extends JInternalFrame {
     private void cargarTiposDeNota() {
         try {
             TipoDeComprobante[] tiposDeComprobantes = RestClient.getRestTemplate()
-                    .getForObject("/notas/debito/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                    .getForObject("/notas/debito/tipos/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
                             TipoDeComprobante[].class);
             for (int i = 0; tiposDeComprobantes.length > i; i++) {
                 cmb_TipoNota.addItem(tiposDeComprobantes[i]);

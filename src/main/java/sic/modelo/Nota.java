@@ -30,8 +30,8 @@ public class Nota implements Serializable {
     private boolean eliminada;
     private TipoDeComprobante tipoComprobante;
     private Date fecha; 
-    private Long idEmpresa;
-    private String nombreEmpresa;    
+    private Long idSucursal;
+    private String nombreSucursal;    
     private Long idUsuario;
     private String nombreUsuario;   
     private Long idCliente;
@@ -57,7 +57,7 @@ public class Nota implements Serializable {
     }
 
     public Nota(long idNota, long serie, long nroNota, boolean eliminada,
-            TipoDeComprobante tipoDeComprobante, Date fecha, long idEmpresa, String nombreEmpresa, 
+            TipoDeComprobante tipoDeComprobante, Date fecha, long idSucursal, String nombreSucursal, 
             long idUsuario, String nombreUsuario, long idCliente, String nombreFiscalCliente,
             long idProveedor, String razonSocialProveedor, long idFacturaVenta, long idFacturaCompra, 
             String motivo, BigDecimal subTotalBruto, BigDecimal iva21Neto, BigDecimal iva105Neto, 
@@ -69,8 +69,8 @@ public class Nota implements Serializable {
         this.eliminada = eliminada;
         this.tipoComprobante = tipoDeComprobante;
         this.fecha = fecha;
-        this.idEmpresa = idEmpresa;
-        this.nombreEmpresa = nombreEmpresa;
+        this.idSucursal = idSucursal;
+        this.nombreSucursal = nombreSucursal;
         this.idUsuario = idUsuario;
         this.nombreUsuario = nombreUsuario;
         this.idCliente = idCliente;

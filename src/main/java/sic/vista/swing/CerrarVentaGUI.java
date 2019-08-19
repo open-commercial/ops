@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.Factura;
 import sic.modelo.FacturaVenta;
 import sic.modelo.FormaDePago;
@@ -107,8 +107,7 @@ public class CerrarVentaGUI extends JDialog {
             cmb_FormaDePago2.removeAllItems();
             cmb_FormaDePago3.removeAllItems();
             List<FormaDePago> formasDePago = Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/formas-de-pago/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                            FormaDePago[].class));
+                    .getForObject("/formas-de-pago", FormaDePago[].class));
             formasDePago.stream().map(fdp -> {
                 cmb_FormaDePago1.addItem(fdp);
                 return fdp;
@@ -132,7 +131,7 @@ public class CerrarVentaGUI extends JDialog {
         try {
             cmb_Transporte.removeAllItems();
             List<Transportista> transportes = Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/transportistas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                    .getForObject("/transportistas/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
                             Transportista[].class));
             transportes.stream().forEach(t -> {
                 cmb_Transporte.addItem(t);
@@ -162,8 +161,7 @@ public class CerrarVentaGUI extends JDialog {
     private void setEstadoFormasDePago() {
         try {
             FormaDePago formaDePagoPredeterminada = RestClient.getRestTemplate()
-                    .getForObject("/formas-de-pago/predeterminada/empresas/"
-                            + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), FormaDePago.class);            
+                    .getForObject("/formas-de-pago/predeterminada", FormaDePago.class);            
             cmb_FormaDePago1.setSelectedItem(formaDePagoPredeterminada);
             cmb_FormaDePago1.setEnabled(false);
             txt_MontoPago1.setEnabled(false);           
@@ -206,8 +204,8 @@ public class CerrarVentaGUI extends JDialog {
                                     RenglonFactura[].class)));
                 });
                 exito = true;
-                boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/sucursales/"
+                        + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                         + "/factura-electronica-habilitada", Boolean.class);
                 if (FEHabilitada) {
                     int indice = facturasDivididas.size();
@@ -243,8 +241,8 @@ public class CerrarVentaGUI extends JDialog {
             } else {
                 facturaVenta = Arrays.asList(RestClient.getRestTemplate().postForObject(uri, facturaVenta, FacturaVenta[].class)).get(0);
                 if (facturaVenta != null) {
-                    boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                            + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/sucursales/"
+                            + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                             + "/factura-electronica-habilitada", Boolean.class);
                     if (FEHabilitada) {
                         this.autorizarFactura(facturaVenta);

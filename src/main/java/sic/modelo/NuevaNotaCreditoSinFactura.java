@@ -14,7 +14,7 @@ public class NuevaNotaCreditoSinFactura {
 
     private Long idCliente;
     private Long idProveedor;
-    private long idEmpresa;
+    private long idSucursal;
     private BigDecimal monto;
     private TipoDeComprobante tipo;
     private String detalle;

@@ -406,7 +406,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="DejaVu Sans" size="15" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="La siguiente configuraci&#xf3;n se aplica a la empresa seleccionada:"/>
+        <Property name="text" type="java.lang.String" value="La siguiente configuraci&#xf3;n se aplica a la sucursal seleccionada:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="btn_Guardar">
