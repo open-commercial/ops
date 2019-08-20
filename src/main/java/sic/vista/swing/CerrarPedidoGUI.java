@@ -256,21 +256,21 @@ public class CerrarPedidoGUI extends JDialog {
     private void btnCerrarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarPedidoActionPerformed
         try {
             TipoDeEnvio tipoDeEnvio;
-            Long idSucursal = null;
+            Long idSucursalEnvio = null;
             if (rbDireccionFacturacion.isSelected()) {
                 tipoDeEnvio = TipoDeEnvio.USAR_UBICACION_FACTURACION;
             } else if (rbDireccionEnvio.isSelected()) {
                 tipoDeEnvio = TipoDeEnvio.USAR_UBICACION_ENVIO;
             } else {
                 tipoDeEnvio = TipoDeEnvio.RETIRO_EN_SUCURSAL;
-                idSucursal = sucursales.get(cmbSucursales.getSelectedIndex()).getIdSucursal();
+                idSucursalEnvio = sucursales.get(cmbSucursales.getSelectedIndex()).getIdSucursal();
             }
             if (nuevoPedido != null) {
                 nuevoPedido.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
                 nuevoPedido.setIdUsuario(UsuarioActivo.getInstance().getUsuario().getId_Usuario());
                 nuevoPedido.setIdCliente(cliente.getId_Cliente());
                 nuevoPedido.setTipoDeEnvio(tipoDeEnvio);
-                nuevoPedido.setIdSucursal(idSucursal);
+                nuevoPedido.setIdSucursalEnvio(idSucursalEnvio);
                 Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?", nuevoPedido, Pedido.class);
                 this.operacionExitosa = true;
                 int reply = JOptionPane.showConfirmDialog(this,
@@ -285,7 +285,7 @@ public class CerrarPedidoGUI extends JDialog {
                         + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                         + "&idCliente=" + cliente.getId_Cliente()
                         + "&tipoDeEnvio=" + tipoDeEnvio
-                        + "&idSucursal=" + (idSucursal != null ? idSucursal : ""), pedido);
+                        + "&idSucursalEnvio=" + (idSucursalEnvio != null ? idSucursalEnvio : ""), pedido);
                 this.operacionExitosa = true;
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_pedido_actualizado"),
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);

@@ -193,7 +193,7 @@ public class DetalleRubroGUI extends JInternalFrame {
         try {
             Rubro rubro = new Rubro();
             rubro.setNombre(txt_Nuevo.getText().trim());
-            RestClient.getRestTemplate().postForObject("/rubros?idSucursal= " + (SucursalActiva.getInstance().getSucursal()).getIdSucursal(), rubro, Rubro.class);
+            RestClient.getRestTemplate().postForObject("/rubros", rubro, Rubro.class);
             txt_Nuevo.setText("");
             this.cargarListRubros();
         } catch (RestClientResponseException ex) {
@@ -224,7 +224,7 @@ public class DetalleRubroGUI extends JInternalFrame {
                 Rubro rubroModificado = new Rubro();
                 rubroModificado.setId_Rubro(rubroSeleccionado.getId_Rubro());
                 rubroModificado.setNombre(txt_Nuevo.getText().trim());
-                RestClient.getRestTemplate().put("/rubros?idSucursal= " + (SucursalActiva.getInstance().getSucursal()).getIdSucursal(), rubroModificado);
+                RestClient.getRestTemplate().put("/rubros", rubroModificado);
                 txt_Nuevo.setText("");
                 rubroSeleccionado = null;
                 this.cargarListRubros();
@@ -274,8 +274,7 @@ public class DetalleRubroGUI extends JInternalFrame {
     private void cargarListRubros() {
         modeloList.clear();
         List<Rubro> rubros = Arrays.asList(RestClient.getRestTemplate()
-                .getForObject("/rubros/sucursales/"  + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
-                Rubro[].class));
+                .getForObject("/rubros", Rubro[].class));
         rubros.stream().forEach(r -> {
             modeloList.addElement(r);
         });

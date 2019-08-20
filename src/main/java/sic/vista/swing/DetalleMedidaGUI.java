@@ -32,8 +32,7 @@ public class DetalleMedidaGUI extends JInternalFrame {
     private void cargarListMedidas() {
         modeloList.clear();
         try {
-            List<Medida> medidas = new ArrayList(Arrays.asList(RestClient.getRestTemplate().getForObject("/medidas/sucursales/"
-                    + SucursalActiva.getInstance().getSucursal().getIdSucursal(), Medida[].class)));
+            List<Medida> medidas = new ArrayList(Arrays.asList(RestClient.getRestTemplate().getForObject("/medidas", Medida[].class)));
             medidas.stream().forEach(m -> {
                 modeloList.addElement(m);
             });
@@ -214,7 +213,7 @@ public class DetalleMedidaGUI extends JInternalFrame {
         try {
             Medida medida = new Medida();
             medida.setNombre(txt_Nuevo.getText().trim());
-            RestClient.getRestTemplate().postForObject("/medidas?idSucursal=" + (SucursalActiva.getInstance().getSucursal()).getIdSucursal(), medida, Medida.class);
+            RestClient.getRestTemplate().postForObject("/medidas", medida, Medida.class);
             txt_Nuevo.setText("");
             this.cargarListMedidas();
         } catch (RestClientResponseException ex) {

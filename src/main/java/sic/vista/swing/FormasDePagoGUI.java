@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.SucursalActiva;
 import sic.modelo.FormaDePago;
 
 public class FormasDePagoGUI extends JInternalFrame {
@@ -46,8 +45,7 @@ public class FormasDePagoGUI extends JInternalFrame {
     }
 
     private void cargarFormasDePago() {
-        formasDePago = new ArrayList(Arrays.asList(RestClient.getRestTemplate().getForObject("/formas-de-pago/sucursales/"
-                + SucursalActiva.getInstance().getSucursal().getIdSucursal(), FormaDePago[].class)));
+        formasDePago = new ArrayList(Arrays.asList(RestClient.getRestTemplate().getForObject("/formas-de-pago", FormaDePago[].class)));
         this.limpiarJTable();
         formasDePago.stream().map(fdp -> {
             Object[] fila = new Object[3];
@@ -65,29 +63,6 @@ public class FormasDePagoGUI extends JInternalFrame {
         modeloTablaResultados = new ModeloTabla();
         tbl_FormasDePago.setModel(modeloTablaResultados);
         this.setColumnas();
-    }
-
-    private void eliminarFormaDePago() {
-        if (tbl_FormasDePago.getSelectedRow() != -1) {
-            int filaSeleccionada = tbl_FormasDePago.getSelectedRow();
-            int respuesta = JOptionPane.showConfirmDialog(this,
-                    "¿Esta seguro que desea eliminar la forma de pago seleccionada?",
-                    "Eliminar", JOptionPane.YES_NO_OPTION);
-            if (respuesta == JOptionPane.YES_OPTION) {
-                try {
-                    RestClient.getRestTemplate().delete("/formas-de-pago/" + formasDePago.get(filaSeleccionada).getId_FormaDePago());
-                    formasDePago.remove(formasDePago.get(filaSeleccionada));                    
-                    this.cargarFormasDePago();
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }
     }
 
     private void setPredeterminado() {
