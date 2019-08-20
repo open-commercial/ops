@@ -161,13 +161,13 @@ public class CerrarVentaGUI extends JDialog {
     private void setEstadoFormasDePago() {
         try {
             FormaDePago formaDePagoPredeterminada = RestClient.getRestTemplate()
-                    .getForObject("/formas-de-pago/predeterminada", FormaDePago.class);            
+                    .getForObject("/formas-de-pago/predeterminada", FormaDePago.class);
             cmb_FormaDePago1.setSelectedItem(formaDePagoPredeterminada);
             cmb_FormaDePago1.setEnabled(false);
-            txt_MontoPago1.setEnabled(false);           
+            txt_MontoPago1.setEnabled(false);
             cmb_FormaDePago2.setSelectedItem(formaDePagoPredeterminada);
-            txt_MontoPago2.setEnabled(false);            
-            cmb_FormaDePago2.setEnabled(false);            
+            txt_MontoPago2.setEnabled(false);
+            cmb_FormaDePago2.setEnabled(false);
             cmb_FormaDePago3.setSelectedItem(formaDePagoPredeterminada);
             cmb_FormaDePago3.setEnabled(false);
             txt_MontoPago3.setEnabled(false);
