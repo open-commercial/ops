@@ -70,8 +70,8 @@ public class PedidosGUI extends JInternalFrame {
         this.cambiarEstadoEnabledComponentes(false);
         String criteria = "/pedidos/busqueda/criteria?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
         if (chk_Fecha.isSelected()) {
-            criteria += "&desde=" + dc_FechaDesde.getDate().getTime();
-            criteria += "&hasta=" + dc_FechaHasta.getDate().getTime();
+            criteria += "&desde=" + (dc_FechaDesde.getDate() != null ? dc_FechaDesde.getDate().getTime() : "");
+            criteria += "&hasta=" + (dc_FechaHasta.getDate() != null ? dc_FechaHasta.getDate().getTime() : "");
         }
         if (chk_NumeroPedido.isSelected()) {
             criteria += "&nroPedido=" + Long.valueOf(txt_NumeroPedido.getText());
