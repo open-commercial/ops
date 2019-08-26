@@ -194,8 +194,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
     private boolean existeFormaDePagoPredeterminada() {
         FormaDePago formaDePago = RestClient.getRestTemplate()
-                .getForObject("/formas-de-pago/predeterminada/empresas/"
-                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                .getForObject("/formas-de-pago/predeterminada",
                         FormaDePago.class);
         return (formaDePago != null);
     }

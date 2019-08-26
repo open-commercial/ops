@@ -107,8 +107,7 @@ public class CerrarVentaGUI extends JDialog {
             cmb_FormaDePago2.removeAllItems();
             cmb_FormaDePago3.removeAllItems();
             List<FormaDePago> formasDePago = Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/formas-de-pago/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
-                            FormaDePago[].class));
+                    .getForObject("/formas-de-pago", FormaDePago[].class));
             formasDePago.stream().map(fdp -> {
                 cmb_FormaDePago1.addItem(fdp);
                 return fdp;
@@ -162,13 +161,12 @@ public class CerrarVentaGUI extends JDialog {
     private void setEstadoFormasDePago() {
         try {
             FormaDePago formaDePagoPredeterminada = RestClient.getRestTemplate()
-                    .getForObject("/formas-de-pago/predeterminada/empresas/"
-                            + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), FormaDePago.class);            
+                    .getForObject("/formas-de-pago/predeterminada", FormaDePago.class);
             cmb_FormaDePago1.setSelectedItem(formaDePagoPredeterminada);
             cmb_FormaDePago1.setEnabled(false);
-            txt_MontoPago1.setEnabled(false);           
+            txt_MontoPago1.setEnabled(false);
             cmb_FormaDePago2.setSelectedItem(formaDePagoPredeterminada);
-            txt_MontoPago2.setEnabled(false);            
+            txt_MontoPago2.setEnabled(false);
             cmb_FormaDePago2.setEnabled(false);            
             cmb_FormaDePago3.setSelectedItem(formaDePagoPredeterminada);
             cmb_FormaDePago3.setEnabled(false);
@@ -663,6 +661,13 @@ public class CerrarVentaGUI extends JDialog {
             if (totalPagos.compareTo(totalAPagar) < 0) {
                 int reply = JOptionPane.showConfirmDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_montos_insuficientes"),
+                        "Aviso", JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION) {
+                    this.finalizarVenta();
+                }
+            } else if (totalPagos.compareTo(totalAPagar) > 0) {
+                int reply = JOptionPane.showConfirmDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_montos_superiores_al_total_factura"),
                         "Aviso", JOptionPane.YES_NO_OPTION);
                 if (reply == JOptionPane.YES_OPTION) {
                     this.finalizarVenta();

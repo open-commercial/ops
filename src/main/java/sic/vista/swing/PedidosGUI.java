@@ -70,8 +70,8 @@ public class PedidosGUI extends JInternalFrame {
         this.cambiarEstadoEnabledComponentes(false);
         String criteria = "/pedidos/busqueda/criteria?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
         if (chk_Fecha.isSelected()) {
-            criteria += "&desde=" + dc_FechaDesde.getDate().getTime();
-            criteria += "&hasta=" + dc_FechaHasta.getDate().getTime();
+            criteria += "&desde=" + (dc_FechaDesde.getDate() != null ? dc_FechaDesde.getDate().getTime() : "");
+            criteria += "&hasta=" + (dc_FechaHasta.getDate() != null ? dc_FechaHasta.getDate().getTime() : "");
         }
         if (chk_NumeroPedido.isSelected()) {
             criteria += "&nroPedido=" + Long.valueOf(txt_NumeroPedido.getText());
@@ -645,6 +645,7 @@ public class PedidosGUI extends JInternalFrame {
         });
 
         btnImprimirPedido.setForeground(new java.awt.Color(0, 0, 255));
+        btnImprimirPedido.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/target_16x16.png"))); // NOI18N
         btnImprimirPedido.setText("Ver Detalle");
         btnImprimirPedido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -706,7 +707,7 @@ public class PedidosGUI extends JInternalFrame {
                     .addComponent(btnEliminarPedido)))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnFacturar, btnImprimirPedido, btnModificarPedido, btnNuevoPedido, btnVerFacturas});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnEliminarPedido, btnFacturar, btnImprimirPedido, btnModificarPedido, btnNuevoPedido, btnVerFacturas});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

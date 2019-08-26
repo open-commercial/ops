@@ -304,6 +304,7 @@ public class DetalleCajaGUI extends JInternalFrame {
         lbl_movimientos.setText("Movimientos por Forma de Pago (Seleccione una de la lista superior)");
 
         btn_VerDetalle.setForeground(java.awt.Color.blue);
+        btn_VerDetalle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/target_16x16.png"))); // NOI18N
         btn_VerDetalle.setText("Ver Detalle");
         btn_VerDetalle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -529,8 +530,7 @@ public class DetalleCajaGUI extends JInternalFrame {
         try {
             if (RestClient.getRestTemplate().getForObject("/cajas/empresas/"
                     + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/ultima-caja-abierta", boolean.class)) {
-                List<FormaDePago> formasDePago = Arrays.asList(RestClient.getRestTemplate().getForObject("/formas-de-pago/empresas/"
-                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), FormaDePago[].class));
+                List<FormaDePago> formasDePago = Arrays.asList(RestClient.getRestTemplate().getForObject("/formas-de-pago", FormaDePago[].class));
                 AgregarGastoGUI agregarGasto = new AgregarGastoGUI(formasDePago);
                 agregarGasto.setLocationRelativeTo(null);
                 agregarGasto.setEnabled(true);

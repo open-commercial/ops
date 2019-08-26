@@ -111,6 +111,20 @@ public class RecibosVentaGUI extends JInternalFrame {
         uriCriteria += "&pagina=" + NUMERO_PAGINA;
         return uriCriteria;
     }
+    
+    private void crearNotaDebitoConRecibo(Recibo recibo) {
+        Cliente clienteDeRecibo = RestClient.getRestTemplate().getForObject("/clientes/" + recibo.getIdCliente(), Cliente.class);
+        NuevaNotaDebitoGUI nuevaNotaDebitoDeRecibo = new NuevaNotaDebitoGUI(clienteDeRecibo, recibo.getIdRecibo());
+        nuevaNotaDebitoDeRecibo.setModal(true);
+        nuevaNotaDebitoDeRecibo.setLocationRelativeTo(this);
+        nuevaNotaDebitoDeRecibo.setVisible(true);
+        if (nuevaNotaDebitoDeRecibo.getNotaDebitoCalculada() != null) {
+            DetalleNotaDebitoGUI detalleNotaDebito = new DetalleNotaDebitoGUI(nuevaNotaDebitoDeRecibo.getNotaDebitoCalculada());
+            detalleNotaDebito.setModal(true);
+            detalleNotaDebito.setLocationRelativeTo(this);
+            detalleNotaDebito.setVisible(true);
+        }
+    }
 
     private void setColumnas() {
         //nombres de columnas
@@ -387,6 +401,7 @@ public class RecibosVentaGUI extends JInternalFrame {
         sp_Resultados.setViewportView(tbl_Resultados);
 
         btn_VerDetalle.setForeground(java.awt.Color.blue);
+        btn_VerDetalle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/target_16x16.png"))); // NOI18N
         btn_VerDetalle.setText("Ver Detalle");
         btn_VerDetalle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -404,6 +419,7 @@ public class RecibosVentaGUI extends JInternalFrame {
         });
 
         btnCrearNotaDebito.setForeground(java.awt.Color.blue);
+        btnCrearNotaDebito.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Add_16x16.png"))); // NOI18N
         btnCrearNotaDebito.setText("Nueva Nota Debito");
         btnCrearNotaDebito.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -445,14 +461,12 @@ public class RecibosVentaGUI extends JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
                 .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblTotal)
-                        .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btn_VerDetalle)
-                        .addComponent(btn_Eliminar)
-                        .addComponent(btnCrearNotaDebito))))
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblTotal)
+                    .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_Eliminar)
+                    .addComponent(btn_VerDetalle)
+                    .addComponent(btnCrearNotaDebito)))
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaDebito, btn_Eliminar, btn_VerDetalle});
@@ -889,12 +903,24 @@ public class RecibosVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_NumReciboItemStateChanged
 
     private void btnCrearNotaDebitoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearNotaDebitoActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1) {
-            Recibo reciboDeCliente = recibosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados));
-            Cliente cliente = RestClient.getRestTemplate().getForObject("/clientes/" + reciboDeCliente.getIdCliente(), Cliente.class);
-            DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(cliente, reciboDeCliente.getIdRecibo());
-            detalleNotaDebitoGUI.setLocationRelativeTo(this);
-            detalleNotaDebitoGUI.setVisible(true);
+        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {         
+            try {
+                if (RestClient.getRestTemplate().getForObject("/notas/debito/recibo/"
+                        + recibosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getIdRecibo() + "/existe", boolean.class)) {
+                    JOptionPane.showInternalMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_recibo_con_nota_debito"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    this.crearNotaDebitoConRecibo(recibosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)));
+                }
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_btnCrearNotaDebitoActionPerformed
 

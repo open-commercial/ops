@@ -60,8 +60,7 @@ public class DetalleEmpresaGUI extends JDialog {
     
     private void cargarEmpresaParaModificar() {
         txt_Nombre.setText(empresaModificar.getNombre());
-        txt_Lema.setText(empresaModificar.getLema());
-        txt_Direccion.setText(empresaModificar.getDireccion());
+        txt_Lema.setText(empresaModificar.getLema());        
         cmbCategoriaIVA.setSelectedItem(empresaModificar.getCategoriaIVA());                    
         txtIdFiscal.setValue(empresaModificar.getIdFiscal());                            
         txtIngresosBrutos.setValue(empresaModificar.getIngresosBrutos());        
@@ -100,7 +99,6 @@ public class DetalleEmpresaGUI extends JDialog {
 
         panelPrincipal = new javax.swing.JPanel();
         lbl_Nombre = new javax.swing.JLabel();
-        lbl_Direccion = new javax.swing.JLabel();
         lbl_Lema = new javax.swing.JLabel();
         lbl_CondicionIVA = new javax.swing.JLabel();
         lbl_CUIP = new javax.swing.JLabel();
@@ -108,7 +106,6 @@ public class DetalleEmpresaGUI extends JDialog {
         lbl_FIA = new javax.swing.JLabel();
         txt_Nombre = new javax.swing.JTextField();
         txt_Lema = new javax.swing.JTextField();
-        txt_Direccion = new javax.swing.JTextField();
         cmbCategoriaIVA = new javax.swing.JComboBox();
         dc_FechaInicioActividad = new com.toedter.calendar.JDateChooser();
         lbl_Logo = new javax.swing.JLabel();
@@ -140,10 +137,6 @@ public class DetalleEmpresaGUI extends JDialog {
         lbl_Nombre.setForeground(java.awt.Color.red);
         lbl_Nombre.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Nombre.setText("* Nombre:");
-
-        lbl_Direccion.setForeground(java.awt.Color.red);
-        lbl_Direccion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Direccion.setText("* Dirección:");
 
         lbl_Lema.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Lema.setText("Lema:");
@@ -229,44 +222,44 @@ public class DetalleEmpresaGUI extends JDialog {
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPrincipalLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lbl_Telefono, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Email, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Nombre, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Lema, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Direccion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_CondicionIVA, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_CUIP, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_IngBrutos, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_FIA, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelPrincipalLayout.createSequentialGroup()
-                        .addComponent(lbl_Logo, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lbl_Nombre, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                            .addComponent(lbl_Lema, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btn_ExaminarArchivos)
-                            .addComponent(btn_EliminarLogo)
-                            .addComponent(lblTamanioMax)
-                            .addComponent(lblAspectRatio))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(panelPrincipalLayout.createSequentialGroup()
+                                .addComponent(lbl_Logo, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btn_ExaminarArchivos)
+                                    .addComponent(btn_EliminarLogo)
+                                    .addComponent(lblTamanioMax)
+                                    .addComponent(lblAspectRatio)))
+                            .addComponent(txt_Lema, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txt_Nombre, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lbl_Telefono, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbl_Email, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbl_CondicionIVA, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbl_CUIP, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbl_IngBrutos, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbl_FIA, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelPrincipalLayout.createSequentialGroup()
-                                .addComponent(lblDetalleUbicacionEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblDetalleUbicacionEmpresa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(0, 0, 0)
                                 .addComponent(btnUbicacion))
-                            .addComponent(txt_Nombre, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txt_Lema, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txt_Direccion, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(cmbCategoriaIVA, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtIdFiscal, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(txtIngresosBrutos, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(dc_FechaInicioActividad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txt_Email, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txt_Telefono, javax.swing.GroupLayout.Alignment.TRAILING))))
+                            .addComponent(txt_Telefono, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(cmbCategoriaIVA, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         panelPrincipalLayout.setVerticalGroup(
@@ -291,10 +284,6 @@ public class DetalleEmpresaGUI extends JDialog {
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_Lema)
                     .addComponent(txt_Lema, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Direccion)
-                    .addComponent(txt_Direccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_CondicionIVA)
@@ -342,14 +331,14 @@ public class DetalleEmpresaGUI extends JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panelPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_Guardar)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(panelPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -370,8 +359,7 @@ public class DetalleEmpresaGUI extends JDialog {
             if (operacion == TipoDeOperacion.ALTA) {
                 Empresa empresa = new Empresa();
                 empresa.setNombre(txt_Nombre.getText().trim());
-                empresa.setLema(txt_Lema.getText().trim());
-                empresa.setDireccion(txt_Direccion.getText().trim());
+                empresa.setLema(txt_Lema.getText().trim());                
                 empresa.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
                 empresa.setIdFiscal((Long) txtIdFiscal.getValue());
                 empresa.setIngresosBrutos((Long) txtIngresosBrutos.getValue());
@@ -393,8 +381,7 @@ public class DetalleEmpresaGUI extends JDialog {
             }
             if (operacion == TipoDeOperacion.ACTUALIZACION) {
                 empresaModificar.setNombre(txt_Nombre.getText().trim());
-                empresaModificar.setLema(txt_Lema.getText().trim());
-                empresaModificar.setDireccion(txt_Direccion.getText().trim());
+                empresaModificar.setLema(txt_Lema.getText().trim());                
                 empresaModificar.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
                 empresaModificar.setIdFiscal((Long) txtIdFiscal.getValue());
                 empresaModificar.setIngresosBrutos((Long) txtIngresosBrutos.getValue());
@@ -505,7 +492,6 @@ public class DetalleEmpresaGUI extends JDialog {
     private javax.swing.JLabel lblUbicacion;
     private javax.swing.JLabel lbl_CUIP;
     private javax.swing.JLabel lbl_CondicionIVA;
-    private javax.swing.JLabel lbl_Direccion;
     private javax.swing.JLabel lbl_Email;
     private javax.swing.JLabel lbl_FIA;
     private javax.swing.JLabel lbl_IngBrutos;
@@ -516,7 +502,6 @@ public class DetalleEmpresaGUI extends JDialog {
     private javax.swing.JPanel panelPrincipal;
     private javax.swing.JFormattedTextField txtIdFiscal;
     private javax.swing.JFormattedTextField txtIngresosBrutos;
-    private javax.swing.JTextField txt_Direccion;
     private javax.swing.JTextField txt_Email;
     private javax.swing.JTextField txt_Lema;
     private javax.swing.JTextField txt_Nombre;

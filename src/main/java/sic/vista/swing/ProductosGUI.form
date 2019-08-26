@@ -100,7 +100,7 @@
                           <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="rb_privado" alignment="0" max="32767" attributes="0"/>
-                              <Component id="rb_Todos" alignment="0" max="32767" attributes="0"/>
+                              <Component id="rbEnStock" alignment="0" max="32767" attributes="0"/>
                               <Component id="rb_Faltantes" alignment="0" max="32767" attributes="0"/>
                               <Component id="rb_publico" alignment="0" max="32767" attributes="0"/>
                           </Group>
@@ -123,7 +123,7 @@
                       <Component id="chkCodigoODescripcion" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="txtCodigoODescripcion" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="chk_Disponibilidad" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="rb_Todos" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="rbEnStock" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -217,12 +217,12 @@
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_DisponibilidadItemStateChanged"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JRadioButton" name="rb_Todos">
+        <Component class="javax.swing.JRadioButton" name="rbEnStock">
           <Properties>
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="bgDisponibilidad"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Todos"/>
+            <Property name="text" type="java.lang.String" value="En Stock"/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
         </Component>
@@ -318,6 +318,7 @@
                   <Component id="lbl_ValorStock" min="-2" max="-2" attributes="1"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="txt_ValorStock" min="-2" pref="170" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
               <Component id="sp_Resultados" max="32767" attributes="0"/>
           </Group>
@@ -328,12 +329,12 @@
                   <Component id="sp_Resultados" pref="242" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="lbl_ValorStock" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txt_ValorStock" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="btn_Nuevo" linkSize="2" alignment="2" max="32767" attributes="0"/>
                       <Component id="btn_Modificar" linkSize="2" alignment="2" max="32767" attributes="0"/>
                       <Component id="btn_Eliminar" linkSize="2" alignment="2" max="32767" attributes="0"/>
-                      <Component id="btnExportar" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbl_ValorStock" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txt_ValorStock" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnExportar" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>

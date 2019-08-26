@@ -304,6 +304,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 switch (renglonCC.getTipoComprobante()) {
                     case NOTA_DEBITO_A:
                     case NOTA_DEBITO_B:
+                    case NOTA_DEBITO_C:
                     case NOTA_DEBITO_PRESUPUESTO:
                     case NOTA_DEBITO_X:
                     case NOTA_DEBITO_Y:
@@ -321,6 +322,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                         break;
                     case NOTA_CREDITO_A:
                     case NOTA_CREDITO_B:
+                    case NOTA_CREDITO_C:
                     case NOTA_CREDITO_PRESUPUESTO:
                     case NOTA_CREDITO_X:
                     case NOTA_CREDITO_Y:
@@ -405,6 +407,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             switch (renglonCC.getTipoComprobante()) {
                 case NOTA_DEBITO_A:
                 case NOTA_DEBITO_B:
+                case NOTA_DEBITO_C:
                 case NOTA_DEBITO_PRESUPUESTO:
                 case NOTA_DEBITO_X:
                 case NOTA_DEBITO_Y:
@@ -414,6 +417,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     break;
                 case NOTA_CREDITO_A:
                 case NOTA_CREDITO_B:
+                case NOTA_CREDITO_C:
                 case NOTA_CREDITO_PRESUPUESTO:
                 case NOTA_CREDITO_X:
                 case NOTA_CREDITO_Y:
@@ -521,6 +525,54 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             }
         }
     }
+    
+    private void crearNotaDebitoSinRecibo() {
+        NuevaNotaDebitoGUI nuevaNotaDebitoSinRecibo = null;
+        if (this.cliente != null) {
+            nuevaNotaDebitoSinRecibo = new NuevaNotaDebitoGUI(this.cliente);
+            nuevaNotaDebitoSinRecibo.setModal(true);
+            nuevaNotaDebitoSinRecibo.setLocationRelativeTo(this);
+            nuevaNotaDebitoSinRecibo.setVisible(true);
+        } else if (this.proveedor != null) {
+            nuevaNotaDebitoSinRecibo = new NuevaNotaDebitoGUI(this.proveedor);
+            nuevaNotaDebitoSinRecibo.setModal(true);
+            nuevaNotaDebitoSinRecibo.setLocationRelativeTo(this);
+            nuevaNotaDebitoSinRecibo.setVisible(true);
+        }
+        if (nuevaNotaDebitoSinRecibo != null && nuevaNotaDebitoSinRecibo.getNotaDebitoCalculada() != null) {
+            DetalleNotaDebitoGUI detalleNotaDebito = new DetalleNotaDebitoGUI(nuevaNotaDebitoSinRecibo.getNotaDebitoCalculada());
+            detalleNotaDebito.setModal(true);
+            detalleNotaDebito.setLocationRelativeTo(this);
+            detalleNotaDebito.setVisible(true);
+            if (detalleNotaDebito.isNotaCreada()) {
+                this.refrescarVista();
+            }
+        }
+    }
+    
+    private void crearNotaDebitoConRecibo(long idRecibo) {
+        NuevaNotaDebitoGUI nuevaNotaDebito = null;
+        if (this.cliente != null) {
+            nuevaNotaDebito = new NuevaNotaDebitoGUI(this.cliente, idRecibo);
+            nuevaNotaDebito.setModal(true);
+            nuevaNotaDebito.setLocationRelativeTo(this);
+            nuevaNotaDebito.setVisible(true);
+        } else if (this.proveedor != null) {
+            nuevaNotaDebito = new NuevaNotaDebitoGUI(this.proveedor, idRecibo);
+            nuevaNotaDebito.setModal(true);
+            nuevaNotaDebito.setLocationRelativeTo(this);
+            nuevaNotaDebito.setVisible(true);
+        }
+        if (nuevaNotaDebito != null && nuevaNotaDebito.getNotaDebitoCalculada() != null) {
+            DetalleNotaDebitoGUI detalleNotaDebito = new DetalleNotaDebitoGUI(nuevaNotaDebito.getNotaDebitoCalculada());
+            detalleNotaDebito.setModal(true);
+            detalleNotaDebito.setLocationRelativeTo(this);
+            detalleNotaDebito.setVisible(true);
+            if (detalleNotaDebito.isNotaCreada()) {
+                this.refrescarVista();
+            }
+        }
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -584,6 +636,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         sp_Resultados.setViewportView(tbl_Resultados);
 
         btnCrearNotaCredito.setForeground(java.awt.Color.blue);
+        btnCrearNotaCredito.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Add_16x16.png"))); // NOI18N
         btnCrearNotaCredito.setText("Nueva Nota Credito");
         btnCrearNotaCredito.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -592,6 +645,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         });
 
         btnVerDetalle.setForeground(java.awt.Color.blue);
+        btnVerDetalle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/target_16x16.png"))); // NOI18N
         btnVerDetalle.setText("Ver Detalle");
         btnVerDetalle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -617,6 +671,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         ftxtSaldoFinal.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
 
         btnCrearNotaDebito.setForeground(java.awt.Color.blue);
+        btnCrearNotaDebito.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Add_16x16.png"))); // NOI18N
         btnCrearNotaDebito.setText("Nueva Nota Debito");
         btnCrearNotaDebito.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -669,7 +724,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 .addComponent(btnCrearRecibo)
                 .addGap(0, 0, 0)
                 .addComponent(btnExportar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap(295, Short.MAX_VALUE))
+                .addContainerGap(215, Short.MAX_VALUE))
             .addGroup(pnlResultadosLayout.createSequentialGroup()
                 .addComponent(btnAutorizar)
                 .addGap(0, 0, 0)
@@ -688,7 +743,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     .addComponent(ftxtSaldoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_saldoFinal))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Resultados)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAutorizar, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -703,7 +758,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     .addComponent(btnCrearNotaCredito, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
 
-        pnlResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAutorizar, btnCrearNotaCredito, btnCrearNotaDebito, btnCrearRecibo, btnVerDetalle, btn_Eliminar});
+        pnlResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAutorizar, btnCrearNotaCredito, btnCrearNotaDebito, btnCrearRecibo, btnExportar, btnVerDetalle, btn_Eliminar});
 
         txtCondicionIVACliente.setEditable(false);
         txtCondicionIVACliente.setFocusable(false);
@@ -849,32 +904,27 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
             if (renglonCC.getTipoComprobante() == TipoDeComprobante.RECIBO) {
-                if (RestClient.getRestTemplate().getForObject("/notas/debito/recibo/" + renglonCC.getIdMovimiento() + "/existe", boolean.class)) {
-                    JOptionPane.showInternalMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_recibo_con_nota_debito"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    if (cliente != null) {
-                        DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(cliente, renglonCC.getIdMovimiento());
-                        detalleNotaDebitoGUI.setLocationRelativeTo(this);
-                        detalleNotaDebitoGUI.setVisible(true);
-                        if (detalleNotaDebitoGUI.isNotaDebitoCreada()) {
-                            this.refrescarVista();
+                int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_confirmacion_nota_debito"), "Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
+                switch (respuesta) {
+                    case 0:
+                        if (RestClient.getRestTemplate().getForObject("/notas/debito/recibo/" + renglonCC.getIdMovimiento() + "/existe", boolean.class)) {
+                            JOptionPane.showInternalMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_recibo_con_nota_debito"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            this.crearNotaDebitoConRecibo(renglonCC.getIdMovimiento());
                         }
-                    } else if (proveedor != null) {
-                        DetalleNotaDebitoGUI detalleNotaDebitoGUI = new DetalleNotaDebitoGUI(proveedor, renglonCC.getIdMovimiento());
-                        detalleNotaDebitoGUI.setLocationRelativeTo(this);
-                        detalleNotaDebitoGUI.setVisible(true);
-                        if (detalleNotaDebitoGUI.isNotaDebitoCreada()) {
-                            this.refrescarVista();
-                        }
-                    }
+                        break;
+                    case 1:
+                        this.crearNotaDebitoSinRecibo();
+                    default:
+                        break;
                 }
             } else {
-                JOptionPane.showInternalMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+                this.crearNotaDebitoSinRecibo();
             }
+        } else {
+            this.crearNotaDebitoSinRecibo();
         }
     }//GEN-LAST:event_btnCrearNotaDebitoActionPerformed
 
@@ -902,17 +952,21 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     switch (renglonCC.getTipoComprobante()) {
                         case NOTA_CREDITO_A:
                         case NOTA_CREDITO_B:
+                        case NOTA_CREDITO_C:
                         case NOTA_DEBITO_A:
                         case NOTA_DEBITO_B:
+                        case NOTA_DEBITO_C:
                             if (renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_A
-                                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B) {
+                                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_B
+                                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_CREDITO_C) {
                                 RestClient.getRestTemplate().postForObject("/notas/" + renglonCC.getIdMovimiento() + "/autorizacion",
                                         null, NotaCredito.class);
                                 JOptionPane.showMessageDialog(this,
                                         ResourceBundle.getBundle("Mensajes").getString("mensaje_nota_autorizada"),
                                         "Aviso", JOptionPane.INFORMATION_MESSAGE);
                             } else if (renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_A
-                                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B) {
+                                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_B
+                                    || renglonCC.getTipoComprobante() == TipoDeComprobante.NOTA_DEBITO_C) {
                                 RestClient.getRestTemplate().postForObject("/notas/" + renglonCC.getIdMovimiento() + "/autorizacion",
                                         null, NotaDebito.class);
                                 JOptionPane.showMessageDialog(this,
@@ -958,10 +1012,57 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             RenglonCuentaCorriente renglonCC = movimientosTotal.get(indexFilaSeleccionada);
             boolean refrescar = false;
+            int respuesta;
             try {
                 switch (renglonCC.getTipoComprobante()) {
+                    case FACTURA_A:
+                    case FACTURA_B:
+                    case FACTURA_C:
+                    case FACTURA_Y:
+                    case FACTURA_X:
+                    case PRESUPUESTO:
+                        if (this.cliente != null) {
+                            respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
+                                    .getString("mensaje_eliminar_movimientos"),
+                                    "Eliminar", JOptionPane.YES_NO_OPTION);
+                            if (respuesta == JOptionPane.YES_OPTION) {
+                                RestClient.getRestTemplate().delete("/facturas/" + renglonCC.getIdMovimiento());
+                                refrescar = true;
+                            }
+                        } else {
+                            JOptionPane.showInternalMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                        break;
+                    case NOTA_CREDITO_A:
+                    case NOTA_CREDITO_B:
+                    case NOTA_CREDITO_C:
+                    case NOTA_CREDITO_X:
+                    case NOTA_CREDITO_Y:
+                    case NOTA_CREDITO_PRESUPUESTO:
+                    case NOTA_DEBITO_A:
+                    case NOTA_DEBITO_B:
+                    case NOTA_DEBITO_C:
+                    case NOTA_DEBITO_X:
+                    case NOTA_DEBITO_Y:
+                    case NOTA_DEBITO_PRESUPUESTO:
+                        if (this.cliente != null) {
+                            respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
+                                    .getString("mensaje_eliminar_movimientos"),
+                                    "Eliminar", JOptionPane.YES_NO_OPTION);
+                            if (respuesta == JOptionPane.YES_OPTION) {
+                                RestClient.getRestTemplate().delete("/notas/" + renglonCC.getIdMovimiento());
+                                refrescar = true;
+                            }
+                        } else {
+                            JOptionPane.showInternalMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                        break;
                     case RECIBO: {
-                        int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
+                        respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
                                 .getString("mensaje_eliminar_movimientos"),
                                 "Eliminar", JOptionPane.YES_NO_OPTION);
                         if (respuesta == JOptionPane.YES_OPTION) {

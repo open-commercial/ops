@@ -19,10 +19,12 @@ import javax.swing.JScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.BusquedaFacturaVentaCriteria;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.FacturaVenta;
@@ -73,7 +75,8 @@ public class FacturasVentaGUI extends JInternalFrame {
         this.limpiarYBuscar(true);
     }
 
-    public void buscarPorSerieNroTipo(long nroSerie, long nroFactura, TipoDeComprobante tipoDeComprobante, long idCliente) {
+    public void buscarPorSerieNroTipo(long nroSerie, long nroFactura,
+            TipoDeComprobante tipoDeComprobante, long idCliente) {
         chk_NumFactura.setSelected(true);
         txt_SerieFactura.setEnabled(true);
         txt_NroFactura.setEnabled(true);
@@ -91,57 +94,36 @@ public class FacturasVentaGUI extends JInternalFrame {
         this.buscar(true);
     }
 
-    private String getUriCriteria() {
-        String uriCriteria = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
+    private BusquedaFacturaVentaCriteria getCriteria() {
+        BusquedaFacturaVentaCriteria criteria = new BusquedaFacturaVentaCriteria();
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
         if (chk_Cliente.isSelected() && clienteSeleccionado != null) {
-            uriCriteria += "&idCliente=" + clienteSeleccionado.getId_Cliente();
+            criteria.setIdCliente(clienteSeleccionado.getId_Cliente());
         }
         if (chk_Fecha.isSelected()) {
-            uriCriteria += "&desde=" + dc_FechaDesde.getDate().getTime()
-                    + "&hasta=" + dc_FechaHasta.getDate().getTime();
+            criteria.setFechaDesde(dc_FechaDesde.getDate());
+            criteria.setFechaHasta(dc_FechaHasta.getDate());
         }
         if (chk_NumFactura.isSelected()) {
-            uriCriteria += "&nroFactura=" + Long.valueOf(txt_NroFactura.getText())
-                    + "&nroSerie=" + Long.valueOf(txt_SerieFactura.getText());
+            criteria.setNumSerie(Long.valueOf(txt_SerieFactura.getText()));
+            criteria.setNumFactura(Long.valueOf(txt_NroFactura.getText()));
         }
         if (chk_TipoFactura.isSelected()) {
-            uriCriteria += "&tipoDeComprobante=" + ((TipoDeComprobante) cmb_TipoFactura.getSelectedItem()).name();
+            criteria.setTipoComprobante(((TipoDeComprobante) cmb_TipoFactura.getSelectedItem()));
         }
         if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
-            uriCriteria += "&idUsuario=" + usuarioSeleccionado.getId_Usuario();
+            criteria.setIdUsuario(usuarioSeleccionado.getId_Usuario());
         }
         if (chk_Producto.isSelected() && productoSeleccionado != null) {
-            uriCriteria += "&idProducto=" + productoSeleccionado.getIdProducto();
+            criteria.setIdProducto(productoSeleccionado.getIdProducto());
         }
         if (chk_Viajante.isSelected() && viajanteSeleccionado != null) {
-            uriCriteria += "&idViajante=" + viajanteSeleccionado.getId_Usuario();
+            criteria.setIdViajante(viajanteSeleccionado.getId_Usuario());
         }
         if (chk_NumeroPedido.isSelected()) {
-            uriCriteria += "&nroPedido=" + Long.parseLong(txt_NumeroPedido.getText());
+            criteria.setNroPedido(Long.parseLong(txt_NumeroPedido.getText()));
         }
-        int seleccionOrden = cmbOrden.getSelectedIndex();
-        switch (seleccionOrden) {
-            case 0:
-                uriCriteria += "&ordenarPor=fecha";
-                break;
-            case 1:
-                uriCriteria += "&ordenarPor=cliente.nombreFiscal";
-                break;
-            case 2:
-                uriCriteria += "&ordenarPor=total";
-                break;
-        }
-        int seleccionDireccion = cmbSentido.getSelectedIndex();
-        switch (seleccionDireccion) {
-            case 0:
-                uriCriteria += "&sentido=DESC";
-                break;
-            case 1:
-                uriCriteria += "&sentido=ASC";
-                break;
-        }
-        uriCriteria += "&pagina=" + NUMERO_PAGINA;
-        return uriCriteria;
+        return criteria;
     }
 
     private void setColumnas() {
@@ -228,24 +210,47 @@ public class FacturasVentaGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(19).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 
-    private void calcularResultados(String uriCriteria) {
+    private void calcularResultados(BusquedaFacturaVentaCriteria criteria) {
         txt_ResultTotalFacturado.setValue(RestClient.getRestTemplate()
-                .getForObject("/facturas/total-facturado-venta/criteria?" + uriCriteria, BigDecimal.class));
+                .postForObject("/facturas/total-facturado-venta/criteria", criteria, BigDecimal.class));
         if (UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)
                 || UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ENCARGADO)) {
             txt_ResultGananciaTotal.setValue(RestClient.getRestTemplate()
-                    .getForObject("/facturas/ganancia-total/criteria?" + uriCriteria, BigDecimal.class));
+                    .postForObject("/facturas/ganancia-total/criteria", criteria, BigDecimal.class));
             txt_ResultTotalIVAVenta.setValue(RestClient.getRestTemplate()
-                    .getForObject("/facturas/total-iva-venta/criteria?" + uriCriteria, BigDecimal.class));
+                    .postForObject("/facturas/total-iva-venta/criteria", criteria, BigDecimal.class));
         }
     }
 
     private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
-        String uriCriteria = getUriCriteria();
+        BusquedaFacturaVentaCriteria criteria = getCriteria();
+        int seleccionOrden = cmbOrden.getSelectedIndex();
+        switch (seleccionOrden) {
+            case 0:
+                criteria.setOrdenarPor("fecha");
+                break;
+            case 1:
+                criteria.setOrdenarPor("cliente.nombreFiscal");
+                break;
+            case 2:
+                criteria.setOrdenarPor("total");
+                break;
+        }
+        int seleccionDireccion = cmbSentido.getSelectedIndex();
+        switch (seleccionDireccion) {
+            case 0:
+                criteria.setSentido("DESC");
+                break;
+            case 1:
+                criteria.setSentido("ASC");
+                break;
+        }
+        criteria.setPagina(NUMERO_PAGINA);
         try {
+            HttpEntity<BusquedaFacturaVentaCriteria> requestEntity = new HttpEntity<>(criteria);
             PaginaRespuestaRest<FacturaVenta> response = RestClient.getRestTemplate()
-                    .exchange("/facturas/venta/busqueda/criteria?" + uriCriteria, HttpMethod.GET, null,
+                    .exchange("/facturas/venta/busqueda/criteria", HttpMethod.POST, requestEntity,
                             new ParameterizedTypeReference<PaginaRespuestaRest<FacturaVenta>>() {
                     })
                     .getBody();
@@ -253,7 +258,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             facturasParcial = response.getContent();
             facturasTotal.addAll(facturasParcial);
             if (calcularResultados && tienePermisoSegunRoles) {
-                this.calcularResultados(getUriCriteria());
+                this.calcularResultados(getCriteria());
             }
             this.cargarResultadosAlTable();
         } catch (RestClientResponseException ex) {
@@ -316,7 +321,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             txt_NumeroPedido.setEnabled(false);
         }
         btn_Buscar.setEnabled(status);
-        btn_Nueva.setEnabled(status);
+        btnNuevaFactura.setEnabled(status);
         btn_VerDetalle.setEnabled(status);
         btn_Autorizar.setEnabled(status);
         tbl_Resultados.setEnabled(status);
@@ -441,6 +446,11 @@ public class FacturasVentaGUI extends JInternalFrame {
 
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            btn_Eliminar.setEnabled(true);
+        } else {
+            btn_Eliminar.setEnabled(false);
+        }
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
             txt_ResultGananciaTotal.setVisible(true);
@@ -457,12 +467,12 @@ public class FacturasVentaGUI extends JInternalFrame {
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
                 || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
             tienePermisoSegunRoles = true;
-            btn_Nueva.setEnabled(true);
+            btnNuevaFactura.setEnabled(true);
             btn_Autorizar.setEnabled(true);
             chk_Usuario.setEnabled(true);
         } else {
             tienePermisoSegunRoles = false;
-            btn_Nueva.setEnabled(false);
+            btnNuevaFactura.setEnabled(false);
             btn_Autorizar.setEnabled(false);
             chk_Usuario.setEnabled(false);
         }
@@ -483,9 +493,10 @@ public class FacturasVentaGUI extends JInternalFrame {
         txt_ResultTotalFacturado = new javax.swing.JFormattedTextField();
         txt_ResultGananciaTotal = new javax.swing.JFormattedTextField();
         txt_ResultTotalIVAVenta = new javax.swing.JFormattedTextField();
-        btn_Nueva = new javax.swing.JButton();
+        btnNuevaFactura = new javax.swing.JButton();
         btn_Autorizar = new javax.swing.JButton();
         btnCrearNotaCredito = new javax.swing.JButton();
+        btn_Eliminar = new javax.swing.JButton();
         panelFiltros = new javax.swing.JPanel();
         subPanelFiltros1 = new javax.swing.JPanel();
         chk_Cliente = new javax.swing.JCheckBox();
@@ -552,10 +563,11 @@ public class FacturasVentaGUI extends JInternalFrame {
             }
         ));
         tbl_Resultados.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        tbl_Resultados.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        tbl_Resultados.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         sp_Resultados.setViewportView(tbl_Resultados);
 
         btn_VerDetalle.setForeground(java.awt.Color.blue);
+        btn_VerDetalle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/target_16x16.png"))); // NOI18N
         btn_VerDetalle.setText("Ver Detalle");
         btn_VerDetalle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -612,12 +624,12 @@ public class FacturasVentaGUI extends JInternalFrame {
                     .addComponent(txt_ResultTotalFacturado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        btn_Nueva.setForeground(java.awt.Color.blue);
-        btn_Nueva.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Add_16x16.png"))); // NOI18N
-        btn_Nueva.setText("Nueva");
-        btn_Nueva.addActionListener(new java.awt.event.ActionListener() {
+        btnNuevaFactura.setForeground(java.awt.Color.blue);
+        btnNuevaFactura.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Add_16x16.png"))); // NOI18N
+        btnNuevaFactura.setText("Nueva Factura");
+        btnNuevaFactura.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_NuevaActionPerformed(evt);
+                btnNuevaFacturaActionPerformed(evt);
             }
         });
 
@@ -631,10 +643,20 @@ public class FacturasVentaGUI extends JInternalFrame {
         });
 
         btnCrearNotaCredito.setForeground(java.awt.Color.blue);
+        btnCrearNotaCredito.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Add_16x16.png"))); // NOI18N
         btnCrearNotaCredito.setText("Nueva Nota Credito");
         btnCrearNotaCredito.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCrearNotaCreditoActionPerformed(evt);
+            }
+        });
+
+        btn_Eliminar.setForeground(java.awt.Color.blue);
+        btn_Eliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Cancel_16x16.png"))); // NOI18N
+        btn_Eliminar.setText("Eliminar ");
+        btn_Eliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_EliminarActionPerformed(evt);
             }
         });
 
@@ -643,36 +665,43 @@ public class FacturasVentaGUI extends JInternalFrame {
         panelResultadosLayout.setHorizontalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(btn_Nueva, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0)
-                .addComponent(btn_Autorizar)
-                .addGap(0, 0, 0)
-                .addComponent(btn_VerDetalle)
-                .addGap(0, 0, 0)
-                .addComponent(btnCrearNotaCredito)
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelResultadosLayout.createSequentialGroup()
+                        .addComponent(btnNuevaFactura, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_VerDetalle))
+                    .addGroup(panelResultadosLayout.createSequentialGroup()
+                        .addComponent(btnCrearNotaCredito)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_Autorizar)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_Eliminar)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panelNumeros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(sp_Resultados)
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Autorizar, btn_Nueva, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCrearNotaCredito, btnNuevaFactura, btn_Autorizar, btn_Eliminar, btn_VerDetalle});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
-                .addGap(7, 7, 7)
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(panelNumeros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(btn_Nueva)
-                        .addComponent(btn_Autorizar)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelNumeros, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
                         .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btn_VerDetalle)
-                            .addComponent(btnCrearNotaCredito)))))
+                            .addComponent(btnNuevaFactura)
+                            .addComponent(btn_VerDetalle))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnCrearNotaCredito)
+                            .addComponent(btn_Autorizar)
+                            .addComponent(btn_Eliminar)))))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaCredito, btn_Autorizar, btn_Nueva, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaCredito, btnNuevaFactura, btn_Autorizar, btn_VerDetalle});
 
         panelFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
 
@@ -1130,7 +1159,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_chk_TipoFacturaItemStateChanged
 
-    private void btn_NuevaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevaActionPerformed
+    private void btnNuevaFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaFacturaActionPerformed
         if (this.existeClienteDisponible()) {
             JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), PuntoDeVentaGUI.class);
             if (gui == null) {
@@ -1156,7 +1185,7 @@ public class FacturasVentaGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_btn_NuevaActionPerformed
+    }//GEN-LAST:event_btnNuevaFacturaActionPerformed
 
     private void txt_SerieFacturaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_SerieFacturaKeyTyped
         Utilidades.controlarEntradaSoloNumerico(evt);
@@ -1169,7 +1198,7 @@ public class FacturasVentaGUI extends JInternalFrame {
     private void txt_NumeroPedidoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_NumeroPedidoKeyTyped
         Utilidades.controlarEntradaSoloNumerico(evt);
     }//GEN-LAST:event_txt_NumeroPedidoKeyTyped
-
+  
     private void chk_NumeroPedidoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_NumeroPedidoItemStateChanged
         txt_NumeroPedido.setEnabled(chk_NumeroPedido.isSelected());
     }//GEN-LAST:event_chk_NumeroPedidoItemStateChanged
@@ -1332,15 +1361,38 @@ public class FacturasVentaGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btnBuscarViajantesActionPerformed
 
+    private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
+        if (tbl_Resultados.getSelectedRow() != -1) {
+            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+            int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
+                    .getString("mensaje_eliminar_movimientos"),
+                    "Eliminar", JOptionPane.YES_NO_OPTION);
+            if (respuesta == JOptionPane.YES_OPTION) {
+                try {
+                    RestClient.getRestTemplate().delete("/facturas/" + facturasTotal.get(indexFilaSeleccionada).getId_Factura());
+                    this.limpiarYBuscar(true);
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }//GEN-LAST:event_btn_EliminarActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarCliente;
     private javax.swing.JButton btnBuscarProductos;
     private javax.swing.JButton btnBuscarUsuarios;
     private javax.swing.JButton btnBuscarViajantes;
     private javax.swing.JButton btnCrearNotaCredito;
+    private javax.swing.JButton btnNuevaFactura;
     private javax.swing.JButton btn_Autorizar;
     private javax.swing.JButton btn_Buscar;
-    private javax.swing.JButton btn_Nueva;
+    private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_VerDetalle;
     private javax.swing.JCheckBox chk_Cliente;
     private javax.swing.JCheckBox chk_Fecha;

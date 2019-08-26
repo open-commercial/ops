@@ -36,7 +36,7 @@
               <Component id="panelFiltros" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="panelOrden" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="24" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -91,16 +91,12 @@
               <Group type="102" alignment="1" attributes="0">
                   <Component id="sp_Resultados" pref="367" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                          <Component id="lblTotal" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtTotal" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="btn_VerDetalle" linkSize="3" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btn_Eliminar" linkSize="3" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnCrearGasto" linkSize="3" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="btnCrearGasto" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btn_VerDetalle" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btn_Eliminar" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblTotal" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtTotal" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -139,7 +135,7 @@
               <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/Certificate_16x16.png"/>
+              <Image iconType="3" name="/sic/icons/target_16x16.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Ver Detalle"/>
           </Properties>

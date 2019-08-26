@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
@@ -23,10 +24,16 @@ public class DetalleUbicacionGUI extends JDialog {
 
     public DetalleUbicacionGUI(Ubicacion ubicacionAModificar, String tituloVentana) {
         this.ubicacionAModificar = ubicacionAModificar;
-        initComponents();
+        this.initComponents();
+        this.setIcon();
         this.modificarTituloVentana(tituloVentana);
     }
 
+    private void setIcon() {
+        ImageIcon iconoVentana = new ImageIcon(DetalleProductoGUI.class.getResource("/sic/icons/Map_16x16.png"));
+        this.setIconImage(iconoVentana.getImage());
+    }
+    
     public Ubicacion getUbicacionModificada() {
         return ubicacionAModificar;
     }

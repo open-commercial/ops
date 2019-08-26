@@ -11,7 +11,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = {"fecha", "tipoComprobante", "serie", "nroNota", "empresa"})
+@EqualsAndHashCode(of = {"fecha", "tipoComprobante", "serie", "nroNota"})
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idNota", scope = Nota.class)
 @JsonSubTypes({
   @JsonSubTypes.Type(value = NotaCredito.class),
