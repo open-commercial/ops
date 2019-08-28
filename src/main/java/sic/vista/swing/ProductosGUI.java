@@ -332,9 +332,8 @@ public class ProductosGUI extends JInternalFrame {
     
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
-        long idSucursal = SucursalActiva.getInstance().getSucursal().getIdSucursal();
-        String criteriaBusqueda = "/productos/busqueda/criteria?idSucursal=" + idSucursal;
-        String criteriaCosto = "/productos/valor-stock/criteria?idSucursal=" + idSucursal;
+        String criteriaBusqueda = "/productos/busqueda/criteria?";
+        String criteriaCosto = "/productos/valor-stock/criteria?";
         if (chkCodigoODescripcion.isSelected()) {
             criteriaBusqueda += "&codigo=" + txtCodigoODescripcion.getText().trim();
             criteriaCosto += "&codigo=" + txtCodigoODescripcion.getText().trim();
