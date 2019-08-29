@@ -288,7 +288,6 @@ public class ClientesGUI extends JInternalFrame {
                 criteriaBusqueda += "sentido=DESC&";
                 break;
         }
-        criteriaBusqueda += "idSucursal=" + String.valueOf(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         criteriaBusqueda += "&pagina=" + NUMERO_PAGINA;
         try {
             PaginaRespuestaRest<CuentaCorrienteCliente> response = RestClient.getRestTemplate()

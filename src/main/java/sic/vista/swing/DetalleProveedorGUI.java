@@ -60,17 +60,6 @@ public class DetalleProveedorGUI extends JDialog {
 
     }
 
-    private void limpiarYRecargarComponentes() {
-        txtRazonSocial.setText("");
-        txtCuitOrDNI.setText("");
-        txtTelPrimario.setText("");
-        txtTelSecundario.setText("");
-        txtContacto.setText("");
-        txtEmail.setText("");
-        txtWeb.setText("");
-        this.cargarComboBoxCondicionesIVA();
-    }
-
     private void cargarComboBoxCondicionesIVA() {
         cmbCategoriaIVA.removeAllItems();
         for (CategoriaIVA c : CategoriaIVA.values()) {
@@ -303,7 +292,6 @@ public class DetalleProveedorGUI extends JDialog {
                 proveedor.setContacto(txtContacto.getText().trim());
                 proveedor.setEmail(txtEmail.getText().trim());
                 proveedor.setWeb(txtWeb.getText().trim());
-                proveedor.setIdSucursal((SucursalActiva.getInstance().getSucursal()).getIdSucursal());
                 if (this.ubicacion != null) {
                     proveedor.setUbicacion(this.ubicacion);
                 }
@@ -323,7 +311,6 @@ public class DetalleProveedorGUI extends JDialog {
                 if (this.ubicacion != null) {
                     proveedorModificar.setUbicacion(this.ubicacion);
                 }
-                proveedorModificar.setIdSucursal((SucursalActiva.getInstance().getSucursal()).getIdSucursal());
                 RestClient.getRestTemplate().put("/proveedores", proveedorModificar);
                 JOptionPane.showMessageDialog(this, "El proveedor se modificó correctamente.",
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);

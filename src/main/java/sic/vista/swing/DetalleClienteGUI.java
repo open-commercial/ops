@@ -488,7 +488,6 @@ public class DetalleClienteGUI extends JDialog {
             cliente.setTelefono(txtTelefono.getText().trim());
             cliente.setContacto(txtContacto.getText().trim());
             cliente.setEmail(txtEmail.getText().trim());
-            cliente.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
             if (cmbViajante.getSelectedItem() != null) {
                 cliente.setIdViajante(((Usuario) cmbViajante.getSelectedItem()).getId_Usuario());
             }

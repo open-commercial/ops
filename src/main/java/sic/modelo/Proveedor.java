@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = {"razonSocial", "idSucursal"})
+@EqualsAndHashCode(of = "razonSocial")
 public class Proveedor implements Serializable {
 
     private long id_Proveedor;
@@ -19,8 +19,6 @@ public class Proveedor implements Serializable {
     private String email;
     private String web;
     private Ubicacion ubicacion;
-    private Long idSucursal;
-    private String nombreSucursal;
     private boolean eliminado;
 
     @Override
