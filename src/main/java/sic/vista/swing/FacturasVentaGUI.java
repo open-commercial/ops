@@ -339,7 +339,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             fila[4] = factura.getNroPedido();
             fila[5] = factura.getNombreFiscalCliente();
             fila[6] = factura.getNombreUsuario();
-            fila[7] = factura.getNombreViajante();
+            fila[7] = factura.getNombreViajanteCliente();
             fila[8] = factura.getNombreTransportista();
             fila[9] = factura.getTotal();
             fila[10] = factura.getSubTotal();
