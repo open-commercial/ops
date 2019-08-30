@@ -259,7 +259,6 @@ public class ProveedoresGUI extends JInternalFrame {
                 criteria += "sentido=DESC&";
                 break;
         }
-        criteria += "idSucursal=" + SucursalActiva.getInstance().getSucursal().getIdSucursal();
         criteria += "&pagina=" + NUMERO_PAGINA;
         try {
             PaginaRespuestaRest<CuentaCorrienteProveedor> response = RestClient.getRestTemplate()

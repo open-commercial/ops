@@ -188,8 +188,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }
 
     private boolean existeClientePredeterminado() {
-        return RestClient.getRestTemplate().getForObject("/clientes/existe-predeterminado/sucursales/"
-                + SucursalActiva.getInstance().getSucursal().getIdSucursal(), boolean.class);
+        return RestClient.getRestTemplate().getForObject("/clientes/existe-predeterminado", boolean.class);
     }
 
     private boolean existeFormaDePagoPredeterminada() {
@@ -1636,8 +1635,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 || rolesDeUsuario.contains(Rol.VENDEDOR)) {
                 if (this.existeClientePredeterminado()) {
                     Cliente clientePredeterminado = RestClient.getRestTemplate()
-                            .getForObject("/clientes/predeterminado/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
-                                    Cliente.class);
+                            .getForObject("/clientes/predeterminado", Cliente.class);
                     this.cargarCliente(clientePredeterminado);
                     this.btnModificarCliente.setEnabled(true);
                 } 

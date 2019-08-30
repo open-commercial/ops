@@ -224,13 +224,12 @@ public class BuscarProductosGUI extends JDialog {
             Object[] fila = new Object[busquedaParaCompraOVenta ? 7 : 2];
             fila[0] = p.getCodigo();
             fila[1] = p.getDescripcion();
+            fila[2] = BigDecimal.ZERO;
             if (busquedaParaCompraOVenta) {
                 p.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
                     if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
                         fila[2] = cantidadesEnSucursal.getCantidad();
-                    } else {
-                        fila[2] = BigDecimal.ZERO;
-                    }
+                    } 
                 });
                 fila[3] = p.getCantidadEnSucursales().stream()
                         .filter(cantidadEnSucursales -> !cantidadEnSucursales.idSucursal.equals(SucursalActiva.getInstance().getSucursal().getIdSucursal()))

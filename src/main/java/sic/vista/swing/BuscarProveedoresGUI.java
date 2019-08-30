@@ -76,7 +76,6 @@ public class BuscarProveedoresGUI extends JDialog {
                 String uri = "/proveedores/busqueda/criteria?"
                         + "nroProveedor=" + txtCriteriaBusqueda.getText().trim()
                         + "&razonSocial=" + txtCriteriaBusqueda.getText().trim()                        
-                        + "&idSucursal=" + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                         + "&pagina=" + NUMERO_PAGINA
                         + "&tamanio=" + TAMANIO_PAGINA;
                 PaginaRespuestaRest<Proveedor> response = RestClient.getRestTemplate()

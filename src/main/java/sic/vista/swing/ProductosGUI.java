@@ -179,11 +179,10 @@ public class ProductosGUI extends JInternalFrame {
             fila[1] = producto.isDestacado();
             fila[2] = producto.getCodigo();
             fila[3] = producto.getDescripcion();
+            fila[4] = BigDecimal.ZERO;
             producto.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
                 if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
                     fila[4] = cantidadesEnSucursal.getCantidad();
-                } else {
-                    fila[4] = BigDecimal.ZERO;
                 }
             });
             fila[5] = producto.getCantidadEnSucursales().stream()

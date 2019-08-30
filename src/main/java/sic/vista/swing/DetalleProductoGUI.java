@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.CantidadEnSucursal;
 import sic.modelo.SucursalActiva;
 import sic.modelo.Medida;
 import sic.modelo.NuevoProducto;
@@ -1050,11 +1051,22 @@ public class DetalleProductoGUI extends JDialog {
                     productoParaModificar.setCodigo(txt_Codigo.getText());
                     productoParaModificar.setDescripcion(txt_Descripcion.getText().trim());
                     productoParaModificar.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
-                    productoParaModificar.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
-                        if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {                      
+                    boolean noExisteCantidadEnSucursal = true;
+                    for (CantidadEnSucursal cantidadesEnSucursal : productoParaModificar.getCantidadEnSucursales()) {
+                        if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
                             cantidadesEnSucursal.setCantidad(new BigDecimal(txt_Cantidad.getValue().toString()));
+                            noExisteCantidadEnSucursal = false;
                         }
-                    });
+                    }
+                    if (noExisteCantidadEnSucursal) {
+                        CantidadEnSucursal cantidadNuevaEnSucursal = new CantidadEnSucursal();
+                        cantidadNuevaEnSucursal.setCantidad(new BigDecimal(txt_Cantidad.getValue().toString()));
+                        cantidadNuevaEnSucursal.setEstante(txt_Estante.getText().trim());
+                        cantidadNuevaEnSucursal.setEstanteria(txt_Estanteria.getText().trim());
+                        cantidadNuevaEnSucursal.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
+                        cantidadNuevaEnSucursal.setNombreSucursal(SucursalActiva.getInstance().getSucursal().getNombre());
+                        productoParaModificar.getCantidadEnSucursales().add(cantidadNuevaEnSucursal);
+                    }
                     productoParaModificar.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
                     productoParaModificar.setBulto(new BigDecimal(txt_Bulto.getValue().toString()));
                     productoParaModificar.setPrecioCosto(new BigDecimal(txtPrecioCosto.getValue().toString()));
