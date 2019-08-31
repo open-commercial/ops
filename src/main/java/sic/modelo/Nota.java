@@ -48,8 +48,8 @@ public class Nota implements Serializable {
     private BigDecimal iva21Neto;      
     private BigDecimal iva105Neto;
     private BigDecimal total;
-    private long CAE;
-    private Date vencimientoCAE;
+    private long cae;
+    private Date vencimientoCae;
     private long numSerieAfip;
     private long numNotaAfip;
 
@@ -61,7 +61,7 @@ public class Nota implements Serializable {
             long idUsuario, String nombreUsuario, long idCliente, String nombreFiscalCliente,
             long idProveedor, String razonSocialProveedor, long idFacturaVenta, long idFacturaCompra, 
             String motivo, BigDecimal subTotalBruto, BigDecimal iva21Neto, BigDecimal iva105Neto, 
-            BigDecimal total, long CAE, Date vencimientoCAE, long numSerieAfip, long numNotaAfip) {
+            BigDecimal total, long cae, Date vencimientoCae, long numSerieAfip, long numNotaAfip) {
 
         this.idNota = idNota;
         this.serie = serie;
@@ -84,8 +84,8 @@ public class Nota implements Serializable {
         this.iva21Neto = iva21Neto;
         this.iva105Neto = iva105Neto;
         this.total = total;
-        this.CAE = CAE;
-        this.vencimientoCAE = vencimientoCAE;
+        this.cae = cae;
+        this.vencimientoCae = vencimientoCae;
         this.numSerieAfip = numSerieAfip;
         this.numNotaAfip = numNotaAfip;
     }

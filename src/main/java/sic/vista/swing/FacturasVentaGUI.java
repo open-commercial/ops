@@ -332,14 +332,14 @@ public class FacturasVentaGUI extends JInternalFrame {
     private void cargarResultadosAlTable() {
         facturasParcial.stream().map(factura -> {
             Object[] fila = new Object[20];
-            fila[0] = factura.getCAE() == 0 ? "" : factura.getCAE();
+            fila[0] = factura.getCae() == 0 ? "" : factura.getCae();
             fila[1] = factura.getFecha();
             fila[2] = factura.getTipoComprobante();
             fila[3] = factura.getNumSerie() + " - " + factura.getNumFactura();
             fila[4] = factura.getNroPedido();
             fila[5] = factura.getNombreFiscalCliente();
             fila[6] = factura.getNombreUsuario();
-            fila[7] = factura.getNombreViajante();
+            fila[7] = factura.getNombreViajanteCliente();
             fila[8] = factura.getNombreTransportista();
             fila[9] = factura.getTotal();
             fila[10] = factura.getSubTotal();
@@ -355,7 +355,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             } else {
                 fila[18] = factura.getNumSerieAfip() + " - " + factura.getNumFacturaAfip();
             }
-            fila[19] = factura.getVencimientoCAE();
+            fila[19] = factura.getVencimientoCae();
             return fila;
         }).forEach(fila -> {
             modeloTablaFacturas.addRow(fila);

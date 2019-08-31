@@ -143,7 +143,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
         if (proveedor != null) {
             notaDebito.setSerie(Long.parseLong(txt_Serie.getValue().toString()));
             notaDebito.setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
-            notaDebito.setCAE(Long.parseLong(txt_CAE.getValue().toString()));
+            notaDebito.setCae(Long.parseLong(txt_CAE.getValue().toString()));
             notaDebito.setIdProveedor(proveedor.getId_Proveedor());
         }
         NotaDebito nd = RestClient.getRestTemplate()
@@ -193,7 +193,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
             notaDebito = RestClient.getRestTemplate()
                     .postForObject("/notas/" + notaDebito.getIdNota() + "/autorizacion",
                             null, NotaDebito.class);
-            return notaDebito.getCAE() != 0L;
+            return notaDebito.getCae() != 0L;
         }
         return false;
     }
@@ -211,11 +211,11 @@ public class DetalleNotaDebitoGUI extends JDialog {
         dcFechaNota.setDate(notaDebito.getFecha());
         txt_Serie.setText(String.valueOf(notaDebito.getSerie()));
         txt_Numero.setText(String.valueOf(notaDebito.getNroNota()));
-        txt_CAE.setText(String.valueOf(notaDebito.getCAE()));
-        if (notaDebito.getCAE() == 0L) {
+        txt_CAE.setText(String.valueOf(notaDebito.getCae()));
+        if (notaDebito.getCae() == 0L) {
             txt_CAE.setText("");
         } else {
-            txt_CAE.setText(String.valueOf(notaDebito.getCAE()));
+            txt_CAE.setText(String.valueOf(notaDebito.getCae()));
         }
         txtNombre.setText(proveedorDeNota.getRazonSocial());
         cmbDescripcionRenglon2.removeAllItems();

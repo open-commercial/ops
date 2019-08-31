@@ -135,10 +135,10 @@ public class DetalleNotaCreditoGUI extends JDialog {
         txt_Serie.setText(String.valueOf(notaCredito.getSerie()));
         txt_Numero.setText(String.valueOf(notaCredito.getNroNota()));
         txt_CAE.setEnabled(false);
-        if (notaCredito.getCAE() == 0L) {
+        if (notaCredito.getCae() == 0L) {
             txt_CAE.setText("");
         } else {
-            txt_CAE.setText(String.valueOf(notaCredito.getCAE()));
+            txt_CAE.setText(String.valueOf(notaCredito.getCae()));
         }
         cmbMotivo.removeAllItems();
         cmbMotivo.addItem(notaCredito.getMotivo());
@@ -216,7 +216,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
             this.notaCredito.setFecha(fechaNotaCredito.getTime());
             this.notaCredito.setSerie(Long.parseLong(txt_Serie.getValue().toString()));
             this.notaCredito.setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
-            this.notaCredito.setCAE(Long.parseLong(txt_CAE.getValue().toString()));
+            this.notaCredito.setCae(Long.parseLong(txt_CAE.getValue().toString()));
 
         }
         NotaCredito nc = RestClient.getRestTemplate()

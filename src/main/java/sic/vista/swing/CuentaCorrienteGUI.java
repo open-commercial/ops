@@ -146,7 +146,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             renglonTabla[0] = r.getFecha();
             renglonTabla[1] = r.getTipoComprobante() + " Nº " + r.getSerie() + " - " + r.getNumero();
             renglonTabla[2] = r.getFechaVencimiento();
-            renglonTabla[3] = r.getCAE() == 0 ? "" : r.getCAE();
+            renglonTabla[3] = r.getCae() == 0 ? "" : r.getCae();
             renglonTabla[4] = r.getDescripcion();
             if (cliente != null) {
                 if (r.getMonto().compareTo(BigDecimal.ZERO) > 0) {

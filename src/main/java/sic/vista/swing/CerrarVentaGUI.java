@@ -185,7 +185,7 @@ public class CerrarVentaGUI extends JDialog {
         FacturaVenta facturaVenta = gui_puntoDeVenta.construirFactura();
         facturaVenta.setIdTransportista(((Transportista) cmb_Transporte.getSelectedItem()).getId_Transportista());
         this.armarMontosConFormasDePago();
-        try {
+        try {                  
             String uri = "/facturas/venta?";
             if (idsFormasDePago.isEmpty() == false) {
                 uri += "idsFormaDePago=" + Arrays.toString(idsFormasDePago.toArray()).substring(1, Arrays.toString(idsFormasDePago.toArray()).length() - 1)
@@ -291,7 +291,7 @@ public class CerrarVentaGUI extends JDialog {
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-        if (facturaVenta.getCAE() != 0L) facturaAutorizada = true;
+        if (facturaVenta.getCae() != 0L) facturaAutorizada = true;
     }
 
     private void armarMontosConFormasDePago() {
