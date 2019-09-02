@@ -339,8 +339,8 @@ public class ProductosGUI extends JInternalFrame {
         }
         if (chk_Disponibilidad.isSelected()) {
             if (rb_Faltantes.isSelected()) {
-                criteriaBusqueda += "&soloFantantes=true";
-                criteriaCosto += "&soloFantantes=true";
+                criteriaBusqueda += "&soloFaltantes=true";
+                criteriaCosto += "&soloFaltantes=true";
             }
             if (rbEnStock.isSelected()) {
                 criteriaBusqueda += "&soloEnStock=true";
