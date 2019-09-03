@@ -595,7 +595,7 @@
                 <Component class="javax.swing.JLabel" name="lbl_Bulto">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="Cant. por Bulto:"/>
+                    <Property name="text" type="java.lang.String" value="Cant. x Bulto:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JFormattedTextField" name="txt_Bulto">

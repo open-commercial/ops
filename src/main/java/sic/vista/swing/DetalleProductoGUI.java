@@ -458,7 +458,7 @@ public class DetalleProductoGUI extends JDialog {
         lbl_CantMinima.setText("Cant. Mínima:");
 
         lbl_Bulto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Bulto.setText("Cant. por Bulto:");
+        lbl_Bulto.setText("Cant. x Bulto:");
 
         txt_Bulto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
         txt_Bulto.setText("0");

@@ -269,7 +269,7 @@ public class BuscarProductosGUI extends JDialog {
         if (busquedaParaCompraOVenta) {
             encabezados[2] = "Cant. Disponible";
             encabezados[3] = "Otras Sucursales";
-            encabezados[4] = "Cant. por Bulto";
+            encabezados[4] = "Cant. x Bulto";
             encabezados[5] = "Unidad";
             String encabezadoPrecio = (movimiento == Movimiento.VENTA) ? "P. Lista"
                     : (movimiento == Movimiento.PEDIDO) ? "P. Lista"
@@ -484,13 +484,13 @@ public class BuscarProductosGUI extends JDialog {
             .addGroup(panelFondoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 788, Short.MAX_VALUE)
+                    .addComponent(sp_Resultados)
                     .addGroup(panelFondoLayout.createSequentialGroup()
                         .addComponent(txtCriteriaBusqueda)
                         .addGap(0, 0, 0)
                         .addComponent(btnBuscar))
                     .addGroup(panelFondoLayout.createSequentialGroup()
-                        .addComponent(spNotaProducto)
+                        .addComponent(spNotaProducto, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lbl_Descuento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -511,21 +511,20 @@ public class BuscarProductosGUI extends JDialog {
                     .addComponent(btnBuscar)
                     .addComponent(txtCriteriaBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Resultados)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spNotaProducto, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(panelFondoLayout.createSequentialGroup()
-                            .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                                .addComponent(lbl_Cantidad)
-                                .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                                .addComponent(lbl_Descuento)
-                                .addComponent(txtPorcentajeDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap())
+                .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(spNotaProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelFondoLayout.createSequentialGroup()
+                        .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addComponent(txtPorcentajeDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelFondoLayout.createSequentialGroup()
+                        .addComponent(lbl_Cantidad)
+                        .addGap(15, 15, 15)
+                        .addComponent(lbl_Descuento)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelFondoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscar, txtCriteriaBusqueda});
