@@ -52,8 +52,8 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         try {
             cmb_Medida.removeAllItems();
             List<Medida> medidas = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                .getForObject("/medidas/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
-                Medida[].class)));
+                    .getForObject("/medidas",
+                            Medida[].class)));
             medidas.stream().forEach((m) -> {
                 cmb_Medida.addItem(m);
             });

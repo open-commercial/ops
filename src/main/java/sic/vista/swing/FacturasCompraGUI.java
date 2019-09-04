@@ -298,9 +298,11 @@ public class FacturasCompraGUI extends JInternalFrame {
     }
 
     private boolean existeProveedorDisponible() {
-        return !Arrays.asList(RestClient.getRestTemplate()
-            .getForObject("/proveedores/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
-            Proveedor[].class)).isEmpty();
+        return !RestClient.getRestTemplate()
+                .exchange("/proveedores/busqueda/criteria", HttpMethod.GET, null,
+                        new ParameterizedTypeReference<PaginaRespuestaRest<Proveedor>>() {
+                })
+                .getBody().getContent().isEmpty();
     }
        
     private void cargarTiposDeFactura() {
