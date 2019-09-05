@@ -179,8 +179,8 @@ public class FacturasCompraGUI extends JInternalFrame {
         BusquedaFacturaCompraCriteria criteria = new BusquedaFacturaCompraCriteria();
         criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
         if (chk_Fecha.isSelected()) {
-            criteria.setFechaDesde(dc_FechaDesde.getDate());
-            criteria.setFechaHasta(dc_FechaHasta.getDate());
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? dc_FechaDesde.getDate() : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? dc_FechaHasta.getDate() : null);
         }
         if (chk_Proveedor.isSelected() && proveedorSeleccionado != null) {
             criteria.setIdProveedor(proveedorSeleccionado.getId_Proveedor());

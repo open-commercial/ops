@@ -101,8 +101,8 @@ public class FacturasVentaGUI extends JInternalFrame {
             criteria.setIdCliente(clienteSeleccionado.getId_Cliente());
         }
         if (chk_Fecha.isSelected()) {
-            criteria.setFechaDesde(dc_FechaDesde.getDate());
-            criteria.setFechaHasta(dc_FechaHasta.getDate());
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? dc_FechaDesde.getDate() : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? dc_FechaHasta.getDate() : null);
         }
         if (chk_NumFactura.isSelected()) {
             criteria.setNumSerie(Long.valueOf(txt_SerieFactura.getText()));
