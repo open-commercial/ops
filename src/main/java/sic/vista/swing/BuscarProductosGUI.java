@@ -139,8 +139,8 @@ public class BuscarProductosGUI extends JDialog {
             this.dispose();
         } else {            
             if (movimiento == Movimiento.VENTA) {
-                String uri = "/productos/disponibilidad-stock?"
-                        + "idProducto=" + productoSeleccionado.getIdProducto()
+                String uri = "/productos/disponibilidad-stock/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal() 
+                        + "?idProducto=" + productoSeleccionado.getIdProducto()
                         + "&cantidad=" + this.sumarCantidadesSegunProductosYaCargados();
                 boolean existeStockSuficiente = RestClient.getRestTemplate()
                         .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {})

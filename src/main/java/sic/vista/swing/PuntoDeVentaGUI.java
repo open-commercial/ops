@@ -641,8 +641,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             idsProductos[i] = renglonesFactura.get(i).getIdProductoItem();
             cantidades[i] = renglonesFactura.get(i).getCantidad();
         }
-        String uri = "/productos/disponibilidad-stock?"
-                + "idProducto=" + Arrays.toString(idsProductos).substring(1, Arrays.toString(idsProductos).length() - 1)
+        String uri = "/productos/disponibilidad-stock/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal() 
+                + "?idProducto=" + Arrays.toString(idsProductos).substring(1, Arrays.toString(idsProductos).length() - 1)
                 + "&cantidad=" + Arrays.toString(cantidades).substring(1, Arrays.toString(cantidades).length() - 1);
         return RestClient.getRestTemplate()
                 .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {
