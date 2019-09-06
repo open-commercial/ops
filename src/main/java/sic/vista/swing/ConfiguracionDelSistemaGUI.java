@@ -57,7 +57,7 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
             txtCorreoElectronico.setText(cdsModificar.getEmailUsername());
         }
         if (cdsModificar.isPuntoDeRetiro()) {
-            chkEnvio.setSelected(true);
+            chkRetiro.setSelected(true);
         }
     }
 
@@ -90,7 +90,7 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
             cdsModificar.setEmailUsername(null);
             cdsModificar.setEmailPassword(null);
         }
-        if (chkEnvio.isSelected()) {
+        if (chkRetiro.isSelected()) {
             cdsModificar.setPuntoDeRetiro(true);
         } else {
             cdsModificar.setPuntoDeRetiro(false);
@@ -128,8 +128,8 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
         lbl_password = new javax.swing.JLabel();
         txtEmailPassword = new javax.swing.JPasswordField();
         panelEnvio = new javax.swing.JPanel();
-        lblEnvio = new javax.swing.JLabel();
-        chkEnvio = new javax.swing.JCheckBox();
+        lblRetiro = new javax.swing.JLabel();
+        chkRetiro = new javax.swing.JCheckBox();
         lbl_Leyenda = new javax.swing.JLabel();
         btn_Guardar = new javax.swing.JButton();
 
@@ -342,7 +342,7 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
 
         panelEnvio.setBorder(javax.swing.BorderFactory.createTitledBorder("Envío"));
 
-        lblEnvio.setText("Usar como punto de entrega:");
+        lblRetiro.setText("Usar como punto de retiro:");
 
         javax.swing.GroupLayout panelEnvioLayout = new javax.swing.GroupLayout(panelEnvio);
         panelEnvio.setLayout(panelEnvioLayout);
@@ -350,9 +350,9 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
             panelEnvioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelEnvioLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblRetiro, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chkEnvio)
+                .addComponent(chkRetiro)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelEnvioLayout.setVerticalGroup(
@@ -360,8 +360,8 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
             .addGroup(panelEnvioLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelEnvioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblEnvio)
-                    .addComponent(chkEnvio))
+                    .addComponent(lblRetiro)
+                    .addComponent(chkRetiro))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -519,10 +519,10 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
     private javax.swing.JButton btn_BuscarCertificado;
     private javax.swing.JButton btn_Guardar;
     private javax.swing.JCheckBox chkEmail;
-    private javax.swing.JCheckBox chkEnvio;
+    private javax.swing.JCheckBox chkRetiro;
     private javax.swing.JCheckBox chk_PreImpresas;
     private javax.swing.JCheckBox chk_UsarFE;
-    private javax.swing.JLabel lblEnvio;
+    private javax.swing.JLabel lblRetiro;
     private javax.swing.JLabel lbl_CantMaxRenglones;
     private javax.swing.JLabel lbl_Certificado;
     private javax.swing.JLabel lbl_Contrasenia;

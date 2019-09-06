@@ -77,9 +77,9 @@ public class CerrarPedidoGUI extends JDialog {
         return this.operacionExitosa;
     }
 
-    private void cargarSucursales() {
+    private void cargarSucursalesConPuntoDeRetiro() {
         try {
-            sucursales = Arrays.asList(RestClient.getRestTemplate().getForObject("/sucursales", Sucursal[].class));
+            sucursales = Arrays.asList(RestClient.getRestTemplate().getForObject("/sucursales?puntoDeRetiro=true", Sucursal[].class));
             sucursales.stream().forEach(e -> {
                 cmbSucursales.addItem(e.getNombre() + ((e.getUbicacion() != null) ? (" (" + e.getUbicacion() + ")") : ""));
             });
@@ -241,7 +241,7 @@ public class CerrarPedidoGUI extends JDialog {
             } else {
                 rbDireccionFacturacion.setEnabled(false);
             }
-            this.cargarSucursales();
+            this.cargarSucursalesConPuntoDeRetiro();
             rbRetiroEnSucursal.setSelected(true);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

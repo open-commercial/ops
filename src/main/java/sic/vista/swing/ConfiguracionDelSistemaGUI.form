@@ -416,9 +416,9 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="lblEnvio" min="-2" pref="300" max="-2" attributes="0"/>
+                      <Component id="lblRetiro" min="-2" pref="300" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="chkEnvio" min="-2" max="-2" attributes="0"/>
+                      <Component id="chkRetiro" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -428,8 +428,8 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="lblEnvio" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="chkEnvio" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblRetiro" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="chkRetiro" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -437,12 +437,12 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="lblEnvio">
+            <Component class="javax.swing.JLabel" name="lblRetiro">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Usar como punto de entrega:"/>
+                <Property name="text" type="java.lang.String" value="Usar como punto de retiro:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JCheckBox" name="chkEnvio">
+            <Component class="javax.swing.JCheckBox" name="chkRetiro">
             </Component>
           </SubComponents>
         </Container>
