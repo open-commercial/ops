@@ -10,7 +10,9 @@ import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -31,6 +33,7 @@ import sic.modelo.Producto;
 import sic.modelo.Proveedor;
 import sic.modelo.Rol;
 import sic.modelo.Rubro;
+import sic.modelo.Sucursal;
 import sic.modelo.TipoDeOperacion;
 import sic.modelo.UsuarioActivo;
 import sic.util.CalculosPrecioProducto;
@@ -49,6 +52,8 @@ public class DetalleProductoGUI extends JDialog {
     private final TipoDeOperacion operacion;        
     private List<Medida> medidas;
     private List<Rubro> rubros;  
+    private List<Sucursal> sucursales;
+    private Map<Long,BigDecimal> cantidadEnSucursal;
     private Proveedor proveedorSeleccionado;
     private BigDecimal precioListaAnterior = BigDecimal.ZERO;
     private final static BigDecimal IVA_21 = new BigDecimal("21");	
@@ -109,13 +114,16 @@ public class DetalleProductoGUI extends JDialog {
         cmbIVAPorcentaje = new javax.swing.JComboBox();
         panelCantidades = new javax.swing.JPanel();
         chkSinLimite = new javax.swing.JCheckBox();
-        lbl_Cantidad = new javax.swing.JLabel();
-        txt_Cantidad = new javax.swing.JFormattedTextField();
         txt_CantMinima = new javax.swing.JFormattedTextField();
         lbl_CantMinima = new javax.swing.JLabel();
         lbl_Bulto = new javax.swing.JLabel();
         txt_Bulto = new javax.swing.JFormattedTextField();
         lblSinLimite = new javax.swing.JLabel();
+        pnlCantidadSucursales = new javax.swing.JPanel();
+        lblSucursal = new javax.swing.JLabel();
+        cmbSucursales = new javax.swing.JComboBox<>();
+        txt_Cantidad = new javax.swing.JFormattedTextField();
+        lbl_Cantidad = new javax.swing.JLabel();
         panelPropiedades = new javax.swing.JPanel();
         panel5 = new javax.swing.JPanel();
         lbl_Ven = new javax.swing.JLabel();
@@ -217,7 +225,7 @@ public class DetalleProductoGUI extends JDialog {
                     .addComponent(txt_Codigo)
                     .addComponent(txt_Descripcion)
                     .addGroup(panelSuperiorLayout.createSequentialGroup()
-                        .addComponent(txtProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
+                        .addComponent(txtProveedor)
                         .addGap(0, 0, 0)
                         .addComponent(btnBuscarProveedor)
                         .addGap(0, 0, 0)
@@ -434,18 +442,6 @@ public class DetalleProductoGUI extends JDialog {
             }
         });
 
-        lbl_Cantidad.setForeground(java.awt.Color.red);
-        lbl_Cantidad.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Cantidad.setText("* Cant. Disponible:");
-
-        txt_Cantidad.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
-        txt_Cantidad.setText("0");
-        txt_Cantidad.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                txt_CantidadFocusGained(evt);
-            }
-        });
-
         txt_CantMinima.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
         txt_CantMinima.setText("0");
         txt_CantMinima.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -477,25 +473,25 @@ public class DetalleProductoGUI extends JDialog {
             panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelCantidadesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelCantidadesLayout.createSequentialGroup()
                         .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lbl_CantMinima, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lbl_Cantidad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblSinLimite, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txt_CantMinima)
-                            .addComponent(chkSinLimite, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
-                            .addComponent(txt_Cantidad)))
+                        .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelCantidadesLayout.createSequentialGroup()
+                                .addComponent(chkSinLimite, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(txt_CantMinima)))
                     .addGroup(panelCantidadesLayout.createSequentialGroup()
                         .addComponent(lbl_Bulto, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txt_Bulto)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
-        panelCantidadesLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lbl_Bulto, lbl_CantMinima, lbl_Cantidad});
+        panelCantidadesLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lbl_Bulto, lbl_CantMinima});
 
         panelCantidadesLayout.setVerticalGroup(
             panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -504,20 +500,79 @@ public class DetalleProductoGUI extends JDialog {
                 .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblSinLimite)
                     .addComponent(chkSinLimite))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_Cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Cantidad))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txt_CantMinima, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_CantMinima))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_Bulto)
                     .addComponent(txt_Bulto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        pnlCantidadSucursales.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        lblSucursal.setText("Sucursal:");
+
+        cmbSucursales.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbSucursalesActionPerformed(evt);
+            }
+        });
+
+        txt_Cantidad.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
+        txt_Cantidad.setText("0");
+        txt_Cantidad.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txt_CantidadFocusGained(evt);
+            }
+        });
+        txt_Cantidad.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_CantidadKeyReleased(evt);
+            }
+        });
+
+        lbl_Cantidad.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbl_Cantidad.setText("Cantidad:");
+
+        javax.swing.GroupLayout pnlCantidadSucursalesLayout = new javax.swing.GroupLayout(pnlCantidadSucursales);
+        pnlCantidadSucursales.setLayout(pnlCantidadSucursalesLayout);
+        pnlCantidadSucursalesLayout.setHorizontalGroup(
+            pnlCantidadSucursalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlCantidadSucursalesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlCantidadSucursalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblSucursal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_Cantidad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(pnlCantidadSucursalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlCantidadSucursalesLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txt_Cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlCantidadSucursalesLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cmbSucursales, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+
+        pnlCantidadSucursalesLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cmbSucursales, txt_Cantidad});
+
+        pnlCantidadSucursalesLayout.setVerticalGroup(
+            pnlCantidadSucursalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlCantidadSucursalesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlCantidadSucursalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblSucursal)
+                    .addComponent(cmbSucursales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlCantidadSucursalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txt_Cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_Cantidad))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        pnlCantidadSucursalesLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblSucursal, lbl_Cantidad});
 
         javax.swing.GroupLayout panelGeneralLayout = new javax.swing.GroupLayout(panelGeneral);
         panelGeneral.setLayout(panelGeneralLayout);
@@ -530,7 +585,9 @@ public class DetalleProductoGUI extends JDialog {
                     .addGroup(panelGeneralLayout.createSequentialGroup()
                         .addComponent(panelPrecios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panelCantidades, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(panelCantidades, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(pnlCantidadSucursales, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         panelGeneralLayout.setVerticalGroup(
@@ -539,10 +596,13 @@ public class DetalleProductoGUI extends JDialog {
                 .addContainerGap()
                 .addComponent(panelSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(panelPrecios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelCantidades, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelPrecios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelGeneralLayout.createSequentialGroup()
+                        .addComponent(pnlCantidadSucursales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(panelCantidades, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tpTabs.addTab("General", panelGeneral);
@@ -799,11 +859,11 @@ public class DetalleProductoGUI extends JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(tpTabs, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(9, Short.MAX_VALUE)
+                .addComponent(tpTabs, javax.swing.GroupLayout.PREFERRED_SIZE, 398, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnGuardar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -818,10 +878,12 @@ public class DetalleProductoGUI extends JDialog {
         rbPublico.setSelected(productoParaModificar.isPublico());
         rbPrivado.setSelected(!productoParaModificar.isPublico());
         chkDestacado.setSelected(productoParaModificar.isDestacado());
+        cmbSucursales.setSelectedItem(SucursalActiva.getInstance().getSucursal());
         productoParaModificar.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
-            if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
+            cantidadEnSucursal.put(cantidadesEnSucursal.idSucursal, cantidadesEnSucursal.getCantidad());
+            if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {               
                 txt_Cantidad.setValue(cantidadesEnSucursal.getCantidad());
-            }
+            }           
         });
         txt_CantMinima.setValue(productoParaModificar.getCantMinima());
         txt_Bulto.setValue(productoParaModificar.getBulto());
@@ -899,6 +961,25 @@ public class DetalleProductoGUI extends JDialog {
                     .getForObject("/rubros",
                             Rubro[].class)));
             rubros.stream().forEach(r -> cmb_Rubro.addItem(r.getNombre()));
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void cargarSucursales() {
+        this.cantidadEnSucursal = new HashMap<>();
+        cmbSucursales.removeAllItems();
+        try {
+            sucursales = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
+                    .getForObject("/sucursales",
+                            Sucursal[].class)));
+            sucursales.stream().forEach(s -> cmbSucursales.addItem(s));
+            cmbSucursales.setSelectedItem(SucursalActiva.getInstance().getSucursal());
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -1012,7 +1093,7 @@ public class DetalleProductoGUI extends JDialog {
                     NuevoProducto producto = new NuevoProducto();
                     producto.setCodigo(txt_Codigo.getText());
                     producto.setDescripcion(txt_Descripcion.getText().trim());
-                    producto.setCantidad(new BigDecimal(txt_Cantidad.getValue().toString()));
+                    producto.setCantidadEnSucursal(cantidadEnSucursal);
                     producto.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
                     producto.setBulto(new BigDecimal(txt_Bulto.getValue().toString()));
                     producto.setPrecioCosto(new BigDecimal(txtPrecioCosto.getValue().toString()));
@@ -1051,22 +1132,25 @@ public class DetalleProductoGUI extends JDialog {
                     productoParaModificar.setCodigo(txt_Codigo.getText());
                     productoParaModificar.setDescripcion(txt_Descripcion.getText().trim());
                     productoParaModificar.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
-                    boolean noExisteCantidadEnSucursal = true;
-                    for (CantidadEnSucursal cantidadesEnSucursal : productoParaModificar.getCantidadEnSucursales()) {
-                        if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
-                            cantidadesEnSucursal.setCantidad(new BigDecimal(txt_Cantidad.getValue().toString()));
-                            noExisteCantidadEnSucursal = false;
+                    List<CantidadEnSucursal> cantidadesNuevas = new ArrayList<>();
+                    cantidadEnSucursal.keySet().forEach(idSucursal -> {
+                        boolean crearNuevaCantidadEnSucursal = true;
+                        for (CantidadEnSucursal cant : productoParaModificar.getCantidadEnSucursales()) {
+                            if (cant.getIdSucursal().equals(idSucursal)) {
+                                cant.setCantidad(cantidadEnSucursal.get(idSucursal));
+                                crearNuevaCantidadEnSucursal = false;
+                            }
                         }
-                    }
-                    if (noExisteCantidadEnSucursal) {
-                        CantidadEnSucursal cantidadNuevaEnSucursal = new CantidadEnSucursal();
-                        cantidadNuevaEnSucursal.setCantidad(new BigDecimal(txt_Cantidad.getValue().toString()));
-                        cantidadNuevaEnSucursal.setEstante(txt_Estante.getText().trim());
-                        cantidadNuevaEnSucursal.setEstanteria(txt_Estanteria.getText().trim());
-                        cantidadNuevaEnSucursal.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
-                        cantidadNuevaEnSucursal.setNombreSucursal(SucursalActiva.getInstance().getSucursal().getNombre());
-                        productoParaModificar.getCantidadEnSucursales().add(cantidadNuevaEnSucursal);
-                    }
+                        if (crearNuevaCantidadEnSucursal) {
+                            CantidadEnSucursal cantidadNuevaEnSucursal = new CantidadEnSucursal();
+                            cantidadNuevaEnSucursal.setCantidad(cantidadEnSucursal.get(idSucursal));
+                            cantidadNuevaEnSucursal.setEstante(txt_Estante.getText().trim());
+                            cantidadNuevaEnSucursal.setEstanteria(txt_Estanteria.getText().trim());
+                            cantidadNuevaEnSucursal.setIdSucursal(idSucursal);
+                            cantidadesNuevas.add(cantidadNuevaEnSucursal);
+                        }
+                    });
+                    productoParaModificar.getCantidadEnSucursales().addAll(cantidadesNuevas);                                  
                     productoParaModificar.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
                     productoParaModificar.setBulto(new BigDecimal(txt_Bulto.getValue().toString()));
                     productoParaModificar.setPrecioCosto(new BigDecimal(txtPrecioCosto.getValue().toString()));
@@ -1116,6 +1200,7 @@ public class DetalleProductoGUI extends JDialog {
         this.prepararComponentes();
         this.cargarMedidas();
         this.cargarRubros();
+        this.cargarSucursales();
         if (operacion == TipoDeOperacion.ALTA) {
             this.setTitle("Nuevo Producto");
             lblDestacado.setEnabled(false);
@@ -1359,6 +1444,17 @@ public class DetalleProductoGUI extends JDialog {
         }
     }//GEN-LAST:event_chkDestacadoActionPerformed
 
+    private void cmbSucursalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbSucursalesActionPerformed
+        txt_Cantidad.setText((cantidadEnSucursal.get(((Sucursal) cmbSucursales.getSelectedItem()).getIdSucursal())) != null
+                ? "" + (cantidadEnSucursal.get(((Sucursal) cmbSucursales.getSelectedItem()).getIdSucursal())).doubleValue() : "0");
+    }//GEN-LAST:event_cmbSucursalesActionPerformed
+
+    private void txt_CantidadKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_CantidadKeyReleased
+        if (!txt_Cantidad.getText().isEmpty() && (new BigDecimal(txt_Cantidad.getText())).compareTo(new BigDecimal(txt_Cantidad.getValue().toString())) != 0) {
+            cantidadEnSucursal.put(((Sucursal) cmbSucursales.getSelectedItem()).getIdSucursal(), new BigDecimal(txt_Cantidad.getText()));
+        }
+    }//GEN-LAST:event_txt_CantidadKeyReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgVisibilidad;
     private javax.swing.JButton btnBuscarProveedor;
@@ -1369,6 +1465,7 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JCheckBox chkDestacado;
     private javax.swing.JCheckBox chkSinLimite;
     private javax.swing.JComboBox cmbIVAPorcentaje;
+    private javax.swing.JComboBox<Sucursal> cmbSucursales;
     private javax.swing.JComboBox cmb_Medida;
     private javax.swing.JComboBox cmb_Rubro;
     private com.toedter.calendar.JDateChooser dc_Vencimiento;
@@ -1377,6 +1474,7 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JLabel lblDestacado;
     private javax.swing.JLabel lblPublico;
     private javax.swing.JLabel lblSinLimite;
+    private javax.swing.JLabel lblSucursal;
     private javax.swing.JLabel lblTamanioMax;
     private javax.swing.JLabel lbl_Bulto;
     private javax.swing.JLabel lbl_CantMinima;
@@ -1408,6 +1506,7 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JPanel panelPrecios;
     private javax.swing.JPanel panelPropiedades;
     private javax.swing.JPanel panelSuperior;
+    private javax.swing.JPanel pnlCantidadSucursales;
     private javax.swing.JRadioButton rbPrivado;
     private javax.swing.JRadioButton rbPublico;
     private javax.swing.JTabbedPane tpTabs;
