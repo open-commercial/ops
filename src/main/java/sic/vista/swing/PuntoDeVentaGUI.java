@@ -42,6 +42,7 @@ import sic.modelo.NuevoRenglonPedido;
 import sic.modelo.Pedido;
 import sic.modelo.Producto;
 import sic.modelo.Rol;
+import sic.modelo.Sucursal;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.Transportista;
 import sic.util.DecimalesRenderer;
@@ -258,9 +259,9 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         tbl_Resultado.getColumnModel().getColumn(7).setPreferredWidth(120);
     }
 
-    private void agregarRenglon(RenglonFactura renglon) {
+    private boolean agregarRenglon(RenglonFactura renglon) {
+        boolean agregado = false;
         try {
-            boolean agregado = false;
             //busca entre los renglones al producto, aumenta la cantidad y recalcula el descuento        
             for (int i = 0; i < renglones.size(); i++) {
                 RenglonFactura rf;
@@ -283,6 +284,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             //para que baje solo el scroll vertical
             Point p = new Point(0, tbl_Resultado.getHeight());
             sp_Resultado.getViewport().setViewPosition(p);
+
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -291,6 +293,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
+        return agregado;
     }
 
     private void cargarRenglonesAlTable(EstadoRenglon[] estadosDeLosRenglones) {
@@ -414,29 +417,24 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         RenglonFactura.class);
                 boolean esValido = true;
                 Map<Long, BigDecimal> faltantes;
-                if (cmb_TipoComprobante.getSelectedItem() == TipoDeComprobante.PEDIDO) {
+                if (cmb_TipoComprobante.getSelectedItem() != TipoDeComprobante.PEDIDO) {
                     faltantes = this.getProductosSinStockDisponible(Arrays.asList(renglon));
                     if (!faltantes.isEmpty()) {
-                        esValido = false;
-                        JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                                .getString("mensaje_producto_sin_stock_suficiente"), "Error", JOptionPane.ERROR_MESSAGE);                        
-                    }
-                } else {
-                    faltantes = this.getProductosSinStockDisponible(Arrays.asList(renglon));
-                    if (faltantes.isEmpty() == false) {
                         esValido = false;
                         JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                                 .getString("mensaje_producto_sin_stock_suficiente"), "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
                 if (esValido) {
-                    this.agregarRenglon(renglon);
+                    boolean renglonCargado = this.agregarRenglon(renglon);
                     EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglones.size()];
                     if (tbl_Resultado.getRowCount() == 0) {
                         estadosRenglones[0] = EstadoRenglon.DESMARCADO;
                     } else {
                         this.cargarEstadoDeLosChkEnTabla(tbl_Resultado, estadosRenglones);
+                        if (!renglonCargado) {
                         estadosRenglones[tbl_Resultado.getRowCount()] = EstadoRenglon.DESMARCADO;
+                        }
                     }
                     this.cargarRenglonesAlTable(estadosRenglones);
                     this.calcularResultados();
@@ -650,16 +648,22 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     }
     
     private void finalizarPedido() {
-        if (nuevoPedido != null) {
-            CerrarPedidoGUI cerrarPedido = new CerrarPedidoGUI(nuevoPedido, cliente);
-            cerrarPedido.setModal(true);
-            cerrarPedido.setLocationRelativeTo(this);
-            cerrarPedido.setVisible(true);
-            if (cerrarPedido.isOperacionExitosa()) {
-                this.limpiarYRecargarComponentes();
+        if (Arrays.asList(RestClient.getRestTemplate().getForObject("/sucursales?puntoDeRetiro=true", Sucursal[].class)).isEmpty()
+                && cliente.getUbicacionEnvio() == null && cliente.getUbicacionFacturacion() == null) {
+            JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                    .getString("mensaje_pedido_sin_ubicacion_envio_disponible"), "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            if (nuevoPedido != null) {
+                CerrarPedidoGUI cerrarPedido = new CerrarPedidoGUI(nuevoPedido, cliente);
+                cerrarPedido.setModal(true);
+                cerrarPedido.setLocationRelativeTo(this);
+                cerrarPedido.setVisible(true);
+                if (cerrarPedido.isOperacionExitosa()) {
+                    this.limpiarYRecargarComponentes();
+                }
+            } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificarPedido == true) {
+                this.actualizarPedido(pedido);
             }
-        } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificarPedido == true) {
-            this.actualizarPedido(pedido);
         }
     }
 
