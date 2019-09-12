@@ -217,7 +217,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         txtUbicacionCliente.setText(cliente.getUbicacionFacturacion() != null ? cliente.getUbicacionFacturacion().toString() : "");
         txt_CondicionIVACliente.setText(cliente.getCategoriaIVA().toString());
         txtIdFiscalCliente.setText(cliente.getIdFiscal() != null ? cliente.getIdFiscal().toString() : "");
-        txt_Descuento_porcentaje.setValue(cliente.getBonificacion());
     }
 
     private void setColumnas() {
@@ -364,7 +363,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         if (cantidadMaximaRenglones > renglones.size()) {
             Movimiento movimiento = this.tipoDeComprobante.equals(TipoDeComprobante.PEDIDO) ? Movimiento.PEDIDO : Movimiento.VENTA;
             // revisar esto, es necesario para el movimiento como String y a su vez el movimiento?
-            BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglones, this.tipoDeComprobante, movimiento);
+            BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglones, this.tipoDeComprobante, movimiento, this.cliente.getBonificacion());
             buscarProductosGUI.setModal(true);
             buscarProductosGUI.setLocationRelativeTo(this);
             buscarProductosGUI.setVisible(true);

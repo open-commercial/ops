@@ -45,18 +45,20 @@ public class BuscarProductosGUI extends JDialog {
     private boolean debeCargarRenglon;    
     private final boolean busquedaParaCompraOVenta;
     private Movimiento movimiento;
+    private BigDecimal bonificacionCliente;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int NUMERO_PAGINA = 0;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeDialog = new Dimension(1000, 600);
     
-    public BuscarProductosGUI(List<RenglonFactura> renglones, TipoDeComprobante tipoDeComprobante, Movimiento movimiento) {
+    public BuscarProductosGUI(List<RenglonFactura> renglones, TipoDeComprobante tipoDeComprobante, Movimiento movimiento, BigDecimal bonificacionCliente) {
         this.initComponents();
         this.setIcon();
         this.renglones = renglones;
         this.movimiento = movimiento;
         this.tipoDeComprobante = tipoDeComprobante;
         this.busquedaParaCompraOVenta = true;
+        this.bonificacionCliente = bonificacionCliente;
         this.setColumnas();
         this.agregarListeners();
     }
@@ -88,7 +90,7 @@ public class BuscarProductosGUI extends JDialog {
     
     private void prepararComponentes() {
         txtCantidad.setValue(1.00);
-        txtPorcentajeDescuento.setValue(0.0);
+        txtPorcentajeDescuento.setValue(this.bonificacionCliente);
         if (renglones == null && movimiento == null && tipoDeComprobante == null) {
             lbl_Cantidad.setVisible(false);
             lbl_Descuento.setVisible(false);
