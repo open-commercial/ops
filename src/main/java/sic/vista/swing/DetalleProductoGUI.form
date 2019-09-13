@@ -36,21 +36,16 @@
               <Component id="btnGuardar" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="tpTabs" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
-          </Group>
+          <Component id="tpTabs" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace pref="9" max="32767" attributes="0"/>
-              <Component id="tpTabs" min="-2" pref="398" max="-2" attributes="0"/>
+              <Component id="tpTabs" min="-2" pref="391" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="btnGuardar" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -109,13 +104,13 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="panelSuperior" min="-2" max="-2" attributes="1"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="panelPrecios" min="-2" max="-2" attributes="3"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" attributes="0">
                               <Component id="pnlCantidadSucursales" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="panelCantidades" min="-2" max="-2" attributes="1"/>
+                              <Component id="panelCantidades" max="32767" attributes="1"/>
                           </Group>
+                          <Component id="panelPrecios" min="-2" max="-2" attributes="3"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -139,9 +134,9 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="lbl_Codigo" alignment="1" max="32767" attributes="1"/>
-                              <Component id="lbl_Medida" max="32767" attributes="1"/>
                               <Component id="lbl_Proveedor" alignment="0" max="32767" attributes="1"/>
-                              <Component id="lbl_Descripcion" max="32767" attributes="1"/>
+                              <Component id="lbl_Descripcion" pref="111" max="32767" attributes="1"/>
+                              <Component id="lbl_Medida" alignment="1" max="32767" attributes="1"/>
                               <Component id="lbl_Rubro" alignment="1" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -219,11 +214,8 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lbl_Rubro">
                   <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
-                    </Property>
                     <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="* Rubro:"/>
+                    <Property name="text" type="java.lang.String" value="Rubro:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="cmb_Rubro">
@@ -264,11 +256,8 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lbl_Medida">
                   <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
-                    </Property>
                     <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="* U. de Medida:"/>
+                    <Property name="text" type="java.lang.String" value="Medida:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="btnBuscarProveedor">
@@ -302,32 +291,49 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lbl_PrecioLista" max="32767" attributes="1"/>
-                              <Component id="lbl_PVP" max="32767" attributes="0"/>
-                              <Component id="lbl_IVA" alignment="0" max="32767" attributes="0"/>
-                              <Component id="lbl_Ganancia" alignment="0" max="32767" attributes="1"/>
-                              <Component id="lbl_PrecioCosto" alignment="0" max="32767" attributes="1"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="cmbIVAPorcentaje" max="32767" attributes="0"/>
-                                      <Component id="txtGananciaPorcentaje" max="32767" attributes="2"/>
+                              <Group type="102" attributes="0">
+                                  <Component id="lbl_PrecioCosto" min="-2" pref="154" max="-2" attributes="1"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="txtPrecioCosto" linkSize="5" pref="67" max="32767" attributes="1"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="lbl_Ganancia" min="-2" pref="154" max="-2" attributes="1"/>
+                                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtGananciaPorcentaje" max="32767" attributes="2"/>
+                                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtGananciaNeto" linkSize="5" pref="102" max="32767" attributes="1"/>
+                              </Group>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="1" attributes="0">
+                                      <Component id="lbl_PrecioLista" min="-2" pref="154" max="-2" attributes="1"/>
+                                      <Component id="lbl_IVA" min="-2" pref="154" max="-2" attributes="0"/>
+                                      <Component id="lbl_PVP" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="txtIVANeto" linkSize="5" alignment="1" max="32767" attributes="2"/>
-                                      <Component id="txtGananciaNeto" linkSize="5" alignment="0" max="32767" attributes="1"/>
-                                      <Component id="txtPrecioCosto" linkSize="5" alignment="0" max="32767" attributes="1"/>
-                                      <Component id="txtPVP" linkSize="5" alignment="0" pref="102" max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" attributes="0">
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Group type="102" attributes="0">
+                                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                                  <Component id="txtPVP" linkSize="5" pref="102" max="32767" attributes="0"/>
+                                              </Group>
+                                              <Group type="102" attributes="0">
+                                                  <Component id="cmbIVAPorcentaje" min="-2" max="-2" attributes="0"/>
+                                                  <EmptySpace max="32767" attributes="0"/>
+                                                  <Component id="txtIVANeto" linkSize="5" pref="102" max="32767" attributes="2"/>
+                                              </Group>
+                                          </Group>
+                                      </Group>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
+                                          <Component id="txtPrecioLista" linkSize="5" pref="30" max="32767" attributes="1"/>
+                                      </Group>
                                   </Group>
                               </Group>
-                              <Component id="txtPrecioLista" linkSize="5" alignment="1" pref="30" max="32767" attributes="1"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -339,24 +345,24 @@
                               <Component id="lbl_PrecioCosto" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="txtPrecioCosto" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="lbl_Ganancia" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="txtGananciaPorcentaje" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="txtGananciaNeto" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="lbl_PVP" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="txtPVP" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="txtIVANeto" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="cmbIVAPorcentaje" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="lbl_IVA" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="lbl_PrecioLista" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="txtPrecioLista" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -504,25 +510,22 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="lbl_CantMinima" linkSize="10" alignment="1" max="32767" attributes="0"/>
-                                      <Component id="lblSinLimite" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="lbl_CantMinima" max="32767" attributes="0"/>
+                                      <Component id="lblSinLimite" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" attributes="0">
-                                          <Component id="chkSinLimite" min="-2" pref="137" max="-2" attributes="2"/>
-                                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                      </Group>
+                                      <Component id="chkSinLimite" pref="185" max="32767" attributes="2"/>
                                       <Component id="txt_CantMinima" max="32767" attributes="1"/>
                                   </Group>
                               </Group>
                               <Group type="102" attributes="0">
-                                  <Component id="lbl_Bulto" linkSize="10" min="-2" pref="120" max="-2" attributes="0"/>
+                                  <Component id="lbl_Bulto" min="-2" pref="97" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="txt_Bulto" max="32767" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -614,19 +617,14 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="lblSucursal" max="32767" attributes="0"/>
-                              <Component id="lbl_Cantidad" linkSize="10" max="32767" attributes="1"/>
-                          </Group>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                                  <Component id="txt_Cantidad" linkSize="20" min="-2" pref="213" max="-2" attributes="1"/>
-                              </Group>
-                              <Group type="102" attributes="0">
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="cmbSucursales" linkSize="20" min="-2" pref="210" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="lblSucursal" alignment="0" min="-2" pref="69" max="-2" attributes="0"/>
+                              <Component id="lbl_Cantidad" alignment="0" min="-2" max="-2" attributes="1"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="txt_Cantidad" max="32767" attributes="1"/>
+                              <Component id="cmbSucursales" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -636,9 +634,9 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="lblSucursal" linkSize="19" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="cmbSucursales" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblSucursal" linkSize="19" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cmbSucursales" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -752,7 +750,7 @@
                               <Component id="txt_Estanteria" alignment="0" max="32767" attributes="3"/>
                               <Component id="dc_Vencimiento" max="32767" attributes="1"/>
                               <Component id="txt_Estante" alignment="0" max="32767" attributes="3"/>
-                              <Component id="jScrollPane1" alignment="0" pref="466" max="32767" attributes="0"/>
+                              <Component id="jScrollPane1" alignment="0" pref="477" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
