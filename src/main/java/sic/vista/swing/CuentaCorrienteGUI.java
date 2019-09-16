@@ -942,7 +942,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     
     private void btnAutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAutorizarActionPerformed
         try {
-            boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/sucursales/"
+            boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuracion-sucursales/"
                     + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                     + "/factura-electronica-habilitada", Boolean.class);
             if (FEHabilitada) {
@@ -994,7 +994,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 }
             } else {
                 JOptionPane.showInternalMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_cds_fe_habilitada"),
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_sucursal_fe_habilitada"),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (RestClientResponseException ex) {

@@ -673,9 +673,9 @@ public class PrincipalGUI extends JFrame {
     }//GEN-LAST:event_mnuItm_FacturasVentaActionPerformed
 
     private void mnuItm_ConfiguracionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_ConfiguracionActionPerformed
-        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), ConfiguracionDelSistemaGUI.class);
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), ConfiguracionSucursalGUI.class);
         if (gui == null) {
-            gui = new ConfiguracionDelSistemaGUI();
+            gui = new ConfiguracionSucursalGUI();
             gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
                     getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
             getDesktopPane().add(gui);

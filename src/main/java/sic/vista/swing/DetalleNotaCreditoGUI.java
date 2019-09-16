@@ -224,7 +224,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
         if (nc != null) {
             notaCreditoCreada = true;
             boolean FEHabilitada = RestClient.getRestTemplate()
-                    .getForObject("/configuraciones-del-sistema/sucursales/"
+                    .getForObject("/configuracion-sucursales/"
                             + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                             + "/factura-electronica-habilitada", Boolean.class);
             if (cliente != null && FEHabilitada) {

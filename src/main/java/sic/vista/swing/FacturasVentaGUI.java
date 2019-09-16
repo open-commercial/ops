@@ -1205,7 +1205,7 @@ public class FacturasVentaGUI extends JInternalFrame {
 
     private void btn_AutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AutorizarActionPerformed
         try {
-            boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/sucursales/"
+            boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuracion-sucursales/"
                     + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                     + "/factura-electronica-habilitada", Boolean.class);
             if (FEHabilitada) {
@@ -1222,7 +1222,7 @@ public class FacturasVentaGUI extends JInternalFrame {
                 }
             } else {
                 JOptionPane.showInternalMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_cds_fe_habilitada"),
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_sucursal_fe_habilitada"),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (RestClientResponseException ex) {

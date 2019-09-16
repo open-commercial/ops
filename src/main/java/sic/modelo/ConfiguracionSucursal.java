@@ -4,9 +4,9 @@ import java.io.Serializable;
 import lombok.Data;
 
 @Data
-public class ConfiguracionDelSistema implements Serializable {
+public class ConfiguracionSucursal implements Serializable {
 
-    private long id_ConfiguracionDelSistema;
+    private long idConfiguracionSucursal;
     private boolean usarFacturaVentaPreImpresa;
     private int cantidadMaximaDeRenglonesEnFactura;
     private boolean facturaElectronicaHabilitada;
@@ -15,10 +15,7 @@ public class ConfiguracionDelSistema implements Serializable {
     private String firmanteCertificadoAfip;
     private String passwordCertificadoAfip;
     private int nroPuntoDeVentaAfip;
-    private boolean emailSenderHabilitado;
     private boolean puntoDeRetiro;
-    private String emailUsername;
-    private String emailPassword;
     private long idSucursal;
     private String nombreSucursal;
 
