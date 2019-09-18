@@ -942,7 +942,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     
     private void btnAutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAutorizarActionPerformed
         try {
-            boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuracion-sucursales/"
+            boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/"
                     + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                     + "/factura-electronica-habilitada", Boolean.class);
             if (FEHabilitada) {

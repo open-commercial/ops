@@ -51,7 +51,7 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
         }
     }
 
-    private ConfiguracionSucursal getConfiguracionDelSistema() {
+    private ConfiguracionSucursal getConfiguracionSucursal() {
         configuracionModificar.setUsarFacturaVentaPreImpresa(chk_PreImpresas.isSelected());
         configuracionModificar.setCantidadMaximaDeRenglonesEnFactura(
                 Integer.parseInt(txt_CantMaximaRenglones.getValue().toString()));
@@ -356,8 +356,8 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
 
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
         try {
-            RestClient.getRestTemplate().put("/configuracion-sucursales", this.getConfiguracionDelSistema());
-            JOptionPane.showMessageDialog(this, "La Configuración se guardó correctamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+            RestClient.getRestTemplate().put("/configuraciones-sucursal", this.getConfiguracionSucursal());
+            JOptionPane.showMessageDialog(this, "La configuración se guardó correctamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -410,7 +410,7 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         try {
-            configuracionModificar = RestClient.getRestTemplate().getForObject("/configuracion-sucursales/"
+            configuracionModificar = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/"
                     + SucursalActiva.getInstance().getSucursal().getIdSucursal(), ConfiguracionSucursal.class);
             this.cargarConfiguracionParaModificar();
         } catch (RestClientResponseException ex) {

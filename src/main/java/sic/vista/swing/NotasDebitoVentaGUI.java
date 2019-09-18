@@ -931,7 +931,7 @@ public class NotasDebitoVentaGUI extends JInternalFrame {
 
     private void btn_AutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AutorizarActionPerformed
         try {
-            boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuracion-sucursales/"
+            boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/"
                     + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                     + "/factura-electronica-habilitada", Boolean.class);
             if (FEHabilitada) {

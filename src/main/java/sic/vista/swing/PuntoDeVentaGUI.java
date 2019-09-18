@@ -1630,7 +1630,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             this.setColumnas();
             this.setMaximum(true);
             this.setTitle("Punto de Venta");
-            cantidadMaximaRenglones = RestClient.getRestTemplate().getForObject("/configuracion-sucursales/"
+            cantidadMaximaRenglones = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/"
                     + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                     + "/cantidad-renglones", Integer.class); 
             if (rolesDeUsuario.contains(Rol.ADMINISTRADOR)

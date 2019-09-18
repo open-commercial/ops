@@ -204,7 +204,7 @@ public class CerrarVentaGUI extends JDialog {
                                     RenglonFactura[].class)));
                 });
                 exito = true;
-                boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuracion-sucursales/"
+                boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/"
                         + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                         + "/factura-electronica-habilitada", Boolean.class);
                 if (FEHabilitada) {
@@ -241,7 +241,7 @@ public class CerrarVentaGUI extends JDialog {
             } else {
                 facturaVenta = Arrays.asList(RestClient.getRestTemplate().postForObject(uri, facturaVenta, FacturaVenta[].class)).get(0);
                 if (facturaVenta != null) {
-                    boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuracion-sucursales/"
+                    boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/"
                             + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                             + "/factura-electronica-habilitada", Boolean.class);
                     if (FEHabilitada) {
