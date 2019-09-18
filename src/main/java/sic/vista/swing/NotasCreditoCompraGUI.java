@@ -179,7 +179,7 @@ public class NotasCreditoCompraGUI extends JInternalFrame {
                 criteria.setOrdenarPor("fecha");
                 break;
             case 1:
-                criteria.setOrdenarPor("cliente.nombreFiscal");
+                criteria.setOrdenarPor("proveedor.razonSocial");
                 break;
             case 2:
                 criteria.setOrdenarPor("total");
@@ -852,7 +852,7 @@ public class NotasCreditoCompraGUI extends JInternalFrame {
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
 
-        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha", "Cliente", "Total" }));
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha", "Proveedor", "Total" }));
         cmbOrden.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbOrdenItemStateChanged(evt);
