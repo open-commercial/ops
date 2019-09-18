@@ -40,15 +40,19 @@
                       <Component id="panelDatosComprobanteIzquierdo" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="panelMisc" alignment="0" max="32767" attributes="0"/>
-                          <Component id="panelResultados" alignment="0" max="32767" attributes="1"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="panelMisc" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="panelResultados" alignment="0" max="32767" attributes="1"/>
+                              </Group>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
+                          <Component id="lblCantidadDeArticulos" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="lblCantidadDeArticulos" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -65,14 +69,16 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="panelRenglones" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="lblCantidadDeArticulos" min="-2" pref="24" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="panelMisc" min="-2" max="-2" attributes="1"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="panelResultados" min="-2" max="-2" attributes="1"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Component id="lblCantidadDeArticulos" min="-2" pref="24" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="panelMisc" min="-2" max="-2" attributes="1"/>
+                  </Group>
                   <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
               </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="panelResultados" min="-2" max="-2" attributes="1"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -102,7 +108,7 @@
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cmb_TipoFactura" pref="260" max="32767" attributes="1"/>
+                              <Component id="cmb_TipoFactura" pref="307" max="32767" attributes="1"/>
                               <Component id="cmb_Transportista" alignment="0" max="32767" attributes="2"/>
                           </Group>
                           <Component id="btn_NuevoTransportista" min="-2" max="-2" attributes="1"/>
@@ -247,7 +253,7 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="sp_Renglones" pref="877" max="32767" attributes="0"/>
+              <Component id="sp_Renglones" pref="934" max="32767" attributes="0"/>
               <Group type="102" attributes="0">
                   <Component id="btn_BuscarProducto" linkSize="7" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
@@ -665,7 +671,6 @@
           <Image iconType="3" name="/sic/icons/Accept_16x16.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Guardar"/>
-        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_GuardarActionPerformed"/>

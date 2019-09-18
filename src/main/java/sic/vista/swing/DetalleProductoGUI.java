@@ -122,7 +122,7 @@ public class DetalleProductoGUI extends JDialog {
         pnlCantidadSucursales = new javax.swing.JPanel();
         lblSucursal = new javax.swing.JLabel();
         cmbSucursales = new javax.swing.JComboBox<>();
-        txt_Cantidad = new javax.swing.JFormattedTextField();
+        txtCantidad = new javax.swing.JFormattedTextField();
         lbl_Cantidad = new javax.swing.JLabel();
         panelPropiedades = new javax.swing.JPanel();
         panel5 = new javax.swing.JPanel();
@@ -178,8 +178,9 @@ public class DetalleProductoGUI extends JDialog {
         lbl_Descripcion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Descripcion.setText("* Descripción:");
 
+        lbl_Rubro.setForeground(java.awt.Color.red);
         lbl_Rubro.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Rubro.setText("Rubro:");
+        lbl_Rubro.setText("* Rubro:");
 
         lbl_Proveedor.setForeground(java.awt.Color.red);
         lbl_Proveedor.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -193,8 +194,9 @@ public class DetalleProductoGUI extends JDialog {
             }
         });
 
+        lbl_Medida.setForeground(java.awt.Color.red);
         lbl_Medida.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Medida.setText("Medida:");
+        lbl_Medida.setText("* Medida:");
 
         btnBuscarProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
         btnBuscarProveedor.addActionListener(new java.awt.event.ActionListener() {
@@ -465,7 +467,7 @@ public class DetalleProductoGUI extends JDialog {
         lbl_Bulto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Bulto.setText("Cant. x Bulto:");
 
-        txt_Bulto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
+        txt_Bulto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat(""))));
         txt_Bulto.setText("0");
         txt_Bulto.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -525,16 +527,16 @@ public class DetalleProductoGUI extends JDialog {
             }
         });
 
-        txt_Cantidad.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
-        txt_Cantidad.setText("0");
-        txt_Cantidad.addFocusListener(new java.awt.event.FocusAdapter() {
+        txtCantidad.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
+        txtCantidad.setText("0");
+        txtCantidad.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                txt_CantidadFocusGained(evt);
+                txtCantidadFocusGained(evt);
             }
         });
-        txt_Cantidad.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtCantidad.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                txt_CantidadKeyReleased(evt);
+                txtCantidadKeyReleased(evt);
             }
         });
 
@@ -552,7 +554,7 @@ public class DetalleProductoGUI extends JDialog {
                     .addComponent(lbl_Cantidad))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlCantidadSucursalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txt_Cantidad)
+                    .addComponent(txtCantidad)
                     .addComponent(cmbSucursales, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -565,7 +567,7 @@ public class DetalleProductoGUI extends JDialog {
                     .addComponent(cmbSucursales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlCantidadSucursalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_Cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_Cantidad))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -875,9 +877,9 @@ public class DetalleProductoGUI extends JDialog {
         cmbSucursales.setSelectedItem(SucursalActiva.getInstance().getSucursal());
         productoParaModificar.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
             cantidadEnSucursal.put(cantidadesEnSucursal.idSucursal, cantidadesEnSucursal.getCantidad());
-            if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {               
-                txt_Cantidad.setValue(cantidadesEnSucursal.getCantidad());
-            }           
+            if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
+                txtCantidad.setValue(cantidadesEnSucursal.getCantidad());
+            }
         });
         txt_CantMinima.setValue(productoParaModificar.getCantMinima());
         txt_Bulto.setValue(productoParaModificar.getBulto());
@@ -919,7 +921,7 @@ public class DetalleProductoGUI extends JDialog {
     }
 
     private void prepararComponentes() {
-        txt_Cantidad.setValue(BigDecimal.ZERO);
+        txtCantidad.setValue(BigDecimal.ZERO);
         txt_CantMinima.setValue(BigDecimal.ZERO);
         txt_Bulto.setValue(BigDecimal.ONE);
         txtPrecioCosto.setValue(BigDecimal.ZERO);
@@ -987,7 +989,7 @@ public class DetalleProductoGUI extends JDialog {
     private void limpiarYRecargarComponentes() {
         txt_Codigo.setText("");
         txt_Descripcion.setText("");
-        txt_Cantidad.setValue(BigDecimal.ZERO);
+        txtCantidad.setValue(BigDecimal.ZERO);
         txt_CantMinima.setValue(BigDecimal.ZERO);
         txt_Bulto.setValue(BigDecimal.ZERO);
         chkSinLimite.setSelected(false);
@@ -1211,7 +1213,7 @@ public class DetalleProductoGUI extends JDialog {
                 && operacion == TipoDeOperacion.ACTUALIZACION) {
             chkSinLimite.setEnabled(false);
             lbl_Cantidad.setEnabled(false);
-            txt_Cantidad.setEnabled(false);
+            txtCantidad.setEnabled(false);
             lbl_CantMinima.setEnabled(false);
             txt_CantMinima.setEnabled(false);
             lbl_Bulto.setEnabled(false);
@@ -1231,22 +1233,22 @@ public class DetalleProductoGUI extends JDialog {
         });
     }//GEN-LAST:event_txt_CantMinimaFocusGained
 
-    private void txt_CantidadFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_CantidadFocusGained
+    private void txtCantidadFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCantidadFocusGained
         SwingUtilities.invokeLater(() -> {
-            txt_Cantidad.selectAll();
+            txtCantidad.selectAll();
         });
-    }//GEN-LAST:event_txt_CantidadFocusGained
+    }//GEN-LAST:event_txtCantidadFocusGained
 
     private void chkSinLimiteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkSinLimiteItemStateChanged
         if (evt.getStateChange() == ItemEvent.SELECTED) {
-            txt_Cantidad.setEnabled(false);
+            txtCantidad.setEnabled(false);
             lbl_Cantidad.setForeground(Color.LIGHT_GRAY);
             txt_CantMinima.setEnabled(false);
             lbl_CantMinima.setForeground(Color.LIGHT_GRAY);
             txt_Bulto.setEnabled(false);
             lbl_Bulto.setForeground(Color.LIGHT_GRAY);
         } else {
-            txt_Cantidad.setEnabled(true);
+            txtCantidad.setEnabled(true);
             lbl_Cantidad.setForeground(Color.RED);
             txt_CantMinima.setEnabled(true);
             lbl_CantMinima.setForeground(Color.BLACK);
@@ -1439,15 +1441,19 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_chkDestacadoActionPerformed
 
     private void cmbSucursalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbSucursalesActionPerformed
-        txt_Cantidad.setText((cantidadEnSucursal.get(((Sucursal) cmbSucursales.getSelectedItem()).getIdSucursal())) != null
-                ? "" + (cantidadEnSucursal.get(((Sucursal) cmbSucursales.getSelectedItem()).getIdSucursal())).doubleValue() : "0");
+        BigDecimal cantidad = cantidadEnSucursal.get(((Sucursal) cmbSucursales.getSelectedItem()).getIdSucursal());
+        if (cantidad != null) {
+            txtCantidad.setValue(cantidad);
+        } else {
+            txtCantidad.setValue(BigDecimal.ZERO);
+        }
     }//GEN-LAST:event_cmbSucursalesActionPerformed
 
-    private void txt_CantidadKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_CantidadKeyReleased
-        if (!txt_Cantidad.getText().isEmpty() && (new BigDecimal(txt_Cantidad.getText())).compareTo(new BigDecimal(txt_Cantidad.getValue().toString())) != 0) {
-            cantidadEnSucursal.put(((Sucursal) cmbSucursales.getSelectedItem()).getIdSucursal(), new BigDecimal(txt_Cantidad.getText()));
+    private void txtCantidadKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadKeyReleased
+        if (!txtCantidad.getText().isEmpty() && (new BigDecimal(txtCantidad.getText())).compareTo(new BigDecimal(txtCantidad.getValue().toString())) != 0) {
+            cantidadEnSucursal.put(((Sucursal) cmbSucursales.getSelectedItem()).getIdSucursal(), new BigDecimal(txtCantidad.getText()));
         }
-    }//GEN-LAST:event_txt_CantidadKeyReleased
+    }//GEN-LAST:event_txtCantidadKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgVisibilidad;
@@ -1504,6 +1510,7 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JRadioButton rbPrivado;
     private javax.swing.JRadioButton rbPublico;
     private javax.swing.JTabbedPane tpTabs;
+    private javax.swing.JFormattedTextField txtCantidad;
     private javax.swing.JFormattedTextField txtGananciaNeto;
     private javax.swing.JFormattedTextField txtGananciaPorcentaje;
     private javax.swing.JFormattedTextField txtIVANeto;
@@ -1513,7 +1520,6 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JTextField txtProveedor;
     private javax.swing.JFormattedTextField txt_Bulto;
     private javax.swing.JFormattedTextField txt_CantMinima;
-    private javax.swing.JFormattedTextField txt_Cantidad;
     private javax.swing.JTextField txt_Codigo;
     private javax.swing.JTextField txt_Descripcion;
     private javax.swing.JTextField txt_Estante;

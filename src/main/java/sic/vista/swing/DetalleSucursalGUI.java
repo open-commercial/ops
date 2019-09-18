@@ -146,7 +146,7 @@ public class DetalleSucursalGUI extends JDialog {
         lbl_CondicionIVA.setText("* Condición IVA:");
 
         lbl_CUIP.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_CUIP.setText("ID Fiscal:");
+        lbl_CUIP.setText("CUIT:");
 
         lbl_IngBrutos.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_IngBrutos.setText("Ingresos Brutos:");

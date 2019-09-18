@@ -214,8 +214,11 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lbl_Rubro">
                   <Properties>
+                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
+                    </Property>
                     <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="Rubro:"/>
+                    <Property name="text" type="java.lang.String" value="* Rubro:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="cmb_Rubro">
@@ -256,8 +259,11 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lbl_Medida">
                   <Properties>
+                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
+                    </Property>
                     <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="Medida:"/>
+                    <Property name="text" type="java.lang.String" value="* Medida:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="btnBuscarProveedor">
@@ -587,7 +593,7 @@
                 <Component class="javax.swing.JFormattedTextField" name="txt_Bulto">
                   <Properties>
                     <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-                      <Format format="#,##0.##" subtype="-1" type="0"/>
+                      <Format format="" subtype="-1" type="0"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="0"/>
                   </Properties>
@@ -623,7 +629,7 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txt_Cantidad" max="32767" attributes="1"/>
+                              <Component id="txtCantidad" max="32767" attributes="1"/>
                               <Component id="cmbSucursales" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -640,7 +646,7 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txt_Cantidad" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtCantidad" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="lbl_Cantidad" linkSize="19" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
@@ -667,7 +673,7 @@
                     <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Sucursal&gt;"/>
                   </AuxValues>
                 </Component>
-                <Component class="javax.swing.JFormattedTextField" name="txt_Cantidad">
+                <Component class="javax.swing.JFormattedTextField" name="txtCantidad">
                   <Properties>
                     <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
                       <Format format="#,##0.##" subtype="-1" type="0"/>
@@ -675,8 +681,8 @@
                     <Property name="text" type="java.lang.String" value="0"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txt_CantidadFocusGained"/>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_CantidadKeyReleased"/>
+                    <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtCantidadFocusGained"/>
+                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtCantidadKeyReleased"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lbl_Cantidad">

@@ -644,7 +644,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
                 .addGroup(panelDatosComprobanteDerechoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panelDatosComprobanteDerechoLayout.createSequentialGroup()
                         .addGroup(panelDatosComprobanteDerechoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmb_TipoFactura, 0, 260, Short.MAX_VALUE)
+                            .addComponent(cmb_TipoFactura, 0, 307, Short.MAX_VALUE)
                             .addComponent(cmb_Transportista, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addComponent(btn_NuevoTransportista))
                     .addGroup(panelDatosComprobanteDerechoLayout.createSequentialGroup()
@@ -723,7 +723,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         panelRenglones.setLayout(panelRenglonesLayout);
         panelRenglonesLayout.setHorizontalGroup(
             panelRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sp_Renglones, javax.swing.GroupLayout.DEFAULT_SIZE, 877, Short.MAX_VALUE)
+            .addComponent(sp_Renglones, javax.swing.GroupLayout.DEFAULT_SIZE, 934, Short.MAX_VALUE)
             .addGroup(panelRenglonesLayout.createSequentialGroup()
                 .addComponent(btn_BuscarProducto)
                 .addGap(0, 0, 0)
@@ -943,7 +943,6 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         btn_Guardar.setForeground(java.awt.Color.blue);
         btn_Guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
         btn_Guardar.setText("Guardar");
-        btn_Guardar.setEnabled(false);
         btn_Guardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_GuardarActionPerformed(evt);
@@ -1028,13 +1027,15 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(panelDatosComprobanteIzquierdo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(panelMisc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(panelResultados, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(panelMisc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(panelResultados, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(lblCantidadDeArticulos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btn_Guardar)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(lblCantidadDeArticulos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(btn_Guardar)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1047,13 +1048,14 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelRenglones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblCantidadDeArticulos, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelMisc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(panelResultados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblCantidadDeArticulos, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(panelMisc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btn_Guardar))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelResultados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -1077,7 +1079,6 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
             txtProveedor.setText(gui_DetalleProveedor.getProveedorCreado().getRazonSocial());
             proveedorSeleccionado = gui_DetalleProveedor.getProveedorCreado();
             this.cargarTiposDeFacturaDisponibles();
-            this.btn_Guardar.setEnabled(true);
         }
     }//GEN-LAST:event_btn_NuevoProveedorActionPerformed
 
@@ -1112,13 +1113,23 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_QuitarDeListaActionPerformed
 
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
-        if (this.guardarFactura()) {
-            int respuesta = JOptionPane.showConfirmDialog(this,
-                    "La Factura se guardó correctamente!\n¿Desea dar de alta otra Factura?",
-                    "Aviso", JOptionPane.YES_NO_OPTION);
-            this.limpiarYRecargarComponentes();
-            if (respuesta == JOptionPane.NO_OPTION) {
-                this.dispose();
+        if (txtProveedor.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                    .getString("mensaje_factura_seleccionar_proveedor"), "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            if (renglones.isEmpty()) {
+                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                        .getString("mensaje_factura_sin_renglones"), "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                if (this.guardarFactura()) {
+                    int respuesta = JOptionPane.showConfirmDialog(this,
+                            "La Factura se guardó correctamente!\n¿Desea dar de alta otra Factura?",
+                            "Aviso", JOptionPane.YES_NO_OPTION);
+                    this.limpiarYRecargarComponentes();
+                    if (respuesta == JOptionPane.NO_OPTION) {
+                        this.dispose();
+                    }
+                }
             }
         }
     }//GEN-LAST:event_btn_GuardarActionPerformed
@@ -1179,7 +1190,6 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
             proveedorSeleccionado = buscarProveedoresGUI.getProveedorSeleccionado();
             txtProveedor.setText(proveedorSeleccionado.getRazonSocial());
             this.cargarTiposDeFacturaDisponibles();
-            this.btn_Guardar.setEnabled(true);
         }
     }//GEN-LAST:event_btnBuscarProveedorActionPerformed
 
