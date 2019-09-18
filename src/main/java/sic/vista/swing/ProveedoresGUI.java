@@ -16,6 +16,7 @@ import javax.swing.JScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
@@ -28,6 +29,7 @@ import sic.modelo.Proveedor;
 import sic.modelo.Provincia;
 import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
+import sic.modelo.criteria.BusquedaCuentaCorrienteProveedorCriteria;
 import sic.util.ColoresNumerosRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
@@ -227,43 +229,45 @@ public class ProveedoresGUI extends JInternalFrame {
 
     private void buscar() {
         this.cambiarEstadoEnabled(false);
-        String criteria = "/cuentas-corriente/proveedores/busqueda/criteria?";
+        BusquedaCuentaCorrienteProveedorCriteria criteria = BusquedaCuentaCorrienteProveedorCriteria.builder().build();
         if (chkNroProveedorORazonSocial.isSelected()) {
-            criteria += "nroProveedor=" + txtNroProveedorORazonSocial.getText().trim()
-                    + "&razonSocial=" + txtNroProveedorORazonSocial.getText().trim() + "&";
+            criteria.setNroProveedor(txtNroProveedorORazonSocial.getText().trim());
+            criteria.setRazonSocial(txtNroProveedorORazonSocial.getText().trim());
         }
         if (chk_Ubicacion.isSelected()) {
-            criteria += "idProvincia=" + String.valueOf(((Provincia) (cmb_Provincia.getSelectedItem())).getIdProvincia()) + "&";
+            criteria.setIdProvincia(((Provincia) (cmb_Provincia.getSelectedItem())).getIdProvincia());
             if (!((Localidad) cmb_Localidad.getSelectedItem()).getNombre().equals("Todas")) {
-                criteria += "idLocalidad=" + String.valueOf((((Localidad) cmb_Localidad.getSelectedItem()).getIdLocalidad())) + "&";
+                criteria.setIdLocalidad(((Localidad) cmb_Localidad.getSelectedItem()).getIdLocalidad());
             }
         }
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
             case 0:
-                criteria += "ordenarPor=proveedor.razonSocial&";
+                criteria.setOrdenarPor("proveedor.razonSocial");
                 break;
             case 1:
-                criteria += "ordenarPor=saldo&";
+                criteria.setOrdenarPor("saldo");
                 break;
             case 2:
-                criteria += "ordenarPor=fechaUltimoMovimiento&";
+                criteria.setOrdenarPor("fechaUltimoMovimiento");
                 break;
         }
         int seleccionDireccion = cmbSentido.getSelectedIndex();
         switch (seleccionDireccion) {
             case 0:
-                criteria += "sentido=ASC&";
+               
+                criteria.setSentido("ASC");
                 break;
             case 1:
-                criteria += "sentido=DESC&";
+                criteria.setSentido("DESC");
                 break;
         }
-        criteria += "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
-        criteria += "&pagina=" + NUMERO_PAGINA;
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteria.setPagina(NUMERO_PAGINA);
         try {
+            HttpEntity<BusquedaCuentaCorrienteProveedorCriteria> requestEntity = new HttpEntity<>(criteria);
             PaginaRespuestaRest<CuentaCorrienteProveedor> response = RestClient.getRestTemplate()
-                    .exchange(criteria, HttpMethod.GET, null, new ParameterizedTypeReference<PaginaRespuestaRest<CuentaCorrienteProveedor>>() {
+                    .exchange("/cuentas-corriente/proveedores/busqueda/criteria", HttpMethod.POST, requestEntity, new ParameterizedTypeReference<PaginaRespuestaRest<CuentaCorrienteProveedor>>() {
                     })
                     .getBody();
             totalElementosBusqueda = response.getTotalElements();

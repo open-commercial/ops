@@ -24,7 +24,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.BusquedaNotaCriteria;
+import sic.modelo.criteria.BusquedaNotaCriteria;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Movimiento;
@@ -178,7 +178,7 @@ public class NotasDebitoCompraGUI extends JInternalFrame {
                 criteria.setOrdenarPor("fecha");
                 break;
             case 1:
-                criteria.setOrdenarPor("cliente.nombreFiscal");
+                criteria.setOrdenarPor("proveedor.razonSocial");
                 break;
             case 2:
                 criteria.setOrdenarPor("total");
@@ -819,7 +819,7 @@ public class NotasDebitoCompraGUI extends JInternalFrame {
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
 
-        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha", "Cliente", "Total" }));
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha", "Proveedor", "Total" }));
         cmbOrden.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbOrdenItemStateChanged(evt);

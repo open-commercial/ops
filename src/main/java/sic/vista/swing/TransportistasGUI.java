@@ -19,6 +19,7 @@ import sic.modelo.Provincia;
 import sic.modelo.Rol;
 import sic.modelo.Transportista;
 import sic.modelo.UsuarioActivo;
+import sic.modelo.criteria.BusquedaTransportistaCriteria;
 import sic.util.Utilidades;
 
 public class TransportistasGUI extends JInternalFrame {
@@ -160,19 +161,19 @@ public class TransportistasGUI extends JInternalFrame {
 
     private void buscar() {
         this.cambiarEstadoEnabled(false);
-        String criteria = "/transportistas/busqueda/criteria?";
+        BusquedaTransportistaCriteria c = BusquedaTransportistaCriteria.builder().build();
         if (chk_Nombre.isSelected()) {
-            criteria += "nombre=" + txt_Nombre.getText().trim() + "&";
+            c.setNombre(txt_Nombre.getText().trim());
         }
         if (chk_Ubicacion.isSelected()) {
-            criteria += "idProvincia=" + String.valueOf(((Provincia) (cmb_Provincia.getSelectedItem())).getIdProvincia()) + "&";
+            c.setIdProvincia(((Provincia) (cmb_Provincia.getSelectedItem())).getIdProvincia());
             if (!((Localidad) cmb_Localidad.getSelectedItem()).getNombre().equals("Todas")) {
-                criteria += "idLocalidad=" + String.valueOf((((Localidad) cmb_Localidad.getSelectedItem()).getIdLocalidad())) + "&";
+                c.setIdLocalidad(((Localidad) cmb_Localidad.getSelectedItem()).getIdLocalidad());
             }
         }
-        criteria += "idEmpresa=" + String.valueOf(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        c.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
         try {
-            transportistas = new ArrayList(Arrays.asList(RestClient.getRestTemplate().getForObject(criteria, Transportista[].class)));
+            transportistas = new ArrayList(Arrays.asList(RestClient.getRestTemplate().postForObject("/transportistas/busqueda/criteria", c, Transportista[].class)));
             this.cargarResultadosAlTable();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -180,8 +181,8 @@ public class TransportistasGUI extends JInternalFrame {
         } catch (ResourceAccessException ex) {
             LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this,
-                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                "Error", JOptionPane.ERROR_MESSAGE);
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
             this.cambiarEstadoEnabled(true);
         } 
         this.cambiarEstadoEnabled(true);

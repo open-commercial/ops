@@ -1,27 +1,27 @@
-package sic.modelo;
+package sic.modelo.criteria;
 
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import sic.modelo.TipoDeComprobante;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BusquedaNotaCriteria {
+public class BusquedaFacturaVentaCriteria {
 
     private Date fechaDesde;
     private Date fechaHasta;
-    private Long idEmpresa;
-    private int cantidadDeRegistros;
-    private long numSerie;
-    private long numNota;
-    private TipoDeComprobante tipoComprobante;
-    private Movimiento movimiento;
-    private Long idUsuario;
-    private Long idProveedor;
     private Long idCliente;
+    private TipoDeComprobante tipoComprobante;
+    private Long idUsuario;
     private Long idViajante;
+    private long numSerie;
+    private long numFactura;
+    private long nroPedido;
+    private Long idProducto;
+    private Long idEmpresa;
     private Integer pagina;
     private String ordenarPor;
     private String sentido;

@@ -17,17 +17,20 @@ import javax.swing.JScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.EmpresaActiva;
+import sic.modelo.Movimiento;
 import sic.modelo.Usuario;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Proveedor;
 import sic.modelo.Recibo;
 import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
+import sic.modelo.criteria.BusquedaReciboCriteria;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
@@ -59,51 +62,53 @@ public class RecibosCompraGUI extends JInternalFrame {
         });
     }
     
-    private String getUriCriteria() {
-        String uriCriteria = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
+    private BusquedaReciboCriteria getCriteria() {
+        BusquedaReciboCriteria criteria = BusquedaReciboCriteria.builder().build();
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
         if (chk_Proveedor.isSelected() && proveedorSeleccionado != null) {
-            uriCriteria += "&idProveedor=" + proveedorSeleccionado.getId_Proveedor();
+            criteria.setIdProveedor(proveedorSeleccionado.getId_Proveedor());
         }
         if (chk_Fecha.isSelected()) {
-            uriCriteria += "&desde=" + dc_FechaDesde.getDate().getTime()
-                    + "&hasta=" + dc_FechaHasta.getDate().getTime();
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? dc_FechaDesde.getDate() : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? dc_FechaHasta.getDate() : null);
         }
         if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
-            uriCriteria += "&idUsuario=" + usuarioSeleccionado.getId_Usuario();
+            criteria.setIdUsuario(usuarioSeleccionado.getId_Usuario());
         }
         if (chk_Concepto.isSelected()) {
-            uriCriteria += "&concepto=" + txt_Concepto.getText();
+            criteria.setConcepto(txt_Concepto.getText());
         }
         if (chk_NumRecibo.isSelected()) {
-            uriCriteria += "&nroSerie=" + Long.valueOf(txt_SerieRecibo.getText()) 
-                    + "&nroRecibo=" +  Long.valueOf(txt_NroRecibo.getText());             
+            criteria.setNumSerie(Long.valueOf(txt_SerieRecibo.getText()) );
+            criteria.setNumRecibo(Long.valueOf(txt_NroRecibo.getText()));          
         }
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
             case 0:
-                uriCriteria += "&ordenarPor=fecha";
+                criteria.setOrdenarPor("fecha");
                 break;
             case 1:
-                uriCriteria += "&ordenarPor=concepto";
+                criteria.setOrdenarPor("concepto");
                 break;
             case 2:
-                uriCriteria += "&ordenarPor=formaDePago";
+                criteria.setOrdenarPor("formaDePago");
                 break;
             case 3:
-                uriCriteria += "&ordenarPor=monto";
+                criteria.setOrdenarPor("monto");
                 break;
         }
         int seleccionDireccion = cmbSentido.getSelectedIndex();
         switch (seleccionDireccion) {
             case 0:
-                uriCriteria += "&sentido=DESC";
+                criteria.setSentido("DESC");
                 break;
             case 1:
-                uriCriteria += "&sentido=ASC";
+                criteria.setSentido("ASC");
                 break;
         }
-        uriCriteria += "&pagina=" + NUMERO_PAGINA;
-        return uriCriteria;
+        criteria.setPagina(NUMERO_PAGINA);
+        criteria.setMovimiento(Movimiento.COMPRA);
+        return criteria;
     }
     
     private void crearNotaDebitoConRecibo(Recibo recibo) {
@@ -159,10 +164,11 @@ public class RecibosCompraGUI extends JInternalFrame {
 
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
-        String uriCriteria = getUriCriteria();
+        BusquedaReciboCriteria criteria = getCriteria();
         try {
+            HttpEntity<BusquedaReciboCriteria> requestEntity = new HttpEntity<>(this.getCriteria());
             PaginaRespuestaRest<Recibo> response = RestClient.getRestTemplate()
-                    .exchange("/recibos/compra/busqueda/criteria?" + uriCriteria, HttpMethod.GET, null,
+                    .exchange("/recibos/busqueda/criteria", HttpMethod.POST, requestEntity,
                             new ParameterizedTypeReference<PaginaRespuestaRest<Recibo>>() {
                     })
                     .getBody();
@@ -171,7 +177,7 @@ public class RecibosCompraGUI extends JInternalFrame {
             recibosTotal.addAll(recibosParcial);
             this.cargarResultadosAlTable();
             txtTotal.setValue(RestClient.getRestTemplate()
-                .getForObject("/recibos/compra/total/criteria?" + uriCriteria, BigDecimal.class));
+                    .postForObject("/recibos/total/criteria", criteria, BigDecimal.class));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {

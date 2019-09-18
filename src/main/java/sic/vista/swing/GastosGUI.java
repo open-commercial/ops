@@ -16,6 +16,7 @@ import javax.swing.JScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
@@ -27,6 +28,7 @@ import sic.modelo.Usuario;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
+import sic.modelo.criteria.BusquedaGastoCriteria;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
@@ -57,54 +59,50 @@ public class GastosGUI extends JInternalFrame {
         });
     }
 
-    private String getUriCriteria() {
-        String uriCriteria = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
+    private BusquedaGastoCriteria getCriteria() {
+        BusquedaGastoCriteria criteria = BusquedaGastoCriteria.builder().build();
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
         if (chkFecha.isSelected()) {
-            uriCriteria += "&desde=" + dc_FechaDesde.getDate().getTime()
-                    + "&hasta=" + dc_FechaHasta.getDate().getTime();
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? dc_FechaDesde.getDate() : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? dc_FechaHasta.getDate() : null);
         }
         if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
-            uriCriteria += "&idUsuario=" + usuarioSeleccionado.getId_Usuario();
+            criteria.setIdUsuario(usuarioSeleccionado.getId_Usuario());
         }
         if (chk_Concepto.isSelected()) {
-            uriCriteria += "&concepto=" + txtConcepto.getText();
+            criteria.setConcepto(txtConcepto.getText());
         }
         if (chkNumGasto.isSelected()) {
-            uriCriteria += "&nroGasto=" + Long.valueOf(txtNroGasto.getText());
+            criteria.setNroGasto(Long.valueOf(txtNroGasto.getText()));
         }
-        return uriCriteria;
-    }
-    
-    private String getUriPaginado() {
-        String uriPaginado = "";
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
             case 0:
-                uriPaginado += "&ordenarPor=fecha";
+                criteria.setOrdenarPor("fecha");
                 break;
             case 1:
-                uriPaginado += "&ordenarPor=concepto";
+                criteria.setOrdenarPor("concepto");
                 break;
             case 2:
-                uriPaginado += "&ordenarPor=formaDePago";
+                criteria.setOrdenarPor("formaDePago");
                 break;
             case 3:
-                uriPaginado += "&ordenarPor=monto";
+                criteria.setOrdenarPor("monto");
                 break;
         }
         int seleccionDireccion = cmbSentido.getSelectedIndex();
         switch (seleccionDireccion) {
             case 0:
-                uriPaginado += "&sentido=DESC";
+                criteria.setSentido("DESC");
                 break;
             case 1:
-                uriPaginado += "&sentido=ASC";
+                criteria.setSentido("ASC");
                 break;
         }
-        uriPaginado += "&pagina=" + NUMERO_PAGINA;
-        return uriPaginado;
+        criteria.setPagina(NUMERO_PAGINA);
+        return criteria;
     }
-    
+
     private void setColumnas() {
         //nombres de columnas
         String[] encabezados = new String[6];
@@ -145,12 +143,10 @@ public class GastosGUI extends JInternalFrame {
 
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
-        String uriCriteria = this.getUriCriteria();
         try {
+            HttpEntity<BusquedaGastoCriteria> requestEntity = new HttpEntity<>(this.getCriteria());
             PaginaRespuestaRest<Gasto> response = RestClient.getRestTemplate()
-                    .exchange("/gastos/busqueda/criteria?"
-                            + uriCriteria
-                            + this.getUriPaginado(), HttpMethod.GET, null,
+                    .exchange("/gastos/busqueda/criteria", HttpMethod.POST, requestEntity,
                             new ParameterizedTypeReference<PaginaRespuestaRest<Gasto>>() {
                     })
                     .getBody();
@@ -159,7 +155,7 @@ public class GastosGUI extends JInternalFrame {
             gastosTotal.addAll(gastosParcial);
             this.cargarResultadosAlTable();
             txtTotal.setValue(RestClient.getRestTemplate()
-                    .getForObject("/gastos/total/criteria?" + uriCriteria, BigDecimal.class));
+                    .postForObject("/gastos/total/criteria", this.getCriteria(), BigDecimal.class));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -636,11 +632,11 @@ public class GastosGUI extends JInternalFrame {
     private void chkFechaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkFechaItemStateChanged
         if (chkFecha.isSelected() == true) {
             dc_FechaDesde.setEnabled(true);
-            dc_FechaHasta.setEnabled(true);            
+            dc_FechaHasta.setEnabled(true);
             dc_FechaDesde.requestFocus();
         } else {
             dc_FechaDesde.setEnabled(false);
-            dc_FechaHasta.setEnabled(false);            
+            dc_FechaHasta.setEnabled(false);
         }
 }//GEN-LAST:event_chkFechaItemStateChanged
 

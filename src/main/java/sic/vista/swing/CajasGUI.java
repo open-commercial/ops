@@ -6,6 +6,7 @@ import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -15,6 +16,7 @@ import javax.swing.JScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
@@ -25,6 +27,8 @@ import sic.modelo.Usuario;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
+import sic.modelo.criteria.BusquedaCajaCriteria;
+import sic.modelo.criteria.BusquedaUsuarioCriteria;
 import sic.util.ColoresEstadosRenderer;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
@@ -98,16 +102,21 @@ public class CajasGUI extends JInternalFrame {
 
     private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
-        String busqueda = "/cajas/busqueda/criteria?";
-        String criteria = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
-        if (chk_Fecha.isSelected()) criteria += "&desde=" + dc_FechaDesde.getDate().getTime() + "&hasta=" + dc_FechaHasta.getDate().getTime();
-        if (chk_UsuarioApertura.isSelected()) criteria += "&idUsuarioApertura=" + ((Usuario) cmb_UsuariosApertura.getSelectedItem()).getId_Usuario();
-        if (chk_UsuarioCierre.isSelected()) criteria += "&idUsuarioCierre=" + ((Usuario) cmb_UsuariosCierre.getSelectedItem()).getId_Usuario();
-        criteria += "&pagina=" + NUMERO_PAGINA;
+        BusquedaCajaCriteria criteria = BusquedaCajaCriteria.builder().build();
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        if (chk_Fecha.isSelected()) {
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? dc_FechaDesde.getDate() : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? dc_FechaHasta.getDate() : null);
+        }
+        if (chk_UsuarioApertura.isSelected()) criteria.setIdUsuarioApertura(((Usuario) cmb_UsuariosApertura.getSelectedItem()).getId_Usuario());
+        if (chk_UsuarioCierre.isSelected()) criteria.setIdUsuarioCierre(((Usuario) cmb_UsuariosCierre.getSelectedItem()).getId_Usuario());
+        criteria.setPagina(NUMERO_PAGINA);
         try {
+            HttpEntity<BusquedaCajaCriteria> requestEntity = new HttpEntity<>(criteria);
             PaginaRespuestaRest<Caja> response = RestClient.getRestTemplate()
-                    .exchange(busqueda + criteria, HttpMethod.GET, null,
-                            new ParameterizedTypeReference<PaginaRespuestaRest<Caja>>() {})
+                    .exchange("/cajas/busqueda/criteria", HttpMethod.POST, requestEntity,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<Caja>>() {
+                    })
                     .getBody();
             totalElementosBusqueda = response.getTotalElements();
             cajasParcial = response.getContent();
@@ -115,9 +124,9 @@ public class CajasGUI extends JInternalFrame {
             this.cargarResultadosAlTable();
             if (calcularResultados) {
                 ftxt_TotalSistema.setValue(RestClient.getRestTemplate()
-                        .getForObject("/cajas/saldo-sistema?" + criteria, BigDecimal.class));
+                        .postForObject("/cajas/saldo-sistema", criteria, BigDecimal.class));
                 ftxt_TotalReal.setValue(RestClient.getRestTemplate()
-                        .getForObject("/cajas/saldo-real?" + criteria, BigDecimal.class));
+                        .postForObject("/cajas/saldo-real", criteria, BigDecimal.class));
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -599,11 +608,16 @@ public class CajasGUI extends JInternalFrame {
     private void chk_UsuarioAperturaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UsuarioAperturaItemStateChanged
         try {
             if (chk_UsuarioApertura.isSelected() == true) {
-                cmb_UsuariosApertura.setEnabled(true);
+                cmb_UsuariosApertura.setEnabled(true);        
+                BusquedaUsuarioCriteria criteria = BusquedaUsuarioCriteria.builder().build();
+                List<Rol> rolesParafiltrar = new ArrayList<>();
+                rolesParafiltrar.add(Rol.ADMINISTRADOR);
+                rolesParafiltrar.add(Rol.ENCARGADO);
+                criteria.setRoles(rolesParafiltrar);
+                criteria.setPagina(NUMERO_PAGINA);
+                HttpEntity<BusquedaUsuarioCriteria> requestEntity = new HttpEntity<>(criteria);
                 PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                        .exchange("/usuarios/busqueda/criteria?"
-                                + "roles=" + Rol.ADMINISTRADOR + "," + Rol.ENCARGADO
-                                + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
+                        .exchange("/usuarios/busqueda/criteria", HttpMethod.POST, requestEntity,
                                 new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
                         })
                         .getBody();
@@ -650,10 +664,15 @@ public class CajasGUI extends JInternalFrame {
         try {
             if (chk_UsuarioCierre.isSelected() == true) {
                 cmb_UsuariosCierre.setEnabled(true);
+                BusquedaUsuarioCriteria criteria = BusquedaUsuarioCriteria.builder().build();
+                List<Rol> rolesParafiltrar = new ArrayList<>();
+                rolesParafiltrar.add(Rol.ADMINISTRADOR);
+                rolesParafiltrar.add(Rol.ENCARGADO);
+                criteria.setRoles(rolesParafiltrar);
+                criteria.setPagina(NUMERO_PAGINA);
+                HttpEntity<BusquedaUsuarioCriteria> requestEntity = new HttpEntity<>(criteria);
                 PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                        .exchange("/usuarios/busqueda/criteria?"
-                                + "roles=" + Rol.ADMINISTRADOR + "," + Rol.ENCARGADO,
-                                HttpMethod.GET, null,
+                        .exchange("/usuarios/busqueda/criteria", HttpMethod.POST, requestEntity,
                                 new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
                         })
                         .getBody();

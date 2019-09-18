@@ -16,6 +16,7 @@ import javax.swing.JScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
@@ -23,6 +24,7 @@ import sic.RestClient;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
 import sic.modelo.Usuario;
+import sic.modelo.criteria.BusquedaUsuarioCriteria;
 import sic.util.Utilidades;
 
 public class BuscarUsuariosGUI extends JDialog {
@@ -76,17 +78,18 @@ public class BuscarUsuariosGUI extends JDialog {
                 this.resetScroll();
                 this.limpiarJTable();
             } else {
-                String criteriaBusqueda = "/usuarios/busqueda/criteria?";
-                criteriaBusqueda += "username=" + txtCriteriaBusqueda.getText().trim();
-                criteriaBusqueda += "&nombre=" + txtCriteriaBusqueda.getText().trim();
-                criteriaBusqueda += "&apellido=" + txtCriteriaBusqueda.getText().trim();
-                criteriaBusqueda += "&email=" + txtCriteriaBusqueda.getText().trim();                
-                criteriaBusqueda += "&roles=" + Arrays.toString(rolesParaFiltrar)
-                        .substring(1, Arrays.toString(rolesParaFiltrar).length() - 1);
-                criteriaBusqueda += "&pagina=" + NUMERO_PAGINA;
+                BusquedaUsuarioCriteria criteria = BusquedaUsuarioCriteria.builder().build();
+                criteria.setUsername(txtCriteriaBusqueda.getText().trim());
+                criteria.setNombre(txtCriteriaBusqueda.getText().trim());
+                criteria.setApellido(txtCriteriaBusqueda.getText().trim());
+                criteria.setEmail(txtCriteriaBusqueda.getText().trim());
+                criteria.setRoles(Arrays.asList(rolesParaFiltrar));
+                criteria.setPagina(NUMERO_PAGINA);
+                HttpEntity<BusquedaUsuarioCriteria> requestEntity = new HttpEntity<>(criteria);
                 PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                        .exchange(criteriaBusqueda, HttpMethod.GET, null,
-                                new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {})
+                        .exchange("/usuarios/busqueda/criteria", HttpMethod.POST, requestEntity,
+                                new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
+                        })
                         .getBody();
                 usuariosParcial = response.getContent();
                 usuariosTotal.addAll(usuariosParcial);
