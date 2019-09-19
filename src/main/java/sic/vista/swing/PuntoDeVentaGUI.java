@@ -412,7 +412,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                         + "&movimiento=" + Movimiento.VENTA
                         + "&cantidad=1"
-                        + "&descuentoPorcentaje=0.0",
+                        + "&descuentoPorcentaje=" + this.cliente.getBonificacion(),
                         RenglonFactura.class);
                 boolean esValido = true;
                 Map<Long, BigDecimal> faltantes;

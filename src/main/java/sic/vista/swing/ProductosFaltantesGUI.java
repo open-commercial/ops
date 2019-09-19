@@ -12,7 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.CantidadEnSucursal;
 import sic.modelo.Producto;
+import sic.modelo.SucursalActiva;
 import sic.util.DecimalesRenderer;
 
 public class ProductosFaltantesGUI extends JDialog {
@@ -77,10 +79,12 @@ public class ProductosFaltantesGUI extends JDialog {
             Producto p = RestClient.getRestTemplate().getForObject("/productos/" + id, Producto.class);
             fila[0] = p.getCodigo();
             fila[1] = p.getDescripcion();
-            fila[2] = cantidad;          
-            //fila[3] = p.getCantidad();
+            fila[2] = cantidad;
+            fila[3] = p.getCantidadEnSucursales().stream().filter(cantidadEnSucursal
+                    -> cantidadEnSucursal.idSucursal.equals(SucursalActiva.getInstance().getSucursal().getIdSucursal()))
+                    .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);
             modeloTablaFaltantes.addRow(fila);
-        });        
+        });
         tbl_Faltantes.setModel(modeloTablaFaltantes);
     }
 
