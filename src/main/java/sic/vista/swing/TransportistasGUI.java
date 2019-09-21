@@ -161,19 +161,20 @@ public class TransportistasGUI extends JInternalFrame {
 
     private void buscar() {
         this.cambiarEstadoEnabled(false);
-        BusquedaTransportistaCriteria c = BusquedaTransportistaCriteria.builder().build();
+        BusquedaTransportistaCriteria criteria = BusquedaTransportistaCriteria.builder().build();
         if (chk_Nombre.isSelected()) {
-            c.setNombre(txt_Nombre.getText().trim());
+            criteria.setNombre(txt_Nombre.getText().trim());
         }
         if (chk_Ubicacion.isSelected()) {
-            c.setIdProvincia(((Provincia) (cmb_Provincia.getSelectedItem())).getIdProvincia());
+            criteria.setIdProvincia(((Provincia) (cmb_Provincia.getSelectedItem())).getIdProvincia());
             if (!((Localidad) cmb_Localidad.getSelectedItem()).getNombre().equals("Todas")) {
-                c.setIdLocalidad(((Localidad) cmb_Localidad.getSelectedItem()).getIdLocalidad());
+                criteria.setIdLocalidad(((Localidad) cmb_Localidad.getSelectedItem()).getIdLocalidad());
             }
         }
-        c.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
         try {
-            transportistas = new ArrayList(Arrays.asList(RestClient.getRestTemplate().postForObject("/transportistas/busqueda/criteria", c, Transportista[].class)));
+            transportistas = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
+                    .postForObject("/transportistas/busqueda/criteria", criteria, Transportista[].class)));
             this.cargarResultadosAlTable();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

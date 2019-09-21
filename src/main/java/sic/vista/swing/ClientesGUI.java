@@ -30,7 +30,6 @@ import sic.modelo.Provincia;
 import sic.modelo.Rol;
 import sic.modelo.Usuario;
 import sic.modelo.UsuarioActivo;
-import sic.modelo.criteria.BusquedaClienteCriteria;
 import sic.modelo.criteria.BusquedaCuentaCorrienteClienteCriteria;
 import sic.util.ColoresNumerosRenderer;
 import sic.util.FechasRenderer;

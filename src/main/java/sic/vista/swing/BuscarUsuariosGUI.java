@@ -88,8 +88,7 @@ public class BuscarUsuariosGUI extends JDialog {
                 HttpEntity<BusquedaUsuarioCriteria> requestEntity = new HttpEntity<>(criteria);
                 PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
                         .exchange("/usuarios/busqueda/criteria", HttpMethod.POST, requestEntity,
-                                new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
-                        })
+                                new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {})
                         .getBody();
                 usuariosParcial = response.getContent();
                 usuariosTotal.addAll(usuariosParcial);

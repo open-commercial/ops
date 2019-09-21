@@ -254,8 +254,7 @@ public class ProveedoresGUI extends JInternalFrame {
         }
         int seleccionDireccion = cmbSentido.getSelectedIndex();
         switch (seleccionDireccion) {
-            case 0:
-               
+            case 0:            
                 criteria.setSentido("ASC");
                 break;
             case 1:
@@ -267,7 +266,8 @@ public class ProveedoresGUI extends JInternalFrame {
         try {
             HttpEntity<BusquedaCuentaCorrienteProveedorCriteria> requestEntity = new HttpEntity<>(criteria);
             PaginaRespuestaRest<CuentaCorrienteProveedor> response = RestClient.getRestTemplate()
-                    .exchange("/cuentas-corriente/proveedores/busqueda/criteria", HttpMethod.POST, requestEntity, new ParameterizedTypeReference<PaginaRespuestaRest<CuentaCorrienteProveedor>>() {
+                    .exchange("/cuentas-corriente/proveedores/busqueda/criteria", HttpMethod.POST, requestEntity,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<CuentaCorrienteProveedor>>() {
                     })
                     .getBody();
             totalElementosBusqueda = response.getTotalElements();

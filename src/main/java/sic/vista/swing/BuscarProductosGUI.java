@@ -112,8 +112,7 @@ public class BuscarProductosGUI extends JDialog {
                 HttpEntity<BusquedaProductoCriteria> requestEntity = new HttpEntity<>(criteria);
                 PaginaRespuestaRest<Producto> response = RestClient.getRestTemplate()
                         .exchange("/productos/busqueda/criteria", HttpMethod.POST, requestEntity,
-                                new ParameterizedTypeReference<PaginaRespuestaRest<Producto>>() {
-                        })
+                                new ParameterizedTypeReference<PaginaRespuestaRest<Producto>>() {})
                         .getBody();
                 productosParcial = response.getContent();
                 productosTotal.addAll(productosParcial);

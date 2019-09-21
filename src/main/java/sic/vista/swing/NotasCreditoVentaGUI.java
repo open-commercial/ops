@@ -173,7 +173,7 @@ public class NotasCreditoVentaGUI extends JInternalFrame {
 
     private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
-        BusquedaNotaCriteria criteria = getCriteria();
+        BusquedaNotaCriteria criteria = this.getCriteria();
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
             case 0:

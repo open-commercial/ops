@@ -6,7 +6,6 @@ import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -115,8 +114,7 @@ public class CajasGUI extends JInternalFrame {
             HttpEntity<BusquedaCajaCriteria> requestEntity = new HttpEntity<>(criteria);
             PaginaRespuestaRest<Caja> response = RestClient.getRestTemplate()
                     .exchange("/cajas/busqueda/criteria", HttpMethod.POST, requestEntity,
-                            new ParameterizedTypeReference<PaginaRespuestaRest<Caja>>() {
-                    })
+                            new ParameterizedTypeReference<PaginaRespuestaRest<Caja>>() {})
                     .getBody();
             totalElementosBusqueda = response.getTotalElements();
             cajasParcial = response.getContent();
@@ -610,10 +608,10 @@ public class CajasGUI extends JInternalFrame {
             if (chk_UsuarioApertura.isSelected() == true) {
                 cmb_UsuariosApertura.setEnabled(true);        
                 BusquedaUsuarioCriteria criteria = BusquedaUsuarioCriteria.builder().build();
-                List<Rol> rolesParafiltrar = new ArrayList<>();
-                rolesParafiltrar.add(Rol.ADMINISTRADOR);
-                rolesParafiltrar.add(Rol.ENCARGADO);
-                criteria.setRoles(rolesParafiltrar);
+                List<Rol> rolesParaFiltrar = new ArrayList<>();
+                rolesParaFiltrar.add(Rol.ADMINISTRADOR);
+                rolesParaFiltrar.add(Rol.ENCARGADO);
+                criteria.setRoles(rolesParaFiltrar);
                 criteria.setPagina(NUMERO_PAGINA);
                 HttpEntity<BusquedaUsuarioCriteria> requestEntity = new HttpEntity<>(criteria);
                 PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
@@ -665,10 +663,10 @@ public class CajasGUI extends JInternalFrame {
             if (chk_UsuarioCierre.isSelected() == true) {
                 cmb_UsuariosCierre.setEnabled(true);
                 BusquedaUsuarioCriteria criteria = BusquedaUsuarioCriteria.builder().build();
-                List<Rol> rolesParafiltrar = new ArrayList<>();
-                rolesParafiltrar.add(Rol.ADMINISTRADOR);
-                rolesParafiltrar.add(Rol.ENCARGADO);
-                criteria.setRoles(rolesParafiltrar);
+                List<Rol> rolesParaFiltrar = new ArrayList<>();
+                rolesParaFiltrar.add(Rol.ADMINISTRADOR);
+                rolesParaFiltrar.add(Rol.ENCARGADO);
+                criteria.setRoles(rolesParaFiltrar);
                 criteria.setPagina(NUMERO_PAGINA);
                 HttpEntity<BusquedaUsuarioCriteria> requestEntity = new HttpEntity<>(criteria);
                 PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
