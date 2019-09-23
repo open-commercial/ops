@@ -164,7 +164,7 @@ public class RecibosCompraGUI extends JInternalFrame {
 
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
-        BusquedaReciboCriteria criteria = getCriteria();
+        BusquedaReciboCriteria criteria = this.getCriteria();
         try {
             HttpEntity<BusquedaReciboCriteria> requestEntity = new HttpEntity<>(this.getCriteria());
             PaginaRespuestaRest<Recibo> response = RestClient.getRestTemplate()
