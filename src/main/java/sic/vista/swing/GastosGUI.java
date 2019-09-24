@@ -745,7 +745,6 @@ public class GastosGUI extends JInternalFrame {
                 AgregarGastoGUI agregarGasto = new AgregarGastoGUI(formasDePago);
                 agregarGasto.setLocationRelativeTo(this);
                 agregarGasto.setModal(true);
-                agregarGasto.setEnabled(true);
                 agregarGasto.setVisible(true);
                 this.limpiarYBuscar();
             } else {

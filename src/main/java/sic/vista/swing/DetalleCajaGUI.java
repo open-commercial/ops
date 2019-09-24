@@ -532,8 +532,8 @@ public class DetalleCajaGUI extends JInternalFrame {
                     + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/ultima-caja-abierta", boolean.class)) {
                 List<FormaDePago> formasDePago = Arrays.asList(RestClient.getRestTemplate().getForObject("/formas-de-pago", FormaDePago[].class));
                 AgregarGastoGUI agregarGasto = new AgregarGastoGUI(formasDePago);
+                agregarGasto.setModal(true);
                 agregarGasto.setLocationRelativeTo(null);
-                agregarGasto.setEnabled(true);
                 agregarGasto.setVisible(true);
                 this.limpiarYCargarTablas();
             } else if (this.caja.getEstado().equals(EstadoCaja.CERRADA)) {
