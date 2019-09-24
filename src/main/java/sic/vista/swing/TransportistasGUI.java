@@ -46,7 +46,7 @@ public class TransportistasGUI extends JInternalFrame {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
             int va = scrollBar.getVisibleAmount() + 10;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (transportistas.size() >= 25) {
+                if (transportistas.size() >= 10) {
                     NUMERO_PAGINA += 1;
                     buscar();
                 }
