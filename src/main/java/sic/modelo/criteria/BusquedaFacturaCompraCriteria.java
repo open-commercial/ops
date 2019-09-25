@@ -14,8 +14,8 @@ public class BusquedaFacturaCompraCriteria {
     private Date fechaDesde;
     private Date fechaHasta;
     private Long idProveedor;
-    private long numSerie;
-    private long numFactura;
+    private Long numSerie;
+    private Long numFactura;
     private TipoDeComprobante tipoComprobante;
     private Long idProducto;
     private Long idEmpresa;

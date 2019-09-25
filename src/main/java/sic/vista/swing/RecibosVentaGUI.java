@@ -97,7 +97,7 @@ public class RecibosVentaGUI extends JInternalFrame {
                 criteria.setOrdenarPor("concepto");
                 break;
             case 2:
-                criteria.setOrdenarPor("formaDePago");
+                criteria.setOrdenarPor("formaDePago.nombre");
                 break;
             case 3:
                 criteria.setOrdenarPor("monto");
