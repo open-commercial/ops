@@ -252,8 +252,6 @@ public class CajasGUI extends JInternalFrame {
         chk_Fecha = new javax.swing.JCheckBox();
         dc_FechaDesde = new com.toedter.calendar.JDateChooser();
         dc_FechaHasta = new com.toedter.calendar.JDateChooser();
-        lbl_Hasta = new javax.swing.JLabel();
-        lbl_Desde = new javax.swing.JLabel();
         btn_buscar = new javax.swing.JButton();
         chk_UsuarioApertura = new javax.swing.JCheckBox();
         lbl_cantidadMostrar = new javax.swing.JLabel();
@@ -299,7 +297,7 @@ public class CajasGUI extends JInternalFrame {
 
         pnl_Filtros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
 
-        chk_Fecha.setText("Fecha Caja:");
+        chk_Fecha.setText("Fecha:");
         chk_Fecha.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 chk_FechaItemStateChanged(evt);
@@ -311,12 +309,6 @@ public class CajasGUI extends JInternalFrame {
 
         dc_FechaHasta.setDateFormatString("dd/MM/yyyy");
         dc_FechaHasta.setEnabled(false);
-
-        lbl_Hasta.setText("Hasta:");
-        lbl_Hasta.setEnabled(false);
-
-        lbl_Desde.setText("Desde:");
-        lbl_Desde.setEnabled(false);
 
         btn_buscar.setForeground(java.awt.Color.blue);
         btn_buscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
@@ -383,31 +375,24 @@ public class CajasGUI extends JInternalFrame {
                             .addComponent(chk_UsuarioApertura)
                             .addComponent(chk_Fecha)
                             .addComponent(chk_UsuarioCierre))
-                        .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(pnl_FiltrosLayout.createSequentialGroup()
-                                .addGap(0, 83, Short.MAX_VALUE)
-                                .addComponent(lbl_Desde)
+                                .addComponent(dc_FechaDesde, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lbl_Hasta)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(dc_FechaHasta, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE))
                             .addGroup(pnl_FiltrosLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txtUsuarioApertura)
                                     .addComponent(txtUsuarioCierre))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGap(0, 0, 0)
                                 .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnBuscarUsuariosApertura, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(btnBuscarUsuariosCierre, javax.swing.GroupLayout.Alignment.TRAILING))))))
-                .addContainerGap())
+                                    .addComponent(btnBuscarUsuariosCierre, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(btnBuscarUsuariosApertura, javax.swing.GroupLayout.Alignment.TRAILING))))))
+                .addGap(6, 6, 6))
         );
 
         pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chk_Fecha, chk_UsuarioApertura, chk_UsuarioCierre});
-
-        pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {dc_FechaDesde, dc_FechaHasta});
 
         pnl_FiltrosLayout.setVerticalGroup(
             pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -415,9 +400,7 @@ public class CajasGUI extends JInternalFrame {
                 .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_Fecha)
                     .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Desde)
-                    .addComponent(lbl_Hasta))
+                    .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_UsuarioApertura)
@@ -425,10 +408,10 @@ public class CajasGUI extends JInternalFrame {
                     .addComponent(btnBuscarUsuariosApertura))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(txtUsuarioCierre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chk_UsuarioCierre)
+                    .addComponent(txtUsuarioCierre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscarUsuariosCierre))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btn_buscar)
                     .addComponent(lbl_cantidadMostrar))
@@ -436,6 +419,10 @@ public class CajasGUI extends JInternalFrame {
         );
 
         pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_buscar, lbl_cantidadMostrar});
+
+        pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarUsuariosApertura, txtUsuarioApertura});
+
+        pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarUsuariosCierre, txtUsuarioCierre});
 
         pnl_Cajas.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados"));
 
@@ -576,15 +563,11 @@ public class CajasGUI extends JInternalFrame {
         //Pregunta el estado actual del checkBox
         if (chk_Fecha.isSelected() == true) {
             dc_FechaDesde.setEnabled(true);
-            dc_FechaHasta.setEnabled(true);
-            lbl_Desde.setEnabled(true);
-            lbl_Hasta.setEnabled(true);
+            dc_FechaHasta.setEnabled(true);          
             dc_FechaDesde.requestFocus();
         } else {
             dc_FechaDesde.setEnabled(false);
             dc_FechaHasta.setEnabled(false);
-            lbl_Desde.setEnabled(false);
-            lbl_Hasta.setEnabled(false);
         }
     }//GEN-LAST:event_chk_FechaItemStateChanged
 
@@ -748,8 +731,6 @@ public class CajasGUI extends JInternalFrame {
     private com.toedter.calendar.JDateChooser dc_FechaHasta;
     private javax.swing.JFormattedTextField ftxt_TotalReal;
     private javax.swing.JFormattedTextField ftxt_TotalSistema;
-    private javax.swing.JLabel lbl_Desde;
-    private javax.swing.JLabel lbl_Hasta;
     private javax.swing.JLabel lbl_TotalCierre;
     private javax.swing.JLabel lbl_TotalSistema;
     private javax.swing.JLabel lbl_cantidadMostrar;
