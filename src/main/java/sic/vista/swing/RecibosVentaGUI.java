@@ -79,7 +79,7 @@ public class RecibosVentaGUI extends JInternalFrame {
             criteria.setIdUsuario(usuarioSeleccionado.getId_Usuario());
         }
         if (chk_Viajante.isSelected() && viajanteSeleccionado != null) {
-            criteria.setIdUsuario(viajanteSeleccionado.getId_Usuario());
+            criteria.setIdViajante(viajanteSeleccionado.getId_Usuario());
         }
         if (chk_Concepto.isSelected()) {
             criteria.setConcepto(txt_Concepto.getText());

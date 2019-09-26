@@ -17,9 +17,9 @@ public class BusquedaFacturaVentaCriteria {
     private TipoDeComprobante tipoComprobante;
     private Long idUsuario;
     private Long idViajante;
-    private long numSerie;
-    private long numFactura;
-    private long nroPedido;
+    private Long numSerie;
+    private Long numFactura;
+    private Long nroPedido;
     private Long idProducto;
     private Long idEmpresa;
     private Integer pagina;
