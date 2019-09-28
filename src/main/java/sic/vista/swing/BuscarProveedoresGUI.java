@@ -15,6 +15,7 @@ import javax.swing.JScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
@@ -22,6 +23,7 @@ import sic.RestClient;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Proveedor;
+import sic.modelo.criteria.BusquedaProveedorCriteria;
 import sic.util.Utilidades;
 
 public class BuscarProveedoresGUI extends JDialog {
@@ -32,7 +34,6 @@ public class BuscarProveedoresGUI extends JDialog {
     private Proveedor proveedorSeleccionado;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int NUMERO_PAGINA = 0;
-    private static final int TAMANIO_PAGINA = 50;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeDialog = new Dimension(1000, 600);
 
@@ -44,9 +45,9 @@ public class BuscarProveedoresGUI extends JDialog {
         tblResultados.addKeyListener(keyHandler);
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-            int va = scrollBar.getVisibleAmount() + 50;
+            int va = scrollBar.getVisibleAmount() + 10;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (proveedoresTotal.size() >= TAMANIO_PAGINA) {
+                if (proveedoresTotal.size() >= 10) {
                     NUMERO_PAGINA += 1;
                     buscar();
                 }
@@ -73,14 +74,15 @@ public class BuscarProveedoresGUI extends JDialog {
                 this.resetScroll();
                 this.limpiarJTable();
             } else {
-                String uri = "/proveedores/busqueda/criteria?"
-                        + "nroProveedor=" + txtCriteriaBusqueda.getText().trim()
-                        + "&razonSocial=" + txtCriteriaBusqueda.getText().trim()                        
-                        + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "&pagina=" + NUMERO_PAGINA
-                        + "&tamanio=" + TAMANIO_PAGINA;
+                BusquedaProveedorCriteria criteria = BusquedaProveedorCriteria.builder().build();
+                criteria.setNroProveedor(txtCriteriaBusqueda.getText().trim());
+                criteria.setRazonSocial(txtCriteriaBusqueda.getText().trim());
+                criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+                criteria.setPagina(NUMERO_PAGINA);
+                HttpEntity<BusquedaProveedorCriteria> requestEntity = new HttpEntity<>(criteria);
                 PaginaRespuestaRest<Proveedor> response = RestClient.getRestTemplate()
-                        .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<PaginaRespuestaRest<Proveedor>>() {})
+                        .exchange("/proveedores/busqueda/criteria", HttpMethod.POST, requestEntity, 
+                                new ParameterizedTypeReference<PaginaRespuestaRest<Proveedor>>() {})
                         .getBody();
                 proveedoresParcial = response.getContent();
                 proveedoresTotal.addAll(proveedoresParcial);

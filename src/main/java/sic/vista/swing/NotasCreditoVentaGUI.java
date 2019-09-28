@@ -24,7 +24,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.BusquedaNotaCriteria;
+import sic.modelo.criteria.BusquedaNotaCriteria;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Factura;
@@ -73,8 +73,8 @@ public class NotasCreditoVentaGUI extends JInternalFrame {
         BusquedaNotaCriteria criteria = new BusquedaNotaCriteria();
         criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
         if (chk_Fecha.isSelected()) {
-            criteria.setFechaDesde(dc_FechaDesde.getDate());
-            criteria.setFechaHasta(dc_FechaDesde.getDate());
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? dc_FechaDesde.getDate() : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? dc_FechaHasta.getDate() : null);
         }
         if (chk_NumNota.isSelected()) {
             criteria.setNumNota(Long.valueOf(txt_NroNota.getText()));
@@ -173,7 +173,7 @@ public class NotasCreditoVentaGUI extends JInternalFrame {
 
     private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
-        BusquedaNotaCriteria criteria = getCriteria();
+        BusquedaNotaCriteria criteria = this.getCriteria();
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
             case 0:

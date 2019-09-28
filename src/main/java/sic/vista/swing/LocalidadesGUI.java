@@ -15,6 +15,7 @@ import javax.swing.JScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
@@ -24,6 +25,7 @@ import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Provincia;
 import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
+import sic.modelo.criteria.BusquedaLocalidadCriteria;
 import sic.util.DecimalesRenderer;
 import sic.util.Utilidades;
 
@@ -164,42 +166,43 @@ public class LocalidadesGUI extends JInternalFrame {
 
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
-        String criteriaBusqueda = "/ubicaciones/localidades/busqueda/criteria?";
+        BusquedaLocalidadCriteria criteria = BusquedaLocalidadCriteria.builder().build();
         if (chk_Provincia.isSelected()) {
-            criteriaBusqueda += "nombreProvincia=" + ((Provincia) cmbProvincia.getSelectedItem()).getNombre() + "&";
+            criteria.setNombreProvincia(((Provincia) cmbProvincia.getSelectedItem()).getNombre());
         }
         if (chkNombreLocalidad.isSelected()) {
-            criteriaBusqueda += "nombreLocalidad=" + txtCriteria.getText().trim() + "&";
+            criteria.setNombre(txtCriteria.getText().trim());
         }
         if (chkEnvio.isSelected()) {
             if (rbGratuito.isSelected()) {
-                criteriaBusqueda += "envioGratuito=true&";
+                criteria.setEnvioGratuito(true);
             } else if (rbNoGratuito.isSelected()) {
-                criteriaBusqueda += "envioGratuito=false&";
+                criteria.setEnvioGratuito(false);
             }
         }
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
             case 0:
-                criteriaBusqueda += "ordenarPor=nombre&";
+                criteria.setOrdenarPor("nombre");
                 break;
             case 1:
-                criteriaBusqueda += "ordenarPor=provincia.nombre&";
+                criteria.setOrdenarPor("provincia.nombre");
                 break;
         }
         int seleccionDireccion = cmbSentido.getSelectedIndex();
         switch (seleccionDireccion) {
             case 0:
-                criteriaBusqueda += "sentido=ASC&";
+                criteria.setSentido("ASC");
                 break;
             case 1:
-                criteriaBusqueda += "sentido=DESC&";
+                criteria.setSentido("DESC");
                 break;
         }
-        criteriaBusqueda += "pagina=" + NUMERO_PAGINA;
+        criteria.setPagina(NUMERO_PAGINA);
         try {
+            HttpEntity<BusquedaLocalidadCriteria> requestEntity = new HttpEntity<>(criteria);
             PaginaRespuestaRest<Localidad> response = RestClient.getRestTemplate()
-                    .exchange(criteriaBusqueda, HttpMethod.GET, null,
+                    .exchange("/ubicaciones/localidades/busqueda/criteria", HttpMethod.POST, requestEntity,
                             new ParameterizedTypeReference<PaginaRespuestaRest<Localidad>>() {
                     })
                     .getBody();

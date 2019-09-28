@@ -15,6 +15,7 @@ import javax.swing.JScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
@@ -22,6 +23,7 @@ import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.PaginaRespuestaRest;
+import sic.modelo.criteria.BusquedaClienteCriteria;
 import sic.util.Utilidades;
 
 public class BuscarClientesGUI extends JDialog {
@@ -72,14 +74,16 @@ public class BuscarClientesGUI extends JDialog {
                 this.resetScroll();
                 this.limpiarJTable();
             } else {
-                String uri = "/clientes/busqueda/criteria?"
-                        + "nombreFiscal=" + txtCriteriaBusqueda.getText().trim()
-                        + "&nombreFantasia=" + txtCriteriaBusqueda.getText().trim()                        
-                        + "&nroCliente=" + txtCriteriaBusqueda.getText().trim()
-                        + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "&pagina=" + NUMERO_PAGINA;
+                BusquedaClienteCriteria criteria = BusquedaClienteCriteria.builder().build();
+                criteria.setNombreFiscal(txtCriteriaBusqueda.getText().trim());
+                criteria.setNombreFantasia(txtCriteriaBusqueda.getText().trim());
+                criteria.setNroDeCliente(txtCriteriaBusqueda.getText().trim());
+                criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+                criteria.setPagina(NUMERO_PAGINA);
+                HttpEntity<BusquedaClienteCriteria> requestEntity = new HttpEntity<>(criteria);
                 PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
-                        .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {})
+                        .exchange("/clientes/busqueda/criteria", HttpMethod.POST, requestEntity,
+                                new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {})
                         .getBody();
                 clientesParcial = response.getContent();
                 clientesTotal.addAll(clientesParcial);
@@ -266,9 +270,9 @@ public class BuscarClientesGUI extends JDialog {
             panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFondoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCriteriaBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscar))
+                .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnBuscar)
+                    .addComponent(txtCriteriaBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

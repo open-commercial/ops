@@ -19,6 +19,7 @@ import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
@@ -29,6 +30,7 @@ import sic.modelo.Producto;
 import sic.modelo.RenglonFactura;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.TipoDeComprobante;
+import sic.modelo.criteria.BusquedaProductoCriteria;
 import sic.util.DecimalesRenderer;
 import sic.util.Utilidades;
 
@@ -102,18 +104,19 @@ public class BuscarProductosGUI extends JDialog {
                 this.resetScroll();
                 this.limpiarJTable();
             } else {
-                String uri = "descripcion=" + txtCriteriaBusqueda.getText().trim()
-                        + "&codigo=" + txtCriteriaBusqueda.getText().trim()
-                        + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "&pagina=" + NUMERO_PAGINA;
+                BusquedaProductoCriteria criteria = BusquedaProductoCriteria.builder().build();
+                criteria.setDescripcion(txtCriteriaBusqueda.getText().trim());
+                criteria.setCodigo(txtCriteriaBusqueda.getText().trim());
+                criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+                criteria.setPagina(NUMERO_PAGINA);
+                HttpEntity<BusquedaProductoCriteria> requestEntity = new HttpEntity<>(criteria);
                 PaginaRespuestaRest<Producto> response = RestClient.getRestTemplate()
-                        .exchange("/productos/busqueda/criteria?" + uri, HttpMethod.GET, null,
-                                new ParameterizedTypeReference<PaginaRespuestaRest<Producto>>() {
-                        })
+                        .exchange("/productos/busqueda/criteria", HttpMethod.POST, requestEntity,
+                                new ParameterizedTypeReference<PaginaRespuestaRest<Producto>>() {})
                         .getBody();
                 productosParcial = response.getContent();
                 productosTotal.addAll(productosParcial);
-                productoSeleccionado = null;       
+                productoSeleccionado = null;
                 if (renglones != null) {
                     this.restarCantidadesSegunProductosYaCargados();
                 }

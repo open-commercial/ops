@@ -15,6 +15,7 @@ import javax.swing.JScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
@@ -25,6 +26,7 @@ import sic.modelo.Usuario;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
+import sic.modelo.criteria.BusquedaCajaCriteria;
 import sic.util.ColoresEstadosRenderer;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
@@ -37,6 +39,8 @@ public class CajasGUI extends JInternalFrame {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private List<Caja> cajasTotal = new ArrayList<>();
     private List<Caja> cajasParcial = new ArrayList<>();
+    private Usuario usuarioSeleccionadoApertura;
+    private Usuario usuarioSeleccionadoCierre;
     private static int totalElementosBusqueda;
     private static int NUMERO_PAGINA = 0;    
     private final Dimension sizeInternalFrame = new Dimension(880, 600);
@@ -98,15 +102,19 @@ public class CajasGUI extends JInternalFrame {
 
     private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
-        String busqueda = "/cajas/busqueda/criteria?";
-        String criteria = "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa();
-        if (chk_Fecha.isSelected()) criteria += "&desde=" + dc_FechaDesde.getDate().getTime() + "&hasta=" + dc_FechaHasta.getDate().getTime();
-        if (chk_UsuarioApertura.isSelected()) criteria += "&idUsuarioApertura=" + ((Usuario) cmb_UsuariosApertura.getSelectedItem()).getId_Usuario();
-        if (chk_UsuarioCierre.isSelected()) criteria += "&idUsuarioCierre=" + ((Usuario) cmb_UsuariosCierre.getSelectedItem()).getId_Usuario();
-        criteria += "&pagina=" + NUMERO_PAGINA;
+        BusquedaCajaCriteria criteria = BusquedaCajaCriteria.builder().build();
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        if (chk_Fecha.isSelected()) {
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? dc_FechaDesde.getDate() : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? dc_FechaHasta.getDate() : null);
+        }
+        if (chk_UsuarioApertura.isSelected() && usuarioSeleccionadoApertura != null) criteria.setIdUsuarioApertura(usuarioSeleccionadoApertura.getId_Usuario());
+        if (chk_UsuarioCierre.isSelected() && usuarioSeleccionadoCierre != null) criteria.setIdUsuarioCierre(usuarioSeleccionadoCierre.getId_Usuario());
+        criteria.setPagina(NUMERO_PAGINA);
         try {
+            HttpEntity<BusquedaCajaCriteria> requestEntity = new HttpEntity<>(criteria);
             PaginaRespuestaRest<Caja> response = RestClient.getRestTemplate()
-                    .exchange(busqueda + criteria, HttpMethod.GET, null,
+                    .exchange("/cajas/busqueda/criteria", HttpMethod.POST, requestEntity,
                             new ParameterizedTypeReference<PaginaRespuestaRest<Caja>>() {})
                     .getBody();
             totalElementosBusqueda = response.getTotalElements();
@@ -115,9 +123,9 @@ public class CajasGUI extends JInternalFrame {
             this.cargarResultadosAlTable();
             if (calcularResultados) {
                 ftxt_TotalSistema.setValue(RestClient.getRestTemplate()
-                        .getForObject("/cajas/saldo-sistema?" + criteria, BigDecimal.class));
+                        .postForObject("/cajas/saldo-sistema", criteria, BigDecimal.class));
                 ftxt_TotalReal.setValue(RestClient.getRestTemplate()
-                        .getForObject("/cajas/saldo-real?" + criteria, BigDecimal.class));
+                        .postForObject("/cajas/saldo-real", criteria, BigDecimal.class));
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -142,14 +150,18 @@ public class CajasGUI extends JInternalFrame {
         }
         chk_UsuarioApertura.setEnabled(status);
         if (status == true && chk_UsuarioApertura.isSelected() == true) {
-            cmb_UsuariosApertura.setEnabled(true);
+            txtUsuarioApertura.setEnabled(true);
+            btnBuscarUsuariosApertura.setEnabled(true);
         } else {
-            cmb_UsuariosApertura.setEnabled(false);
+            txtUsuarioApertura.setEnabled(false);
+            btnBuscarUsuariosApertura.setEnabled(false);
         }
         if (status == true && chk_UsuarioCierre.isSelected() == true) {
-            cmb_UsuariosCierre.setEnabled(true);
+            txtUsuarioCierre.setEnabled(true);
+            btnBuscarUsuariosCierre.setEnabled(true);
         } else {
-            cmb_UsuariosCierre.setEnabled(false);
+            txtUsuarioCierre.setEnabled(false);
+            btnBuscarUsuariosCierre.setEnabled(false);
         }
         btn_buscar.setEnabled(status);        
         tbl_Cajas.setEnabled(status);
@@ -240,14 +252,14 @@ public class CajasGUI extends JInternalFrame {
         chk_Fecha = new javax.swing.JCheckBox();
         dc_FechaDesde = new com.toedter.calendar.JDateChooser();
         dc_FechaHasta = new com.toedter.calendar.JDateChooser();
-        lbl_Hasta = new javax.swing.JLabel();
-        lbl_Desde = new javax.swing.JLabel();
         btn_buscar = new javax.swing.JButton();
         chk_UsuarioApertura = new javax.swing.JCheckBox();
-        cmb_UsuariosApertura = new javax.swing.JComboBox<>();
         lbl_cantidadMostrar = new javax.swing.JLabel();
         chk_UsuarioCierre = new javax.swing.JCheckBox();
-        cmb_UsuariosCierre = new javax.swing.JComboBox<>();
+        txtUsuarioApertura = new javax.swing.JTextField();
+        txtUsuarioCierre = new javax.swing.JTextField();
+        btnBuscarUsuariosApertura = new javax.swing.JButton();
+        btnBuscarUsuariosCierre = new javax.swing.JButton();
         pnl_Cajas = new javax.swing.JPanel();
         sp_Cajas = new javax.swing.JScrollPane();
         tbl_Cajas = new javax.swing.JTable();
@@ -285,7 +297,7 @@ public class CajasGUI extends JInternalFrame {
 
         pnl_Filtros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
 
-        chk_Fecha.setText("Fecha Caja:");
+        chk_Fecha.setText("Fecha:");
         chk_Fecha.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 chk_FechaItemStateChanged(evt);
@@ -297,12 +309,6 @@ public class CajasGUI extends JInternalFrame {
 
         dc_FechaHasta.setDateFormatString("dd/MM/yyyy");
         dc_FechaHasta.setEnabled(false);
-
-        lbl_Hasta.setText("Hasta:");
-        lbl_Hasta.setEnabled(false);
-
-        lbl_Desde.setText("Desde:");
-        lbl_Desde.setEnabled(false);
 
         btn_buscar.setForeground(java.awt.Color.blue);
         btn_buscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
@@ -329,6 +335,30 @@ public class CajasGUI extends JInternalFrame {
             }
         });
 
+        txtUsuarioApertura.setEditable(false);
+        txtUsuarioApertura.setEnabled(false);
+        txtUsuarioApertura.setOpaque(false);
+
+        txtUsuarioCierre.setEditable(false);
+        txtUsuarioCierre.setEnabled(false);
+        txtUsuarioCierre.setOpaque(false);
+
+        btnBuscarUsuariosApertura.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
+        btnBuscarUsuariosApertura.setEnabled(false);
+        btnBuscarUsuariosApertura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarUsuariosAperturaActionPerformed(evt);
+            }
+        });
+
+        btnBuscarUsuariosCierre.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
+        btnBuscarUsuariosCierre.setEnabled(false);
+        btnBuscarUsuariosCierre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarUsuariosCierreActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnl_FiltrosLayout = new javax.swing.GroupLayout(pnl_Filtros);
         pnl_Filtros.setLayout(pnl_FiltrosLayout);
         pnl_FiltrosLayout.setHorizontalGroup(
@@ -345,27 +375,24 @@ public class CajasGUI extends JInternalFrame {
                             .addComponent(chk_UsuarioApertura)
                             .addComponent(chk_Fecha)
                             .addComponent(chk_UsuarioCierre))
-                        .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnl_FiltrosLayout.createSequentialGroup()
-                                .addGap(0, 12, Short.MAX_VALUE)
-                                .addComponent(lbl_Desde)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(pnl_FiltrosLayout.createSequentialGroup()
+                                .addComponent(dc_FechaDesde, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lbl_Hasta)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnl_FiltrosLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dc_FechaHasta, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE))
+                            .addGroup(pnl_FiltrosLayout.createSequentialGroup()
                                 .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cmb_UsuariosApertura, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(cmb_UsuariosCierre, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
-                .addContainerGap())
+                                    .addComponent(txtUsuarioApertura)
+                                    .addComponent(txtUsuarioCierre))
+                                .addGap(0, 0, 0)
+                                .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnBuscarUsuariosCierre, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(btnBuscarUsuariosApertura, javax.swing.GroupLayout.Alignment.TRAILING))))))
+                .addGap(6, 6, 6))
         );
 
         pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chk_Fecha, chk_UsuarioApertura, chk_UsuarioCierre});
-
-        pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {dc_FechaDesde, dc_FechaHasta});
 
         pnl_FiltrosLayout.setVerticalGroup(
             pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -373,18 +400,18 @@ public class CajasGUI extends JInternalFrame {
                 .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_Fecha)
                     .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Desde)
-                    .addComponent(lbl_Hasta))
+                    .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(cmb_UsuariosApertura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chk_UsuarioApertura))
+                    .addComponent(chk_UsuarioApertura)
+                    .addComponent(txtUsuarioApertura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarUsuariosApertura))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(cmb_UsuariosCierre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chk_UsuarioCierre))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(chk_UsuarioCierre)
+                    .addComponent(txtUsuarioCierre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarUsuariosCierre))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_FiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btn_buscar)
                     .addComponent(lbl_cantidadMostrar))
@@ -393,7 +420,9 @@ public class CajasGUI extends JInternalFrame {
 
         pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_buscar, lbl_cantidadMostrar});
 
-        pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmb_UsuariosApertura, cmb_UsuariosCierre});
+        pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarUsuariosApertura, txtUsuarioApertura});
+
+        pnl_FiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarUsuariosCierre, txtUsuarioCierre});
 
         pnl_Cajas.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados"));
 
@@ -490,7 +519,7 @@ public class CajasGUI extends JInternalFrame {
         pnl_CajasLayout.setVerticalGroup(
             pnl_CajasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_CajasLayout.createSequentialGroup()
-                .addComponent(sp_Cajas, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
+                .addComponent(sp_Cajas, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_CajasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(pnl_CajasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -534,15 +563,11 @@ public class CajasGUI extends JInternalFrame {
         //Pregunta el estado actual del checkBox
         if (chk_Fecha.isSelected() == true) {
             dc_FechaDesde.setEnabled(true);
-            dc_FechaHasta.setEnabled(true);
-            lbl_Desde.setEnabled(true);
-            lbl_Hasta.setEnabled(true);
+            dc_FechaHasta.setEnabled(true);          
             dc_FechaDesde.requestFocus();
         } else {
             dc_FechaDesde.setEnabled(false);
             dc_FechaHasta.setEnabled(false);
-            lbl_Desde.setEnabled(false);
-            lbl_Hasta.setEnabled(false);
         }
     }//GEN-LAST:event_chk_FechaItemStateChanged
 
@@ -597,30 +622,12 @@ public class CajasGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_eliminarCajaActionPerformed
 
     private void chk_UsuarioAperturaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UsuarioAperturaItemStateChanged
-        try {
-            if (chk_UsuarioApertura.isSelected() == true) {
-                cmb_UsuariosApertura.setEnabled(true);
-                PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                        .exchange("/usuarios/busqueda/criteria?"
-                                + "roles=" + Rol.ADMINISTRADOR + "," + Rol.ENCARGADO
-                                + "&pagina=0&tamanio=" + Integer.MAX_VALUE, HttpMethod.GET, null,
-                                new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
-                        })
-                        .getBody();
-                response.getContent().stream().forEach(usuario -> {
-                    cmb_UsuariosApertura.addItem(usuario);
-                });
-            } else {
-                cmb_UsuariosApertura.removeAllItems();
-                cmb_UsuariosApertura.setEnabled(false);
-            }
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+        if (chk_UsuarioApertura.isSelected() == true) {
+            txtUsuarioApertura.setEnabled(true);
+            btnBuscarUsuariosApertura.setEnabled(true);
+        } else {
+            txtUsuarioApertura.setEnabled(false);
+            btnBuscarUsuariosApertura.setEnabled(false);
         }
     }//GEN-LAST:event_chk_UsuarioAperturaItemStateChanged
 
@@ -631,8 +638,10 @@ public class CajasGUI extends JInternalFrame {
     private void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_internalFrameOpened
         this.setSize(sizeInternalFrame);
         this.setColumnasCaja();
-        cmb_UsuariosApertura.setEnabled(false);
-        cmb_UsuariosCierre.setEnabled(false);
+        txtUsuarioApertura.setEnabled(false);
+        btnBuscarUsuariosApertura.setEnabled(false);
+        txtUsuarioCierre.setEnabled(false);
+        btnBuscarUsuariosCierre.setEnabled(false);
         dc_FechaDesde.setDate(new Date());
         dc_FechaHasta.setDate(new Date());
         this.cambiarEstadoDeComponentesSegunRolUsuario();
@@ -647,30 +656,12 @@ public class CajasGUI extends JInternalFrame {
     }//GEN-LAST:event_internalFrameOpened
 
     private void chk_UsuarioCierreItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UsuarioCierreItemStateChanged
-        try {
-            if (chk_UsuarioCierre.isSelected() == true) {
-                cmb_UsuariosCierre.setEnabled(true);
-                PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                        .exchange("/usuarios/busqueda/criteria?"
-                                + "roles=" + Rol.ADMINISTRADOR + "," + Rol.ENCARGADO,
-                                HttpMethod.GET, null,
-                                new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
-                        })
-                        .getBody();
-                response.getContent().stream().forEach(usuario -> {
-                    cmb_UsuariosCierre.addItem(usuario);
-                });
-            } else {
-                cmb_UsuariosCierre.removeAllItems();
-                cmb_UsuariosCierre.setEnabled(false);
-            }
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+        if (chk_UsuarioCierre.isSelected() == true) {
+            txtUsuarioCierre.setEnabled(true);
+            btnBuscarUsuariosCierre.setEnabled(true);
+        } else {
+            txtUsuarioCierre.setEnabled(false);
+            btnBuscarUsuariosCierre.setEnabled(false);
         }
     }//GEN-LAST:event_chk_UsuarioCierreItemStateChanged
 
@@ -701,7 +692,33 @@ public class CajasGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btn_ReabrirCajaActionPerformed
 
+    private void btnBuscarUsuariosAperturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarUsuariosAperturaActionPerformed
+        Rol[] rolesParaFiltrar = new Rol[]{Rol.ADMINISTRADOR, Rol.ENCARGADO};
+        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar, "Buscar Usuario");
+        buscarUsuariosGUI.setModal(true);
+        buscarUsuariosGUI.setLocationRelativeTo(this);
+        buscarUsuariosGUI.setVisible(true);
+        if (buscarUsuariosGUI.getUsuarioSeleccionado() != null) {
+            usuarioSeleccionadoApertura = buscarUsuariosGUI.getUsuarioSeleccionado();
+            txtUsuarioApertura.setText(usuarioSeleccionadoApertura.toString());
+        }
+    }//GEN-LAST:event_btnBuscarUsuariosAperturaActionPerformed
+
+    private void btnBuscarUsuariosCierreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarUsuariosCierreActionPerformed
+        Rol[] rolesParaFiltrar = new Rol[]{Rol.ADMINISTRADOR, Rol.ENCARGADO};
+        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar, "Buscar Usuario");
+        buscarUsuariosGUI.setModal(true);
+        buscarUsuariosGUI.setLocationRelativeTo(this);
+        buscarUsuariosGUI.setVisible(true);
+        if (buscarUsuariosGUI.getUsuarioSeleccionado() != null) {
+            usuarioSeleccionadoCierre = buscarUsuariosGUI.getUsuarioSeleccionado();
+            txtUsuarioCierre.setText(usuarioSeleccionadoCierre.toString());
+        }
+    }//GEN-LAST:event_btnBuscarUsuariosCierreActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuscarUsuariosApertura;
+    private javax.swing.JButton btnBuscarUsuariosCierre;
     private javax.swing.JButton btn_AbrirCaja;
     private javax.swing.JButton btn_ReabrirCaja;
     private javax.swing.JButton btn_buscar;
@@ -710,14 +727,10 @@ public class CajasGUI extends JInternalFrame {
     private javax.swing.JCheckBox chk_Fecha;
     private javax.swing.JCheckBox chk_UsuarioApertura;
     private javax.swing.JCheckBox chk_UsuarioCierre;
-    private javax.swing.JComboBox<Usuario> cmb_UsuariosApertura;
-    private javax.swing.JComboBox<Usuario> cmb_UsuariosCierre;
     private com.toedter.calendar.JDateChooser dc_FechaDesde;
     private com.toedter.calendar.JDateChooser dc_FechaHasta;
     private javax.swing.JFormattedTextField ftxt_TotalReal;
     private javax.swing.JFormattedTextField ftxt_TotalSistema;
-    private javax.swing.JLabel lbl_Desde;
-    private javax.swing.JLabel lbl_Hasta;
     private javax.swing.JLabel lbl_TotalCierre;
     private javax.swing.JLabel lbl_TotalSistema;
     private javax.swing.JLabel lbl_cantidadMostrar;
@@ -725,6 +738,8 @@ public class CajasGUI extends JInternalFrame {
     private javax.swing.JPanel pnl_Filtros;
     private javax.swing.JScrollPane sp_Cajas;
     private javax.swing.JTable tbl_Cajas;
+    private javax.swing.JTextField txtUsuarioApertura;
+    private javax.swing.JTextField txtUsuarioCierre;
     // End of variables declaration//GEN-END:variables
 
 }

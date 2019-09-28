@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = {"nombre", "empresa"})
+@EqualsAndHashCode(of = {"nombre", "idEmpresa"})
 public class Rubro implements Serializable {
 
     private long id_Rubro;
