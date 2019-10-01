@@ -34,6 +34,7 @@ import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
 import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
+import sic.modelo.criteria.BusquedaClienteCriteria;
 import sic.modelo.criteria.BusquedaPedidoCriteria;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
@@ -260,10 +261,13 @@ public class PedidosGUI extends JInternalFrame {
     }
 
     private boolean existeClienteDisponible() {
+        BusquedaClienteCriteria criteriaCliente = BusquedaClienteCriteria.builder()
+                .idEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())
+                .pagina(0)
+                .build();
+        HttpEntity<BusquedaClienteCriteria> requestEntity = new HttpEntity<>(criteriaCliente);
         PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
-                .exchange("/clientes/busqueda/criteria?idEmpresa="
-                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                        + "&pagina=0&tamanio=1", HttpMethod.GET, null,
+                .exchange("/clientes/busqueda/criteria", HttpMethod.POST, requestEntity,
                         new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {
                 })
                 .getBody();

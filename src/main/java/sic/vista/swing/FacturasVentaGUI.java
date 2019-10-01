@@ -34,6 +34,7 @@ import sic.modelo.Producto;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.UsuarioActivo;
+import sic.modelo.criteria.BusquedaClienteCriteria;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
@@ -433,11 +434,13 @@ public class FacturasVentaGUI extends JInternalFrame {
     }
 
     private boolean existeClienteDisponible() {
-        String criteriaBusqueda = "/clientes/busqueda/criteria?idEmpresa="
-                + String.valueOf(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())
-                + "&pagina=0&tamanio=" + 1;
+        BusquedaClienteCriteria criteriaCliente = BusquedaClienteCriteria.builder()
+                .idEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())
+                .pagina(0)
+                .build();
+        HttpEntity<BusquedaClienteCriteria> requestEntity = new HttpEntity<>(criteriaCliente);
         PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
-                .exchange(criteriaBusqueda, HttpMethod.GET, null,
+                .exchange("/clientes/busqueda/criteria", HttpMethod.POST, requestEntity,
                         new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {
                 })
                 .getBody();
