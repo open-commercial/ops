@@ -54,15 +54,9 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="spNotaProducto" pref="523" max="32767" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="lbl_Descuento" max="32767" attributes="0"/>
-                              <Component id="lbl_Cantidad" min="-2" pref="107" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="lbl_Cantidad" min="-2" pref="107" max="-2" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="txtPorcentajeDescuento" max="32767" attributes="1"/>
-                              <Component id="txtCantidad" alignment="1" min="-2" pref="88" max="-2" attributes="1"/>
-                          </Group>
+                          <Component id="txtCantidad" min="-2" pref="88" max="-2" attributes="1"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Component id="btnAceptar" min="-2" pref="48" max="-2" attributes="0"/>
                       </Group>
@@ -85,16 +79,8 @@
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="spNotaProducto" alignment="2" pref="0" max="32767" attributes="0"/>
                       <Component id="btnAceptar" alignment="2" min="-2" pref="54" max="-2" attributes="0"/>
-                      <Group type="102" alignment="2" attributes="0">
-                          <Component id="txtCantidad" linkSize="5" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="6" pref="6" max="6" attributes="0"/>
-                          <Component id="txtPorcentajeDescuento" linkSize="5" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="2" attributes="0">
-                          <Component id="lbl_Cantidad" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="15" pref="15" max="15" attributes="0"/>
-                          <Component id="lbl_Descuento" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="txtCantidad" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbl_Cantidad" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -182,11 +168,6 @@
             <Property name="text" type="java.lang.String" value="Cantidad:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="lbl_Descuento">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Descuento (%):"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JFormattedTextField" name="txtCantidad">
           <Properties>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
@@ -200,23 +181,6 @@
             <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtCantidadFocusGained"/>
             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtCantidadFocusLost"/>
             <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtCantidadKeyPressed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txtPorcentajeDescuento">
-          <Properties>
-            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-              <Format format="#,##0.##" subtype="-1" type="0"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="0"/>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="DejaVu Sans" size="17" style="0"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPorcentajeDescuentoFocusGained"/>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPorcentajeDescuentoFocusLost"/>
-            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPorcentajeDescuentoKeyTyped"/>
-            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPorcentajeDescuentoKeyReleased"/>
           </Events>
         </Component>
         <Container class="javax.swing.JScrollPane" name="spNotaProducto">

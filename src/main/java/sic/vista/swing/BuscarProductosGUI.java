@@ -25,6 +25,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.CantidadEnSucursal;
+import sic.modelo.Cliente;
 import sic.modelo.SucursalActiva;
 import sic.modelo.Movimiento;
 import sic.modelo.Producto;
@@ -47,20 +48,31 @@ public class BuscarProductosGUI extends JDialog {
     private boolean debeCargarRenglon;    
     private final boolean busquedaParaCompraOVenta;
     private Movimiento movimiento;
-    private BigDecimal bonificacionCliente;
+    private Cliente cliente;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int NUMERO_PAGINA = 0;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeDialog = new Dimension(1000, 600);
     
-    public BuscarProductosGUI(List<RenglonFactura> renglones, TipoDeComprobante tipoDeComprobante, Movimiento movimiento, BigDecimal bonificacionCliente) {
+    public BuscarProductosGUI(List<RenglonFactura> renglones, TipoDeComprobante tipoDeComprobante, Movimiento movimiento, Cliente cliente) {
         this.initComponents();
         this.setIcon();
         this.renglones = renglones;
         this.movimiento = movimiento;
         this.tipoDeComprobante = tipoDeComprobante;
         this.busquedaParaCompraOVenta = true;
-        this.bonificacionCliente = bonificacionCliente;
+        this.cliente = cliente;
+        this.setColumnas();
+        this.agregarListeners();
+    }
+    
+    public BuscarProductosGUI(List<RenglonFactura> renglones, TipoDeComprobante tipoDeComprobante, Movimiento movimiento) {
+        this.initComponents();
+        this.setIcon();
+        this.renglones = renglones;
+        this.movimiento = movimiento;
+        this.tipoDeComprobante = tipoDeComprobante;
+        this.busquedaParaCompraOVenta = true;
         this.setColumnas();
         this.agregarListeners();
     }
@@ -92,12 +104,9 @@ public class BuscarProductosGUI extends JDialog {
     
     private void prepararComponentes() {
         txtCantidad.setValue(1.00);
-        txtPorcentajeDescuento.setValue(this.bonificacionCliente);
         if (renglones == null && movimiento == null && tipoDeComprobante == null) {
             lbl_Cantidad.setVisible(false);
-            lbl_Descuento.setVisible(false);
             txtCantidad.setVisible(false);
-            txtPorcentajeDescuento.setVisible(false);
         }
     }
 
@@ -162,7 +171,7 @@ public class BuscarProductosGUI extends JDialog {
                             + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                             + "&movimiento=" + movimiento
                             + "&cantidad=" + txtCantidad.getValue().toString()
-                            + "&descuentoPorcentaje=" + txtPorcentajeDescuento.getValue().toString(),
+                            + "&idCliente=" + this.cliente.getId_Cliente(),
                             RenglonFactura.class);
                     debeCargarRenglon = true;
                     this.dispose();
@@ -203,10 +212,9 @@ public class BuscarProductosGUI extends JDialog {
     }
 
     private void actualizarEstadoSeleccion() {
-        if (txtCantidad.isEditValid() && txtPorcentajeDescuento.isEditValid()) {
+        if (txtCantidad.isEditValid()) {
             try {
                 txtCantidad.commitEdit();
-                txtPorcentajeDescuento.commitEdit();
             } catch (ParseException ex) {
                 String msjError = "Se produjo un error analizando los campos.";
                 LOGGER.error(msjError + " - " + ex.getMessage());
@@ -319,7 +327,6 @@ public class BuscarProductosGUI extends JDialog {
         tbl_Resultados.addKeyListener(keyHandler);
         txtaNotaProducto.addKeyListener(keyHandler);
         txtCantidad.addKeyListener(keyHandler);
-        txtPorcentajeDescuento.addKeyListener(keyHandler);
         btnAceptar.addKeyListener(keyHandler);
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
@@ -356,9 +363,7 @@ public class BuscarProductosGUI extends JDialog {
         tbl_Resultados = new javax.swing.JTable();
         btnAceptar = new javax.swing.JButton();
         lbl_Cantidad = new javax.swing.JLabel();
-        lbl_Descuento = new javax.swing.JLabel();
         txtCantidad = new javax.swing.JFormattedTextField();
-        txtPorcentajeDescuento = new javax.swing.JFormattedTextField();
         spNotaProducto = new javax.swing.JScrollPane();
         txtaNotaProducto = new javax.swing.JTextArea();
 
@@ -436,8 +441,6 @@ public class BuscarProductosGUI extends JDialog {
         lbl_Cantidad.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Cantidad.setText("Cantidad:");
 
-        lbl_Descuento.setText("Descuento (%):");
-
         txtCantidad.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
         txtCantidad.setFont(new java.awt.Font("DejaVu Sans", 0, 17)); // NOI18N
         txtCantidad.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -451,26 +454,6 @@ public class BuscarProductosGUI extends JDialog {
         txtCantidad.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtCantidadKeyPressed(evt);
-            }
-        });
-
-        txtPorcentajeDescuento.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
-        txtPorcentajeDescuento.setText("0");
-        txtPorcentajeDescuento.setFont(new java.awt.Font("DejaVu Sans", 0, 17)); // NOI18N
-        txtPorcentajeDescuento.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                txtPorcentajeDescuentoFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtPorcentajeDescuentoFocusLost(evt);
-            }
-        });
-        txtPorcentajeDescuento.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtPorcentajeDescuentoKeyTyped(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtPorcentajeDescuentoKeyReleased(evt);
             }
         });
 
@@ -496,13 +479,9 @@ public class BuscarProductosGUI extends JDialog {
                     .addGroup(panelFondoLayout.createSequentialGroup()
                         .addComponent(spNotaProducto, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lbl_Descuento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lbl_Cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lbl_Cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txtPorcentajeDescuento)
-                            .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -520,20 +499,12 @@ public class BuscarProductosGUI extends JDialog {
                 .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(spNotaProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panelFondoLayout.createSequentialGroup()
-                        .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(6, 6, 6)
-                        .addComponent(txtPorcentajeDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelFondoLayout.createSequentialGroup()
-                        .addComponent(lbl_Cantidad)
-                        .addGap(15, 15, 15)
-                        .addComponent(lbl_Descuento)))
+                    .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_Cantidad))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelFondoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscar, txtCriteriaBusqueda});
-
-        panelFondoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtCantidad, txtPorcentajeDescuento});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -559,30 +530,6 @@ public class BuscarProductosGUI extends JDialog {
         this.setTitle("Buscar Producto");
         this.prepararComponentes();
     }//GEN-LAST:event_formWindowOpened
-
-    private void txtPorcentajeDescuentoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPorcentajeDescuentoKeyReleased
-        if (evt.getKeyCode() == 10) {
-            this.aceptarProducto();
-        } else {
-            this.actualizarEstadoSeleccion();
-        }
-    }//GEN-LAST:event_txtPorcentajeDescuentoKeyReleased
-
-    private void txtPorcentajeDescuentoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPorcentajeDescuentoKeyTyped
-        if (evt.getKeyChar() == KeyEvent.VK_MINUS) {
-            evt.consume();
-        }
-    }//GEN-LAST:event_txtPorcentajeDescuentoKeyTyped
-
-    private void txtPorcentajeDescuentoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPorcentajeDescuentoFocusLost
-        this.actualizarEstadoSeleccion();
-    }//GEN-LAST:event_txtPorcentajeDescuentoFocusLost
-
-    private void txtPorcentajeDescuentoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPorcentajeDescuentoFocusGained
-        SwingUtilities.invokeLater(() -> {
-            txtPorcentajeDescuento.selectAll();
-        });
-    }//GEN-LAST:event_txtPorcentajeDescuentoFocusGained
 
     private void txtCantidadKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadKeyPressed
         if (evt.getKeyCode() == 10) {
@@ -650,14 +597,12 @@ public class BuscarProductosGUI extends JDialog {
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JLabel lbl_Cantidad;
-    private javax.swing.JLabel lbl_Descuento;
     private javax.swing.JPanel panelFondo;
     private javax.swing.JScrollPane spNotaProducto;
     private javax.swing.JScrollPane sp_Resultados;
     private javax.swing.JTable tbl_Resultados;
     private javax.swing.JFormattedTextField txtCantidad;
     private javax.swing.JTextField txtCriteriaBusqueda;
-    private javax.swing.JFormattedTextField txtPorcentajeDescuento;
     private javax.swing.JTextArea txtaNotaProducto;
     // End of variables declaration//GEN-END:variables
 }

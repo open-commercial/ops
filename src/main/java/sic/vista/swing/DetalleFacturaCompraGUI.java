@@ -129,7 +129,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         lineaDeFactura[2] = renglon.getMedidaItem();
         lineaDeFactura[3] = renglon.getCantidad();
         lineaDeFactura[4] = renglon.getPrecioUnitario();
-        lineaDeFactura[5] = renglon.getDescuentoPorcentaje();
+        //lineaDeFactura[5] = renglon.getDescuentoPorcentaje();
         lineaDeFactura[6] = renglon.getImporte();
         modeloTablaRenglones.addRow(lineaDeFactura);
         renglones.add(renglon);
@@ -434,8 +434,8 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
                         + "idProducto=" + producto.getIdProducto()
                         + "&tipoDeComprobante=" + tipoDeComprobante.name()
                         + "&movimiento=" + Movimiento.COMPRA
-                        + "&cantidad=" + rf.getCantidad()
-                        + "&descuentoPorcentaje=" + rf.getDescuentoPorcentaje(),                        
+                        + "&cantidad=" + rf.getCantidad(),
+                      // + "&descuentoPorcentaje=" + rf.getDescuentoPorcentaje(),                        
                         RenglonFactura.class);
                 return nuevoRenglon;
             }).forEachOrdered(nuevoRenglon -> {
@@ -1097,7 +1097,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     private void btn_BuscarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarProductoActionPerformed
         if (proveedorSeleccionado != null) {
             BuscarProductosGUI gui_buscarProducto = new BuscarProductosGUI(renglones,
-                    (TipoDeComprobante) cmb_TipoFactura.getSelectedItem(), Movimiento.COMPRA, BigDecimal.ZERO);
+                    (TipoDeComprobante) cmb_TipoFactura.getSelectedItem(), Movimiento.COMPRA);
             gui_buscarProducto.setModal(true);
             gui_buscarProducto.setLocationRelativeTo(this);
             gui_buscarProducto.setVisible(true);

@@ -270,7 +270,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                             + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                             + "&movimiento=" + Movimiento.VENTA
                             + "&cantidad=" + renglones.get(i).getCantidad().add(renglon.getCantidad())
-                            + "&descuentoPorcentaje=" + renglon.getDescuentoPorcentaje(),
+                            + "&idCliente=" + this.cliente.getId_Cliente(),
                             RenglonFactura.class);
                     renglones.set(i, rf);
                     agregado = true;
@@ -338,7 +338,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             fila[3] = renglon.getMedidaItem();
             fila[4] = renglon.getCantidad();
             fila[5] = renglon.getPrecioUnitario();
-            fila[6] = renglon.getDescuentoPorcentaje();
+            fila[6] = renglon.getBonificacionPorcentaje();
             fila[7] = renglon.getImporte();
             modeloTablaResultados.addRow(fila);
         }
@@ -363,7 +363,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         if (cantidadMaximaRenglones > renglones.size()) {
             Movimiento movimiento = this.tipoDeComprobante.equals(TipoDeComprobante.PEDIDO) ? Movimiento.PEDIDO : Movimiento.VENTA;
             // revisar esto, es necesario para el movimiento como String y a su vez el movimiento?
-            BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglones, this.tipoDeComprobante, movimiento, this.cliente.getBonificacion());
+            BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglones, this.tipoDeComprobante, movimiento, this.cliente);
             buscarProductosGUI.setModal(true);
             buscarProductosGUI.setLocationRelativeTo(this);
             buscarProductosGUI.setVisible(true);
@@ -411,8 +411,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         + "idProducto=" + producto.getIdProducto()
                         + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                         + "&movimiento=" + Movimiento.VENTA
-                        + "&cantidad=1"
-                        + "&descuentoPorcentaje=" + this.cliente.getBonificacion(),
+                        + "&cantidad=1" 
+                        + "&idCliente=" + this.cliente.getId_Cliente(),
                         RenglonFactura.class);
                 boolean esValido = true;
                 Map<Long, BigDecimal> faltantes;
@@ -591,7 +591,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                         + "&movimiento=" + Movimiento.VENTA
                         + "&cantidad=" + renglonFactura.getCantidad()
-                        + "&descuentoPorcentaje=" + renglonFactura.getDescuentoPorcentaje(),
+                        + "&idCliente=" + this.cliente.getId_Cliente(),
                         RenglonFactura.class);
                 return renglon;
             }).forEachOrdered(renglon -> this.agregarRenglon(renglon));
@@ -688,7 +688,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     public List<RenglonPedido> calcularRenglonesPedido() {
         List<NuevoRenglonPedido> nuevosRenglonesPedido = new ArrayList();
         this.renglones.forEach(r -> nuevosRenglonesPedido.add(
-                new NuevoRenglonPedido(r.getIdProductoItem(), r.getCantidad(), r.getDescuentoPorcentaje())));
+                new NuevoRenglonPedido(r.getIdProductoItem(), r.getCantidad(), cliente.getId_Cliente())));
         return Arrays.asList(RestClient.getRestTemplate().postForObject("/pedidos/renglones",
                 nuevosRenglonesPedido, RenglonPedido[].class));
     }

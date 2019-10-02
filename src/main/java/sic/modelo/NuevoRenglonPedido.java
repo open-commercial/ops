@@ -12,6 +12,6 @@ public class NuevoRenglonPedido {
 
     private long idProductoItem;
     private BigDecimal cantidad;
-    private BigDecimal descuentoPorcentaje;
+    private long idCliente;
 
 }
