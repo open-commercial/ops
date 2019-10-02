@@ -24,7 +24,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.BusquedaNotaCriteria;
+import sic.modelo.criteria.BusquedaNotaCriteria;
 import sic.modelo.Cliente;
 import sic.modelo.SucursalActiva;
 import sic.modelo.Factura;
@@ -73,8 +73,8 @@ public class NotasCreditoVentaGUI extends JInternalFrame {
         BusquedaNotaCriteria criteria = new BusquedaNotaCriteria();
         criteria.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         if (chk_Fecha.isSelected()) {
-            criteria.setFechaDesde(dc_FechaDesde.getDate());
-            criteria.setFechaHasta(dc_FechaDesde.getDate());
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? dc_FechaDesde.getDate() : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? dc_FechaHasta.getDate() : null);
         }
         if (chk_NumNota.isSelected()) {
             criteria.setNumNota(Long.valueOf(txt_NroNota.getText()));
@@ -173,7 +173,7 @@ public class NotasCreditoVentaGUI extends JInternalFrame {
 
     private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
-        BusquedaNotaCriteria criteria = getCriteria();
+        BusquedaNotaCriteria criteria = this.getCriteria();
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
             case 0:
@@ -275,7 +275,7 @@ public class NotasCreditoVentaGUI extends JInternalFrame {
     private void cargarResultadosAlTable() {
         notasParcial.stream().map(nota -> {
             Object[] fila = new Object[12];
-            fila[0] = nota.getCAE() == 0 ? "" : nota.getCAE();
+            fila[0] = nota.getCae() == 0 ? "" : nota.getCae();
             fila[1] = nota.getFecha();
             fila[2] = nota.getTipoComprobante();
             fila[3] = nota.getSerie() + " - " + nota.getNroNota();
@@ -288,7 +288,7 @@ public class NotasCreditoVentaGUI extends JInternalFrame {
             } else {
                 fila[8] = nota.getNumSerieAfip() + " - " + nota.getNumNotaAfip();
             }
-            fila[9] = nota.getVencimientoCAE();
+            fila[9] = nota.getVencimientoCae();
             fila[10] = nota.isModificaStock();
             fila[11] = nota.getMotivo();
             return fila;

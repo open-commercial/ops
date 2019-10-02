@@ -6,6 +6,7 @@ import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.JInternalFrame;
@@ -14,6 +15,7 @@ import javax.swing.JScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
@@ -22,6 +24,7 @@ import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
 import sic.modelo.Usuario;
+import sic.modelo.criteria.BusquedaUsuarioCriteria;
 import sic.util.Utilidades;
 
 public class UsuariosGUI extends JInternalFrame {
@@ -59,45 +62,47 @@ public class UsuariosGUI extends JInternalFrame {
 
     private void buscar() {
         this.cambiarEstadoDeComponentes(false);
-        String criteriaBusqueda = "/usuarios/busqueda/criteria?";
+        BusquedaUsuarioCriteria criteria = BusquedaUsuarioCriteria.builder().build();
         if (chkCriteria.isSelected()) {
-            criteriaBusqueda += "username=" + txtCriteria.getText().trim() + "&";
-            criteriaBusqueda += "nombre=" + txtCriteria.getText().trim() + "&";
-            criteriaBusqueda += "apellido=" + txtCriteria.getText().trim() + "&";
-            criteriaBusqueda += "email=" + txtCriteria.getText().trim() + "&";
+            criteria.setUsername(txtCriteria.getText().trim());
+            criteria.setNombre(txtCriteria.getText().trim());
+            criteria.setApellido(txtCriteria.getText().trim());
+            criteria.setEmail(txtCriteria.getText().trim());
         }
         if (chkRoles.isSelected()) {
-            criteriaBusqueda += "roles=" + cmbRoles.getSelectedItem() + "&";
+            criteria.setRoles(Collections.singletonList((Rol)cmbRoles.getSelectedItem()));
         }
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
             case 0:
-                criteriaBusqueda += "ordenarPor=nombre&";
+                criteria.setOrdenarPor("nombre");
                 break;
             case 1:
-                criteriaBusqueda += "ordenarPor=apellido&";
+                criteria.setOrdenarPor("apellido");
                 break;
             case 2:
-                criteriaBusqueda += "ordenarPor=username&";
+                criteria.setOrdenarPor("username");
                 break;
             case 3:
-                criteriaBusqueda += "ordenarPor=habilitado&";
+                criteria.setOrdenarPor("habilitado");
                 break;
         }
         int seleccionDireccion = cmbSentido.getSelectedIndex();
         switch (seleccionDireccion) {
             case 0:
-                criteriaBusqueda += "sentido=ASC&";
+                criteria.setSentido("ASC");
                 break;
             case 1:
-                criteriaBusqueda += "sentido=DESC&";
+                criteria.setSentido("DESC");
                 break;
         }
-        criteriaBusqueda += "&pagina=" + NUMERO_PAGINA;
+        criteria.setPagina(NUMERO_PAGINA);
         try {
+            HttpEntity<BusquedaUsuarioCriteria> requestEntity = new HttpEntity<>(criteria);
             PaginaRespuestaRest<Usuario> response = RestClient.getRestTemplate()
-                    .exchange(criteriaBusqueda, HttpMethod.GET, null,
-                            new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {})
+                    .exchange("/usuarios/busqueda/criteria", HttpMethod.POST, requestEntity,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<Usuario>>() {
+                    })
                     .getBody();
             totalElementosBusqueda = response.getTotalElements();
             usuariosParcial = response.getContent();
@@ -225,7 +230,7 @@ public class UsuariosGUI extends JInternalFrame {
       
     private void cargarRoles() {
         for (Rol roles : Rol.values()) {
-            cmbRoles.addItem(roles.name());
+            cmbRoles.addItem(roles);
         }
     }
 
@@ -608,7 +613,7 @@ public class UsuariosGUI extends JInternalFrame {
     private javax.swing.JCheckBox chkCriteria;
     private javax.swing.JCheckBox chkRoles;
     private javax.swing.JComboBox<String> cmbOrden;
-    private javax.swing.JComboBox<String> cmbRoles;
+    private javax.swing.JComboBox<Rol> cmbRoles;
     private javax.swing.JComboBox<String> cmbSentido;
     private javax.swing.JLabel lblCantResultados;
     private javax.swing.JPanel panelFiltros;

@@ -20,6 +20,7 @@ import javax.swing.JScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
@@ -33,6 +34,8 @@ import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
 import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
+import sic.modelo.criteria.BusquedaClienteCriteria;
+import sic.modelo.criteria.BusquedaPedidoCriteria;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
@@ -68,37 +71,39 @@ public class PedidosGUI extends JInternalFrame {
 
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
-        String criteria = "/pedidos/busqueda/criteria?idSucursal=" + SucursalActiva.getInstance().getSucursal().getIdSucursal();
+        BusquedaPedidoCriteria criteria = BusquedaPedidoCriteria.builder().build();
+        criteria.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         if (chk_Fecha.isSelected()) {
-            criteria += "&desde=" + dc_FechaDesde.getDate().getTime();
-            criteria += "&hasta=" + dc_FechaHasta.getDate().getTime();
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? dc_FechaDesde.getDate() : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? dc_FechaHasta.getDate() : null);
         }
         if (chk_NumeroPedido.isSelected()) {
-            criteria += "&nroPedido=" + Long.valueOf(txt_NumeroPedido.getText());
+            criteria.setNroPedido(Long.valueOf(txt_NumeroPedido.getText()));
         }
         if (chkEstado.isSelected()) {
-            criteria += "&estadoPedido=" + cmbEstado.getSelectedItem().toString();
+            criteria.setEstadoPedido((EstadoPedido) cmbEstado.getSelectedItem());
         }
         if (chk_Cliente.isSelected() && clienteSeleccionado != null) {
-            criteria += "&idCliente=" + clienteSeleccionado.getId_Cliente();
+            criteria.setIdCliente(clienteSeleccionado.getId_Cliente());
         }
         if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
-            criteria += "&idUsuario=" + usuarioSeleccionado.getId_Usuario();
+            criteria.setIdUsuario(usuarioSeleccionado.getId_Usuario());
         }
         if (chk_Viajante.isSelected() && viajanteSeleccionado != null) {
-            criteria += "&idViajante=" + viajanteSeleccionado.getId_Usuario();
+            criteria.setIdViajante(viajanteSeleccionado.getId_Usuario());
         }
         if (chk_Producto.isSelected() && productoSeleccionado != null) {
-            criteria += "&idProducto=" + productoSeleccionado.getIdProducto();
+            criteria.setIdProducto(productoSeleccionado.getIdProducto());
         }
-        criteria += "&pagina=" + NUMERO_PAGINA;
+        criteria.setPagina(NUMERO_PAGINA);
         try {
+            HttpEntity<BusquedaPedidoCriteria> requestEntity = new HttpEntity<>(criteria);
             PaginaRespuestaRest<Pedido> response = RestClient.getRestTemplate()
-                    .exchange(criteria, HttpMethod.GET, null,
+                    .exchange("/pedidos/busqueda/criteria", HttpMethod.POST, requestEntity,
                             new ParameterizedTypeReference<PaginaRespuestaRest<Pedido>>() {
                     })
                     .getBody();
-            totalElementosBusqueda = response.getTotalElements();        
+            totalElementosBusqueda = response.getTotalElements();
             pedidosParcial = response.getContent();
             pedidosTotal.addAll(pedidosParcial);
             this.cargarResultadosAlTable();
@@ -256,10 +261,12 @@ public class PedidosGUI extends JInternalFrame {
     }
 
     private boolean existeClienteDisponible() {
+        BusquedaClienteCriteria criteriaCliente = BusquedaClienteCriteria.builder()
+                .pagina(0)
+                .build();
+        HttpEntity<BusquedaClienteCriteria> requestEntity = new HttpEntity<>(criteriaCliente);
         PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
-                .exchange("/clientes/busqueda/criteria?idSucursal="
-                        + SucursalActiva.getInstance().getSucursal().getIdSucursal()
-                        + "&pagina=0&tamanio=1", HttpMethod.GET, null,
+                .exchange("/clientes/busqueda/criteria", HttpMethod.POST, requestEntity,
                         new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {
                 })
                 .getBody();
@@ -958,9 +965,9 @@ public class PedidosGUI extends JInternalFrame {
     private void chkEstadoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkEstadoItemStateChanged
         if (chkEstado.isSelected() == true) {
             cmbEstado.setEnabled(true);
-            cmbEstado.addItem("ABIERTO");
-            cmbEstado.addItem("ACTIVO");
-            cmbEstado.addItem("CERRADO");
+            cmbEstado.addItem(EstadoPedido.ABIERTO);
+            cmbEstado.addItem(EstadoPedido.ACTIVO);
+            cmbEstado.addItem(EstadoPedido.CERRADO);
             cmbEstado.requestFocus();
         } else {
             cmbEstado.removeAllItems();
@@ -1059,7 +1066,7 @@ public class PedidosGUI extends JInternalFrame {
     private javax.swing.JCheckBox chk_Producto;
     private javax.swing.JCheckBox chk_Usuario;
     private javax.swing.JCheckBox chk_Viajante;
-    private javax.swing.JComboBox<String> cmbEstado;
+    private javax.swing.JComboBox<EstadoPedido> cmbEstado;
     private com.toedter.calendar.JDateChooser dc_FechaDesde;
     private com.toedter.calendar.JDateChooser dc_FechaHasta;
     private javax.swing.JLabel lbl_cantResultados;

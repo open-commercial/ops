@@ -62,7 +62,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Component id="btn_buscar" min="-2" max="-2" attributes="0"/>
@@ -75,28 +75,28 @@
                               <Component id="chk_Fecha" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="chk_UsuarioCierre" linkSize="3" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace min="0" pref="12" max="32767" attributes="0"/>
-                                  <Component id="lbl_Desde" min="-2" max="-2" attributes="1"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="dc_FechaDesde" linkSize="17" min="-2" pref="150" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbl_Hasta" min="-2" max="-2" attributes="1"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="dc_FechaHasta" linkSize="17" min="-2" pref="150" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Component id="dc_FechaDesde" pref="164" max="32767" attributes="0"/>
+                                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                                  <Component id="dc_FechaHasta" pref="164" max="32767" attributes="0"/>
                               </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="cmb_UsuariosApertura" alignment="1" max="32767" attributes="0"/>
-                                      <Component id="cmb_UsuariosCierre" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="txtUsuarioApertura" max="32767" attributes="0"/>
+                                      <Component id="txtUsuarioCierre" max="32767" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="btnBuscarUsuariosCierre" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btnBuscarUsuariosApertura" alignment="1" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -107,20 +107,20 @@
                       <Component id="chk_Fecha" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="dc_FechaDesde" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="dc_FechaHasta" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbl_Desde" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbl_Hasta" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="cmb_UsuariosApertura" linkSize="16" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="chk_UsuarioApertura" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtUsuarioApertura" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnBuscarUsuariosApertura" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="cmb_UsuariosCierre" linkSize="16" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="chk_UsuarioCierre" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtUsuarioCierre" linkSize="22" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnBuscarUsuariosCierre" linkSize="22" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="btn_buscar" linkSize="14" max="-2" attributes="0"/>
                       <Component id="lbl_cantidadMostrar" linkSize="14" max="-2" attributes="0"/>
@@ -133,7 +133,7 @@
       <SubComponents>
         <Component class="javax.swing.JCheckBox" name="chk_Fecha">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Fecha Caja:"/>
+            <Property name="text" type="java.lang.String" value="Fecha:"/>
           </Properties>
           <Events>
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_FechaItemStateChanged"/>
@@ -148,18 +148,6 @@
         <Component class="com.toedter.calendar.JDateChooser" name="dc_FechaHasta">
           <Properties>
             <Property name="dateFormatString" type="java.lang.String" value="dd/MM/yyyy"/>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lbl_Hasta">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Hasta:"/>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lbl_Desde">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Desde:"/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
         </Component>
@@ -185,16 +173,6 @@
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_UsuarioAperturaItemStateChanged"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JComboBox" name="cmb_UsuariosApertura">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Usuario&gt;"/>
-          </AuxValues>
-        </Component>
         <Component class="javax.swing.JLabel" name="lbl_cantidadMostrar">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
@@ -208,15 +186,41 @@
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_UsuarioCierreItemStateChanged"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JComboBox" name="cmb_UsuariosCierre">
+        <Component class="javax.swing.JTextField" name="txtUsuarioApertura">
           <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="opaque" type="boolean" value="false"/>
           </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Usuario&gt;"/>
-          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtUsuarioCierre">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="opaque" type="boolean" value="false"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnBuscarUsuariosApertura">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/sic/icons/Search_16x16.png"/>
+            </Property>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarUsuariosAperturaActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnBuscarUsuariosCierre">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/sic/icons/Search_16x16.png"/>
+            </Property>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarUsuariosCierreActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -260,7 +264,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="sp_Cajas" pref="245" max="32767" attributes="0"/>
+                  <Component id="sp_Cajas" pref="231" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">

@@ -160,7 +160,6 @@ public class AgregarGastoGUI extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        this.setModal(true);
         formasDePago.forEach((formaDePago) -> {
             cmb_FormaDePago.addItem(formaDePago);
         });
@@ -173,12 +172,13 @@ public class AgregarGastoGUI extends JDialog {
         if (ftxt_Concepto.getText() == null) {
             ftxt_Concepto.setText("");
         }
-        Gasto gasto = null;
+        Gasto gasto = this.construirGasto(ftxt_Concepto.getText().trim(), new BigDecimal(ftxt_Monto.getValue().toString()));
         try {
-            gasto = RestClient.getRestTemplate().postForObject("/gastos?idSucursal="
+            RestClient.getRestTemplate().postForObject("/gastos?idSucursal="
                     + SucursalActiva.getInstance().getSucursal().getIdSucursal()
-                    + "&idFormaDePago=" + ((FormaDePago) cmb_FormaDePago.getSelectedItem()).getId_FormaDePago(), this.construirGasto(ftxt_Concepto.getText(),
-                    new BigDecimal(ftxt_Monto.getValue().toString())), Gasto.class);
+                    + "&idFormaDePago=" + ((FormaDePago) cmb_FormaDePago.getSelectedItem()).getId_FormaDePago(),
+                    gasto, Gasto.class);
+            this.dispose();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -186,9 +186,6 @@ public class AgregarGastoGUI extends JDialog {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        if (gasto != null) {
-            this.dispose();
         }
     }//GEN-LAST:event_lbl_AceptarActionPerformed
 

@@ -1,6 +1,8 @@
 package sic.vista.swing;
 
 import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,29 +10,48 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.SucursalActiva;
 import sic.modelo.Localidad;
+import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Provincia;
 import sic.modelo.Rol;
 import sic.modelo.Transportista;
 import sic.modelo.UsuarioActivo;
+import sic.modelo.criteria.BusquedaTransportistaCriteria;
 import sic.util.Utilidades;
 
 public class TransportistasGUI extends JInternalFrame {
 
     private ModeloTabla modeloTablaResultados = new ModeloTabla();
-    private List<Transportista> transportistas;
-    private Transportista transSeleccionado;     
+    private List<Transportista> transportistas = new ArrayList<>();;
+    private List<Transportista> transportistasParcial = new ArrayList<>();;
+    private Transportista transSeleccionado;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(880, 600);
+    private static int totalElementosBusqueda;
+    private static int NUMERO_PAGINA = 0;
 
     public TransportistasGUI() {
-        this.initComponents();                
+        this.initComponents();
+        sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
+            JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
+            int va = scrollBar.getVisibleAmount() + 10;
+            if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
+                if (transportistas.size() >= 10) {
+                    NUMERO_PAGINA += 1;
+                    buscar();
+                }
+            }
+        });
     }
 
     public Transportista getTransSeleccionado() {
@@ -41,12 +62,12 @@ public class TransportistasGUI extends JInternalFrame {
         this.transSeleccionado = transSeleccionado;
     }
 
-    private void cargarComboBoxProvincias() {        
+    private void cargarComboBoxProvincias() {
         cmb_Provincia.removeAllItems();
         try {
             List<Provincia> provincias = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/ubicaciones/provincias",
-                    Provincia[].class)));
+                            Provincia[].class)));
             provincias.stream().forEach((p) -> {
                 cmb_Provincia.addItem(p);
             });
@@ -60,12 +81,12 @@ public class TransportistasGUI extends JInternalFrame {
         }
     }
 
-    private void cargarComboBoxLocalidadesDeLaProvincia(Provincia provSeleccionada) {        
+    private void cargarComboBoxLocalidadesDeLaProvincia(Provincia provSeleccionada) {
         cmb_Localidad.removeAllItems();
         try {
             List<Localidad> Localidades = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/ubicaciones/localidades/provincias/" + provSeleccionada.getIdProvincia(),
-                    Localidad[].class)));
+                            Localidad[].class)));
             Localidad localidadTodas = new Localidad();
             localidadTodas.setNombre("Todas");
             cmb_Localidad.addItem(localidadTodas);
@@ -77,8 +98,8 @@ public class TransportistasGUI extends JInternalFrame {
         } catch (ResourceAccessException ex) {
             LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this,
-                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                "Error", JOptionPane.ERROR_MESSAGE);
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -113,8 +134,7 @@ public class TransportistasGUI extends JInternalFrame {
     }
 
     private void cargarResultadosAlTable() {
-        this.limpiarJTable();
-        transportistas.stream().map((transportista) -> {
+        transportistasParcial.stream().map((transportista) -> {
             Object[] fila = new Object[4];
             fila[0] = transportista.getNombre();
             fila[1] = transportista.getTelefono();
@@ -125,8 +145,7 @@ public class TransportistasGUI extends JInternalFrame {
             modeloTablaResultados.addRow(fila);
         });
         tbl_Resultados.setModel(modeloTablaResultados);
-        String mensaje = transportistas.size() + " transportistas encontrados";
-        lbl_cantResultados.setText(mensaje);
+        lbl_cantResultados.setText(totalElementosBusqueda + " transportistas encontrados");
     }
 
     private void limpiarJTable() {
@@ -134,7 +153,7 @@ public class TransportistasGUI extends JInternalFrame {
         tbl_Resultados.setModel(modeloTablaResultados);
         setColumnas();
     }
-    
+
     private void cambiarEstadoEnabled(boolean status) {
         chk_Nombre.setEnabled(status);
         if (status == true && chk_Nombre.isSelected() == true) {
@@ -150,7 +169,7 @@ public class TransportistasGUI extends JInternalFrame {
             cmb_Provincia.setEnabled(false);
             cmb_Localidad.setEnabled(false);
         }
-        btn_Buscar.setEnabled(status);        
+        btn_Buscar.setEnabled(status);
         tbl_Resultados.setEnabled(status);
         btn_Nuevo.setEnabled(status);
         btn_Modificar.setEnabled(status);
@@ -160,19 +179,27 @@ public class TransportistasGUI extends JInternalFrame {
 
     private void buscar() {
         this.cambiarEstadoEnabled(false);
-        String criteria = "/transportistas/busqueda/criteria?";
+        BusquedaTransportistaCriteria criteria = BusquedaTransportistaCriteria.builder().build();
         if (chk_Nombre.isSelected()) {
-            criteria += "nombre=" + txt_Nombre.getText().trim() + "&";
+            criteria.setNombre(txt_Nombre.getText().trim());
         }
         if (chk_Ubicacion.isSelected()) {
-            criteria += "idProvincia=" + String.valueOf(((Provincia) (cmb_Provincia.getSelectedItem())).getIdProvincia()) + "&";
+            criteria.setIdProvincia(((Provincia) (cmb_Provincia.getSelectedItem())).getIdProvincia());
             if (!((Localidad) cmb_Localidad.getSelectedItem()).getNombre().equals("Todas")) {
-                criteria += "idLocalidad=" + String.valueOf((((Localidad) cmb_Localidad.getSelectedItem()).getIdLocalidad())) + "&";
+                criteria.setIdLocalidad(((Localidad) cmb_Localidad.getSelectedItem()).getIdLocalidad());
             }
         }
-        criteria += "idSucursal=" + String.valueOf(SucursalActiva.getInstance().getSucursal().getIdSucursal());
+        criteria.setPagina(NUMERO_PAGINA);
         try {
-            transportistas = new ArrayList(Arrays.asList(RestClient.getRestTemplate().getForObject(criteria, Transportista[].class)));
+            HttpEntity<BusquedaTransportistaCriteria> requestEntity = new HttpEntity<>(criteria);
+            PaginaRespuestaRest<Transportista> response = RestClient.getRestTemplate()
+                    .exchange("/transportistas/busqueda/criteria", HttpMethod.POST, requestEntity,
+                            new ParameterizedTypeReference<PaginaRespuestaRest<Transportista>>() {
+                    })
+                    .getBody();
+            transportistasParcial = response.getContent();
+            transportistas.addAll(transportistasParcial);
+            totalElementosBusqueda = response.getTotalElements();
             this.cargarResultadosAlTable();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -180,10 +207,10 @@ public class TransportistasGUI extends JInternalFrame {
         } catch (ResourceAccessException ex) {
             LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this,
-                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                "Error", JOptionPane.ERROR_MESSAGE);
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
             this.cambiarEstadoEnabled(true);
-        } 
+        }
         this.cambiarEstadoEnabled(true);
         this.cambiarEstadoDeComponentesSegunRolUsuario();
     }
@@ -197,6 +224,20 @@ public class TransportistasGUI extends JInternalFrame {
         }
     }
     
+    private void resetScroll() {
+        NUMERO_PAGINA = 0;
+        transportistas.clear();
+        transportistasParcial.clear();
+        Point p = new Point(0, 0);
+        sp_Resultados.getViewport().setViewPosition(p);
+    }
+
+    private void limpiarYBuscar() {
+        this.resetScroll();
+        this.limpiarJTable();
+        this.buscar();
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -449,7 +490,7 @@ public class TransportistasGUI extends JInternalFrame {
     }//GEN-LAST:event_cmb_ProvinciaItemStateChanged
 
     private void btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarActionPerformed
-        this.buscar();        
+        this.limpiarYBuscar();
     }//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void btn_NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoActionPerformed
@@ -457,7 +498,7 @@ public class TransportistasGUI extends JInternalFrame {
         gui_DetalleTransportista.setModal(true);
         gui_DetalleTransportista.setLocationRelativeTo(this);
         gui_DetalleTransportista.setVisible(true);
-        this.buscar(); 
+        this.limpiarYBuscar();
     }//GEN-LAST:event_btn_NuevoActionPerformed
 
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
@@ -476,8 +517,8 @@ public class TransportistasGUI extends JInternalFrame {
                 } catch (ResourceAccessException ex) {
                     LOGGER.error(ex.getMessage());
                     JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -507,7 +548,7 @@ public class TransportistasGUI extends JInternalFrame {
             this.dispose();
         }
     }//GEN-LAST:event_formInternalFrameOpened
-   
+
     private void txt_NombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_NombreActionPerformed
         btn_BuscarActionPerformed(null);
     }//GEN-LAST:event_txt_NombreActionPerformed

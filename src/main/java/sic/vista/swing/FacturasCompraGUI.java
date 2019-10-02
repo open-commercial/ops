@@ -7,7 +7,6 @@ import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -22,8 +21,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.BusquedaFacturaCompraCriteria;
 import sic.modelo.SucursalActiva;
+import sic.modelo.criteria.BusquedaFacturaCompraCriteria;
 import sic.modelo.FacturaCompra;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
@@ -179,8 +178,8 @@ public class FacturasCompraGUI extends JInternalFrame {
         BusquedaFacturaCompraCriteria criteria = new BusquedaFacturaCompraCriteria();
         criteria.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         if (chk_Fecha.isSelected()) {
-            criteria.setFechaDesde(dc_FechaDesde.getDate());
-            criteria.setFechaHasta(dc_FechaHasta.getDate());
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? dc_FechaDesde.getDate() : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? dc_FechaHasta.getDate() : null);
         }
         if (chk_Proveedor.isSelected() && proveedorSeleccionado != null) {
             criteria.setIdProveedor(proveedorSeleccionado.getId_Proveedor());

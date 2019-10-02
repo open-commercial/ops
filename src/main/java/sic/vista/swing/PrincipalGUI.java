@@ -16,7 +16,6 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Sucursal;
 import sic.modelo.SucursalActiva;
-import sic.modelo.Movimiento;
 import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
 import sic.util.Utilidades;

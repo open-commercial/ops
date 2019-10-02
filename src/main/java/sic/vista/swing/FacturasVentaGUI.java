@@ -24,7 +24,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.BusquedaFacturaVentaCriteria;
+import sic.modelo.criteria.BusquedaFacturaVentaCriteria;
 import sic.modelo.Cliente;
 import sic.modelo.SucursalActiva;
 import sic.modelo.FacturaVenta;
@@ -34,6 +34,7 @@ import sic.modelo.Producto;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.UsuarioActivo;
+import sic.modelo.criteria.BusquedaClienteCriteria;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
@@ -101,8 +102,8 @@ public class FacturasVentaGUI extends JInternalFrame {
             criteria.setIdCliente(clienteSeleccionado.getId_Cliente());
         }
         if (chk_Fecha.isSelected()) {
-            criteria.setFechaDesde(dc_FechaDesde.getDate());
-            criteria.setFechaHasta(dc_FechaHasta.getDate());
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? dc_FechaDesde.getDate() : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? dc_FechaHasta.getDate() : null);
         }
         if (chk_NumFactura.isSelected()) {
             criteria.setNumSerie(Long.valueOf(txt_SerieFactura.getText()));
@@ -332,14 +333,14 @@ public class FacturasVentaGUI extends JInternalFrame {
     private void cargarResultadosAlTable() {
         facturasParcial.stream().map(factura -> {
             Object[] fila = new Object[20];
-            fila[0] = factura.getCAE() == 0 ? "" : factura.getCAE();
+            fila[0] = factura.getCae() == 0 ? "" : factura.getCae();
             fila[1] = factura.getFecha();
             fila[2] = factura.getTipoComprobante();
             fila[3] = factura.getNumSerie() + " - " + factura.getNumFactura();
             fila[4] = factura.getNroPedido();
             fila[5] = factura.getNombreFiscalCliente();
             fila[6] = factura.getNombreUsuario();
-            fila[7] = factura.getNombreViajante();
+            fila[7] = factura.getNombreViajanteCliente();
             fila[8] = factura.getNombreTransportista();
             fila[9] = factura.getTotal();
             fila[10] = factura.getSubTotal();
@@ -355,7 +356,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             } else {
                 fila[18] = factura.getNumSerieAfip() + " - " + factura.getNumFacturaAfip();
             }
-            fila[19] = factura.getVencimientoCAE();
+            fila[19] = factura.getVencimientoCae();
             return fila;
         }).forEach(fila -> {
             modeloTablaFacturas.addRow(fila);
@@ -433,11 +434,12 @@ public class FacturasVentaGUI extends JInternalFrame {
     }
 
     private boolean existeClienteDisponible() {
-        String criteriaBusqueda = "/clientes/busqueda/criteria?idSucursal="
-                + String.valueOf(SucursalActiva.getInstance().getSucursal().getIdSucursal())
-                + "&pagina=0&tamanio=" + 1;
+        BusquedaClienteCriteria criteriaCliente = BusquedaClienteCriteria.builder()
+                .pagina(0)
+                .build();
+        HttpEntity<BusquedaClienteCriteria> requestEntity = new HttpEntity<>(criteriaCliente);
         PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
-                .exchange(criteriaBusqueda, HttpMethod.GET, null,
+                .exchange("/clientes/busqueda/criteria", HttpMethod.POST, requestEntity,
                         new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {
                 })
                 .getBody();

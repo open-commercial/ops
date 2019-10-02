@@ -17,6 +17,7 @@ import javax.swing.JScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
@@ -29,6 +30,7 @@ import sic.modelo.Proveedor;
 import sic.modelo.Rol;
 import sic.modelo.Rubro;
 import sic.modelo.UsuarioActivo;
+import sic.modelo.criteria.BusquedaProductoCriteria;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
@@ -331,69 +333,70 @@ public class ProductosGUI extends JInternalFrame {
     
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
-        String criteriaBusqueda = "/productos/busqueda/criteria?";
-        String criteriaCosto = "/productos/valor-stock/criteria?";
+        BusquedaProductoCriteria criteria = BusquedaProductoCriteria.builder().build();
         if (chkCodigoODescripcion.isSelected()) {
-            criteriaBusqueda += "&codigo=" + txtCodigoODescripcion.getText().trim();
-            criteriaCosto += "&codigo=" + txtCodigoODescripcion.getText().trim();
-            criteriaBusqueda += "&descripcion=" + txtCodigoODescripcion.getText().trim();
-            criteriaCosto += "&descripcion=" + txtCodigoODescripcion.getText().trim();
+            criteria.setCodigo(txtCodigoODescripcion.getText().trim());
+            criteria.setDescripcion(txtCodigoODescripcion.getText().trim());
         }
         if (chk_Rubro.isSelected()) {
-            criteriaBusqueda += "&idRubro=" + this.getIdRubroSeleccionado();
-            criteriaCosto += "&idRubro=" + this.getIdRubroSeleccionado();
+            criteria.setIdRubro(this.getIdRubroSeleccionado());
         }
         if (chk_Proveedor.isSelected() &&  this.getIdProveedorSeleccionado() != 0L) {
-            criteriaBusqueda += "&idProveedor=" + this.getIdProveedorSeleccionado();
-            criteriaCosto += "&idProveedor=" + this.getIdProveedorSeleccionado();
+            criteria.setIdProveedor(this.getIdProveedorSeleccionado());
         }
         if (chk_Disponibilidad.isSelected()) {
             if (rb_Faltantes.isSelected()) {
-                criteriaBusqueda += "&soloFantantes=true";
-                criteriaCosto += "&soloFantantes=true";
+                criteria.setListarSoloFaltantes(true);
             }
             if (rbEnStock.isSelected()) {
-                criteriaBusqueda += "&soloEnStock=true";
-                criteriaCosto += "&soloEnStock=true";
+                criteria.setListarSoloEnStock(true);
             }
         }
         if (chk_visibilidad.isSelected()) {
             if (rb_publico.isSelected()) {
-                criteriaBusqueda += "&publicos=true";
-                criteriaCosto += "&publicos=true";
+                criteria.setPublico(true);
             } else if (rb_privado.isSelected()) {
-                criteriaBusqueda += "&publicos=false";
-                criteriaCosto += "&publicos=false";
+                criteria.setPublico(false);
             }
         }
         if (chkDestacados.isSelected()) {
-            criteriaBusqueda += "&destacados=true";
-            criteriaCosto += "&destacados=true";
+            criteria.setOferta(true);
         }
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
-            case 0: criteriaBusqueda += "&ordenarPor=descripcion"; break;
-            case 1: criteriaBusqueda += "&ordenarPor=codigo"; break;
-            case 2: criteriaBusqueda += "&ordenarPor=cantidad"; break;
-            case 3: criteriaBusqueda += "&ordenarPor=precioCosto"; break;
-            case 4: criteriaBusqueda += "&ordenarPor=gananciaPorcentaje"; break;
-            case 5: criteriaBusqueda += "&ordenarPor=precioLista"; break;
-            case 6: criteriaBusqueda += "&ordenarPor=fechaAlta"; break;
-            case 7: criteriaBusqueda += "&ordenarPor=fechaUltimaModificacion"; break;
+            case 0:
+                criteria.setOrdenarPor("descripcion"); break;
+            case 1:
+                criteria.setOrdenarPor("codigo"); break;
+            case 2:
+                criteria.setOrdenarPor("cantidad"); break;
+            case 3:
+                criteria.setOrdenarPor("precioCosto"); break;
+            case 4:
+                criteria.setOrdenarPor("gananciaPorcentaje"); break;
+            case 5:
+                criteria.setOrdenarPor("precioLista"); break;
+            case 6:
+                criteria.setOrdenarPor("fechaAlta"); break;
+            case 7:
+                criteria.setOrdenarPor("fechaUltimaModificacion"); break;
         }
         int seleccionDireccion = cmbSentido.getSelectedIndex();
         switch (seleccionDireccion) {
-            case 0: criteriaBusqueda += "&sentido=ASC"; break;
-            case 1: criteriaBusqueda += "&sentido=DESC"; break;
+            case 0:
+                criteria.setSentido("ASC"); break;
+            case 1:
+                criteria.setSentido("DESC"); break;
         }
-        criteriaBusqueda += "&pagina=" + NUMERO_PAGINA;
+        criteria.setPagina(NUMERO_PAGINA);
         try {
+            HttpEntity<BusquedaProductoCriteria> requestEntity = new HttpEntity<>(criteria);
             PaginaRespuestaRest<Producto> response = RestClient.getRestTemplate()
-                    .exchange(criteriaBusqueda, HttpMethod.GET, null,
+                    .exchange("/productos/busqueda/criteria", HttpMethod.POST, requestEntity,
                             new ParameterizedTypeReference<PaginaRespuestaRest<Producto>>() {
                     })
                     .getBody();
-            txt_ValorStock.setValue(RestClient.getRestTemplate().getForObject(criteriaCosto, BigDecimal.class));
+            txt_ValorStock.setValue(RestClient.getRestTemplate().postForObject("/productos/valor-stock/criteria", criteria, BigDecimal.class));
             totalElementosBusqueda = response.getTotalElements();
             productosParcial = response.getContent();
             productosTotal.addAll(productosParcial);
@@ -406,7 +409,7 @@ public class ProductosGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-        this.cambiarEstadoEnabledComponentes(true);   
+        this.cambiarEstadoEnabledComponentes(true);
         this.cambiarEstadoDeComponentesSegunRolUsuario();
     }
 

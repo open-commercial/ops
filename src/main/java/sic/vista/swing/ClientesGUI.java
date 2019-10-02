@@ -16,6 +16,7 @@ import javax.swing.JScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
@@ -29,6 +30,7 @@ import sic.modelo.Provincia;
 import sic.modelo.Rol;
 import sic.modelo.Usuario;
 import sic.modelo.UsuarioActivo;
+import sic.modelo.criteria.BusquedaCuentaCorrienteClienteCriteria;
 import sic.util.ColoresNumerosRenderer;
 import sic.util.FechasRenderer;
 import sic.util.PorcentajeRenderer;
@@ -243,55 +245,56 @@ public class ClientesGUI extends JInternalFrame {
 
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
-        String criteriaBusqueda = "/cuentas-corriente/clientes/busqueda/criteria?";
+        BusquedaCuentaCorrienteClienteCriteria criteria = BusquedaCuentaCorrienteClienteCriteria.builder().build();
         if (chkCriteria.isSelected()) {
-            criteriaBusqueda += "nombreFiscal=" + txtCriteria.getText().trim() + "&";
-            criteriaBusqueda += "nombreFantasia=" + txtCriteria.getText().trim() + "&";
-            criteriaBusqueda += "nroCliente=" + txtCriteria.getText().trim() + "&";
+            criteria.setNombreFiscal(txtCriteria.getText().trim());
+            criteria.setNombreFantasia(txtCriteria.getText().trim());
+            criteria.setNroDeCliente(txtCriteria.getText().trim());
         }
         if (chkViajante.isSelected() && viajanteSeleccionado != null) {
-            criteriaBusqueda += "idViajante=" + viajanteSeleccionado.getId_Usuario() + "&";
+            criteria.setIdViajante(viajanteSeleccionado.getId_Usuario());
         }
         if (chk_Ubicacion.isSelected()) {
-            criteriaBusqueda += "idProvincia=" + String.valueOf(((Provincia) (cmbProvincia.getSelectedItem())).getIdProvincia()) + "&";
+            criteria.setIdProvincia(((Provincia) (cmbProvincia.getSelectedItem())).getIdProvincia());
             if (!((Localidad) cmbLocalidad.getSelectedItem()).getNombre().equals("Todas")) {
-                criteriaBusqueda += "idLocalidad=" + String.valueOf((((Localidad) cmbLocalidad.getSelectedItem()).getIdLocalidad())) + "&";
+                criteria.setIdLocalidad(((Localidad) cmbLocalidad.getSelectedItem()).getIdLocalidad());
             }
         }
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
             case 0:
-                criteriaBusqueda += "ordenarPor=cliente.nombreFiscal&";
+                criteria.setOrdenarPor("cliente.nombreFiscal");
                 break;
             case 1:
-                criteriaBusqueda += "ordenarPor=cliente.fechaAlta&";
+                criteria.setOrdenarPor("cliente.fechaAlta");
                 break;
             case 2:
-                criteriaBusqueda += "ordenarPor=cliente.nombreFantasia&";
+                criteria.setOrdenarPor("cliente.nombreFantasia");
                 break;
             case 3:
-                criteriaBusqueda += "ordenarPor=saldo&";
+                criteria.setOrdenarPor("saldo");
                 break;
             case 4:
-                criteriaBusqueda += "ordenarPor=fechaUltimoMovimiento&";
+                criteria.setOrdenarPor("fechaUltimoMovimiento");
                 break;
             case 5:
-                criteriaBusqueda += "ordenarPor=cliente.bonificacion&";
+                criteria.setOrdenarPor("cliente.bonificacion");
                 break;
         }
         int seleccionDireccion = cmbSentido.getSelectedIndex();
         switch (seleccionDireccion) {
             case 0:
-                criteriaBusqueda += "sentido=ASC&";
+                criteria.setSentido("ASC");
                 break;
             case 1:
-                criteriaBusqueda += "sentido=DESC&";
+                criteria.setSentido("DESC");
                 break;
         }
-        criteriaBusqueda += "&pagina=" + NUMERO_PAGINA;
+        criteria.setPagina(NUMERO_PAGINA);
         try {
+            HttpEntity<BusquedaCuentaCorrienteClienteCriteria> requestEntity = new HttpEntity<>(criteria);
             PaginaRespuestaRest<CuentaCorrienteCliente> response = RestClient.getRestTemplate()
-                    .exchange(criteriaBusqueda, HttpMethod.GET, null,
+                    .exchange("/cuentas-corriente/clientes/busqueda/criteria", HttpMethod.POST, requestEntity,
                             new ParameterizedTypeReference<PaginaRespuestaRest<CuentaCorrienteCliente>>() {
                     })
                     .getBody();

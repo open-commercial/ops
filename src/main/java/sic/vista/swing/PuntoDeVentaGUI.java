@@ -148,7 +148,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         factura.setFechaVencimiento(cal.getTime());
         factura.setRenglones(this.getRenglones());
         factura.setObservaciones(this.txt_Observaciones.getText().trim());      
-        factura.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
+        factura.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));  
         factura.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
         factura.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
         factura.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
