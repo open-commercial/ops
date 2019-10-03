@@ -298,6 +298,9 @@ public class ProductosGUI extends JInternalFrame {
                 criteria.setPublico(false);
             }
         }
+        if (chkDestacados.isSelected()) {
+            criteria.setDestacado(true);
+        }
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
             case 0: 
