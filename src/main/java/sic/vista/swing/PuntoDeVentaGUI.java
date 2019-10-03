@@ -29,6 +29,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
+import sic.modelo.CuentaCorrienteCliente;
 import sic.modelo.SucursalActiva;
 import sic.modelo.NuevoPedido;
 import sic.modelo.RenglonFactura;
@@ -1637,11 +1638,11 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 || rolesDeUsuario.contains(Rol.ENCARGADO)
                 || rolesDeUsuario.contains(Rol.VENDEDOR)) {
                 if (this.existeClientePredeterminado()) {
-                    Cliente clientePredeterminado = RestClient.getRestTemplate()
-                            .getForObject("/clientes/predeterminado", Cliente.class);
-                    this.cargarCliente(clientePredeterminado);
+                    CuentaCorrienteCliente cuentaCorrienteClientePredeterminado
+                            = RestClient.getRestTemplate().getForObject("/cuentas-corrientes/clientes/predeterminado", CuentaCorrienteCliente.class);
+                    this.cargarCliente(cuentaCorrienteClientePredeterminado.getCliente());
                     this.btnModificarCliente.setEnabled(true);
-                } 
+                }
             }
             if (!this.existeFormaDePagoPredeterminada() || !this.existeTransportistaCargado()) {
                 this.dispose();
