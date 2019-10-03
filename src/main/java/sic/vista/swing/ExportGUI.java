@@ -12,21 +12,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.criteria.BusquedaCuentaCorrienteClienteCriteria;
+import sic.modelo.criteria.BusquedaProductoCriteria;
 
 public class ExportGUI extends JDialog {
 
-    private final String uriXLSX;
-    private final String filenameXLSX;
-    private final String uriPDF;    
-    private final String filenamePDF;
+    private BusquedaProductoCriteria criteriaProducto;
+    private BusquedaCuentaCorrienteClienteCriteria criteriaCuentaCorrienteCliente;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     
-    public ExportGUI(String uriXLSX, String filenameXLSX, String uriPDF, String filenamePDF) {
-        this.initComponents(); 
-        this.uriXLSX = uriXLSX;
-        this.filenameXLSX = filenameXLSX;
-        this.uriPDF = uriPDF;
-        this.filenamePDF = filenamePDF;
+    public ExportGUI(BusquedaProductoCriteria criteriaProducto) {
+        this.initComponents();
+        this.criteriaProducto = criteriaProducto;
+    }
+    
+    public ExportGUI(BusquedaCuentaCorrienteClienteCriteria criteriaCuentaCorrienteCliente) {
+        this.initComponents();
+        this.criteriaCuentaCorrienteCliente = criteriaCuentaCorrienteCliente;
     }
     
     @SuppressWarnings("unchecked")
@@ -40,11 +42,6 @@ public class ExportGUI extends JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Exportar");
         setResizable(false);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                formWindowOpened(evt);
-            }
-        });
 
         panelGeneral.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -108,10 +105,18 @@ public class ExportGUI extends JDialog {
 
     private void btnExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcelActionPerformed
         try {
-            byte[] reporte = RestClient.getRestTemplate().getForObject(uriXLSX, byte[].class);
-            File f = new File(System.getProperty("user.home") + "/" + filenameXLSX);
-            Files.write(f.toPath(), reporte);
-            Desktop.getDesktop().open(f);
+            if (this.criteriaCuentaCorrienteCliente != null) {
+                byte[] reporte = RestClient.getRestTemplate().postForObject("/cuentas-corriente/clientes/reporte/criteria?formato=xlsx", this.criteriaCuentaCorrienteCliente, byte[].class);
+                File f = new File(System.getProperty("user.home") + "/" + "CuentaCorriente.xlsx");
+                Files.write(f.toPath(), reporte);
+                Desktop.getDesktop().open(f);
+            }
+            if (this.criteriaProducto != null) {
+                byte[] reporte = RestClient.getRestTemplate().postForObject("/productos/reporte/criteria?formato=xlsx", this.criteriaProducto, byte[].class);
+                File f = new File(System.getProperty("user.home") + "/" + "ListaPrecios.xlsx");
+                Files.write(f.toPath(), reporte);
+                Desktop.getDesktop().open(f);
+            }
             this.dispose();
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage());
@@ -130,10 +135,18 @@ public class ExportGUI extends JDialog {
 
     private void btnPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPDFActionPerformed
         try {
-            byte[] reporte = RestClient.getRestTemplate().getForObject(uriPDF, byte[].class);
-            File f = new File(System.getProperty("user.home") + "/" + filenamePDF);
-            Files.write(f.toPath(), reporte);
-            Desktop.getDesktop().open(f);
+            if (this.criteriaCuentaCorrienteCliente != null) {
+                byte[] reporte = RestClient.getRestTemplate().postForObject("/cuentas-corriente/clientes/reporte/criteria?formato=pdf", this.criteriaCuentaCorrienteCliente, byte[].class);
+                File f = new File(System.getProperty("user.home") + "/" + "CuentaCorriente.pdf");
+                Files.write(f.toPath(), reporte);
+                Desktop.getDesktop().open(f);
+            }
+            if (this.criteriaProducto != null) {
+                byte[] reporte = RestClient.getRestTemplate().postForObject("/productos/reporte/criteria?formato=pdf", this.criteriaProducto, byte[].class);
+                File f = new File(System.getProperty("user.home") + "/" + "ListaPrecios.pdf");
+                Files.write(f.toPath(), reporte);
+                Desktop.getDesktop().open(f);
+            }
             this.dispose();
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage());
@@ -149,11 +162,6 @@ public class ExportGUI extends JDialog {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnPDFActionPerformed
-
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        if (uriXLSX == null) btnExcel.setEnabled(false);
-        if (uriPDF == null) btnPDF.setEnabled(false);
-    }//GEN-LAST:event_formWindowOpened
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnExcel;

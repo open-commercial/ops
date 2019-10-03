@@ -43,6 +43,7 @@ import sic.modelo.RenglonCuentaCorriente;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.UsuarioActivo;
+import sic.modelo.criteria.BusquedaCuentaCorrienteClienteCriteria;
 import sic.util.ColoresNumerosRenderer;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
@@ -1111,10 +1112,9 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     
     private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
         if (Desktop.isDesktopSupported()) {
-            String uriReporte = "/cuentas-corriente/clientes/" + this.cliente.getId_Cliente() + "/reporte?"
-                    + "pagina=" + NUMERO_PAGINA;
-            ExportGUI exportGUI = new ExportGUI(uriReporte + "&formato=xlsx", "CuentaCorriente.xlsx",
-                    uriReporte + "&formato=pdf", "CuentaCorriente.pdf");
+            ExportGUI exportGUI = new ExportGUI(BusquedaCuentaCorrienteClienteCriteria.builder()
+                    .idCliente(this.cliente.getId_Cliente())
+                    .build());
             exportGUI.setModal(true);
             exportGUI.setLocationRelativeTo(this);
             exportGUI.setVisible(true);
