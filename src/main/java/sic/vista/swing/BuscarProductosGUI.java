@@ -104,9 +104,12 @@ public class BuscarProductosGUI extends JDialog {
     
     private void prepararComponentes() {
         txtCantidad.setValue(1.00);
+        txtBonificacion.setValue(1.00);
         if (renglones == null && movimiento == null && tipoDeComprobante == null) {
             lbl_Cantidad.setVisible(false);
             txtCantidad.setVisible(false);
+            lblBonificacion.setVisible(false);
+            txtBonificacion.setVisible(false);
         }
     }
 
@@ -151,7 +154,7 @@ public class BuscarProductosGUI extends JDialog {
             debeCargarRenglon = false;
             this.dispose();
         } else {            
-            if (movimiento == Movimiento.VENTA) {
+            if (movimiento.equals(Movimiento.VENTA)) {
                 String uri = "/productos/disponibilidad-stock/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal() 
                         + "?idProducto=" + productoSeleccionado.getIdProducto()
                         + "&cantidad=" + this.sumarCantidadesSegunProductosYaCargados();
@@ -166,13 +169,23 @@ public class BuscarProductosGUI extends JDialog {
             }
             if (esValido) {
                 try {
-                    renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
-                            + "idProducto=" + productoSeleccionado.getIdProducto()
-                            + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
-                            + "&movimiento=" + movimiento
-                            + "&cantidad=" + txtCantidad.getValue().toString()
-                            + "&idCliente=" + this.cliente.getId_Cliente(),
-                            RenglonFactura.class);
+                    if (movimiento.equals(Movimiento.VENTA)) {
+                        renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon-venta?"
+                                + "idProducto=" + productoSeleccionado.getIdProducto()
+                                + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
+                                + "&movimiento=" + movimiento
+                                + "&cantidad=" + txtCantidad.getValue().toString()
+                                + "&idCliente=" + this.cliente.getId_Cliente(),
+                                RenglonFactura.class);
+                    } else if (movimiento.equals(Movimiento.COMPRA)) {
+                        renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon-compra?"
+                                + "idProducto=" + productoSeleccionado.getIdProducto()
+                                + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
+                                + "&movimiento=" + movimiento
+                                + "&cantidad=" + txtCantidad.getValue().toString()
+                                + "&bonificacion=" + txtBonificacion.getValue().toString(),
+                                RenglonFactura.class);
+                    }
                     debeCargarRenglon = true;
                     this.dispose();
                 } catch (RestClientResponseException ex) {
@@ -212,9 +225,10 @@ public class BuscarProductosGUI extends JDialog {
     }
 
     private void actualizarEstadoSeleccion() {
-        if (txtCantidad.isEditValid()) {
+        if (txtCantidad.isEditValid() && txtBonificacion.isEditValid()) {
             try {
                 txtCantidad.commitEdit();
+                txtBonificacion.commitEdit();
             } catch (ParseException ex) {
                 String msjError = "Se produjo un error analizando los campos.";
                 LOGGER.error(msjError + " - " + ex.getMessage());
@@ -328,6 +342,7 @@ public class BuscarProductosGUI extends JDialog {
         txtaNotaProducto.addKeyListener(keyHandler);
         txtCantidad.addKeyListener(keyHandler);
         btnAceptar.addKeyListener(keyHandler);
+        txtBonificacion.addKeyListener(keyHandler);
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
             int va = scrollBar.getVisibleAmount() + 10;
@@ -366,6 +381,8 @@ public class BuscarProductosGUI extends JDialog {
         txtCantidad = new javax.swing.JFormattedTextField();
         spNotaProducto = new javax.swing.JScrollPane();
         txtaNotaProducto = new javax.swing.JTextArea();
+        lblBonificacion = new javax.swing.JLabel();
+        txtBonificacion = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -464,6 +481,26 @@ public class BuscarProductosGUI extends JDialog {
         txtaNotaProducto.setFocusable(false);
         spNotaProducto.setViewportView(txtaNotaProducto);
 
+        lblBonificacion.setText("Bonificacion (%):");
+
+        txtBonificacion.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
+        txtBonificacion.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtBonificacionFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtBonificacionFocusLost(evt);
+            }
+        });
+        txtBonificacion.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtBonificacionKeyTyped(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBonificacionKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelFondoLayout = new javax.swing.GroupLayout(panelFondo);
         panelFondo.setLayout(panelFondoLayout);
         panelFondoLayout.setHorizontalGroup(
@@ -477,15 +514,24 @@ public class BuscarProductosGUI extends JDialog {
                         .addGap(0, 0, 0)
                         .addComponent(btnBuscar))
                     .addGroup(panelFondoLayout.createSequentialGroup()
-                        .addComponent(spNotaProducto, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
+                        .addComponent(spNotaProducto, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
+                        .addGap(139, 139, 139)
+                        .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lbl_Cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblBonificacion))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_Cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtBonificacion)
+                            .addComponent(txtCantidad, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
+
+        panelFondoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblBonificacion, lbl_Cantidad});
+
+        panelFondoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txtBonificacion, txtCantidad});
+
         panelFondoLayout.setVerticalGroup(
             panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFondoLayout.createSequentialGroup()
@@ -494,17 +540,30 @@ public class BuscarProductosGUI extends JDialog {
                     .addComponent(btnBuscar)
                     .addComponent(txtCriteriaBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(spNotaProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Cantidad))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelFondoLayout.createSequentialGroup()
+                        .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(spNotaProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(12, Short.MAX_VALUE))
+                    .addGroup(panelFondoLayout.createSequentialGroup()
+                        .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtBonificacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblBonificacion))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbl_Cantidad))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         panelFondoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscar, txtCriteriaBusqueda});
+
+        panelFondoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblBonificacion, lbl_Cantidad});
+
+        panelFondoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtBonificacion, txtCantidad});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -529,6 +588,12 @@ public class BuscarProductosGUI extends JDialog {
         this.setSize(sizeDialog);
         this.setTitle("Buscar Producto");
         this.prepararComponentes();
+        lblBonificacion.setVisible(false);
+        txtBonificacion.setVisible(false);
+        if (this.movimiento.equals(Movimiento.COMPRA)) {
+            lblBonificacion.setVisible(true);
+            txtBonificacion.setVisible(true);
+        }
     }//GEN-LAST:event_formWindowOpened
 
     private void txtCantidadKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadKeyPressed
@@ -593,14 +658,40 @@ public class BuscarProductosGUI extends JDialog {
         this.buscar();
     }//GEN-LAST:event_txtCriteriaBusquedaActionPerformed
 
+    private void txtBonificacionKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBonificacionKeyReleased
+        if (evt.getKeyCode() == 10) {
+            this.aceptarProducto();
+        } else {
+            this.actualizarEstadoSeleccion();
+        }
+    }//GEN-LAST:event_txtBonificacionKeyReleased
+
+    private void txtBonificacionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBonificacionKeyTyped
+        if (evt.getKeyChar() == KeyEvent.VK_MINUS) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtBonificacionKeyTyped
+
+    private void txtBonificacionFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBonificacionFocusLost
+        this.actualizarEstadoSeleccion();
+    }//GEN-LAST:event_txtBonificacionFocusLost
+
+    private void txtBonificacionFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBonificacionFocusGained
+        SwingUtilities.invokeLater(() -> {
+            txtBonificacion.selectAll();
+        });
+    }//GEN-LAST:event_txtBonificacionFocusGained
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnBuscar;
+    private javax.swing.JLabel lblBonificacion;
     private javax.swing.JLabel lbl_Cantidad;
     private javax.swing.JPanel panelFondo;
     private javax.swing.JScrollPane spNotaProducto;
     private javax.swing.JScrollPane sp_Resultados;
     private javax.swing.JTable tbl_Resultados;
+    private javax.swing.JFormattedTextField txtBonificacion;
     private javax.swing.JFormattedTextField txtCantidad;
     private javax.swing.JTextField txtCriteriaBusqueda;
     private javax.swing.JTextArea txtaNotaProducto;

@@ -1639,7 +1639,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 || rolesDeUsuario.contains(Rol.VENDEDOR)) {
                 if (this.existeClientePredeterminado()) {
                     CuentaCorrienteCliente cuentaCorrienteClientePredeterminado
-                            = RestClient.getRestTemplate().getForObject("/cuentas-corrientes/clientes/predeterminado", CuentaCorrienteCliente.class);
+                            = RestClient.getRestTemplate().getForObject("/cuentas-corriente/clientes/predeterminado", CuentaCorrienteCliente.class);
                     this.cargarCliente(cuentaCorrienteClientePredeterminado.getCliente());
                     this.btnModificarCliente.setEnabled(true);
                 }

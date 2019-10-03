@@ -129,7 +129,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         lineaDeFactura[2] = renglon.getMedidaItem();
         lineaDeFactura[3] = renglon.getCantidad();
         lineaDeFactura[4] = renglon.getPrecioUnitario();
-        //lineaDeFactura[5] = renglon.getDescuentoPorcentaje();
+        lineaDeFactura[5] = renglon.getBonificacionPorcentaje();
         lineaDeFactura[6] = renglon.getImporte();
         modeloTablaRenglones.addRow(lineaDeFactura);
         renglones.add(renglon);
@@ -325,7 +325,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         encabezados[2] = "Unidad";
         encabezados[3] = "Cantidad";
         encabezados[4] = "P. Unitario";
-        encabezados[5] = "% Descuento";
+        encabezados[5] = "% Bonificación";
         encabezados[6] = "Importe";
         modeloTablaRenglones.setColumnIdentifiers(encabezados);
         tbl_Renglones.setModel(modeloTablaRenglones);
@@ -430,12 +430,12 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
             resguardoRenglones.stream().map(rf -> {
                 Producto producto = RestClient.getRestTemplate()
                         .getForObject("/productos/" + rf.getIdProductoItem(), Producto.class);
-                RenglonFactura nuevoRenglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
+                RenglonFactura nuevoRenglon = RestClient.getRestTemplate().getForObject("/facturas/renglon-compra?"
                         + "idProducto=" + producto.getIdProducto()
                         + "&tipoDeComprobante=" + tipoDeComprobante.name()
                         + "&movimiento=" + Movimiento.COMPRA
-                        + "&cantidad=" + rf.getCantidad(),
-                      // + "&descuentoPorcentaje=" + rf.getDescuentoPorcentaje(),                        
+                        + "&cantidad=" + rf.getCantidad()
+                        + "&bonificacion=" + rf.getBonificacionPorcentaje(),                        
                         RenglonFactura.class);
                 return nuevoRenglon;
             }).forEachOrdered(nuevoRenglon -> {

@@ -29,6 +29,7 @@ import sic.modelo.Producto;
 import sic.modelo.Proveedor;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.TipoDeOperacion;
+import sic.modelo.criteria.BusquedaProveedorCriteria;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
@@ -297,13 +298,16 @@ public class FacturasCompraGUI extends JInternalFrame {
     }
 
     private boolean existeProveedorDisponible() {
-        return !RestClient.getRestTemplate()
-                .exchange("/proveedores/busqueda/criteria", HttpMethod.GET, null,
+        BusquedaProveedorCriteria criteriaProveedor = BusquedaProveedorCriteria.builder().pagina(0).build();
+        HttpEntity<BusquedaProveedorCriteria> requestEntity = new HttpEntity<>(criteriaProveedor);
+        PaginaRespuestaRest<Proveedor> response = RestClient.getRestTemplate()
+                .exchange("/proveedores/busqueda/criteria", HttpMethod.POST, requestEntity,
                         new ParameterizedTypeReference<PaginaRespuestaRest<Proveedor>>() {
                 })
-                .getBody().getContent().isEmpty();
+                .getBody();
+        return !response.getContent().isEmpty();
     }
-       
+
     private void cargarTiposDeFactura() {
         try {
             TipoDeComprobante[] tiposDeComprobantes = RestClient.getRestTemplate()
