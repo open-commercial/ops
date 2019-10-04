@@ -87,11 +87,11 @@ public class ProductosGUI extends JInternalFrame {
         encabezados[1] = "Destacado";
         encabezados[2] = "Codigo";
         encabezados[3] = "Descripcion";
-        encabezados[4] = "Cant. Disponible";
+        encabezados[4] = "Stock";
         encabezados[5] = "Otras Sucursales";
-        encabezados[6] = "Cant. Mínima";
-        encabezados[7] = "Cant. x Bulto";
-        encabezados[8] = "Sin Límite";
+        encabezados[6] = "Cant. x Bulto"; 
+        encabezados[7] = "Sin Límite"; 
+        encabezados[8] = "Cant. Mínima"; 
         encabezados[9] = "Medida";
         encabezados[10] = "Precio Costo";
         encabezados[11] = "% Ganancia";
@@ -119,8 +119,8 @@ public class ProductosGUI extends JInternalFrame {
         tipos[4] = BigDecimal.class;
         tipos[5] = BigDecimal.class;
         tipos[6] = BigDecimal.class;
-        tipos[7] = BigDecimal.class;
-        tipos[8] = Boolean.class;
+        tipos[7] = Boolean.class;
+        tipos[8] = BigDecimal.class;
         tipos[9] = String.class;
         tipos[10] = BigDecimal.class;
         tipos[11] = BigDecimal.class;
@@ -150,8 +150,8 @@ public class ProductosGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(110);
         tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(115);
         tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(90);
-        tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(90);
-        tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(80);
+        tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(80);
+        tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(90);
         tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(11).setPreferredWidth(100);
@@ -178,7 +178,7 @@ public class ProductosGUI extends JInternalFrame {
         productosParcial.stream().map(producto -> {
             Object[] fila = new Object[25];
             fila[0] = producto.isPublico();
-            fila[1] = producto.isDestacado();
+            fila[1] = producto.isOferta();
             fila[2] = producto.getCodigo();
             fila[3] = producto.getDescripcion();
             fila[4] = BigDecimal.ZERO;
@@ -190,9 +190,9 @@ public class ProductosGUI extends JInternalFrame {
             fila[5] = producto.getCantidadEnSucursales().stream()
                     .filter(cantidadEnSucursales -> !cantidadEnSucursales.idSucursal.equals(SucursalActiva.getInstance().getSucursal().getIdSucursal()))
                     .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);
-            fila[6] = producto.getCantMinima();
-            fila[7] = producto.getBulto();
-            fila[8] = producto.isIlimitado();
+            fila[6] = producto.getBulto();
+            fila[7] = producto.isIlimitado();
+            fila[8] = producto.getCantMinima();
             fila[9] = producto.getNombreMedida();
             fila[10] = producto.getPrecioCosto();
             fila[11] = producto.getGananciaPorcentaje();

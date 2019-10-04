@@ -6,6 +6,7 @@ import java.awt.event.ItemEvent;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -77,6 +78,12 @@ public class DetalleProductoGUI extends JDialog {
         ImageIcon iconoVentana = new ImageIcon(DetalleProductoGUI.class.getResource("/sic/icons/Product_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
     }
+    
+    private void calcularPrecioBonificado(BigDecimal precioDeLista) {
+        txtPrecioBonificado.setValue(precioDeLista
+                .multiply((new BigDecimal("100")).subtract(new BigDecimal(txtPorcentajeOferta.getValue().toString()))
+                        .divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP)));
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -124,6 +131,10 @@ public class DetalleProductoGUI extends JDialog {
         cmbSucursales = new javax.swing.JComboBox<>();
         txtCantidad = new javax.swing.JFormattedTextField();
         lbl_Cantidad = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        chkOferta = new javax.swing.JCheckBox();
+        txtPrecioBonificado = new javax.swing.JFormattedTextField();
+        txtPorcentajeOferta = new javax.swing.JFormattedTextField();
         panelPropiedades = new javax.swing.JPanel();
         panel5 = new javax.swing.JPanel();
         lbl_Ven = new javax.swing.JLabel();
@@ -138,8 +149,6 @@ public class DetalleProductoGUI extends JDialog {
         lblPublico = new javax.swing.JLabel();
         rbPublico = new javax.swing.JRadioButton();
         rbPrivado = new javax.swing.JRadioButton();
-        lblDestacado = new javax.swing.JLabel();
-        chkDestacado = new javax.swing.JCheckBox();
         panel6 = new javax.swing.JPanel();
         lbl_FUM = new javax.swing.JLabel();
         lbl_FechaUltimaModificacion = new javax.swing.JLabel();
@@ -299,7 +308,6 @@ public class DetalleProductoGUI extends JDialog {
 
         txtGananciaPorcentaje.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
         txtGananciaPorcentaje.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtGananciaPorcentaje.setText("0");
         txtGananciaPorcentaje.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtGananciaPorcentajeFocusGained(evt);
@@ -574,6 +582,66 @@ public class DetalleProductoGUI extends JDialog {
 
         pnlCantidadSucursalesLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblSucursal, lbl_Cantidad});
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        chkOferta.setText("Oferta (%)");
+        chkOferta.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        chkOferta.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chkOfertaItemStateChanged(evt);
+            }
+        });
+        chkOferta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkOfertaActionPerformed(evt);
+            }
+        });
+
+        txtPrecioBonificado.setEditable(false);
+        txtPrecioBonificado.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
+        txtPrecioBonificado.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        txtPorcentajeOferta.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
+        txtPorcentajeOferta.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtPorcentajeOferta.setEnabled(false);
+        txtPorcentajeOferta.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtPorcentajeOfertaFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPorcentajeOfertaFocusLost(evt);
+            }
+        });
+        txtPorcentajeOferta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPorcentajeOfertaActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(chkOferta)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtPorcentajeOferta, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtPrecioBonificado, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(txtPrecioBonificado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtPorcentajeOferta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chkOferta))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout panelGeneralLayout = new javax.swing.GroupLayout(panelGeneral);
         panelGeneral.setLayout(panelGeneralLayout);
         panelGeneralLayout.setHorizontalGroup(
@@ -583,7 +651,9 @@ public class DetalleProductoGUI extends JDialog {
                 .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(panelSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panelGeneralLayout.createSequentialGroup()
-                        .addComponent(panelPrecios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panelPrecios, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(panelCantidades, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -602,7 +672,9 @@ public class DetalleProductoGUI extends JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(panelCantidades, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(panelPrecios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         tpTabs.addTab("General", panelGeneral);
@@ -642,22 +714,12 @@ public class DetalleProductoGUI extends JDialog {
             }
         });
 
-        lblDestacado.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblDestacado.setText("Destacado:");
-
-        chkDestacado.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chkDestacadoActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout panel5Layout = new javax.swing.GroupLayout(panel5);
         panel5.setLayout(panel5Layout);
         panel5Layout.setHorizontalGroup(
             panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel5Layout.createSequentialGroup()
                 .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblDestacado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_Estante, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblPublico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_Estanteria, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -670,12 +732,9 @@ public class DetalleProductoGUI extends JDialog {
                     .addComponent(txt_Estante)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
                     .addGroup(panel5Layout.createSequentialGroup()
-                        .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panel5Layout.createSequentialGroup()
-                                .addComponent(rbPublico)
-                                .addGap(8, 8, 8)
-                                .addComponent(rbPrivado))
-                            .addComponent(chkDestacado))
+                        .addComponent(rbPublico)
+                        .addGap(8, 8, 8)
+                        .addComponent(rbPrivado)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -687,10 +746,6 @@ public class DetalleProductoGUI extends JDialog {
                     .addComponent(lblPublico)
                     .addComponent(rbPublico)
                     .addComponent(rbPrivado))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(chkDestacado)
-                    .addComponent(lblDestacado))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_Ven)
@@ -709,8 +764,6 @@ public class DetalleProductoGUI extends JDialog {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        panel5Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblDestacado, lblPublico});
 
         panel5Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {rbPrivado, rbPublico});
 
@@ -773,7 +826,7 @@ public class DetalleProductoGUI extends JDialog {
                 .addComponent(panel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(296, 296, 296))
+                .addGap(326, 326, 326))
         );
 
         tpTabs.addTab("Propiedades", panelPropiedades);
@@ -848,7 +901,7 @@ public class DetalleProductoGUI extends JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnGuardar)
                 .addContainerGap())
             .addComponent(tpTabs)
@@ -856,7 +909,7 @@ public class DetalleProductoGUI extends JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(tpTabs, javax.swing.GroupLayout.PREFERRED_SIZE, 391, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tpTabs, javax.swing.GroupLayout.PREFERRED_SIZE, 445, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnGuardar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -873,7 +926,6 @@ public class DetalleProductoGUI extends JDialog {
         chkSinLimite.setSelected(productoParaModificar.isIlimitado());
         rbPublico.setSelected(productoParaModificar.isPublico());
         rbPrivado.setSelected(!productoParaModificar.isPublico());
-        chkDestacado.setSelected(productoParaModificar.isDestacado());
         cmbSucursales.setSelectedItem(SucursalActiva.getInstance().getSucursal());
         productoParaModificar.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
             cantidadEnSucursal.put(cantidadesEnSucursal.idSucursal, cantidadesEnSucursal.getCantidad());
@@ -898,6 +950,13 @@ public class DetalleProductoGUI extends JDialog {
         cmbIVAPorcentaje.setSelectedItem(productoParaModificar.getIvaPorcentaje().stripTrailingZeros());        
         txtIVANeto.setValue(productoParaModificar.getIvaNeto());        
         txtPrecioLista.setValue(productoParaModificar.getPrecioLista());
+        if (productoParaModificar.isOferta()) {
+            chkOferta.setSelected(true);
+            txtPorcentajeOferta.setValue(productoParaModificar.getPorcentajeBonificacionOferta());
+            txtPrecioBonificado.setValue(productoParaModificar.getPrecioListaBonificado() != null 
+                    ? productoParaModificar.getPrecioListaBonificado() : BigDecimal.ZERO);
+            this.calcularPrecioBonificado(productoParaModificar.getPrecioLista());
+        }          
         if (productoParaModificar.getUrlImagen() == null || "".equals(productoParaModificar.getUrlImagen())) {
             lbl_imagen.setText("SIN IMAGEN");
             imagenProducto = null;
@@ -931,6 +990,7 @@ public class DetalleProductoGUI extends JDialog {
         txtGananciaNeto.setValue(BigDecimal.ZERO);
         txtPrecioLista.setValue(BigDecimal.ZERO);
         rbPrivado.setSelected(true);
+        txtPorcentajeOferta.setValue(BigDecimal.ZERO);
     }
     
     private void cargarMedidas() {
@@ -1101,7 +1161,8 @@ public class DetalleProductoGUI extends JDialog {
                     producto.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
                     producto.setIlimitado(chkSinLimite.isSelected());
                     producto.setPublico(rbPublico.isSelected());
-                    producto.setDestacado(chkDestacado.isSelected());
+                    producto.setOferta(chkOferta.isSelected());
+                    producto.setPorcentajeBonificacionOferta(new BigDecimal(txtPorcentajeOferta.getValue().toString()));
                     producto.setEstanteria(txt_Estanteria.getText().trim());
                     producto.setEstante(txt_Estante.getText().trim());
                     producto.setNota(txt_Nota.getText().trim());
@@ -1158,11 +1219,16 @@ public class DetalleProductoGUI extends JDialog {
                     productoParaModificar.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
                     productoParaModificar.setIlimitado(chkSinLimite.isSelected());   
                     productoParaModificar.setPublico(rbPublico.isSelected());
-                    productoParaModificar.setDestacado(chkDestacado.isSelected());
                     productoParaModificar.setEstanteria(txt_Estanteria.getText().trim());
                     productoParaModificar.setEstante(txt_Estante.getText().trim());
                     productoParaModificar.setNota(txt_Nota.getText().trim());
                     productoParaModificar.setFechaVencimiento(dc_Vencimiento.getDate());
+                    productoParaModificar.setOferta(chkOferta.isSelected());
+                    if (chkOferta.isSelected()) {
+                        productoParaModificar.setPorcentajeBonificacionOferta(new BigDecimal(txtPorcentajeOferta.getValue().toString()));
+                    } else {
+                        productoParaModificar.setPorcentajeBonificacionOferta(null);
+                    }
                     if (cambioImagen && imagenProducto != null) {
                         productoParaModificar.setUrlImagen(RestClient.getRestTemplate()
                                 .postForObject("/productos/" + productoParaModificar.getIdProducto() + "/imagenes", imagenProducto, String.class));
@@ -1199,8 +1265,6 @@ public class DetalleProductoGUI extends JDialog {
         this.cargarSucursales();
         if (operacion == TipoDeOperacion.ALTA) {
             this.setTitle("Nuevo Producto");
-            lblDestacado.setEnabled(false);
-            chkDestacado.setEnabled(false);
             lbl_FUM.setEnabled(false);
             lbl_FA.setEnabled(false);
             lbl_FechaUltimaModificacion.setVisible(false);
@@ -1247,6 +1311,7 @@ public class DetalleProductoGUI extends JDialog {
             lbl_CantMinima.setForeground(Color.LIGHT_GRAY);
             txt_Bulto.setEnabled(false);
             lbl_Bulto.setForeground(Color.LIGHT_GRAY);
+            cmbSucursales.setEnabled(false);
         } else {
             txtCantidad.setEnabled(true);
             lbl_Cantidad.setForeground(Color.RED);
@@ -1254,6 +1319,7 @@ public class DetalleProductoGUI extends JDialog {
             lbl_CantMinima.setForeground(Color.BLACK);
             txt_Bulto.setEnabled(true);
             lbl_Bulto.setForeground(Color.BLACK);
+            cmbSucursales.setEnabled(true);
         }
     }//GEN-LAST:event_chkSinLimiteItemStateChanged
 
@@ -1293,6 +1359,7 @@ public class DetalleProductoGUI extends JDialog {
         this.calcularPVP();
         this.calcularIVANeto();
         this.calcularPrecioLista();
+        this.calcularPrecioBonificado(new BigDecimal(txtPrecioLista.getValue().toString()));
     }//GEN-LAST:event_txtPrecioListaActionPerformed
 
     private void txtPrecioListaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioListaFocusLost
@@ -1304,6 +1371,7 @@ public class DetalleProductoGUI extends JDialog {
         this.calcularPVP();
         this.calcularIVANeto();
         this.calcularPrecioLista();
+        this.calcularPrecioBonificado(new BigDecimal(txtPrecioLista.getValue().toString()));
     }//GEN-LAST:event_txtPrecioListaFocusLost
 
     private void txtPrecioListaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioListaFocusGained
@@ -1423,22 +1491,13 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_btnBuscarProveedorActionPerformed
 
     private void rbPrivadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbPrivadoActionPerformed
-        if (rbPrivado.isSelected() && chkDestacado.isSelected()) {
+        if (rbPrivado.isSelected() && chkOferta.isSelected()) {
             rbPublico.setSelected(true);
             JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_producto_privado_no_destacado"),
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_producto_privado_no_en_oferta"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_rbPrivadoActionPerformed
-
-    private void chkDestacadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkDestacadoActionPerformed
-        if (rbPrivado.isSelected() && chkDestacado.isSelected()) {
-            chkDestacado.setSelected(false);
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_producto_privado_no_destacado"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_chkDestacadoActionPerformed
 
     private void cmbSucursalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbSucursalesActionPerformed
         BigDecimal cantidad = cantidadEnSucursal.get(((Sucursal) cmbSucursales.getSelectedItem()).getIdSucursal());
@@ -1455,6 +1514,42 @@ public class DetalleProductoGUI extends JDialog {
         }
     }//GEN-LAST:event_txtCantidadKeyReleased
 
+    private void chkOfertaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkOfertaItemStateChanged
+        if (chkOferta.isSelected()) {
+            txtPorcentajeOferta.setEnabled(true);
+            this.calcularPrecioBonificado(txtPrecioLista.getValue() != null ? new BigDecimal(txtPrecioLista.getValue().toString()) : BigDecimal.ZERO);
+        } else {
+            txtPorcentajeOferta.setEnabled(false);
+        }
+    }//GEN-LAST:event_chkOfertaItemStateChanged
+
+    private void txtPorcentajeOfertaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPorcentajeOfertaFocusGained
+        SwingUtilities.invokeLater(() -> {
+            txtPorcentajeOferta.selectAll();
+        });
+    }//GEN-LAST:event_txtPorcentajeOfertaFocusGained
+
+    private void txtPorcentajeOfertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPorcentajeOfertaActionPerformed
+        this.calcularPrecioBonificado(new BigDecimal(txtPrecioLista.getValue().toString()));
+    }//GEN-LAST:event_txtPorcentajeOfertaActionPerformed
+
+    private void txtPorcentajeOfertaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPorcentajeOfertaFocusLost
+        try {
+            txtPorcentajeOferta.commitEdit();
+        } catch (ParseException ex) {
+        }
+        this.calcularPrecioBonificado(new BigDecimal(txtPrecioLista.getValue().toString()));
+    }//GEN-LAST:event_txtPorcentajeOfertaFocusLost
+
+    private void chkOfertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkOfertaActionPerformed
+        if (rbPrivado.isSelected() && chkOferta.isSelected()) {
+            chkOferta.setSelected(false);
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_producto_privado_no_en_oferta"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_chkOfertaActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgVisibilidad;
     private javax.swing.JButton btnBuscarProveedor;
@@ -1462,16 +1557,16 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JButton btn_EliminarImagen;
     private javax.swing.JButton btn_ExaminarArchivos;
     private javax.swing.JButton btn_NuevoProveedor;
-    private javax.swing.JCheckBox chkDestacado;
+    private javax.swing.JCheckBox chkOferta;
     private javax.swing.JCheckBox chkSinLimite;
     private javax.swing.JComboBox cmbIVAPorcentaje;
     private javax.swing.JComboBox<Sucursal> cmbSucursales;
     private javax.swing.JComboBox cmb_Medida;
     private javax.swing.JComboBox cmb_Rubro;
     private com.toedter.calendar.JDateChooser dc_Vencimiento;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblAspectRatio;
-    private javax.swing.JLabel lblDestacado;
     private javax.swing.JLabel lblPublico;
     private javax.swing.JLabel lblSinLimite;
     private javax.swing.JLabel lblSucursal;
@@ -1515,6 +1610,8 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JFormattedTextField txtGananciaPorcentaje;
     private javax.swing.JFormattedTextField txtIVANeto;
     private javax.swing.JFormattedTextField txtPVP;
+    private javax.swing.JFormattedTextField txtPorcentajeOferta;
+    private javax.swing.JFormattedTextField txtPrecioBonificado;
     private javax.swing.JFormattedTextField txtPrecioCosto;
     private javax.swing.JFormattedTextField txtPrecioLista;
     private javax.swing.JTextField txtProveedor;

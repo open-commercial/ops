@@ -229,7 +229,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         encabezados[3] = "Unidad";
         encabezados[4] = "Cantidad";
         encabezados[5] = "P. Unitario";
-        encabezados[6] = "% Descuento";
+        encabezados[6] = "% Bonificacion";
         encabezados[7] = "Importe";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultado.setModel(modeloTablaResultados);
@@ -266,7 +266,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             for (int i = 0; i < renglones.size(); i++) {
                 RenglonFactura rf;
                 if (renglones.get(i).getIdProductoItem() == renglon.getIdProductoItem()) {
-                    rf = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
+                    rf = RestClient.getRestTemplate().getForObject("/facturas/renglon-venta?"
                             + "idProducto=" + renglones.get(i).getIdProductoItem()
                             + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                             + "&movimiento=" + Movimiento.VENTA
@@ -402,13 +402,12 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private void buscarProductoPorCodigo() {
         try {
             Producto producto = RestClient.getRestTemplate().getForObject("/productos/busqueda?"
-                    + "idSucursal=" + SucursalActiva.getInstance().getSucursal().getIdSucursal()
-                    + "&codigo=" + txt_CodigoProducto.getText().trim(), Producto.class);
+                    + "codigo=" + txt_CodigoProducto.getText().trim(), Producto.class);
             if (producto == null) {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                         .getString("mensaje_producto_no_encontrado"), "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                RenglonFactura renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
+                RenglonFactura renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon-venta?"
                         + "idProducto=" + producto.getIdProducto()
                         + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                         + "&movimiento=" + Movimiento.VENTA
@@ -580,14 +579,14 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         }
     }
 
-    private void recargarRenglonesSegunTipoDeFactura() {
+    private void recargarRenglones() {
         try {            
             List<RenglonFactura> resguardoRenglones = renglones;
             renglones = new ArrayList<>();
             resguardoRenglones.stream().map(renglonFactura -> {
                 Producto producto = RestClient.getRestTemplate()
                         .getForObject("/productos/" + renglonFactura.getIdProductoItem(), Producto.class);
-                RenglonFactura renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
+                RenglonFactura renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon-venta?"
                         + "idProducto=" + producto.getIdProducto()
                         + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                         + "&movimiento=" + Movimiento.VENTA
@@ -1444,7 +1443,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         //para evitar que pase null cuando esta recargando el comboBox
         if (cmb_TipoComprobante.getSelectedItem() != null) {            
             this.tipoDeComprobante = (TipoDeComprobante) cmb_TipoComprobante.getSelectedItem();
-            this.recargarRenglonesSegunTipoDeFactura();
+            this.recargarRenglones();
             if (cmb_TipoComprobante.getSelectedItem().equals(TipoDeComprobante.PEDIDO)) {
                 this.txt_Observaciones.setText("Los precios se encuentran sujetos a modificaciones.");
             } else {
@@ -1682,6 +1681,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             gui_DetalleCliente.setVisible(true);
             try {
                 this.cargarCliente(RestClient.getRestTemplate().getForObject("/clientes/" + this.cliente.getId_Cliente(), Cliente.class));
+                this.recargarRenglones();
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 this.dispose();
