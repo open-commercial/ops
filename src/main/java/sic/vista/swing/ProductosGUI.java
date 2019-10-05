@@ -281,51 +281,62 @@ public class ProductosGUI extends JInternalFrame {
     }
 
     private void exportar() {
-        String uriReporte = "/productos/reporte/criteria?"
-                + "&idSucursal=" + SucursalActiva.getInstance().getSucursal().getIdSucursal();
+        BusquedaProductoCriteria criteria = BusquedaProductoCriteria.builder().build();
         if (chkCodigoODescripcion.isSelected()) {
-            uriReporte += "&codigo=" + txtCodigoODescripcion.getText().trim();
-            uriReporte += "&descripcion=" + txtCodigoODescripcion.getText().trim();
+            criteria.setCodigo(txtCodigoODescripcion.getText().trim());
+            criteria.setDescripcion(txtCodigoODescripcion.getText().trim());
         }
         if (chk_Rubro.isSelected()) {
-            uriReporte += "&idRubro=" + this.getIdRubroSeleccionado();
+            criteria.setIdRubro(this.getIdRubroSeleccionado());
         }
         if (chk_Proveedor.isSelected()) {
-            uriReporte += "&idProveedor=" + this.getIdProveedorSeleccionado();
+            criteria.setIdProveedor(this.getIdProveedorSeleccionado());
         }
         if (chk_Disponibilidad.isSelected()) {
             if (rb_Faltantes.isSelected()) {
-                uriReporte += "&soloFantantes=true";
+                criteria.setListarSoloFaltantes(true);
             }
             if (rbEnStock.isSelected()) {
-                uriReporte += "&soloEnStock=true";
+                criteria.setListarSoloEnStock(true);
             }
         }
         if (chk_visibilidad.isSelected()) {
             if (rb_publico.isSelected()) {
-                uriReporte += "&publicos=true";
+                criteria.setPublico(true);
             } else if (rb_privado.isSelected()) {
-                uriReporte += "&publicos=false";                        
+                criteria.setPublico(false);
             }
+        }
+        if (chkOfertas.isSelected()) {
+            criteria.setOferta(true);
         }
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
-            case 0: uriReporte += "&ordenarPor=descripcion"; break;
-            case 1: uriReporte += "&ordenarPor=codigo"; break;
-            case 2: uriReporte += "&ordenarPor=cantidad"; break;
-            case 3: uriReporte += "&ordenarPor=precioCosto"; break;
-            case 4: uriReporte += "&ordenarPor=gananciaPorcentaje"; break;
-            case 5: uriReporte += "&ordenarPor=precioLista"; break;
-            case 6: uriReporte += "&ordenarPor=fechaAlta"; break;
-            case 7: uriReporte += "&ordenarPor=fechaUltimaModificacion"; break;
+            case 0: 
+                criteria.setOrdenarPor("descripcion");break;
+            case 1:
+                criteria.setOrdenarPor("codigo"); break;
+            case 2: 
+                criteria.setOrdenarPor("cantidad"); break;
+            case 3: 
+                criteria.setOrdenarPor("precioCosto");break;
+            case 4: 
+                criteria.setOrdenarPor("gananciaPorcentaje");break;
+            case 5: 
+                criteria.setOrdenarPor("precioLista");break;
+            case 6:
+                criteria.setOrdenarPor("fechaAlta");break;
+            case 7:
+                criteria.setOrdenarPor("fechaUltimaModificacion");break;
         }
         int seleccionDireccion = cmbSentido.getSelectedIndex();
         switch (seleccionDireccion) {
-            case 0: uriReporte += "&sentido=ASC"; break;
-            case 1: uriReporte += "&sentido=DESC"; break;
+            case 0: 
+                criteria.setSentido("ASC");break;
+            case 1: 
+                criteria.setSentido("DESC");break;
         }
-        ExportGUI exportGUI = new ExportGUI(uriReporte + "&formato=xlsx", "ListaPrecios.xlsx",
-                uriReporte + "&formato=pdf", "ListaPrecios.pdf");
+        ExportGUI exportGUI = new ExportGUI(criteria);
         exportGUI.setModal(true);
         exportGUI.setLocationRelativeTo(this);
         exportGUI.setVisible(true);
@@ -359,7 +370,7 @@ public class ProductosGUI extends JInternalFrame {
                 criteria.setPublico(false);
             }
         }
-        if (chkDestacados.isSelected()) {
+        if (chkOfertas.isSelected()) {
             criteria.setOferta(true);
         }
         int seleccionOrden = cmbOrden.getSelectedIndex();
@@ -457,7 +468,7 @@ public class ProductosGUI extends JInternalFrame {
         rb_privado = new javax.swing.JRadioButton();
         txtProveedor = new javax.swing.JTextField();
         btnBuscarProveedor = new javax.swing.JButton();
-        chkDestacados = new javax.swing.JCheckBox();
+        chkOfertas = new javax.swing.JCheckBox();
         txtCodigoODescripcion = new javax.swing.JTextField();
         panelResultados = new javax.swing.JPanel();
         sp_Resultados = new javax.swing.JScrollPane();
@@ -573,7 +584,7 @@ public class ProductosGUI extends JInternalFrame {
             }
         });
 
-        chkDestacados.setText("Destacados");
+        chkOfertas.setText("Ofertas");
 
         txtCodigoODescripcion.setEnabled(false);
         txtCodigoODescripcion.addActionListener(new java.awt.event.ActionListener() {
@@ -591,7 +602,7 @@ public class ProductosGUI extends JInternalFrame {
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
                         .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(chkDestacados)
+                            .addComponent(chkOfertas)
                             .addComponent(chk_Proveedor)
                             .addComponent(chk_Rubro)
                             .addComponent(chkCodigoODescripcion))
@@ -621,7 +632,7 @@ public class ProductosGUI extends JInternalFrame {
                         .addContainerGap())))
         );
 
-        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chkCodigoODescripcion, chkDestacados, chk_Proveedor, chk_Rubro});
+        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chkCodigoODescripcion, chkOfertas, chk_Proveedor, chk_Rubro});
 
         panelFiltrosLayout.setVerticalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -645,7 +656,7 @@ public class ProductosGUI extends JInternalFrame {
                     .addComponent(rb_publico))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(chkDestacados)
+                    .addComponent(chkOfertas)
                     .addComponent(rb_privado))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
@@ -987,7 +998,7 @@ public class ProductosGUI extends JInternalFrame {
     private javax.swing.JButton btn_Modificar;
     private javax.swing.JButton btn_Nuevo;
     private javax.swing.JCheckBox chkCodigoODescripcion;
-    private javax.swing.JCheckBox chkDestacados;
+    private javax.swing.JCheckBox chkOfertas;
     private javax.swing.JCheckBox chk_Disponibilidad;
     private javax.swing.JCheckBox chk_Proveedor;
     private javax.swing.JCheckBox chk_Rubro;
