@@ -84,7 +84,7 @@ public class ProductosGUI extends JInternalFrame {
         //nombres de columnas
         String[] encabezados = new String[25];
         encabezados[0] = "Público";
-        encabezados[1] = "Destacado";
+        encabezados[1] = "Oferta";
         encabezados[2] = "Codigo";
         encabezados[3] = "Descripcion";
         encabezados[4] = "Stock";
@@ -143,11 +143,11 @@ public class ProductosGUI extends JInternalFrame {
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         //tamanios de columnas
-        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(70);
-        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(75);
+        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(60);
+        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(60);
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(150);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(400);
-        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(110);
+        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(80);
         tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(115);
         tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(90);
         tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(80);
@@ -755,7 +755,7 @@ public class ProductosGUI extends JInternalFrame {
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
 
-        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descripción", "Código", "Cantidad", "Precio Costo", "% Ganancia", "Precio Lista", "Fecha Alta", "Fecha U. Modificación" }));
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descripción", "Código", "Stock", "Precio Costo", "% Ganancia", "Precio Lista", "Fecha Alta", "Fecha U. Modificación" }));
         cmbOrden.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbOrdenItemStateChanged(evt);

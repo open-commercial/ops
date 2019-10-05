@@ -396,6 +396,7 @@ public class DetalleProductoGUI extends JDialog {
 
         txtPorcentajeOferta.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
         txtPorcentajeOferta.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtPorcentajeOferta.setText("0");
         txtPorcentajeOferta.setEnabled(false);
         txtPorcentajeOferta.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -414,6 +415,7 @@ public class DetalleProductoGUI extends JDialog {
         txtPrecioBonificado.setEditable(false);
         txtPrecioBonificado.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
         txtPrecioBonificado.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtPrecioBonificado.setText("0");
         txtPrecioBonificado.setFocusable(false);
 
         javax.swing.GroupLayout panelPreciosLayout = new javax.swing.GroupLayout(panelPrecios);
@@ -925,7 +927,10 @@ public class DetalleProductoGUI extends JDialog {
             txtPrecioBonificado.setValue(productoParaModificar.getPrecioListaBonificado() != null 
                     ? productoParaModificar.getPrecioListaBonificado() : BigDecimal.ZERO);
             this.calcularPrecioBonificado(productoParaModificar.getPrecioLista());
-        }          
+        } else {
+            txtPorcentajeOferta.setValue(BigDecimal.ZERO);
+            txtPrecioBonificado.setValue(BigDecimal.ZERO);
+        }         
         if (productoParaModificar.getUrlImagen() == null || "".equals(productoParaModificar.getUrlImagen())) {
             lbl_imagen.setText("SIN IMAGEN");
             imagenProducto = null;
@@ -1491,6 +1496,8 @@ public class DetalleProductoGUI extends JDialog {
             this.calcularPrecioBonificado(txtPrecioLista.getValue() != null ? new BigDecimal(txtPrecioLista.getValue().toString()) : BigDecimal.ZERO);
         } else {
             txtPorcentajeOferta.setEnabled(false);
+            txtPorcentajeOferta.setValue(BigDecimal.ZERO);
+            txtPrecioBonificado.setValue(BigDecimal.ZERO);
         }
     }//GEN-LAST:event_chkOfertaItemStateChanged
 
