@@ -293,7 +293,7 @@ public class BuscarProductosGUI extends JDialog {
         encabezados[0] = "Codigo";
         encabezados[1] = "Descripción";
         if (busquedaParaCompraOVenta) {
-            encabezados[2] = "Cant. Disponible";
+            encabezados[2] = "Stock";
             encabezados[3] = "Otras Sucursales";
             encabezados[4] = "Cant. x Bulto";
             encabezados[5] = "Unidad";
