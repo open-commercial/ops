@@ -929,6 +929,7 @@ public class DetalleProductoGUI extends JDialog {
             this.calcularPrecioBonificado(productoParaModificar.getPrecioLista());
         } else {
             txtPorcentajeOferta.setValue(BigDecimal.ZERO);
+            txtPrecioBonificado.setEnabled(false);
             txtPrecioBonificado.setValue(BigDecimal.ZERO);
         }         
         if (productoParaModificar.getUrlImagen() == null || "".equals(productoParaModificar.getUrlImagen())) {
@@ -965,6 +966,7 @@ public class DetalleProductoGUI extends JDialog {
         txtPrecioLista.setValue(BigDecimal.ZERO);
         rbPrivado.setSelected(true);
         txtPorcentajeOferta.setValue(BigDecimal.ZERO);
+        txtPrecioBonificado.setEnabled(false);
     }
     
     private void cargarMedidas() {
@@ -1493,10 +1495,12 @@ public class DetalleProductoGUI extends JDialog {
     private void chkOfertaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkOfertaItemStateChanged
         if (chkOferta.isSelected()) {
             txtPorcentajeOferta.setEnabled(true);
+            txtPrecioBonificado.setEnabled(true);
             this.calcularPrecioBonificado(txtPrecioLista.getValue() != null ? new BigDecimal(txtPrecioLista.getValue().toString()) : BigDecimal.ZERO);
         } else {
             txtPorcentajeOferta.setEnabled(false);
             txtPorcentajeOferta.setValue(BigDecimal.ZERO);
+            txtPrecioBonificado.setEnabled(false);
             txtPrecioBonificado.setValue(BigDecimal.ZERO);
         }
     }//GEN-LAST:event_chkOfertaItemStateChanged
