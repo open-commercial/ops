@@ -459,7 +459,7 @@ public class BuscarProductosGUI extends JDialog {
         lbl_Cantidad.setText("Cantidad:");
 
         txtCantidad.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
-        txtCantidad.setFont(new java.awt.Font("DejaVu Sans", 0, 17)); // NOI18N
+        txtCantidad.setFont(new java.awt.Font("Dialog", 0, 17)); // NOI18N
         txtCantidad.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtCantidadFocusGained(evt);
@@ -484,6 +484,7 @@ public class BuscarProductosGUI extends JDialog {
         lblBonificacion.setText("Bonificacion (%):");
 
         txtBonificacion.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
+        txtBonificacion.setFont(new java.awt.Font("Dialog", 0, 17)); // NOI18N
         txtBonificacion.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtBonificacionFocusGained(evt);
@@ -508,14 +509,14 @@ public class BuscarProductosGUI extends JDialog {
             .addGroup(panelFondoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 778, Short.MAX_VALUE)
+                    .addComponent(sp_Resultados)
                     .addGroup(panelFondoLayout.createSequentialGroup()
                         .addComponent(txtCriteriaBusqueda)
                         .addGap(0, 0, 0)
                         .addComponent(btnBuscar))
                     .addGroup(panelFondoLayout.createSequentialGroup()
-                        .addComponent(spNotaProducto)
-                        .addGap(0, 0, 0)
+                        .addComponent(spNotaProducto, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelFondoLayout.createSequentialGroup()
                                 .addComponent(lbl_Cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -589,6 +590,7 @@ public class BuscarProductosGUI extends JDialog {
         this.prepararComponentes();
         lblBonificacion.setEnabled(false);
         txtBonificacion.setEnabled(false);
+        txtBonificacion.setText("");
         if (this.movimiento.equals(Movimiento.COMPRA)) {
             lblBonificacion.setEnabled(true);
             txtBonificacion.setEnabled(true);
