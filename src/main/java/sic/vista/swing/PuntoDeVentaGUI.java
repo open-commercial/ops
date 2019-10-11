@@ -47,6 +47,7 @@ import sic.modelo.Sucursal;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.Transportista;
 import sic.util.DecimalesRenderer;
+import sic.util.BonificacionRender;
 import sic.util.Utilidades;
 
 public class PuntoDeVentaGUI extends JInternalFrame {
@@ -248,6 +249,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         tbl_Resultado.getTableHeader().setResizingAllowed(true);
         //render para los tipos de datos
         tbl_Resultado.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
+        tbl_Resultado.getColumnModel().getColumn(6).setCellRenderer(new BonificacionRender());
         //tamanios de columnas
         tbl_Resultado.getColumnModel().getColumn(0).setPreferredWidth(25);
         tbl_Resultado.getColumnModel().getColumn(1).setPreferredWidth(170);
@@ -342,6 +344,9 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             fila[6] = renglon.getBonificacionPorcentaje();
             fila[7] = renglon.getImporte();
             modeloTablaResultados.addRow(fila);
+            if (renglon.getBonificacionPorcentaje().compareTo(BigDecimal.ZERO) > 0) {
+                lblOferta.setVisible(true);
+            }
         }
         tbl_Resultado.setModel(modeloTablaResultados);
     }
@@ -752,6 +757,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         txt_CodigoProducto = new javax.swing.JTextField();
         btn_BuscarPorCodigoProducto = new javax.swing.JButton();
         tbtn_marcarDesmarcar = new javax.swing.JToggleButton();
+        lblOferta = new javax.swing.JLabel();
         panelObservaciones = new javax.swing.JPanel();
         lbl_Observaciones = new javax.swing.JLabel();
         btn_AddComment = new javax.swing.JButton();
@@ -959,6 +965,9 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             }
         });
 
+        lblOferta.setForeground(java.awt.Color.green);
+        lblOferta.setText("Oferta");
+
         javax.swing.GroupLayout panelRenglonesLayout = new javax.swing.GroupLayout(panelRenglones);
         panelRenglones.setLayout(panelRenglonesLayout);
         panelRenglonesLayout.setHorizontalGroup(
@@ -974,6 +983,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 .addComponent(btn_BuscarProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(btn_QuitarProducto)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblOferta)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -988,7 +999,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                     .addComponent(btn_BuscarPorCodigoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btn_BuscarProductos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btn_QuitarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btn_QuitarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblOferta))
                     .addComponent(tbtn_marcarDesmarcar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sp_Resultado, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE))
@@ -1630,6 +1642,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             this.setColumnas();
             this.setMaximum(true);
             this.setTitle("Punto de Venta");
+            lblOferta.setVisible(false);
             cantidadMaximaRenglones = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/"
                     + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                     + "/cantidad-renglones", Integer.class); 
@@ -1713,6 +1726,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblBonificacion;
     private javax.swing.JLabel lblNombreCliente;
+    private javax.swing.JLabel lblOferta;
     private javax.swing.JLabel lblSeparadorDerecho;
     private javax.swing.JLabel lblSeparadorIzquierdo;
     private javax.swing.JLabel lblUbicacionCliente;

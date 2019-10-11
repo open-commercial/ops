@@ -225,14 +225,16 @@ public class BuscarProductosGUI extends JDialog {
     }
 
     private void actualizarEstadoSeleccion() {
-        if (txtCantidad.isEditValid() && txtBonificacion.isEditValid()) {
-            try {
+        try {
+            if (txtCantidad.isEditValid()) {
                 txtCantidad.commitEdit();
-                txtBonificacion.commitEdit();
-            } catch (ParseException ex) {
-                String msjError = "Se produjo un error analizando los campos.";
-                LOGGER.error(msjError + " - " + ex.getMessage());
             }
+            if (txtBonificacion.isEditValid()) {
+                txtBonificacion.commitEdit();
+            }
+        } catch (ParseException ex) {
+            String msjError = "Se produjo un error analizando los campos.";
+            LOGGER.error(msjError + " - " + ex.getMessage());
         }
     }
 
