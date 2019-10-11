@@ -344,9 +344,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             fila[6] = renglon.getBonificacionPorcentaje();
             fila[7] = renglon.getImporte();
             modeloTablaResultados.addRow(fila);
-            if (renglon.getBonificacionPorcentaje().compareTo(BigDecimal.ZERO) > 0) {
-                lblOferta.setVisible(true);
-            }
         }
         tbl_Resultado.setModel(modeloTablaResultados);
     }
@@ -693,8 +690,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     public List<RenglonPedido> calcularRenglonesPedido() {
         List<NuevoRenglonPedido> nuevosRenglonesPedido = new ArrayList();
         this.renglones.forEach(r -> nuevosRenglonesPedido.add(
-                new NuevoRenglonPedido(r.getIdProductoItem(), r.getCantidad(), cliente.getId_Cliente())));
-        return Arrays.asList(RestClient.getRestTemplate().postForObject("/pedidos/renglones",
+                new NuevoRenglonPedido(r.getIdProductoItem(), r.getCantidad())));
+        return Arrays.asList(RestClient.getRestTemplate().postForObject("/pedidos/renglones/clientes/" + cliente.getId_Cliente(),
                 nuevosRenglonesPedido, RenglonPedido[].class));
     }
 
@@ -758,6 +755,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         btn_BuscarPorCodigoProducto = new javax.swing.JButton();
         tbtn_marcarDesmarcar = new javax.swing.JToggleButton();
         lblOferta = new javax.swing.JLabel();
+        lblMarcaOferta = new javax.swing.JLabel();
         panelObservaciones = new javax.swing.JPanel();
         lbl_Observaciones = new javax.swing.JLabel();
         btn_AddComment = new javax.swing.JButton();
@@ -965,8 +963,9 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             }
         });
 
-        lblOferta.setForeground(java.awt.Color.green);
-        lblOferta.setText("Oferta");
+        lblOferta.setText("= Oferta");
+
+        lblMarcaOferta.setBackground(java.awt.Color.green);
 
         javax.swing.GroupLayout panelRenglonesLayout = new javax.swing.GroupLayout(panelRenglones);
         panelRenglones.setLayout(panelRenglonesLayout);
@@ -983,12 +982,15 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 .addComponent(btn_BuscarProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(btn_QuitarProducto)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblOferta)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblMarcaOferta)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblOferta))
         );
 
         panelRenglonesLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_BuscarProductos, btn_QuitarProducto});
+
+        panelRenglonesLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblMarcaOferta, lblOferta});
 
         panelRenglonesLayout.setVerticalGroup(
             panelRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -997,16 +999,18 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 .addGroup(panelRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(txt_CodigoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_BuscarPorCodigoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panelRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btn_BuscarProductos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btn_QuitarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblOferta))
-                    .addComponent(tbtn_marcarDesmarcar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblMarcaOferta)
+                    .addComponent(lblOferta)
+                    .addComponent(tbtn_marcarDesmarcar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_QuitarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_BuscarProductos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sp_Resultado, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE))
         );
 
         panelRenglonesLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_BuscarPorCodigoProducto, txt_CodigoProducto});
+
+        panelRenglonesLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblMarcaOferta, lblOferta});
 
         lbl_Observaciones.setText("Observaciones:");
 
@@ -1642,7 +1646,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             this.setColumnas();
             this.setMaximum(true);
             this.setTitle("Punto de Venta");
-            lblOferta.setVisible(false);
             cantidadMaximaRenglones = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/"
                     + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                     + "/cantidad-renglones", Integer.class); 
@@ -1725,6 +1728,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private com.toedter.calendar.JDateChooser dc_fechaVencimiento;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblBonificacion;
+    private javax.swing.JLabel lblMarcaOferta;
     private javax.swing.JLabel lblNombreCliente;
     private javax.swing.JLabel lblOferta;
     private javax.swing.JLabel lblSeparadorDerecho;

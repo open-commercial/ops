@@ -229,9 +229,10 @@
                       <Component id="btn_BuscarProductos" linkSize="14" min="-2" pref="173" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Component id="btn_QuitarProducto" linkSize="14" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="lblOferta" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="lblMarcaOferta" linkSize="26" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="lblOferta" linkSize="26" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -242,12 +243,11 @@
                       <Group type="103" groupAlignment="2" attributes="0">
                           <Component id="txt_CodigoProducto" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="btn_BuscarPorCodigoProducto" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" alignment="2" groupAlignment="3" attributes="0">
-                              <Component id="btn_BuscarProductos" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btn_QuitarProducto" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
-                              <Component id="lblOferta" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="lblMarcaOferta" linkSize="27" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblOferta" linkSize="27" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="tbtn_marcarDesmarcar" min="-2" pref="30" max="-2" attributes="0"/>
+                          <Component id="btn_QuitarProducto" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+                          <Component id="btn_BuscarProductos" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="sp_Resultado" pref="237" max="32767" attributes="0"/>
@@ -352,10 +352,14 @@
             </Component>
             <Component class="javax.swing.JLabel" name="lblOferta">
               <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                <Property name="text" type="java.lang.String" value="= Oferta"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblMarcaOferta">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="0" green="ff" id="green" palette="1" red="0" type="palette"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Oferta"/>
               </Properties>
             </Component>
           </SubComponents>

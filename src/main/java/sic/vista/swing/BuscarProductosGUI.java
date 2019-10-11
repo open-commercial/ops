@@ -169,7 +169,7 @@ public class BuscarProductosGUI extends JDialog {
             }
             if (esValido) {
                 try {
-                    if (movimiento.equals(Movimiento.VENTA)) {
+                    if (movimiento.equals(Movimiento.VENTA) || movimiento.equals(Movimiento.PEDIDO)) {
                         renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon-venta?"
                                 + "idProducto=" + productoSeleccionado.getIdProducto()
                                 + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
