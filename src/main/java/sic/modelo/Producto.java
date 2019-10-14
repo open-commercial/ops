@@ -3,7 +3,7 @@ package sic.modelo;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,7 +14,7 @@ public class Producto implements Serializable {
     private long idProducto;
     private String codigo;
     private String descripcion;
-    private List<CantidadEnSucursal> cantidadEnSucursales;
+    private Set<CantidadEnSucursal> cantidadEnSucursales;
     private BigDecimal cantidadTotalEnSucursales;
     private BigDecimal cantMinima;
     private BigDecimal bulto;
