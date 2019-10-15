@@ -231,18 +231,31 @@ public class CerrarPedidoGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {
+            this.cargarSucursalesConPuntoDeRetiro();
+            if (sucursales.isEmpty()) {
+                cmbSucursales.setEnabled(false);
+                rbRetiroEnSucursal.setEnabled(false);
+            } else {
+                rbRetiroEnSucursal.setSelected(true);
+            }
             if (this.cliente.getUbicacionEnvio() != null) {
                 lblDetalleUbicacionEnvio.setText(this.cliente.getUbicacionEnvio().toString());
+                if (sucursales.isEmpty()) {
+                    rbDireccionEnvio.setSelected(true);
+                }
             } else {
                 rbDireccionEnvio.setEnabled(false);
+                lblDetalleUbicacionEnvio.setEnabled(false);
             }
             if (this.cliente.getUbicacionFacturacion() != null) {
                 lblDetalleUbicacionFacturacion.setText(this.cliente.getUbicacionFacturacion().toString());
+                if (!rbDireccionEnvio.isSelected()) {
+                    rbDireccionFacturacion.setSelected(true);
+                }
             } else {
                 rbDireccionFacturacion.setEnabled(false);
+                lblDetalleUbicacionFacturacion.setEnabled(false);
             }
-            this.cargarSucursalesConPuntoDeRetiro();
-            rbRetiroEnSucursal.setSelected(true);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -255,40 +268,45 @@ public class CerrarPedidoGUI extends JDialog {
 
     private void btnCerrarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarPedidoActionPerformed
         try {
-            TipoDeEnvio tipoDeEnvio;
+            TipoDeEnvio tipoDeEnvio = null;
             Long idSucursalEnvio = null;
+            if (rbRetiroEnSucursal.isSelected()) {
+                tipoDeEnvio = TipoDeEnvio.RETIRO_EN_SUCURSAL;
+            }
             if (rbDireccionFacturacion.isSelected()) {
                 tipoDeEnvio = TipoDeEnvio.USAR_UBICACION_FACTURACION;
-            } else if (rbDireccionEnvio.isSelected()) {
+            }
+            if (rbDireccionEnvio.isSelected()) {
                 tipoDeEnvio = TipoDeEnvio.USAR_UBICACION_ENVIO;
-            } else {
-                tipoDeEnvio = TipoDeEnvio.RETIRO_EN_SUCURSAL;
                 idSucursalEnvio = sucursales.get(cmbSucursales.getSelectedIndex()).getIdSucursal();
             }
-            if (nuevoPedido != null) {
-                nuevoPedido.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
-                nuevoPedido.setIdUsuario(UsuarioActivo.getInstance().getUsuario().getId_Usuario());
-                nuevoPedido.setIdCliente(cliente.getId_Cliente());
-                nuevoPedido.setTipoDeEnvio(tipoDeEnvio);
-                nuevoPedido.setIdSucursalEnvio(idSucursalEnvio);
-                Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?", nuevoPedido, Pedido.class);
-                this.operacionExitosa = true;
-                int reply = JOptionPane.showConfirmDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
-                        "Aviso", JOptionPane.YES_NO_OPTION);
-                if (reply == JOptionPane.YES_OPTION) {
-                    this.lanzarReportePedido(p);
+            if (tipoDeEnvio != null) {
+                if (nuevoPedido != null) {
+                    nuevoPedido.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
+                    nuevoPedido.setIdUsuario(UsuarioActivo.getInstance().getUsuario().getId_Usuario());
+                    nuevoPedido.setIdCliente(cliente.getId_Cliente());
+                    nuevoPedido.setTipoDeEnvio(tipoDeEnvio);
+                    nuevoPedido.setIdSucursalEnvio(idSucursalEnvio);
+                    Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?", nuevoPedido, Pedido.class);
+                    this.operacionExitosa = true;
+                    int reply = JOptionPane.showConfirmDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                            "Aviso", JOptionPane.YES_NO_OPTION);
+                    if (reply == JOptionPane.YES_OPTION) {
+                        this.lanzarReportePedido(p);
+                    }
+                } else {
+                    RestClient.getRestTemplate().put("/pedidos?idSucursal="
+                            + SucursalActiva.getInstance().getSucursal().getIdSucursal()
+                            + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
+                            + "&idCliente=" + cliente.getId_Cliente()
+                            + "&tipoDeEnvio=" + tipoDeEnvio
+                            + "&idSucursalEnvio=" + (idSucursalEnvio != null ? idSucursalEnvio : ""), pedido);
+                    this.operacionExitosa = true;
+                    JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_pedido_actualizado"),
+                            "Aviso", JOptionPane.INFORMATION_MESSAGE);
                 }
-            } else {
-                RestClient.getRestTemplate().put("/pedidos?idSucursal="
-                        + SucursalActiva.getInstance().getSucursal().getIdSucursal()
-                        + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                        + "&idCliente=" + cliente.getId_Cliente()
-                        + "&tipoDeEnvio=" + tipoDeEnvio
-                        + "&idSucursalEnvio=" + (idSucursalEnvio != null ? idSucursalEnvio : ""), pedido);
-                this.operacionExitosa = true;
-                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_pedido_actualizado"),
-                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                this.dispose();
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -298,7 +316,6 @@ public class CerrarPedidoGUI extends JDialog {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-        this.dispose();
     }//GEN-LAST:event_btnCerrarPedidoActionPerformed
 
     private void rbDireccionFacturacionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbDireccionFacturacionItemStateChanged
