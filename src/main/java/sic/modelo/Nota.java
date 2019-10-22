@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -29,7 +29,7 @@ public class Nota implements Serializable {
     private long nroNota;
     private boolean eliminada;
     private TipoDeComprobante tipoComprobante;
-    private Date fecha; 
+    private LocalDateTime fecha; 
     private Long idEmpresa;
     private String nombreEmpresa;    
     private Long idUsuario;
@@ -49,7 +49,7 @@ public class Nota implements Serializable {
     private BigDecimal iva105Neto;
     private BigDecimal total;
     private long cae;
-    private Date vencimientoCae;
+    private LocalDateTime vencimientoCae;
     private long numSerieAfip;
     private long numNotaAfip;
 
@@ -57,11 +57,11 @@ public class Nota implements Serializable {
     }
 
     public Nota(long idNota, long serie, long nroNota, boolean eliminada,
-            TipoDeComprobante tipoDeComprobante, Date fecha, long idEmpresa, String nombreEmpresa, 
+            TipoDeComprobante tipoDeComprobante, LocalDateTime fecha, long idEmpresa, String nombreEmpresa, 
             long idUsuario, String nombreUsuario, long idCliente, String nombreFiscalCliente,
             long idProveedor, String razonSocialProveedor, long idFacturaVenta, long idFacturaCompra, 
             String motivo, BigDecimal subTotalBruto, BigDecimal iva21Neto, BigDecimal iva105Neto, 
-            BigDecimal total, long cae, Date vencimientoCae, long numSerieAfip, long numNotaAfip) {
+            BigDecimal total, long cae, LocalDateTime vencimientoCae, long numSerieAfip, long numNotaAfip) {
 
         this.idNota = idNota;
         this.serie = serie;

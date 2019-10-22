@@ -29,7 +29,6 @@ import sic.modelo.NuevaNotaCreditoDeFactura;
 import sic.modelo.RenglonFactura;
 import sic.util.DecimalesRenderer;
 import sic.util.FormatosFechaHora;
-import sic.util.FormatterFechaHora;
 import sic.util.FormatterNumero;
 
 public class SeleccionDeProductosGUI extends JDialog {
@@ -257,13 +256,14 @@ public class SeleccionDeProductosGUI extends JDialog {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cargarRenglonesAlTable();
         if (factura instanceof FacturaVenta) {
+            FormatosFechaHora.formatoFecha(factura.getFecha(), FormatosFechaHora.FORMATO_FECHAHORA_HISPANO);
             this.setTitle(factura.getTipoComprobante() + " Nro: " + factura.getNumSerie() + " - " + factura.getNumFactura()
                     + " del Cliente: " + ((FacturaVenta) factura).getNombreFiscalCliente()
-                    + " con Fecha: " + (new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO)).format(factura.getFecha()));
+                    + " con Fecha: " + FormatosFechaHora.formatoFecha(factura.getFecha(), FormatosFechaHora.FORMATO_FECHA_HISPANO));
         } else if (factura instanceof FacturaCompra) {
             this.setTitle(factura.getTipoComprobante() + " Nro: " + factura.getNumSerie() + " - " + factura.getNumFactura()
                     + " del Proveedor: " + ((FacturaCompra) factura).getRazonSocialProveedor()
-                    + " con Fecha: " + (new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO)).format(factura.getFecha()));
+                    + " con Fecha: " + FormatosFechaHora.formatoFecha(factura.getFecha(), FormatosFechaHora.FORMATO_FECHA_HISPANO));
         }
     }//GEN-LAST:event_formWindowOpened
 

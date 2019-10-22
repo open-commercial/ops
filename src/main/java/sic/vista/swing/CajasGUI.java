@@ -5,6 +5,8 @@ import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -75,8 +77,8 @@ public class CajasGUI extends JInternalFrame {
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaCajas.getColumnCount()];
         tipos[0] = String.class;
-        tipos[1] = Date.class;
-        tipos[2] = Date.class;
+        tipos[1] = LocalDateTime.class;
+        tipos[2] = LocalDateTime.class;
         tipos[3] = String.class;
         tipos[4] = String.class;
         tipos[5] = BigDecimal.class;
@@ -105,8 +107,10 @@ public class CajasGUI extends JInternalFrame {
         BusquedaCajaCriteria criteria = BusquedaCajaCriteria.builder().build();
         criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
         if (chk_Fecha.isSelected()) {
-            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? dc_FechaDesde.getDate() : null);
-            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? dc_FechaHasta.getDate() : null);
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(),
+                    ZoneId.systemDefault()) : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(),
+                    ZoneId.systemDefault()) : null);
         }
         if (chk_UsuarioApertura.isSelected() && usuarioSeleccionadoApertura != null) criteria.setIdUsuarioApertura(usuarioSeleccionadoApertura.getId_Usuario());
         if (chk_UsuarioCierre.isSelected() && usuarioSeleccionadoCierre != null) criteria.setIdUsuarioCierre(usuarioSeleccionadoCierre.getId_Usuario());

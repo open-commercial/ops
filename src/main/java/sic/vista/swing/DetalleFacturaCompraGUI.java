@@ -9,6 +9,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -29,10 +32,8 @@ import sic.modelo.Proveedor;
 import sic.modelo.RenglonFactura;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.Transportista;
-import sic.modelo.UsuarioActivo;
 import sic.util.DecimalesRenderer;
 import sic.util.FormatosFechaHora;
-import sic.util.FormatterFechaHora;
 
 public class DetalleFacturaCompraGUI extends JInternalFrame {
 
@@ -43,7 +44,6 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     private final boolean operacionAlta;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private final FormatterFechaHora formatter = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO);
     private BigDecimal totalComprobante;    
     private BigDecimal iva105netoFactura;
     private BigDecimal iva21netoFactura;
@@ -173,11 +173,11 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
 
     private boolean guardarFactura() {
         FacturaCompra facturaCompra = new FacturaCompra();
-        facturaCompra.setFecha(dc_FechaFactura.getDate());
+        facturaCompra.setFecha(LocalDateTime.ofInstant(dc_FechaFactura.getDate().toInstant(), ZoneId.systemDefault()));
         facturaCompra.setTipoComprobante(tipoDeComprobante);
         facturaCompra.setNumSerie(Long.parseLong(txt_SerieFactura.getValue().toString()));
         facturaCompra.setNumFactura(Long.parseLong(txt_NumeroFactura.getValue().toString()));
-        facturaCompra.setFechaVencimiento(dc_FechaVencimiento.getDate());
+        facturaCompra.setFechaVencimiento(LocalDateTime.ofInstant(dc_FechaVencimiento.getDate().toInstant(), ZoneId.systemDefault()));
         facturaCompra.setRenglones(new ArrayList<>(renglones));
         facturaCompra.setSubTotal(new BigDecimal(txt_SubTotal.getValue().toString()));
         facturaCompra.setRecargoPorcentaje(BigDecimal.ZERO);
@@ -371,8 +371,10 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         cmb_TipoFactura.addItem(facturaParaMostrar.getTipoComprobante());
         txtProveedor.setText(facturaParaMostrar.getRazonSocialProveedor());        
         cmb_Transportista.addItem(facturaParaMostrar.getNombreTransportista());
-        dc_FechaFactura.setDate(facturaParaMostrar.getFecha());
-        dc_FechaVencimiento.setDate(facturaParaMostrar.getFechaVencimiento());
+        ZonedDateTime zdt = facturaParaMostrar.getFecha().atZone(ZoneId.systemDefault());
+        dc_FechaFactura.setDate(Date.from(zdt.toInstant()));
+        zdt = facturaParaMostrar.getFechaVencimiento().atZone(ZoneId.systemDefault());
+        dc_FechaVencimiento.setDate(Date.from(zdt.toInstant()));
         txta_Observaciones.setText(facturaParaMostrar.getObservaciones());
         txt_SubTotal.setValue(facturaParaMostrar.getSubTotal());
         txt_Descuento_Porcentaje.setValue(facturaParaMostrar.getDescuentoPorcentaje());
@@ -1149,10 +1151,10 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     }//GEN-LAST:event_txt_Recargo_PorcentajeActionPerformed
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
-        this.setColumnas();        
+        this.setColumnas();
         if (operacionAlta == false) {
             this.setTitle(facturaParaMostrar.getTipoComprobante() + " Nº " + facturaParaMostrar.getNumSerie() + " - " + facturaParaMostrar.getNumFactura()
-                    + " con fecha " + formatter.format(facturaParaMostrar.getFecha()) + " del Proveedor: " + facturaParaMostrar.getRazonSocialProveedor());
+                    + " con fecha " + FormatosFechaHora.formatoFecha(facturaParaMostrar.getFecha(), FormatosFechaHora.FORMATO_FECHAHORA_HISPANO) + " del Proveedor: " + facturaParaMostrar.getRazonSocialProveedor());
             this.cargarFactura();
             DecimalFormat df = new DecimalFormat("#.##");
             lblCantidadDeArticulos.setText("Cantidad de Articulos: " + df.format(this.facturaParaMostrar.getCantidadArticulos()));

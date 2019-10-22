@@ -2,7 +2,7 @@ package sic.modelo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,8 +11,8 @@ import lombok.EqualsAndHashCode;
 public class Caja implements Serializable {
 
     private long id_Caja;
-    private Date fechaApertura;
-    private Date fechaCierre;
+    private LocalDateTime fechaApertura;
+    private LocalDateTime fechaCierre;
     private Long idEmpresa;
     private String nombreEmpresa;
     private Long idUsuarioAbreCaja;

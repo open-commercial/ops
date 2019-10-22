@@ -1,7 +1,8 @@
 package sic.util;
 
 import java.awt.Component;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -19,9 +20,10 @@ public class FechasRenderer extends DefaultTableCellRenderer {
             boolean isSelected, boolean hasFocus, int row, int column) {
 
         JLabel cell = (JLabel) super.getTableCellRendererComponent(tabla, valor, isSelected, hasFocus, row, column);
-        if (valor instanceof Date) {
-            Date fecha = (Date) valor;
-            cell.setText((new FormatterFechaHora(this.formato)).format(fecha));
+        if (valor instanceof LocalDateTime) {
+            DateTimeFormatter formato = DateTimeFormatter.ofPattern(this.formato);
+            LocalDateTime fecha = (LocalDateTime) valor;
+            cell.setText(fecha.format(formato));
         }
         return cell;
     }

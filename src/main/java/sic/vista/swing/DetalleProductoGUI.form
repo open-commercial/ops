@@ -110,7 +110,7 @@
                           <Component id="panelPrecios" max="32767" attributes="3"/>
                           <Component id="panelCantidades" max="32767" attributes="1"/>
                       </Group>
-                      <EmptySpace pref="10" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -864,7 +864,7 @@
                               <Component id="lbl_FA" alignment="2" min="-2" max="-2" attributes="1"/>
                               <Component id="lbl_FechaAlta" alignment="2" min="-2" pref="23" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="8" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>

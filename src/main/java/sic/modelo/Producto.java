@@ -2,7 +2,7 @@ package sic.modelo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -28,13 +28,13 @@ public class Producto implements Serializable {
     private boolean ilimitado;    
     private boolean publico;
     private boolean destacado;
-    private Date fechaUltimaModificacion;    
+    private LocalDateTime fechaUltimaModificacion;    
     private String estanteria;    
     private String estante;        
     private String razonSocialProveedor;    
     private String nota;    
-    private Date fechaAlta;    
-    private Date fechaVencimiento;   
+    private LocalDateTime fechaAlta;    
+    private LocalDateTime fechaVencimiento;   
     private boolean eliminado;
     private String urlImagen;
 }

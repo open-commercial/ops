@@ -1,11 +1,10 @@
 package sic.modelo.criteria;
 
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -13,8 +12,8 @@ import java.util.Date;
 @Builder
 public class BusquedaGastoCriteria {
 
-  private Date fechaDesde;
-  private Date fechaHasta;
+  private LocalDateTime fechaDesde;
+  private LocalDateTime fechaHasta;
   private Long idEmpresa;
   private Long idUsuario;
   private Long idFormaDePago;

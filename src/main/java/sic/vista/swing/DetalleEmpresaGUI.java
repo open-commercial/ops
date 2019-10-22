@@ -4,6 +4,10 @@ import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -63,8 +67,9 @@ public class DetalleEmpresaGUI extends JDialog {
         txt_Lema.setText(empresaModificar.getLema());        
         cmbCategoriaIVA.setSelectedItem(empresaModificar.getCategoriaIVA());                    
         txtIdFiscal.setValue(empresaModificar.getIdFiscal());                            
-        txtIngresosBrutos.setValue(empresaModificar.getIngresosBrutos());        
-        dc_FechaInicioActividad.setDate(empresaModificar.getFechaInicioActividad());
+        txtIngresosBrutos.setValue(empresaModificar.getIngresosBrutos());    
+        ZonedDateTime zdt = empresaModificar.getFechaInicioActividad().atZone(ZoneId.systemDefault());
+        dc_FechaInicioActividad.setDate(Date.from(zdt.toInstant()));
         txt_Email.setText(empresaModificar.getEmail());
         txt_Telefono.setText(empresaModificar.getTelefono());
         if (empresaModificar.getUbicacion() != null) {
@@ -363,7 +368,7 @@ public class DetalleEmpresaGUI extends JDialog {
                 empresa.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
                 empresa.setIdFiscal((Long) txtIdFiscal.getValue());
                 empresa.setIngresosBrutos((Long) txtIngresosBrutos.getValue());
-                empresa.setFechaInicioActividad(dc_FechaInicioActividad.getDate());
+                empresa.setFechaInicioActividad(LocalDateTime.ofInstant(dc_FechaInicioActividad.getDate().toInstant(), ZoneId.systemDefault()));
                 empresa.setEmail(txt_Email.getText().trim());
                 empresa.setTelefono(txt_Telefono.getText().trim());    
                 if (this.ubicacion != null) {
@@ -385,7 +390,7 @@ public class DetalleEmpresaGUI extends JDialog {
                 empresaModificar.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
                 empresaModificar.setIdFiscal((Long) txtIdFiscal.getValue());
                 empresaModificar.setIngresosBrutos((Long) txtIngresosBrutos.getValue());
-                empresaModificar.setFechaInicioActividad(dc_FechaInicioActividad.getDate());
+                empresaModificar.setFechaInicioActividad(LocalDateTime.ofInstant(dc_FechaInicioActividad.getDate().toInstant(), ZoneId.systemDefault()));
                 empresaModificar.setEmail(txt_Email.getText().trim());
                 empresaModificar.setTelefono(txt_Telefono.getText().trim());
                 if (this.ubicacion != null) {

@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -71,8 +73,8 @@ public class NotasDebitoCompraGUI extends JInternalFrame {
         BusquedaNotaCriteria criteria = new BusquedaNotaCriteria();
         criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
         if (chk_Fecha.isSelected()) {
-            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? dc_FechaDesde.getDate() : null);
-            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? dc_FechaHasta.getDate() : null);
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault()) : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault()) : null);
         }
         if (chk_NumNota.isSelected()) {
             criteria.setNumNota(Long.valueOf(txt_NroNota.getText()));
@@ -115,7 +117,7 @@ public class NotasDebitoCompraGUI extends JInternalFrame {
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaNotas.getColumnCount()];
         tipos[0] = Object.class;
-        tipos[1] = Date.class;
+        tipos[1] = LocalDateTime.class;
         tipos[2] = TipoDeComprobante.class;
         tipos[3] = String.class;
         tipos[4] = String.class;
@@ -123,7 +125,7 @@ public class NotasDebitoCompraGUI extends JInternalFrame {
         tipos[6] = String.class;
         tipos[7] = BigDecimal.class;
         tipos[8] = String.class;
-        tipos[9] = Date.class;
+        tipos[9] = LocalDateTime.class;
         tipos[10] = String.class;
         tipos[11] = String.class;
         modeloTablaNotas.setClaseColumnas(tipos);

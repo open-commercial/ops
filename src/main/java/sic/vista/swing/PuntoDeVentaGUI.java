@@ -8,6 +8,8 @@ import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -144,7 +146,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         cal.set(Calendar.HOUR_OF_DAY, 23);
         cal.set(Calendar.MINUTE, 59);
         cal.set(Calendar.SECOND, 58);
-        factura.setFechaVencimiento(cal.getTime());
+        factura.setFechaVencimiento(LocalDateTime.now());
         factura.setRenglones(this.getRenglones());
         factura.setObservaciones(this.txt_Observaciones.getText().trim());      
         factura.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));  
@@ -630,7 +632,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         nuevoPedido.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
         nuevoPedido.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
         nuevoPedido.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
-        nuevoPedido.setFechaVencimiento(dc_fechaVencimiento.getDate());
+        nuevoPedido.setFechaVencimiento(LocalDateTime.ofInstant(dc_fechaVencimiento.getDate().toInstant(), ZoneId.systemDefault()));
         nuevoPedido.setObservaciones(txt_Observaciones.getText());
         nuevoPedido.setRenglones(this.calcularRenglonesPedido());
         nuevoPedido.setTotal(new BigDecimal(txt_Total.getValue().toString()));
