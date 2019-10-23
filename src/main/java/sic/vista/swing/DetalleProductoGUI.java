@@ -1,6 +1,5 @@
 package sic.vista.swing;
 
-import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.ItemEvent;
 import java.io.File;
@@ -83,6 +82,10 @@ public class DetalleProductoGUI extends JDialog {
         txtPrecioBonificado.setValue(precioDeLista
                 .multiply((new BigDecimal("100")).subtract(new BigDecimal(txtPorcentajeOferta.getValue().toString()))
                         .divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP)));
+    }
+    
+    private void calcularPorcentajeOferta(BigDecimal precioBonificado, BigDecimal precioDeLista) {
+        txtPorcentajeOferta.setValue((new BigDecimal("100")).subtract(precioBonificado.multiply(new BigDecimal("100")).divide(precioDeLista, 2, RoundingMode.HALF_UP)));
     }
 
     @SuppressWarnings("unchecked")
@@ -412,11 +415,23 @@ public class DetalleProductoGUI extends JDialog {
             }
         });
 
-        txtPrecioBonificado.setEditable(false);
         txtPrecioBonificado.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
         txtPrecioBonificado.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtPrecioBonificado.setText("0");
-        txtPrecioBonificado.setFocusable(false);
+        txtPrecioBonificado.setEnabled(false);
+        txtPrecioBonificado.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtPrecioBonificadoFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPrecioBonificadoFocusLost(evt);
+            }
+        });
+        txtPrecioBonificado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPrecioBonificadoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelPreciosLayout = new javax.swing.GroupLayout(panelPrecios);
         panelPrecios.setLayout(panelPreciosLayout);
@@ -1531,6 +1546,28 @@ public class DetalleProductoGUI extends JDialog {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_chkOfertaActionPerformed
+
+    private void txtPrecioBonificadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioBonificadoActionPerformed
+        try {
+            txtPrecioBonificado.commitEdit();
+        } catch (ParseException ex) {
+        }
+        this.calcularPorcentajeOferta(new BigDecimal(txtPrecioBonificado.getValue().toString()), new BigDecimal(txtPrecioLista.getValue().toString()));
+    }//GEN-LAST:event_txtPrecioBonificadoActionPerformed
+
+    private void txtPrecioBonificadoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioBonificadoFocusLost
+        try {
+            txtPrecioBonificado.commitEdit();
+        } catch (ParseException ex) {
+        }
+        this.calcularPorcentajeOferta(new BigDecimal(txtPrecioBonificado.getValue().toString()), new BigDecimal(txtPrecioLista.getValue().toString()));
+    }//GEN-LAST:event_txtPrecioBonificadoFocusLost
+
+    private void txtPrecioBonificadoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioBonificadoFocusGained
+        SwingUtilities.invokeLater(() -> {
+            txtPrecioBonificado.selectAll();
+        });
+    }//GEN-LAST:event_txtPrecioBonificadoFocusGained
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgVisibilidad;
