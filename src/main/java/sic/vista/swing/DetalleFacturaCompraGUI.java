@@ -118,7 +118,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
                         "Ya esta cargado el producto \"" + gui_buscarProducto.getProductoSeleccionado().getDescripcion()
                         + "\" en los renglones de la factura.", "Error", JOptionPane.ERROR_MESSAGE);
             } else if (gui_buscarProducto.debeCargarRenglon()) {
-                this.agregarRenglon(gui_buscarProducto.getRenglon());
+                this.agregarRenglon(gui_buscarProducto.getRenglonFactura());
             }
         }
     }

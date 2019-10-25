@@ -10,48 +10,37 @@ import java.math.RoundingMode;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.NuevoPedido;
-import sic.modelo.RenglonFactura;
 import sic.modelo.RenglonPedido;
 import sic.modelo.UsuarioActivo;
 import sic.modelo.EstadoPedido;
-import sic.modelo.FacturaVenta;
 import sic.modelo.FormaDePago;
-import sic.modelo.Movimiento;
 import sic.modelo.NuevoRenglonPedido;
 import sic.modelo.Pedido;
 import sic.modelo.Producto;
 import sic.modelo.Rol;
-import sic.modelo.TipoDeComprobante;
 import sic.modelo.Transportista;
 import sic.util.DecimalesRenderer;
 import sic.util.Utilidades;
 
-public class PuntoDeVentaGUI extends JInternalFrame {
+public class NuevoPedidoGUI extends JInternalFrame {
 
-    private TipoDeComprobante tipoDeComprobante;
     private Cliente cliente;
-    private List<RenglonFactura> renglones = new ArrayList<>();
+    private List<RenglonPedido> renglones = new ArrayList<>();
     private ModeloTabla modeloTablaResultados = new ModeloTabla();
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -60,22 +49,17 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private NuevoPedido nuevoPedido;
     private boolean modificarPedido;
     private int cantidadMaximaRenglones = 0;
-    private BigDecimal subTotalBruto;
-    private BigDecimal iva_105_netoFactura;
-    private BigDecimal iva_21_netoFactura;    
+    private BigDecimal subTotalBruto;  
     private BigDecimal totalComprobante;    
     private final List<Rol> rolesDeUsuario = UsuarioActivo.getInstance().getUsuario().getRoles();
-    private final static BigDecimal IVA_21 = new BigDecimal("21");
-    private final static BigDecimal IVA_105 = new BigDecimal("10.5");
     private final static BigDecimal CIEN = new BigDecimal("100");
 
-    public PuntoDeVentaGUI() {
+    public NuevoPedidoGUI() {
         this.initComponents();        
         ImageIcon iconoNoMarcado = new ImageIcon(getClass().getResource("/sic/icons/chkNoMarcado_16x16.png"));
         this.tbtn_marcarDesmarcar.setIcon(iconoNoMarcado);        
         dc_fechaVencimiento.setDate(new Date());
         //listeners        
-        cmb_TipoComprobante.addKeyListener(keyHandler);
         btn_NuevoCliente.addKeyListener(keyHandler);
         btn_BuscarCliente.addKeyListener(keyHandler);
         btn_BuscarProductos.addKeyListener(keyHandler);
@@ -90,32 +74,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         dc_fechaVencimiento.addKeyListener(keyHandler);     
         btnModificarCliente.addKeyListener(keyHandler); 
     }   
-    
-    public void cargarPedidoParaFacturar() {
-        try {
-            this.cargarCliente(RestClient.getRestTemplate()
-                    .getForObject("/clientes/pedidos/" + pedido.getId_Pedido(), Cliente.class));
-            this.cargarTiposDeComprobantesDisponibles();            
-            this.tipoDeComprobante = (TipoDeComprobante) cmb_TipoComprobante.getSelectedItem();
-            this.renglones = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/facturas/renglones/pedidos/" + pedido.getId_Pedido()
-                            + "?tipoDeComprobante=" + this.tipoDeComprobante.name(),
-                            RenglonFactura[].class)));
-            EstadoRenglon[] marcaDeRenglonesDelPedido = new EstadoRenglon[renglones.size()];
-            for (int i = 0; i < renglones.size(); i++) {
-                marcaDeRenglonesDelPedido[i] = EstadoRenglon.DESMARCADO;
-            }
-            this.cargarRenglonesAlTable(marcaDeRenglonesDelPedido);
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
+   
     public void setPedido(Pedido pedido) {
         this.pedido = pedido;
     }
@@ -124,41 +83,12 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         return this.pedido;
     }
 
-    public TipoDeComprobante getTipoDeComprobante() {
-        return tipoDeComprobante;
-    }
-
-    public List<RenglonFactura> getRenglones() {
+    public List<RenglonPedido> getRenglones() {
         return renglones;
     }
 
     public BigDecimal getTotal() {
         return this.totalComprobante;
-    }
-
-    public FacturaVenta construirFactura() {
-        FacturaVenta factura = new FacturaVenta();        
-        factura.setTipoComprobante(this.tipoDeComprobante);
-        Calendar cal = new GregorianCalendar();
-        cal.setTime(this.dc_fechaVencimiento.getDate());
-        cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.MINUTE, 59);
-        cal.set(Calendar.SECOND, 58);
-        factura.setFechaVencimiento(cal.getTime());
-        factura.setRenglones(this.getRenglones());
-        factura.setObservaciones(this.txt_Observaciones.getText().trim());      
-        factura.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));  
-        factura.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
-        factura.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
-        factura.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
-        factura.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
-        factura.setSubTotalBruto(subTotalBruto);
-        factura.setIva105Neto(iva_105_netoFactura);
-        factura.setIva21Neto(iva_21_netoFactura);
-        factura.setTotal(new BigDecimal(txt_Total.getValue().toString()));                      
-        factura.setIdCliente(this.cliente.getId_Cliente());
-        factura.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
-        return factura;
     }
     
     public long getIdCliente() {
@@ -175,16 +105,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
     public boolean modificandoPedido() {
         return this.modificarPedido;
-    }
-    
-    private void cargarEstadoDeLosChkEnTabla(JTable tbl_Resultado, EstadoRenglon[] estadosDeLosRenglones) {
-        for (int i = 0; i < tbl_Resultado.getRowCount(); i++) {
-            if ((boolean) tbl_Resultado.getValueAt(i, 0)) {
-                estadosDeLosRenglones[i] = EstadoRenglon.MARCADO;
-            } else {
-                estadosDeLosRenglones[i] = EstadoRenglon.DESMARCADO;
-            }
-        }
     }
 
     private boolean existeClientePredeterminado() {
@@ -223,65 +143,57 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
     private void setColumnas() {
         //nombres de columnas
-        String[] encabezados = new String[8];
-        encabezados[0] = " ";
-        encabezados[1] = "Codigo";
-        encabezados[2] = "Descripcion";
-        encabezados[3] = "Unidad";
-        encabezados[4] = "Cantidad";
-        encabezados[5] = "P. Unitario";
-        encabezados[6] = "% Descuento";
-        encabezados[7] = "Importe";
+        String[] encabezados = new String[7];
+        encabezados[0] = "Codigo";
+        encabezados[1] = "Descripcion";
+        encabezados[2] = "Unidad";
+        encabezados[3] = "Cantidad";
+        encabezados[4] = "P. Unitario";
+        encabezados[5] = "% Descuento";
+        encabezados[6] = "Importe";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultado.setModel(modeloTablaResultados);
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
-        tipos[0] = Boolean.class;
+        tipos[0] = String.class;
         tipos[1] = String.class;
         tipos[2] = String.class;
-        tipos[3] = String.class;
+        tipos[3] = BigDecimal.class;
         tipos[4] = BigDecimal.class;
         tipos[5] = BigDecimal.class;
         tipos[6] = BigDecimal.class;
-        tipos[7] = BigDecimal.class;
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultado.getTableHeader().setReorderingAllowed(false);
         tbl_Resultado.getTableHeader().setResizingAllowed(true);
         //render para los tipos de datos
         tbl_Resultado.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         //tamanios de columnas
-        tbl_Resultado.getColumnModel().getColumn(0).setPreferredWidth(25);
-        tbl_Resultado.getColumnModel().getColumn(1).setPreferredWidth(170);
-        tbl_Resultado.getColumnModel().getColumn(2).setPreferredWidth(580);
+        tbl_Resultado.getColumnModel().getColumn(0).setPreferredWidth(170);
+        tbl_Resultado.getColumnModel().getColumn(1).setPreferredWidth(580);
+        tbl_Resultado.getColumnModel().getColumn(2).setPreferredWidth(120);
         tbl_Resultado.getColumnModel().getColumn(3).setPreferredWidth(120);
         tbl_Resultado.getColumnModel().getColumn(4).setPreferredWidth(120);
         tbl_Resultado.getColumnModel().getColumn(5).setPreferredWidth(120);
         tbl_Resultado.getColumnModel().getColumn(6).setPreferredWidth(120);
-        tbl_Resultado.getColumnModel().getColumn(7).setPreferredWidth(120);
     }
 
-    private void agregarRenglon(RenglonFactura renglon) {
+    private void agregarRenglon(NuevoRenglonPedido nuevoRenglonPedido) {
         try {
             boolean agregado = false;
-            //busca entre los renglones al producto, aumenta la cantidad y recalcula el descuento        
-            for (int i = 0; i < renglones.size(); i++) {
-                RenglonFactura rf;
-                if (renglones.get(i).getIdProductoItem() == renglon.getIdProductoItem()) {
-                    rf = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
-                            + "idProducto=" + renglones.get(i).getIdProductoItem()
-                            + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
-                            + "&movimiento=" + Movimiento.VENTA
-                            + "&cantidad=" + renglones.get(i).getCantidad().add(renglon.getCantidad())
-                            + "&descuentoPorcentaje=" + renglon.getDescuentoPorcentaje(),
-                            RenglonFactura.class);
-                    renglones.set(i, rf);
+            List<NuevoRenglonPedido> nuevosRenglonesPedido = new ArrayList();
+            this.renglones.forEach(r -> nuevosRenglonesPedido.add(
+                    new NuevoRenglonPedido(r.getIdProductoItem(), r.getCantidad(), r.getDescuentoPorcentaje())));
+            for (int i = 0; i < nuevosRenglonesPedido.size(); i++) {
+                if (nuevosRenglonesPedido.get(i).getIdProductoItem() == nuevoRenglonPedido.getIdProductoItem()) {
+                    nuevosRenglonesPedido.get(i).setCantidad(nuevosRenglonesPedido.get(i).getCantidad().add(nuevoRenglonPedido.getCantidad()));
                     agregado = true;
                 }
             }
-            //si no encuentra el producto entre los renglones, carga un nuevo renglon        
-            if (agregado == false) {
-                renglones.add(renglon);
+            if (!agregado) {
+                nuevosRenglonesPedido.add(nuevoRenglonPedido);
             }
+            this.renglones = Arrays.asList(RestClient.getRestTemplate().postForObject("/pedidos/renglones",
+                    nuevosRenglonesPedido, RenglonPedido[].class));
             //para que baje solo el scroll vertical
             Point p = new Point(0, tbl_Resultado.getHeight());
             sp_Resultado.getViewport().setViewPosition(p);
@@ -295,53 +207,22 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         }
     }
 
-    private void cargarRenglonesAlTable(EstadoRenglon[] estadosDeLosRenglones) {
+    private void cargarRenglonesAlTable() {
         modeloTablaResultados = new ModeloTabla();
         this.setColumnas();
-        int i = 0;
-        boolean corte;
-        for (RenglonFactura renglon : renglones) {
-            Object[] fila = new Object[8];
-            corte = false;
-            /*Dentro de este While, el case según el valor leido en el array de la enumeración,
-             (modelo tabla) asigna el valor correspondiente al checkbox del renglon.*/
-            while (corte == false) {
-                switch (estadosDeLosRenglones[i]) {
-                    case MARCADO: {
-                        fila[0] = true;
-                        corte = true;
-                        break;
-                    }
-                    case DESMARCADO: {
-                        fila[0] = false;
-                        corte = true;
-                        break;
-                    }
-                    /* En caso de que no sea un marcado o desmarcado, se considera que fue de un
-                     renglon eliminado, entonces la estructura while continua iterando.*/
-                    case ELIMINADO: {
-                        i++;
-                        break;
-                    }
-                    /* El caso por defecto, se da cuando el método es ejecutado
-                     desde otras partes que no sea eliminar, ya que la colección
-                     contendrá valores vacíos ''.*/
-                    default: {
-                        fila[0] = false;
-                        corte = true;
-                    }
-                }
-            }
-            i++;
-            fila[1] = renglon.getCodigoItem();
-            fila[2] = renglon.getDescripcionItem();
-            fila[3] = renglon.getMedidaItem();
-            fila[4] = renglon.getCantidad();
-            fila[5] = renglon.getPrecioUnitario();
-            fila[6] = renglon.getDescuentoPorcentaje();
-            fila[7] = renglon.getImporte();
+        renglones.stream().map(renglon -> {
+            Object[] fila = new Object[7];
+            fila[0] = renglon.getCodigoItem();
+            fila[1] = renglon.getDescripcionItem();
+            fila[2] = renglon.getMedidaItem();
+            fila[3] = renglon.getCantidad();
+            fila[4] = renglon.getPrecioUnitario();
+            fila[5] = renglon.getDescuentoPorcentaje();
+            fila[6] = renglon.getImporte();
+            return fila;
+        }).forEachOrdered(fila -> {
             modeloTablaResultados.addRow(fila);
-        }
+        });
         tbl_Resultado.setModel(modeloTablaResultados);
     }
 
@@ -361,34 +242,14 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
     private void buscarProductoConVentanaAuxiliar() {
         if (cantidadMaximaRenglones > renglones.size()) {
-            Movimiento movimiento = this.tipoDeComprobante.equals(TipoDeComprobante.PEDIDO) ? Movimiento.PEDIDO : Movimiento.VENTA;
             // revisar esto, es necesario para el movimiento como String y a su vez el movimiento?
-            BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglones, this.tipoDeComprobante, movimiento);
+            BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglones);
             buscarProductosGUI.setModal(true);
             buscarProductosGUI.setLocationRelativeTo(this);
             buscarProductosGUI.setVisible(true);
             if (buscarProductosGUI.debeCargarRenglon()) {
-                boolean renglonCargado = false;
-                for (RenglonFactura renglon : renglones) {
-                    if (renglon.getIdProductoItem() == buscarProductosGUI.getRenglonFactura().getIdProductoItem()) {
-                        renglonCargado = true;
-                    }
-                }
-                this.agregarRenglon(buscarProductosGUI.getRenglonFactura());
-                /*Si la tabla no contiene renglones, despues de agregar el renglon
-                 a la coleccion, carga el arreglo con los estados con un solo elemento, 
-                 cuyo valor es "Desmarcado" para evitar un nulo.*/
-                EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglones.size()];
-                if (tbl_Resultado.getRowCount() == 0) {
-                    estadosRenglones[0] = EstadoRenglon.DESMARCADO;
-                } else {
-                    this.cargarEstadoDeLosChkEnTabla(tbl_Resultado, estadosRenglones);
-                    //Se ejecuta o no segun si el renglon ya existe. Si ya existe, no se ejecuta
-                    if (!renglonCargado) {
-                        estadosRenglones[tbl_Resultado.getRowCount()] = EstadoRenglon.DESMARCADO;
-                    }
-                }
-                this.cargarRenglonesAlTable(estadosRenglones);
+                this.agregarRenglon(buscarProductosGUI.getRenglonPedido());
+                this.cargarRenglonesAlTable();
                 this.calcularResultados();
             }
         } else {
@@ -407,43 +268,14 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                         .getString("mensaje_producto_no_encontrado"), "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                RenglonFactura renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
-                        + "idProducto=" + producto.getIdProducto()
-                        + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
-                        + "&movimiento=" + Movimiento.VENTA
-                        + "&cantidad=1"
-                        + "&descuentoPorcentaje=0.0",
-                        RenglonFactura.class);
-                boolean esValido = true;
-                Map<Long, BigDecimal> faltantes;
-                if (cmb_TipoComprobante.getSelectedItem() == TipoDeComprobante.PEDIDO) {
-                    faltantes = this.getProductosSinStockDisponible(Arrays.asList(renglon));
-                    if (!faltantes.isEmpty()) {
-                        esValido = false;
-                        JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                                .getString("mensaje_producto_sin_stock_suficiente"), "Error", JOptionPane.ERROR_MESSAGE);                        
-                    }
-                } else {
-                    faltantes = this.getProductosSinStockDisponible(Arrays.asList(renglon));
-                    if (faltantes.isEmpty() == false) {
-                        esValido = false;
-                        JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                                .getString("mensaje_producto_sin_stock_suficiente"), "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-                if (esValido) {
-                    this.agregarRenglon(renglon);
-                    EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglones.size()];
-                    if (tbl_Resultado.getRowCount() == 0) {
-                        estadosRenglones[0] = EstadoRenglon.DESMARCADO;
-                    } else {
-                        this.cargarEstadoDeLosChkEnTabla(tbl_Resultado, estadosRenglones);
-                        estadosRenglones[tbl_Resultado.getRowCount()] = EstadoRenglon.DESMARCADO;
-                    }
-                    this.cargarRenglonesAlTable(estadosRenglones);
-                    this.calcularResultados();
-                    txt_CodigoProducto.setText("");           
-                }
+                NuevoRenglonPedido nuevoRenglonPedido = new NuevoRenglonPedido();
+                nuevoRenglonPedido.setIdProductoItem(producto.getIdProducto());
+                nuevoRenglonPedido.setCantidad(BigDecimal.ONE);
+                nuevoRenglonPedido.setDescuentoPorcentaje(BigDecimal.ZERO);
+                this.agregarRenglon(nuevoRenglonPedido);
+                this.cargarRenglonesAlTable();
+                this.calcularResultados();
+                txt_CodigoProducto.setText("");
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -479,18 +311,9 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         BigDecimal descuentoNeto;
         BigDecimal recargoPorcentaje;
         BigDecimal recargoNeto;
-        BigDecimal total;
         this.validarComponentesDeResultados();
-        BigDecimal[] cantidades = new BigDecimal[renglones.size()];
-        BigDecimal[] ivaPorcentajeRenglones = new BigDecimal[renglones.size()];
-        BigDecimal[] ivaNetoRenglones = new BigDecimal[renglones.size()];
-        int indice = 0;
-        for (RenglonFactura renglon : renglones) {
+        for (RenglonPedido renglon : renglones) {
             subTotal = subTotal.add(renglon.getImporte());
-            cantidades[indice] = renglon.getCantidad();
-            ivaPorcentajeRenglones[indice] = renglon.getIvaPorcentaje();
-            ivaNetoRenglones[indice] = renglon.getIvaNeto();
-            indice++;
         }
         txt_Subtotal.setValue(subTotal);
         descuentoPorcentaje = new BigDecimal(txt_Descuento_porcentaje.getValue().toString());
@@ -499,128 +322,10 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         recargoPorcentaje = new BigDecimal(txt_Recargo_porcentaje.getValue().toString());
         recargoNeto = subTotal.multiply(recargoPorcentaje).divide(CIEN, 15, RoundingMode.HALF_UP);
         txt_Recargo_neto.setValue(recargoNeto);
-        iva_105_netoFactura = BigDecimal.ZERO;
-        iva_21_netoFactura = BigDecimal.ZERO;
-        indice = cantidades.length;
-        if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.FACTURA_A || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
-            for (int i = 0; i < indice; i++) {
-                if (ivaPorcentajeRenglones[i].compareTo(IVA_105) == 0) {
-                    iva_105_netoFactura = iva_105_netoFactura.add(cantidades[i].multiply(ivaNetoRenglones[i]
-                    .subtract(ivaNetoRenglones[i].multiply(descuentoPorcentaje.divide(CIEN, 15, RoundingMode.HALF_UP)))
-                    .add(ivaNetoRenglones[i].multiply(recargoPorcentaje.divide(CIEN, 15, RoundingMode.HALF_UP)))));
-                } else if (ivaPorcentajeRenglones[i].compareTo(IVA_21) == 0) {
-                    iva_21_netoFactura = iva_21_netoFactura.add(cantidades[i].multiply(ivaNetoRenglones[i]
-                    .subtract(ivaNetoRenglones[i].multiply(descuentoPorcentaje.divide(CIEN, 15, RoundingMode.HALF_UP)))
-                    .add(ivaNetoRenglones[i].multiply(recargoPorcentaje.divide(CIEN, 15, RoundingMode.HALF_UP)))));
-                }
-            }
-        } else {
-            for (int i = 0; i < indice; i++) {
-                if (ivaPorcentajeRenglones[i].compareTo(IVA_105) == 0) {
-                    iva_105_netoFactura = iva_105_netoFactura.add(cantidades[i].multiply(ivaNetoRenglones[i]));
-                } else if (ivaPorcentajeRenglones[i].compareTo(IVA_21) == 0) {
-                    iva_21_netoFactura = iva_21_netoFactura.add(cantidades[i].multiply(ivaNetoRenglones[i]));
-                }
-            }
-        }
-        if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
-            txt_IVA105_neto.setValue(0);
-            txt_IVA21_neto.setValue(0);
-        } else {
-            txt_IVA105_neto.setValue(iva_105_netoFactura);
-            txt_IVA21_neto.setValue(iva_21_netoFactura);
-        }
         subTotalBruto = subTotal.add(recargoNeto).subtract(descuentoNeto);
-        if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
-            subTotalBruto = subTotalBruto.subtract(iva_105_netoFactura.add(iva_21_netoFactura));
-        }
-        total = subTotalBruto.add(iva_105_netoFactura).add(iva_21_netoFactura);
-        txt_Total.setValue(total);
-        if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
-            txt_SubTotalBruto.setValue(total);
-        } else {
-            txt_SubTotalBruto.setValue(subTotalBruto);
-        }
-        this.totalComprobante = total;
-    }
-
-    private void cargarTiposDeComprobantesDisponibles() {
-        cmb_TipoComprobante.removeAllItems();
-        TipoDeComprobante[] tiposDeComprobante = new TipoDeComprobante[0];
-        if (cliente != null) {
-            if (rolesDeUsuario.contains(Rol.ADMINISTRADOR)
-                    || rolesDeUsuario.contains(Rol.ENCARGADO)
-                    || rolesDeUsuario.contains(Rol.VENDEDOR)) {
-                try {
-                    cmb_TipoComprobante.removeAllItems();
-                    tiposDeComprobante = RestClient.getRestTemplate()
-                            .getForObject("/facturas/venta/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
-                                    + "/clientes/" + cliente.getId_Cliente(), TipoDeComprobante[].class);
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                for (int i = 0; tiposDeComprobante.length > i; i++) {
-                    cmb_TipoComprobante.addItem(tiposDeComprobante[i]);                    
-                }
-            }
-        }
-        cmb_TipoComprobante.addItem(TipoDeComprobante.PEDIDO);
-        if (this.pedido != null) {
-            if (this.pedido.getId_Pedido() == 0) {// nuevo pedido, desde la vista de pedido
-                cmb_TipoComprobante.setSelectedItem(TipoDeComprobante.PEDIDO);
-                txt_CodigoProducto.requestFocus();
-            } else if (this.modificandoPedido() == true) { // modificar pedido
-                cmb_TipoComprobante.removeAllItems();
-                cmb_TipoComprobante.addItem(TipoDeComprobante.PEDIDO);
-                txt_CodigoProducto.requestFocus();
-            } else {
-                cmb_TipoComprobante.removeItem(TipoDeComprobante.PEDIDO); // facturando pedido
-            }
-        }
-    }
-
-    private void recargarRenglonesSegunTipoDeFactura() {
-        try {            
-            List<RenglonFactura> resguardoRenglones = renglones;
-            renglones = new ArrayList<>();
-            resguardoRenglones.stream().map(renglonFactura -> {
-                Producto producto = RestClient.getRestTemplate()
-                        .getForObject("/productos/" + renglonFactura.getIdProductoItem(), Producto.class);
-                RenglonFactura renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
-                        + "idProducto=" + producto.getIdProducto()
-                        + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
-                        + "&movimiento=" + Movimiento.VENTA
-                        + "&cantidad=" + renglonFactura.getCantidad()
-                        + "&descuentoPorcentaje=" + renglonFactura.getDescuentoPorcentaje(),
-                        RenglonFactura.class);
-                return renglon;
-            }).forEachOrdered(renglon -> this.agregarRenglon(renglon));
-            EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglones.size()];
-            if (!renglones.isEmpty()) {
-                if (tbl_Resultado.getRowCount() == 0) {
-                    estadosRenglones[0] = EstadoRenglon.DESMARCADO;
-                } else {
-                    this.cargarEstadoDeLosChkEnTabla(tbl_Resultado, estadosRenglones);
-                    if (tbl_Resultado.getRowCount() > renglones.size()) {
-                        estadosRenglones[tbl_Resultado.getRowCount()] = EstadoRenglon.DESMARCADO;
-                    }
-                }
-            }
-            this.cargarRenglonesAlTable(estadosRenglones);
-            this.calcularResultados();
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        txt_SubTotalBruto.setValue(subTotalBruto);
+        txt_Total.setValue(subTotalBruto);
+        this.totalComprobante = subTotalBruto;
     }
 
     private void construirPedido() {
@@ -634,21 +339,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         nuevoPedido.setObservaciones(txt_Observaciones.getText());
         nuevoPedido.setRenglones(this.calcularRenglonesPedido());
         nuevoPedido.setTotal(new BigDecimal(txt_Total.getValue().toString()));
-    }
-    
-    private Map<Long, BigDecimal> getProductosSinStockDisponible(List<RenglonFactura> renglonesFactura) {
-        long[] idsProductos = new long[renglonesFactura.size()];
-        BigDecimal[] cantidades = new BigDecimal[renglonesFactura.size()];
-        for (int i = 0; i < idsProductos.length; i++) {
-            idsProductos[i] = renglonesFactura.get(i).getIdProductoItem();
-            cantidades[i] = renglonesFactura.get(i).getCantidad();
-        }
-        String uri = "/productos/disponibilidad-stock?"
-                + "idProducto=" + Arrays.toString(idsProductos).substring(1, Arrays.toString(idsProductos).length() - 1)
-                + "&cantidad=" + Arrays.toString(cantidades).substring(1, Arrays.toString(cantidades).length() - 1);
-        return RestClient.getRestTemplate()
-                .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {
-                }).getBody();
     }
     
     private void finalizarPedido() {
@@ -759,8 +449,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         panelResultados = new javax.swing.JPanel();
         lbl_SubTotal = new javax.swing.JLabel();
         txt_Subtotal = new javax.swing.JFormattedTextField();
-        lbl_IVA21 = new javax.swing.JLabel();
-        txt_IVA21_neto = new javax.swing.JFormattedTextField();
         lbl_Total = new javax.swing.JLabel();
         txt_Total = new javax.swing.JFormattedTextField();
         txt_Descuento_porcentaje = new javax.swing.JFormattedTextField();
@@ -768,10 +456,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         lbl_DescuentoRecargo = new javax.swing.JLabel();
         txt_SubTotalBruto = new javax.swing.JFormattedTextField();
         lbl_SubTotalBruto = new javax.swing.JLabel();
-        txt_IVA105_neto = new javax.swing.JFormattedTextField();
-        lbl_IVA105 = new javax.swing.JLabel();
-        lbl_105 = new javax.swing.JLabel();
-        lbl_21 = new javax.swing.JLabel();
         lbl_recargoPorcentaje = new javax.swing.JLabel();
         txt_Recargo_neto = new javax.swing.JFormattedTextField();
         txt_Recargo_porcentaje = new javax.swing.JFormattedTextField();
@@ -779,11 +463,8 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         panelEncabezado = new javax.swing.JPanel();
         lbl_fechaDeVencimiento = new javax.swing.JLabel();
         dc_fechaVencimiento = new com.toedter.calendar.JDateChooser();
-        lbl_TipoDeComprobante = new javax.swing.JLabel();
-        cmb_TipoComprobante = new javax.swing.JComboBox();
         btn_NuevoCliente = new javax.swing.JButton();
         btn_BuscarCliente = new javax.swing.JButton();
-        lblSeparadorIzquierdo = new javax.swing.JLabel();
         lblSeparadorDerecho = new javax.swing.JLabel();
         btnModificarCliente = new javax.swing.JButton();
 
@@ -990,7 +671,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         .addComponent(btn_QuitarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(tbtn_marcarDesmarcar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Resultado, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE))
+                .addComponent(sp_Resultado, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))
         );
 
         panelRenglonesLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_BuscarPorCodigoProducto, txt_CodigoProducto});
@@ -1050,17 +731,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         txt_Subtotal.setFocusable(false);
         txt_Subtotal.setFont(new java.awt.Font("DejaVu Sans", 0, 17)); // NOI18N
 
-        lbl_IVA21.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lbl_IVA21.setText("I.V.A.");
-
-        txt_IVA21_neto.setEditable(false);
-        txt_IVA21_neto.setForeground(new java.awt.Color(29, 156, 37));
-        txt_IVA21_neto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
-        txt_IVA21_neto.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txt_IVA21_neto.setText("0");
-        txt_IVA21_neto.setFocusable(false);
-        txt_IVA21_neto.setFont(new java.awt.Font("DejaVu Sans", 0, 17)); // NOI18N
-
         lbl_Total.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lbl_Total.setText("TOTAL");
 
@@ -1117,20 +787,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         txt_SubTotalBruto.setFont(new java.awt.Font("DejaVu Sans", 0, 17)); // NOI18N
 
         lbl_SubTotalBruto.setText("SubTotal Bruto");
-
-        txt_IVA105_neto.setEditable(false);
-        txt_IVA105_neto.setForeground(new java.awt.Color(29, 156, 37));
-        txt_IVA105_neto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
-        txt_IVA105_neto.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txt_IVA105_neto.setText("0");
-        txt_IVA105_neto.setFocusable(false);
-        txt_IVA105_neto.setFont(new java.awt.Font("DejaVu Sans", 0, 17)); // NOI18N
-
-        lbl_IVA105.setText("I.V.A.");
-
-        lbl_105.setText("10.5 %");
-
-        lbl_21.setText("21 %");
 
         lbl_recargoPorcentaje.setText("Recargo (%)");
 
@@ -1189,17 +845,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txt_SubTotalBruto)
                     .addComponent(lbl_SubTotalBruto, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txt_IVA105_neto)
-                    .addComponent(lbl_105, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                    .addComponent(lbl_IVA105, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txt_IVA21_neto)
-                    .addComponent(lbl_21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_IVA21, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(258, 258, 258)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txt_Total)
                     .addComponent(lbl_Total, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE))
@@ -1214,31 +860,25 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                     .addComponent(lbl_DescuentoRecargo)
                     .addComponent(lbl_recargoPorcentaje)
                     .addComponent(lbl_SubTotalBruto)
-                    .addComponent(lbl_IVA105)
-                    .addComponent(lbl_IVA21)
                     .addComponent(lbl_Total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelResultadosLayout.createSequentialGroup()
                         .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(txt_Descuento_porcentaje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_Recargo_porcentaje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbl_105, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbl_21, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txt_Recargo_porcentaje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(txt_Subtotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txt_Descuento_neto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txt_Recargo_neto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_SubTotalBruto, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_IVA105_neto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_IVA21_neto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txt_SubTotalBruto, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(txt_Total, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lbl_105, lbl_21, txt_Descuento_neto, txt_Descuento_porcentaje, txt_IVA105_neto, txt_IVA21_neto, txt_Recargo_neto, txt_Recargo_porcentaje, txt_SubTotalBruto, txt_Subtotal});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txt_Descuento_neto, txt_Descuento_porcentaje, txt_Recargo_neto, txt_Recargo_porcentaje, txt_SubTotalBruto, txt_Subtotal});
 
         btn_Continuar.setForeground(java.awt.Color.blue);
         btn_Continuar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/22x22_FlechaGO.png"))); // NOI18N
@@ -1254,21 +894,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         lbl_fechaDeVencimiento.setText("Fecha de Vencimiento:");
 
         dc_fechaVencimiento.setFocusable(false);
-
-        lbl_TipoDeComprobante.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_TipoDeComprobante.setText("Tipo de Comprobante:");
-
-        cmb_TipoComprobante.setNextFocusableComponent(txt_CodigoProducto);
-        cmb_TipoComprobante.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cmb_TipoComprobanteItemStateChanged(evt);
-            }
-        });
-        cmb_TipoComprobante.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmb_TipoComprobanteActionPerformed(evt);
-            }
-        });
 
         btn_NuevoCliente.setForeground(java.awt.Color.blue);
         btn_NuevoCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddClient_16x16.png"))); // NOI18N
@@ -1308,26 +933,17 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         panelEncabezadoLayout.setHorizontalGroup(
             panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelEncabezadoLayout.createSequentialGroup()
-                .addGroup(panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelEncabezadoLayout.createSequentialGroup()
-                        .addComponent(btn_NuevoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_BuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btnModificarCliente)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lbl_fechaDeVencimiento)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dc_fechaVencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelEncabezadoLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lblSeparadorIzquierdo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_TipoDeComprobante)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmb_TipoComprobante, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblSeparadorDerecho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addComponent(btn_NuevoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(btn_BuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(btnModificarCliente)
+                .addGap(99, 99, 99)
+                .addComponent(lblSeparadorDerecho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbl_fechaDeVencimiento)
+                .addGap(0, 0, 0)
+                .addComponent(dc_fechaVencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -1335,31 +951,17 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
         panelEncabezadoLayout.setVerticalGroup(
             panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.CENTER, panelEncabezadoLayout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(lbl_fechaDeVencimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(6, 6, 6))
             .addGroup(panelEncabezadoLayout.createSequentialGroup()
+                .addGap(6, 6, 6)
                 .addGroup(panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelEncabezadoLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(lbl_TipoDeComprobante)
-                            .addComponent(cmb_TipoComprobante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(4, 4, 4)
-                        .addGroup(panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(btn_BuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnModificarCliente)
-                            .addComponent(btn_NuevoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(panelEncabezadoLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addGroup(panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblSeparadorDerecho, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblSeparadorIzquierdo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.CENTER, panelEncabezadoLayout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addComponent(dc_fechaVencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                        .addComponent(btnModificarCliente)
+                        .addComponent(btn_NuevoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_BuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lbl_fechaDeVencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(dc_fechaVencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblSeparadorDerecho, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         panelEncabezadoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnModificarCliente, btn_BuscarCliente, btn_NuevoCliente});
@@ -1421,8 +1023,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         buscarClientesGUI.setVisible(true);
         if (buscarClientesGUI.getClienteSeleccionado() != null) {
             this.cargarCliente(buscarClientesGUI.getClienteSeleccionado());
-            this.cargarTiposDeComprobantesDisponibles();
-            cmb_TipoComprobante.setSelectedIndex(0);
         }
     }//GEN-LAST:event_btn_BuscarClienteActionPerformed
 
@@ -1433,23 +1033,9 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         gui_DetalleCliente.setVisible(true);
         if (gui_DetalleCliente.getClienteDadoDeAlta() != null) {
             this.cargarCliente(gui_DetalleCliente.getClienteDadoDeAlta());
-            this.cargarTiposDeComprobantesDisponibles();
             btnModificarCliente.setEnabled(true);
         }
     }//GEN-LAST:event_btn_NuevoClienteActionPerformed
-
-    private void cmb_TipoComprobanteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_TipoComprobanteItemStateChanged
-        //para evitar que pase null cuando esta recargando el comboBox
-        if (cmb_TipoComprobante.getSelectedItem() != null) {            
-            this.tipoDeComprobante = (TipoDeComprobante) cmb_TipoComprobante.getSelectedItem();
-            this.recargarRenglonesSegunTipoDeFactura();
-            if (cmb_TipoComprobante.getSelectedItem().equals(TipoDeComprobante.PEDIDO)) {
-                this.txt_Observaciones.setText("Los precios se encuentran sujetos a modificaciones.");
-            } else {
-                this.txt_Observaciones.setText("");
-            }
-        }
-    }//GEN-LAST:event_cmb_TipoComprobanteItemStateChanged
 
     private void btn_BuscarPorCodigoProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarPorCodigoProductoActionPerformed
         this.buscarProductoPorCodigo();
@@ -1494,29 +1080,12 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                     this.calcularResultados();
                     try {
                         cliente = RestClient.getRestTemplate().getForObject("/clientes/" + this.cliente.getId_Cliente(), Cliente.class);
-                        Map<Long, BigDecimal> faltantes;
-                        if (cmb_TipoComprobante.getSelectedItem() == TipoDeComprobante.PEDIDO) {
-                            // Es null cuando, se genera un pedido desde el punto de venta entrando por el menu sistemas.
-                            // El Id es 0 cuando, se genera un pedido desde el punto de venta entrando por el botón nuevo de administrar pedidos.
-                            if (pedido == null || pedido.getId_Pedido() == 0) {
-                                this.construirPedido();
-                            }
-                            this.finalizarPedido();
-                        } else {
-                            faltantes = this.getProductosSinStockDisponible(renglones);
-                            if (faltantes.isEmpty()) {
-                                CerrarVentaGUI cerrarVentaGUI = new CerrarVentaGUI(this, true);
-                                cerrarVentaGUI.setLocationRelativeTo(this);
-                                cerrarVentaGUI.setVisible(true);
-                                if (cerrarVentaGUI.isExito()) {
-                                    this.limpiarYRecargarComponentes();
-                                }
-                            } else {
-                                ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(faltantes);
-                                productosFaltantesGUI.setLocationRelativeTo(this);
-                                productosFaltantesGUI.setVisible(true);
-                            }
+                        // Es null cuando, se genera un pedido desde el punto de venta entrando por el menu sistemas.
+                        // El Id es 0 cuando, se genera un pedido desde el punto de venta entrando por el botón nuevo de administrar pedidos.
+                        if (pedido == null || pedido.getId_Pedido() == 0) {
+                            this.construirPedido();
                         }
+                        this.finalizarPedido();
                     } catch (RestClientResponseException ex) {
                         JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     } catch (ResourceAccessException ex) {
@@ -1535,23 +1104,12 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
     private void btn_QuitarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_QuitarProductoActionPerformed
         int[] indicesParaEliminar = Utilidades.getSelectedRowsModelIndices(tbl_Resultado);
-        List<RenglonFactura> renglonesParaBorrar = new ArrayList<>();
+        List<RenglonPedido> renglonesParaBorrar = new ArrayList<>();
         for (int i = 0; i < indicesParaEliminar.length; i++) {
             renglonesParaBorrar.add(renglones.get(indicesParaEliminar[i]));
         }
-        EstadoRenglon[] estadoDeRenglones = new EstadoRenglon[renglones.size()];
-        for (int i = 0; i < tbl_Resultado.getRowCount(); i++) {
-            if (((boolean) tbl_Resultado.getValueAt(i, 0)) == true) {
-                estadoDeRenglones[i] = EstadoRenglon.MARCADO;
-            } else {
-                estadoDeRenglones[i] = EstadoRenglon.DESMARCADO;
-            }
-        }
-        for (int i = 0; i < indicesParaEliminar.length; i++) {
-            estadoDeRenglones[indicesParaEliminar[i]] = EstadoRenglon.ELIMINADO;
-        }
         renglonesParaBorrar.forEach((renglon) -> renglones.remove(renglon));
-        this.cargarRenglonesAlTable(estadoDeRenglones);
+        this.cargarRenglonesAlTable();
         this.calcularResultados();
     }//GEN-LAST:event_btn_QuitarProductoActionPerformed
 
@@ -1571,12 +1129,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             evt.consume();
         }
     }//GEN-LAST:event_txt_Descuento_porcentajeKeyTyped
-
-    private void cmb_TipoComprobanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmb_TipoComprobanteActionPerformed
-        for (int i = 0; i < tbl_Resultado.getRowCount(); i++) {
-            tbl_Resultado.setValueAt((boolean) tbl_Resultado.getValueAt(i, 0), i, 0);
-        }
-    }//GEN-LAST:event_cmb_TipoComprobanteActionPerformed
 
     private void tbl_ResultadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_ResultadoMouseClicked
         int fila = tbl_Resultado.getSelectedRow();
@@ -1646,15 +1198,11 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             if (!this.existeFormaDePagoPredeterminada() || !this.existeTransportistaCargado()) {
                 this.dispose();
             }
-            this.cargarTiposDeComprobantesDisponibles();
             if (this.pedido != null && this.pedido.getId_Pedido() != 0) {
-                this.cargarPedidoParaFacturar();
                 btn_NuevoCliente.setEnabled(false);
                 btn_BuscarCliente.setEnabled(false);
                 this.calcularResultados();
-                if (this.tipoDeComprobante.equals(TipoDeComprobante.PEDIDO)) {
-                    txt_Observaciones.setText(this.pedido.getObservaciones());
-                }
+                txt_Observaciones.setText(this.pedido.getObservaciones());
             }
         } catch (PropertyVetoException ex) {
             String msjError = "Se produjo un error al intentar maximizar la ventana.";
@@ -1707,25 +1255,18 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private javax.swing.JButton btn_Continuar;
     private javax.swing.JButton btn_NuevoCliente;
     private javax.swing.JButton btn_QuitarProducto;
-    private javax.swing.JComboBox cmb_TipoComprobante;
     private com.toedter.calendar.JDateChooser dc_fechaVencimiento;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblBonificacion;
     private javax.swing.JLabel lblNombreCliente;
     private javax.swing.JLabel lblSeparadorDerecho;
-    private javax.swing.JLabel lblSeparadorIzquierdo;
     private javax.swing.JLabel lblUbicacionCliente;
-    private javax.swing.JLabel lbl_105;
-    private javax.swing.JLabel lbl_21;
     private javax.swing.JLabel lbl_CondicionIVACliente;
     private javax.swing.JLabel lbl_DescuentoRecargo;
     private javax.swing.JLabel lbl_IDFiscalCliente;
-    private javax.swing.JLabel lbl_IVA105;
-    private javax.swing.JLabel lbl_IVA21;
     private javax.swing.JLabel lbl_Observaciones;
     private javax.swing.JLabel lbl_SubTotal;
     private javax.swing.JLabel lbl_SubTotalBruto;
-    private javax.swing.JLabel lbl_TipoDeComprobante;
     private javax.swing.JLabel lbl_Total;
     private javax.swing.JLabel lbl_fechaDeVencimiento;
     private javax.swing.JLabel lbl_recargoPorcentaje;
@@ -1746,8 +1287,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private javax.swing.JTextField txt_CondicionIVACliente;
     private javax.swing.JFormattedTextField txt_Descuento_neto;
     private javax.swing.JFormattedTextField txt_Descuento_porcentaje;
-    private javax.swing.JFormattedTextField txt_IVA105_neto;
-    private javax.swing.JFormattedTextField txt_IVA21_neto;
     private javax.swing.JTextArea txt_Observaciones;
     private javax.swing.JFormattedTextField txt_Recargo_neto;
     private javax.swing.JFormattedTextField txt_Recargo_porcentaje;

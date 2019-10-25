@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -26,9 +27,11 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.Movimiento;
+import sic.modelo.NuevoRenglonPedido;
 import sic.modelo.Producto;
 import sic.modelo.RenglonFactura;
 import sic.modelo.PaginaRespuestaRest;
+import sic.modelo.RenglonPedido;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.criteria.BusquedaProductoCriteria;
 import sic.util.DecimalesRenderer;
@@ -40,9 +43,11 @@ public class BuscarProductosGUI extends JDialog {
     private ModeloTabla modeloTablaResultados = new ModeloTabla();
     private List<Producto> productosTotal = new ArrayList<>();
     private List<Producto> productosParcial = new ArrayList<>();
-    private List<RenglonFactura> renglones;
+    private List<RenglonFactura> renglonesFactura;
+    private List<RenglonPedido> renglonesPedido;
     private Producto productoSeleccionado;
-    private RenglonFactura renglon;
+    private RenglonFactura renglonFactura;
+    private NuevoRenglonPedido nuevoRenglonPedido;
     private boolean debeCargarRenglon;    
     private boolean busquedaParaCompraOVenta;
     private Movimiento movimiento;
@@ -54,9 +59,20 @@ public class BuscarProductosGUI extends JDialog {
     public BuscarProductosGUI(List<RenglonFactura> renglones, TipoDeComprobante tipoDeComprobante, Movimiento movimiento) {
         this.initComponents();
         this.setIcon();
-        this.renglones = renglones;
+        this.renglonesFactura = renglones;
         this.movimiento = movimiento;
         this.tipoDeComprobante = tipoDeComprobante;
+        this.busquedaParaCompraOVenta = true;
+        this.setColumnas();
+        this.agregarListeners();
+    }
+    
+    public BuscarProductosGUI(List<RenglonPedido> renglones) {
+        this.initComponents();
+        this.setIcon();
+        this.renglonesPedido = renglones;
+        this.movimiento = Movimiento.PEDIDO;
+        this.tipoDeComprobante = TipoDeComprobante.PEDIDO;
         this.busquedaParaCompraOVenta = true;
         this.setColumnas();
         this.agregarListeners();
@@ -74,8 +90,12 @@ public class BuscarProductosGUI extends JDialog {
         return debeCargarRenglon;
     }
 
-    public RenglonFactura getRenglon() {
-        return renglon;
+    public RenglonFactura getRenglonFactura() {
+        return renglonFactura;
+    }
+    
+    public NuevoRenglonPedido getRenglonPedido() {
+        return nuevoRenglonPedido;
     }
     
     public Producto getProductoSeleccionado(){
@@ -90,7 +110,7 @@ public class BuscarProductosGUI extends JDialog {
     private void prepararComponentes() {
         txtCantidad.setValue(1.00);
         txtPorcentajeDescuento.setValue(0.0);
-        if (renglones == null && movimiento == null && tipoDeComprobante == null) {
+        if ((renglonesFactura == null || renglonesPedido == null) && movimiento == null && tipoDeComprobante == null) {
             lbl_Cantidad.setVisible(false);
             lbl_Descuento.setVisible(false);
             txtCantidad.setVisible(false);
@@ -117,7 +137,7 @@ public class BuscarProductosGUI extends JDialog {
                 productosParcial = response.getContent();
                 productosTotal.addAll(productosParcial);
                 productoSeleccionado = null;
-                if (renglones != null) {
+                if (renglonesFactura != null) {
                     this.restarCantidadesSegunProductosYaCargados();
                 }
                 this.cargarResultadosAlTable();
@@ -136,7 +156,7 @@ public class BuscarProductosGUI extends JDialog {
     private void aceptarProducto() {
         boolean esValido = true;
         this.actualizarEstadoSeleccion();
-        if (productoSeleccionado == null || (renglones == null && movimiento == null && tipoDeComprobante == null)) {
+        if (productoSeleccionado == null || (renglonesFactura == null && movimiento == null && tipoDeComprobante == null)) {
             debeCargarRenglon = false;
             this.dispose();
         } else {            
@@ -155,13 +175,20 @@ public class BuscarProductosGUI extends JDialog {
             }
             if (esValido) {
                 try {
-                    renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
-                            + "idProducto=" + productoSeleccionado.getIdProducto()
-                            + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
-                            + "&movimiento=" + movimiento
-                            + "&cantidad=" + txtCantidad.getValue().toString()
-                            + "&descuentoPorcentaje=" + txtPorcentajeDescuento.getValue().toString(),
-                            RenglonFactura.class);
+                    if (movimiento.equals(Movimiento.PEDIDO)) {
+                        this.nuevoRenglonPedido = new NuevoRenglonPedido();
+                        this.nuevoRenglonPedido.setCantidad(new BigDecimal(txtCantidad.getValue().toString()));
+                        this.nuevoRenglonPedido.setIdProductoItem(productoSeleccionado.getIdProducto());
+                        this.nuevoRenglonPedido.setDescuentoPorcentaje(new BigDecimal(txtPorcentajeDescuento.getValue().toString()));
+                    } else {
+                        renglonFactura = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
+                                + "idProducto=" + productoSeleccionado.getIdProducto()
+                                + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
+                                + "&movimiento=" + movimiento
+                                + "&cantidad=" + txtCantidad.getValue().toString()
+                                + "&descuentoPorcentaje=" + txtPorcentajeDescuento.getValue().toString(),
+                                RenglonFactura.class);
+                    }
                     debeCargarRenglon = true;
                     this.dispose();
                 } catch (RestClientResponseException ex) {
@@ -171,15 +198,23 @@ public class BuscarProductosGUI extends JDialog {
                     JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
-            }            
+            }
         }
     }
     
     private BigDecimal sumarCantidadesSegunProductosYaCargados() {
         BigDecimal cantidad = new BigDecimal(txtCantidad.getValue().toString());
-        for (RenglonFactura r : renglones) {
-            if (r.getIdProductoItem() == productoSeleccionado.getIdProducto()) {
-                cantidad = cantidad.add(r.getCantidad());
+        if (movimiento.equals(Movimiento.PEDIDO)) {
+            for (RenglonPedido r : renglonesPedido) {
+                if (r.getIdProductoItem() == productoSeleccionado.getIdProducto()) {
+                    cantidad = cantidad.add(r.getCantidad());
+                }
+            }
+        } else {
+            for (RenglonFactura r : renglonesFactura) {
+                if (r.getIdProductoItem() == productoSeleccionado.getIdProducto()) {
+                    cantidad = cantidad.add(r.getCantidad());
+                }
             }
         }
         return cantidad;
@@ -187,8 +222,8 @@ public class BuscarProductosGUI extends JDialog {
     
     private void restarCantidadesSegunProductosYaCargados() {
         if (!(movimiento == Movimiento.PEDIDO || movimiento == Movimiento.COMPRA)) {
-            renglones.forEach((r) -> {
-                productosTotal.stream().filter((p) -> (r.getDescripcionItem().equals(p.getDescripcion()) && p.isIlimitado() == false))
+            renglonesFactura.forEach((r) -> {
+                productosTotal.stream().filter((p) -> (r.getIdProductoItem() == p.getIdProducto() && p.isIlimitado() == false))
                         .forEachOrdered((p) -> {
                             p.setCantidad(p.getCantidad().subtract(r.getCantidad()));
                         });
