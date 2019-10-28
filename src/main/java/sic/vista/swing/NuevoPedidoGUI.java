@@ -1106,9 +1106,9 @@ public class NuevoPedidoGUI extends JInternalFrame {
         int[] indicesParaEliminar = Utilidades.getSelectedRowsModelIndices(tbl_Resultado);
         List<RenglonPedido> renglonesParaBorrar = new ArrayList<>();
         for (int i = 0; i < indicesParaEliminar.length; i++) {
-            renglonesParaBorrar.add(renglones.get(indicesParaEliminar[i]));
+            renglonesParaBorrar.add(this.renglones.get(indicesParaEliminar[i]));
         }
-        renglonesParaBorrar.forEach((renglon) -> renglones.remove(renglon));
+        renglonesParaBorrar.forEach((renglonParaBorrar) -> this.renglones.remove(renglonParaBorrar));
         this.cargarRenglonesAlTable();
         this.calcularResultados();
     }//GEN-LAST:event_btn_QuitarProductoActionPerformed
@@ -1201,8 +1201,12 @@ public class NuevoPedidoGUI extends JInternalFrame {
             if (this.pedido != null && this.pedido.getId_Pedido() != 0) {
                 btn_NuevoCliente.setEnabled(false);
                 btn_BuscarCliente.setEnabled(false);
-                this.calcularResultados();
                 txt_Observaciones.setText(this.pedido.getObservaciones());
+                this.cargarCliente(RestClient.getRestTemplate()
+                    .getForObject("/clientes/pedidos/" + pedido.getId_Pedido(), Cliente.class));
+                this.renglones.addAll(Arrays.asList(RestClient.getRestTemplate().getForObject("/pedidos/" + this.pedido.getId_Pedido() + "/renglones", RenglonPedido[].class)));
+                this.cargarRenglonesAlTable();
+                this.calcularResultados();
             }
         } catch (PropertyVetoException ex) {
             String msjError = "Se produjo un error al intentar maximizar la ventana.";

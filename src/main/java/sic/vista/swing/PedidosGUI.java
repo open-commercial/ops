@@ -899,15 +899,15 @@ public class PedidosGUI extends JInternalFrame {
                     JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                             .getString("mensaje_pedido_procesado"), "Error", JOptionPane.ERROR_MESSAGE);
                 } else if (this.existeClienteDisponible()) {
-                    PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
-                    puntoDeVentaGUI.setPedido(pedido);
-                    puntoDeVentaGUI.setModificarPedido(true);
-                    puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
-                            getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
-                    getDesktopPane().add(puntoDeVentaGUI);
-                    puntoDeVentaGUI.setMaximizable(true);
-                    puntoDeVentaGUI.setClosable(true);
-                    puntoDeVentaGUI.setVisible(true);
+                    NuevoPedidoGUI nuevoPedidoGUI = new NuevoPedidoGUI();
+                    nuevoPedidoGUI.setPedido(pedido);
+                    nuevoPedidoGUI.setModificarPedido(true);
+                    nuevoPedidoGUI.setLocation(getDesktopPane().getWidth() / 2 - nuevoPedidoGUI.getWidth() / 2,
+                            getDesktopPane().getHeight() / 2 - nuevoPedidoGUI.getHeight() / 2);
+                    getDesktopPane().add(nuevoPedidoGUI);
+                    nuevoPedidoGUI.setMaximizable(true);
+                    nuevoPedidoGUI.setClosable(true);
+                    nuevoPedidoGUI.setVisible(true);
                 } else {
                     JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
                             "Error", JOptionPane.ERROR_MESSAGE);
