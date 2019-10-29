@@ -3,6 +3,7 @@ package sic.modelo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Data;
@@ -27,12 +28,12 @@ public class NotaCredito extends Nota implements Serializable {
             TipoDeComprobante tipoDeComprobante, LocalDateTime fecha, long idEmpresa, String nombreEmpresa, long idUsuario, String nombreUsuario,
             long idCliente, String nombreFiscalCliente, long idProveedor, String razonSocialProveedor, long idFacturaVenta, long idFacturaCompra,
             String motivo, List<RenglonNotaCredito> renglones, BigDecimal subTotalBruto,
-            BigDecimal iva21Neto, BigDecimal iva105Neto, BigDecimal total, long CAE, LocalDateTime vencimientoCAE,
+            BigDecimal iva21Neto, BigDecimal iva105Neto, BigDecimal total, long cae, LocalDate vencimientoCAE,
             long numSerieAfip, long numFacturaAfip) {
 
         super(idNota, serie, nroNota, eliminada, tipoDeComprobante, fecha, idEmpresa, nombreEmpresa,
                 idUsuario, nombreUsuario, idCliente, nombreFiscalCliente, idProveedor, razonSocialProveedor,
-                idFacturaVenta, idFacturaCompra, motivo, subTotalBruto, iva21Neto, iva105Neto, total, CAE,
+                idFacturaVenta, idFacturaCompra, motivo, subTotalBruto, iva21Neto, iva105Neto, total, cae,
                 vencimientoCAE, numSerieAfip, numFacturaAfip);
         this.renglonesNotaCredito = renglones;
     }

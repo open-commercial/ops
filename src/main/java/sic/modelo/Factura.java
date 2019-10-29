@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Data;
@@ -55,7 +56,7 @@ public abstract class Factura implements Serializable {
     private String nombreEmpresa;
     private boolean eliminada;   
     private long cae;
-    private LocalDateTime vencimientoCae;
+    private LocalDate vencimientoCae;
     private long numSerieAfip;
     private long numFacturaAfip;
 }
