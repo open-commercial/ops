@@ -3,7 +3,7 @@
 <Form version="1.6" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
   <Properties>
     <Property name="resizable" type="boolean" value="true"/>
-    <Property name="title" type="java.lang.String" value="S.I.C. Punto de Venta"/>
+    <Property name="title" type="java.lang.String" value="Nuevo Pedido"/>
     <Property name="frameIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
       <Image iconType="3" name="/sic/icons/SIC_16_square.png"/>
     </Property>
@@ -57,14 +57,14 @@
                       <Component id="panelRenglones" alignment="0" max="32767" attributes="0"/>
                       <Component id="panelEncabezado" alignment="1" max="32767" attributes="0"/>
                       <Component id="panelCliente" alignment="0" max="32767" attributes="0"/>
-                      <Group type="102" attributes="0">
-                          <Component id="panelResultados" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="panelObservaciones" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="btn_Continuar" min="-2" max="-2" attributes="1"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="panelResultados" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -452,10 +452,10 @@
                           <Component id="txt_SubTotalBruto" max="32767" attributes="0"/>
                           <Component id="lbl_SubTotalBruto" pref="120" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="258" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="txt_Total" max="32767" attributes="1"/>
-                          <Component id="lbl_Total" pref="270" max="32767" attributes="1"/>
+                          <Component id="lbl_Total" min="-2" pref="270" max="-2" attributes="1"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -683,10 +683,10 @@
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Component id="btnModificarCliente" linkSize="25" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="99" max="-2" attributes="0"/>
-                      <Component id="lblSeparadorDerecho" max="32767" attributes="0"/>
+                      <Component id="lblSeparadorDerecho" pref="30" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lbl_fechaDeVencimiento" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="dc_fechaVencimiento" min="-2" pref="132" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -697,14 +697,14 @@
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="103" alignment="0" groupAlignment="2" attributes="0">
-                              <Component id="btnModificarCliente" linkSize="16" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="btn_NuevoCliente" linkSize="16" alignment="2" min="-2" pref="32" max="-2" attributes="0"/>
-                              <Component id="btn_BuscarCliente" linkSize="16" alignment="2" min="-2" pref="15" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="lbl_fechaDeVencimiento" alignment="2" min="-2" pref="33" max="-2" attributes="0"/>
                               <Component id="dc_fechaVencimiento" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="lblSeparadorDerecho" min="-2" pref="25" max="-2" attributes="0"/>
+                          <Component id="btn_BuscarCliente" linkSize="16" alignment="2" min="-2" pref="15" max="-2" attributes="0"/>
+                          <Component id="btn_NuevoCliente" linkSize="16" alignment="2" min="-2" pref="32" max="-2" attributes="0"/>
+                          <Component id="btnModificarCliente" linkSize="16" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>

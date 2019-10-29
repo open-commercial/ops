@@ -835,7 +835,7 @@ public class PedidosGUI extends JInternalFrame {
                     JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                             .getString("mensaje_pedido_facturado"), "Error", JOptionPane.ERROR_MESSAGE);
                 } else if (this.existeClienteDisponible()) {
-                    NuevaFacturaGUI puntoDeVentaGUI = new NuevaFacturaGUI();
+                    NuevaFacturaVentaGUI puntoDeVentaGUI = new NuevaFacturaVentaGUI();
                     puntoDeVentaGUI.setPedido(pedido);
                     puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
                             getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);

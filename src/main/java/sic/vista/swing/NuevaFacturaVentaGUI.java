@@ -32,13 +32,10 @@ import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
 import sic.modelo.NuevoPedido;
 import sic.modelo.RenglonFactura;
-import sic.modelo.RenglonPedido;
 import sic.modelo.UsuarioActivo;
-import sic.modelo.EstadoPedido;
 import sic.modelo.FacturaVenta;
 import sic.modelo.FormaDePago;
 import sic.modelo.Movimiento;
-import sic.modelo.NuevoRenglonPedido;
 import sic.modelo.Pedido;
 import sic.modelo.Producto;
 import sic.modelo.Rol;
@@ -47,7 +44,7 @@ import sic.modelo.Transportista;
 import sic.util.DecimalesRenderer;
 import sic.util.Utilidades;
 
-public class NuevaFacturaGUI extends JInternalFrame {
+public class NuevaFacturaVentaGUI extends JInternalFrame {
 
     private TipoDeComprobante tipoDeComprobante;
     private Cliente cliente;
@@ -57,8 +54,6 @@ public class NuevaFacturaGUI extends JInternalFrame {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(1200, 700);
     private Pedido pedido;
-    private NuevoPedido nuevoPedido;
-    private boolean modificarPedido;
     private int cantidadMaximaRenglones = 0;
     private BigDecimal subTotalBruto;
     private BigDecimal iva_105_netoFactura;
@@ -69,7 +64,7 @@ public class NuevaFacturaGUI extends JInternalFrame {
     private final static BigDecimal IVA_105 = new BigDecimal("10.5");
     private final static BigDecimal CIEN = new BigDecimal("100");
 
-    public NuevaFacturaGUI() {
+    public NuevaFacturaVentaGUI() {
         this.initComponents();        
         ImageIcon iconoNoMarcado = new ImageIcon(getClass().getResource("/sic/icons/chkNoMarcado_16x16.png"));
         this.tbtn_marcarDesmarcar.setIcon(iconoNoMarcado);        
@@ -711,7 +706,7 @@ public class NuevaFacturaGUI extends JInternalFrame {
         btnModificarCliente = new javax.swing.JButton();
 
         setResizable(true);
-        setTitle("S.I.C. Punto de Venta");
+        setTitle("Nueva Factura de Venta");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/SIC_16_square.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
@@ -1537,7 +1532,6 @@ public class NuevaFacturaGUI extends JInternalFrame {
             this.setSize(sizeInternalFrame);
             this.setColumnas();
             this.setMaximum(true);
-            this.setTitle("Punto de Venta");
             cantidadMaximaRenglones = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
                     + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
                     + "/cantidad-renglones", Integer.class); 
