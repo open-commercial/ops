@@ -36,7 +36,7 @@ public class CerrarVentaGUI extends JDialog {
 
     private boolean exito;
     private boolean facturaAutorizada = false;
-    private final PuntoDeVentaGUI gui_puntoDeVenta;
+    private final NuevaFacturaGUI gui_puntoDeVenta;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int[] indicesParaDividir = null;
     private final List<Long> idsFormasDePago = new ArrayList<>();
@@ -48,7 +48,7 @@ public class CerrarVentaGUI extends JDialog {
         super.setModal(modal);
         this.initComponents();
         this.setIcon();        
-        this.gui_puntoDeVenta = (PuntoDeVentaGUI) parent;
+        this.gui_puntoDeVenta = (NuevaFacturaGUI) parent;
         //listeners
         chk_FormaDePago1.addKeyListener(keyHandler);
         chk_FormaDePago2.addKeyListener(keyHandler);

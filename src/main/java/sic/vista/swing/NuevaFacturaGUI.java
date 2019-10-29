@@ -47,7 +47,7 @@ import sic.modelo.Transportista;
 import sic.util.DecimalesRenderer;
 import sic.util.Utilidades;
 
-public class PuntoDeVentaGUI extends JInternalFrame {
+public class NuevaFacturaGUI extends JInternalFrame {
 
     private TipoDeComprobante tipoDeComprobante;
     private Cliente cliente;
@@ -69,7 +69,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private final static BigDecimal IVA_105 = new BigDecimal("10.5");
     private final static BigDecimal CIEN = new BigDecimal("100");
 
-    public PuntoDeVentaGUI() {
+    public NuevaFacturaGUI() {
         this.initComponents();        
         ImageIcon iconoNoMarcado = new ImageIcon(getClass().getResource("/sic/icons/chkNoMarcado_16x16.png"));
         this.tbtn_marcarDesmarcar.setIcon(iconoNoMarcado);        
@@ -167,14 +167,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
     public ModeloTabla getModeloTabla() {
         return this.modeloTablaResultados;
-    }
-
-    public void setModificarPedido(boolean modificarPedido) {
-        this.modificarPedido = modificarPedido;
-    }
-
-    public boolean modificandoPedido() {
-        return this.modificarPedido;
     }
     
     private void cargarEstadoDeLosChkEnTabla(JTable tbl_Resultado, EstadoRenglon[] estadosDeLosRenglones) {
@@ -361,9 +353,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
     private void buscarProductoConVentanaAuxiliar() {
         if (cantidadMaximaRenglones > renglones.size()) {
-            Movimiento movimiento = this.tipoDeComprobante.equals(TipoDeComprobante.PEDIDO) ? Movimiento.PEDIDO : Movimiento.VENTA;
-            // revisar esto, es necesario para el movimiento como String y a su vez el movimiento?
-            BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglones, this.tipoDeComprobante, movimiento);
+            BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglones, this.tipoDeComprobante,  Movimiento.VENTA);
             buscarProductosGUI.setModal(true);
             buscarProductosGUI.setLocationRelativeTo(this);
             buscarProductosGUI.setVisible(true);
@@ -569,19 +559,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 }
             }
         }
-        cmb_TipoComprobante.addItem(TipoDeComprobante.PEDIDO);
-        if (this.pedido != null) {
-            if (this.pedido.getId_Pedido() == 0) {// nuevo pedido, desde la vista de pedido
-                cmb_TipoComprobante.setSelectedItem(TipoDeComprobante.PEDIDO);
-                txt_CodigoProducto.requestFocus();
-            } else if (this.modificandoPedido() == true) { // modificar pedido
-                cmb_TipoComprobante.removeAllItems();
-                cmb_TipoComprobante.addItem(TipoDeComprobante.PEDIDO);
-                txt_CodigoProducto.requestFocus();
-            } else {
-                cmb_TipoComprobante.removeItem(TipoDeComprobante.PEDIDO); // facturando pedido
-            }
-        }
     }
 
     private void recargarRenglonesSegunTipoDeFactura() {
@@ -622,19 +599,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    private void construirPedido() {
-        nuevoPedido = new NuevoPedido();
-        nuevoPedido.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
-        nuevoPedido.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
-        nuevoPedido.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
-        nuevoPedido.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
-        nuevoPedido.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
-        nuevoPedido.setFechaVencimiento(dc_fechaVencimiento.getDate());
-        nuevoPedido.setObservaciones(txt_Observaciones.getText());
-        nuevoPedido.setRenglones(this.calcularRenglonesPedido());
-        nuevoPedido.setTotal(new BigDecimal(txt_Total.getValue().toString()));
-    }
     
     private Map<Long, BigDecimal> getProductosSinStockDisponible(List<RenglonFactura> renglonesFactura) {
         long[] idsProductos = new long[renglonesFactura.size()];
@@ -649,47 +613,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         return RestClient.getRestTemplate()
                 .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {
                 }).getBody();
-    }
-    
-    private void finalizarPedido() {
-        if (nuevoPedido != null) {
-            CerrarPedidoGUI cerrarPedido = new CerrarPedidoGUI(nuevoPedido, cliente);
-            cerrarPedido.setModal(true);
-            cerrarPedido.setLocationRelativeTo(this);
-            cerrarPedido.setVisible(true);
-            if (cerrarPedido.isOperacionExitosa()) {
-                this.limpiarYRecargarComponentes();
-            }
-        } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificarPedido == true) {
-            this.actualizarPedido(pedido);
-        }
-    }
-
-    private void actualizarPedido(Pedido pedido) {
-        pedido = RestClient.getRestTemplate().getForObject("/pedidos/" + pedido.getId_Pedido(), Pedido.class);
-        pedido.setRenglones(this.calcularRenglonesPedido());
-        pedido.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
-        pedido.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
-        pedido.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
-        pedido.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
-        pedido.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
-        pedido.setTotalEstimado(new BigDecimal(txt_Total.getValue().toString()));
-        pedido.setObservaciones(txt_Observaciones.getText());
-        CerrarPedidoGUI cerrarPedido = new CerrarPedidoGUI(pedido, cliente);
-        cerrarPedido.setModal(true);
-        cerrarPedido.setLocationRelativeTo(this);
-        cerrarPedido.setVisible(true);
-        if (cerrarPedido.isOperacionExitosa()) {
-            this.dispose();
-        }
-    }
-
-    public List<RenglonPedido> calcularRenglonesPedido() {
-        List<NuevoRenglonPedido> nuevosRenglonesPedido = new ArrayList();
-        this.renglones.forEach(r -> nuevosRenglonesPedido.add(
-                new NuevoRenglonPedido(r.getIdProductoItem(), r.getCantidad(), r.getDescuentoPorcentaje())));
-        return Arrays.asList(RestClient.getRestTemplate().postForObject("/pedidos/renglones",
-                nuevosRenglonesPedido, RenglonPedido[].class));
     }
 
     // Clase interna para manejar las hotkeys del TPV     
@@ -1443,11 +1366,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         if (cmb_TipoComprobante.getSelectedItem() != null) {            
             this.tipoDeComprobante = (TipoDeComprobante) cmb_TipoComprobante.getSelectedItem();
             this.recargarRenglonesSegunTipoDeFactura();
-            if (cmb_TipoComprobante.getSelectedItem().equals(TipoDeComprobante.PEDIDO)) {
-                this.txt_Observaciones.setText("Los precios se encuentran sujetos a modificaciones.");
-            } else {
-                this.txt_Observaciones.setText("");
-            }
         }
     }//GEN-LAST:event_cmb_TipoComprobanteItemStateChanged
 
@@ -1495,27 +1413,18 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                     try {
                         cliente = RestClient.getRestTemplate().getForObject("/clientes/" + this.cliente.getId_Cliente(), Cliente.class);
                         Map<Long, BigDecimal> faltantes;
-                        if (cmb_TipoComprobante.getSelectedItem() == TipoDeComprobante.PEDIDO) {
-                            // Es null cuando, se genera un pedido desde el punto de venta entrando por el menu sistemas.
-                            // El Id es 0 cuando, se genera un pedido desde el punto de venta entrando por el botón nuevo de administrar pedidos.
-                            if (pedido == null || pedido.getId_Pedido() == 0) {
-                                this.construirPedido();
+                        faltantes = this.getProductosSinStockDisponible(renglones);
+                        if (faltantes.isEmpty()) {
+                            CerrarVentaGUI cerrarVentaGUI = new CerrarVentaGUI(this, true);
+                            cerrarVentaGUI.setLocationRelativeTo(this);
+                            cerrarVentaGUI.setVisible(true);
+                            if (cerrarVentaGUI.isExito()) {
+                                this.limpiarYRecargarComponentes();
                             }
-                            this.finalizarPedido();
                         } else {
-                            faltantes = this.getProductosSinStockDisponible(renglones);
-                            if (faltantes.isEmpty()) {
-                                CerrarVentaGUI cerrarVentaGUI = new CerrarVentaGUI(this, true);
-                                cerrarVentaGUI.setLocationRelativeTo(this);
-                                cerrarVentaGUI.setVisible(true);
-                                if (cerrarVentaGUI.isExito()) {
-                                    this.limpiarYRecargarComponentes();
-                                }
-                            } else {
-                                ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(faltantes);
-                                productosFaltantesGUI.setLocationRelativeTo(this);
-                                productosFaltantesGUI.setVisible(true);
-                            }
+                            ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(faltantes);
+                            productosFaltantesGUI.setLocationRelativeTo(this);
+                            productosFaltantesGUI.setVisible(true);
                         }
                     } catch (RestClientResponseException ex) {
                         JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -1652,9 +1561,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 btn_NuevoCliente.setEnabled(false);
                 btn_BuscarCliente.setEnabled(false);
                 this.calcularResultados();
-                if (this.tipoDeComprobante.equals(TipoDeComprobante.PEDIDO)) {
-                    txt_Observaciones.setText(this.pedido.getObservaciones());
-                }
             }
         } catch (PropertyVetoException ex) {
             String msjError = "Se produjo un error al intentar maximizar la ventana.";

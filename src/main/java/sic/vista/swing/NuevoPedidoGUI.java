@@ -1198,15 +1198,16 @@ public class NuevoPedidoGUI extends JInternalFrame {
             if (!this.existeFormaDePagoPredeterminada() || !this.existeTransportistaCargado()) {
                 this.dispose();
             }
+            txt_Observaciones.setText(this.pedido.getObservaciones());
             if (this.pedido != null && this.pedido.getId_Pedido() != 0) {
                 btn_NuevoCliente.setEnabled(false);
                 btn_BuscarCliente.setEnabled(false);
-                txt_Observaciones.setText(this.pedido.getObservaciones());
                 this.cargarCliente(RestClient.getRestTemplate()
                     .getForObject("/clientes/pedidos/" + pedido.getId_Pedido(), Cliente.class));
                 this.renglones.addAll(Arrays.asList(RestClient.getRestTemplate().getForObject("/pedidos/" + this.pedido.getId_Pedido() + "/renglones", RenglonPedido[].class)));
                 this.cargarRenglonesAlTable();
                 this.calcularResultados();
+            } else {
             }
         } catch (PropertyVetoException ex) {
             String msjError = "Se produjo un error al intentar maximizar la ventana.";

@@ -36,7 +36,7 @@ public class PrincipalGUI extends JFrame {
     }
 
     private void setIcon() {
-        ImageIcon iconoVentana = new ImageIcon(PuntoDeVentaGUI.class.getResource("/sic/icons/SIC_24_square.png"));
+        ImageIcon iconoVentana = new ImageIcon(NuevaFacturaGUI.class.getResource("/sic/icons/SIC_24_square.png"));
         this.setIconImage(iconoVentana.getImage());
     }
     
@@ -100,7 +100,6 @@ public class PrincipalGUI extends JFrame {
         dp_Escritorio = new javax.swing.JDesktopPane();
         mb_BarraMenues = new javax.swing.JMenuBar();
         mnu_Sistema = new javax.swing.JMenu();
-        mnuItm_IrTPV = new javax.swing.JMenuItem();
         mnuItm_Empresas = new javax.swing.JMenuItem();
         mnuItm_CambiarEmpresa = new javax.swing.JMenuItem();
         mnuItm_Usuarios = new javax.swing.JMenuItem();
@@ -147,14 +146,6 @@ public class PrincipalGUI extends JFrame {
         dp_Escritorio.setToolTipText("");
 
         mnu_Sistema.setText("Sistema");
-
-        mnuItm_IrTPV.setText("Ir a Punto de Venta");
-        mnuItm_IrTPV.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuItm_IrTPVActionPerformed(evt);
-            }
-        });
-        mnu_Sistema.add(mnuItm_IrTPV);
 
         mnuItm_Empresas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Empresa_16x16.png"))); // NOI18N
         mnuItm_Empresas.setText("Empresas");
@@ -631,27 +622,6 @@ public class PrincipalGUI extends JFrame {
         }
     }//GEN-LAST:event_mnuItm_FormasDePagoActionPerformed
 
-    private void mnuItm_IrTPVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_IrTPVActionPerformed
-        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), PuntoDeVentaGUI.class);
-        if (gui == null) {
-            PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
-            puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
-                    getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
-            getDesktopPane().add(puntoDeVentaGUI);
-            puntoDeVentaGUI.setMaximizable(true);
-            puntoDeVentaGUI.setClosable(true);
-            puntoDeVentaGUI.setVisible(true);
-        } else {
-            try {
-                gui.setSelected(true);
-            } catch (PropertyVetoException ex) {
-                String msjError = "No se pudo seleccionar la ventana requerida.";
-                LOGGER.error(msjError + " - " + ex.getMessage());
-                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }//GEN-LAST:event_mnuItm_IrTPVActionPerformed
-
     private void mnuItm_FacturasVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_FacturasVentaActionPerformed
         JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), FacturasVentaGUI.class);
         if (gui == null) {
@@ -939,7 +909,6 @@ public class PrincipalGUI extends JFrame {
     private javax.swing.JMenuItem mnuItm_FacturasCompra;
     private javax.swing.JMenuItem mnuItm_FacturasVenta;
     private javax.swing.JMenuItem mnuItm_FormasDePago;
-    private javax.swing.JMenuItem mnuItm_IrTPV;
     private javax.swing.JMenuItem mnuItm_Pedidos;
     private javax.swing.JMenuItem mnuItm_Productos;
     private javax.swing.JMenuItem mnuItm_Proveedores;
