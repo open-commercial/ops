@@ -30,7 +30,6 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
-import sic.modelo.NuevoPedido;
 import sic.modelo.RenglonFactura;
 import sic.modelo.UsuarioActivo;
 import sic.modelo.FacturaVenta;
