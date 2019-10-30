@@ -46,15 +46,16 @@ public class DetallePedidoGUI extends JInternalFrame {
     private final Dimension sizeInternalFrame = new Dimension(1200, 700);
     private Pedido pedido;
     private NuevoPedido nuevoPedido;
-    private boolean modificarPedido;
+    private final boolean modificandoPedido;
     private int cantidadMaximaRenglones = 0;
     private BigDecimal subTotalBruto;  
-    private BigDecimal totalComprobante;    
     private final List<Rol> rolesDeUsuario = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final static BigDecimal CIEN = new BigDecimal("100");
 
-    public DetallePedidoGUI() {
+    public DetallePedidoGUI(Pedido pedido, boolean modificandoPedido) {
         this.initComponents();      
+        this.pedido = pedido;
+        this.modificandoPedido = modificandoPedido;
         dc_fechaVencimiento.setDate(new Date());
         //listeners        
         btn_NuevoCliente.addKeyListener(keyHandler);
@@ -69,38 +70,6 @@ public class DetallePedidoGUI extends JInternalFrame {
         btn_Continuar.addKeyListener(keyHandler);      
         dc_fechaVencimiento.addKeyListener(keyHandler);     
         btnModificarCliente.addKeyListener(keyHandler); 
-    }   
-   
-    public void setPedido(Pedido pedido) {
-        this.pedido = pedido;
-    }
-
-    public Pedido getPedido() {
-        return this.pedido;
-    }
-
-    public List<RenglonPedido> getRenglones() {
-        return renglones;
-    }
-
-    public BigDecimal getTotal() {
-        return this.totalComprobante;
-    }
-    
-    public long getIdCliente() {
-        return this.cliente.getId_Cliente();
-    }
-
-    public ModeloTabla getModeloTabla() {
-        return this.modeloTablaResultados;
-    }
-
-    public void setModificarPedido(boolean modificarPedido) {
-        this.modificarPedido = modificarPedido;
-    }
-
-    public boolean modificandoPedido() {
-        return this.modificarPedido;
     }
 
     private boolean existeClientePredeterminado() {
@@ -237,7 +206,6 @@ public class DetallePedidoGUI extends JInternalFrame {
 
     private void buscarProductoConVentanaAuxiliar() {
         if (cantidadMaximaRenglones > renglones.size()) {
-            // revisar esto, es necesario para el movimiento como String y a su vez el movimiento?
             BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglones);
             buscarProductosGUI.setModal(true);
             buscarProductosGUI.setLocationRelativeTo(this);
@@ -319,7 +287,6 @@ public class DetallePedidoGUI extends JInternalFrame {
         txt_Recargo_neto.setValue(recargoNeto);
         subTotalBruto = subTotal.add(recargoNeto).subtract(descuentoNeto);
         txt_Total.setValue(subTotalBruto);
-        this.totalComprobante = subTotalBruto;
     }
 
     private void construirPedido() {
@@ -337,14 +304,14 @@ public class DetallePedidoGUI extends JInternalFrame {
     
     private void finalizarPedido() {
         if (nuevoPedido != null) {
-            CerrarPedidoGUI cerrarPedido = new CerrarPedidoGUI(nuevoPedido, cliente);
-            cerrarPedido.setModal(true);
-            cerrarPedido.setLocationRelativeTo(this);
-            cerrarPedido.setVisible(true);
-            if (cerrarPedido.isOperacionExitosa()) {
+            CerrarPedidoGUI cerrarPedidoGUI = new CerrarPedidoGUI(nuevoPedido, cliente);
+            cerrarPedidoGUI.setModal(true);
+            cerrarPedidoGUI.setLocationRelativeTo(this);
+            cerrarPedidoGUI.setVisible(true);
+            if (cerrarPedidoGUI.isOperacionExitosa()) {
                 this.limpiarYRecargarComponentes();
             }
-        } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificarPedido == true) {
+        } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificandoPedido == true) {
             this.actualizarPedido(pedido);
         }
     }
@@ -359,16 +326,16 @@ public class DetallePedidoGUI extends JInternalFrame {
         pedido.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
         pedido.setTotalEstimado(new BigDecimal(txt_Total.getValue().toString()));
         pedido.setObservaciones(txt_Observaciones.getText());
-        CerrarPedidoGUI cerrarPedido = new CerrarPedidoGUI(pedido, cliente);
-        cerrarPedido.setModal(true);
-        cerrarPedido.setLocationRelativeTo(this);
-        cerrarPedido.setVisible(true);
-        if (cerrarPedido.isOperacionExitosa()) {
+        CerrarPedidoGUI cerrarPedidoGUI = new CerrarPedidoGUI(pedido, cliente);
+        cerrarPedidoGUI.setModal(true);
+        cerrarPedidoGUI.setLocationRelativeTo(this);
+        cerrarPedidoGUI.setVisible(true);
+        if (cerrarPedidoGUI.isOperacionExitosa()) {
             this.dispose();
         }
     }
 
-    public List<RenglonPedido> calcularRenglonesPedido() {
+    private List<RenglonPedido> calcularRenglonesPedido() {
         List<NuevoRenglonPedido> nuevosRenglonesPedido = new ArrayList();
         this.renglones.forEach(r -> nuevosRenglonesPedido.add(
                 new NuevoRenglonPedido(r.getIdProductoItem(), r.getCantidad(), r.getDescuentoPorcentaje())));
