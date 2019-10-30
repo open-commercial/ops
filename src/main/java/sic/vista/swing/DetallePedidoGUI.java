@@ -36,7 +36,7 @@ import sic.modelo.Transportista;
 import sic.util.DecimalesRenderer;
 import sic.util.Utilidades;
 
-public class NuevoPedidoGUI extends JInternalFrame {
+public class DetallePedidoGUI extends JInternalFrame {
 
     private Cliente cliente;
     private List<RenglonPedido> renglones = new ArrayList<>();
@@ -53,7 +53,7 @@ public class NuevoPedidoGUI extends JInternalFrame {
     private final List<Rol> rolesDeUsuario = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final static BigDecimal CIEN = new BigDecimal("100");
 
-    public NuevoPedidoGUI() {
+    public DetallePedidoGUI() {
         this.initComponents();      
         dc_fechaVencimiento.setDate(new Date());
         //listeners        

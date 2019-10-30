@@ -789,11 +789,11 @@ public class PedidosGUI extends JInternalFrame {
     private void btnNuevoPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoPedidoActionPerformed
         try {
             if (this.existeClienteDisponible()) {
-                JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), NuevoPedidoGUI.class);
+                JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), DetallePedidoGUI.class);
                 if (gui == null) {
                     Pedido pedido = new Pedido();
                     pedido.setObservaciones("Los precios se encuentran sujetos a modificaciones.");
-                    NuevoPedidoGUI nuevoPedidoGUI = new NuevoPedidoGUI();
+                    DetallePedidoGUI nuevoPedidoGUI = new DetallePedidoGUI();
                     nuevoPedidoGUI.setPedido(pedido);
                     nuevoPedidoGUI.setLocation(getDesktopPane().getWidth() / 2 - nuevoPedidoGUI.getWidth() / 2,
                             getDesktopPane().getHeight() / 2 - nuevoPedidoGUI.getHeight() / 2);
@@ -899,7 +899,7 @@ public class PedidosGUI extends JInternalFrame {
                     JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                             .getString("mensaje_pedido_procesado"), "Error", JOptionPane.ERROR_MESSAGE);
                 } else if (this.existeClienteDisponible()) {
-                    NuevoPedidoGUI nuevoPedidoGUI = new NuevoPedidoGUI();
+                    DetallePedidoGUI nuevoPedidoGUI = new DetallePedidoGUI();
                     nuevoPedidoGUI.setPedido(pedido);
                     nuevoPedidoGUI.setModificarPedido(true);
                     nuevoPedidoGUI.setLocation(getDesktopPane().getWidth() / 2 - nuevoPedidoGUI.getWidth() / 2,
