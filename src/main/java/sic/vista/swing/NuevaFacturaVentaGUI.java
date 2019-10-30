@@ -47,28 +47,65 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
 
     private TipoDeComprobante tipoDeComprobante;
     private Cliente cliente;
-    private List<RenglonFactura> renglones = new ArrayList<>();
+    private Pedido pedido;
+    private List<RenglonFactura> renglonesFactura = new ArrayList<>();
     private ModeloTabla modeloTablaResultados = new ModeloTabla();
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private final Dimension sizeInternalFrame = new Dimension(1200, 700);
-    private Pedido pedido;
+    private final Dimension sizeInternalFrame = new Dimension(1200, 700);    
     private int cantidadMaximaRenglones = 0;
     private BigDecimal subTotalBruto;
     private BigDecimal iva_105_netoFactura;
-    private BigDecimal iva_21_netoFactura;    
-    private BigDecimal totalComprobante;    
+    private BigDecimal iva_21_netoFactura;
     private final List<Rol> rolesDeUsuario = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final static BigDecimal IVA_21 = new BigDecimal("21");
     private final static BigDecimal IVA_105 = new BigDecimal("10.5");
     private final static BigDecimal CIEN = new BigDecimal("100");
 
     public NuevaFacturaVentaGUI() {
-        this.initComponents();        
+        this.initComponents();
+        this.pedido = null;        
         ImageIcon iconoNoMarcado = new ImageIcon(getClass().getResource("/sic/icons/chkNoMarcado_16x16.png"));
         this.tbtn_marcarDesmarcar.setIcon(iconoNoMarcado);        
         dc_fechaVencimiento.setDate(new Date());
-        //listeners        
+        this.setListeners();
+    }   
+    
+    public NuevaFacturaVentaGUI(Pedido pedido) {
+        this.initComponents();        
+        this.pedido = pedido;
+        ImageIcon iconoNoMarcado = new ImageIcon(getClass().getResource("/sic/icons/chkNoMarcado_16x16.png"));
+        this.tbtn_marcarDesmarcar.setIcon(iconoNoMarcado);        
+        dc_fechaVencimiento.setDate(new Date());
+        this.setListeners();
+    }
+    
+    private FacturaVenta construirFactura() {
+        FacturaVenta factura = new FacturaVenta();        
+        factura.setTipoComprobante(this.tipoDeComprobante);
+        Calendar cal = new GregorianCalendar();
+        cal.setTime(this.dc_fechaVencimiento.getDate());
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 58);
+        factura.setFechaVencimiento(cal.getTime());
+        factura.setRenglones(this.renglonesFactura);
+        factura.setObservaciones(this.txt_Observaciones.getText().trim());      
+        factura.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));  
+        factura.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
+        factura.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
+        factura.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
+        factura.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
+        factura.setSubTotalBruto(subTotalBruto);
+        factura.setIva105Neto(iva_105_netoFactura);
+        factura.setIva21Neto(iva_21_netoFactura);
+        factura.setTotal(new BigDecimal(txt_Total.getValue().toString()));                      
+        factura.setIdCliente(this.cliente.getId_Cliente());
+        factura.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        return factura;
+    }   
+    
+    private void setListeners() {
         cmb_TipoComprobante.addKeyListener(keyHandler);
         btn_NuevoCliente.addKeyListener(keyHandler);
         btn_BuscarCliente.addKeyListener(keyHandler);
@@ -83,20 +120,20 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         tbtn_marcarDesmarcar.addKeyListener(keyHandler);        
         dc_fechaVencimiento.addKeyListener(keyHandler);     
         btnModificarCliente.addKeyListener(keyHandler); 
-    }   
+    }
     
-    public void cargarPedidoParaFacturar() {
+    private void cargarPedidoParaFacturar() {
         try {
             this.cargarCliente(RestClient.getRestTemplate()
                     .getForObject("/clientes/pedidos/" + pedido.getId_Pedido(), Cliente.class));
             this.cargarTiposDeComprobantesDisponibles();            
             this.tipoDeComprobante = (TipoDeComprobante) cmb_TipoComprobante.getSelectedItem();
-            this.renglones = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
+            this.renglonesFactura = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/facturas/renglones/pedidos/" + pedido.getId_Pedido()
                             + "?tipoDeComprobante=" + this.tipoDeComprobante.name(),
                             RenglonFactura[].class)));
-            EstadoRenglon[] marcaDeRenglonesDelPedido = new EstadoRenglon[renglones.size()];
-            for (int i = 0; i < renglones.size(); i++) {
+            EstadoRenglon[] marcaDeRenglonesDelPedido = new EstadoRenglon[renglonesFactura.size()];
+            for (int i = 0; i < renglonesFactura.size(); i++) {
                 marcaDeRenglonesDelPedido[i] = EstadoRenglon.DESMARCADO;
             }
             this.cargarRenglonesAlTable(marcaDeRenglonesDelPedido);
@@ -108,59 +145,6 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    public void setPedido(Pedido pedido) {
-        this.pedido = pedido;
-    }
-
-    public Pedido getPedido() {
-        return this.pedido;
-    }
-
-    public TipoDeComprobante getTipoDeComprobante() {
-        return tipoDeComprobante;
-    }
-
-    public List<RenglonFactura> getRenglones() {
-        return renglones;
-    }
-
-    public BigDecimal getTotal() {
-        return this.totalComprobante;
-    }
-
-    public FacturaVenta construirFactura() {
-        FacturaVenta factura = new FacturaVenta();        
-        factura.setTipoComprobante(this.tipoDeComprobante);
-        Calendar cal = new GregorianCalendar();
-        cal.setTime(this.dc_fechaVencimiento.getDate());
-        cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.MINUTE, 59);
-        cal.set(Calendar.SECOND, 58);
-        factura.setFechaVencimiento(cal.getTime());
-        factura.setRenglones(this.getRenglones());
-        factura.setObservaciones(this.txt_Observaciones.getText().trim());      
-        factura.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));  
-        factura.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
-        factura.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
-        factura.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
-        factura.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
-        factura.setSubTotalBruto(subTotalBruto);
-        factura.setIva105Neto(iva_105_netoFactura);
-        factura.setIva21Neto(iva_21_netoFactura);
-        factura.setTotal(new BigDecimal(txt_Total.getValue().toString()));                      
-        factura.setIdCliente(this.cliente.getId_Cliente());
-        factura.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
-        return factura;
-    }
-    
-    public long getIdCliente() {
-        return this.cliente.getId_Cliente();
-    }
-
-    public ModeloTabla getModeloTabla() {
-        return this.modeloTablaResultados;
     }
     
     private void cargarEstadoDeLosChkEnTabla(JTable tbl_Resultado, EstadoRenglon[] estadosDeLosRenglones) {
@@ -250,23 +234,23 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         try {
             boolean agregado = false;
             //busca entre los renglones al producto, aumenta la cantidad y recalcula el descuento        
-            for (int i = 0; i < renglones.size(); i++) {
+            for (int i = 0; i < renglonesFactura.size(); i++) {
                 RenglonFactura rf;
-                if (renglones.get(i).getIdProductoItem() == renglon.getIdProductoItem()) {
+                if (renglonesFactura.get(i).getIdProductoItem() == renglon.getIdProductoItem()) {
                     rf = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
-                            + "idProducto=" + renglones.get(i).getIdProductoItem()
+                            + "idProducto=" + renglonesFactura.get(i).getIdProductoItem()
                             + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                             + "&movimiento=" + Movimiento.VENTA
-                            + "&cantidad=" + renglones.get(i).getCantidad().add(renglon.getCantidad())
+                            + "&cantidad=" + renglonesFactura.get(i).getCantidad().add(renglon.getCantidad())
                             + "&descuentoPorcentaje=" + renglon.getDescuentoPorcentaje(),
                             RenglonFactura.class);
-                    renglones.set(i, rf);
+                    renglonesFactura.set(i, rf);
                     agregado = true;
                 }
             }
             //si no encuentra el producto entre los renglones, carga un nuevo renglon        
             if (agregado == false) {
-                renglones.add(renglon);
+                renglonesFactura.add(renglon);
             }
             //para que baje solo el scroll vertical
             Point p = new Point(0, tbl_Resultado.getHeight());
@@ -286,7 +270,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         this.setColumnas();
         int i = 0;
         boolean corte;
-        for (RenglonFactura renglon : renglones) {
+        for (RenglonFactura renglon : renglonesFactura) {
             Object[] fila = new Object[8];
             corte = false;
             /*Dentro de este While, el case según el valor leido en el array de la enumeración,
@@ -334,7 +318,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
     private void limpiarYRecargarComponentes() {        
         this.pedido = null;
         dc_fechaVencimiento.setDate(new Date());
-        renglones = new ArrayList<>();
+        renglonesFactura = new ArrayList<>();
         modeloTablaResultados = new ModeloTabla();
         this.setColumnas();
         txt_CodigoProducto.setText("");
@@ -346,14 +330,14 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
     }
 
     private void buscarProductoConVentanaAuxiliar() {
-        if (cantidadMaximaRenglones > renglones.size()) {
-            BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglones, this.tipoDeComprobante,  Movimiento.VENTA);
+        if (cantidadMaximaRenglones > renglonesFactura.size()) {
+            BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglonesFactura, this.tipoDeComprobante,  Movimiento.VENTA);
             buscarProductosGUI.setModal(true);
             buscarProductosGUI.setLocationRelativeTo(this);
             buscarProductosGUI.setVisible(true);
             if (buscarProductosGUI.debeCargarRenglon()) {
                 boolean renglonCargado = false;
-                for (RenglonFactura renglon : renglones) {
+                for (RenglonFactura renglon : renglonesFactura) {
                     if (renglon.getIdProductoItem() == buscarProductosGUI.getRenglonFactura().getIdProductoItem()) {
                         renglonCargado = true;
                     }
@@ -362,7 +346,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                 /*Si la tabla no contiene renglones, despues de agregar el renglon
                  a la coleccion, carga el arreglo con los estados con un solo elemento, 
                  cuyo valor es "Desmarcado" para evitar un nulo.*/
-                EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglones.size()];
+                EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglonesFactura.size()];
                 if (tbl_Resultado.getRowCount() == 0) {
                     estadosRenglones[0] = EstadoRenglon.DESMARCADO;
                 } else {
@@ -417,7 +401,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                 }
                 if (esValido) {
                     this.agregarRenglon(renglon);
-                    EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglones.size()];
+                    EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglonesFactura.size()];
                     if (tbl_Resultado.getRowCount() == 0) {
                         estadosRenglones[0] = EstadoRenglon.DESMARCADO;
                     } else {
@@ -465,11 +449,11 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         BigDecimal recargoNeto;
         BigDecimal total;
         this.validarComponentesDeResultados();
-        BigDecimal[] cantidades = new BigDecimal[renglones.size()];
-        BigDecimal[] ivaPorcentajeRenglones = new BigDecimal[renglones.size()];
-        BigDecimal[] ivaNetoRenglones = new BigDecimal[renglones.size()];
+        BigDecimal[] cantidades = new BigDecimal[renglonesFactura.size()];
+        BigDecimal[] ivaPorcentajeRenglones = new BigDecimal[renglonesFactura.size()];
+        BigDecimal[] ivaNetoRenglones = new BigDecimal[renglonesFactura.size()];
         int indice = 0;
-        for (RenglonFactura renglon : renglones) {
+        for (RenglonFactura renglon : renglonesFactura) {
             subTotal = subTotal.add(renglon.getImporte());
             cantidades[indice] = renglon.getCantidad();
             ivaPorcentajeRenglones[indice] = renglon.getIvaPorcentaje();
@@ -525,7 +509,6 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         } else {
             txt_SubTotalBruto.setValue(subTotalBruto);
         }
-        this.totalComprobante = total;
     }
 
     private void cargarTiposDeComprobantesDisponibles() {
@@ -557,8 +540,8 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
 
     private void recargarRenglonesSegunTipoDeFactura() {
         try {            
-            List<RenglonFactura> resguardoRenglones = renglones;
-            renglones = new ArrayList<>();
+            List<RenglonFactura> resguardoRenglones = renglonesFactura;
+            renglonesFactura = new ArrayList<>();
             resguardoRenglones.stream().map(renglonFactura -> {
                 Producto producto = RestClient.getRestTemplate()
                         .getForObject("/productos/" + renglonFactura.getIdProductoItem(), Producto.class);
@@ -571,13 +554,13 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                         RenglonFactura.class);
                 return renglon;
             }).forEachOrdered(renglon -> this.agregarRenglon(renglon));
-            EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglones.size()];
-            if (!renglones.isEmpty()) {
+            EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglonesFactura.size()];
+            if (!renglonesFactura.isEmpty()) {
                 if (tbl_Resultado.getRowCount() == 0) {
                     estadosRenglones[0] = EstadoRenglon.DESMARCADO;
                 } else {
                     this.cargarEstadoDeLosChkEnTabla(tbl_Resultado, estadosRenglones);
-                    if (tbl_Resultado.getRowCount() > renglones.size()) {
+                    if (tbl_Resultado.getRowCount() > renglonesFactura.size()) {
                         estadosRenglones[tbl_Resultado.getRowCount()] = EstadoRenglon.DESMARCADO;
                     }
                 }
@@ -1395,7 +1378,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
 
     private void btn_ContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ContinuarActionPerformed
         if (cliente != null) {
-            if (renglones.isEmpty()) {
+            if (renglonesFactura.isEmpty()) {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                         .getString("mensaje_factura_sin_renglones"), "Error", JOptionPane.ERROR_MESSAGE);
             } else {
@@ -1407,9 +1390,9 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                     try {
                         cliente = RestClient.getRestTemplate().getForObject("/clientes/" + this.cliente.getId_Cliente(), Cliente.class);
                         Map<Long, BigDecimal> faltantes;
-                        faltantes = this.getProductosSinStockDisponible(renglones);
+                        faltantes = this.getProductosSinStockDisponible(renglonesFactura);
                         if (faltantes.isEmpty()) {
-                            CerrarVentaGUI cerrarVentaGUI = new CerrarVentaGUI(this, true);
+                            CerrarVentaGUI cerrarVentaGUI = new CerrarVentaGUI(this, this.construirFactura(), this.pedido, this.modeloTablaResultados);
                             cerrarVentaGUI.setLocationRelativeTo(this);
                             cerrarVentaGUI.setVisible(true);
                             if (cerrarVentaGUI.isExito()) {
@@ -1440,9 +1423,9 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         int[] indicesParaEliminar = Utilidades.getSelectedRowsModelIndices(tbl_Resultado);
         List<RenglonFactura> renglonesParaBorrar = new ArrayList<>();
         for (int i = 0; i < indicesParaEliminar.length; i++) {
-            renglonesParaBorrar.add(renglones.get(indicesParaEliminar[i]));
+            renglonesParaBorrar.add(renglonesFactura.get(indicesParaEliminar[i]));
         }
-        EstadoRenglon[] estadoDeRenglones = new EstadoRenglon[renglones.size()];
+        EstadoRenglon[] estadoDeRenglones = new EstadoRenglon[renglonesFactura.size()];
         for (int i = 0; i < tbl_Resultado.getRowCount(); i++) {
             if (((boolean) tbl_Resultado.getValueAt(i, 0)) == true) {
                 estadoDeRenglones[i] = EstadoRenglon.MARCADO;
@@ -1453,7 +1436,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         for (int i = 0; i < indicesParaEliminar.length; i++) {
             estadoDeRenglones[indicesParaEliminar[i]] = EstadoRenglon.ELIMINADO;
         }
-        renglonesParaBorrar.forEach((renglon) -> renglones.remove(renglon));
+        renglonesParaBorrar.forEach((renglon) -> renglonesFactura.remove(renglon));
         this.cargarRenglonesAlTable(estadoDeRenglones);
         this.calcularResultados();
     }//GEN-LAST:event_btn_QuitarProductoActionPerformed
