@@ -5,7 +5,7 @@
     <Property name="resizable" type="boolean" value="true"/>
     <Property name="title" type="java.lang.String" value="Nuevo Pedido"/>
     <Property name="frameIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-      <Image iconType="3" name="/sic/icons/SIC_16_square.png"/>
+      <Image iconType="3" name="/sic/icons/PedidoNuevo_16x16.png"/>
     </Property>
   </Properties>
   <SyntheticProperties>

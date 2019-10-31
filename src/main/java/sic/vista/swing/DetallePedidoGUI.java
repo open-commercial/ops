@@ -415,7 +415,7 @@ public class DetallePedidoGUI extends JInternalFrame {
 
         setResizable(true);
         setTitle("Nuevo Pedido");
-        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/SIC_16_square.png"))); // NOI18N
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/PedidoNuevo_16x16.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
                 formInternalFrameOpened(evt);
@@ -1114,8 +1114,7 @@ public class DetallePedidoGUI extends JInternalFrame {
                         .getForObject("/pedidos/" + this.pedido.getId_Pedido() + "/renglones", RenglonPedido[].class)));
                 this.cargarRenglonesAlTable();
                 this.calcularResultados();
-            } else {
-            }
+            }            
         } catch (PropertyVetoException ex) {
             String msjError = "Se produjo un error al intentar maximizar la ventana.";
             LOGGER.error(msjError + " - " + ex.getMessage());
