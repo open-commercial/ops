@@ -36,7 +36,7 @@ public abstract class Factura implements Serializable {
     private TipoDeComprobante tipoComprobante;
     private long numSerie;
     private long numFactura;
-    private LocalDateTime fechaVencimiento;  
+    private LocalDate fechaVencimiento;  
     private Long nroPedido;
     private long idTransportista;
     private String nombreTransportista;     

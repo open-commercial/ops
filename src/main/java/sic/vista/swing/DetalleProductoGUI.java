@@ -827,8 +827,7 @@ public class DetalleProductoGUI extends JDialog {
         txtProveedor.setText(productoParaModificar.getRazonSocialProveedor());     
         lbl_FechaUltimaModificacion.setText(FormatosFechaHora.formatoFecha(productoParaModificar.getFechaUltimaModificacion(), FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
         lbl_FechaAlta.setText(FormatosFechaHora.formatoFecha(productoParaModificar.getFechaAlta(), FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
-        ZonedDateTime zdt = productoParaModificar.getFechaVencimiento().atZone(ZoneId.systemDefault());
-        dc_Vencimiento.setDate(Date.from(zdt.toInstant()));
+        dc_Vencimiento.setDate(java.sql.Date.valueOf(productoParaModificar.getFechaVencimiento()));
         txt_Estanteria.setText(productoParaModificar.getEstanteria());
         txt_Estante.setText(productoParaModificar.getEstante());        
         txtPrecioCosto.setValue(productoParaModificar.getPrecioCosto());        
@@ -1026,8 +1025,11 @@ public class DetalleProductoGUI extends JDialog {
                     producto.setEstanteria(txt_Estanteria.getText().trim());
                     producto.setEstante(txt_Estante.getText().trim());
                     producto.setNota(txt_Nota.getText().trim());
-                    producto.setFechaVencimiento(LocalDateTime.ofInstant(dc_Vencimiento.getDate().toInstant(),
-                            ZoneId.systemDefault()));
+                    if (dc_Vencimiento.getDate() != null) {
+                        producto.setFechaVencimiento(dc_Vencimiento.getDate().toInstant()
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate());
+                    }
                     Producto productoRecuperado = RestClient.getRestTemplate().postForObject("/productos?idMedida=" + idMedida
                             + "&idRubro=" + idRubro
                             + "&idProveedor=" + ((idProveedor != null) ? idProveedor : "")
@@ -1067,8 +1069,11 @@ public class DetalleProductoGUI extends JDialog {
                     productoParaModificar.setEstanteria(txt_Estanteria.getText().trim());
                     productoParaModificar.setEstante(txt_Estante.getText().trim());
                     productoParaModificar.setNota(txt_Nota.getText().trim());
-                    productoParaModificar.setFechaVencimiento(LocalDateTime.ofInstant(dc_Vencimiento.getDate().toInstant(),
-                            ZoneId.systemDefault()));
+                    if (dc_Vencimiento.getDate() != null) {
+                        productoParaModificar.setFechaVencimiento(dc_Vencimiento.getDate().toInstant()
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate());
+                    }
                     if (cambioImagen && imagenProducto != null) {
                         productoParaModificar.setUrlImagen(RestClient.getRestTemplate()
                                 .postForObject("/productos/" + productoParaModificar.getIdProducto() + "/imagenes", imagenProducto, String.class));

@@ -142,14 +142,18 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         FacturaVenta factura = new FacturaVenta();        
         factura.setTipoComprobante(this.tipoDeComprobante);
         Calendar cal = new GregorianCalendar();
-        cal.setTime(this.dc_fechaVencimiento.getDate());
-        cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.MINUTE, 59);
-        cal.set(Calendar.SECOND, 58);
-        factura.setFechaVencimiento(LocalDateTime.now());
+        if (this.dc_fechaVencimiento.getDate() != null) {
+            cal.setTime(this.dc_fechaVencimiento.getDate());
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 58);
+            factura.setFechaVencimiento(cal.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate());
+        }
         factura.setRenglones(this.getRenglones());
-        factura.setObservaciones(this.txt_Observaciones.getText().trim());      
-        factura.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));  
+        factura.setObservaciones(this.txt_Observaciones.getText().trim());
+        factura.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
         factura.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
         factura.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
         factura.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
@@ -157,7 +161,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         factura.setSubTotalBruto(subTotalBruto);
         factura.setIva105Neto(iva_105_netoFactura);
         factura.setIva21Neto(iva_21_netoFactura);
-        factura.setTotal(new BigDecimal(txt_Total.getValue().toString()));                      
+        factura.setTotal(new BigDecimal(txt_Total.getValue().toString()));
         factura.setIdCliente(this.cliente.getId_Cliente());
         factura.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
         return factura;
@@ -632,7 +636,11 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         nuevoPedido.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
         nuevoPedido.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
         nuevoPedido.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
-        nuevoPedido.setFechaVencimiento(LocalDateTime.ofInstant(dc_fechaVencimiento.getDate().toInstant(), ZoneId.systemDefault()));
+        if (dc_fechaVencimiento.getDate() != null) {
+            nuevoPedido.setFechaVencimiento(dc_fechaVencimiento.getDate().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate());
+        }
         nuevoPedido.setObservaciones(txt_Observaciones.getText());
         nuevoPedido.setRenglones(this.calcularRenglonesPedido());
         nuevoPedido.setTotal(new BigDecimal(txt_Total.getValue().toString()));

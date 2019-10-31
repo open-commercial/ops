@@ -6,6 +6,7 @@ import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -107,7 +108,7 @@ public class FacturasCompraGUI extends JInternalFrame {
         tipos[0] = LocalDateTime.class;
         tipos[1] = TipoDeOperacion.class;
         tipos[2] = String.class;
-        tipos[3] = LocalDateTime.class;
+        tipos[3] = LocalDate.class;
         tipos[4] = String.class;
         tipos[5] = String.class;
         tipos[6] = String.class;
@@ -143,6 +144,7 @@ public class FacturasCompraGUI extends JInternalFrame {
         //renderers        
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         tbl_Resultados.setDefaultRenderer(LocalDateTime.class, new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
+        tbl_Resultados.setDefaultRenderer(LocalDate.class, new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 
     private void cambiarEstadoEnabledComponentes(boolean status) {

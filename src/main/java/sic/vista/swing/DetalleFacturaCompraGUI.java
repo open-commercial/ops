@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -177,7 +178,11 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         facturaCompra.setTipoComprobante(tipoDeComprobante);
         facturaCompra.setNumSerie(Long.parseLong(txt_SerieFactura.getValue().toString()));
         facturaCompra.setNumFactura(Long.parseLong(txt_NumeroFactura.getValue().toString()));
-        facturaCompra.setFechaVencimiento(LocalDateTime.ofInstant(dc_FechaVencimiento.getDate().toInstant(), ZoneId.systemDefault()));
+        if (dc_FechaVencimiento.getDate() != null) {
+            facturaCompra.setFechaVencimiento(dc_FechaVencimiento.getDate().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate());
+        }
         facturaCompra.setRenglones(new ArrayList<>(renglones));
         facturaCompra.setSubTotal(new BigDecimal(txt_SubTotal.getValue().toString()));
         facturaCompra.setRecargoPorcentaje(BigDecimal.ZERO);
@@ -371,10 +376,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         cmb_TipoFactura.addItem(facturaParaMostrar.getTipoComprobante());
         txtProveedor.setText(facturaParaMostrar.getRazonSocialProveedor());        
         cmb_Transportista.addItem(facturaParaMostrar.getNombreTransportista());
-        ZonedDateTime zdt = facturaParaMostrar.getFecha().atZone(ZoneId.systemDefault());
-        dc_FechaFactura.setDate(Date.from(zdt.toInstant()));
-        zdt = facturaParaMostrar.getFechaVencimiento().atZone(ZoneId.systemDefault());
-        dc_FechaVencimiento.setDate(Date.from(zdt.toInstant()));
+        dc_FechaVencimiento.setDate(java.sql.Date.valueOf(facturaParaMostrar.getFechaVencimiento()));
         txta_Observaciones.setText(facturaParaMostrar.getObservaciones());
         txt_SubTotal.setValue(facturaParaMostrar.getSubTotal());
         txt_Descuento_Porcentaje.setValue(facturaParaMostrar.getDescuentoPorcentaje());

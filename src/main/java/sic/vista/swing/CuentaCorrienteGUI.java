@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -191,7 +192,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
         tipos[0] = LocalDateTime.class;
         tipos[1] = String.class;
-        tipos[2] = LocalDateTime.class;
+        tipos[2] = LocalDate.class;
         tipos[3] = Object.class;
         tipos[4] = String.class;
         tipos[5] = BigDecimal.class;
