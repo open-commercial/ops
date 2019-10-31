@@ -315,20 +315,6 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         tbl_Resultado.setModel(modeloTablaResultados);
     }
 
-    private void limpiarYRecargarComponentes() {        
-        this.pedido = null;
-        dc_fechaVencimiento.setDate(new Date());
-        renglonesFactura = new ArrayList<>();
-        modeloTablaResultados = new ModeloTabla();
-        this.setColumnas();
-        txt_CodigoProducto.setText("");
-        txt_Observaciones.setText("");
-        txt_Descuento_porcentaje.setValue(0.0);
-        txt_Recargo_porcentaje.setValue(0.0);
-        this.calcularResultados();
-        this.tbtn_marcarDesmarcar.setSelected(false);
-    }
-
     private void buscarProductoConVentanaAuxiliar() {
         if (cantidadMaximaRenglones > renglonesFactura.size()) {
             BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglonesFactura, this.tipoDeComprobante,  Movimiento.VENTA);
@@ -1392,11 +1378,11 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                         Map<Long, BigDecimal> faltantes;
                         faltantes = this.getProductosSinStockDisponible(renglonesFactura);
                         if (faltantes.isEmpty()) {
-                            CerrarVentaGUI cerrarVentaGUI = new CerrarVentaGUI(this, this.construirFactura(), this.pedido, this.modeloTablaResultados);
+                            CerrarVentaGUI cerrarVentaGUI = new CerrarVentaGUI(this.construirFactura(), this.pedido, this.modeloTablaResultados);
                             cerrarVentaGUI.setLocationRelativeTo(this);
                             cerrarVentaGUI.setVisible(true);
                             if (cerrarVentaGUI.isExito()) {
-                                this.limpiarYRecargarComponentes();
+                                this.dispose();
                             }
                         } else {
                             ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(faltantes);

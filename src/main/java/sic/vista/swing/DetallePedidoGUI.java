@@ -191,19 +191,6 @@ public class DetallePedidoGUI extends JInternalFrame {
         tbl_Resultado.setModel(modeloTablaResultados);
     }
 
-    private void limpiarYRecargarComponentes() {        
-        this.pedido = null;
-        dc_fechaVencimiento.setDate(new Date());
-        renglones = new ArrayList<>();
-        modeloTablaResultados = new ModeloTabla();
-        this.setColumnas();
-        txt_CodigoProducto.setText("");
-        txt_Observaciones.setText("");
-        txt_Descuento_porcentaje.setValue(0.0);
-        txt_Recargo_porcentaje.setValue(0.0);
-        this.calcularResultados();
-    }
-
     private void buscarProductoConVentanaAuxiliar() {
         if (cantidadMaximaRenglones > renglones.size()) {
             BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglones);
@@ -309,7 +296,7 @@ public class DetallePedidoGUI extends JInternalFrame {
             cerrarPedidoGUI.setLocationRelativeTo(this);
             cerrarPedidoGUI.setVisible(true);
             if (cerrarPedidoGUI.isOperacionExitosa()) {
-                this.limpiarYRecargarComponentes();
+                this.dispose();
             }
         } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificandoPedido == true) {
             this.actualizarPedido(pedido);

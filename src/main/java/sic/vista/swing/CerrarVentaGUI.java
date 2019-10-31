@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
-import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
@@ -40,7 +39,6 @@ public class CerrarVentaGUI extends JDialog {
     private FacturaVenta facturaVenta;
     private final Pedido pedido;
     private final ModeloTabla modeloTabla;
-    private final NuevaFacturaVentaGUI gui_puntoDeVenta;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int[] indicesParaDividir = null;
     private final List<Long> idsFormasDePago = new ArrayList<>();
@@ -48,14 +46,13 @@ public class CerrarVentaGUI extends JDialog {
     private boolean dividir = false;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     
-    public CerrarVentaGUI(JInternalFrame parent, FacturaVenta facturaVenta, Pedido pedido, ModeloTabla modeloTabla) {
+    public CerrarVentaGUI(FacturaVenta facturaVenta, Pedido pedido, ModeloTabla modeloTabla) {
         super.setModal(true);
         this.facturaVenta = facturaVenta;
         this.pedido = pedido;
         this.modeloTabla = modeloTabla;
         this.initComponents();
-        this.setIcon();        
-        this.gui_puntoDeVenta = (NuevaFacturaVentaGUI) parent;
+        this.setIcon();
         this.setListeners();
     }
 
@@ -269,9 +266,6 @@ public class CerrarVentaGUI extends JDialog {
                     }
                     exito = true;
                 }
-            }
-            if (this.pedido != null) {
-                gui_puntoDeVenta.dispose();
             }
             this.dispose();
         } catch (RestClientResponseException ex) {
