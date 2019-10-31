@@ -222,12 +222,12 @@ public class NuevaNotaDebitoGUI extends JDialog {
             TipoDeComprobante[] tiposDeComprobante = null;
             if (cliente != null) {
                 tiposDeComprobante = RestClient.getRestTemplate()
-                        .getForObject("/notas/clientes/tipos/debito?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        .getForObject("/notas/clientes/tipos/debito?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                                 + "&idCliente=" + this.cliente.getId_Cliente(), TipoDeComprobante[].class);
             }
             if (proveedor != null) {
                 tiposDeComprobante = RestClient.getRestTemplate()
-                        .getForObject("/notas/proveedores/tipos/debito?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        .getForObject("/notas/proveedores/tipos/debito?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                                 + "&idProveedor=" + this.proveedor.getId_Proveedor(), TipoDeComprobante[].class);
             }
             if (tiposDeComprobante != null) {

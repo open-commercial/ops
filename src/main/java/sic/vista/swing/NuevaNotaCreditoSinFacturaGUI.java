@@ -174,12 +174,12 @@ public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
             TipoDeComprobante[] tiposDeComprobante = null;
             if (this.idCliente != null) {
                 tiposDeComprobante = RestClient.getRestTemplate()
-                        .getForObject("/notas/clientes/tipos/credito?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        .getForObject("/notas/clientes/tipos/credito?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                                 + "&idCliente=" + this.idCliente, TipoDeComprobante[].class);
             }
             if (this.idProveedor != null) {
                 tiposDeComprobante = RestClient.getRestTemplate()
-                        .getForObject("/notas/proveedores/tipos/credito?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        .getForObject("/notas/proveedores/tipos/credito?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                                 + "&idProveedor=" + this.idProveedor, TipoDeComprobante[].class);
             }
             if (tiposDeComprobante != null) {
@@ -209,7 +209,7 @@ public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
                     .builder()
                     .idCliente(idCliente)
                     .idProveedor(idProveedor)
-                    .idEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())
+                    .idEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa())
                     .monto(new BigDecimal(ftxt_Monto.getValue().toString()))
                     .tipo(((TipoDeComprobante) cmbTipoDeComprobante.getSelectedItem()))
                     .detalle(ftxtDetalle.getText().trim())

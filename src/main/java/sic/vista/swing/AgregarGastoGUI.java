@@ -175,7 +175,7 @@ public class AgregarGastoGUI extends JDialog {
         Gasto gasto = this.construirGasto(ftxt_Concepto.getText().trim(), new BigDecimal(ftxt_Monto.getValue().toString()));
         try {
             RestClient.getRestTemplate().postForObject("/gastos?idEmpresa="
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                     + "&idFormaDePago=" + ((FormaDePago) cmb_FormaDePago.getSelectedItem()).getId_FormaDePago(),
                     gasto, Gasto.class);
             this.dispose();

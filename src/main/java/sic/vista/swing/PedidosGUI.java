@@ -74,7 +74,7 @@ public class PedidosGUI extends JInternalFrame {
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
         BusquedaPedidoCriteria criteria = BusquedaPedidoCriteria.builder().build();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         if (chk_Fecha.isSelected()) {
             criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault()) : null);
             criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault()) : null);
@@ -264,7 +264,7 @@ public class PedidosGUI extends JInternalFrame {
 
     private boolean existeClienteDisponible() {
         BusquedaClienteCriteria criteriaCliente = BusquedaClienteCriteria.builder()
-                .idEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())
+                .idEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa())
                 .pagina(0)
                 .build();
         HttpEntity<BusquedaClienteCriteria> requestEntity = new HttpEntity<>(criteriaCliente);

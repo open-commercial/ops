@@ -9,10 +9,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -159,7 +157,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         cmb_Transportista.removeAllItems();
         try {
             List<Transportista> transportistas = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/transportistas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                    .getForObject("/transportistas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                     Transportista[].class)));
             transportistas.stream().forEach(t -> cmb_Transportista.addItem(t));
         } catch (RestClientResponseException ex) {
@@ -197,7 +195,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         facturaCompra.setTotal(totalComprobante);
         facturaCompra.setObservaciones(txta_Observaciones.getText().trim());
         facturaCompra.setEliminada(false);
-        facturaCompra.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        facturaCompra.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         facturaCompra.setIdProveedor(proveedorSeleccionado.getId_Proveedor());
         facturaCompra.setIdTransportista(((Transportista) cmb_Transportista.getSelectedItem()).getId_Transportista());
         try {
@@ -389,7 +387,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         txt_Total.setValue(facturaParaMostrar.getTotal());
         try {
             facturaParaMostrar.setRenglones(new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/facturas/" + facturaParaMostrar.getId_Factura() + "/renglones",
+                    .getForObject("/facturas/" + facturaParaMostrar.getIdFactura() + "/renglones",
                     RenglonFactura[].class))));
             facturaParaMostrar.getRenglones().stream().forEach(r -> {
                 this.agregarRenglon(r);
@@ -409,7 +407,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         try {
             TipoDeComprobante[] tiposFactura = RestClient.getRestTemplate()
                     .getForObject("/facturas/compra/tipos/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                     + "/proveedores/" + proveedorSeleccionado.getId_Proveedor(),
                     TipoDeComprobante[].class);
             cmb_TipoFactura.removeAllItems();

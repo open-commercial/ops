@@ -71,7 +71,7 @@ public class NotasDebitoCompraGUI extends JInternalFrame {
 
     private BusquedaNotaCriteria getCriteria() {
         BusquedaNotaCriteria criteria = new BusquedaNotaCriteria();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         if (chk_Fecha.isSelected()) {
             criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault()) : null);
             criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault()) : null);
@@ -319,7 +319,7 @@ public class NotasDebitoCompraGUI extends JInternalFrame {
     private void cargarTiposDeNota() {
         try {
             TipoDeComprobante[] tiposDeComprobantes = RestClient.getRestTemplate()
-                    .getForObject("/notas/debito/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                    .getForObject("/notas/debito/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                             TipoDeComprobante[].class);
             for (int i = 0; tiposDeComprobantes.length > i; i++) {
                 cmb_TipoNota.addItem(tiposDeComprobantes[i]);

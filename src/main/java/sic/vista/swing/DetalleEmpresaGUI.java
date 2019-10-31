@@ -380,7 +380,7 @@ public class DetalleEmpresaGUI extends JDialog {
                     empresa.setLogo("");
                 } else {
                     empresa.setLogo(RestClient.getRestTemplate()
-                            .postForObject("/empresas/" + empresa.getId_Empresa() + "/logo", logo, String.class));
+                            .postForObject("/empresas/" + empresa.getIdEmpresa() + "/logo", logo, String.class));
                     RestClient.getRestTemplate().put("/empresas", empresa);
                 }
             }
@@ -398,7 +398,7 @@ public class DetalleEmpresaGUI extends JDialog {
                 }
                 if (cambioLogo && logo != null) {
                     empresaModificar.setLogo(RestClient.getRestTemplate()
-                            .postForObject("/empresas/" + empresaModificar.getId_Empresa() + "/logo", logo, String.class));
+                            .postForObject("/empresas/" + empresaModificar.getIdEmpresa() + "/logo", logo, String.class));
                 } else if (cambioLogo && logo == null) {
                     empresaModificar.setLogo(null);
                 }

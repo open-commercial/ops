@@ -193,7 +193,7 @@ public class DetalleTransportistaGUI extends JDialog {
                     transportista.setNombre(txt_Nombre.getText().trim());
                     transportista.setTelefono(txt_Telefono.getText().trim());
                     transportista.setWeb(txt_Web.getText().trim());
-                    transportista.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+                    transportista.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
                     if (this.ubicacion != null) {
                         transportista.setUbicacion(this.ubicacion);
                     }
@@ -210,8 +210,8 @@ public class DetalleTransportistaGUI extends JDialog {
                     transportistaModificar.setNombre(txt_Nombre.getText().trim());
                     transportistaModificar.setTelefono(txt_Telefono.getText().trim());
                     transportistaModificar.setWeb(txt_Web.getText().trim());
-                    transportistaModificar.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
-                    transportistaModificar.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+                    transportistaModificar.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
+                    transportistaModificar.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
                     if (this.ubicacion != null) {
                         transportistaModificar.setUbicacion(this.ubicacion);
                     }

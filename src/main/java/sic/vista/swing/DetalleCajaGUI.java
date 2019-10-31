@@ -528,7 +528,7 @@ public class DetalleCajaGUI extends JInternalFrame {
     private void btn_AgregarGastoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AgregarGastoActionPerformed
         try {
             if (RestClient.getRestTemplate().getForObject("/cajas/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/ultima-caja-abierta", boolean.class)) {
+                    + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa() + "/ultima-caja-abierta", boolean.class)) {
                 List<FormaDePago> formasDePago = Arrays.asList(RestClient.getRestTemplate().getForObject("/formas-de-pago", FormaDePago[].class));
                 AgregarGastoGUI agregarGasto = new AgregarGastoGUI(formasDePago);
                 agregarGasto.setModal(true);
@@ -560,7 +560,7 @@ public class DetalleCajaGUI extends JInternalFrame {
             TipoDeComprobante tipoDeComprobante = this.movimientos.get(idFormaDePagoSeleccionada).get(Utilidades.getSelectedRowModelIndice(tbl_Movimientos)).getTipoComprobante();
             try {
                 if (tipoDeComprobante.equals(TipoDeComprobante.GASTO) && RestClient.getRestTemplate().getForObject("/cajas/empresas/"
-                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/ultima-caja-abierta", boolean.class)) {
+                        + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa() + "/ultima-caja-abierta", boolean.class)) {
                     int confirmacionEliminacion = JOptionPane.showConfirmDialog(this,
                             "¿Esta seguro que desea eliminar el gasto seleccionado?",
                             "Eliminar", JOptionPane.YES_NO_OPTION);

@@ -181,7 +181,7 @@ public class FacturasCompraGUI extends JInternalFrame {
     private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
         BusquedaFacturaCompraCriteria criteria = new BusquedaFacturaCompraCriteria();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         if (chk_Fecha.isSelected()) {
             criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault()) : null);
             criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault()) : null);
@@ -303,14 +303,14 @@ public class FacturasCompraGUI extends JInternalFrame {
 
     private boolean existeProveedorDisponible() {
         return !Arrays.asList(RestClient.getRestTemplate()
-            .getForObject("/proveedores/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+            .getForObject("/proveedores/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
             Proveedor[].class)).isEmpty();
     }
        
     private void cargarTiposDeFactura() {
         try {
             TipoDeComprobante[] tiposDeComprobantes = RestClient.getRestTemplate()
-                    .getForObject("/facturas/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                    .getForObject("/facturas/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                             TipoDeComprobante[].class);
             for (int i = 0; tiposDeComprobantes.length > i; i++) {
                 cmb_TipoFactura.addItem(tiposDeComprobantes[i]);
@@ -939,7 +939,7 @@ public class FacturasCompraGUI extends JInternalFrame {
                     || factura.getTipoComprobante() == TipoDeComprobante.FACTURA_Y
                     || factura.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
                 SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(
-                        factura.getId_Factura());
+                        factura.getIdFactura());
                 seleccionDeProductosGUI.setModal(true);
                 seleccionDeProductosGUI.setLocationRelativeTo(this);
                 seleccionDeProductosGUI.setVisible(true);

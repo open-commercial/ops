@@ -163,7 +163,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         factura.setIva21Neto(iva_21_netoFactura);
         factura.setTotal(new BigDecimal(txt_Total.getValue().toString()));
         factura.setIdCliente(this.cliente.getId_Cliente());
-        factura.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        factura.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         return factura;
     }
     
@@ -195,7 +195,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
     private boolean existeClientePredeterminado() {
         return RestClient.getRestTemplate().getForObject("/clientes/existe-predeterminado/empresas/"
-                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), boolean.class);
+                + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(), boolean.class);
     }
 
     private boolean existeFormaDePagoPredeterminada() {
@@ -207,7 +207,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
     private boolean existeTransportistaCargado() {
         if (Arrays.asList(RestClient.getRestTemplate().
-                getForObject("/transportistas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                getForObject("/transportistas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                         Transportista[].class)).isEmpty()) {
             JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                     .getString("mensaje_transportista_ninguno_cargado"), "Error", JOptionPane.ERROR_MESSAGE);
@@ -407,7 +407,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
     private void buscarProductoPorCodigo() {
         try {
             Producto producto = RestClient.getRestTemplate().getForObject("/productos/busqueda?"
-                    + "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                     + "&codigo=" + txt_CodigoProducto.getText().trim(), Producto.class);
             if (producto == null) {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
@@ -560,7 +560,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 try {
                     cmb_TipoComprobante.removeAllItems();
                     tiposDeComprobante = RestClient.getRestTemplate()
-                            .getForObject("/facturas/venta/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                            .getForObject("/facturas/venta/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                                     + "/clientes/" + cliente.getId_Cliente(), TipoDeComprobante[].class);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -1640,14 +1640,14 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             this.setMaximum(true);
             this.setTitle("Punto de Venta");
             cantidadMaximaRenglones = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                     + "/cantidad-renglones", Integer.class); 
             if (rolesDeUsuario.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuario.contains(Rol.ENCARGADO)
                 || rolesDeUsuario.contains(Rol.VENDEDOR)) {
                 if (this.existeClientePredeterminado()) {
                     Cliente clientePredeterminado = RestClient.getRestTemplate()
-                            .getForObject("/clientes/predeterminado/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                            .getForObject("/clientes/predeterminado/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                                     Cliente.class);
                     this.cargarCliente(clientePredeterminado);
                     this.btnModificarCliente.setEnabled(true);

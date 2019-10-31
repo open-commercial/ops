@@ -77,7 +77,7 @@ public class BuscarProveedoresGUI extends JDialog {
                 BusquedaProveedorCriteria criteria = BusquedaProveedorCriteria.builder().build();
                 criteria.setNroProveedor(txtCriteriaBusqueda.getText().trim());
                 criteria.setRazonSocial(txtCriteriaBusqueda.getText().trim());
-                criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+                criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
                 criteria.setPagina(NUMERO_PAGINA);
                 HttpEntity<BusquedaProveedorCriteria> requestEntity = new HttpEntity<>(criteria);
                 PaginaRespuestaRest<Proveedor> response = RestClient.getRestTemplate()

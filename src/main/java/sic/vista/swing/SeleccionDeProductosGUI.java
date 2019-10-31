@@ -149,7 +149,7 @@ public class SeleccionDeProductosGUI extends JDialog {
         try {
             factura = RestClient.getRestTemplate().getForObject("/facturas/" + idFactura, Factura.class);
             factura.setRenglones(new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/facturas/" + factura.getId_Factura() + "/renglones/notas/credito", RenglonFactura[].class))));
+                    .getForObject("/facturas/" + factura.getIdFactura() + "/renglones/notas/credito", RenglonFactura[].class))));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -293,7 +293,7 @@ public class SeleccionDeProductosGUI extends JDialog {
             } else {
                 NuevaNotaCreditoDeFactura notaCreditoDeFactura = NuevaNotaCreditoDeFactura
                         .builder()
-                        .idFactura(this.factura.getId_Factura())
+                        .idFactura(this.factura.getIdFactura())
                         .cantidades(cantidades.toArray(new BigDecimal[cantidades.size()]))
                         .idsRenglonesFactura(idsRenglonesFactura.toArray(new Long[idsRenglonesFactura.size()]))
                         .modificaStock(chkModificarStock.isSelected())

@@ -22,7 +22,6 @@ import sic.modelo.EmpresaActiva;
 import sic.modelo.FormaDePago;
 import sic.modelo.Proveedor;
 import sic.modelo.Recibo;
-import sic.modelo.UsuarioActivo;
 
 public class DetalleReciboGUI extends JDialog {
     
@@ -71,7 +70,7 @@ public class DetalleReciboGUI extends JDialog {
             recibo.setMonto(new BigDecimal(txtMonto.getValue().toString()));
             recibo.setConcepto(txtObservaciones.getText().trim());
             recibo.setIdFormaDePago(((FormaDePago) cmbFormaDePago.getSelectedItem()).getId_FormaDePago());
-            recibo.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+            recibo.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
             if (cliente != null) {
                 recibo.setIdCliente(cliente.getId_Cliente());
                 recibo = RestClient.getRestTemplate().postForObject("/recibos/clientes",

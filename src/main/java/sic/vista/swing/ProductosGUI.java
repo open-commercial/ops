@@ -65,7 +65,7 @@ public class ProductosGUI extends JInternalFrame {
     private void cargarRubros() {
         try {
             rubros = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/rubros/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                    .getForObject("/rubros/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                             Rubro[].class)));
             cmb_Rubro.removeAllItems();
             rubros.stream().forEach(r -> {
@@ -272,7 +272,7 @@ public class ProductosGUI extends JInternalFrame {
 
     private void exportar() {
         BusquedaProductoCriteria criteria = BusquedaProductoCriteria.builder()
-                .idEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())
+                .idEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa())
                 .build();
         if (chkCodigoODescripcion.isSelected()) {
             criteria.setCodigo(txtCodigoODescripcion.getText().trim());
@@ -337,7 +337,7 @@ public class ProductosGUI extends JInternalFrame {
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
         BusquedaProductoCriteria criteria = BusquedaProductoCriteria.builder().build();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         if (chkCodigoODescripcion.isSelected()) {
             criteria.setCodigo(txtCodigoODescripcion.getText().trim());
             criteria.setDescripcion(txtCodigoODescripcion.getText().trim());

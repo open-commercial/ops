@@ -190,7 +190,7 @@ public class EmpresasGUI extends JDialog {
                     "Eliminar", JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
                 try {
-                    RestClient.getRestTemplate().delete("/empresas/" + empresaSeleccionada.getId_Empresa());
+                    RestClient.getRestTemplate().delete("/empresas/" + empresaSeleccionada.getIdEmpresa());
                     LOGGER.warn("Empresa " + empresaSeleccionada.getNombre() + " eliminada.");   
                     if (empresaSeleccionada.equals(EmpresaActiva.getInstance().getEmpresa())) {
                         EmpresaActiva.getInstance().setEmpresa(null);

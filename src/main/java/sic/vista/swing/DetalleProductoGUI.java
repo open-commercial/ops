@@ -8,12 +8,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.text.ParseException;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
@@ -876,7 +873,7 @@ public class DetalleProductoGUI extends JDialog {
         cmb_Medida.removeAllItems();
         try {
             medidas = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                .getForObject("/medidas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                .getForObject("/medidas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                 Medida[].class)));
             medidas.stream().forEach(m -> cmb_Medida.addItem(m.getNombre()));
         } catch (RestClientResponseException ex) {
@@ -893,7 +890,7 @@ public class DetalleProductoGUI extends JDialog {
         cmb_Rubro.removeAllItems();
         try {
             rubros = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                .getForObject("/rubros/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                .getForObject("/rubros/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                 Rubro[].class)));
             rubros.stream().forEach(r -> cmb_Rubro.addItem(r.getNombre()));
         } catch (RestClientResponseException ex) {
@@ -1033,7 +1030,7 @@ public class DetalleProductoGUI extends JDialog {
                     Producto productoRecuperado = RestClient.getRestTemplate().postForObject("/productos?idMedida=" + idMedida
                             + "&idRubro=" + idRubro
                             + "&idProveedor=" + ((idProveedor != null) ? idProveedor : "")
-                            + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                            + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                             producto, Producto.class);
                     LOGGER.warn("El producto " + productoRecuperado + " se guardó correctamente");
                     if (imagenProducto != null) {
@@ -1083,7 +1080,7 @@ public class DetalleProductoGUI extends JDialog {
                     RestClient.getRestTemplate().put("/productos?idMedida=" + idMedida
                             + "&idRubro=" + idRubro
                             + "&idProveedor=" + ((idProveedor != null) ? idProveedor : "")
-                            + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                            + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                             productoParaModificar);
                     LOGGER.warn("El producto " + productoParaModificar + " se modificó correctamente");
                     JOptionPane.showMessageDialog(this, "El producto se modificó correctamente.",

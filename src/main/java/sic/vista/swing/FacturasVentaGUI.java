@@ -99,7 +99,7 @@ public class FacturasVentaGUI extends JInternalFrame {
 
     private BusquedaFacturaVentaCriteria getCriteria() {
         BusquedaFacturaVentaCriteria criteria = new BusquedaFacturaVentaCriteria();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         if (chk_Cliente.isSelected() && clienteSeleccionado != null) {
             criteria.setIdCliente(clienteSeleccionado.getId_Cliente());
         }
@@ -390,7 +390,7 @@ public class FacturasVentaGUI extends JInternalFrame {
     private void cargarTiposDeFactura() {
         try {
             TipoDeComprobante[] tiposDeComprobantes = RestClient.getRestTemplate()
-                    .getForObject("/facturas/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                    .getForObject("/facturas/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                             TipoDeComprobante[].class);
             for (int i = 0; tiposDeComprobantes.length > i; i++) {
                 cmb_TipoFactura.addItem(tiposDeComprobantes[i]);
@@ -410,7 +410,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             try {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
                 byte[] reporte = RestClient.getRestTemplate()
-                        .getForObject("/facturas/" + facturasTotal.get(indexFilaSeleccionada).getId_Factura() + "/reporte",
+                        .getForObject("/facturas/" + facturasTotal.get(indexFilaSeleccionada).getIdFactura() + "/reporte",
                                 byte[].class);
                 File f = new File(System.getProperty("user.home") + "/Factura.pdf");
                 Files.write(f.toPath(), reporte);
@@ -437,7 +437,7 @@ public class FacturasVentaGUI extends JInternalFrame {
 
     private boolean existeClienteDisponible() {
         BusquedaClienteCriteria criteriaCliente = BusquedaClienteCriteria.builder()
-                .idEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())
+                .idEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa())
                 .pagina(0)
                 .build();
         HttpEntity<BusquedaClienteCriteria> requestEntity = new HttpEntity<>(criteriaCliente);
@@ -1211,12 +1211,12 @@ public class FacturasVentaGUI extends JInternalFrame {
     private void btn_AutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AutorizarActionPerformed
         try {
             boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                     + "/factura-electronica-habilitada", Boolean.class);
             if (FEHabilitada) {
                 if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
                     int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                    long idFacturaSeleccionada = facturasTotal.get(indexFilaSeleccionada).getId_Factura();
+                    long idFacturaSeleccionada = facturasTotal.get(indexFilaSeleccionada).getIdFactura();
                     RestClient.getRestTemplate().postForObject("/facturas/" + idFacturaSeleccionada + "/autorizacion",
                             null, FacturaVenta.class);
                     JOptionPane.showMessageDialog(this,
@@ -1294,7 +1294,7 @@ public class FacturasVentaGUI extends JInternalFrame {
                     || factura.getTipoComprobante() == TipoDeComprobante.FACTURA_Y
                     || factura.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
                 SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(
-                        factura.getId_Factura());
+                        factura.getIdFactura());
                 seleccionDeProductosGUI.setModal(true);
                 seleccionDeProductosGUI.setLocationRelativeTo(this);
                 seleccionDeProductosGUI.setVisible(true);
@@ -1374,7 +1374,7 @@ public class FacturasVentaGUI extends JInternalFrame {
                     "Eliminar", JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
                 try {
-                    RestClient.getRestTemplate().delete("/facturas/" + facturasTotal.get(indexFilaSeleccionada).getId_Factura());
+                    RestClient.getRestTemplate().delete("/facturas/" + facturasTotal.get(indexFilaSeleccionada).getIdFactura());
                     this.limpiarYBuscar(true);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

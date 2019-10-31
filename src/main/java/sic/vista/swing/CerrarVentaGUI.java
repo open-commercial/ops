@@ -77,7 +77,7 @@ public class CerrarVentaGUI extends JDialog {
         if (Desktop.isDesktopSupported()) {
             try {
                 byte[] reporte = RestClient.getRestTemplate()
-                        .getForObject("/facturas/" + factura.getId_Factura() + "/reporte", byte[].class);
+                        .getForObject("/facturas/" + factura.getIdFactura() + "/reporte", byte[].class);
                 File f = new File(System.getProperty("user.home") + "/" + nombreReporte + ".pdf");
                 Files.write(f.toPath(), reporte);
                 Desktop.getDesktop().open(f);
@@ -131,7 +131,7 @@ public class CerrarVentaGUI extends JDialog {
         try {
             cmb_Transporte.removeAllItems();
             List<Transportista> transportes = Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/transportistas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                    .getForObject("/transportistas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                             Transportista[].class));
             transportes.stream().forEach(t -> {
                 cmb_Transporte.addItem(t);
@@ -200,12 +200,12 @@ public class CerrarVentaGUI extends JDialog {
                         .postForObject(uri + indices, facturaVenta, FacturaVenta[].class));
                 facturasDivididas.forEach(fv -> {
                     fv.setRenglones(Arrays.asList(RestClient.getRestTemplate()
-                            .getForObject("/facturas/" + fv.getId_Factura() + "/renglones",
+                            .getForObject("/facturas/" + fv.getIdFactura() + "/renglones",
                                     RenglonFactura[].class)));
                 });
                 exito = true;
                 boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                         + "/factura-electronica-habilitada", Boolean.class);
                 if (FEHabilitada) {
                     int indice = facturasDivididas.size();
@@ -242,7 +242,7 @@ public class CerrarVentaGUI extends JDialog {
                 facturaVenta = Arrays.asList(RestClient.getRestTemplate().postForObject(uri, facturaVenta, FacturaVenta[].class)).get(0);
                 if (facturaVenta != null) {
                     boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                            + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                            + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                             + "/factura-electronica-habilitada", Boolean.class);
                     if (FEHabilitada) {
                         this.autorizarFactura(facturaVenta);
@@ -280,7 +280,7 @@ public class CerrarVentaGUI extends JDialog {
                 || facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_B
                 || facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_C) {
             try {
-                facturaVenta = RestClient.getRestTemplate().postForObject("/facturas/" + facturaVenta.getId_Factura() + "/autorizacion",
+                facturaVenta = RestClient.getRestTemplate().postForObject("/facturas/" + facturaVenta.getIdFactura() + "/autorizacion",
                         null, FacturaVenta.class);
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

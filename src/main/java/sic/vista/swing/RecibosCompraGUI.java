@@ -66,7 +66,7 @@ public class RecibosCompraGUI extends JInternalFrame {
     
     private BusquedaReciboCriteria getCriteria() {
         BusquedaReciboCriteria criteria = BusquedaReciboCriteria.builder().build();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         if (chk_Proveedor.isSelected() && proveedorSeleccionado != null) {
             criteria.setIdProveedor(proveedorSeleccionado.getId_Proveedor());
         }

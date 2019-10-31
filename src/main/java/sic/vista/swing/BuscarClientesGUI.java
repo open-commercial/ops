@@ -78,7 +78,7 @@ public class BuscarClientesGUI extends JDialog {
                 criteria.setNombreFiscal(txtCriteriaBusqueda.getText().trim());
                 criteria.setNombreFantasia(txtCriteriaBusqueda.getText().trim());
                 criteria.setNroDeCliente(txtCriteriaBusqueda.getText().trim());
-                criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+                criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
                 criteria.setPagina(NUMERO_PAGINA);
                 HttpEntity<BusquedaClienteCriteria> requestEntity = new HttpEntity<>(criteria);
                 PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()

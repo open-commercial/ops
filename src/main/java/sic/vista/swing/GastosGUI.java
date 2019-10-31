@@ -63,7 +63,7 @@ public class GastosGUI extends JInternalFrame {
 
     private BusquedaGastoCriteria getCriteria() {
         BusquedaGastoCriteria criteria = BusquedaGastoCriteria.builder().build();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         if (chkFecha.isSelected()) {
             criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault()) : null);
             criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault()) : null);
@@ -719,7 +719,7 @@ public class GastosGUI extends JInternalFrame {
     private void btnCrearGastoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearGastoActionPerformed
         try {
             if (RestClient.getRestTemplate().getForObject("/cajas/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/ultima-caja-abierta", boolean.class)) {
+                    + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa() + "/ultima-caja-abierta", boolean.class)) {
                 List<FormaDePago> formasDePago = Arrays.asList(RestClient.getRestTemplate().getForObject("/formas-de-pago", FormaDePago[].class));
                 AgregarGastoGUI agregarGasto = new AgregarGastoGUI(formasDePago);
                 agregarGasto.setLocationRelativeTo(this);

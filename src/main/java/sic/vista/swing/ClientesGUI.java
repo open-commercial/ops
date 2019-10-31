@@ -290,7 +290,7 @@ public class ClientesGUI extends JInternalFrame {
                 criteria.setSentido("DESC");
                 break;
         }
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         criteria.setPagina(NUMERO_PAGINA);
         try {
             HttpEntity<BusquedaCuentaCorrienteClienteCriteria> requestEntity = new HttpEntity<>(criteria);
@@ -760,7 +760,7 @@ public class ClientesGUI extends JInternalFrame {
             if (tienePermisoSegunRoles) {
                 boolean existeClientePredeterminado = RestClient.getRestTemplate()
                         .getForObject("/clientes/existe-predeterminado/empresas/"
-                                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), boolean.class);
+                                + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(), boolean.class);
                 if (!existeClientePredeterminado) {
                     JOptionPane.showMessageDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_no_existe_cliente_predeterminado"),

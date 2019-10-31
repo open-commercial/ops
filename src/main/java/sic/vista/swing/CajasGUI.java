@@ -105,7 +105,7 @@ public class CajasGUI extends JInternalFrame {
     private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
         BusquedaCajaCriteria criteria = BusquedaCajaCriteria.builder().build();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         if (chk_Fecha.isSelected()) {
             criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(),
                     ZoneId.systemDefault()) : null);
@@ -207,14 +207,14 @@ public class CajasGUI extends JInternalFrame {
 
     private void abrirNuevaCaja() {
         boolean ultimaCajaAbierta = RestClient.getRestTemplate()
-                .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/ultima-caja-abierta",
+                .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa() + "/ultima-caja-abierta",
                         boolean.class);
         if (!ultimaCajaAbierta) {
             String saldoApertura = JOptionPane.showInputDialog(this,
                     "Saldo Apertura: \n", "Abrir Caja", JOptionPane.QUESTION_MESSAGE);
             if (saldoApertura != null) {
                 try {
-                    RestClient.getRestTemplate().postForObject("/cajas/apertura/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    RestClient.getRestTemplate().postForObject("/cajas/apertura/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                             + "?saldoApertura=" + new BigDecimal(saldoApertura), null, Caja.class);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(of = {"fecha", "tipoComprobante", "numSerie", "numFactura", "nombreEmpresa"})
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id_Factura", scope = Factura.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idFactura", scope = Factura.class)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
   @JsonSubTypes.Type(value = FacturaCompra.class), 
@@ -29,7 +29,7 @@ public abstract class Factura implements Serializable {
         return this.getClass().getSimpleName();
     }
 
-    private long id_Factura;
+    private long idFactura;
     private Long idUsuario;
     private String nombreUsuario;
     private LocalDateTime fecha;

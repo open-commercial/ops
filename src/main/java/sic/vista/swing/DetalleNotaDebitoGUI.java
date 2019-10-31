@@ -152,7 +152,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
         if (nd != null) {
             notaDebitoCreada = true;
             boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                     + "/factura-electronica-habilitada", Boolean.class);
             if (cliente != null && FEHabilitada) {
                 if (this.autorizarNotaDebito(nd)) {

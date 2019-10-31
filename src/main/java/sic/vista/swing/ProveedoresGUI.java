@@ -261,7 +261,7 @@ public class ProveedoresGUI extends JInternalFrame {
                 criteria.setSentido("DESC");
                 break;
         }
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         criteria.setPagina(NUMERO_PAGINA);
         try {
             HttpEntity<BusquedaCuentaCorrienteProveedorCriteria> requestEntity = new HttpEntity<>(criteria);
