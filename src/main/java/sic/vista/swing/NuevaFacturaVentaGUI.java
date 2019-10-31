@@ -47,7 +47,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
 
     private TipoDeComprobante tipoDeComprobante;
     private Cliente cliente;
-    private Pedido pedido;
+    private final Pedido pedido;
     private List<RenglonFactura> renglonesFactura = new ArrayList<>();
     private ModeloTabla modeloTablaResultados = new ModeloTabla();
     private final HotKeysHandler keyHandler = new HotKeysHandler();
