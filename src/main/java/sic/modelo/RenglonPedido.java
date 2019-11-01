@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = "producto")
+@EqualsAndHashCode(of = "idProductoItem")
 public class RenglonPedido implements Serializable {
     
     private long id_RenglonPedido;

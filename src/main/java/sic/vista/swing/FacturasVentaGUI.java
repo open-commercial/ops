@@ -1166,9 +1166,9 @@ public class FacturasVentaGUI extends JInternalFrame {
 
     private void btnNuevaFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaFacturaActionPerformed
         if (this.existeClienteDisponible()) {
-            JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), PuntoDeVentaGUI.class);
+            JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), NuevaFacturaVentaGUI.class);
             if (gui == null) {
-                PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
+                NuevaFacturaVentaGUI puntoDeVentaGUI = new NuevaFacturaVentaGUI();
                 puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
                         getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
                 getDesktopPane().add(puntoDeVentaGUI);

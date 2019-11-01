@@ -8,7 +8,6 @@ import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,15 +31,11 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.EmpresaActiva;
-import sic.modelo.NuevoPedido;
 import sic.modelo.RenglonFactura;
-import sic.modelo.RenglonPedido;
 import sic.modelo.UsuarioActivo;
-import sic.modelo.EstadoPedido;
 import sic.modelo.FacturaVenta;
 import sic.modelo.FormaDePago;
 import sic.modelo.Movimiento;
-import sic.modelo.NuevoRenglonPedido;
 import sic.modelo.Pedido;
 import sic.modelo.Producto;
 import sic.modelo.Rol;
@@ -49,34 +44,73 @@ import sic.modelo.Transportista;
 import sic.util.DecimalesRenderer;
 import sic.util.Utilidades;
 
-public class PuntoDeVentaGUI extends JInternalFrame {
+public class NuevaFacturaVentaGUI extends JInternalFrame {
 
     private TipoDeComprobante tipoDeComprobante;
     private Cliente cliente;
-    private List<RenglonFactura> renglones = new ArrayList<>();
+    private final Pedido pedido;
+    private List<RenglonFactura> renglonesFactura = new ArrayList<>();
     private ModeloTabla modeloTablaResultados = new ModeloTabla();
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private final Dimension sizeInternalFrame = new Dimension(1200, 700);
-    private Pedido pedido;
-    private NuevoPedido nuevoPedido;
-    private boolean modificarPedido;
+    private final Dimension sizeInternalFrame = new Dimension(1200, 700);    
     private int cantidadMaximaRenglones = 0;
     private BigDecimal subTotalBruto;
     private BigDecimal iva_105_netoFactura;
-    private BigDecimal iva_21_netoFactura;    
-    private BigDecimal totalComprobante;    
+    private BigDecimal iva_21_netoFactura;
     private final List<Rol> rolesDeUsuario = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final static BigDecimal IVA_21 = new BigDecimal("21");
     private final static BigDecimal IVA_105 = new BigDecimal("10.5");
     private final static BigDecimal CIEN = new BigDecimal("100");
 
-    public PuntoDeVentaGUI() {
-        this.initComponents();        
+    public NuevaFacturaVentaGUI() {
+        this.initComponents();
+        this.pedido = null;        
         ImageIcon iconoNoMarcado = new ImageIcon(getClass().getResource("/sic/icons/chkNoMarcado_16x16.png"));
         this.tbtn_marcarDesmarcar.setIcon(iconoNoMarcado);        
         dc_fechaVencimiento.setDate(new Date());
-        //listeners        
+        this.setListeners();
+    }   
+    
+    public NuevaFacturaVentaGUI(Pedido pedido) {
+        this.initComponents();        
+        this.pedido = pedido;
+        ImageIcon iconoNoMarcado = new ImageIcon(getClass().getResource("/sic/icons/chkNoMarcado_16x16.png"));
+        this.tbtn_marcarDesmarcar.setIcon(iconoNoMarcado);        
+        dc_fechaVencimiento.setDate(new Date());
+        this.setListeners();
+    }
+    
+    private FacturaVenta construirFactura() {
+        FacturaVenta factura = new FacturaVenta();        
+        factura.setTipoComprobante(this.tipoDeComprobante);
+        if (this.dc_fechaVencimiento.getDate() != null) {
+            Calendar cal = new GregorianCalendar();
+            cal.setTime(this.dc_fechaVencimiento.getDate());
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 58);
+            factura.setFechaVencimiento(cal.getTime().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate());
+        }
+        factura.setRenglones(this.renglonesFactura);
+        factura.setObservaciones(this.txt_Observaciones.getText().trim());      
+        factura.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));  
+        factura.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
+        factura.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
+        factura.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
+        factura.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
+        factura.setSubTotalBruto(subTotalBruto);
+        factura.setIva105Neto(iva_105_netoFactura);
+        factura.setIva21Neto(iva_21_netoFactura);
+        factura.setTotal(new BigDecimal(txt_Total.getValue().toString()));                      
+        factura.setIdCliente(this.cliente.getId_Cliente());
+        factura.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
+        return factura;
+    }   
+    
+    private void setListeners() {
         cmb_TipoComprobante.addKeyListener(keyHandler);
         btn_NuevoCliente.addKeyListener(keyHandler);
         btn_BuscarCliente.addKeyListener(keyHandler);
@@ -91,20 +125,20 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         tbtn_marcarDesmarcar.addKeyListener(keyHandler);        
         dc_fechaVencimiento.addKeyListener(keyHandler);     
         btnModificarCliente.addKeyListener(keyHandler); 
-    }   
+    }
     
-    public void cargarPedidoParaFacturar() {
+    private void cargarPedidoParaFacturar() {
         try {
             this.cargarCliente(RestClient.getRestTemplate()
                     .getForObject("/clientes/pedidos/" + pedido.getId_Pedido(), Cliente.class));
             this.cargarTiposDeComprobantesDisponibles();            
             this.tipoDeComprobante = (TipoDeComprobante) cmb_TipoComprobante.getSelectedItem();
-            this.renglones = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
+            this.renglonesFactura = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/facturas/renglones/pedidos/" + pedido.getId_Pedido()
                             + "?tipoDeComprobante=" + this.tipoDeComprobante.name(),
                             RenglonFactura[].class)));
-            EstadoRenglon[] marcaDeRenglonesDelPedido = new EstadoRenglon[renglones.size()];
-            for (int i = 0; i < renglones.size(); i++) {
+            EstadoRenglon[] marcaDeRenglonesDelPedido = new EstadoRenglon[renglonesFactura.size()];
+            for (int i = 0; i < renglonesFactura.size(); i++) {
                 marcaDeRenglonesDelPedido[i] = EstadoRenglon.DESMARCADO;
             }
             this.cargarRenglonesAlTable(marcaDeRenglonesDelPedido);
@@ -116,71 +150,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    public void setPedido(Pedido pedido) {
-        this.pedido = pedido;
-    }
-
-    public Pedido getPedido() {
-        return this.pedido;
-    }
-
-    public TipoDeComprobante getTipoDeComprobante() {
-        return tipoDeComprobante;
-    }
-
-    public List<RenglonFactura> getRenglones() {
-        return renglones;
-    }
-
-    public BigDecimal getTotal() {
-        return this.totalComprobante;
-    }
-
-    public FacturaVenta construirFactura() {
-        FacturaVenta factura = new FacturaVenta();        
-        factura.setTipoComprobante(this.tipoDeComprobante);
-        Calendar cal = new GregorianCalendar();
-        if (this.dc_fechaVencimiento.getDate() != null) {
-            cal.setTime(this.dc_fechaVencimiento.getDate());
-            cal.set(Calendar.HOUR_OF_DAY, 23);
-            cal.set(Calendar.MINUTE, 59);
-            cal.set(Calendar.SECOND, 58);
-            factura.setFechaVencimiento(cal.toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate());
-        }
-        factura.setRenglones(this.getRenglones());
-        factura.setObservaciones(this.txt_Observaciones.getText().trim());
-        factura.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
-        factura.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
-        factura.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
-        factura.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
-        factura.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
-        factura.setSubTotalBruto(subTotalBruto);
-        factura.setIva105Neto(iva_105_netoFactura);
-        factura.setIva21Neto(iva_21_netoFactura);
-        factura.setTotal(new BigDecimal(txt_Total.getValue().toString()));
-        factura.setIdCliente(this.cliente.getId_Cliente());
-        factura.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
-        return factura;
-    }
-    
-    public long getIdCliente() {
-        return this.cliente.getId_Cliente();
-    }
-
-    public ModeloTabla getModeloTabla() {
-        return this.modeloTablaResultados;
-    }
-
-    public void setModificarPedido(boolean modificarPedido) {
-        this.modificarPedido = modificarPedido;
-    }
-
-    public boolean modificandoPedido() {
-        return this.modificarPedido;
     }
     
     private void cargarEstadoDeLosChkEnTabla(JTable tbl_Resultado, EstadoRenglon[] estadosDeLosRenglones) {
@@ -270,23 +239,23 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         try {
             boolean agregado = false;
             //busca entre los renglones al producto, aumenta la cantidad y recalcula el descuento        
-            for (int i = 0; i < renglones.size(); i++) {
+            for (int i = 0; i < renglonesFactura.size(); i++) {
                 RenglonFactura rf;
-                if (renglones.get(i).getIdProductoItem() == renglon.getIdProductoItem()) {
+                if (renglonesFactura.get(i).getIdProductoItem() == renglon.getIdProductoItem()) {
                     rf = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
-                            + "idProducto=" + renglones.get(i).getIdProductoItem()
+                            + "idProducto=" + renglonesFactura.get(i).getIdProductoItem()
                             + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                             + "&movimiento=" + Movimiento.VENTA
-                            + "&cantidad=" + renglones.get(i).getCantidad().add(renglon.getCantidad())
+                            + "&cantidad=" + renglonesFactura.get(i).getCantidad().add(renglon.getCantidad())
                             + "&descuentoPorcentaje=" + renglon.getDescuentoPorcentaje(),
                             RenglonFactura.class);
-                    renglones.set(i, rf);
+                    renglonesFactura.set(i, rf);
                     agregado = true;
                 }
             }
             //si no encuentra el producto entre los renglones, carga un nuevo renglon        
             if (agregado == false) {
-                renglones.add(renglon);
+                renglonesFactura.add(renglon);
             }
             //para que baje solo el scroll vertical
             Point p = new Point(0, tbl_Resultado.getHeight());
@@ -306,7 +275,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         this.setColumnas();
         int i = 0;
         boolean corte;
-        for (RenglonFactura renglon : renglones) {
+        for (RenglonFactura renglon : renglonesFactura) {
             Object[] fila = new Object[8];
             corte = false;
             /*Dentro de este While, el case según el valor leido en el array de la enumeración,
@@ -351,40 +320,24 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         tbl_Resultado.setModel(modeloTablaResultados);
     }
 
-    private void limpiarYRecargarComponentes() {        
-        this.pedido = null;
-        dc_fechaVencimiento.setDate(new Date());
-        renglones = new ArrayList<>();
-        modeloTablaResultados = new ModeloTabla();
-        this.setColumnas();
-        txt_CodigoProducto.setText("");
-        txt_Observaciones.setText("");
-        txt_Descuento_porcentaje.setValue(0.0);
-        txt_Recargo_porcentaje.setValue(0.0);
-        this.calcularResultados();
-        this.tbtn_marcarDesmarcar.setSelected(false);
-    }
-
     private void buscarProductoConVentanaAuxiliar() {
-        if (cantidadMaximaRenglones > renglones.size()) {
-            Movimiento movimiento = this.tipoDeComprobante.equals(TipoDeComprobante.PEDIDO) ? Movimiento.PEDIDO : Movimiento.VENTA;
-            // revisar esto, es necesario para el movimiento como String y a su vez el movimiento?
-            BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglones, this.tipoDeComprobante, movimiento);
+        if (cantidadMaximaRenglones > renglonesFactura.size()) {
+            BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglonesFactura, this.tipoDeComprobante,  Movimiento.VENTA);
             buscarProductosGUI.setModal(true);
             buscarProductosGUI.setLocationRelativeTo(this);
             buscarProductosGUI.setVisible(true);
             if (buscarProductosGUI.debeCargarRenglon()) {
                 boolean renglonCargado = false;
-                for (RenglonFactura renglon : renglones) {
-                    if (renglon.getIdProductoItem() == buscarProductosGUI.getRenglon().getIdProductoItem()) {
+                for (RenglonFactura renglon : renglonesFactura) {
+                    if (renglon.getIdProductoItem() == buscarProductosGUI.getRenglonFactura().getIdProductoItem()) {
                         renglonCargado = true;
                     }
                 }
-                this.agregarRenglon(buscarProductosGUI.getRenglon());
+                this.agregarRenglon(buscarProductosGUI.getRenglonFactura());
                 /*Si la tabla no contiene renglones, despues de agregar el renglon
                  a la coleccion, carga el arreglo con los estados con un solo elemento, 
                  cuyo valor es "Desmarcado" para evitar un nulo.*/
-                EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglones.size()];
+                EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglonesFactura.size()];
                 if (tbl_Resultado.getRowCount() == 0) {
                     estadosRenglones[0] = EstadoRenglon.DESMARCADO;
                 } else {
@@ -439,7 +392,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 }
                 if (esValido) {
                     this.agregarRenglon(renglon);
-                    EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglones.size()];
+                    EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglonesFactura.size()];
                     if (tbl_Resultado.getRowCount() == 0) {
                         estadosRenglones[0] = EstadoRenglon.DESMARCADO;
                     } else {
@@ -487,11 +440,11 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         BigDecimal recargoNeto;
         BigDecimal total;
         this.validarComponentesDeResultados();
-        BigDecimal[] cantidades = new BigDecimal[renglones.size()];
-        BigDecimal[] ivaPorcentajeRenglones = new BigDecimal[renglones.size()];
-        BigDecimal[] ivaNetoRenglones = new BigDecimal[renglones.size()];
+        BigDecimal[] cantidades = new BigDecimal[renglonesFactura.size()];
+        BigDecimal[] ivaPorcentajeRenglones = new BigDecimal[renglonesFactura.size()];
+        BigDecimal[] ivaNetoRenglones = new BigDecimal[renglonesFactura.size()];
         int indice = 0;
-        for (RenglonFactura renglon : renglones) {
+        for (RenglonFactura renglon : renglonesFactura) {
             subTotal = subTotal.add(renglon.getImporte());
             cantidades[indice] = renglon.getCantidad();
             ivaPorcentajeRenglones[indice] = renglon.getIvaPorcentaje();
@@ -547,7 +500,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         } else {
             txt_SubTotalBruto.setValue(subTotalBruto);
         }
-        this.totalComprobante = total;
     }
 
     private void cargarTiposDeComprobantesDisponibles() {
@@ -575,25 +527,12 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 }
             }
         }
-        cmb_TipoComprobante.addItem(TipoDeComprobante.PEDIDO);
-        if (this.pedido != null) {
-            if (this.pedido.getId_Pedido() == 0) {// nuevo pedido, desde la vista de pedido
-                cmb_TipoComprobante.setSelectedItem(TipoDeComprobante.PEDIDO);
-                txt_CodigoProducto.requestFocus();
-            } else if (this.modificandoPedido() == true) { // modificar pedido
-                cmb_TipoComprobante.removeAllItems();
-                cmb_TipoComprobante.addItem(TipoDeComprobante.PEDIDO);
-                txt_CodigoProducto.requestFocus();
-            } else {
-                cmb_TipoComprobante.removeItem(TipoDeComprobante.PEDIDO); // facturando pedido
-            }
-        }
     }
 
     private void recargarRenglonesSegunTipoDeFactura() {
         try {            
-            List<RenglonFactura> resguardoRenglones = renglones;
-            renglones = new ArrayList<>();
+            List<RenglonFactura> resguardoRenglones = renglonesFactura;
+            renglonesFactura = new ArrayList<>();
             resguardoRenglones.stream().map(renglonFactura -> {
                 Producto producto = RestClient.getRestTemplate()
                         .getForObject("/productos/" + renglonFactura.getIdProductoItem(), Producto.class);
@@ -606,13 +545,13 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                         RenglonFactura.class);
                 return renglon;
             }).forEachOrdered(renglon -> this.agregarRenglon(renglon));
-            EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglones.size()];
-            if (!renglones.isEmpty()) {
+            EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglonesFactura.size()];
+            if (!renglonesFactura.isEmpty()) {
                 if (tbl_Resultado.getRowCount() == 0) {
                     estadosRenglones[0] = EstadoRenglon.DESMARCADO;
                 } else {
                     this.cargarEstadoDeLosChkEnTabla(tbl_Resultado, estadosRenglones);
-                    if (tbl_Resultado.getRowCount() > renglones.size()) {
+                    if (tbl_Resultado.getRowCount() > renglonesFactura.size()) {
                         estadosRenglones[tbl_Resultado.getRowCount()] = EstadoRenglon.DESMARCADO;
                     }
                 }
@@ -628,23 +567,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    private void construirPedido() {
-        nuevoPedido = new NuevoPedido();
-        nuevoPedido.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
-        nuevoPedido.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
-        nuevoPedido.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
-        nuevoPedido.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
-        nuevoPedido.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
-        if (dc_fechaVencimiento.getDate() != null) {
-            nuevoPedido.setFechaVencimiento(dc_fechaVencimiento.getDate().toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate());
-        }
-        nuevoPedido.setObservaciones(txt_Observaciones.getText());
-        nuevoPedido.setRenglones(this.calcularRenglonesPedido());
-        nuevoPedido.setTotal(new BigDecimal(txt_Total.getValue().toString()));
-    }
     
     private Map<Long, BigDecimal> getProductosSinStockDisponible(List<RenglonFactura> renglonesFactura) {
         long[] idsProductos = new long[renglonesFactura.size()];
@@ -659,47 +581,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         return RestClient.getRestTemplate()
                 .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {
                 }).getBody();
-    }
-    
-    private void finalizarPedido() {
-        if (nuevoPedido != null) {
-            CerrarPedidoGUI cerrarPedido = new CerrarPedidoGUI(nuevoPedido, cliente);
-            cerrarPedido.setModal(true);
-            cerrarPedido.setLocationRelativeTo(this);
-            cerrarPedido.setVisible(true);
-            if (cerrarPedido.isOperacionExitosa()) {
-                this.limpiarYRecargarComponentes();
-            }
-        } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificarPedido == true) {
-            this.actualizarPedido(pedido);
-        }
-    }
-
-    private void actualizarPedido(Pedido pedido) {
-        pedido = RestClient.getRestTemplate().getForObject("/pedidos/" + pedido.getId_Pedido(), Pedido.class);
-        pedido.setRenglones(this.calcularRenglonesPedido());
-        pedido.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
-        pedido.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
-        pedido.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
-        pedido.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
-        pedido.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
-        pedido.setTotalEstimado(new BigDecimal(txt_Total.getValue().toString()));
-        pedido.setObservaciones(txt_Observaciones.getText());
-        CerrarPedidoGUI cerrarPedido = new CerrarPedidoGUI(pedido, cliente);
-        cerrarPedido.setModal(true);
-        cerrarPedido.setLocationRelativeTo(this);
-        cerrarPedido.setVisible(true);
-        if (cerrarPedido.isOperacionExitosa()) {
-            this.dispose();
-        }
-    }
-
-    public List<RenglonPedido> calcularRenglonesPedido() {
-        List<NuevoRenglonPedido> nuevosRenglonesPedido = new ArrayList();
-        this.renglones.forEach(r -> nuevosRenglonesPedido.add(
-                new NuevoRenglonPedido(r.getIdProductoItem(), r.getCantidad(), r.getDescuentoPorcentaje())));
-        return Arrays.asList(RestClient.getRestTemplate().postForObject("/pedidos/renglones",
-                nuevosRenglonesPedido, RenglonPedido[].class));
     }
 
     // Clase interna para manejar las hotkeys del TPV     
@@ -798,7 +679,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         btnModificarCliente = new javax.swing.JButton();
 
         setResizable(true);
-        setTitle("S.I.C. Punto de Venta");
+        setTitle("Nueva Factura de Venta");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/SIC_16_square.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
@@ -1453,11 +1334,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         if (cmb_TipoComprobante.getSelectedItem() != null) {            
             this.tipoDeComprobante = (TipoDeComprobante) cmb_TipoComprobante.getSelectedItem();
             this.recargarRenglonesSegunTipoDeFactura();
-            if (cmb_TipoComprobante.getSelectedItem().equals(TipoDeComprobante.PEDIDO)) {
-                this.txt_Observaciones.setText("Los precios se encuentran sujetos a modificaciones.");
-            } else {
-                this.txt_Observaciones.setText("");
-            }
         }
     }//GEN-LAST:event_cmb_TipoComprobanteItemStateChanged
 
@@ -1493,7 +1369,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
 
     private void btn_ContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ContinuarActionPerformed
         if (cliente != null) {
-            if (renglones.isEmpty()) {
+            if (renglonesFactura.isEmpty()) {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                         .getString("mensaje_factura_sin_renglones"), "Error", JOptionPane.ERROR_MESSAGE);
             } else {
@@ -1505,27 +1381,18 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                     try {
                         cliente = RestClient.getRestTemplate().getForObject("/clientes/" + this.cliente.getId_Cliente(), Cliente.class);
                         Map<Long, BigDecimal> faltantes;
-                        if (cmb_TipoComprobante.getSelectedItem() == TipoDeComprobante.PEDIDO) {
-                            // Es null cuando, se genera un pedido desde el punto de venta entrando por el menu sistemas.
-                            // El Id es 0 cuando, se genera un pedido desde el punto de venta entrando por el botón nuevo de administrar pedidos.
-                            if (pedido == null || pedido.getId_Pedido() == 0) {
-                                this.construirPedido();
+                        faltantes = this.getProductosSinStockDisponible(renglonesFactura);
+                        if (faltantes.isEmpty()) {
+                            CerrarVentaGUI cerrarVentaGUI = new CerrarVentaGUI(this.construirFactura(), this.pedido, this.modeloTablaResultados);
+                            cerrarVentaGUI.setLocationRelativeTo(this);
+                            cerrarVentaGUI.setVisible(true);
+                            if (cerrarVentaGUI.isExito()) {
+                                this.dispose();
                             }
-                            this.finalizarPedido();
                         } else {
-                            faltantes = this.getProductosSinStockDisponible(renglones);
-                            if (faltantes.isEmpty()) {
-                                CerrarVentaGUI cerrarVentaGUI = new CerrarVentaGUI(this, true);
-                                cerrarVentaGUI.setLocationRelativeTo(this);
-                                cerrarVentaGUI.setVisible(true);
-                                if (cerrarVentaGUI.isExito()) {
-                                    this.limpiarYRecargarComponentes();
-                                }
-                            } else {
-                                ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(faltantes);
-                                productosFaltantesGUI.setLocationRelativeTo(this);
-                                productosFaltantesGUI.setVisible(true);
-                            }
+                            ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(faltantes);
+                            productosFaltantesGUI.setLocationRelativeTo(this);
+                            productosFaltantesGUI.setVisible(true);
                         }
                     } catch (RestClientResponseException ex) {
                         JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -1547,9 +1414,9 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         int[] indicesParaEliminar = Utilidades.getSelectedRowsModelIndices(tbl_Resultado);
         List<RenglonFactura> renglonesParaBorrar = new ArrayList<>();
         for (int i = 0; i < indicesParaEliminar.length; i++) {
-            renglonesParaBorrar.add(renglones.get(indicesParaEliminar[i]));
+            renglonesParaBorrar.add(renglonesFactura.get(indicesParaEliminar[i]));
         }
-        EstadoRenglon[] estadoDeRenglones = new EstadoRenglon[renglones.size()];
+        EstadoRenglon[] estadoDeRenglones = new EstadoRenglon[renglonesFactura.size()];
         for (int i = 0; i < tbl_Resultado.getRowCount(); i++) {
             if (((boolean) tbl_Resultado.getValueAt(i, 0)) == true) {
                 estadoDeRenglones[i] = EstadoRenglon.MARCADO;
@@ -1560,7 +1427,7 @@ public class PuntoDeVentaGUI extends JInternalFrame {
         for (int i = 0; i < indicesParaEliminar.length; i++) {
             estadoDeRenglones[indicesParaEliminar[i]] = EstadoRenglon.ELIMINADO;
         }
-        renglonesParaBorrar.forEach((renglon) -> renglones.remove(renglon));
+        renglonesParaBorrar.forEach((renglon) -> renglonesFactura.remove(renglon));
         this.cargarRenglonesAlTable(estadoDeRenglones);
         this.calcularResultados();
     }//GEN-LAST:event_btn_QuitarProductoActionPerformed
@@ -1638,7 +1505,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
             this.setSize(sizeInternalFrame);
             this.setColumnas();
             this.setMaximum(true);
-            this.setTitle("Punto de Venta");
             cantidadMaximaRenglones = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
                     + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                     + "/cantidad-renglones", Integer.class); 
@@ -1662,9 +1528,6 @@ public class PuntoDeVentaGUI extends JInternalFrame {
                 btn_NuevoCliente.setEnabled(false);
                 btn_BuscarCliente.setEnabled(false);
                 this.calcularResultados();
-                if (this.tipoDeComprobante.equals(TipoDeComprobante.PEDIDO)) {
-                    txt_Observaciones.setText(this.pedido.getObservaciones());
-                }
             }
         } catch (PropertyVetoException ex) {
             String msjError = "Se produjo un error al intentar maximizar la ventana.";
