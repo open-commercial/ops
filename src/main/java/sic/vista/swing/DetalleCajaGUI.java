@@ -10,8 +10,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,12 +36,10 @@ import sic.modelo.TipoDeComprobante;
 import sic.util.ColoresNumerosRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
-import sic.util.FormatterFechaHora;
 import sic.util.Utilidades;
 
 public class DetalleCajaGUI extends JInternalFrame {
 
-    private final FormatterFechaHora formatter = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO);
     private ModeloTabla modeloTablaBalance = new ModeloTabla();
     private ModeloTabla modeloTablaResumen = new ModeloTabla();
     private final HashMap<Long, List<MovimientoCaja>> movimientos = new HashMap<>();
@@ -77,7 +76,7 @@ public class DetalleCajaGUI extends JInternalFrame {
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaBalance.getColumnCount()];
         tipos[0] = String.class;
-        tipos[1] = Date.class;
+        tipos[1] = LocalDateTime.class;
         tipos[2] = BigDecimal.class;
         modeloTablaBalance.setClaseColumnas(tipos);
         tbl_Movimientos.getTableHeader().setReorderingAllowed(false);
@@ -529,7 +528,7 @@ public class DetalleCajaGUI extends JInternalFrame {
     private void btn_AgregarGastoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AgregarGastoActionPerformed
         try {
             if (RestClient.getRestTemplate().getForObject("/cajas/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/ultima-caja-abierta", boolean.class)) {
+                    + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa() + "/ultima-caja-abierta", boolean.class)) {
                 List<FormaDePago> formasDePago = Arrays.asList(RestClient.getRestTemplate().getForObject("/formas-de-pago", FormaDePago[].class));
                 AgregarGastoGUI agregarGasto = new AgregarGastoGUI(formasDePago);
                 agregarGasto.setModal(true);
@@ -561,7 +560,7 @@ public class DetalleCajaGUI extends JInternalFrame {
             TipoDeComprobante tipoDeComprobante = this.movimientos.get(idFormaDePagoSeleccionada).get(Utilidades.getSelectedRowModelIndice(tbl_Movimientos)).getTipoComprobante();
             try {
                 if (tipoDeComprobante.equals(TipoDeComprobante.GASTO) && RestClient.getRestTemplate().getForObject("/cajas/empresas/"
-                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/ultima-caja-abierta", boolean.class)) {
+                        + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa() + "/ultima-caja-abierta", boolean.class)) {
                     int confirmacionEliminacion = JOptionPane.showConfirmDialog(this,
                             "¿Esta seguro que desea eliminar el gasto seleccionado?",
                             "Eliminar", JOptionPane.YES_NO_OPTION);
@@ -598,8 +597,8 @@ public class DetalleCajaGUI extends JInternalFrame {
     }//GEN-LAST:event_tbl_ResumenMouseClicked
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
-        this.setSize(sizeInternalFrame);        
-        this.setTitle("Arqueo de Caja - Apertura: " + formatter.format(this.caja.getFechaApertura()));
+        this.setSize(sizeInternalFrame);
+        this.setTitle("Arqueo de Caja - Apertura: " + FormatosFechaHora.formatoFecha(this.caja.getFechaApertura(), FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
         this.cambiarMensajeEstadoCaja();
         this.limpiarYCargarTablas();
         try {

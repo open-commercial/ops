@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -72,10 +74,10 @@ public class PedidosGUI extends JInternalFrame {
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
         BusquedaPedidoCriteria criteria = BusquedaPedidoCriteria.builder().build();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         if (chk_Fecha.isSelected()) {
-            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? dc_FechaDesde.getDate() : null);
-            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? dc_FechaHasta.getDate() : null);
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault()) : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault()) : null);
         }
         if (chk_NumeroPedido.isSelected()) {
             criteria.setNroPedido(Long.valueOf(txt_NumeroPedido.getText()));
@@ -227,7 +229,7 @@ public class PedidosGUI extends JInternalFrame {
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaPedidos.getColumnCount()];
         tipos[0] = EstadoPedido.class;
-        tipos[1] = Date.class;
+        tipos[1] = LocalDateTime.class;
         tipos[2] = Long.class;
         tipos[3] = String.class;
         tipos[4] = String.class;
@@ -262,7 +264,7 @@ public class PedidosGUI extends JInternalFrame {
 
     private boolean existeClienteDisponible() {
         BusquedaClienteCriteria criteriaCliente = BusquedaClienteCriteria.builder()
-                .idEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())
+                .idEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa())
                 .pagina(0)
                 .build();
         HttpEntity<BusquedaClienteCriteria> requestEntity = new HttpEntity<>(criteriaCliente);

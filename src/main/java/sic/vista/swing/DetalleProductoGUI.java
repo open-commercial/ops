@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.text.ParseException;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +36,6 @@ import sic.modelo.UsuarioActivo;
 import sic.util.CalculosPrecioProducto;
 import sic.util.FiltroImagenes;
 import sic.util.FormatosFechaHora;
-import sic.util.FormatterFechaHora;
 import sic.util.Utilidades;
 
 public class DetalleProductoGUI extends JDialog {
@@ -821,11 +821,10 @@ public class DetalleProductoGUI extends JDialog {
         txt_CantMinima.setValue(productoParaModificar.getCantMinima());
         txt_Bulto.setValue(productoParaModificar.getBulto());
         cmb_Rubro.setSelectedItem(productoParaModificar.getNombreRubro());
-        txtProveedor.setText(productoParaModificar.getRazonSocialProveedor());
-        FormatterFechaHora formateador = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO);
-        lbl_FechaUltimaModificacion.setText(formateador.format(productoParaModificar.getFechaUltimaModificacion()));
-        lbl_FechaAlta.setText(formateador.format(productoParaModificar.getFechaAlta()));
-        dc_Vencimiento.setDate(productoParaModificar.getFechaVencimiento());
+        txtProveedor.setText(productoParaModificar.getRazonSocialProveedor());     
+        lbl_FechaUltimaModificacion.setText(FormatosFechaHora.formatoFecha(productoParaModificar.getFechaUltimaModificacion(), FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
+        lbl_FechaAlta.setText(FormatosFechaHora.formatoFecha(productoParaModificar.getFechaAlta(), FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
+        dc_Vencimiento.setDate(java.sql.Date.valueOf(productoParaModificar.getFechaVencimiento()));
         txt_Estanteria.setText(productoParaModificar.getEstanteria());
         txt_Estante.setText(productoParaModificar.getEstante());        
         txtPrecioCosto.setValue(productoParaModificar.getPrecioCosto());        
@@ -874,7 +873,7 @@ public class DetalleProductoGUI extends JDialog {
         cmb_Medida.removeAllItems();
         try {
             medidas = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                .getForObject("/medidas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                .getForObject("/medidas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                 Medida[].class)));
             medidas.stream().forEach(m -> cmb_Medida.addItem(m.getNombre()));
         } catch (RestClientResponseException ex) {
@@ -891,7 +890,7 @@ public class DetalleProductoGUI extends JDialog {
         cmb_Rubro.removeAllItems();
         try {
             rubros = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                .getForObject("/rubros/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                .getForObject("/rubros/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                 Rubro[].class)));
             rubros.stream().forEach(r -> cmb_Rubro.addItem(r.getNombre()));
         } catch (RestClientResponseException ex) {
@@ -1023,11 +1022,15 @@ public class DetalleProductoGUI extends JDialog {
                     producto.setEstanteria(txt_Estanteria.getText().trim());
                     producto.setEstante(txt_Estante.getText().trim());
                     producto.setNota(txt_Nota.getText().trim());
-                    producto.setFechaVencimiento(dc_Vencimiento.getDate());
+                    if (dc_Vencimiento.getDate() != null) {
+                        producto.setFechaVencimiento(dc_Vencimiento.getDate().toInstant()
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate());
+                    }
                     Producto productoRecuperado = RestClient.getRestTemplate().postForObject("/productos?idMedida=" + idMedida
                             + "&idRubro=" + idRubro
                             + "&idProveedor=" + ((idProveedor != null) ? idProveedor : "")
-                            + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                            + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                             producto, Producto.class);
                     LOGGER.warn("El producto " + productoRecuperado + " se guardó correctamente");
                     if (imagenProducto != null) {
@@ -1063,7 +1066,11 @@ public class DetalleProductoGUI extends JDialog {
                     productoParaModificar.setEstanteria(txt_Estanteria.getText().trim());
                     productoParaModificar.setEstante(txt_Estante.getText().trim());
                     productoParaModificar.setNota(txt_Nota.getText().trim());
-                    productoParaModificar.setFechaVencimiento(dc_Vencimiento.getDate());
+                    if (dc_Vencimiento.getDate() != null) {
+                        productoParaModificar.setFechaVencimiento(dc_Vencimiento.getDate().toInstant()
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate());
+                    }
                     if (cambioImagen && imagenProducto != null) {
                         productoParaModificar.setUrlImagen(RestClient.getRestTemplate()
                                 .postForObject("/productos/" + productoParaModificar.getIdProducto() + "/imagenes", imagenProducto, String.class));
@@ -1073,7 +1080,7 @@ public class DetalleProductoGUI extends JDialog {
                     RestClient.getRestTemplate().put("/productos?idMedida=" + idMedida
                             + "&idRubro=" + idRubro
                             + "&idProveedor=" + ((idProveedor != null) ? idProveedor : "")
-                            + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                            + "&idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                             productoParaModificar);
                     LOGGER.warn("El producto " + productoParaModificar + " se modificó correctamente");
                     JOptionPane.showMessageDialog(this, "El producto se modificó correctamente.",

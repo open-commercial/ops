@@ -395,7 +395,7 @@
                       <Component id="txt_Total" max="32767" attributes="1"/>
                       <Component id="lbl_Total" min="-2" pref="101" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="12" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

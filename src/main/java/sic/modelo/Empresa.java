@@ -1,7 +1,7 @@
 package sic.modelo;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -9,13 +9,13 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(of = {"nombre"})
 public class Empresa implements Serializable {
     
-    private long id_Empresa;    
+    private long idEmpresa;    
     private String nombre;
     private String lema;    
     private CategoriaIVA categoriaIVA;
     private Long idFiscal;
     private Long ingresosBrutos;
-    private Date fechaInicioActividad;
+    private LocalDateTime fechaInicioActividad;
     private String email;
     private String telefono;
     private Ubicacion ubicacion;

@@ -189,7 +189,7 @@ public class TransportistasGUI extends JInternalFrame {
                 criteria.setIdLocalidad(((Localidad) cmb_Localidad.getSelectedItem()).getIdLocalidad());
             }
         }
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         criteria.setPagina(NUMERO_PAGINA);
         try {
             HttpEntity<BusquedaTransportistaCriteria> requestEntity = new HttpEntity<>(criteria);

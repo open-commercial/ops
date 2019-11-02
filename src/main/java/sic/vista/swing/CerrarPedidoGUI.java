@@ -263,10 +263,10 @@ public class CerrarPedidoGUI extends JDialog {
                 tipoDeEnvio = TipoDeEnvio.USAR_UBICACION_ENVIO;
             } else {
                 tipoDeEnvio = TipoDeEnvio.RETIRO_EN_SUCURSAL;
-                idSucursal = empresas.get(cmbEmpresas.getSelectedIndex()).getId_Empresa();
+                idSucursal = empresas.get(cmbEmpresas.getSelectedIndex()).getIdEmpresa();
             }
             if (nuevoPedido != null) {
-                nuevoPedido.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+                nuevoPedido.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
                 nuevoPedido.setIdUsuario(UsuarioActivo.getInstance().getUsuario().getId_Usuario());
                 nuevoPedido.setIdCliente(cliente.getId_Cliente());
                 nuevoPedido.setTipoDeEnvio(tipoDeEnvio);
@@ -281,7 +281,7 @@ public class CerrarPedidoGUI extends JDialog {
                 }
             } else {
                 RestClient.getRestTemplate().put("/pedidos?idEmpresa="
-                        + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                        + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                         + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
                         + "&idCliente=" + cliente.getId_Cliente()
                         + "&tipoDeEnvio=" + tipoDeEnvio

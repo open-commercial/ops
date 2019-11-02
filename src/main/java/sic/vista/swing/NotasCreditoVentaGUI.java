@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -71,10 +73,10 @@ public class NotasCreditoVentaGUI extends JInternalFrame {
 
     private BusquedaNotaCriteria getCriteria() {
         BusquedaNotaCriteria criteria = new BusquedaNotaCriteria();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         if (chk_Fecha.isSelected()) {
-            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? dc_FechaDesde.getDate() : null);
-            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? dc_FechaHasta.getDate() : null);
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault()) : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault()) : null);
         }
         if (chk_NumNota.isSelected()) {
             criteria.setNumNota(Long.valueOf(txt_NroNota.getText()));
@@ -117,7 +119,7 @@ public class NotasCreditoVentaGUI extends JInternalFrame {
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaNotas.getColumnCount()];
         tipos[0] = Object.class;
-        tipos[1] = Date.class;
+        tipos[1] = LocalDateTime.class;
         tipos[2] = TipoDeComprobante.class;
         tipos[3] = String.class;
         tipos[4] = String.class;
@@ -125,7 +127,7 @@ public class NotasCreditoVentaGUI extends JInternalFrame {
         tipos[6] = String.class;
         tipos[7] = BigDecimal.class;
         tipos[8] = String.class;
-        tipos[9] = Date.class;
+        tipos[9] = LocalDateTime.class;
         tipos[10] = Boolean.class;
         tipos[11] = String.class;
         modeloTablaNotas.setClaseColumnas(tipos);
@@ -318,7 +320,7 @@ public class NotasCreditoVentaGUI extends JInternalFrame {
     private void cargarTiposDeNota() {
         try {
             TipoDeComprobante[] tiposDeComprobantes = RestClient.getRestTemplate()
-                    .getForObject("/notas/credito/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                    .getForObject("/notas/credito/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                             TipoDeComprobante[].class);
             for (int i = 0; tiposDeComprobantes.length > i; i++) {
                 cmb_TipoNota.addItem(tiposDeComprobantes[i]);
@@ -967,7 +969,7 @@ public class NotasCreditoVentaGUI extends JInternalFrame {
     private void btn_AutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AutorizarActionPerformed
         try {
             boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                     + "/factura-electronica-habilitada", Boolean.class);
             if (FEHabilitada) {
                 if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {

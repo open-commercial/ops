@@ -1,7 +1,5 @@
 package sic.util;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,22 +37,6 @@ public class Validator {
             return true;
         }
     }    
-
-    /**
-     * Compara dos fechas pasadas como Date
-     *
-     * @param fechaAnterior
-     * @param fechaSiguiente
-     * @return 0 si es igual, menor a 0 si fechaAnterior esta antes de
-     * fechaSiguiente, mayor a 0 si fechaAnterior esta despues de fechaSiguiente
-     */
-    public static int compararFechas(Date fechaAnterior, Date fechaSiguiente) {
-        Calendar anterior = Calendar.getInstance();
-        Calendar siguiente = Calendar.getInstance();
-        anterior.setTime(fechaAnterior);
-        siguiente.setTime(fechaSiguiente);
-        return siguiente.compareTo(anterior);
-    }
     
     public static boolean tieneDuplicados(long[] array) {
         Set<Long> set = new HashSet<>();

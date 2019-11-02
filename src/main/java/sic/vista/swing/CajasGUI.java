@@ -5,6 +5,8 @@ import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -75,8 +77,8 @@ public class CajasGUI extends JInternalFrame {
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaCajas.getColumnCount()];
         tipos[0] = String.class;
-        tipos[1] = Date.class;
-        tipos[2] = Date.class;
+        tipos[1] = LocalDateTime.class;
+        tipos[2] = LocalDateTime.class;
         tipos[3] = String.class;
         tipos[4] = String.class;
         tipos[5] = BigDecimal.class;
@@ -103,10 +105,12 @@ public class CajasGUI extends JInternalFrame {
     private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
         BusquedaCajaCriteria criteria = BusquedaCajaCriteria.builder().build();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         if (chk_Fecha.isSelected()) {
-            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? dc_FechaDesde.getDate() : null);
-            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? dc_FechaHasta.getDate() : null);
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(),
+                    ZoneId.systemDefault()) : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(),
+                    ZoneId.systemDefault()) : null);
         }
         if (chk_UsuarioApertura.isSelected() && usuarioSeleccionadoApertura != null) criteria.setIdUsuarioApertura(usuarioSeleccionadoApertura.getId_Usuario());
         if (chk_UsuarioCierre.isSelected() && usuarioSeleccionadoCierre != null) criteria.setIdUsuarioCierre(usuarioSeleccionadoCierre.getId_Usuario());
@@ -203,14 +207,14 @@ public class CajasGUI extends JInternalFrame {
 
     private void abrirNuevaCaja() {
         boolean ultimaCajaAbierta = RestClient.getRestTemplate()
-                .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/ultima-caja-abierta",
+                .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa() + "/ultima-caja-abierta",
                         boolean.class);
         if (!ultimaCajaAbierta) {
             String saldoApertura = JOptionPane.showInputDialog(this,
                     "Saldo Apertura: \n", "Abrir Caja", JOptionPane.QUESTION_MESSAGE);
             if (saldoApertura != null) {
                 try {
-                    RestClient.getRestTemplate().postForObject("/cajas/apertura/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    RestClient.getRestTemplate().postForObject("/cajas/apertura/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                             + "?saldoApertura=" + new BigDecimal(saldoApertura), null, Caja.class);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

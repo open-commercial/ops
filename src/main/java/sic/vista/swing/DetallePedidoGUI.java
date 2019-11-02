@@ -8,9 +8,12 @@ import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.JInternalFrame;
@@ -74,7 +77,7 @@ public class DetallePedidoGUI extends JInternalFrame {
 
     private boolean existeClientePredeterminado() {
         return RestClient.getRestTemplate().getForObject("/clientes/existe-predeterminado/empresas/"
-                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), boolean.class);
+                + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(), boolean.class);
     }
 
     private boolean existeFormaDePagoPredeterminada() {
@@ -86,7 +89,7 @@ public class DetallePedidoGUI extends JInternalFrame {
 
     private boolean existeTransportistaCargado() {
         if (Arrays.asList(RestClient.getRestTemplate().
-                getForObject("/transportistas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                getForObject("/transportistas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                         Transportista[].class)).isEmpty()) {
             JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                     .getString("mensaje_transportista_ninguno_cargado"), "Error", JOptionPane.ERROR_MESSAGE);
@@ -212,7 +215,7 @@ public class DetallePedidoGUI extends JInternalFrame {
     private void buscarProductoPorCodigo() {
         try {
             Producto producto = RestClient.getRestTemplate().getForObject("/productos/busqueda?"
-                    + "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                     + "&codigo=" + txt_CodigoProducto.getText().trim(), Producto.class);
             if (producto == null) {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
@@ -283,7 +286,16 @@ public class DetallePedidoGUI extends JInternalFrame {
         nuevoPedido.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
         nuevoPedido.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
         nuevoPedido.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
-        nuevoPedido.setFechaVencimiento(dc_fechaVencimiento.getDate());
+        if (this.dc_fechaVencimiento.getDate() != null) {
+            Calendar cal = new GregorianCalendar();
+            cal.setTime(this.dc_fechaVencimiento.getDate());
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 58);
+            nuevoPedido.setFechaVencimiento(cal.getTime().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate());
+        }
         nuevoPedido.setObservaciones(txt_Observaciones.getText());
         nuevoPedido.setRenglones(this.calcularRenglonesPedido());
         nuevoPedido.setTotal(new BigDecimal(txt_Total.getValue().toString()));
@@ -1088,14 +1100,14 @@ public class DetallePedidoGUI extends JInternalFrame {
             this.setColumnas();
             this.setMaximum(true);
             cantidadMaximaRenglones = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                     + "/cantidad-renglones", Integer.class); 
             if (rolesDeUsuario.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuario.contains(Rol.ENCARGADO)
                 || rolesDeUsuario.contains(Rol.VENDEDOR)) {
                 if (this.existeClientePredeterminado()) {
                     Cliente clientePredeterminado = RestClient.getRestTemplate()
-                            .getForObject("/clientes/predeterminado/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                            .getForObject("/clientes/predeterminado/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                                     Cliente.class);
                     this.cargarCliente(clientePredeterminado);
                     this.btnModificarCliente.setEnabled(true);

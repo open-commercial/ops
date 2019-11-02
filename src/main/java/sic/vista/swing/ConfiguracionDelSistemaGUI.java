@@ -454,7 +454,7 @@ public class ConfiguracionDelSistemaGUI extends JInternalFrame {
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         try {
             cdsModificar = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), ConfiguracionDelSistema.class);
+                    + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(), ConfiguracionDelSistema.class);
             this.cargarConfiguracionParaModificar();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

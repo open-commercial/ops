@@ -52,7 +52,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         try {
             cmb_Medida.removeAllItems();
             List<Medida> medidas = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                .getForObject("/medidas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                .getForObject("/medidas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                 Medida[].class)));
             medidas.stream().forEach((m) -> {
                 cmb_Medida.addItem(m);
@@ -71,7 +71,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         try {
             cmb_Rubro.removeAllItems();
             List<Rubro> rubros = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                .getForObject("/rubros/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                .getForObject("/rubros/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                 Rubro[].class)));
             rubros.stream().forEach((r) -> {
                 cmb_Rubro.addItem(r);

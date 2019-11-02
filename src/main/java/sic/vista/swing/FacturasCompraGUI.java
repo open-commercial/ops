@@ -6,6 +6,9 @@ import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -102,10 +105,10 @@ public class FacturasCompraGUI extends JInternalFrame {
         tbl_Resultados.setModel(modeloTablaFacturas);
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaFacturas.getColumnCount()];
-        tipos[0] = Date.class;
+        tipos[0] = LocalDateTime.class;
         tipos[1] = TipoDeOperacion.class;
         tipos[2] = String.class;
-        tipos[3] = Date.class;
+        tipos[3] = LocalDate.class;
         tipos[4] = String.class;
         tipos[5] = String.class;
         tipos[6] = String.class;
@@ -140,7 +143,8 @@ public class FacturasCompraGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(15).setPreferredWidth(120);
         //renderers        
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
-        tbl_Resultados.setDefaultRenderer(Date.class, new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
+        tbl_Resultados.setDefaultRenderer(LocalDateTime.class, new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
+        tbl_Resultados.setDefaultRenderer(LocalDate.class, new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 
     private void cambiarEstadoEnabledComponentes(boolean status) {
@@ -177,10 +181,10 @@ public class FacturasCompraGUI extends JInternalFrame {
     private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
         BusquedaFacturaCompraCriteria criteria = new BusquedaFacturaCompraCriteria();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         if (chk_Fecha.isSelected()) {
-            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? dc_FechaDesde.getDate() : null);
-            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? dc_FechaHasta.getDate() : null);
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault()) : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault()) : null);
         }
         if (chk_Proveedor.isSelected() && proveedorSeleccionado != null) {
             criteria.setIdProveedor(proveedorSeleccionado.getId_Proveedor());
@@ -299,14 +303,14 @@ public class FacturasCompraGUI extends JInternalFrame {
 
     private boolean existeProveedorDisponible() {
         return !Arrays.asList(RestClient.getRestTemplate()
-            .getForObject("/proveedores/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+            .getForObject("/proveedores/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
             Proveedor[].class)).isEmpty();
     }
        
     private void cargarTiposDeFactura() {
         try {
             TipoDeComprobante[] tiposDeComprobantes = RestClient.getRestTemplate()
-                    .getForObject("/facturas/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                    .getForObject("/facturas/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                             TipoDeComprobante[].class);
             for (int i = 0; tiposDeComprobantes.length > i; i++) {
                 cmb_TipoFactura.addItem(tiposDeComprobantes[i]);
@@ -935,7 +939,7 @@ public class FacturasCompraGUI extends JInternalFrame {
                     || factura.getTipoComprobante() == TipoDeComprobante.FACTURA_Y
                     || factura.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
                 SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(
-                        factura.getId_Factura());
+                        factura.getIdFactura());
                 seleccionDeProductosGUI.setModal(true);
                 seleccionDeProductosGUI.setLocationRelativeTo(this);
                 seleccionDeProductosGUI.setVisible(true);

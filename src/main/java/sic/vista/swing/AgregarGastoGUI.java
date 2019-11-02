@@ -2,7 +2,7 @@ package sic.vista.swing;
 
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
@@ -38,7 +38,7 @@ public class AgregarGastoGUI extends JDialog {
         Gasto gasto = new Gasto();
         gasto.setConcepto(concepto);
         gasto.setEliminado(false);
-        gasto.setFecha(new Date());
+        gasto.setFecha(LocalDateTime.now());
         gasto.setMonto(monto);
         return gasto;
     }
@@ -175,7 +175,7 @@ public class AgregarGastoGUI extends JDialog {
         Gasto gasto = this.construirGasto(ftxt_Concepto.getText().trim(), new BigDecimal(ftxt_Monto.getValue().toString()));
         try {
             RestClient.getRestTemplate().postForObject("/gastos?idEmpresa="
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                     + "&idFormaDePago=" + ((FormaDePago) cmb_FormaDePago.getSelectedItem()).getId_FormaDePago(),
                     gasto, Gasto.class);
             this.dispose();

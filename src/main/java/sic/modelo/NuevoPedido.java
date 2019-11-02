@@ -1,14 +1,14 @@
 package sic.modelo;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.Data;
 
 @Data
 public class NuevoPedido { 
  
-    private Date fechaVencimiento;    
+    private LocalDate fechaVencimiento;    
     private String observaciones;        
     private Long idEmpresa;
     private Long idUsuario;

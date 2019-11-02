@@ -126,7 +126,7 @@ public class BuscarProductosGUI extends JDialog {
                 BusquedaProductoCriteria criteria = BusquedaProductoCriteria.builder().build();
                 criteria.setDescripcion(txtCriteriaBusqueda.getText().trim());
                 criteria.setCodigo(txtCriteriaBusqueda.getText().trim());
-                criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+                criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
                 criteria.setPagina(NUMERO_PAGINA);
                 HttpEntity<BusquedaProductoCriteria> requestEntity = new HttpEntity<>(criteria);
                 PaginaRespuestaRest<Producto> response = RestClient.getRestTemplate()

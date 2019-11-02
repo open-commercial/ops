@@ -83,7 +83,7 @@ public class PrincipalGUI extends JFrame {
     private void checkCajaAbierta() {
         if (tienePermisoSegunRoles) {
             boolean existeCajaAbierta = RestClient.getRestTemplate()
-                    .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa() + "/ultima-caja-abierta",
+                    .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa() + "/ultima-caja-abierta",
                             boolean.class);
             if (!existeCajaAbierta) {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")

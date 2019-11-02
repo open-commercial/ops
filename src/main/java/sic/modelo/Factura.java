@@ -7,14 +7,15 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(of = {"fecha", "tipoComprobante", "numSerie", "numFactura", "nombreEmpresa"})
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id_Factura", scope = Factura.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idFactura", scope = Factura.class)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
   @JsonSubTypes.Type(value = FacturaCompra.class), 
@@ -28,14 +29,14 @@ public abstract class Factura implements Serializable {
         return this.getClass().getSimpleName();
     }
 
-    private long id_Factura;
+    private long idFactura;
     private Long idUsuario;
     private String nombreUsuario;
-    private Date fecha;
+    private LocalDateTime fecha;
     private TipoDeComprobante tipoComprobante;
     private long numSerie;
     private long numFactura;
-    private Date fechaVencimiento;  
+    private LocalDate fechaVencimiento;  
     private Long nroPedido;
     private long idTransportista;
     private String nombreTransportista;     
@@ -55,7 +56,7 @@ public abstract class Factura implements Serializable {
     private String nombreEmpresa;
     private boolean eliminada;   
     private long cae;
-    private Date vencimientoCae;
+    private LocalDate vencimientoCae;
     private long numSerieAfip;
     private long numFacturaAfip;
 }

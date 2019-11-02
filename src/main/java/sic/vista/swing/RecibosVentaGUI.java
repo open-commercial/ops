@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -67,13 +69,13 @@ public class RecibosVentaGUI extends JInternalFrame {
 
     private BusquedaReciboCriteria getCriteria() {
         BusquedaReciboCriteria criteria = BusquedaReciboCriteria.builder().build();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         if (chk_Cliente.isSelected() && clienteSeleccionado != null) {
             criteria.setIdCliente(clienteSeleccionado.getId_Cliente());
         }
         if (chk_Fecha.isSelected()) {
-            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? dc_FechaDesde.getDate() : null);
-            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? dc_FechaHasta.getDate() : null);
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault()) : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault()) : null);
         }
         if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
             criteria.setIdUsuario(usuarioSeleccionado.getId_Usuario());
@@ -146,7 +148,7 @@ public class RecibosVentaGUI extends JInternalFrame {
         tbl_Resultados.setModel(modeloTablaRecibos);
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaRecibos.getColumnCount()];
-        tipos[0] = Date.class;
+        tipos[0] = LocalDateTime.class;
         tipos[1] = String.class;
         tipos[2] = String.class;
         tipos[3] = String.class;

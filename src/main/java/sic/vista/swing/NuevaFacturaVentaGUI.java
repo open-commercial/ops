@@ -8,6 +8,7 @@ import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -83,12 +84,16 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
     private FacturaVenta construirFactura() {
         FacturaVenta factura = new FacturaVenta();        
         factura.setTipoComprobante(this.tipoDeComprobante);
-        Calendar cal = new GregorianCalendar();
-        cal.setTime(this.dc_fechaVencimiento.getDate());
-        cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.MINUTE, 59);
-        cal.set(Calendar.SECOND, 58);
-        factura.setFechaVencimiento(cal.getTime());
+        if (this.dc_fechaVencimiento.getDate() != null) {
+            Calendar cal = new GregorianCalendar();
+            cal.setTime(this.dc_fechaVencimiento.getDate());
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 58);
+            factura.setFechaVencimiento(cal.getTime().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate());
+        }
         factura.setRenglones(this.renglonesFactura);
         factura.setObservaciones(this.txt_Observaciones.getText().trim());      
         factura.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));  
@@ -101,7 +106,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         factura.setIva21Neto(iva_21_netoFactura);
         factura.setTotal(new BigDecimal(txt_Total.getValue().toString()));                      
         factura.setIdCliente(this.cliente.getId_Cliente());
-        factura.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        factura.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         return factura;
     }   
     
@@ -159,7 +164,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
 
     private boolean existeClientePredeterminado() {
         return RestClient.getRestTemplate().getForObject("/clientes/existe-predeterminado/empresas/"
-                + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(), boolean.class);
+                + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(), boolean.class);
     }
 
     private boolean existeFormaDePagoPredeterminada() {
@@ -171,7 +176,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
 
     private boolean existeTransportistaCargado() {
         if (Arrays.asList(RestClient.getRestTemplate().
-                getForObject("/transportistas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                getForObject("/transportistas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                         Transportista[].class)).isEmpty()) {
             JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                     .getString("mensaje_transportista_ninguno_cargado"), "Error", JOptionPane.ERROR_MESSAGE);
@@ -355,7 +360,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
     private void buscarProductoPorCodigo() {
         try {
             Producto producto = RestClient.getRestTemplate().getForObject("/productos/busqueda?"
-                    + "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                     + "&codigo=" + txt_CodigoProducto.getText().trim(), Producto.class);
             if (producto == null) {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
@@ -507,7 +512,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                 try {
                     cmb_TipoComprobante.removeAllItems();
                     tiposDeComprobante = RestClient.getRestTemplate()
-                            .getForObject("/facturas/venta/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                            .getForObject("/facturas/venta/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                                     + "/clientes/" + cliente.getId_Cliente(), TipoDeComprobante[].class);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -1501,14 +1506,14 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
             this.setColumnas();
             this.setMaximum(true);
             cantidadMaximaRenglones = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getId_Empresa()
+                    + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                     + "/cantidad-renglones", Integer.class); 
             if (rolesDeUsuario.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuario.contains(Rol.ENCARGADO)
                 || rolesDeUsuario.contains(Rol.VENDEDOR)) {
                 if (this.existeClientePredeterminado()) {
                     Cliente clientePredeterminado = RestClient.getRestTemplate()
-                            .getForObject("/clientes/predeterminado/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                            .getForObject("/clientes/predeterminado/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                                     Cliente.class);
                     this.cargarCliente(clientePredeterminado);
                     this.btnModificarCliente.setEnabled(true);

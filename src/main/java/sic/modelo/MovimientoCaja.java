@@ -1,7 +1,7 @@
 package sic.modelo;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,7 +16,7 @@ public class MovimientoCaja {
     private long idMovimiento;
     private TipoDeComprobante tipoComprobante;
     private String concepto;
-    private Date fecha;
+    private LocalDateTime fecha;
     private BigDecimal monto;
 
 }

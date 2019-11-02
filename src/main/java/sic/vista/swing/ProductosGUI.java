@@ -6,9 +6,10 @@ import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.JInternalFrame;
@@ -64,7 +65,7 @@ public class ProductosGUI extends JInternalFrame {
     private void cargarRubros() {
         try {
             rubros = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/rubros/empresas/" + EmpresaActiva.getInstance().getEmpresa().getId_Empresa(),
+                    .getForObject("/rubros/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
                             Rubro[].class)));
             cmb_Rubro.removeAllItems();
             rubros.stream().forEach(r -> {
@@ -128,12 +129,12 @@ public class ProductosGUI extends JInternalFrame {
         tipos[14] = BigDecimal.class;
         tipos[15] = BigDecimal.class;
         tipos[16] = String.class;
-        tipos[17] = Date.class;
+        tipos[17] = LocalDateTime.class;
         tipos[18] = String.class;
         tipos[19] = String.class;
         tipos[20] = String.class;
-        tipos[21] = Date.class;
-        tipos[22] = Date.class;
+        tipos[21] = LocalDateTime.class;
+        tipos[22] = LocalDate.class;
         tipos[23] = String.class;
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
@@ -166,9 +167,9 @@ public class ProductosGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(22).setPreferredWidth(125);
         tbl_Resultados.getColumnModel().getColumn(23).setPreferredWidth(400);
         //renderers
-        tbl_Resultados.getColumnModel().getColumn(16).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
-        tbl_Resultados.getColumnModel().getColumn(20).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(17).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
         tbl_Resultados.getColumnModel().getColumn(21).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(22).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 
     private void cargarResultadosAlTable() {
@@ -271,7 +272,7 @@ public class ProductosGUI extends JInternalFrame {
 
     private void exportar() {
         BusquedaProductoCriteria criteria = BusquedaProductoCriteria.builder()
-                .idEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa())
+                .idEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa())
                 .build();
         if (chkCodigoODescripcion.isSelected()) {
             criteria.setCodigo(txtCodigoODescripcion.getText().trim());
@@ -336,7 +337,7 @@ public class ProductosGUI extends JInternalFrame {
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
         BusquedaProductoCriteria criteria = BusquedaProductoCriteria.builder().build();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getId_Empresa());
+        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         if (chkCodigoODescripcion.isSelected()) {
             criteria.setCodigo(txtCodigoODescripcion.getText().trim());
             criteria.setDescripcion(txtCodigoODescripcion.getText().trim());
