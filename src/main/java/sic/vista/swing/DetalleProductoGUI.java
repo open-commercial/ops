@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
@@ -824,8 +825,9 @@ public class DetalleProductoGUI extends JDialog {
         txtProveedor.setText(productoParaModificar.getRazonSocialProveedor());     
         lbl_FechaUltimaModificacion.setText(FormatosFechaHora.formatoFecha(productoParaModificar.getFechaUltimaModificacion(), FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
         lbl_FechaAlta.setText(FormatosFechaHora.formatoFecha(productoParaModificar.getFechaAlta(), FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
-        if (productoParaModificar.getFechaVencimiento() != null){
-            dc_Vencimiento.setDate(java.sql.Date.valueOf(productoParaModificar.getFechaVencimiento()));
+        if (productoParaModificar.getFechaVencimiento() != null) {
+            Date fVencimiento = Date.from(productoParaModificar.getFechaVencimiento().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            dc_Vencimiento.setDate(fVencimiento);
         }
         txt_Estanteria.setText(productoParaModificar.getEstanteria());
         txt_Estante.setText(productoParaModificar.getEstante());        
