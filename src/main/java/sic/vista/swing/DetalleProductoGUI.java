@@ -824,7 +824,9 @@ public class DetalleProductoGUI extends JDialog {
         txtProveedor.setText(productoParaModificar.getRazonSocialProveedor());     
         lbl_FechaUltimaModificacion.setText(FormatosFechaHora.formatoFecha(productoParaModificar.getFechaUltimaModificacion(), FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
         lbl_FechaAlta.setText(FormatosFechaHora.formatoFecha(productoParaModificar.getFechaAlta(), FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
-        dc_Vencimiento.setDate(java.sql.Date.valueOf(productoParaModificar.getFechaVencimiento()));
+        if (productoParaModificar.getFechaVencimiento() != null){
+            dc_Vencimiento.setDate(java.sql.Date.valueOf(productoParaModificar.getFechaVencimiento()));
+        }
         txt_Estanteria.setText(productoParaModificar.getEstanteria());
         txt_Estante.setText(productoParaModificar.getEstante());        
         txtPrecioCosto.setValue(productoParaModificar.getPrecioCosto());        
