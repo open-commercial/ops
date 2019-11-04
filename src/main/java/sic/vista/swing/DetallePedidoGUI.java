@@ -12,6 +12,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -160,7 +161,7 @@ public class DetallePedidoGUI extends JInternalFrame {
             if (!agregado) {
                 nuevosRenglonesPedido.add(nuevoRenglonPedido);
             }
-            this.renglones = Arrays.asList(RestClient.getRestTemplate().postForObject("/pedidos/renglones",
+            Collections.addAll(renglones, RestClient.getRestTemplate().postForObject("/pedidos/renglones",
                     nuevosRenglonesPedido, RenglonPedido[].class));
             //para que baje solo el scroll vertical
             Point p = new Point(0, tbl_Resultado.getHeight());
@@ -1041,10 +1042,12 @@ public class DetallePedidoGUI extends JInternalFrame {
     private void btn_QuitarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_QuitarProductoActionPerformed
         int[] indicesParaEliminar = Utilidades.getSelectedRowsModelIndices(tbl_Resultado);
         List<RenglonPedido> renglonesParaBorrar = new ArrayList<>();
+      //  List<RenglonPedido> asd = renglones.
         for (int i = 0; i < indicesParaEliminar.length; i++) {
-            renglonesParaBorrar.add(this.renglones.get(indicesParaEliminar[i]));
+            renglonesParaBorrar.add(renglones.get(indicesParaEliminar[i]));
         }
-        renglonesParaBorrar.forEach((renglonParaBorrar) -> this.renglones.remove(renglonParaBorrar));
+        //renglonesParaBorrar.forEach(renglonParaBorrar -> renglones.remove(renglonParaBorrar));
+        renglones.removeAll(renglonesParaBorrar);
         this.cargarRenglonesAlTable();
         this.calcularResultados();
     }//GEN-LAST:event_btn_QuitarProductoActionPerformed

@@ -1427,7 +1427,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         for (int i = 0; i < indicesParaEliminar.length; i++) {
             estadoDeRenglones[indicesParaEliminar[i]] = EstadoRenglon.ELIMINADO;
         }
-        renglonesParaBorrar.forEach((renglon) -> renglonesFactura.remove(renglon));
+        renglonesParaBorrar.forEach(renglon -> renglonesFactura.remove(renglon));
         this.cargarRenglonesAlTable(estadoDeRenglones);
         this.calcularResultados();
     }//GEN-LAST:event_btn_QuitarProductoActionPerformed
