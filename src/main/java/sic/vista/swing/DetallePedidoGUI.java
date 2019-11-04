@@ -1046,7 +1046,6 @@ public class DetallePedidoGUI extends JInternalFrame {
         for (int i = 0; i < indicesParaEliminar.length; i++) {
             renglonesParaBorrar.add(renglones.get(indicesParaEliminar[i]));
         }
-        //renglonesParaBorrar.forEach(renglonParaBorrar -> renglones.remove(renglonParaBorrar));
         renglones.removeAll(renglonesParaBorrar);
         this.cargarRenglonesAlTable();
         this.calcularResultados();
