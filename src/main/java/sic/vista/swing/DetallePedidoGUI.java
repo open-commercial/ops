@@ -1042,7 +1042,6 @@ public class DetallePedidoGUI extends JInternalFrame {
     private void btn_QuitarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_QuitarProductoActionPerformed
         int[] indicesParaEliminar = Utilidades.getSelectedRowsModelIndices(tbl_Resultado);
         List<RenglonPedido> renglonesParaBorrar = new ArrayList<>();
-      //  List<RenglonPedido> asd = renglones.
         for (int i = 0; i < indicesParaEliminar.length; i++) {
             renglonesParaBorrar.add(renglones.get(indicesParaEliminar[i]));
         }
