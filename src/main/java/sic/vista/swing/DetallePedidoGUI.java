@@ -161,6 +161,7 @@ public class DetallePedidoGUI extends JInternalFrame {
             if (!agregado) {
                 nuevosRenglonesPedido.add(nuevoRenglonPedido);
             }
+            renglones.clear();
             Collections.addAll(renglones, RestClient.getRestTemplate().postForObject("/pedidos/renglones",
                     nuevosRenglonesPedido, RenglonPedido[].class));
             //para que baje solo el scroll vertical
