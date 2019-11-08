@@ -135,13 +135,9 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="lbl_Desde" min="-2" max="-2" attributes="1"/>
+                              <Component id="dc_FechaDesde" min="-2" pref="190" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="dc_FechaDesde" linkSize="6" min="-2" pref="136" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="lbl_Hasta" min="-2" max="-2" attributes="1"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="dc_FechaHasta" linkSize="6" min="-2" pref="136" max="-2" attributes="0"/>
+                              <Component id="dc_FechaHasta" pref="185" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
@@ -163,9 +159,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="2" attributes="0">
                           <Component id="dc_FechaHasta" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="lbl_Hasta" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="dc_FechaDesde" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="lbl_Desde" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="chk_Fecha" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -188,18 +182,6 @@
             <Component class="com.toedter.calendar.JDateChooser" name="dc_FechaDesde">
               <Properties>
                 <Property name="dateFormatString" type="java.lang.String" value="dd/MM/yyyy"/>
-                <Property name="enabled" type="boolean" value="false"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="lbl_Hasta">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Hasta:"/>
-                <Property name="enabled" type="boolean" value="false"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="lbl_Desde">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Desde:"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
             </Component>

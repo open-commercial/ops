@@ -65,8 +65,13 @@ public class GastosGUI extends JInternalFrame {
         BusquedaGastoCriteria criteria = BusquedaGastoCriteria.builder().build();
         criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         if (chkFecha.isSelected()) {
-            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault()) : null);
-            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault()) : null);
+            criteria.setFechaDesde(
+                    (dc_FechaDesde.getDate() != null)
+                    ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault())
+                    : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null)
+                    ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault())
+                    : null);
         }
         if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
             criteria.setIdUsuario(usuarioSeleccionado.getId_Usuario());

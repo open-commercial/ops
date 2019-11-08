@@ -107,10 +107,12 @@ public class CajasGUI extends JInternalFrame {
         BusquedaCajaCriteria criteria = BusquedaCajaCriteria.builder().build();
         criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         if (chk_Fecha.isSelected()) {
-            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(),
-                    ZoneId.systemDefault()) : null);
-            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(),
-                    ZoneId.systemDefault()) : null);
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null)
+                    ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault())
+                    : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null)
+                    ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault())
+                    : null);
         }
         if (chk_UsuarioApertura.isSelected() && usuarioSeleccionadoApertura != null) criteria.setIdUsuarioApertura(usuarioSeleccionadoApertura.getId_Usuario());
         if (chk_UsuarioCierre.isSelected() && usuarioSeleccionadoCierre != null) criteria.setIdUsuarioCierre(usuarioSeleccionadoCierre.getId_Usuario());
