@@ -104,8 +104,12 @@ public class FacturasVentaGUI extends JInternalFrame {
             criteria.setIdCliente(clienteSeleccionado.getId_Cliente());
         }
         if (chk_Fecha.isSelected()) {
-            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault()) : null);
-            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault()) : null);
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null)
+                    ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault())
+                    : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null)
+                    ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault())
+                    : null);
         }
         if (chk_NumFactura.isSelected()) {
             criteria.setNumSerie(Long.valueOf(txt_SerieFactura.getText()));
@@ -227,7 +231,7 @@ public class FacturasVentaGUI extends JInternalFrame {
 
     private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
-        BusquedaFacturaVentaCriteria criteria = getCriteria();
+        BusquedaFacturaVentaCriteria criteria = this.getCriteria();
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
             case 0:

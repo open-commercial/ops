@@ -183,8 +183,12 @@ public class FacturasCompraGUI extends JInternalFrame {
         BusquedaFacturaCompraCriteria criteria = new BusquedaFacturaCompraCriteria();
         criteria.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         if (chk_Fecha.isSelected()) {
-            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault()) : null);
-            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault()) : null);
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null)
+                    ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault())
+                    : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null)
+                    ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault())
+                    : null);
         }
         if (chk_Proveedor.isSelected() && proveedorSeleccionado != null) {
             criteria.setIdProveedor(proveedorSeleccionado.getId_Proveedor());
@@ -339,8 +343,6 @@ public class FacturasCompraGUI extends JInternalFrame {
         lbl_CantRegistrosEncontrados = new javax.swing.JLabel();
         panelFiltros1 = new javax.swing.JPanel();
         dc_FechaDesde = new com.toedter.calendar.JDateChooser();
-        lbl_Hasta = new javax.swing.JLabel();
-        lbl_Desde = new javax.swing.JLabel();
         chk_Fecha = new javax.swing.JCheckBox();
         dc_FechaHasta = new com.toedter.calendar.JDateChooser();
         chk_Proveedor = new javax.swing.JCheckBox();
@@ -409,12 +411,6 @@ public class FacturasCompraGUI extends JInternalFrame {
         dc_FechaDesde.setDateFormatString("dd/MM/yyyy");
         dc_FechaDesde.setEnabled(false);
 
-        lbl_Hasta.setText("Hasta:");
-        lbl_Hasta.setEnabled(false);
-
-        lbl_Desde.setText("Desde:");
-        lbl_Desde.setEnabled(false);
-
         chk_Fecha.setText("Fecha Factura:");
         chk_Fecha.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -476,13 +472,9 @@ public class FacturasCompraGUI extends JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelFiltros1Layout.createSequentialGroup()
-                        .addComponent(lbl_Desde)
+                        .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_Hasta)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(dc_FechaHasta, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE))
                     .addGroup(panelFiltros1Layout.createSequentialGroup()
                         .addGroup(panelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(txtProducto)
@@ -493,8 +485,6 @@ public class FacturasCompraGUI extends JInternalFrame {
                             .addComponent(btnBuscarProductos, javax.swing.GroupLayout.Alignment.TRAILING)))))
         );
 
-        panelFiltros1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {dc_FechaDesde, dc_FechaHasta});
-
         panelFiltros1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chk_Fecha, chk_Producto, chk_Proveedor});
 
         panelFiltros1Layout.setVerticalGroup(
@@ -502,9 +492,7 @@ public class FacturasCompraGUI extends JInternalFrame {
             .addGroup(panelFiltros1Layout.createSequentialGroup()
                 .addGroup(panelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Hasta)
                     .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_Desde)
                     .addComponent(chk_Fecha))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
@@ -841,14 +829,10 @@ public class FacturasCompraGUI extends JInternalFrame {
         if (chk_Fecha.isSelected() == true) {
             dc_FechaDesde.setEnabled(true);
             dc_FechaHasta.setEnabled(true);
-            lbl_Desde.setEnabled(true);
-            lbl_Hasta.setEnabled(true);
             dc_FechaDesde.requestFocus();
         } else {
             dc_FechaDesde.setEnabled(false);
             dc_FechaHasta.setEnabled(false);
-            lbl_Desde.setEnabled(false);
-            lbl_Hasta.setEnabled(false);
         }
     }//GEN-LAST:event_chk_FechaItemStateChanged
 
@@ -1012,8 +996,6 @@ public class FacturasCompraGUI extends JInternalFrame {
     private com.toedter.calendar.JDateChooser dc_FechaHasta;
     private javax.swing.JLabel lblSeparador;
     private javax.swing.JLabel lbl_CantRegistrosEncontrados;
-    private javax.swing.JLabel lbl_Desde;
-    private javax.swing.JLabel lbl_Hasta;
     private javax.swing.JLabel lbl_TotalFacturado;
     private javax.swing.JLabel lbl_TotalIVACompra;
     private javax.swing.JPanel panelFiltros;

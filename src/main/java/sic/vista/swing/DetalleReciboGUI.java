@@ -5,11 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
-import java.time.ZoneId;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
@@ -86,14 +83,6 @@ public class DetalleReciboGUI extends JDialog {
                     this.lanzarReporteRecibo(recibo);
                 }
             } else {
-                Calendar cal = new GregorianCalendar();
-                cal.setTime(this.dcFechaRecibo.getDate());
-                cal.set(Calendar.HOUR_OF_DAY, 00);
-                cal.set(Calendar.MINUTE, 00);
-                cal.set(Calendar.SECOND, 00);
-                recibo.setFecha(cal.toInstant()
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDateTime());
                 recibo.setIdProveedor(proveedor.getId_Proveedor());
                 RestClient.getRestTemplate().postForObject("/recibos/proveedores",
                         recibo, Recibo.class);
@@ -148,8 +137,6 @@ public class DetalleReciboGUI extends JDialog {
         txtObservaciones = new javax.swing.JTextField();
         cmbFormaDePago = new javax.swing.JComboBox<>();
         lblConcepto = new javax.swing.JLabel();
-        lblFecha = new javax.swing.JLabel();
-        dcFechaRecibo = new com.toedter.calendar.JDateChooser();
         btnGuardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -184,12 +171,6 @@ public class DetalleReciboGUI extends JDialog {
         lblConcepto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblConcepto.setText("* Concepto:");
 
-        lblFecha.setForeground(java.awt.Color.red);
-        lblFecha.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblFecha.setText("* Fecha:");
-
-        dcFechaRecibo.setDateFormatString("dd/MM/yyyy");
-
         javax.swing.GroupLayout panelGeneralLayout = new javax.swing.GroupLayout(panelGeneral);
         panelGeneral.setLayout(panelGeneralLayout);
         panelGeneralLayout.setHorizontalGroup(
@@ -199,11 +180,9 @@ public class DetalleReciboGUI extends JDialog {
                 .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(lblFormaDePago, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblMonto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblConcepto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblFecha, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblConcepto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dcFechaRecibo, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbFormaDePago, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtMonto, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtObservaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -213,10 +192,6 @@ public class DetalleReciboGUI extends JDialog {
             panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelGeneralLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(dcFechaRecibo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblFecha))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblFormaDePago)
                     .addComponent(cmbFormaDePago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -228,7 +203,7 @@ public class DetalleReciboGUI extends JDialog {
                 .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(txtObservaciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblConcepto))
-                .addGap(12, 12, 12))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         btnGuardar.setForeground(java.awt.Color.blue);
@@ -257,8 +232,8 @@ public class DetalleReciboGUI extends JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panelGeneral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnGuardar)
                 .addContainerGap())
         );
@@ -273,11 +248,8 @@ public class DetalleReciboGUI extends JDialog {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {
             this.cargarFormasDePago();
-            this.txtObservaciones.setText("SALDO.");
-            this.dcFechaRecibo.setDate(new Date());
+            this.txtObservaciones.setText("SALDO.");            
             if (cliente != null) {
-                this.dcFechaRecibo.setVisible(false);
-                this.lblFecha.setVisible(false);
                 BigDecimal saldoCC = RestClient.getRestTemplate()
                         .getForObject("/cuentas-corriente/clientes/" + cliente.getId_Cliente() + "/saldo", BigDecimal.class);
                 txtMonto.setValue((saldoCC.compareTo(BigDecimal.ZERO) < 0) ? saldoCC.negate() : BigDecimal.ZERO);
@@ -305,9 +277,7 @@ public class DetalleReciboGUI extends JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar;
     private javax.swing.JComboBox<FormaDePago> cmbFormaDePago;
-    private com.toedter.calendar.JDateChooser dcFechaRecibo;
     private javax.swing.JLabel lblConcepto;
-    private javax.swing.JLabel lblFecha;
     private javax.swing.JLabel lblFormaDePago;
     private javax.swing.JLabel lblMonto;
     private javax.swing.JPanel panelGeneral;

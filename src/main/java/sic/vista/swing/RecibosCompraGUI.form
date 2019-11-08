@@ -36,7 +36,6 @@
               <Component id="panelFiltros" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="panelOrden" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="91" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -44,8 +43,8 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="panelFiltros" min="-2" max="-2" attributes="0"/>
                   <Component id="panelOrden" min="-2" max="-2" attributes="0"/>
+                  <Component id="panelFiltros" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="panelResultados" max="32767" attributes="0"/>
@@ -76,7 +75,7 @@
                           <Component id="btn_VerDetalle" linkSize="2" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Component id="btn_Eliminar" linkSize="2" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="323" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Component id="lblTotal" min="-2" max="-2" attributes="1"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="txtTotal" min="-2" pref="178" max="-2" attributes="0"/>
@@ -89,8 +88,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="sp_Resultados" pref="224" max="32767" attributes="0"/>
+                  <Component id="sp_Resultados" pref="253" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lblTotal" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -201,26 +199,29 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                  <Component id="subPanelFiltros1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
-                  <Component id="subPanelFiltros2" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="btn_Buscar" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="lbl_cantResultados" max="32767" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="subPanelFiltros1" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="subPanelFiltros2" max="32767" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="btn_Buscar" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="lbl_cantResultados" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="subPanelFiltros1" min="-2" max="-2" attributes="0"/>
-                      <Component id="subPanelFiltros2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="subPanelFiltros1" max="32767" attributes="0"/>
+                      <Component id="subPanelFiltros2" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -242,47 +243,29 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="chk_Concepto" alignment="0" min="-2" pref="139" max="-2" attributes="0"/>
                           <Component id="chk_Usuario" alignment="0" min="-2" pref="139" max="-2" attributes="0"/>
-                          <Component id="chk_Proveedor" alignment="0" min="-2" pref="139" max="-2" attributes="0"/>
-                          <Component id="chk_Fecha" alignment="0" min="-2" pref="139" max="-2" attributes="0"/>
+                          <Component id="chk_Proveedor" alignment="1" min="-2" pref="139" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="lbl_Desde" min="-2" max="-2" attributes="1"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="dc_FechaDesde" pref="138" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="lbl_Hasta" min="-2" max="-2" attributes="1"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="dc_FechaHasta" pref="139" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="txtProveedor" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="txtUsuario" alignment="0" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="txtProveedor" pref="270" max="32767" attributes="0"/>
+                                  <Component id="txtUsuario" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="btnBuscarCliente" alignment="1" min="-2" max="-2" attributes="0"/>
-                                  <Component id="btnBuscarUsuarios" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnBuscarCliente" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnBuscarUsuarios" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <Component id="txt_Concepto" alignment="0" max="32767" attributes="0"/>
+                          <Component id="txt_Concepto" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="lbl_Desde" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="dc_FechaDesde" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="lbl_Hasta" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="dc_FechaHasta" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="chk_Fecha" alignment="2" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="2" attributes="0">
                           <Component id="chk_Proveedor" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="txtProveedor" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -304,14 +287,6 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JCheckBox" name="chk_Fecha">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Fecha Recibo:"/>
-              </Properties>
-              <Events>
-                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_FechaItemStateChanged"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JCheckBox" name="chk_Proveedor">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Proveedor:"/>
@@ -319,30 +294,6 @@
               <Events>
                 <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_ProveedorItemStateChanged"/>
               </Events>
-            </Component>
-            <Component class="javax.swing.JLabel" name="lbl_Hasta">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Hasta:"/>
-                <Property name="enabled" type="boolean" value="false"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="lbl_Desde">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Desde:"/>
-                <Property name="enabled" type="boolean" value="false"/>
-              </Properties>
-            </Component>
-            <Component class="com.toedter.calendar.JDateChooser" name="dc_FechaDesde">
-              <Properties>
-                <Property name="dateFormatString" type="java.lang.String" value="dd/MM/yyyy"/>
-                <Property name="enabled" type="boolean" value="false"/>
-              </Properties>
-            </Component>
-            <Component class="com.toedter.calendar.JDateChooser" name="dc_FechaHasta">
-              <Properties>
-                <Property name="dateFormatString" type="java.lang.String" value="dd/MM/yyyy"/>
-                <Property name="enabled" type="boolean" value="false"/>
-              </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="chk_Usuario">
               <Properties>
@@ -414,24 +365,44 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="1" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="chk_NumRecibo" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="chk_Fecha" max="32767" attributes="0"/>
+                          <Component id="chk_NumRecibo" max="32767" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="txt_SerieRecibo" min="-2" pref="47" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="separador" min="-2" pref="14" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="txt_NroRecibo" pref="72" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="txt_SerieRecibo" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="separador" min="-2" pref="14" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="txt_NroRecibo" min="-2" pref="226" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Component id="dc_FechaDesde" min="-2" pref="141" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="dc_FechaHasta" min="-2" pref="143" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="chk_NumRecibo" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txt_SerieRecibo" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="separador" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txt_NroRecibo" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="2" attributes="0">
+                          <Component id="chk_Fecha" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="dc_FechaDesde" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="dc_FechaHasta" alignment="2" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="2" attributes="0">
+                          <Component id="chk_NumRecibo" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txt_SerieRecibo" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="separador" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txt_NroRecibo" alignment="2" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -479,6 +450,26 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_NroReciboActionPerformed"/>
                 <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_NroReciboKeyTyped"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="chk_Fecha">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Fecha Recibo:"/>
+              </Properties>
+              <Events>
+                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_FechaItemStateChanged"/>
+              </Events>
+            </Component>
+            <Component class="com.toedter.calendar.JDateChooser" name="dc_FechaDesde">
+              <Properties>
+                <Property name="dateFormatString" type="java.lang.String" value="dd/MM/yyyy"/>
+                <Property name="enabled" type="boolean" value="false"/>
+              </Properties>
+            </Component>
+            <Component class="com.toedter.calendar.JDateChooser" name="dc_FechaHasta">
+              <Properties>
+                <Property name="dateFormatString" type="java.lang.String" value="dd/MM/yyyy"/>
+                <Property name="enabled" type="boolean" value="false"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>
