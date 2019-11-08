@@ -13,7 +13,6 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.CategoriaIVA;
 import sic.modelo.Cliente;
-import sic.modelo.SucursalActiva;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeOperacion;
 import sic.modelo.Usuario;

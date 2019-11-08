@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.SucursalActiva;
 import sic.modelo.Rol;
 import sic.modelo.Rubro;
 import sic.modelo.UsuarioActivo;

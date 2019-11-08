@@ -5,6 +5,8 @@ import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -63,8 +65,8 @@ public class GastosGUI extends JInternalFrame {
         BusquedaGastoCriteria criteria = BusquedaGastoCriteria.builder().build();
         criteria.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         if (chkFecha.isSelected()) {
-            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? dc_FechaDesde.getDate() : null);
-            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? dc_FechaHasta.getDate() : null);
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault()) : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault()) : null);
         }
         if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
             criteria.setIdUsuario(usuarioSeleccionado.getId_Usuario());
@@ -116,7 +118,7 @@ public class GastosGUI extends JInternalFrame {
         tbl_Resultados.setModel(modeloTablaGastos);
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaGastos.getColumnCount()];
-        tipos[0] = Date.class;
+        tipos[0] = LocalDateTime.class;
         tipos[1] = String.class;
         tipos[2] = String.class;
         tipos[3] = String.class;

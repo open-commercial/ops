@@ -422,7 +422,7 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();
-        }        
+        }
     }//GEN-LAST:event_formInternalFrameOpened
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

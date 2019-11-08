@@ -3,7 +3,8 @@ package sic.modelo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,10 +23,10 @@ public class NotaDebito extends Nota implements Serializable {
     public NotaDebito() {}
 
     public NotaDebito(long idNota, long serie, long nroNota, boolean eliminada,
-            TipoDeComprobante tipoDeComprobante, Date fecha, long idSucursal, String nombreSucursal, long idUsuario, String nombreUsuario,
+            TipoDeComprobante tipoDeComprobante, LocalDateTime fecha, long idSucursal, String nombreSucursal, long idUsuario, String nombreUsuario,
             long idCliente, String nombreFiscalCliente, long idProveedor, String razonSocialProveedor,
             String motivo, List<RenglonNotaDebito> renglones, BigDecimal subTotalBruto,
-            BigDecimal iva21Neto, BigDecimal iva105Neto, BigDecimal total, BigDecimal montoNoGravado, long CAE, Date vencimientoCAE,
+            BigDecimal iva21Neto, BigDecimal iva105Neto, BigDecimal total, BigDecimal montoNoGravado, long CAE, LocalDate vencimientoCAE,
             long numSerieAfip, long numFacturaAfip, long idRecibo) {
 
         super(idNota, serie, nroNota, eliminada, tipoDeComprobante, fecha, idSucursal, nombreSucursal,

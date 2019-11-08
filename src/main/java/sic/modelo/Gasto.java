@@ -2,7 +2,7 @@ package sic.modelo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,7 +12,7 @@ public class Gasto implements Serializable {
 
     private long id_Gasto;
     private long nroGasto;
-    private Date fecha;
+    private LocalDateTime fecha;
     private String concepto;
     private Long idSucursal;
     private String nombreSucursal;

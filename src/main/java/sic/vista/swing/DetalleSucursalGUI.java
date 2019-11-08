@@ -4,6 +4,11 @@ import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -63,14 +68,16 @@ public class DetalleSucursalGUI extends JDialog {
         txt_Lema.setText(sucursalModificar.getLema());        
         cmbCategoriaIVA.setSelectedItem(sucursalModificar.getCategoriaIVA());                    
         txtIdFiscal.setValue(sucursalModificar.getIdFiscal());                            
-        txtIngresosBrutos.setValue(sucursalModificar.getIngresosBrutos());        
-        dc_FechaInicioActividad.setDate(sucursalModificar.getFechaInicioActividad());
+        txtIngresosBrutos.setValue(sucursalModificar.getIngresosBrutos());
+        dc_FechaInicioActividad.setDate(java.util.Date
+                .from(sucursalModificar.getFechaInicioActividad().atZone(ZoneId.systemDefault())
+                        .toInstant()));
         txt_Email.setText(sucursalModificar.getEmail());
         txt_Telefono.setText(sucursalModificar.getTelefono());
         if (sucursalModificar.getUbicacion() != null) {
             lblDetalleUbicacionSucursal.setText(sucursalModificar.getUbicacion().toString());
             this.ubicacion = sucursalModificar.getUbicacion();
-        } 
+        }
         if (sucursalModificar.getLogo() == null || "".equals(sucursalModificar.getLogo())) {
             lbl_Logo.setText("SIN IMAGEN");
             logo = null;
@@ -363,13 +370,15 @@ public class DetalleSucursalGUI extends JDialog {
                 sucursal.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
                 sucursal.setIdFiscal((Long) txtIdFiscal.getValue());
                 sucursal.setIngresosBrutos((Long) txtIngresosBrutos.getValue());
-                sucursal.setFechaInicioActividad(dc_FechaInicioActividad.getDate());
+                sucursal.setFechaInicioActividad(Instant.ofEpochMilli(dc_FechaInicioActividad.getDate().getTime())
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime());
                 sucursal.setEmail(txt_Email.getText().trim());
-                sucursal.setTelefono(txt_Telefono.getText().trim());    
+                sucursal.setTelefono(txt_Telefono.getText().trim());
                 if (this.ubicacion != null) {
                     sucursal.setUbicacion(this.ubicacion);
                 }
-                sucursal = RestClient.getRestTemplate().postForObject("/sucursales", sucursal, Sucursal.class);            
+                sucursal = RestClient.getRestTemplate().postForObject("/sucursales", sucursal, Sucursal.class);
                 mensaje = "La Sucursal " + txt_Nombre.getText().trim() + " se guardó correctamente.";
                 if (logo == null) {
                     sucursal.setLogo("");
@@ -384,8 +393,10 @@ public class DetalleSucursalGUI extends JDialog {
                 sucursalModificar.setLema(txt_Lema.getText().trim());                
                 sucursalModificar.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
                 sucursalModificar.setIdFiscal((Long) txtIdFiscal.getValue());
-                sucursalModificar.setIngresosBrutos((Long) txtIngresosBrutos.getValue());
-                sucursalModificar.setFechaInicioActividad(dc_FechaInicioActividad.getDate());
+                sucursalModificar.setIngresosBrutos((Long) txtIngresosBrutos.getValue());               
+                sucursalModificar.setFechaInicioActividad(Instant.ofEpochMilli(dc_FechaInicioActividad.getDate().getTime())
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime());
                 sucursalModificar.setEmail(txt_Email.getText().trim());
                 sucursalModificar.setTelefono(txt_Telefono.getText().trim());
                 if (this.ubicacion != null) {

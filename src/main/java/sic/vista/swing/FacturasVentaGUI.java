@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -102,8 +104,8 @@ public class FacturasVentaGUI extends JInternalFrame {
             criteria.setIdCliente(clienteSeleccionado.getId_Cliente());
         }
         if (chk_Fecha.isSelected()) {
-            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? dc_FechaDesde.getDate() : null);
-            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? dc_FechaHasta.getDate() : null);
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault()) : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault()) : null);
         }
         if (chk_NumFactura.isSelected()) {
             criteria.setNumSerie(Long.valueOf(txt_SerieFactura.getText()));
@@ -155,7 +157,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaFacturas.getColumnCount()];
         tipos[0] = Object.class;
-        tipos[1] = Date.class;
+        tipos[1] = LocalDateTime.class;
         tipos[2] = TipoDeComprobante.class;
         tipos[3] = String.class;
         tipos[4] = Long.class;
@@ -173,7 +175,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         tipos[16] = BigDecimal.class;
         tipos[17] = BigDecimal.class;
         tipos[18] = String.class;
-        tipos[19] = Date.class;
+        tipos[19] = LocalDateTime.class;
         modeloTablaFacturas.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
@@ -408,7 +410,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             try {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
                 byte[] reporte = RestClient.getRestTemplate()
-                        .getForObject("/facturas/" + facturasTotal.get(indexFilaSeleccionada).getId_Factura() + "/reporte",
+                        .getForObject("/facturas/" + facturasTotal.get(indexFilaSeleccionada).getIdFactura() + "/reporte",
                                 byte[].class);
                 File f = new File(System.getProperty("user.home") + "/Factura.pdf");
                 Files.write(f.toPath(), reporte);
@@ -1163,9 +1165,9 @@ public class FacturasVentaGUI extends JInternalFrame {
 
     private void btnNuevaFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaFacturaActionPerformed
         if (this.existeClienteDisponible()) {
-            JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), PuntoDeVentaGUI.class);
+            JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), NuevaFacturaVentaGUI.class);
             if (gui == null) {
-                PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
+                NuevaFacturaVentaGUI puntoDeVentaGUI = new NuevaFacturaVentaGUI();
                 puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
                         getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
                 getDesktopPane().add(puntoDeVentaGUI);
@@ -1213,7 +1215,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             if (FEHabilitada) {
                 if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
                     int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                    long idFacturaSeleccionada = facturasTotal.get(indexFilaSeleccionada).getId_Factura();
+                    long idFacturaSeleccionada = facturasTotal.get(indexFilaSeleccionada).getIdFactura();
                     RestClient.getRestTemplate().postForObject("/facturas/" + idFacturaSeleccionada + "/autorizacion",
                             null, FacturaVenta.class);
                     JOptionPane.showMessageDialog(this,
@@ -1291,7 +1293,7 @@ public class FacturasVentaGUI extends JInternalFrame {
                     || factura.getTipoComprobante() == TipoDeComprobante.FACTURA_Y
                     || factura.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
                 SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(
-                        factura.getId_Factura());
+                        factura.getIdFactura());
                 seleccionDeProductosGUI.setModal(true);
                 seleccionDeProductosGUI.setLocationRelativeTo(this);
                 seleccionDeProductosGUI.setVisible(true);
@@ -1371,7 +1373,7 @@ public class FacturasVentaGUI extends JInternalFrame {
                     "Eliminar", JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
                 try {
-                    RestClient.getRestTemplate().delete("/facturas/" + facturasTotal.get(indexFilaSeleccionada).getId_Factura());
+                    RestClient.getRestTemplate().delete("/facturas/" + facturasTotal.get(indexFilaSeleccionada).getIdFactura());
                     this.limpiarYBuscar(true);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

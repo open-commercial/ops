@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
-import java.util.Calendar;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
@@ -23,7 +25,6 @@ import sic.modelo.Proveedor;
 import sic.modelo.TipoDeComprobante;
 import sic.util.DecimalesRenderer;
 import sic.util.FormatosFechaHora;
-import sic.util.FormatterFechaHora;
 
 public class DetalleNotaCreditoGUI extends JDialog {
 
@@ -33,7 +34,6 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private long idNotaCredito;
     private NotaCredito notaCredito;
     private boolean notaCreditoCreada;
-    private final FormatterFechaHora formatter = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO);
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private BigDecimal subTotalBruto = BigDecimal.ZERO;
     private BigDecimal iva_105_netoFactura = BigDecimal.ZERO;
@@ -143,7 +143,8 @@ public class DetalleNotaCreditoGUI extends JDialog {
         cmbMotivo.removeAllItems();
         cmbMotivo.addItem(notaCredito.getMotivo());
         dc_FechaNota.setEnabled(false);
-        dc_FechaNota.setDate(notaCredito.getFecha());
+        ZonedDateTime zdt = notaCredito.getFecha().atZone(ZoneId.systemDefault());
+        dc_FechaNota.setDate(Date.from(zdt.toInstant()));
     }
 
     private void setColumnas() {
@@ -207,13 +208,9 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private void guardar() throws IOException {
         this.notaCredito.setMotivo(cmbMotivo.getSelectedItem().toString());
         if (proveedor != null) {
-            Calendar fechaActual = Calendar.getInstance();
-            Calendar fechaNotaCredito = Calendar.getInstance();
-            fechaNotaCredito.setTime(dc_FechaNota.getDate());
-            fechaNotaCredito.set(Calendar.HOUR_OF_DAY, fechaActual.get(Calendar.HOUR_OF_DAY));
-            fechaNotaCredito.set(Calendar.MINUTE, fechaActual.get(Calendar.MINUTE));
-            fechaNotaCredito.set(Calendar.SECOND, fechaActual.get(Calendar.SECOND));
-            this.notaCredito.setFecha(fechaNotaCredito.getTime());
+            LocalDateTime hoy = LocalDateTime.now();
+            this.notaCredito.setFecha(LocalDateTime.ofInstant(dc_FechaNota.getDate().toInstant(), ZoneId.systemDefault())
+                    .withHour(hoy.getHour()).withMinute(hoy.getMinute()).withSecond(hoy.getSecond()));
             this.notaCredito.setSerie(Long.parseLong(txt_Serie.getValue().toString()));
             this.notaCredito.setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
             this.notaCredito.setCae(Long.parseLong(txt_CAE.getValue().toString()));
@@ -742,7 +739,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
                 btnGuardar.setVisible(false);
                 this.cargarDetalleNotaCreditoProveedor();
                 this.setTitle(notaCredito.getTipoComprobante() + " Nº " + notaCredito.getSerie() + " - " + notaCredito.getNroNota()
-                        + " con fecha " + formatter.format(notaCredito.getFecha()) + " del Proveedor: " + notaCredito.getRazonSocialProveedor());
+                        + " con fecha " + FormatosFechaHora.formatoFecha(notaCredito.getFecha(), FormatosFechaHora.FORMATO_FECHAHORA_HISPANO) + " del Proveedor: " + notaCredito.getRazonSocialProveedor());
             } else {
                 if (this.notaCredito.getIdCliente() != null) {
                     this.cargarDetalleCliente();

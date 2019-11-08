@@ -35,7 +35,7 @@ public class CerrarPedidoGUI extends JDialog {
     public CerrarPedidoGUI(NuevoPedido nuevoPedido, Cliente cliente) {
         this.nuevoPedido = nuevoPedido;
         this.cliente = cliente;
-        initComponents();
+        this.initComponents();
         this.setIcon(); 
     }
 
@@ -43,8 +43,12 @@ public class CerrarPedidoGUI extends JDialog {
         this.nuevoPedido = null;
         this.cliente = cliente;
         this.pedido = pedido;
-        initComponents();
+        this.initComponents();
         this.setIcon(); 
+    }
+    
+    public boolean isOperacionExitosa() {
+        return this.operacionExitosa;
     }
     
     private void setIcon() {
@@ -71,10 +75,6 @@ public class CerrarPedidoGUI extends JDialog {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    public boolean isOperacionExitosa() {
-        return this.operacionExitosa;
     }
 
     private void cargarSucursalesConPuntoDeRetiro() {

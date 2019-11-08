@@ -1,8 +1,9 @@
 package sic.modelo;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.Map;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
@@ -26,11 +27,11 @@ public class NuevoProducto {
     private boolean publico;
     private boolean oferta;
     private BigDecimal porcentajeBonificacionOferta;
-    private Date fechaUltimaModificacion;
+    private LocalDateTime fechaUltimaModificacion;
     private String estanteria;
     private String estante;
     private String nota;
-    private Date fechaVencimiento;
+    private LocalDate fechaVencimiento;
     private boolean eliminado;
 
 }

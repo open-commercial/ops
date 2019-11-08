@@ -5,9 +5,9 @@ import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.JInternalFrame;
@@ -130,7 +130,7 @@ public class ProveedoresGUI extends JInternalFrame {
         tipos[1] = String.class;
         tipos[2] = String.class;
         tipos[3] = BigDecimal.class;
-        tipos[4] = Date.class;
+        tipos[4] = LocalDateTime.class;
         tipos[5] = String.class;
         tipos[6] = String.class;
         tipos[7] = String.class;
@@ -156,7 +156,7 @@ public class ProveedoresGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(11).setPreferredWidth(440);
         //renderers
         tbl_Resultados.getColumnModel().getColumn(3).setCellRenderer(new ColoresNumerosRenderer());
-        tbl_Resultados.setDefaultRenderer(Date.class, new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
+        tbl_Resultados.setDefaultRenderer(LocalDateTime.class, new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
     }
 
     private void cargarResultadosAlTable() {

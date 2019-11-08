@@ -29,7 +29,6 @@ import sic.modelo.NuevaNotaCreditoDeFactura;
 import sic.modelo.RenglonFactura;
 import sic.util.DecimalesRenderer;
 import sic.util.FormatosFechaHora;
-import sic.util.FormatterFechaHora;
 import sic.util.FormatterNumero;
 
 public class SeleccionDeProductosGUI extends JDialog {
@@ -55,7 +54,7 @@ public class SeleccionDeProductosGUI extends JDialog {
     }
     
     private void setIcon() {
-        ImageIcon iconoVentana = new ImageIcon(PuntoDeVentaGUI.class.getResource("/sic/icons/SIC_24_square.png"));
+        ImageIcon iconoVentana = new ImageIcon(NuevaFacturaVentaGUI.class.getResource("/sic/icons/SIC_24_square.png"));
         this.setIconImage(iconoVentana.getImage());
     }
     
@@ -150,7 +149,7 @@ public class SeleccionDeProductosGUI extends JDialog {
         try {
             factura = RestClient.getRestTemplate().getForObject("/facturas/" + idFactura, Factura.class);
             factura.setRenglones(new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/facturas/" + factura.getId_Factura() + "/renglones/notas/credito", RenglonFactura[].class))));
+                    .getForObject("/facturas/" + factura.getIdFactura() + "/renglones/notas/credito", RenglonFactura[].class))));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -257,13 +256,14 @@ public class SeleccionDeProductosGUI extends JDialog {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cargarRenglonesAlTable();
         if (factura instanceof FacturaVenta) {
+            FormatosFechaHora.formatoFecha(factura.getFecha(), FormatosFechaHora.FORMATO_FECHAHORA_HISPANO);
             this.setTitle(factura.getTipoComprobante() + " Nro: " + factura.getNumSerie() + " - " + factura.getNumFactura()
                     + " del Cliente: " + ((FacturaVenta) factura).getNombreFiscalCliente()
-                    + " con Fecha: " + (new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO)).format(factura.getFecha()));
+                    + " con Fecha: " + FormatosFechaHora.formatoFecha(factura.getFecha(), FormatosFechaHora.FORMATO_FECHA_HISPANO));
         } else if (factura instanceof FacturaCompra) {
             this.setTitle(factura.getTipoComprobante() + " Nro: " + factura.getNumSerie() + " - " + factura.getNumFactura()
                     + " del Proveedor: " + ((FacturaCompra) factura).getRazonSocialProveedor()
-                    + " con Fecha: " + (new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO)).format(factura.getFecha()));
+                    + " con Fecha: " + FormatosFechaHora.formatoFecha(factura.getFecha(), FormatosFechaHora.FORMATO_FECHA_HISPANO));
         }
     }//GEN-LAST:event_formWindowOpened
 
@@ -293,7 +293,7 @@ public class SeleccionDeProductosGUI extends JDialog {
             } else {
                 NuevaNotaCreditoDeFactura notaCreditoDeFactura = NuevaNotaCreditoDeFactura
                         .builder()
-                        .idFactura(this.factura.getId_Factura())
+                        .idFactura(this.factura.getIdFactura())
                         .cantidades(cantidades.toArray(new BigDecimal[cantidades.size()]))
                         .idsRenglonesFactura(idsRenglonesFactura.toArray(new Long[idsRenglonesFactura.size()]))
                         .modificaStock(chkModificarStock.isSelected())

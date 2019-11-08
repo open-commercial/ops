@@ -8,8 +8,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.text.ParseException;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +41,6 @@ import sic.modelo.UsuarioActivo;
 import sic.util.CalculosPrecioProducto;
 import sic.util.FiltroImagenes;
 import sic.util.FormatosFechaHora;
-import sic.util.FormatterFechaHora;
 import sic.util.Utilidades;
 
 public class DetalleProductoGUI extends JDialog {
@@ -922,11 +923,13 @@ public class DetalleProductoGUI extends JDialog {
         txt_CantMinima.setValue(productoParaModificar.getCantMinima());
         txt_Bulto.setValue(productoParaModificar.getBulto());
         cmb_Rubro.setSelectedItem(productoParaModificar.getNombreRubro());
-        txtProveedor.setText(productoParaModificar.getRazonSocialProveedor());
-        FormatterFechaHora formateador = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO);
-        lbl_FechaUltimaModificacion.setText(formateador.format(productoParaModificar.getFechaUltimaModificacion()));
-        lbl_FechaAlta.setText(formateador.format(productoParaModificar.getFechaAlta()));
-        dc_Vencimiento.setDate(productoParaModificar.getFechaVencimiento());
+        txtProveedor.setText(productoParaModificar.getRazonSocialProveedor());     
+        lbl_FechaUltimaModificacion.setText(FormatosFechaHora.formatoFecha(productoParaModificar.getFechaUltimaModificacion(), FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
+        lbl_FechaAlta.setText(FormatosFechaHora.formatoFecha(productoParaModificar.getFechaAlta(), FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
+        if (productoParaModificar.getFechaVencimiento() != null) {
+            Date fVencimiento = Date.from(productoParaModificar.getFechaVencimiento().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            dc_Vencimiento.setDate(fVencimiento);
+        }
         txt_Estanteria.setText(productoParaModificar.getEstanteria());
         txt_Estante.setText(productoParaModificar.getEstante());        
         txtPrecioCosto.setValue(productoParaModificar.getPrecioCosto());        
@@ -1157,7 +1160,11 @@ public class DetalleProductoGUI extends JDialog {
                     producto.setEstanteria(txt_Estanteria.getText().trim());
                     producto.setEstante(txt_Estante.getText().trim());
                     producto.setNota(txt_Nota.getText().trim());
-                    producto.setFechaVencimiento(dc_Vencimiento.getDate());
+                    if (dc_Vencimiento.getDate() != null) {
+                        producto.setFechaVencimiento(dc_Vencimiento.getDate().toInstant()
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate());
+                    }
                     Producto productoRecuperado = RestClient.getRestTemplate().postForObject("/productos?idMedida=" + idMedida
                             + "&idRubro=" + idRubro
                             + "&idProveedor=" + ((idProveedor != null) ? idProveedor : "")
@@ -1198,7 +1205,7 @@ public class DetalleProductoGUI extends JDialog {
                             cantidadesNuevas.add(cantidadNuevaEnSucursal);
                         }
                     });
-                    productoParaModificar.getCantidadEnSucursales().addAll(cantidadesNuevas);                                  
+                    productoParaModificar.getCantidadEnSucursales().addAll(cantidadesNuevas);
                     productoParaModificar.setCantMinima(new BigDecimal(txt_CantMinima.getValue().toString()));
                     productoParaModificar.setBulto(new BigDecimal(txt_Bulto.getValue().toString()));
                     productoParaModificar.setPrecioCosto(new BigDecimal(txtPrecioCosto.getValue().toString()));
@@ -1208,17 +1215,21 @@ public class DetalleProductoGUI extends JDialog {
                     productoParaModificar.setIvaPorcentaje(new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()));
                     productoParaModificar.setIvaNeto(new BigDecimal(txtIVANeto.getValue().toString()));
                     productoParaModificar.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
-                    productoParaModificar.setIlimitado(chkSinLimite.isSelected());   
+                    productoParaModificar.setIlimitado(chkSinLimite.isSelected());
                     productoParaModificar.setPublico(rbPublico.isSelected());
                     productoParaModificar.setEstanteria(txt_Estanteria.getText().trim());
                     productoParaModificar.setEstante(txt_Estante.getText().trim());
                     productoParaModificar.setNota(txt_Nota.getText().trim());
-                    productoParaModificar.setFechaVencimiento(dc_Vencimiento.getDate());
                     productoParaModificar.setOferta(chkOferta.isSelected());
                     if (chkOferta.isSelected()) {
                         productoParaModificar.setPorcentajeBonificacionOferta(new BigDecimal(txtPorcentajeOferta.getValue().toString()));
                     } else {
                         productoParaModificar.setPorcentajeBonificacionOferta(null);
+                    }
+                    if (dc_Vencimiento.getDate() != null) {
+                        productoParaModificar.setFechaVencimiento(dc_Vencimiento.getDate().toInstant()
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate());
                     }
                     if (cambioImagen && imagenProducto != null) {
                         productoParaModificar.setUrlImagen(RestClient.getRestTemplate()
@@ -1247,6 +1258,7 @@ public class DetalleProductoGUI extends JDialog {
         } else {
             JOptionPane.showMessageDialog(this, mensajeError, "Error", JOptionPane.ERROR_MESSAGE);
         }
+
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened

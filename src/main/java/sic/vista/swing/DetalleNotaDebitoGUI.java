@@ -4,8 +4,13 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
@@ -24,7 +29,6 @@ import sic.modelo.Recibo;
 import sic.modelo.RenglonNotaDebito;
 import sic.modelo.TipoDeComprobante;
 import sic.util.FormatosFechaHora;
-import sic.util.FormatterFechaHora;
 import sic.util.FormatterNumero;
 
 public class DetalleNotaDebitoGUI extends JDialog {
@@ -35,7 +39,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private boolean notaDebitoCreada;
     private long idNotaDebito;
     private NotaDebito notaDebito;
-    private final FormatterFechaHora formatter = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO);
+    //private final FormatterFechaHora formatter = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO);
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleNotaDebitoGUI(NotaDebito notaDebitoCalculada) {
@@ -145,6 +149,16 @@ public class DetalleNotaDebitoGUI extends JDialog {
             notaDebito.setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
             notaDebito.setCae(Long.parseLong(txt_CAE.getValue().toString()));
             notaDebito.setIdProveedor(proveedor.getId_Proveedor());
+            if (this.dcFechaNota.isVisible() && this.dcFechaNota.getDate() != null) {
+                Calendar cal = new GregorianCalendar();
+                cal.setTime(this.dcFechaNota.getDate());
+                cal.set(Calendar.HOUR_OF_DAY, 00);
+                cal.set(Calendar.MINUTE, 00);
+                cal.set(Calendar.SECOND, 00);
+                notaDebito.setFecha(cal.toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime());
+            }
         }
         NotaDebito nd = RestClient.getRestTemplate()
                 .postForObject(uri, notaDebito, NotaDebito.class);
@@ -203,12 +217,13 @@ public class DetalleNotaDebitoGUI extends JDialog {
         Proveedor proveedorDeNota = RestClient.getRestTemplate()
                 .getForObject("/proveedores/" + notaDebito.getIdProveedor(), Proveedor.class);
         this.setTitle(notaDebito.getTipoComprobante() + " Nº " + notaDebito.getSerie() + " - " + notaDebito.getNroNota()
-                + " con fecha " + formatter.format(notaDebito.getFecha()) + " del Proveedor: " + proveedorDeNota.getRazonSocial());
+                + " con fecha " + FormatosFechaHora.formatoFecha(notaDebito.getFecha(), FormatosFechaHora.FORMATO_FECHAHORA_HISPANO) + " del Proveedor: " + proveedorDeNota.getRazonSocial());
         dcFechaNota.setEnabled(false);
         txt_Serie.setEnabled(false);
         txt_Numero.setEnabled(false);
         txt_CAE.setEnabled(false);
-        dcFechaNota.setDate(notaDebito.getFecha());
+        ZonedDateTime zdt = notaDebito.getFecha().atZone(ZoneId.systemDefault());
+        dcFechaNota.setDate(Date.from(zdt.toInstant()));
         txt_Serie.setText(String.valueOf(notaDebito.getSerie()));
         txt_Numero.setText(String.valueOf(notaDebito.getNroNota()));
         txt_CAE.setText(String.valueOf(notaDebito.getCae()));
@@ -765,7 +780,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
             } else {
                 this.cargarDetalleNotaDebitoProveedor();
                 this.setTitle(notaDebito.getTipoComprobante() + " Nº " + notaDebito.getSerie() + " - " + notaDebito.getNroNota()
-                        + " con fecha " + formatter.format(notaDebito.getFecha()) + " del Proveedor: " + notaDebito.getRazonSocialProveedor());
+                        + " con fecha " + FormatosFechaHora.formatoFecha(notaDebito.getFecha(), FormatosFechaHora.FORMATO_FECHAHORA_HISPANO) + " del Proveedor: " + notaDebito.getRazonSocialProveedor());
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

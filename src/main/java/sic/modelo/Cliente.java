@@ -2,7 +2,7 @@ package sic.modelo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,7 +20,7 @@ public class Cliente implements Serializable {
     private String email;
     private String telefono;    
     private String contacto;
-    private Date fechaAlta;       
+    private LocalDateTime fechaAlta;       
     private Long idViajante;
     private String nombreViajante;
     private Long idCredencial;

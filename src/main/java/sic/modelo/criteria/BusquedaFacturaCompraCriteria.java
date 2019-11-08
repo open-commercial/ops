@@ -1,6 +1,6 @@
 package sic.modelo.criteria;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,8 +11,8 @@ import sic.modelo.TipoDeComprobante;
 @NoArgsConstructor
 public class BusquedaFacturaCompraCriteria {
 
-    private Date fechaDesde;
-    private Date fechaHasta;
+    private LocalDateTime fechaDesde;
+    private LocalDateTime fechaHasta;
     private Long idProveedor;
     private Long numSerie;
     private Long numFactura;

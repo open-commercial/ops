@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -74,8 +76,8 @@ public class PedidosGUI extends JInternalFrame {
         BusquedaPedidoCriteria criteria = BusquedaPedidoCriteria.builder().build();
         criteria.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         if (chk_Fecha.isSelected()) {
-            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? dc_FechaDesde.getDate() : null);
-            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? dc_FechaHasta.getDate() : null);
+            criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault()) : null);
+            criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault()) : null);
         }
         if (chk_NumeroPedido.isSelected()) {
             criteria.setNroPedido(Long.valueOf(txt_NumeroPedido.getText()));
@@ -227,7 +229,7 @@ public class PedidosGUI extends JInternalFrame {
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaPedidos.getColumnCount()];
         tipos[0] = EstadoPedido.class;
-        tipos[1] = Date.class;
+        tipos[1] = LocalDateTime.class;
         tipos[2] = Long.class;
         tipos[3] = String.class;
         tipos[4] = String.class;
@@ -788,18 +790,17 @@ public class PedidosGUI extends JInternalFrame {
     private void btnNuevoPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoPedidoActionPerformed
         try {
             if (this.existeClienteDisponible()) {
-                JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), PuntoDeVentaGUI.class);
+                JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), DetallePedidoGUI.class);
                 if (gui == null) {
                     Pedido pedido = new Pedido();
                     pedido.setObservaciones("Los precios se encuentran sujetos a modificaciones.");
-                    PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
-                    puntoDeVentaGUI.setPedido(pedido);
-                    puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
-                            getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
-                    getDesktopPane().add(puntoDeVentaGUI);
-                    puntoDeVentaGUI.setMaximizable(true);
-                    puntoDeVentaGUI.setClosable(true);
-                    puntoDeVentaGUI.setVisible(true);
+                    DetallePedidoGUI nuevoPedidoGUI = new DetallePedidoGUI(pedido, false);
+                    nuevoPedidoGUI.setLocation(getDesktopPane().getWidth() / 2 - nuevoPedidoGUI.getWidth() / 2,
+                            getDesktopPane().getHeight() / 2 - nuevoPedidoGUI.getHeight() / 2);
+                    getDesktopPane().add(nuevoPedidoGUI);
+                    nuevoPedidoGUI.setMaximizable(true);
+                    nuevoPedidoGUI.setClosable(true);
+                    nuevoPedidoGUI.setVisible(true);
                 } else {
                     //selecciona y trae al frente el internalframe
                     try {
@@ -834,8 +835,7 @@ public class PedidosGUI extends JInternalFrame {
                     JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                             .getString("mensaje_pedido_facturado"), "Error", JOptionPane.ERROR_MESSAGE);
                 } else if (this.existeClienteDisponible()) {
-                    PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
-                    puntoDeVentaGUI.setPedido(pedido);
+                    NuevaFacturaVentaGUI puntoDeVentaGUI = new NuevaFacturaVentaGUI(pedido);
                     puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
                             getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
                     getDesktopPane().add(puntoDeVentaGUI);
@@ -898,15 +898,13 @@ public class PedidosGUI extends JInternalFrame {
                     JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                             .getString("mensaje_pedido_procesado"), "Error", JOptionPane.ERROR_MESSAGE);
                 } else if (this.existeClienteDisponible()) {
-                    PuntoDeVentaGUI puntoDeVentaGUI = new PuntoDeVentaGUI();
-                    puntoDeVentaGUI.setPedido(pedido);
-                    puntoDeVentaGUI.setModificarPedido(true);
-                    puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
-                            getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
-                    getDesktopPane().add(puntoDeVentaGUI);
-                    puntoDeVentaGUI.setMaximizable(true);
-                    puntoDeVentaGUI.setClosable(true);
-                    puntoDeVentaGUI.setVisible(true);
+                    DetallePedidoGUI nuevoPedidoGUI = new DetallePedidoGUI(pedido, true);
+                    nuevoPedidoGUI.setLocation(getDesktopPane().getWidth() / 2 - nuevoPedidoGUI.getWidth() / 2,
+                            getDesktopPane().getHeight() / 2 - nuevoPedidoGUI.getHeight() / 2);
+                    getDesktopPane().add(nuevoPedidoGUI);
+                    nuevoPedidoGUI.setMaximizable(true);
+                    nuevoPedidoGUI.setClosable(true);
+                    nuevoPedidoGUI.setVisible(true);
                 } else {
                     JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
                             "Error", JOptionPane.ERROR_MESSAGE);

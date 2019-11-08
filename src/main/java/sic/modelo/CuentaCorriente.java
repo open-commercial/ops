@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.util.List;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -34,10 +34,10 @@ public abstract class CuentaCorriente implements Serializable {
 
     private Long idCuentaCorriente;    
     private boolean eliminada;    
-    private Date fechaApertura;
+    private LocalDateTime fechaApertura;
     private Sucursal sucursal;
     private BigDecimal saldo;
-    private Date fechaUltimoMovimiento;
+    private LocalDateTime fechaUltimoMovimiento;
     private List<RenglonCuentaCorriente> renglones;    
     
 }
