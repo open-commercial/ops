@@ -196,8 +196,8 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         facturaCompra.setObservaciones(txta_Observaciones.getText().trim());
         facturaCompra.setEliminada(false);
         facturaCompra.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
-        facturaCompra.setIdProveedor(proveedorSeleccionado.getId_Proveedor());
-        facturaCompra.setIdTransportista(((Transportista) cmb_Transportista.getSelectedItem()).getId_Transportista());
+        facturaCompra.setIdProveedor(proveedorSeleccionado.getIdProveedor());
+        facturaCompra.setIdTransportista(((Transportista) cmb_Transportista.getSelectedItem()).getIdTransportista());
         try {
             RestClient.getRestTemplate().postForObject("/facturas/compra",
                     facturaCompra, FacturaCompra[].class);
@@ -408,7 +408,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
             TipoDeComprobante[] tiposFactura = RestClient.getRestTemplate()
                     .getForObject("/facturas/compra/tipos/empresas/"
                     + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
-                    + "/proveedores/" + proveedorSeleccionado.getId_Proveedor(),
+                    + "/proveedores/" + proveedorSeleccionado.getIdProveedor(),
                     TipoDeComprobante[].class);
             cmb_TipoFactura.removeAllItems();
             for (int i = 0; tiposFactura.length > i; i++) {

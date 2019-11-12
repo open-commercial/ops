@@ -243,7 +243,7 @@ public class DetalleMedidaGUI extends JInternalFrame {
                         "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 Medida medidaModificada = new Medida();
-                medidaModificada.setId_Medida(medidaSeleccionada.getId_Medida());
+                medidaModificada.setIdMedida(medidaSeleccionada.getIdMedida());
                 medidaModificada.setNombre(txt_Nuevo.getText().trim());
                 RestClient.getRestTemplate().put("/medidas?idEmpresa=" + (EmpresaActiva.getInstance().getEmpresa()).getIdEmpresa(), medidaModificada);
                 txt_Nuevo.setText("");
@@ -266,7 +266,7 @@ public class DetalleMedidaGUI extends JInternalFrame {
                 JOptionPane.showMessageDialog(this, "Seleccione una Medida de la lista para poder continuar.",
                         "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                RestClient.getRestTemplate().delete("/medidas/" + medidaSeleccionada.getId_Medida());
+                RestClient.getRestTemplate().delete("/medidas/" + medidaSeleccionada.getIdMedida());
                 txt_Nuevo.setText("");
                 medidaSeleccionada = null;
                 this.cargarListMedidas();

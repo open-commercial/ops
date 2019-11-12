@@ -114,8 +114,8 @@ public class CajasGUI extends JInternalFrame {
                     ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault())
                     : null);
         }
-        if (chk_UsuarioApertura.isSelected() && usuarioSeleccionadoApertura != null) criteria.setIdUsuarioApertura(usuarioSeleccionadoApertura.getId_Usuario());
-        if (chk_UsuarioCierre.isSelected() && usuarioSeleccionadoCierre != null) criteria.setIdUsuarioCierre(usuarioSeleccionadoCierre.getId_Usuario());
+        if (chk_UsuarioApertura.isSelected() && usuarioSeleccionadoApertura != null) criteria.setIdUsuarioApertura(usuarioSeleccionadoApertura.getIdUsuario());
+        if (chk_UsuarioCierre.isSelected() && usuarioSeleccionadoCierre != null) criteria.setIdUsuarioCierre(usuarioSeleccionadoCierre.getIdUsuario());
         criteria.setPagina(NUMERO_PAGINA);
         try {
             HttpEntity<BusquedaCajaCriteria> requestEntity = new HttpEntity<>(criteria);
@@ -587,7 +587,7 @@ public class CajasGUI extends JInternalFrame {
             int indice = Utilidades.getSelectedRowModelIndice(tbl_Cajas);
             try {
                 Caja caja = RestClient.getRestTemplate()
-                        .getForObject("/cajas/ " + this.cajasTotal.get(indice).getId_Caja(), Caja.class);
+                        .getForObject("/cajas/ " + this.cajasTotal.get(indice).getIdCaja(), Caja.class);
                 JInternalFrame iFrameCaja = new DetalleCajaGUI(caja);
                 iFrameCaja.setLocation(getDesktopPane().getWidth() / 2 - iFrameCaja.getWidth() / 2,
                         getDesktopPane().getHeight() / 2 - iFrameCaja.getHeight() / 2);
@@ -612,7 +612,7 @@ public class CajasGUI extends JInternalFrame {
             try {
                 if (confirmacionEliminacion == JOptionPane.YES_OPTION) {
                     int indiceDelModel = Utilidades.getSelectedRowModelIndice(tbl_Cajas);
-                    RestClient.getRestTemplate().delete("/cajas/" + this.cajasTotal.get(indiceDelModel).getId_Caja());
+                    RestClient.getRestTemplate().delete("/cajas/" + this.cajasTotal.get(indiceDelModel).getIdCaja());
                 }
                 this.limpiarResultados();
                 this.buscar(true);
@@ -678,7 +678,7 @@ public class CajasGUI extends JInternalFrame {
                     "Saldo Apertura: \n", "Reabrir Caja", JOptionPane.QUESTION_MESSAGE);
             if (monto != null) {
                 try {
-                    RestClient.getRestTemplate().put("/cajas/" + this.cajasTotal.get(indice).getId_Caja() + "/reapertura?monto=" + new BigDecimal(monto), null);
+                    RestClient.getRestTemplate().put("/cajas/" + this.cajasTotal.get(indice).getIdCaja() + "/reapertura?monto=" + new BigDecimal(monto), null);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (ResourceAccessException ex) {

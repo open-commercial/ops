@@ -189,7 +189,7 @@ public class CerrarVentaGUI extends JDialog {
     }
 
     private void finalizarVenta() {
-        this.facturaVenta.setIdTransportista(((Transportista) cmb_Transporte.getSelectedItem()).getId_Transportista());
+        this.facturaVenta.setIdTransportista(((Transportista) cmb_Transporte.getSelectedItem()).getIdTransportista());
         this.armarMontosConFormasDePago();
         try {                  
             String uri = "/facturas/venta?";
@@ -197,8 +197,8 @@ public class CerrarVentaGUI extends JDialog {
                 uri += "idsFormaDePago=" + Arrays.toString(idsFormasDePago.toArray()).substring(1, Arrays.toString(idsFormasDePago.toArray()).length() - 1)
                         + "&montos=" + Arrays.toString(montos.toArray()).substring(1, Arrays.toString(montos.toArray()).length() - 1) + "&";
             }
-            if (this.pedido != null && this.pedido.getId_Pedido() != 0) {
-                uri += "idPedido=" + this.pedido.getId_Pedido() + "&";
+            if (this.pedido != null && this.pedido.getIdPedido() != 0) {
+                uri += "idPedido=" + this.pedido.getIdPedido() + "&";
             }
             if (dividir) {
                 String indices = "indices=" + Arrays.toString(indicesParaDividir).substring(1, Arrays.toString(indicesParaDividir).length() - 1);
@@ -302,15 +302,15 @@ public class CerrarVentaGUI extends JDialog {
         idsFormasDePago.clear();
         if (chk_FormaDePago1.isSelected() && chk_FormaDePago1.isEnabled()) {            
             montos.add(new BigDecimal(txt_MontoPago1.getValue().toString()));            
-            idsFormasDePago.add(((FormaDePago) cmb_FormaDePago1.getSelectedItem()).getId_FormaDePago());            
+            idsFormasDePago.add(((FormaDePago) cmb_FormaDePago1.getSelectedItem()).getIdFormaDePago());            
         }
         if (chk_FormaDePago2.isSelected() && chk_FormaDePago2.isEnabled()) {            
             montos.add(new BigDecimal(txt_MontoPago2.getValue().toString()));            
-            idsFormasDePago.add(((FormaDePago) cmb_FormaDePago2.getSelectedItem()).getId_FormaDePago());            
+            idsFormasDePago.add(((FormaDePago) cmb_FormaDePago2.getSelectedItem()).getIdFormaDePago());            
         }
         if (chk_FormaDePago3.isSelected() && chk_FormaDePago3.isEnabled()) {            
             montos.add(new BigDecimal(txt_MontoPago3.getValue().toString()));                        
-            idsFormasDePago.add(((FormaDePago) cmb_FormaDePago3.getSelectedItem()).getId_FormaDePago());
+            idsFormasDePago.add(((FormaDePago) cmb_FormaDePago3.getSelectedItem()).getIdFormaDePago());
         }
     }
 

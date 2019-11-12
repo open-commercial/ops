@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class ConfiguracionDelSistema implements Serializable {
 
-    private long id_ConfiguracionDelSistema;
+    private long idConfiguracionDelSistema;
     private boolean usarFacturaVentaPreImpresa;
     private int cantidadMaximaDeRenglonesEnFactura;
     private boolean facturaElectronicaHabilitada;

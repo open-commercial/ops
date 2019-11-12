@@ -188,8 +188,8 @@ public class NuevaNotaDebitoGUI extends JDialog {
             if (idRecibo == null) {
                 NuevaNotaDebitoSinRecibo nuevaNotaCreditoSinRecibo = NuevaNotaDebitoSinRecibo
                         .builder()
-                        .idCliente(cliente != null ? cliente.getId_Cliente() : null)
-                        .idProveedor(proveedor != null ? proveedor.getId_Proveedor() : null)
+                        .idCliente(cliente != null ? cliente.getIdCliente() : null)
+                        .idProveedor(proveedor != null ? proveedor.getIdProveedor() : null)
                         .gastoAdministrativo(new BigDecimal(ftxt_Monto.getValue().toString()))
                         .tipoDeComprobante(((TipoDeComprobante) cmbTipoDeComprobante.getSelectedItem()))
                         .build();
@@ -223,12 +223,12 @@ public class NuevaNotaDebitoGUI extends JDialog {
             if (cliente != null) {
                 tiposDeComprobante = RestClient.getRestTemplate()
                         .getForObject("/notas/clientes/tipos/debito?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
-                                + "&idCliente=" + this.cliente.getId_Cliente(), TipoDeComprobante[].class);
+                                + "&idCliente=" + this.cliente.getIdCliente(), TipoDeComprobante[].class);
             }
             if (proveedor != null) {
                 tiposDeComprobante = RestClient.getRestTemplate()
                         .getForObject("/notas/proveedores/tipos/debito?idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
-                                + "&idProveedor=" + this.proveedor.getId_Proveedor(), TipoDeComprobante[].class);
+                                + "&idProveedor=" + this.proveedor.getIdProveedor(), TipoDeComprobante[].class);
             }
             if (tiposDeComprobante != null) {
                 for (int i = 0; tiposDeComprobante.length > i; i++) {

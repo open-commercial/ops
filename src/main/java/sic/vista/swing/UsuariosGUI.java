@@ -485,7 +485,7 @@ public class UsuariosGUI extends JInternalFrame {
         if (this.existeUsuarioSeleccionado()) {
             if (usuarioSeleccionado != null) {
                 int respuesta;
-                if (UsuarioActivo.getInstance().getUsuario().getId_Usuario() == usuarioSeleccionado.getId_Usuario()) {
+                if (UsuarioActivo.getInstance().getUsuario().getIdUsuario() == usuarioSeleccionado.getIdUsuario()) {
                     respuesta = JOptionPane.showConfirmDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_eliminar_usuario_propio"),
                             "Eliminar", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
@@ -499,7 +499,7 @@ public class UsuariosGUI extends JInternalFrame {
                 if (respuesta == JOptionPane.YES_OPTION) {
                     try {
                         if (respuesta == JOptionPane.YES_OPTION) {
-                            RestClient.getRestTemplate().delete("/usuarios/" + usuarioSeleccionado.getId_Usuario());
+                            RestClient.getRestTemplate().delete("/usuarios/" + usuarioSeleccionado.getIdUsuario());
                             LOGGER.warn("El usuario " + usuarioSeleccionado.getUsername() + " se eliminó correctamente.");
                             usuarioSeleccionado = null;
                             this.resetScroll();
@@ -535,7 +535,7 @@ public class UsuariosGUI extends JInternalFrame {
                 //Si el usuario activo corresponde con el usuario seleccionado para modificar
                 int respuesta = JOptionPane.YES_OPTION;
                 boolean mismoUsuarioActivo = false;
-                if (UsuarioActivo.getInstance().getUsuario().getId_Usuario() == usuarioSeleccionado.getId_Usuario()) {
+                if (UsuarioActivo.getInstance().getUsuario().getIdUsuario() == usuarioSeleccionado.getIdUsuario()) {
                     mismoUsuarioActivo = true;
                     respuesta = JOptionPane.showConfirmDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_modificar_el_usuario_propio"),

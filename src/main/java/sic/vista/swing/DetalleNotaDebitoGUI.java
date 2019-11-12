@@ -4,7 +4,6 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -148,7 +147,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
             notaDebito.setSerie(Long.parseLong(txt_Serie.getValue().toString()));
             notaDebito.setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
             notaDebito.setCae(Long.parseLong(txt_CAE.getValue().toString()));
-            notaDebito.setIdProveedor(proveedor.getId_Proveedor());
+            notaDebito.setIdProveedor(proveedor.getIdProveedor());
             if (this.dcFechaNota.isVisible() && this.dcFechaNota.getDate() != null) {
                 Calendar cal = new GregorianCalendar();
                 cal.setTime(this.dcFechaNota.getDate());

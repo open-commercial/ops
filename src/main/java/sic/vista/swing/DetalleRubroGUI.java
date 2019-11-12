@@ -222,7 +222,7 @@ public class DetalleRubroGUI extends JInternalFrame {
                         "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 Rubro rubroModificado = new Rubro();
-                rubroModificado.setId_Rubro(rubroSeleccionado.getId_Rubro());
+                rubroModificado.setIdRubro(rubroSeleccionado.getIdRubro());
                 rubroModificado.setNombre(txt_Nuevo.getText().trim());
                 RestClient.getRestTemplate().put("/rubros?idEmpresa= " + (EmpresaActiva.getInstance().getEmpresa()).getIdEmpresa(), rubroModificado);
                 txt_Nuevo.setText("");
@@ -245,7 +245,7 @@ public class DetalleRubroGUI extends JInternalFrame {
                 JOptionPane.showMessageDialog(this, "Seleccione un rubro de la lista para poder continuar.",
                         "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                RestClient.getRestTemplate().delete("/rubros/" + rubroSeleccionado.getId_Rubro());
+                RestClient.getRestTemplate().delete("/rubros/" + rubroSeleccionado.getIdRubro());
                 txt_Nuevo.setText("");
                 rubroSeleccionado = null;
                 cargarListRubros();

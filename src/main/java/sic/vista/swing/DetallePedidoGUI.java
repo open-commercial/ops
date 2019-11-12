@@ -318,7 +318,7 @@ public class DetallePedidoGUI extends JInternalFrame {
     }
 
     private void actualizarPedido(Pedido pedido) {
-        pedido = RestClient.getRestTemplate().getForObject("/pedidos/" + pedido.getId_Pedido(), Pedido.class);
+        pedido = RestClient.getRestTemplate().getForObject("/pedidos/" + pedido.getIdPedido(), Pedido.class);
         pedido.setRenglones(this.calcularRenglonesPedido());
         pedido.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
         pedido.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
@@ -1017,10 +1017,10 @@ public class DetallePedidoGUI extends JInternalFrame {
                 } else {
                     this.calcularResultados();
                     try {
-                        cliente = RestClient.getRestTemplate().getForObject("/clientes/" + this.cliente.getId_Cliente(), Cliente.class);
+                        cliente = RestClient.getRestTemplate().getForObject("/clientes/" + this.cliente.getIdCliente(), Cliente.class);
                         // Es null cuando, se genera un pedido desde el punto de venta entrando por el menu sistemas.
                         // El Id es 0 cuando, se genera un pedido desde el punto de venta entrando por el botón nuevo de administrar pedidos.
-                        if (pedido == null || pedido.getId_Pedido() == 0) {
+                        if (pedido == null || pedido.getIdPedido() == 0) {
                             this.construirPedido();
                         }
                         this.finalizarPedido();
@@ -1119,13 +1119,13 @@ public class DetallePedidoGUI extends JInternalFrame {
                 this.dispose();
             }
             txt_Observaciones.setText(this.pedido.getObservaciones());
-            if (this.pedido != null && this.pedido.getId_Pedido() != 0) {
+            if (this.pedido != null && this.pedido.getIdPedido() != 0) {
                 btn_NuevoCliente.setEnabled(false);
                 btn_BuscarCliente.setEnabled(false);
                 this.cargarCliente(RestClient.getRestTemplate()
-                    .getForObject("/clientes/pedidos/" + pedido.getId_Pedido(), Cliente.class));
+                    .getForObject("/clientes/pedidos/" + pedido.getIdPedido(), Cliente.class));
                 this.renglones.addAll(Arrays.asList(RestClient.getRestTemplate()
-                        .getForObject("/pedidos/" + this.pedido.getId_Pedido() + "/renglones", RenglonPedido[].class)));
+                        .getForObject("/pedidos/" + this.pedido.getIdPedido() + "/renglones", RenglonPedido[].class)));
                 this.cargarRenglonesAlTable();
                 this.calcularResultados();
             }            
@@ -1153,7 +1153,7 @@ public class DetallePedidoGUI extends JInternalFrame {
             gui_DetalleCliente.setLocationRelativeTo(this);
             gui_DetalleCliente.setVisible(true);
             try {
-                this.cargarCliente(RestClient.getRestTemplate().getForObject("/clientes/" + this.cliente.getId_Cliente(), Cliente.class));
+                this.cargarCliente(RestClient.getRestTemplate().getForObject("/clientes/" + this.cliente.getIdCliente(), Cliente.class));
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 this.dispose();

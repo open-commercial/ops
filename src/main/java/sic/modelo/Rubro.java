@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(of = {"nombre", "idEmpresa"})
 public class Rubro implements Serializable {
 
-    private long id_Rubro;
+    private long idRubro;
     private String nombre;
     private Long idEmpresa;
     private String nombreEmpresa;

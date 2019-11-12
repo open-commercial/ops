@@ -511,7 +511,7 @@ public class TransportistasGUI extends JInternalFrame {
                     JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
                 try {
-                    RestClient.getRestTemplate().delete("/transportistas/" + transportistas.get(indexFilaSeleccionada).getId_Transportista());
+                    RestClient.getRestTemplate().delete("/transportistas/" + transportistas.get(indexFilaSeleccionada).getIdTransportista());
                     this.buscar();
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

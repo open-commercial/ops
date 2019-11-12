@@ -5,10 +5,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = {"nombre", "empresa"})
+@EqualsAndHashCode(of = {"nombre", "idEmpresa"})
 public class FormaDePago implements Serializable {
 
-    private long id_FormaDePago;
+    private long idFormaDePago;
     private String nombre;
     private boolean afectaCaja;
     private boolean predeterminado;

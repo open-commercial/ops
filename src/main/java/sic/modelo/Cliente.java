@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(of = {"nombreFiscal", "idFiscal", "nombreEmpresa"})
 public class Cliente implements Serializable {
 
-    private long id_Cliente;    
+    private long idCliente;    
     private BigDecimal bonificacion;
     private String nroCliente;
     private String nombreFiscal;

@@ -176,7 +176,7 @@ public class AgregarGastoGUI extends JDialog {
         try {
             RestClient.getRestTemplate().postForObject("/gastos?idEmpresa="
                     + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
-                    + "&idFormaDePago=" + ((FormaDePago) cmb_FormaDePago.getSelectedItem()).getId_FormaDePago(),
+                    + "&idFormaDePago=" + ((FormaDePago) cmb_FormaDePago.getSelectedItem()).getIdFormaDePago(),
                     gasto, Gasto.class);
             this.dispose();
         } catch (RestClientResponseException ex) {

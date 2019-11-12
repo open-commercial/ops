@@ -129,7 +129,7 @@ public class SeleccionEmpresaGUI extends JDialog {
                     .forEachOrdered(e -> {
                         EmpresaActiva.getInstance().setEmpresa(e);
                         try {
-                            RestClient.getRestTemplate().put("/usuarios/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario() + "/empresas/" + e.getIdEmpresa(), Usuario.class);
+                            RestClient.getRestTemplate().put("/usuarios/" + UsuarioActivo.getInstance().getUsuario().getIdUsuario() + "/empresas/" + e.getIdEmpresa(), Usuario.class);
                         } catch (RestClientResponseException ex) {
                             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                             this.dispose();
@@ -164,7 +164,7 @@ public class SeleccionEmpresaGUI extends JDialog {
                 this.cargarComboBoxEmpresas();
             } else {
                 EmpresaActiva.getInstance().setEmpresa(empresas.get(0));
-                RestClient.getRestTemplate().put("/usuarios/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario() + "/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(), Usuario.class);
+                RestClient.getRestTemplate().put("/usuarios/" + UsuarioActivo.getInstance().getUsuario().getIdUsuario() + "/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(), Usuario.class);
                 this.dispose();
             }
         } catch (RestClientResponseException ex) {
