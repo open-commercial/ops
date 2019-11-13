@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(of = "idProductoItem")
 public class RenglonPedido implements Serializable {
     
-    private long id_RenglonPedido;
+    private long idRenglonPedido;
     private long idProductoItem;
     private String descripcionItem;
     private String medidaItem;
