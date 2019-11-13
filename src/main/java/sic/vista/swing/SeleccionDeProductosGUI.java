@@ -274,7 +274,7 @@ public class SeleccionDeProductosGUI extends JDialog {
                 if (!(cantidadElegida.compareTo(BigDecimal.ZERO) < 0)) {
                     if ((cantidadElegida.compareTo(BigDecimal.ZERO) > 0 && (cantidadElegida.compareTo((BigDecimal) tblResultados.getValueAt(i, 5)) < 1))) {
                         cantidades.add(cantidadElegida);
-                        idsRenglonesFactura.add(factura.getRenglones().get(i).getId_RenglonFactura());
+                        idsRenglonesFactura.add(factura.getRenglones().get(i).getIdRenglonFactura());
                     }
                 } else {
                     JOptionPane.showMessageDialog(this,

@@ -7,10 +7,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = {"nroGasto", "empresa"})
+@EqualsAndHashCode(of = {"nroGasto", "idEmpresa"})
 public class Gasto implements Serializable {
 
-    private long id_Gasto;
+    private long idGasto;
     private long nroGasto;
     private LocalDateTime fecha;
     private String concepto;

@@ -86,13 +86,13 @@ public class PedidosGUI extends JInternalFrame {
             criteria.setEstadoPedido((EstadoPedido) cmbEstado.getSelectedItem());
         }
         if (chk_Cliente.isSelected() && clienteSeleccionado != null) {
-            criteria.setIdCliente(clienteSeleccionado.getId_Cliente());
+            criteria.setIdCliente(clienteSeleccionado.getIdCliente());
         }
         if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
-            criteria.setIdUsuario(usuarioSeleccionado.getId_Usuario());
+            criteria.setIdUsuario(usuarioSeleccionado.getIdUsuario());
         }
         if (chk_Viajante.isSelected() && viajanteSeleccionado != null) {
-            criteria.setIdViajante(viajanteSeleccionado.getId_Usuario());
+            criteria.setIdViajante(viajanteSeleccionado.getIdUsuario());
         }
         if (chk_Producto.isSelected() && productoSeleccionado != null) {
             criteria.setIdProducto(productoSeleccionado.getIdProducto());
@@ -831,7 +831,7 @@ public class PedidosGUI extends JInternalFrame {
             if (tbl_Pedidos.getSelectedRow() != -1) {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
                 Pedido pedido = RestClient.getRestTemplate()
-                        .getForObject("/pedidos/" + pedidosTotal.get(indexFilaSeleccionada).getId_Pedido(), Pedido.class);
+                        .getForObject("/pedidos/" + pedidosTotal.get(indexFilaSeleccionada).getIdPedido(), Pedido.class);
                 if (pedido.getEstado() == EstadoPedido.CERRADO) {
                     JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                             .getString("mensaje_pedido_facturado"), "Error", JOptionPane.ERROR_MESSAGE);
@@ -882,7 +882,7 @@ public class PedidosGUI extends JInternalFrame {
     private void btnImprimirPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirPedidoActionPerformed
         if (tbl_Pedidos.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
-            this.lanzarReportePedido(pedidosTotal.get(indexFilaSeleccionada).getId_Pedido());
+            this.lanzarReportePedido(pedidosTotal.get(indexFilaSeleccionada).getIdPedido());
         }
     }//GEN-LAST:event_btnImprimirPedidoActionPerformed
 
@@ -891,7 +891,7 @@ public class PedidosGUI extends JInternalFrame {
             if (tbl_Pedidos.getSelectedRow() != -1) {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
                 Pedido pedido = RestClient.getRestTemplate()
-                        .getForObject("/pedidos/" + pedidosTotal.get(indexFilaSeleccionada).getId_Pedido(), Pedido.class);
+                        .getForObject("/pedidos/" + pedidosTotal.get(indexFilaSeleccionada).getIdPedido(), Pedido.class);
                 if (pedido.getEstado() == EstadoPedido.CERRADO) {
                     JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                             .getString("mensaje_pedido_facturado"), "Error", JOptionPane.ERROR_MESSAGE);
@@ -925,7 +925,7 @@ public class PedidosGUI extends JInternalFrame {
         try {
             if (tbl_Pedidos.getSelectedRow() != -1) {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
-                Pedido pedido = RestClient.getRestTemplate().getForObject("/pedidos/" + pedidosTotal.get(indexFilaSeleccionada).getId_Pedido(), Pedido.class);
+                Pedido pedido = RestClient.getRestTemplate().getForObject("/pedidos/" + pedidosTotal.get(indexFilaSeleccionada).getIdPedido(), Pedido.class);
                 if (pedido.getEstado() == EstadoPedido.CERRADO) {
                     JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                             .getString("mensaje_pedido_facturado"), "Error", JOptionPane.ERROR_MESSAGE);
@@ -937,7 +937,7 @@ public class PedidosGUI extends JInternalFrame {
                             "¿Esta seguro que desea eliminar el pedido seleccionado?",
                             "Eliminar", JOptionPane.YES_NO_OPTION);
                     if (respuesta == JOptionPane.YES_OPTION) {
-                        RestClient.getRestTemplate().delete("/pedidos/" + pedido.getId_Pedido());
+                        RestClient.getRestTemplate().delete("/pedidos/" + pedido.getIdPedido());
                         this.resetScroll();
                         this.limpiarJTables();
                         this.buscar();

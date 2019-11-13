@@ -89,13 +89,13 @@ public class NotasDebitoVentaGUI extends JInternalFrame {
             criteria.setTipoComprobante((TipoDeComprobante) cmb_TipoNota.getSelectedItem());
         }
         if (chk_Cliente.isSelected() && clienteSeleccionado != null) {
-            criteria.setIdCliente(clienteSeleccionado.getId_Cliente());
+            criteria.setIdCliente(clienteSeleccionado.getIdCliente());
         }
         if (chk_Viajante.isSelected() && viajanteSeleccionado != null) {
-            criteria.setIdViajante(viajanteSeleccionado.getId_Usuario());
+            criteria.setIdViajante(viajanteSeleccionado.getIdUsuario());
         }
         if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
-            criteria.setIdUsuario(usuarioSeleccionado.getId_Usuario());
+            criteria.setIdUsuario(usuarioSeleccionado.getIdUsuario());
         }
         criteria.setPagina(NUMERO_PAGINA);
         criteria.setMovimiento(Movimiento.VENTA);

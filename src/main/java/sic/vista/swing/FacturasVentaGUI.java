@@ -101,7 +101,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         BusquedaFacturaVentaCriteria criteria = new BusquedaFacturaVentaCriteria();
         criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         if (chk_Cliente.isSelected() && clienteSeleccionado != null) {
-            criteria.setIdCliente(clienteSeleccionado.getId_Cliente());
+            criteria.setIdCliente(clienteSeleccionado.getIdCliente());
         }
         if (chk_Fecha.isSelected()) {
             criteria.setFechaDesde((dc_FechaDesde.getDate() != null)
@@ -119,13 +119,13 @@ public class FacturasVentaGUI extends JInternalFrame {
             criteria.setTipoComprobante(((TipoDeComprobante) cmb_TipoFactura.getSelectedItem()));
         }
         if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
-            criteria.setIdUsuario(usuarioSeleccionado.getId_Usuario());
+            criteria.setIdUsuario(usuarioSeleccionado.getIdUsuario());
         }
         if (chk_Producto.isSelected() && productoSeleccionado != null) {
             criteria.setIdProducto(productoSeleccionado.getIdProducto());
         }
         if (chk_Viajante.isSelected() && viajanteSeleccionado != null) {
-            criteria.setIdViajante(viajanteSeleccionado.getId_Usuario());
+            criteria.setIdViajante(viajanteSeleccionado.getIdUsuario());
         }
         if (chk_NumeroPedido.isSelected()) {
             criteria.setNroPedido(Long.parseLong(txt_NumeroPedido.getText()));

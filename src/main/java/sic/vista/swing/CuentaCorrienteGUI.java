@@ -240,10 +240,10 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         try {
             if (cliente != null) {
                 ftxtSaldoFinal.setValue(RestClient.getRestTemplate()
-                        .getForObject("/cuentas-corriente/clientes/" + cliente.getId_Cliente() + "/saldo", BigDecimal.class));
+                        .getForObject("/cuentas-corriente/clientes/" + cliente.getIdCliente() + "/saldo", BigDecimal.class));
             } else if (proveedor != null) {
                 ftxtSaldoFinal.setValue(RestClient.getRestTemplate()
-                        .getForObject("/cuentas-corriente/proveedores/" + proveedor.getId_Proveedor() + "/saldo", BigDecimal.class));
+                        .getForObject("/cuentas-corriente/proveedores/" + proveedor.getIdProveedor() + "/saldo", BigDecimal.class));
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -266,7 +266,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         txtCondicionIVACliente.setText(cliente.getCategoriaIVA().toString());
         try {
             cuentaCorriente = RestClient.getRestTemplate()
-                    .getForObject("/cuentas-corriente/clientes/" + cliente.getId_Cliente(), CuentaCorrienteCliente.class);
+                    .getForObject("/cuentas-corriente/clientes/" + cliente.getIdCliente(), CuentaCorrienteCliente.class);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -285,7 +285,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         txtCondicionIVACliente.setText(proveedor.getCategoriaIVA().toString());
         try {
             cuentaCorriente = RestClient.getRestTemplate()
-                    .getForObject("/cuentas-corriente/proveedores/" + proveedor.getId_Proveedor(), CuentaCorrienteProveedor.class);
+                    .getForObject("/cuentas-corriente/proveedores/" + proveedor.getIdProveedor(), CuentaCorrienteProveedor.class);
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -1114,7 +1114,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
     private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
         if (Desktop.isDesktopSupported()) {
             ExportGUI exportGUI = new ExportGUI(BusquedaCuentaCorrienteClienteCriteria.builder()
-                    .idCliente(this.cliente.getId_Cliente())
+                    .idCliente(this.cliente.getIdCliente())
                     .build());
             exportGUI.setModal(true);
             exportGUI.setLocationRelativeTo(this);

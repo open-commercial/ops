@@ -261,13 +261,13 @@ public class ProductosGUI extends JInternalFrame {
     private long getIdRubroSeleccionado() {
         long idRubro = 0;
         for (Rubro r : rubros) {
-            if (r.getNombre().equals(cmb_Rubro.getSelectedItem())) idRubro = r.getId_Rubro();
+            if (r.getNombre().equals(cmb_Rubro.getSelectedItem())) idRubro = r.getIdRubro();
         }
         return idRubro;
     }
     
     private long getIdProveedorSeleccionado() {
-        return ((proveedorSeleccionado != null) ? proveedorSeleccionado.getId_Proveedor() : 0);
+        return ((proveedorSeleccionado != null) ? proveedorSeleccionado.getIdProveedor() : 0);
     }
 
     private void exportar() {
