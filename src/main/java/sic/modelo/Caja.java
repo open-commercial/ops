@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = {"id_Caja", "idSucursal"})
+@EqualsAndHashCode(of = {"idCaja", "idSucursal"})
 public class Caja implements Serializable {
 
     private long idCaja;
