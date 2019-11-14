@@ -68,14 +68,14 @@ public class RecibosCompraGUI extends JInternalFrame {
         BusquedaReciboCriteria criteria = BusquedaReciboCriteria.builder().build();
         criteria.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         if (chk_Proveedor.isSelected() && proveedorSeleccionado != null) {
-            criteria.setIdProveedor(proveedorSeleccionado.getId_Proveedor());
+            criteria.setIdProveedor(proveedorSeleccionado.getIdProveedor());
         }
         if (chk_Fecha.isSelected()) {
             criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault()) : null);
             criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault()) : null);
         }
         if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
-            criteria.setIdUsuario(usuarioSeleccionado.getId_Usuario());
+            criteria.setIdUsuario(usuarioSeleccionado.getIdUsuario());
         }
         if (chk_Concepto.isSelected()) {
             criteria.setConcepto(txt_Concepto.getText());

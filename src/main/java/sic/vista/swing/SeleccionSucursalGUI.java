@@ -129,7 +129,7 @@ public class SeleccionSucursalGUI extends JDialog {
                     .forEachOrdered(e -> {
                         SucursalActiva.getInstance().setSucursal(e);
                         try {
-                            RestClient.getRestTemplate().put("/usuarios/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario() + "/sucursales/" + e.getIdSucursal(), Usuario.class);
+                            RestClient.getRestTemplate().put("/usuarios/" + UsuarioActivo.getInstance().getUsuario().getIdUsuario() + "/sucursales/" + e.getIdSucursal(), Usuario.class);
                         } catch (RestClientResponseException ex) {
                             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                             this.dispose();
@@ -164,7 +164,7 @@ public class SeleccionSucursalGUI extends JDialog {
                 this.cargarComboBoxSucursales();
             } else {
                 SucursalActiva.getInstance().setSucursal(sucursales.get(0));
-                RestClient.getRestTemplate().put("/usuarios/" + UsuarioActivo.getInstance().getUsuario().getId_Usuario() + "/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(), Usuario.class);
+                RestClient.getRestTemplate().put("/usuarios/" + UsuarioActivo.getInstance().getUsuario().getIdUsuario() + "/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(), Usuario.class);
                 this.dispose();
             }
         } catch (RestClientResponseException ex) {

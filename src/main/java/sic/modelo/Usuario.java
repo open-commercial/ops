@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(of = {"username", "email"})
 public class Usuario implements Serializable {
     
-    private long id_Usuario;    
+    private long idUsuario;    
     private String username;    
     private String password;    
     private String nombre;   

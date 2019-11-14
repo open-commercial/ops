@@ -115,7 +115,7 @@ public class DetalleCajaGUI extends JInternalFrame {
 
     private void cargarTablaResumen() {
         try {
-            this.caja = RestClient.getRestTemplate().getForObject("/cajas/" + this.caja.getId_Caja(), Caja.class);
+            this.caja = RestClient.getRestTemplate().getForObject("/cajas/" + this.caja.getIdCaja(), Caja.class);
             Object[] renglonSaldoApertura = new Object[4];
             renglonSaldoApertura[0] = 0L;
             renglonSaldoApertura[1] = "Saldo Apertura";
@@ -123,13 +123,13 @@ public class DetalleCajaGUI extends JInternalFrame {
             renglonSaldoApertura[3] = caja.getSaldoApertura();
             modeloTablaResumen.addRow(renglonSaldoApertura);            
             Map<Long, BigDecimal> totalesPorFormasDePago = RestClient.getRestTemplate()
-                    .exchange("/cajas/" + this.caja.getId_Caja() + "/totales-formas-de-pago",
+                    .exchange("/cajas/" + this.caja.getIdCaja() + "/totales-formas-de-pago",
                             HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {})
                     .getBody();
             totalesPorFormasDePago.keySet().stream().map(idFormaDePago -> {
                 FormaDePago fdp = RestClient.getRestTemplate().getForObject("/formas-de-pago/" + idFormaDePago, FormaDePago.class);
                 Object[] fila = new Object[4];
-                fila[0] = fdp.getId_FormaDePago();
+                fila[0] = fdp.getIdFormaDePago();
                 fila[1] = fdp.getNombre();
                 fila[2] = fdp.isAfectaCaja();
                 fila[3] = totalesPorFormasDePago.get(idFormaDePago);
@@ -140,7 +140,7 @@ public class DetalleCajaGUI extends JInternalFrame {
             totalesPorFormasDePago.keySet()
                     .forEach(idFormaDePago -> {
                         List<MovimientoCaja> movimientosFormaDePago = Arrays.asList(RestClient.getRestTemplate()
-                                .getForObject("/cajas/" + caja.getId_Caja() + "/movimientos?idFormaDePago=" + idFormaDePago, MovimientoCaja[].class));
+                                .getForObject("/cajas/" + caja.getIdCaja() + "/movimientos?idFormaDePago=" + idFormaDePago, MovimientoCaja[].class));
                         movimientos.put(idFormaDePago, movimientosFormaDePago);
                     });
         } catch (RestClientResponseException ex) {
@@ -171,12 +171,12 @@ public class DetalleCajaGUI extends JInternalFrame {
   
     private void cargarResultados() {   
         ftxt_TotalAfectaCaja.setValue(RestClient.getRestTemplate()
-                .getForObject("/cajas/" + caja.getId_Caja() + "/saldo-afecta-caja", BigDecimal.class));
+                .getForObject("/cajas/" + caja.getIdCaja() + "/saldo-afecta-caja", BigDecimal.class));
         if (caja.getEstado().equals(EstadoCaja.CERRADA)) {
             ftxt_TotalSistema.setValue(caja.getSaldoSistema());
         } else {
             ftxt_TotalSistema.setValue(RestClient.getRestTemplate()
-                .getForObject("/cajas/" + caja.getId_Caja() + "/saldo-sistema", BigDecimal.class));
+                .getForObject("/cajas/" + caja.getIdCaja() + "/saldo-sistema", BigDecimal.class));
         }
         if (((BigDecimal) ftxt_TotalAfectaCaja.getValue()).compareTo(BigDecimal.ZERO) > 0) {
             ftxt_TotalAfectaCaja.setBackground(Color.GREEN);
@@ -471,10 +471,10 @@ public class DetalleCajaGUI extends JInternalFrame {
                 try {
                     String monto = JOptionPane.showInputDialog(this,
                             "Saldo Sistema: " + new DecimalFormat("#.##").format(RestClient.getRestTemplate()
-                                    .getForObject("/cajas/" + caja.getId_Caja() + "/saldo-sistema", BigDecimal.class))
+                                    .getForObject("/cajas/" + caja.getIdCaja() + "/saldo-sistema", BigDecimal.class))
                             + "\nSaldo Real:", "Cerrar Caja", JOptionPane.QUESTION_MESSAGE);
                     if (monto != null) {
-                        RestClient.getRestTemplate().put("/cajas/" + caja.getId_Caja() + "/cierre?"
+                        RestClient.getRestTemplate().put("/cajas/" + caja.getIdCaja() + "/cierre?"
                                 + "monto=" + new BigDecimal(monto),
                                 Caja.class);
                         this.dispose();

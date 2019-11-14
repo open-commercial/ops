@@ -252,7 +252,7 @@ public class ClientesGUI extends JInternalFrame {
             criteria.setNroDeCliente(txtCriteria.getText().trim());
         }
         if (chkViajante.isSelected() && viajanteSeleccionado != null) {
-            criteria.setIdViajante(viajanteSeleccionado.getId_Usuario());
+            criteria.setIdViajante(viajanteSeleccionado.getIdUsuario());
         }
         if (chk_Ubicacion.isSelected()) {
             criteria.setIdProvincia(((Provincia) (cmbProvincia.getSelectedItem())).getIdProvincia());
@@ -724,7 +724,7 @@ public class ClientesGUI extends JInternalFrame {
                     "Eliminar", JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
                 try {
-                    RestClient.getRestTemplate().delete("/clientes/" + cuentasCorrienteClienteTotal.get(indexFilaSeleccionada).getCliente().getId_Cliente());
+                    RestClient.getRestTemplate().delete("/clientes/" + cuentasCorrienteClienteTotal.get(indexFilaSeleccionada).getCliente().getIdCliente());
                     this.resetScroll();
                     this.limpiarJTable();
                     this.buscar();
@@ -789,9 +789,9 @@ public class ClientesGUI extends JInternalFrame {
             try {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
                 Cliente cliente = RestClient.getRestTemplate()
-                        .getForObject("/clientes/" + cuentasCorrienteClienteTotal.get(indexFilaSeleccionada).getCliente().getId_Cliente(), Cliente.class);
+                        .getForObject("/clientes/" + cuentasCorrienteClienteTotal.get(indexFilaSeleccionada).getCliente().getIdCliente(), Cliente.class);
                 if (cliente != null) {
-                    RestClient.getRestTemplate().put("/clientes/" + cliente.getId_Cliente() + "/predeterminado", null);
+                    RestClient.getRestTemplate().put("/clientes/" + cliente.getIdCliente() + "/predeterminado", null);
                     btn_BuscarActionPerformed(evt);
                 } else {
                     JOptionPane.showInternalMessageDialog(this,
@@ -817,7 +817,7 @@ public class ClientesGUI extends JInternalFrame {
         if (tbl_Resultados.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             Cliente cliente = RestClient.getRestTemplate()
-                    .getForObject("/clientes/" + cuentasCorrienteClienteTotal.get(indexFilaSeleccionada).getCliente().getId_Cliente(), Cliente.class);
+                    .getForObject("/clientes/" + cuentasCorrienteClienteTotal.get(indexFilaSeleccionada).getCliente().getIdCliente(), Cliente.class);
             JInternalFrame gui;
             if (cliente != null) {
                 gui = new CuentaCorrienteGUI(cliente);

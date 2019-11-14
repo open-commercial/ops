@@ -27,14 +27,14 @@ public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
 
     public NuevaNotaCreditoSinFacturaGUI(Cliente cliente) {
         this.initComponents();
-        this.idCliente = cliente.getId_Cliente();
+        this.idCliente = cliente.getIdCliente();
         this.idProveedor = null;
     }
 
     public NuevaNotaCreditoSinFacturaGUI(Proveedor proveedor) {
         this.initComponents();
         this.idCliente = null;
-        this.idProveedor = proveedor.getId_Proveedor();
+        this.idProveedor = proveedor.getIdProveedor();
     }
 
     public NotaCredito getNotaCreditoCalculadaSinFactura() {

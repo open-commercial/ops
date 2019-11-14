@@ -41,7 +41,7 @@ public class DetalleClienteGUI extends JDialog {
     }
 
     public Cliente getClienteDadoDeAlta() {
-        return (cliente.getId_Cliente() != 0L ? cliente : null);
+        return (cliente.getIdCliente() != 0L ? cliente : null);
     }
 
     private void setIcon() {
@@ -488,10 +488,10 @@ public class DetalleClienteGUI extends JDialog {
             cliente.setContacto(txtContacto.getText().trim());
             cliente.setEmail(txtEmail.getText().trim());
             if (cmbViajante.getSelectedItem() != null) {
-                cliente.setIdViajante(((Usuario) cmbViajante.getSelectedItem()).getId_Usuario());
+                cliente.setIdViajante(((Usuario) cmbViajante.getSelectedItem()).getIdUsuario());
             }
             if (cmbCredencial.getSelectedItem() != null) {
-                cliente.setIdCredencial(((Usuario) cmbCredencial.getSelectedItem()).getId_Usuario());
+                cliente.setIdCredencial(((Usuario) cmbCredencial.getSelectedItem()).getIdUsuario());
             }
             if (this.ubicacionDeFacturacion != null) {
                 cliente.setUbicacionFacturacion(this.ubicacionDeFacturacion);

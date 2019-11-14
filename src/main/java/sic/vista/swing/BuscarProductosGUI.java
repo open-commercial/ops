@@ -200,7 +200,7 @@ public class BuscarProductosGUI extends JDialog {
                                     + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                                     + "&movimiento=" + movimiento
                                     + "&cantidad=" + txtCantidad.getValue().toString()
-                                    + "&idCliente=" + this.cliente.getId_Cliente(),
+                                    + "&idCliente=" + this.cliente.getIdCliente(),
                                     RenglonFactura.class);
                             break;
                         case COMPRA:

@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(of = "nombre")
 public class Medida implements Serializable {
 
-    private long id_Medida;
+    private long idMedida;
     private String nombre;
     private boolean eliminada;
 

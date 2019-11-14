@@ -1108,12 +1108,12 @@ public class DetalleProductoGUI extends JDialog {
         String mensajeError = "";
         for (Medida m : medidas) {
             if (m.getNombre().equals(cmb_Medida.getSelectedItem())) {
-                idMedida = m.getId_Medida();
+                idMedida = m.getIdMedida();
             }
         }
         for (Rubro r : rubros) {
             if (r.getNombre().equals(cmb_Rubro.getSelectedItem())) {
-                idRubro = r.getId_Rubro();
+                idRubro = r.getIdRubro();
             }
         }
         if (idMedida == null) {
@@ -1132,10 +1132,10 @@ public class DetalleProductoGUI extends JDialog {
                         .getString("mensaje_producto_vacio_proveedor") + "\n");
                 ejecutarOperacion = false;
             } else {
-                idProveedor = proveedorSeleccionado.getId_Proveedor();
+                idProveedor = proveedorSeleccionado.getIdProveedor();
             }
         } else if (operacion == TipoDeOperacion.ACTUALIZACION && proveedorSeleccionado != null) {
-            idProveedor = proveedorSeleccionado.getId_Proveedor();
+            idProveedor = proveedorSeleccionado.getIdProveedor();
         }
         if (ejecutarOperacion) {
             try {

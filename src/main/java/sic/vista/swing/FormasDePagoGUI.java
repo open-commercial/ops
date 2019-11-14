@@ -70,11 +70,11 @@ public class FormasDePagoGUI extends JInternalFrame {
             int filaSeleccionada = tbl_FormasDePago.getSelectedRow();
             try {
                 if (RestClient.getRestTemplate().getForObject("/formas-de-pago/"
-                        + formasDePago.get(filaSeleccionada).getId_FormaDePago(),
+                        + formasDePago.get(filaSeleccionada).getIdFormaDePago(),
                         FormaDePago.class) != null) {
                     RestClient.getRestTemplate()
-                            .put("/formas-de-pago/predeterminada/" + formasDePago.get(filaSeleccionada).getId_FormaDePago(),
-                                    formasDePago.get(filaSeleccionada).getId_FormaDePago());                    
+                            .put("/formas-de-pago/predeterminada/" + formasDePago.get(filaSeleccionada).getIdFormaDePago(),
+                                    formasDePago.get(filaSeleccionada).getIdFormaDePago());                    
                     this.cargarFormasDePago();
                 } else {
                     JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")

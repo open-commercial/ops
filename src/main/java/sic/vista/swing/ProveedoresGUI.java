@@ -626,7 +626,7 @@ public class ProveedoresGUI extends JInternalFrame {
                     JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
                 try {
-                    RestClient.getRestTemplate().delete("/proveedores/" + cuentasCorrienteProveedoresTotal.get(indexFilaSeleccionada).getProveedor().getId_Proveedor());
+                    RestClient.getRestTemplate().delete("/proveedores/" + cuentasCorrienteProveedoresTotal.get(indexFilaSeleccionada).getProveedor().getIdProveedor());
                     this.limpiarYBuscar();
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -669,7 +669,7 @@ public class ProveedoresGUI extends JInternalFrame {
         if (tbl_Resultados.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             Proveedor proveedor = RestClient.getRestTemplate()
-                    .getForObject("/proveedores/" + cuentasCorrienteProveedoresTotal.get(indexFilaSeleccionada).getProveedor().getId_Proveedor(), Proveedor.class);
+                    .getForObject("/proveedores/" + cuentasCorrienteProveedoresTotal.get(indexFilaSeleccionada).getProveedor().getIdProveedor(), Proveedor.class);
             JInternalFrame gui;
             if (proveedor != null) {
                 gui = new CuentaCorrienteGUI(proveedor);

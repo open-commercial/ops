@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(of = "razonSocial")
 public class Proveedor implements Serializable {
 
-    private long id_Proveedor;
+    private long idProveedor;
     private String nroProveedor;
     private String razonSocial;
     private CategoriaIVA categoriaIVA;

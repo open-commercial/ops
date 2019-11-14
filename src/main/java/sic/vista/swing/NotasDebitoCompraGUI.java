@@ -88,13 +88,13 @@ public class NotasDebitoCompraGUI extends JInternalFrame {
             criteria.setTipoComprobante((TipoDeComprobante) cmb_TipoNota.getSelectedItem());
         }
         if (chkProveedor.isSelected() && proveedorSeleccionado != null) {
-            criteria.setIdProveedor(proveedorSeleccionado.getId_Proveedor());
+            criteria.setIdProveedor(proveedorSeleccionado.getIdProveedor());
         }
         if (chk_Viajante.isSelected() && viajanteSeleccionado != null) {
-            criteria.setIdViajante(viajanteSeleccionado.getId_Usuario());
+            criteria.setIdViajante(viajanteSeleccionado.getIdUsuario());
         }
         if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
-            criteria.setIdUsuario(usuarioSeleccionado.getId_Usuario());
+            criteria.setIdUsuario(usuarioSeleccionado.getIdUsuario());
         }
         criteria.setPagina(NUMERO_PAGINA);
         criteria.setMovimiento(Movimiento.COMPRA);

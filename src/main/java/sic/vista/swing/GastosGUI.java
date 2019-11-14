@@ -74,7 +74,7 @@ public class GastosGUI extends JInternalFrame {
                     : null);
         }
         if (chk_Usuario.isSelected() && usuarioSeleccionado != null) {
-            criteria.setIdUsuario(usuarioSeleccionado.getId_Usuario());
+            criteria.setIdUsuario(usuarioSeleccionado.getIdUsuario());
         }
         if (chk_Concepto.isSelected()) {
             criteria.setConcepto(txtConcepto.getText());
@@ -635,7 +635,7 @@ public class GastosGUI extends JInternalFrame {
     private void btn_VerDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VerDetalleActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1) {
             try {
-                Gasto gasto = RestClient.getRestTemplate().getForObject("/gastos/" + gastosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getId_Gasto(), Gasto.class);
+                Gasto gasto = RestClient.getRestTemplate().getForObject("/gastos/" + gastosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getIdGasto(), Gasto.class);
                 String mensaje = "En Concepto de: " + gasto.getConcepto()
                         + "\nMonto: " + gasto.getMonto().doubleValue() + "\nUsuario: " + gasto.getNombreUsuario();
                 JOptionPane.showMessageDialog(this, mensaje, "Resumen de Gasto", JOptionPane.INFORMATION_MESSAGE);
@@ -658,7 +658,7 @@ public class GastosGUI extends JInternalFrame {
             if (respuesta == JOptionPane.YES_OPTION) {
                 try {
                     RestClient.getRestTemplate().delete("/gastos/"
-                            + gastosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getId_Gasto());
+                            + gastosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getIdGasto());
                     this.limpiarYBuscar();
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

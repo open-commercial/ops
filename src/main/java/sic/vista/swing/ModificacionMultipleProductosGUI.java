@@ -700,7 +700,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         ProductosParaActualizar productosParaActualizar = ProductosParaActualizar.builder().build();
         if (chk_UnidadDeMedida.isSelected()) {
             if (cmb_Medida.getSelectedItem() != null) {
-                productosParaActualizar.setIdMedida(((Medida) cmb_Medida.getSelectedItem()).getId_Medida());
+                productosParaActualizar.setIdMedida(((Medida) cmb_Medida.getSelectedItem()).getIdMedida());
             } else {
                 mensajeError = mensajeError.concat(ResourceBundle.getBundle("Mensajes")
                         .getString("mensaje_producto_vacio_medida") + "\n");
@@ -708,7 +708,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         }
         if (chk_Rubro.isSelected()) {
             if (cmb_Rubro.getSelectedItem() != null) {
-                productosParaActualizar.setIdRubro(((Rubro) cmb_Rubro.getSelectedItem()).getId_Rubro());
+                productosParaActualizar.setIdRubro(((Rubro) cmb_Rubro.getSelectedItem()).getIdRubro());
             } else {
                 mensajeError = mensajeError.concat(ResourceBundle.getBundle("Mensajes")
                         .getString("mensaje_producto_vacio_rubro") + "\n");
@@ -750,7 +750,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
                 }
                 productosParaActualizar.setIdProducto(idsProductos);
                 if (proveedorSeleccionado != null) {
-                    productosParaActualizar.setIdProveedor(proveedorSeleccionado.getId_Proveedor());
+                    productosParaActualizar.setIdProveedor(proveedorSeleccionado.getIdProveedor());
                 }
                 RestClient.getRestTemplate().put("/productos/multiples?", productosParaActualizar);
                 JOptionPane.showMessageDialog(this, "Los productos se modificaron correctamente.",

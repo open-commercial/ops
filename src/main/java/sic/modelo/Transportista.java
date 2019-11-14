@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(of = "nombre")
 public class Transportista implements Serializable {
 
-    private long id_Transportista;
+    private long idTransportista;
     private String nombre;
     private Ubicacion ubicacion;
     private String web;

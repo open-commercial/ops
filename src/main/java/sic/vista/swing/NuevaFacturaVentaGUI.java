@@ -107,7 +107,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         factura.setIva105Neto(iva_105_netoFactura);
         factura.setIva21Neto(iva_21_netoFactura);
         factura.setTotal(new BigDecimal(txt_Total.getValue().toString()));                      
-        factura.setIdCliente(this.cliente.getId_Cliente());
+        factura.setIdCliente(this.cliente.getIdCliente());
         factura.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         return factura;
     }   
@@ -132,11 +132,11 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
     private void cargarPedidoParaFacturar() {
         try {
             this.cargarCliente(RestClient.getRestTemplate()
-                    .getForObject("/clientes/pedidos/" + pedido.getId_Pedido(), Cliente.class));
+                    .getForObject("/clientes/pedidos/" + pedido.getIdPedido(), Cliente.class));
             this.cargarTiposDeComprobantesDisponibles();            
             this.tipoDeComprobante = (TipoDeComprobante) cmb_TipoComprobante.getSelectedItem();
             this.renglonesFactura = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/facturas/renglones/pedidos/" + pedido.getId_Pedido()
+                    .getForObject("/facturas/renglones/pedidos/" + pedido.getIdPedido()
                             + "?tipoDeComprobante=" + this.tipoDeComprobante.name(),
                             RenglonFactura[].class)));
             EstadoRenglon[] marcaDeRenglonesDelPedido = new EstadoRenglon[renglonesFactura.size()];
@@ -246,7 +246,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                             + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                             + "&movimiento=" + Movimiento.VENTA
                             + "&cantidad=" + renglonesFactura.get(i).getCantidad().add(renglon.getCantidad())
-                            + "&idCliente=" + this.cliente.getId_Cliente(),
+                            + "&idCliente=" + this.cliente.getIdCliente(),
                             RenglonFactura.class);
                     renglonesFactura.set(i, rf);
                     agregado = true;
@@ -373,7 +373,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                         + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                         + "&movimiento=" + Movimiento.VENTA
                         + "&cantidad=1" 
-                        + "&idCliente=" + this.cliente.getId_Cliente(),
+                        + "&idCliente=" + this.cliente.getIdCliente(),
                         RenglonFactura.class);
                 boolean esValido = true;
                 Map<Long, BigDecimal> faltantes;
@@ -510,7 +510,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                     cmb_TipoComprobante.removeAllItems();
                     tiposDeComprobante = RestClient.getRestTemplate()
                             .getForObject("/facturas/venta/tipos/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal()
-                                    + "/clientes/" + cliente.getId_Cliente(), TipoDeComprobante[].class);
+                                    + "/clientes/" + cliente.getIdCliente(), TipoDeComprobante[].class);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (ResourceAccessException ex) {
@@ -538,7 +538,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                         + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                         + "&movimiento=" + Movimiento.VENTA
                         + "&cantidad=" + renglonFactura.getCantidad()
-                        + "&idCliente=" + this.cliente.getId_Cliente(),
+                        + "&idCliente=" + this.cliente.getIdCliente(),
                         RenglonFactura.class);
                 return renglon;
             }).forEachOrdered(renglon -> this.agregarRenglon(renglon));
@@ -1376,7 +1376,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                 } else {
                     this.calcularResultados();
                     try {
-                        cliente = RestClient.getRestTemplate().getForObject("/clientes/" + this.cliente.getId_Cliente(), Cliente.class);
+                        cliente = RestClient.getRestTemplate().getForObject("/clientes/" + this.cliente.getIdCliente(), Cliente.class);
                         Map<Long, BigDecimal> faltantes;
                         faltantes = this.getProductosSinStockDisponible(renglonesFactura);
                         if (faltantes.isEmpty()) {
@@ -1520,7 +1520,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                 this.dispose();
             }
             this.cargarTiposDeComprobantesDisponibles();
-            if (this.pedido != null && this.pedido.getId_Pedido() != 0) {
+            if (this.pedido != null && this.pedido.getIdPedido() != 0) {
                 this.cargarPedidoParaFacturar();
                 btn_NuevoCliente.setEnabled(false);
                 btn_BuscarCliente.setEnabled(false);
@@ -1550,7 +1550,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
             gui_DetalleCliente.setLocationRelativeTo(this);
             gui_DetalleCliente.setVisible(true);
             try {
-                this.cargarCliente(RestClient.getRestTemplate().getForObject("/clientes/" + this.cliente.getId_Cliente(), Cliente.class));
+                this.cargarCliente(RestClient.getRestTemplate().getForObject("/clientes/" + this.cliente.getIdCliente(), Cliente.class));
                 this.recargarRenglones();
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

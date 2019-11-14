@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(of = "nombre")
 public class FormaDePago implements Serializable {
 
-    private long id_FormaDePago;
+    private long idFormaDePago;
     private String nombre;
     private boolean afectaCaja;
     private boolean predeterminado;

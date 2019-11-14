@@ -60,7 +60,7 @@ public class CerrarPedidoGUI extends JDialog {
         if (Desktop.isDesktopSupported()) {
             try {
                 byte[] reporte = RestClient.getRestTemplate()
-                        .getForObject("/pedidos/" + pedido.getId_Pedido() + "/reporte", byte[].class);
+                        .getForObject("/pedidos/" + pedido.getIdPedido() + "/reporte", byte[].class);
                 File f = new File(System.getProperty("user.home") + "/Pedido.pdf");
                 Files.write(f.toPath(), reporte);
                 Desktop.getDesktop().open(f);
@@ -283,8 +283,8 @@ public class CerrarPedidoGUI extends JDialog {
             if (tipoDeEnvio != null) {
                 if (nuevoPedido != null) {
                     nuevoPedido.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
-                    nuevoPedido.setIdUsuario(UsuarioActivo.getInstance().getUsuario().getId_Usuario());
-                    nuevoPedido.setIdCliente(cliente.getId_Cliente());
+                    nuevoPedido.setIdUsuario(UsuarioActivo.getInstance().getUsuario().getIdUsuario());
+                    nuevoPedido.setIdCliente(cliente.getIdCliente());
                     nuevoPedido.setTipoDeEnvio(tipoDeEnvio);
                     nuevoPedido.setIdSucursalEnvio(idSucursalEnvio);
                     Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?", nuevoPedido, Pedido.class);
@@ -298,8 +298,8 @@ public class CerrarPedidoGUI extends JDialog {
                 } else {
                     RestClient.getRestTemplate().put("/pedidos?idSucursal="
                             + SucursalActiva.getInstance().getSucursal().getIdSucursal()
-                            + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getId_Usuario()
-                            + "&idCliente=" + cliente.getId_Cliente()
+                            + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getIdUsuario()
+                            + "&idCliente=" + cliente.getIdCliente()
                             + "&tipoDeEnvio=" + tipoDeEnvio
                             + "&idSucursalEnvio=" + (idSucursalEnvio != null ? idSucursalEnvio : ""), pedido);
                     this.operacionExitosa = true;

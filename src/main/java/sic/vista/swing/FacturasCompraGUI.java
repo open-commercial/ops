@@ -191,7 +191,7 @@ public class FacturasCompraGUI extends JInternalFrame {
                     : null);
         }
         if (chk_Proveedor.isSelected() && proveedorSeleccionado != null) {
-            criteria.setIdProveedor(proveedorSeleccionado.getId_Proveedor());
+            criteria.setIdProveedor(proveedorSeleccionado.getIdProveedor());
         }
         if (chk_TipoFactura.isSelected()) {
             criteria.setTipoComprobante(((TipoDeComprobante) cmb_TipoFactura.getSelectedItem()));

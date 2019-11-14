@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id_Pedido", scope = Pedido.class)
 public class Pedido implements Serializable {
     
-    private long id_Pedido;
+    private long idPedido;
     private long nroPedido;    
     private LocalDateTime fecha;    
     private LocalDate fechaVencimiento;    
