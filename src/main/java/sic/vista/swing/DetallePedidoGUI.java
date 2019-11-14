@@ -107,7 +107,6 @@ public class DetallePedidoGUI extends JInternalFrame {
         txtUbicacionCliente.setText(cliente.getUbicacionFacturacion() != null ? cliente.getUbicacionFacturacion().toString() : "");
         txt_CondicionIVACliente.setText(cliente.getCategoriaIVA().toString());
         txtIdFiscalCliente.setText(cliente.getIdFiscal() != null ? cliente.getIdFiscal().toString() : "");
-        txt_Descuento_porcentaje.setValue(cliente.getBonificacion());
     }
 
     private void setColumnas() {

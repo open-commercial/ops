@@ -50,7 +50,7 @@ public class BuscarProductosGUI extends JDialog {
     private RenglonFactura renglonFactura;
     private NuevoRenglonPedido nuevoRenglonPedido;
     private boolean debeCargarRenglon;    
-    private final boolean busquedaParaCompraOVenta;
+    private final boolean busquedaParaFiltros;
     private Movimiento movimiento;
     private Cliente cliente;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
@@ -64,8 +64,8 @@ public class BuscarProductosGUI extends JDialog {
         this.renglonesFactura = renglones;
         this.movimiento = Movimiento.VENTA;
         this.tipoDeComprobante = tipoDeComprobante;
-        this.busquedaParaCompraOVenta = true;
         this.cliente = cliente;
+        this.busquedaParaFiltros = false;
         this.setColumnas();
         this.agregarListeners();
     }
@@ -76,7 +76,7 @@ public class BuscarProductosGUI extends JDialog {
         this.renglonesFactura = renglones;
         this.movimiento = Movimiento.COMPRA;
         this.tipoDeComprobante = tipoDeComprobante;
-        this.busquedaParaCompraOVenta = true;
+        this.busquedaParaFiltros = false;
         this.setColumnas();
         this.agregarListeners();
     }
@@ -87,7 +87,7 @@ public class BuscarProductosGUI extends JDialog {
         this.renglonesPedido = renglones;
         this.movimiento = Movimiento.PEDIDO;
         this.tipoDeComprobante = TipoDeComprobante.PEDIDO;
-        this.busquedaParaCompraOVenta = false;
+        this.busquedaParaFiltros = false;
         this.setColumnas();
         this.agregarListeners();
     }
@@ -95,7 +95,7 @@ public class BuscarProductosGUI extends JDialog {
     public BuscarProductosGUI() {
         this.initComponents();
         this.setIcon();
-        this.busquedaParaCompraOVenta = false;
+        this.busquedaParaFiltros = true;
         this.setColumnas();
         this.agregarListeners();
     }
@@ -276,11 +276,10 @@ public class BuscarProductosGUI extends JDialog {
 
     private void cargarResultadosAlTable() {
         productosParcial.stream().map(p -> {
-            Object[] fila = new Object[busquedaParaCompraOVenta ? 7 : 3];
+            Object[] fila = new Object[busquedaParaFiltros ? 2 : 7];
             fila[0] = p.getCodigo();
             fila[1] = p.getDescripcion();
-            fila[2] = BigDecimal.ZERO;
-            if (busquedaParaCompraOVenta) {
+            if (!busquedaParaFiltros) {
                 p.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
                     if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
                         fila[2] = cantidadesEnSucursal.getCantidad();
@@ -318,10 +317,10 @@ public class BuscarProductosGUI extends JDialog {
     }
 
     private void setColumnas() {
-        String[] encabezados = new String[busquedaParaCompraOVenta ? 7 : 2];
+        String[] encabezados = new String[busquedaParaFiltros ? 2 : 7];
         encabezados[0] = "Codigo";
         encabezados[1] = "Descripción";
-        if (busquedaParaCompraOVenta) {
+        if (!busquedaParaFiltros) {
             encabezados[2] = "Stock";
             encabezados[3] = "Otras Sucursales";
             encabezados[4] = "Cant. x Bulto";
@@ -336,7 +335,7 @@ public class BuscarProductosGUI extends JDialog {
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
         tipos[0] = String.class;
         tipos[1] = String.class;
-        if (busquedaParaCompraOVenta) {
+        if (!busquedaParaFiltros) {
             tipos[2] = BigDecimal.class;
             tipos[3] = BigDecimal.class;
             tipos[4] = BigDecimal.class;
@@ -350,7 +349,7 @@ public class BuscarProductosGUI extends JDialog {
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(130);
         tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(130);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(380);
-        if (busquedaParaCompraOVenta) {
+        if (!busquedaParaFiltros) {
             tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(140);
             tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(140);
             tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(140);
