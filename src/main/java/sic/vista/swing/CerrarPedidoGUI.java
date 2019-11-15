@@ -269,7 +269,6 @@ public class CerrarPedidoGUI extends JDialog {
     private void btnCerrarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarPedidoActionPerformed
         try {
             TipoDeEnvio tipoDeEnvio = null;
-            Long idSucursalEnvio = null;
             if (rbRetiroEnSucursal.isSelected()) {
                 tipoDeEnvio = TipoDeEnvio.RETIRO_EN_SUCURSAL;
             }
@@ -278,7 +277,6 @@ public class CerrarPedidoGUI extends JDialog {
             }
             if (rbDireccionEnvio.isSelected()) {
                 tipoDeEnvio = TipoDeEnvio.USAR_UBICACION_ENVIO;
-                idSucursalEnvio = sucursales.get(cmbSucursales.getSelectedIndex()).getIdSucursal();
             }
             if (tipoDeEnvio != null) {
                 if (nuevoPedido != null) {
@@ -286,7 +284,6 @@ public class CerrarPedidoGUI extends JDialog {
                     nuevoPedido.setIdUsuario(UsuarioActivo.getInstance().getUsuario().getIdUsuario());
                     nuevoPedido.setIdCliente(cliente.getIdCliente());
                     nuevoPedido.setTipoDeEnvio(tipoDeEnvio);
-                    nuevoPedido.setIdSucursalEnvio(idSucursalEnvio);
                     Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?", nuevoPedido, Pedido.class);
                     this.operacionExitosa = true;
                     int reply = JOptionPane.showConfirmDialog(this,
@@ -300,8 +297,7 @@ public class CerrarPedidoGUI extends JDialog {
                             + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                             + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getIdUsuario()
                             + "&idCliente=" + cliente.getIdCliente()
-                            + "&tipoDeEnvio=" + tipoDeEnvio
-                            + "&idSucursalEnvio=" + (idSucursalEnvio != null ? idSucursalEnvio : ""), pedido);
+                            + "&tipoDeEnvio=" + tipoDeEnvio, pedido);
                     this.operacionExitosa = true;
                     JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_pedido_actualizado"),
                             "Aviso", JOptionPane.INFORMATION_MESSAGE);
