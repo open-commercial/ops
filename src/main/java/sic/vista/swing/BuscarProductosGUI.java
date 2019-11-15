@@ -625,6 +625,7 @@ public class BuscarProductosGUI extends JDialog {
         txtBonificacion.setEnabled(false);
         txtBonificacion.setText("");
         if (this.movimiento != null && this.movimiento.equals(Movimiento.COMPRA)) {
+            txtBonificacion.setValue(BigDecimal.ZERO);
             lblBonificacion.setEnabled(true);
             txtBonificacion.setEnabled(true);
         }

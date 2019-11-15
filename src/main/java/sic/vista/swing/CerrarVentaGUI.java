@@ -137,6 +137,7 @@ public class CerrarVentaGUI extends JDialog {
     private void cargarTransportistas() {
         try {
             cmb_Transporte.removeAllItems();
+            cmb_Transporte.addItem(null);
             List<Transportista> transportes = Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/transportistas/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
                             Transportista[].class));
@@ -189,7 +190,9 @@ public class CerrarVentaGUI extends JDialog {
     }
 
     private void finalizarVenta() {
-        this.facturaVenta.setIdTransportista(((Transportista) cmb_Transporte.getSelectedItem()).getIdTransportista());
+        if (cmb_Transporte.getSelectedItem() != null) {
+            this.facturaVenta.setIdTransportista(((Transportista) cmb_Transporte.getSelectedItem()).getIdTransportista());
+        }
         this.armarMontosConFormasDePago();
         try {                  
             String uri = "/facturas/venta?";
