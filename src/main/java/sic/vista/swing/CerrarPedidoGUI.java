@@ -238,23 +238,23 @@ public class CerrarPedidoGUI extends JDialog {
             } else {
                 rbRetiroEnSucursal.setSelected(true);
             }
-            if (this.cliente.getUbicacionEnvio() != null) {
-                lblDetalleUbicacionEnvio.setText(this.cliente.getUbicacionEnvio().toString());
-                if (sucursales.isEmpty()) {
-                    rbDireccionEnvio.setSelected(true);
-                }
-            } else {
-                rbDireccionEnvio.setEnabled(false);
-                lblDetalleUbicacionEnvio.setEnabled(false);
-            }
             if (this.cliente.getUbicacionFacturacion() != null) {
                 lblDetalleUbicacionFacturacion.setText(this.cliente.getUbicacionFacturacion().toString());
-                if (!rbDireccionEnvio.isSelected()) {
+                if (!rbRetiroEnSucursal.isSelected()) {
                     rbDireccionFacturacion.setSelected(true);
                 }
             } else {
                 rbDireccionFacturacion.setEnabled(false);
                 lblDetalleUbicacionFacturacion.setEnabled(false);
+            }
+            if (this.cliente.getUbicacionEnvio() != null) {
+                lblDetalleUbicacionEnvio.setText(this.cliente.getUbicacionEnvio().toString());
+                if (!rbDireccionFacturacion.isSelected()) {
+                    rbDireccionEnvio.setSelected(true);
+                }
+            } else {
+                rbDireccionEnvio.setEnabled(false);
+                lblDetalleUbicacionEnvio.setEnabled(false);
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

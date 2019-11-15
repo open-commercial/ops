@@ -523,7 +523,7 @@ public class DetalleProductoGUI extends JDialog {
         lbl_CantMinima.setText("Cant. Mínima:");
 
         lbl_Bulto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Bulto.setText("Cant. x Bulto:");
+        lbl_Bulto.setText("Venta x Cant:");
 
         txt_Bulto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat(""))));
         txt_Bulto.setText("0");
@@ -598,7 +598,6 @@ public class DetalleProductoGUI extends JDialog {
             }
         });
 
-        lbl_Cantidad.setForeground(java.awt.Color.red);
         lbl_Cantidad.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Cantidad.setText("Cantidad:");
 
@@ -661,7 +660,7 @@ public class DetalleProductoGUI extends JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(panelCantidades, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(panelPrecios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tpTabs.addTab("General", panelGeneral);
@@ -792,7 +791,7 @@ public class DetalleProductoGUI extends JDialog {
                 .addGroup(panel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_FA)
                     .addComponent(lbl_FechaAlta, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(8, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout panelPropiedadesLayout = new javax.swing.GroupLayout(panelPropiedades);

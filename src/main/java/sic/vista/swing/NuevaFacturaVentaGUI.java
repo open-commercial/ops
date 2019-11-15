@@ -40,7 +40,6 @@ import sic.modelo.Movimiento;
 import sic.modelo.Pedido;
 import sic.modelo.Producto;
 import sic.modelo.Rol;
-import sic.modelo.Sucursal;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.Transportista;
 import sic.util.DecimalesRenderer;
@@ -144,6 +143,8 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                 marcaDeRenglonesDelPedido[i] = EstadoRenglon.DESMARCADO;
             }
             this.cargarRenglonesAlTable(marcaDeRenglonesDelPedido);
+            txt_Descuento_porcentaje.setValue(pedido.getDescuentoPorcentaje());
+            txt_Recargo_porcentaje.setValue(pedido.getRecargoPorcentaje());
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -1502,7 +1503,6 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
             this.setSize(sizeInternalFrame);
             this.setColumnas();
             this.setMaximum(true);
-            this.setTitle("Punto de Venta");
             cantidadMaximaRenglones = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/"
                     + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                     + "/cantidad-renglones", Integer.class);

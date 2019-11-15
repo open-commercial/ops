@@ -90,7 +90,7 @@ public class ProductosGUI extends JInternalFrame {
         encabezados[3] = "Descripcion";
         encabezados[4] = "Stock";
         encabezados[5] = "Otras Sucursales";
-        encabezados[6] = "Cant. x Bulto"; 
+        encabezados[6] = "Venta x Cant."; 
         encabezados[7] = "Sin Límite"; 
         encabezados[8] = "Cant. Mínima"; 
         encabezados[9] = "Medida";

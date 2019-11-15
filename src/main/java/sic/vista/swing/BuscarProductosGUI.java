@@ -324,7 +324,7 @@ public class BuscarProductosGUI extends JDialog {
         if (!busquedaParaFiltros) {
             encabezados[2] = "Stock";
             encabezados[3] = "Otras Sucursales";
-            encabezados[4] = "Cant. x Bulto";
+            encabezados[4] = "Venta x Cant.";
             encabezados[5] = "Unidad";
             encabezados[6] = "% Oferta";
             String encabezadoPrecio = (movimiento == Movimiento.VENTA) ? "P. Lista"

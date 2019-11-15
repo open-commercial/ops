@@ -615,7 +615,7 @@
                 <Component class="javax.swing.JLabel" name="lbl_Bulto">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="Cant. x Bulto:"/>
+                    <Property name="text" type="java.lang.String" value="Venta x Cant:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JFormattedTextField" name="txt_Bulto">
@@ -715,9 +715,6 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lbl_Cantidad">
                   <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
-                    </Property>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="text" type="java.lang.String" value="Cantidad:"/>
                   </Properties>
