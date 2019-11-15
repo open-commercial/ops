@@ -276,7 +276,7 @@ public class BuscarProductosGUI extends JDialog {
 
     private void cargarResultadosAlTable() {
         productosParcial.stream().map(p -> {
-            Object[] fila = new Object[busquedaParaFiltros ? 2 : 7];
+            Object[] fila = new Object[busquedaParaFiltros ? 2 : 8];
             fila[0] = p.getCodigo();
             fila[1] = p.getDescripcion();
             if (!busquedaParaFiltros) {
@@ -290,10 +290,11 @@ public class BuscarProductosGUI extends JDialog {
                         .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);
                 fila[4] = p.getBulto();
                 fila[5] = p.getNombreMedida();
+                fila[6] = p.getPorcentajeBonificacionOferta();
                 BigDecimal precio = (movimiento == Movimiento.VENTA) ? p.getPrecioLista()
                         : (movimiento == Movimiento.PEDIDO) ? p.getPrecioLista()
                                 : (movimiento == Movimiento.COMPRA) ? p.getPrecioCosto() : BigDecimal.ZERO;
-                fila[6] = precio;
+                fila[7] = precio;
             }
             return fila;
         }).forEach(fila -> {
@@ -317,7 +318,7 @@ public class BuscarProductosGUI extends JDialog {
     }
 
     private void setColumnas() {
-        String[] encabezados = new String[busquedaParaFiltros ? 2 : 7];
+        String[] encabezados = new String[busquedaParaFiltros ? 2 : 8];
         encabezados[0] = "Codigo";
         encabezados[1] = "Descripción";
         if (!busquedaParaFiltros) {
@@ -325,10 +326,11 @@ public class BuscarProductosGUI extends JDialog {
             encabezados[3] = "Otras Sucursales";
             encabezados[4] = "Cant. x Bulto";
             encabezados[5] = "Unidad";
+            encabezados[6] = "% Oferta";
             String encabezadoPrecio = (movimiento == Movimiento.VENTA) ? "P. Lista"
                     : (movimiento == Movimiento.PEDIDO) ? "P. Lista"
                             : (movimiento == Movimiento.COMPRA) ? "P.Costo" : "";
-            encabezados[6] = encabezadoPrecio;
+            encabezados[7] = encabezadoPrecio;
         }
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaResultados);
@@ -341,13 +343,14 @@ public class BuscarProductosGUI extends JDialog {
             tipos[4] = BigDecimal.class;
             tipos[5] = String.class;
             tipos[6] = BigDecimal.class;
+            tipos[7] = BigDecimal.class;
         }
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
-        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(130);
-        tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(145);
+        tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(145);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(380);
         if (!busquedaParaFiltros) {
             tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(140);
@@ -358,8 +361,10 @@ public class BuscarProductosGUI extends JDialog {
             tbl_Resultados.getColumnModel().getColumn(4).setMaxWidth(110);
             tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(70);
             tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(70);
-            tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(80);
-            tbl_Resultados.getColumnModel().getColumn(6).setMaxWidth(80);
+            tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(90);
+            tbl_Resultados.getColumnModel().getColumn(6).setMaxWidth(90);
+            tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(80);
+            tbl_Resultados.getColumnModel().getColumn(7).setMaxWidth(80);
         }
     }
 
@@ -543,7 +548,7 @@ public class BuscarProductosGUI extends JDialog {
                         .addGap(0, 0, 0)
                         .addComponent(btnBuscar))
                     .addGroup(panelFondoLayout.createSequentialGroup()
-                        .addComponent(spNotaProducto, javax.swing.GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
+                        .addComponent(spNotaProducto, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelFondoLayout.createSequentialGroup()
