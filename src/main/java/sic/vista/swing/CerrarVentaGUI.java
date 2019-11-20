@@ -72,7 +72,6 @@ public class CerrarVentaGUI extends JDialog {
         txt_MontoPago3.addKeyListener(keyHandler);
         cmb_Transporte.addKeyListener(keyHandler);
         btn_Finalizar.addKeyListener(keyHandler);
-        txt_AbonaCon.addKeyListener(keyHandler);
     }
     
     private void setIcon() {
@@ -151,18 +150,6 @@ public class CerrarVentaGUI extends JDialog {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void calcularVuelto() {
-        try {
-            if (txt_AbonaCon.isEditValid()) txt_AbonaCon.commitEdit();
-            BigDecimal montoRecibido = new BigDecimal(txt_AbonaCon.getValue().toString());            
-            BigDecimal vuelto = montoRecibido.subtract(facturaVenta.getTotal());            
-            lbl_Vuelto.setValue(vuelto.compareTo(BigDecimal.ZERO) >= 0 ? vuelto : BigDecimal.ZERO);
-        } catch (ParseException ex) {
-            String mensaje = "Se produjo un error analizando los campos.";
-            LOGGER.error(mensaje + " - " + ex.getMessage());
         }
     }
 
@@ -354,14 +341,6 @@ public class CerrarVentaGUI extends JDialog {
         cmb_FormaDePago3 = new javax.swing.JComboBox();
         txt_MontoPago3 = new javax.swing.JFormattedTextField();
         separador2 = new javax.swing.JSeparator();
-        lbl_Cambio = new javax.swing.JLabel();
-        lbl_Total = new javax.swing.JLabel();
-        lbl_TotalAPagar = new javax.swing.JFormattedTextField();
-        lbl_Total1 = new javax.swing.JLabel();
-        txt_AbonaCon = new javax.swing.JFormattedTextField();
-        lbl_Devolucion = new javax.swing.JLabel();
-        lbl_Vuelto = new javax.swing.JFormattedTextField();
-        separador3 = new javax.swing.JSeparator();
         lbl_Dividido = new javax.swing.JLabel();
         cmb_Transporte = new javax.swing.JComboBox();
 
@@ -436,40 +415,6 @@ public class CerrarVentaGUI extends JDialog {
             }
         });
 
-        lbl_Cambio.setText("Cambio:");
-
-        lbl_Total.setText("Total a pagar:");
-
-        lbl_TotalAPagar.setEditable(false);
-        lbl_TotalAPagar.setForeground(new java.awt.Color(29, 156, 37));
-        lbl_TotalAPagar.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
-        lbl_TotalAPagar.setText("0");
-        lbl_TotalAPagar.setFocusable(false);
-        lbl_TotalAPagar.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
-
-        lbl_Total1.setText("Abona con:");
-
-        txt_AbonaCon.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
-        txt_AbonaCon.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
-        txt_AbonaCon.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                txt_AbonaConFocusGained(evt);
-            }
-        });
-        txt_AbonaCon.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txt_AbonaConKeyReleased(evt);
-            }
-        });
-
-        lbl_Devolucion.setText("Vuelto:");
-
-        lbl_Vuelto.setEditable(false);
-        lbl_Vuelto.setForeground(new java.awt.Color(29, 156, 37));
-        lbl_Vuelto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
-        lbl_Vuelto.setFocusable(false);
-        lbl_Vuelto.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
-
         lbl_Dividido.setForeground(new java.awt.Color(29, 156, 37));
         lbl_Dividido.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lbl_Dividido.setText("ATENCION: Este comprobante será dividido");
@@ -497,18 +442,6 @@ public class CerrarVentaGUI extends JDialog {
                             .addComponent(txt_MontoPago1)
                             .addComponent(txt_MontoPago2)))
                     .addGroup(panelLayout.createSequentialGroup()
-                        .addComponent(lbl_Cambio, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbl_Devolucion, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbl_Total1, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbl_Total, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbl_TotalAPagar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                            .addComponent(lbl_Vuelto, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txt_AbonaCon, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addGroup(panelLayout.createSequentialGroup()
                         .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lbl_Transporte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lbl_Vendor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -518,8 +451,7 @@ public class CerrarVentaGUI extends JDialog {
                             .addComponent(cmb_Transporte, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(separador1)
                     .addComponent(separador2)
-                    .addComponent(separador3)
-                    .addComponent(lbl_Dividido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbl_Dividido, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelLayout.setVerticalGroup(
@@ -553,28 +485,11 @@ public class CerrarVentaGUI extends JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(separador2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Cambio)
-                    .addComponent(lbl_Total)
-                    .addComponent(lbl_TotalAPagar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_Total1)
-                    .addComponent(txt_AbonaCon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_Devolucion)
-                    .addComponent(lbl_Vuelto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(separador3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
                 .addComponent(lbl_Dividido, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txt_MontoPago1, txt_MontoPago3});
-
-        panelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lbl_Cambio, lbl_Devolucion, lbl_Total, lbl_Total1, lbl_TotalAPagar, lbl_Vuelto, txt_AbonaCon});
 
         panelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lbl_Vendedor, lbl_Vendor});
 
@@ -583,20 +498,22 @@ public class CerrarVentaGUI extends JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_Finalizar, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(469, 469, 469)
+                .addComponent(btn_Finalizar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_Finalizar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -608,10 +525,6 @@ public class CerrarVentaGUI extends JDialog {
         this.setEstadoFormasDePago();
         cmb_Transporte.setSelectedIndex(0);
         lbl_Vendedor.setText(UsuarioActivo.getInstance().getUsuario().toString());
-        txt_AbonaCon.setValue(0);
-        txt_AbonaCon.requestFocus();
-        lbl_TotalAPagar.setValue(facturaVenta.getTotal());
-        lbl_Vuelto.setValue(0);
         txt_MontoPago1.setValue(this.facturaVenta.getTotal());
         txt_MontoPago2.setValue(0);
         txt_MontoPago3.setValue(0);
@@ -643,7 +556,6 @@ public class CerrarVentaGUI extends JDialog {
             txt_MontoPago1.setEnabled(false);
             txt_MontoPago2.setEnabled(false);
             txt_MontoPago3.setEnabled(false);
-            txt_AbonaCon.setEnabled(false);
         } else {            
             lbl_Dividido.setText("");
         }
@@ -663,7 +575,7 @@ public class CerrarVentaGUI extends JDialog {
             if (chk_FormaDePago3.isSelected() && chk_FormaDePago3.isEnabled()) {
                 totalPagos = totalPagos.add(new BigDecimal(txt_MontoPago3.getValue().toString()));
             }
-            BigDecimal totalAPagar = (new BigDecimal(lbl_TotalAPagar.getValue().toString())).setScale(2, RoundingMode.FLOOR);
+            BigDecimal totalAPagar = facturaVenta.getTotal().setScale(2, RoundingMode.FLOOR);
             if (totalPagos.compareTo(totalAPagar) < 0) {
                 int reply = JOptionPane.showConfirmDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_montos_insuficientes"),
@@ -711,21 +623,11 @@ public class CerrarVentaGUI extends JDialog {
         txt_MontoPago3.setEnabled(chk_FormaDePago3.isSelected());
     }//GEN-LAST:event_chk_FormaDePago3ItemStateChanged
 
-    private void txt_AbonaConFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_AbonaConFocusGained
-        SwingUtilities.invokeLater(() -> {
-            txt_AbonaCon.selectAll();
-        });
-    }//GEN-LAST:event_txt_AbonaConFocusGained
-
     private void txt_MontoPago2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_MontoPago2FocusGained
         SwingUtilities.invokeLater(() -> {
             txt_MontoPago2.selectAll();
         });
     }//GEN-LAST:event_txt_MontoPago2FocusGained
-
-    private void txt_AbonaConKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_AbonaConKeyReleased
-        this.calcularVuelto();
-    }//GEN-LAST:event_txt_AbonaConKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Finalizar;
@@ -736,21 +638,13 @@ public class CerrarVentaGUI extends JDialog {
     private javax.swing.JComboBox cmb_FormaDePago2;
     private javax.swing.JComboBox cmb_FormaDePago3;
     private javax.swing.JComboBox cmb_Transporte;
-    private javax.swing.JLabel lbl_Cambio;
-    private javax.swing.JLabel lbl_Devolucion;
     private javax.swing.JLabel lbl_Dividido;
-    private javax.swing.JLabel lbl_Total;
-    private javax.swing.JLabel lbl_Total1;
-    private javax.swing.JFormattedTextField lbl_TotalAPagar;
     private javax.swing.JLabel lbl_Transporte;
     private javax.swing.JLabel lbl_Vendedor;
     private javax.swing.JLabel lbl_Vendor;
-    private javax.swing.JFormattedTextField lbl_Vuelto;
     private javax.swing.JPanel panel;
     private javax.swing.JSeparator separador1;
     private javax.swing.JSeparator separador2;
-    private javax.swing.JSeparator separador3;
-    private javax.swing.JFormattedTextField txt_AbonaCon;
     private javax.swing.JFormattedTextField txt_MontoPago1;
     private javax.swing.JFormattedTextField txt_MontoPago2;
     private javax.swing.JFormattedTextField txt_MontoPago3;
