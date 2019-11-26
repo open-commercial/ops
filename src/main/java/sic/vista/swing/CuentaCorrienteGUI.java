@@ -32,6 +32,7 @@ import sic.modelo.Cliente;
 import sic.modelo.CuentaCorriente;
 import sic.modelo.CuentaCorrienteCliente;
 import sic.modelo.CuentaCorrienteProveedor;
+import sic.modelo.Factura;
 import sic.modelo.SucursalActiva;
 import sic.modelo.FacturaCompra;
 import sic.modelo.FacturaVenta;
@@ -494,13 +495,19 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         }
     }
     
-    private void crearNotaCreditoConFacturaRelacionada(SeleccionDeProductosGUI seleccionDeProductosGUI) {
-        DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(seleccionDeProductosGUI.getNotaCreditoCalculada());
-        detalleNotaCredito.setModal(true);
-        detalleNotaCredito.setLocationRelativeTo(this);
-        detalleNotaCredito.setVisible(true);
-        if (detalleNotaCredito.isNotaCreada()) {
-            this.refrescarVista();
+    private void crearNotaCreditoConFacturaRelacionada(long idMovimiento) {
+        SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(idMovimiento);
+        seleccionDeProductosGUI.setModal(true);
+        seleccionDeProductosGUI.setLocationRelativeTo(this);
+        seleccionDeProductosGUI.setVisible(true);
+        if (seleccionDeProductosGUI.getNotaCreditoCalculada() != null) {
+            DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(seleccionDeProductosGUI.getNotaCreditoCalculada());
+            detalleNotaCredito.setModal(true);
+            detalleNotaCredito.setLocationRelativeTo(this);
+            detalleNotaCredito.setVisible(true);
+            if (detalleNotaCredito.isNotaCreada()) {
+                this.refrescarVista();
+            }
         }
     }
     
@@ -880,12 +887,14 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_confirmacion_nota_credito"), "Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
                 switch (respuesta) {
                     case 0:
-                        SeleccionDeProductosGUI seleccionDeProductosGUI = new SeleccionDeProductosGUI(renglonCC.getIdMovimiento());
-                        seleccionDeProductosGUI.setModal(true);
-                        seleccionDeProductosGUI.setLocationRelativeTo(this);
-                        seleccionDeProductosGUI.setVisible(true);
-                        if (seleccionDeProductosGUI.getNotaCreditoCalculada() != null) {
-                            this.crearNotaCreditoConFacturaRelacionada(seleccionDeProductosGUI);
+                        Factura factura = RestClient.getRestTemplate().getForObject("/facturas/" + renglonCC.getIdMovimiento(), Factura.class);
+                        if (factura.getIdSucursal() != SucursalActiva.getInstance().getSucursal().getIdSucursal()) {
+                            int emitirComprobanteEnOtraEmpresa = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_confirmacion_nota_credito_en_otra_sucursal"), "Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
+                            if (emitirComprobanteEnOtraEmpresa == 0) {
+                                this.crearNotaCreditoConFacturaRelacionada(renglonCC.getIdMovimiento());
+                            }
+                        } else {
+                            this.crearNotaCreditoConFacturaRelacionada(renglonCC.getIdMovimiento());
                         }
                         break;
                     case 1:
@@ -909,10 +918,18 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_confirmacion_nota_debito"), "Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
                 switch (respuesta) {
                     case 0:
-                        if (RestClient.getRestTemplate().getForObject("/notas/debito/recibo/" + renglonCC.getIdMovimiento() + "/existe", boolean.class)) {
-                            JOptionPane.showInternalMessageDialog(this,
-                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_recibo_con_nota_debito"),
-                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        Recibo recibo = RestClient.getRestTemplate().getForObject("/recibos/" + renglonCC.getIdMovimiento(), Recibo.class);
+                        if (recibo.getIdSucursal() != SucursalActiva.getInstance().getSucursal().getIdSucursal()) {
+                            int emitirComprobanteEnOtraEmpresa = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_confirmacion_nota_debito_en_otra_sucursal"), "Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
+                            if (emitirComprobanteEnOtraEmpresa == 0) {
+                                if (RestClient.getRestTemplate().getForObject("/notas/debito/recibo/" + renglonCC.getIdMovimiento() + "/existe", boolean.class)) {
+                                    JOptionPane.showInternalMessageDialog(this,
+                                            ResourceBundle.getBundle("Mensajes").getString("mensaje_recibo_con_nota_debito"),
+                                            "Error", JOptionPane.ERROR_MESSAGE);
+                                } else {
+                                    this.crearNotaDebitoConRecibo(renglonCC.getIdMovimiento());
+                                }
+                            }
                         } else {
                             this.crearNotaDebitoConRecibo(renglonCC.getIdMovimiento());
                         }

@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
-@EqualsAndHashCode(of = {"fechaApertura", "sucursal"})
+@EqualsAndHashCode(of = {"fechaApertura"})
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idCuentaCorriente", scope = CuentaCorriente.class)
@@ -35,7 +35,6 @@ public abstract class CuentaCorriente implements Serializable {
     private Long idCuentaCorriente;    
     private boolean eliminada;    
     private LocalDateTime fechaApertura;
-    private Sucursal sucursal;
     private BigDecimal saldo;
     private LocalDateTime fechaUltimoMovimiento;
     private List<RenglonCuentaCorriente> renglones;    

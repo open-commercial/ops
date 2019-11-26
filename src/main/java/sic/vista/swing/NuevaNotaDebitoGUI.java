@@ -192,6 +192,7 @@ public class NuevaNotaDebitoGUI extends JDialog {
                         .idProveedor(proveedor != null ? proveedor.getIdProveedor() : null)
                         .gastoAdministrativo(new BigDecimal(ftxt_Monto.getValue().toString()))
                         .tipoDeComprobante(((TipoDeComprobante) cmbTipoDeComprobante.getSelectedItem()))
+                        .idSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal())
                         .build();
                 notaDebitoCalculada = RestClient.getRestTemplate().postForObject("/notas/debito/calculos-sin-recibo", nuevaNotaCreditoSinRecibo, NotaDebito.class);
             } else {
@@ -199,7 +200,6 @@ public class NuevaNotaDebitoGUI extends JDialog {
                         .builder()
                         .idRecibo(idRecibo)
                         .gastoAdministrativo(new BigDecimal(ftxt_Monto.getValue().toString()))
-                        //.motivo("Tiene una deuda muy vieja que no paga.")
                         .tipoDeComprobante(((TipoDeComprobante) cmbTipoDeComprobante.getSelectedItem()))
                         .build();
                 notaDebitoCalculada = RestClient.getRestTemplate().postForObject("/notas/debito/calculos", nuevaNotaDebitoDeRecibo, NotaDebito.class);

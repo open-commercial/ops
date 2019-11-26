@@ -22,10 +22,7 @@ public class RenglonCuentaCorriente implements Serializable {
     private boolean eliminado;
     private LocalDateTime fecha;
     private LocalDate fechaVencimiento;   
-    private BigDecimal monto;
-    private CuentaCorriente cuentaCorriente;
-    private Factura factura; 
-    private Nota nota;    
+    private BigDecimal monto;   
     private long cae;   
     private BigDecimal saldo;    
 }
