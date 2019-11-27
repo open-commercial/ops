@@ -540,26 +540,31 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="lbl_CantMinima" max="32767" attributes="0"/>
-                                      <Component id="lblSinLimite" max="32767" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="chkSinLimite" pref="185" max="32767" attributes="2"/>
-                                      <Component id="txt_CantMinima" max="32767" attributes="1"/>
-                                  </Group>
+                                  <Component id="lbl_CantMinima" linkSize="22" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="txt_CantMinima" max="32767" attributes="1"/>
                               </Group>
                               <Group type="102" attributes="0">
-                                  <Component id="lbl_Bulto" min="-2" pref="97" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="txt_Bulto" max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                      <Component id="lblSinLimite" linkSize="22" max="32767" attributes="0"/>
+                                      <Component id="lbl_Bulto" linkSize="22" pref="97" max="32767" attributes="0"/>
+                                  </Group>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="txt_Bulto" pref="192" max="32767" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" attributes="0">
+                                          <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                                          <Component id="chkSinLimite" pref="190" max="32767" attributes="2"/>
+                                      </Group>
+                                  </Group>
                               </Group>
                           </Group>
-                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -573,13 +578,13 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txt_CantMinima" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbl_CantMinima" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_Bulto" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txt_Bulto" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lbl_Bulto" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txt_Bulto" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txt_CantMinima" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_CantMinima" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>

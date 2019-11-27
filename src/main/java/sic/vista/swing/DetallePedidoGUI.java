@@ -1014,7 +1014,12 @@ public class DetallePedidoGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_QuitarProductoActionPerformed
 
     private void btn_BuscarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarProductosActionPerformed
-        this.buscarProductoConVentanaAuxiliar();
+        if (cliente != null) {
+            this.buscarProductoConVentanaAuxiliar();
+        } else {
+            JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                    .getString("mensaje_seleccionar_cliente"), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btn_BuscarProductosActionPerformed
 
     private void tbl_ResultadoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbl_ResultadoFocusGained

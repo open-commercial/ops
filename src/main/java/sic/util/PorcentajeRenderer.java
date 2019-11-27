@@ -21,11 +21,11 @@ public class PorcentajeRenderer extends DefaultTableCellRenderer {
             BigDecimal numero = ((BigDecimal) valor).setScale(2, RoundingMode.HALF_UP);
             DecimalFormat dFormat;
             if (numero.compareTo(BigDecimal.ZERO) == 0) {
-                dFormat = new DecimalFormat("##0");
+                cell.setText("");
             } else {
                 dFormat = new DecimalFormat("##0.##");
+                cell.setText(dFormat.format(numero) + "%");
             }
-            cell.setText(dFormat.format(numero) + "%");
         }
         return cell;
     }
