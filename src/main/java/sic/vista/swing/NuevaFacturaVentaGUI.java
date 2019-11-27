@@ -25,6 +25,7 @@ import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
@@ -39,6 +40,7 @@ import sic.modelo.FormaDePago;
 import sic.modelo.Movimiento;
 import sic.modelo.Pedido;
 import sic.modelo.Producto;
+import sic.modelo.ProductosParaVerificarStock;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.Transportista;
@@ -573,11 +575,14 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
             idsProductos[i] = renglonesFactura.get(i).getIdProductoItem();
             cantidades[i] = renglonesFactura.get(i).getCantidad();
         }
-        String uri = "/productos/disponibilidad-stock/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal() 
-                + "?idProducto=" + Arrays.toString(idsProductos).substring(1, Arrays.toString(idsProductos).length() - 1)
-                + "&cantidad=" + Arrays.toString(cantidades).substring(1, Arrays.toString(cantidades).length() - 1);
+        ProductosParaVerificarStock productosParaVerificarStock = ProductosParaVerificarStock.builder()
+                .idSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal())
+                .cantidad(cantidades)
+                .idProducto(idsProductos)
+                .build();
+        HttpEntity<ProductosParaVerificarStock> requestEntity = new HttpEntity<>(productosParaVerificarStock);
         return RestClient.getRestTemplate()
-                .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {
+                .exchange("/productos/disponibilidad-stock", HttpMethod.POST, requestEntity, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {
                 }).getBody();
     }
 

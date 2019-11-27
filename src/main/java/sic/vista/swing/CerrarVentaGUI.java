@@ -26,6 +26,7 @@ import sic.modelo.SucursalActiva;
 import sic.modelo.Factura;
 import sic.modelo.FacturaVenta;
 import sic.modelo.FormaDePago;
+import sic.modelo.NuevaFacturaVenta;
 import sic.modelo.Pedido;
 import sic.modelo.RenglonFactura;
 import sic.modelo.TipoDeComprobante;
@@ -181,19 +182,25 @@ public class CerrarVentaGUI extends JDialog {
             this.facturaVenta.setIdTransportista(((Transportista) cmb_Transporte.getSelectedItem()).getIdTransportista());
         }
         this.armarMontosConFormasDePago();
-        try {                  
-            String uri = "/facturas/venta?";
+        NuevaFacturaVenta nuevaFacturaVenta = NuevaFacturaVenta.builder()
+                .facturaVenta(facturaVenta)
+                .build();
+        try {
             if (idsFormasDePago.isEmpty() == false) {
-                uri += "idsFormaDePago=" + Arrays.toString(idsFormasDePago.toArray()).substring(1, Arrays.toString(idsFormasDePago.toArray()).length() - 1)
-                        + "&montos=" + Arrays.toString(montos.toArray()).substring(1, Arrays.toString(montos.toArray()).length() - 1) + "&";
+                Long[] formasDePago = new Long[idsFormasDePago.size()];
+                formasDePago = idsFormasDePago.toArray(formasDePago);
+                nuevaFacturaVenta.setIdsFormaDePago(formasDePago);
+                BigDecimal[] montosPagos = new BigDecimal[montos.size()];
+                montosPagos = montos.toArray(montosPagos);
+                nuevaFacturaVenta.setMontos(montosPagos);
             }
             if (this.pedido != null && this.pedido.getIdPedido() != 0) {
-                uri += "idPedido=" + this.pedido.getIdPedido() + "&";
+                nuevaFacturaVenta.setIdPedido(this.pedido.getIdPedido());
             }
             if (dividir) {
-                String indices = "indices=" + Arrays.toString(indicesParaDividir).substring(1, Arrays.toString(indicesParaDividir).length() - 1);
+                nuevaFacturaVenta.setIndices(indicesParaDividir);
                 List<FacturaVenta> facturasDivididas = Arrays.asList(RestClient.getRestTemplate()
-                        .postForObject(uri + indices, this.facturaVenta, FacturaVenta[].class));
+                        .postForObject("/facturas/venta", nuevaFacturaVenta, FacturaVenta[].class));
                 facturasDivididas.forEach(fv -> {
                     fv.setRenglones(Arrays.asList(RestClient.getRestTemplate()
                             .getForObject("/facturas/" + fv.getIdFactura() + "/renglones",
@@ -214,7 +221,7 @@ public class CerrarVentaGUI extends JDialog {
                             this.autorizarFactura(facturasDivididas.get(i));
                         }
                     }
-                }                 
+                }
                 if (facturaAutorizada) {
                     int reply = JOptionPane.showConfirmDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
@@ -235,7 +242,7 @@ public class CerrarVentaGUI extends JDialog {
                     }
                 }
             } else {
-                facturaVenta = Arrays.asList(RestClient.getRestTemplate().postForObject(uri, facturaVenta, FacturaVenta[].class)).get(0);
+                this.facturaVenta = Arrays.asList(RestClient.getRestTemplate().postForObject("/facturas/venta", nuevaFacturaVenta, FacturaVenta[].class)).get(0);
                 if (facturaVenta != null) {
                     boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/"
                             + SucursalActiva.getInstance().getSucursal().getIdSucursal()

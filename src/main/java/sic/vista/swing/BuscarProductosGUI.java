@@ -32,6 +32,7 @@ import sic.modelo.NuevoRenglonPedido;
 import sic.modelo.Producto;
 import sic.modelo.RenglonFactura;
 import sic.modelo.PaginaRespuestaRest;
+import sic.modelo.ProductosParaVerificarStock;
 import sic.modelo.RenglonPedido;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.criteria.BusquedaProductoCriteria;
@@ -172,13 +173,19 @@ public class BuscarProductosGUI extends JDialog {
         if (productoSeleccionado == null || (renglonesFactura == null && movimiento == null && tipoDeComprobante == null)) {
             debeCargarRenglon = false;
             this.dispose();
-        } else {            
-            if (movimiento.equals(Movimiento.VENTA)) {
-                String uri = "/productos/disponibilidad-stock/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal() 
-                        + "?idProducto=" + productoSeleccionado.getIdProducto()
-                        + "&cantidad=" + this.sumarCantidadesSegunProductosYaCargados();
+        } else {
+            if (movimiento == Movimiento.VENTA) {
+                BigDecimal[] cantidades = {this.sumarCantidadesSegunProductosYaCargados()};
+                long[] idsProductos = {productoSeleccionado.getIdProducto()};
+                ProductosParaVerificarStock productosParaVerificarStock = ProductosParaVerificarStock.builder()
+                        .idSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal())
+                        .cantidad(cantidades)
+                        .idProducto(idsProductos)
+                        .build();
+                HttpEntity<ProductosParaVerificarStock> requestEntity = new HttpEntity<>(productosParaVerificarStock);
                 boolean existeStockSuficiente = RestClient.getRestTemplate()
-                        .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {})
+                        .exchange("/productos/disponibilidad-stock", HttpMethod.POST, requestEntity, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {
+                        })
                         .getBody().isEmpty();
                 if (!existeStockSuficiente) {
                     JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
