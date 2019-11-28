@@ -24,6 +24,7 @@ import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.criteria.BusquedaClienteCriteria;
+import sic.util.PorcentajeRenderer;
 import sic.util.Utilidades;
 
 public class BuscarClientesGUI extends JDialog {
@@ -106,7 +107,7 @@ public class BuscarClientesGUI extends JDialog {
         encabezados[1] = "CUIT o DNI";
         encabezados[2] = "R. Social o Nombre";
         encabezados[3] = "Nombre Fantasia";
-        encabezados[4] = "Bonificación";
+        encabezados[4] = "% Bonif.";
         encabezados[5] = "Ubicación";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tblResultados.setModel(modeloTablaResultados);        
@@ -125,7 +126,8 @@ public class BuscarClientesGUI extends JDialog {
         tblResultados.getColumnModel().getColumn(2).setPreferredWidth(250);
         tblResultados.getColumnModel().getColumn(3).setPreferredWidth(250);
         tblResultados.getColumnModel().getColumn(4).setPreferredWidth(100);
-        tblResultados.getColumnModel().getColumn(5).setPreferredWidth(400);        
+        tblResultados.getColumnModel().getColumn(5).setPreferredWidth(400);  
+        tblResultados.getColumnModel().getColumn(4).setCellRenderer(new PorcentajeRenderer());
     }
 
     private void cargarResultadosAlTable() {
