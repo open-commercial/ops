@@ -370,9 +370,11 @@ public class DetalleSucursalGUI extends JDialog {
                 sucursal.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
                 sucursal.setIdFiscal((Long) txtIdFiscal.getValue());
                 sucursal.setIngresosBrutos((Long) txtIngresosBrutos.getValue());
-                sucursal.setFechaInicioActividad(Instant.ofEpochMilli(dc_FechaInicioActividad.getDate().getTime())
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDateTime());
+                if (dc_FechaInicioActividad.getDate() != null) {
+                    sucursal.setFechaInicioActividad(Instant.ofEpochMilli(dc_FechaInicioActividad.getDate().getTime())
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDateTime());
+                }
                 sucursal.setEmail(txt_Email.getText().trim());
                 sucursal.setTelefono(txt_Telefono.getText().trim());
                 if (this.ubicacion != null) {
