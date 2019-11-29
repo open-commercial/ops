@@ -39,10 +39,10 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="panelResultados" max="32767" attributes="2"/>
           <Group type="102" attributes="0">
-              <Component id="panelFiltros" min="-2" pref="821" max="-2" attributes="2"/>
+              <Component id="panelFiltros" min="-2" max="-2" attributes="2"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="panelOrden" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="38" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -74,7 +74,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="chkOfertas" linkSize="7" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -98,21 +98,22 @@
                               <Component id="chk_Disponibilidad" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="rb_privado" alignment="0" max="32767" attributes="0"/>
-                              <Component id="rbEnStock" alignment="0" max="32767" attributes="0"/>
-                              <Component id="rb_Faltantes" alignment="0" pref="134" max="32767" attributes="0"/>
-                              <Component id="rb_publico" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="rb_Faltantes" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="rb_publico" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="rb_privado" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="rbEnStock" alignment="0" max="32767" attributes="0"/>
+                              </Group>
                           </Group>
-                          <EmptySpace min="-2" pref="357" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="btn_Buscar" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="lbl_cantResultados" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
