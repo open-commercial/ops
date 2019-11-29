@@ -14,7 +14,7 @@ public class BusquedaNotaCriteria {
 
     private LocalDateTime fechaDesde;
     private LocalDateTime fechaHasta;
-    private Long idEmpresa;
+    private Long idSucursal;
     private int cantidadDeRegistros;
     private Long numSerie;
     private Long numNota;

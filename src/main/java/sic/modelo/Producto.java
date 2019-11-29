@@ -2,19 +2,21 @@ package sic.modelo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Set;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = {"descripcion", "nombreEmpresa"})
+@EqualsAndHashCode(of = {"descripcion"})
 public class Producto implements Serializable {
 
     private long idProducto;
     private String codigo;
     private String descripcion;
-    private BigDecimal cantidad;
+    private Set<CantidadEnSucursal> cantidadEnSucursales;
+    private BigDecimal cantidadTotalEnSucursales;
     private BigDecimal cantMinima;
     private BigDecimal bulto;
     private String nombreMedida;
@@ -28,7 +30,9 @@ public class Producto implements Serializable {
     private String nombreRubro;
     private boolean ilimitado;    
     private boolean publico;
-    private boolean destacado;
+    private boolean oferta;
+    private BigDecimal porcentajeBonificacionOferta;
+    private BigDecimal precioListaBonificado;
     private LocalDateTime fechaUltimaModificacion;    
     private String estanteria;    
     private String estante;        

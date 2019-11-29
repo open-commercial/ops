@@ -13,7 +13,6 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.CategoriaIVA;
 import sic.modelo.Cliente;
-import sic.modelo.EmpresaActiva;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeOperacion;
 import sic.modelo.Usuario;
@@ -488,7 +487,6 @@ public class DetalleClienteGUI extends JDialog {
             cliente.setTelefono(txtTelefono.getText().trim());
             cliente.setContacto(txtContacto.getText().trim());
             cliente.setEmail(txtEmail.getText().trim());
-            cliente.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
             if (cmbViajante.getSelectedItem() != null) {
                 cliente.setIdViajante(((Usuario) cmbViajante.getSelectedItem()).getIdUsuario());
             }

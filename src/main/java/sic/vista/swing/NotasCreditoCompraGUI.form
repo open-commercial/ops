@@ -413,7 +413,7 @@
                       <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="chk_Cliente" alignment="0" max="32767" attributes="0"/>
+                              <Component id="chkProveedor" alignment="0" max="32767" attributes="0"/>
                               <Component id="chk_Usuario" alignment="0" min="-2" pref="92" max="-2" attributes="0"/>
                           </Group>
                           <Component id="chk_Viajante" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -426,9 +426,9 @@
                               <Component id="btnBuscarViajantes" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="txtCliente" min="-2" pref="340" max="-2" attributes="0"/>
+                              <Component id="txtProveedor" min="-2" pref="340" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                              <Component id="btnBuscarCliente" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnBuscarProveedor" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="txtUsuario" min="-2" pref="340" max="-2" attributes="0"/>
@@ -444,9 +444,9 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="chk_Cliente" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtCliente" linkSize="9" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnBuscarCliente" linkSize="9" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="chkProveedor" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtProveedor" linkSize="9" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnBuscarProveedor" linkSize="9" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
@@ -465,12 +465,12 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JCheckBox" name="chk_Cliente">
+            <Component class="javax.swing.JCheckBox" name="chkProveedor">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Cliente:"/>
+                <Property name="text" type="java.lang.String" value="Proveedor:"/>
               </Properties>
               <Events>
-                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_ClienteItemStateChanged"/>
+                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkProveedorItemStateChanged"/>
               </Events>
             </Component>
             <Component class="javax.swing.JCheckBox" name="chk_Usuario">
@@ -482,14 +482,14 @@
                 <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_UsuarioItemStateChanged"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JTextField" name="txtCliente">
+            <Component class="javax.swing.JTextField" name="txtProveedor">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="enabled" type="boolean" value="false"/>
                 <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btnBuscarCliente">
+            <Component class="javax.swing.JButton" name="btnBuscarProveedor">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/sic/icons/Search_16x16.png"/>
@@ -497,7 +497,7 @@
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarClienteActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarProveedorActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="txtUsuario">

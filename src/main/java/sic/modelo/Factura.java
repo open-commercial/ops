@@ -14,7 +14,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = {"fecha", "tipoComprobante", "numSerie", "numFactura", "nombreEmpresa"})
+@EqualsAndHashCode(of = {"fecha", "tipoComprobante", "numSerie", "numFactura", "nombreSucursal"})
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idFactura", scope = Factura.class)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
@@ -38,7 +38,7 @@ public abstract class Factura implements Serializable {
     private long numFactura;
     private LocalDate fechaVencimiento;  
     private Long nroPedido;
-    private long idTransportista;
+    private Long idTransportista;
     private String nombreTransportista;     
     private List<RenglonFactura> renglones;
     private BigDecimal subTotal;
@@ -52,8 +52,8 @@ public abstract class Factura implements Serializable {
     private BigDecimal total;    
     private String observaciones; 
     private BigDecimal cantidadArticulos;
-    private long idEmpresa;
-    private String nombreEmpresa;
+    private long idSucursal;
+    private String nombreSucursal;
     private boolean eliminada;   
     private long cae;
     private LocalDate vencimientoCae;

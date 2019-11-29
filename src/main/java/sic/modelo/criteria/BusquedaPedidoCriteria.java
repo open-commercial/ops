@@ -23,7 +23,7 @@ public class BusquedaPedidoCriteria {
     private EstadoPedido estadoPedido;
     private TipoDeEnvio tipoDeEnvio;
     private Long idProducto;
-    private Long idEmpresa;
+    private Long idSucursal;
     private Integer pagina;
     private String ordenarPor;
     private String sentido;

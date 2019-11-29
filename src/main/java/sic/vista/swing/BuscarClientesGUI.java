@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -21,9 +22,9 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
-import sic.modelo.EmpresaActiva;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.criteria.BusquedaClienteCriteria;
+import sic.util.PorcentajeRenderer;
 import sic.util.Utilidades;
 
 public class BuscarClientesGUI extends JDialog {
@@ -78,7 +79,6 @@ public class BuscarClientesGUI extends JDialog {
                 criteria.setNombreFiscal(txtCriteriaBusqueda.getText().trim());
                 criteria.setNombreFantasia(txtCriteriaBusqueda.getText().trim());
                 criteria.setNroDeCliente(txtCriteriaBusqueda.getText().trim());
-                criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
                 criteria.setPagina(NUMERO_PAGINA);
                 HttpEntity<BusquedaClienteCriteria> requestEntity = new HttpEntity<>(criteria);
                 PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
@@ -102,12 +102,13 @@ public class BuscarClientesGUI extends JDialog {
     }
 
     private void setColumnas() {
-        String[] encabezados = new String[5];
+        String[] encabezados = new String[6];
         encabezados[0] = "Nº Cliente";
         encabezados[1] = "CUIT o DNI";
         encabezados[2] = "R. Social o Nombre";
         encabezados[3] = "Nombre Fantasia";
-        encabezados[4] = "Ubicación";
+        encabezados[4] = "% Bonif.";
+        encabezados[5] = "Ubicación";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tblResultados.setModel(modeloTablaResultados);        
         Class[] tipos = new Class[modeloTablaResultados.getColumnCount()];
@@ -115,7 +116,8 @@ public class BuscarClientesGUI extends JDialog {
         tipos[1] = String.class;
         tipos[2] = String.class;
         tipos[3] = String.class;
-        tipos[4] = String.class;        
+        tipos[4] = BigDecimal.class;
+        tipos[5] = String.class;        
         modeloTablaResultados.setClaseColumnas(tipos);
         tblResultados.getTableHeader().setReorderingAllowed(false);
         tblResultados.getTableHeader().setResizingAllowed(true);     
@@ -123,17 +125,20 @@ public class BuscarClientesGUI extends JDialog {
         tblResultados.getColumnModel().getColumn(1).setPreferredWidth(120);
         tblResultados.getColumnModel().getColumn(2).setPreferredWidth(250);
         tblResultados.getColumnModel().getColumn(3).setPreferredWidth(250);
-        tblResultados.getColumnModel().getColumn(4).setPreferredWidth(400);        
+        tblResultados.getColumnModel().getColumn(4).setPreferredWidth(100);
+        tblResultados.getColumnModel().getColumn(5).setPreferredWidth(400);  
+        tblResultados.getColumnModel().getColumn(4).setCellRenderer(new PorcentajeRenderer());
     }
 
     private void cargarResultadosAlTable() {
         clientesParcial.stream().map(cliente -> {
-            Object[] fila = new Object[5];
+            Object[] fila = new Object[6];
             fila[0] = cliente.getNroCliente();
             fila[1] = cliente.getIdFiscal();
             fila[2] = cliente.getNombreFiscal();
             fila[3] = cliente.getNombreFantasia();
-            fila[4] = cliente.getUbicacionFacturacion();
+            fila[4] = cliente.getBonificacion().compareTo(BigDecimal.ZERO) > 0 ? cliente.getBonificacion() : BigDecimal.ZERO;
+            fila[5] = cliente.getUbicacionFacturacion();
             return fila;
         }).forEachOrdered(fila -> {
             modeloTablaResultados.addRow(fila);

@@ -28,7 +28,7 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.criteria.BusquedaFacturaVentaCriteria;
 import sic.modelo.Cliente;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.FacturaVenta;
 import sic.modelo.Usuario;
 import sic.modelo.PaginaRespuestaRest;
@@ -99,7 +99,7 @@ public class FacturasVentaGUI extends JInternalFrame {
 
     private BusquedaFacturaVentaCriteria getCriteria() {
         BusquedaFacturaVentaCriteria criteria = new BusquedaFacturaVentaCriteria();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
+        criteria.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         if (chk_Cliente.isSelected() && clienteSeleccionado != null) {
             criteria.setIdCliente(clienteSeleccionado.getIdCliente());
         }
@@ -394,7 +394,7 @@ public class FacturasVentaGUI extends JInternalFrame {
     private void cargarTiposDeFactura() {
         try {
             TipoDeComprobante[] tiposDeComprobantes = RestClient.getRestTemplate()
-                    .getForObject("/facturas/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
+                    .getForObject("/facturas/tipos/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
                             TipoDeComprobante[].class);
             for (int i = 0; tiposDeComprobantes.length > i; i++) {
                 cmb_TipoFactura.addItem(tiposDeComprobantes[i]);
@@ -441,7 +441,6 @@ public class FacturasVentaGUI extends JInternalFrame {
 
     private boolean existeClienteDisponible() {
         BusquedaClienteCriteria criteriaCliente = BusquedaClienteCriteria.builder()
-                .idEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa())
                 .pagina(0)
                 .build();
         HttpEntity<BusquedaClienteCriteria> requestEntity = new HttpEntity<>(criteriaCliente);
@@ -1214,8 +1213,8 @@ public class FacturasVentaGUI extends JInternalFrame {
 
     private void btn_AutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AutorizarActionPerformed
         try {
-            boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
+            boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/"
+                    + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                     + "/factura-electronica-habilitada", Boolean.class);
             if (FEHabilitada) {
                 if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
@@ -1231,7 +1230,7 @@ public class FacturasVentaGUI extends JInternalFrame {
                 }
             } else {
                 JOptionPane.showInternalMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_cds_fe_habilitada"),
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_sucursal_fe_habilitada"),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (RestClientResponseException ex) {

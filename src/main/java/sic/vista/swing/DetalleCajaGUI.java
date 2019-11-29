@@ -26,7 +26,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Caja;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.FormaDePago;
 import sic.modelo.Gasto;
 import sic.modelo.EstadoCaja;
@@ -526,8 +526,8 @@ public class DetalleCajaGUI extends JInternalFrame {
 
     private void btn_AgregarGastoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AgregarGastoActionPerformed
         try {
-            if (RestClient.getRestTemplate().getForObject("/cajas/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa() + "/ultima-caja-abierta", boolean.class)) {
+            if (RestClient.getRestTemplate().getForObject("/cajas/sucursales/"
+                    + SucursalActiva.getInstance().getSucursal().getIdSucursal() + "/ultima-caja-abierta", boolean.class)) {
                 List<FormaDePago> formasDePago = Arrays.asList(RestClient.getRestTemplate().getForObject("/formas-de-pago", FormaDePago[].class));
                 AgregarGastoGUI agregarGasto = new AgregarGastoGUI(formasDePago);
                 agregarGasto.setModal(true);
@@ -558,8 +558,8 @@ public class DetalleCajaGUI extends JInternalFrame {
             long idMovimientoTabla = this.movimientos.get(idFormaDePagoSeleccionada).get(Utilidades.getSelectedRowModelIndice(tbl_Movimientos)).getIdMovimiento();
             TipoDeComprobante tipoDeComprobante = this.movimientos.get(idFormaDePagoSeleccionada).get(Utilidades.getSelectedRowModelIndice(tbl_Movimientos)).getTipoComprobante();
             try {
-                if (tipoDeComprobante.equals(TipoDeComprobante.GASTO) && RestClient.getRestTemplate().getForObject("/cajas/empresas/"
-                        + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa() + "/ultima-caja-abierta", boolean.class)) {
+                if (tipoDeComprobante.equals(TipoDeComprobante.GASTO) && RestClient.getRestTemplate().getForObject("/cajas/sucursales/"
+                        + SucursalActiva.getInstance().getSucursal().getIdSucursal() + "/ultima-caja-abierta", boolean.class)) {
                     int confirmacionEliminacion = JOptionPane.showConfirmDialog(this,
                             "¿Esta seguro que desea eliminar el gasto seleccionado?",
                             "Eliminar", JOptionPane.YES_NO_OPTION);

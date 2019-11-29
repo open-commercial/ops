@@ -26,13 +26,13 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.SucursalActiva;
 import sic.modelo.criteria.BusquedaNotaCriteria;
-import sic.modelo.Cliente;
-import sic.modelo.EmpresaActiva;
 import sic.modelo.Factura;
 import sic.modelo.Movimiento;
 import sic.modelo.NotaCredito;
 import sic.modelo.PaginaRespuestaRest;
+import sic.modelo.Proveedor;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.Usuario;
@@ -47,7 +47,7 @@ public class NotasCreditoCompraGUI extends JInternalFrame {
     private ModeloTabla modeloTablaNotas = new ModeloTabla();
     private List<NotaCredito> notasTotal = new ArrayList<>();
     private List<NotaCredito> notasParcial = new ArrayList<>();
-    private Cliente clienteSeleccionado;
+    private Proveedor proveedorSeleccionado;
     private Usuario usuarioSeleccionado;
     private Usuario viajanteSeleccionado;
     private boolean tienePermisoSegunRoles; 
@@ -72,7 +72,7 @@ public class NotasCreditoCompraGUI extends JInternalFrame {
 
     private BusquedaNotaCriteria getCriteria() {
         BusquedaNotaCriteria criteria = new BusquedaNotaCriteria();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
+        criteria.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         if (chk_Fecha.isSelected()) {
             criteria.setFechaDesde((dc_FechaDesde.getDate() != null)
                     ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault())
@@ -88,8 +88,8 @@ public class NotasCreditoCompraGUI extends JInternalFrame {
         if (chk_TipoNota.isSelected()) {
             criteria.setTipoComprobante((TipoDeComprobante) cmb_TipoNota.getSelectedItem());
         }
-        if (chk_Cliente.isSelected() && clienteSeleccionado != null) {
-            criteria.setIdCliente(clienteSeleccionado.getIdCliente());
+        if (chkProveedor.isSelected() && proveedorSeleccionado != null) {
+            criteria.setIdProveedor(proveedorSeleccionado.getIdProveedor());
         }
         if (chk_Viajante.isSelected() && viajanteSeleccionado != null) {
             criteria.setIdViajante(viajanteSeleccionado.getIdUsuario());
@@ -109,7 +109,7 @@ public class NotasCreditoCompraGUI extends JInternalFrame {
         encabezados[1] = "Fecha Nota";
         encabezados[2] = "Tipo";
         encabezados[3] = "Nº Nota";
-        encabezados[4] = "Cliente";
+        encabezados[4] = "Proveedor";
         encabezados[5] = "Usuario";
         encabezados[6] = "Viajante";
         encabezados[7] = "Total";
@@ -253,12 +253,12 @@ public class NotasCreditoCompraGUI extends JInternalFrame {
         } else {
             txt_NroNota.setEnabled(false);
         }
-        if (status == true && chk_Cliente.isSelected() == true) {
-            btnBuscarCliente.setEnabled(true);
-            txtCliente.setEnabled(true);
+        if (status == true && chkProveedor.isSelected() == true) {
+            btnBuscarProveedor.setEnabled(true);
+            txtProveedor.setEnabled(true);
         } else {
-            btnBuscarCliente.setEnabled(false);
-            txtCliente.setEnabled(false);
+            btnBuscarProveedor.setEnabled(false);
+            txtProveedor.setEnabled(false);
         }
         if (status == true && chk_Usuario.isSelected() == true) {
             btnBuscarUsuarios.setEnabled(true);
@@ -281,7 +281,7 @@ public class NotasCreditoCompraGUI extends JInternalFrame {
             fila[1] = nota.getFecha();
             fila[2] = nota.getTipoComprobante();
             fila[3] = nota.getSerie() + " - " + nota.getNroNota();
-            fila[4] = nota.getNombreFiscalCliente();
+            fila[4] = nota.getRazonSocialProveedor();
             fila[5] = nota.getNombreUsuario();
             fila[6] = nota.getNombreViajante();
             fila[7] = nota.getTotal();
@@ -320,7 +320,7 @@ public class NotasCreditoCompraGUI extends JInternalFrame {
     private void cargarTiposDeNota() {
         try {
             TipoDeComprobante[] tiposDeComprobantes = RestClient.getRestTemplate()
-                    .getForObject("/notas/credito/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
+                    .getForObject("/notas/credito/tipos/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
                             TipoDeComprobante[].class);
             for (int i = 0; tiposDeComprobantes.length > i; i++) {
                 cmb_TipoNota.addItem(tiposDeComprobantes[i]);
@@ -461,10 +461,10 @@ public class NotasCreditoCompraGUI extends JInternalFrame {
         txt_NroNota = new javax.swing.JFormattedTextField();
         lbl_cantResultados = new javax.swing.JLabel();
         subPanelFiltros1 = new javax.swing.JPanel();
-        chk_Cliente = new javax.swing.JCheckBox();
+        chkProveedor = new javax.swing.JCheckBox();
         chk_Usuario = new javax.swing.JCheckBox();
-        txtCliente = new javax.swing.JTextField();
-        btnBuscarCliente = new javax.swing.JButton();
+        txtProveedor = new javax.swing.JTextField();
+        btnBuscarProveedor = new javax.swing.JButton();
         txtUsuario = new javax.swing.JTextField();
         btnBuscarUsuarios = new javax.swing.JButton();
         chk_Viajante = new javax.swing.JCheckBox();
@@ -709,10 +709,10 @@ public class NotasCreditoCompraGUI extends JInternalFrame {
 
         lbl_cantResultados.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
-        chk_Cliente.setText("Cliente:");
-        chk_Cliente.addItemListener(new java.awt.event.ItemListener() {
+        chkProveedor.setText("Proveedor:");
+        chkProveedor.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                chk_ClienteItemStateChanged(evt);
+                chkProveedorItemStateChanged(evt);
             }
         });
 
@@ -724,15 +724,15 @@ public class NotasCreditoCompraGUI extends JInternalFrame {
             }
         });
 
-        txtCliente.setEditable(false);
-        txtCliente.setEnabled(false);
-        txtCliente.setOpaque(false);
+        txtProveedor.setEditable(false);
+        txtProveedor.setEnabled(false);
+        txtProveedor.setOpaque(false);
 
-        btnBuscarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
-        btnBuscarCliente.setEnabled(false);
-        btnBuscarCliente.addActionListener(new java.awt.event.ActionListener() {
+        btnBuscarProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
+        btnBuscarProveedor.setEnabled(false);
+        btnBuscarProveedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarClienteActionPerformed(evt);
+                btnBuscarProveedorActionPerformed(evt);
             }
         });
 
@@ -776,7 +776,7 @@ public class NotasCreditoCompraGUI extends JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(chk_Cliente, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(chkProveedor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(chk_Usuario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(chk_Viajante))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -786,9 +786,9 @@ public class NotasCreditoCompraGUI extends JInternalFrame {
                         .addGap(0, 0, 0)
                         .addComponent(btnBuscarViajantes))
                     .addGroup(subPanelFiltros1Layout.createSequentialGroup()
-                        .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
-                        .addComponent(btnBuscarCliente))
+                        .addComponent(btnBuscarProveedor))
                     .addGroup(subPanelFiltros1Layout.createSequentialGroup()
                         .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
@@ -799,9 +799,9 @@ public class NotasCreditoCompraGUI extends JInternalFrame {
             subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(subPanelFiltros1Layout.createSequentialGroup()
                 .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(chk_Cliente)
-                    .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscarCliente))
+                    .addComponent(chkProveedor)
+                    .addComponent(txtProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarProveedor))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_Usuario)
@@ -814,7 +814,7 @@ public class NotasCreditoCompraGUI extends JInternalFrame {
                     .addComponent(btnBuscarViajantes)))
         );
 
-        subPanelFiltros1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarCliente, btnBuscarUsuarios, txtCliente, txtUsuario, txtViajante});
+        subPanelFiltros1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarProveedor, btnBuscarUsuarios, txtProveedor, txtUsuario, txtViajante});
 
         btn_Buscar.setForeground(java.awt.Color.blue);
         btn_Buscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
@@ -1001,27 +1001,27 @@ public class NotasCreditoCompraGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btnBuscarUsuariosActionPerformed
 
-    private void chk_ClienteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ClienteItemStateChanged
-        if (chk_Cliente.isSelected() == true) {
-            btnBuscarCliente.setEnabled(true);
-            btnBuscarCliente.requestFocus();
-            txtCliente.setEnabled(true);
+    private void chkProveedorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkProveedorItemStateChanged
+        if (chkProveedor.isSelected() == true) {
+            btnBuscarProveedor.setEnabled(true);
+            btnBuscarProveedor.requestFocus();
+            txtProveedor.setEnabled(true);
         } else {
-            btnBuscarCliente.setEnabled(false);
-            txtCliente.setEnabled(false);
+            btnBuscarProveedor.setEnabled(false);
+            txtProveedor.setEnabled(false);
         }
-    }//GEN-LAST:event_chk_ClienteItemStateChanged
+    }//GEN-LAST:event_chkProveedorItemStateChanged
 
-    private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarClienteActionPerformed
-        BuscarClientesGUI buscarClientesGUI = new BuscarClientesGUI();
-        buscarClientesGUI.setModal(true);
-        buscarClientesGUI.setLocationRelativeTo(this);
-        buscarClientesGUI.setVisible(true);
-        if (buscarClientesGUI.getClienteSeleccionado() != null) {
-            clienteSeleccionado = buscarClientesGUI.getClienteSeleccionado();
-            txtCliente.setText(clienteSeleccionado.getNombreFiscal());
+    private void btnBuscarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProveedorActionPerformed
+        BuscarProveedoresGUI buscarProveedoresGUI = new BuscarProveedoresGUI();
+        buscarProveedoresGUI.setModal(true);
+        buscarProveedoresGUI.setLocationRelativeTo(this);
+        buscarProveedoresGUI.setVisible(true);
+        if (buscarProveedoresGUI.getProveedorSeleccionado() != null) {
+            proveedorSeleccionado = buscarProveedoresGUI.getProveedorSeleccionado();
+            txtProveedor.setText(proveedorSeleccionado.getRazonSocial());
         }
-    }//GEN-LAST:event_btnBuscarClienteActionPerformed
+    }//GEN-LAST:event_btnBuscarProveedorActionPerformed
 
     private void txt_NroNotaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_NroNotaKeyTyped
         Utilidades.controlarEntradaSoloNumerico(evt);
@@ -1117,14 +1117,14 @@ public class NotasCreditoCompraGUI extends JInternalFrame {
     }//GEN-LAST:event_cmbSentidoItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBuscarCliente;
+    private javax.swing.JButton btnBuscarProveedor;
     private javax.swing.JButton btnBuscarUsuarios;
     private javax.swing.JButton btnBuscarViajantes;
     private javax.swing.JButton btnVerFactura;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_VerDetalle;
-    private javax.swing.JCheckBox chk_Cliente;
+    private javax.swing.JCheckBox chkProveedor;
     private javax.swing.JCheckBox chk_Fecha;
     private javax.swing.JCheckBox chk_NumNota;
     private javax.swing.JCheckBox chk_TipoNota;
@@ -1146,7 +1146,7 @@ public class NotasCreditoCompraGUI extends JInternalFrame {
     private javax.swing.JPanel subPanelFiltros1;
     private javax.swing.JPanel subPanelFiltros2;
     private javax.swing.JTable tbl_Resultados;
-    private javax.swing.JTextField txtCliente;
+    private javax.swing.JTextField txtProveedor;
     private javax.swing.JTextField txtUsuario;
     private javax.swing.JTextField txtViajante;
     private javax.swing.JFormattedTextField txt_NroNota;

@@ -20,7 +20,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.EmpresaActiva;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Proveedor;
 import sic.modelo.criteria.BusquedaProveedorCriteria;
@@ -77,7 +76,6 @@ public class BuscarProveedoresGUI extends JDialog {
                 BusquedaProveedorCriteria criteria = BusquedaProveedorCriteria.builder().build();
                 criteria.setNroProveedor(txtCriteriaBusqueda.getText().trim());
                 criteria.setRazonSocial(txtCriteriaBusqueda.getText().trim());
-                criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
                 criteria.setPagina(NUMERO_PAGINA);
                 HttpEntity<BusquedaProveedorCriteria> requestEntity = new HttpEntity<>(criteria);
                 PaginaRespuestaRest<Proveedor> response = RestClient.getRestTemplate()

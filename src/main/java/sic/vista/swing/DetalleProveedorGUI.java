@@ -11,7 +11,6 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.CategoriaIVA;
-import sic.modelo.EmpresaActiva;
 import sic.modelo.Proveedor;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeOperacion;
@@ -58,17 +57,6 @@ public class DetalleProveedorGUI extends JDialog {
         txtEmail.setText(proveedorModificar.getEmail());
         txtWeb.setText(proveedorModificar.getWeb());
 
-    }
-
-    private void limpiarYRecargarComponentes() {
-        txtRazonSocial.setText("");
-        txtCuitOrDNI.setText("");
-        txtTelPrimario.setText("");
-        txtTelSecundario.setText("");
-        txtContacto.setText("");
-        txtEmail.setText("");
-        txtWeb.setText("");
-        this.cargarComboBoxCondicionesIVA();
     }
 
     private void cargarComboBoxCondicionesIVA() {
@@ -303,7 +291,6 @@ public class DetalleProveedorGUI extends JDialog {
                 proveedor.setContacto(txtContacto.getText().trim());
                 proveedor.setEmail(txtEmail.getText().trim());
                 proveedor.setWeb(txtWeb.getText().trim());
-                proveedor.setIdEmpresa((EmpresaActiva.getInstance().getEmpresa()).getIdEmpresa());
                 if (this.ubicacion != null) {
                     proveedor.setUbicacion(this.ubicacion);
                 }
@@ -323,7 +310,6 @@ public class DetalleProveedorGUI extends JDialog {
                 if (this.ubicacion != null) {
                     proveedorModificar.setUbicacion(this.ubicacion);
                 }
-                proveedorModificar.setIdEmpresa((EmpresaActiva.getInstance().getEmpresa()).getIdEmpresa());
                 RestClient.getRestTemplate().put("/proveedores", proveedorModificar);
                 JOptionPane.showMessageDialog(this, "El proveedor se modificó correctamente.",
                         "Aviso", JOptionPane.INFORMATION_MESSAGE);

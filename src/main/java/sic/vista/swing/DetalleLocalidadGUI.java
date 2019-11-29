@@ -23,7 +23,7 @@ public class DetalleLocalidadGUI extends javax.swing.JDialog {
     }
     
     private void setIcon() {
-        ImageIcon iconoVentana = new ImageIcon(DetalleEmpresaGUI.class.getResource("/sic/icons/EditMap_16x16.png"));
+        ImageIcon iconoVentana = new ImageIcon(DetalleSucursalGUI.class.getResource("/sic/icons/EditMap_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
     }
 

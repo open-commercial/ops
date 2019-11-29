@@ -28,7 +28,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.Pedido;
 import sic.modelo.Usuario;
 import sic.modelo.EstadoPedido;
@@ -74,7 +74,7 @@ public class PedidosGUI extends JInternalFrame {
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
         BusquedaPedidoCriteria criteria = BusquedaPedidoCriteria.builder().build();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
+        criteria.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         if (chk_Fecha.isSelected()) {
             criteria.setFechaDesde((dc_FechaDesde.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault()) : null);
             criteria.setFechaHasta((dc_FechaHasta.getDate() != null) ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault()) : null);
@@ -264,7 +264,6 @@ public class PedidosGUI extends JInternalFrame {
 
     private boolean existeClienteDisponible() {
         BusquedaClienteCriteria criteriaCliente = BusquedaClienteCriteria.builder()
-                .idEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa())
                 .pagina(0)
                 .build();
         HttpEntity<BusquedaClienteCriteria> requestEntity = new HttpEntity<>(criteriaCliente);

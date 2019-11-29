@@ -18,7 +18,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.FormaDePago;
 import sic.modelo.Proveedor;
 import sic.modelo.Recibo;
@@ -70,7 +70,7 @@ public class DetalleReciboGUI extends JDialog {
             recibo.setMonto(new BigDecimal(txtMonto.getValue().toString()));
             recibo.setConcepto(txtObservaciones.getText().trim());
             recibo.setIdFormaDePago(((FormaDePago) cmbFormaDePago.getSelectedItem()).getIdFormaDePago());
-            recibo.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
+            recibo.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
             if (cliente != null) {
                 recibo.setIdCliente(cliente.getIdCliente());
                 recibo = RestClient.getRestTemplate().postForObject("/recibos/clientes",

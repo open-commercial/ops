@@ -31,25 +31,30 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="lbl_CantMinima" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="txt_CantMinima" min="-2" pref="45" max="-2" attributes="1"/>
+              <EmptySpace max="32767" attributes="0"/>
               <Component id="btnGuardar" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="tpTabs" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
-          </Group>
+          <Component id="tpTabs" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
+              <Component id="tpTabs" min="-2" pref="400" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tpTabs" min="-2" pref="370" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="btnGuardar" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="btnGuardar" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" alignment="3" groupAlignment="3" attributes="0">
+                      <Component id="txt_CantMinima" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbl_CantMinima" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -86,17 +91,20 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="panelSuperior" max="32767" attributes="2"/>
-                          <Group type="102" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
                               <Component id="panelPrecios" min="-2" max="-2" attributes="2"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="panelCantidades" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="panelCantidades" max="32767" attributes="0"/>
+                                  <Component id="pnlCantidadSucursales" max="32767" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -107,10 +115,14 @@
                       <Component id="panelSuperior" min="-2" max="-2" attributes="1"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="panelPrecios" max="32767" attributes="3"/>
-                          <Component id="panelCantidades" max="32767" attributes="1"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="pnlCantidadSucursales" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="panelCantidades" min="-2" max="-2" attributes="1"/>
+                          </Group>
+                          <Component id="panelPrecios" min="-2" max="-2" attributes="3"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="10" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -132,9 +144,9 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="lbl_Codigo" alignment="1" max="32767" attributes="1"/>
-                              <Component id="lbl_Medida" max="32767" attributes="1"/>
                               <Component id="lbl_Proveedor" alignment="0" max="32767" attributes="1"/>
-                              <Component id="lbl_Descripcion" max="32767" attributes="1"/>
+                              <Component id="lbl_Descripcion" pref="111" max="32767" attributes="1"/>
+                              <Component id="lbl_Medida" alignment="1" max="32767" attributes="1"/>
                               <Component id="lbl_Rubro" alignment="1" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -142,7 +154,7 @@
                               <Component id="txt_Codigo" max="32767" attributes="2"/>
                               <Component id="txt_Descripcion" alignment="0" max="32767" attributes="2"/>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="txtProveedor" pref="386" max="32767" attributes="0"/>
+                                  <Component id="txtProveedor" max="32767" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Component id="btnBuscarProveedor" linkSize="16" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
@@ -261,7 +273,7 @@
                       <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="* U. de Medida:"/>
+                    <Property name="text" type="java.lang.String" value="* Medida:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JButton" name="btnBuscarProveedor">
@@ -295,32 +307,31 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lbl_PrecioLista" max="32767" attributes="1"/>
-                              <Component id="lbl_PVP" max="32767" attributes="0"/>
-                              <Component id="lbl_IVA" alignment="0" max="32767" attributes="0"/>
-                              <Component id="lbl_Ganancia" alignment="0" max="32767" attributes="1"/>
-                              <Component id="lbl_PrecioCosto" alignment="0" max="32767" attributes="1"/>
+                              <Component id="lbl_PrecioCosto" alignment="1" min="-2" pref="154" max="-2" attributes="1"/>
+                              <Component id="lbl_Ganancia" alignment="1" min="-2" pref="154" max="-2" attributes="1"/>
+                              <Component id="lbl_PVP" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_IVA" alignment="1" min="-2" pref="154" max="-2" attributes="0"/>
+                              <Component id="lbl_PrecioLista" alignment="1" min="-2" pref="154" max="-2" attributes="1"/>
+                              <Component id="chkOferta" alignment="1" min="-2" pref="154" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="cmbIVAPorcentaje" max="32767" attributes="0"/>
-                                      <Component id="txtGananciaPorcentaje" max="32767" attributes="2"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="txtIVANeto" linkSize="5" alignment="1" max="32767" attributes="2"/>
-                                      <Component id="txtGananciaNeto" linkSize="5" alignment="0" max="32767" attributes="1"/>
-                                      <Component id="txtPrecioCosto" linkSize="5" alignment="0" max="32767" attributes="1"/>
-                                      <Component id="txtPVP" linkSize="5" alignment="0" pref="102" max="32767" attributes="0"/>
-                                  </Group>
-                              </Group>
+                              <Component id="txtGananciaPorcentaje" alignment="0" max="32767" attributes="2"/>
+                              <Component id="cmbIVAPorcentaje" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtPorcentajeOferta" alignment="0" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="txtPrecioCosto" linkSize="5" alignment="1" pref="67" max="32767" attributes="1"/>
+                              <Component id="txtGananciaNeto" linkSize="5" alignment="1" pref="102" max="32767" attributes="1"/>
+                              <Component id="txtPVP" linkSize="5" alignment="1" pref="102" max="32767" attributes="0"/>
+                              <Component id="txtIVANeto" linkSize="5" alignment="1" pref="102" max="32767" attributes="2"/>
                               <Component id="txtPrecioLista" linkSize="5" alignment="1" pref="30" max="32767" attributes="1"/>
+                              <Component id="txtPrecioBonificado" alignment="1" min="-2" pref="102" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -329,32 +340,38 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="lbl_PrecioCosto" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_PrecioCosto" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="txtPrecioCosto" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="lbl_Ganancia" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_Ganancia" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="txtGananciaPorcentaje" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="txtGananciaNeto" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="lbl_PVP" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_PVP" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="txtPVP" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="txtIVANeto" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="cmbIVAPorcentaje" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbl_IVA" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_IVA" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="lbl_PrecioLista" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_PrecioLista" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="txtPrecioLista" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="chkOferta" linkSize="21" alignment="3" min="-2" pref="10" max="-2" attributes="0"/>
+                              <Component id="txtPorcentajeOferta" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtPrecioBonificado" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace pref="11" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -398,7 +415,6 @@
                       <Format format="#,##0.##" subtype="-1" type="0"/>
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="0"/>
                   </Properties>
                   <Events>
                     <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtGananciaPorcentajeFocusGained"/>
@@ -478,6 +494,47 @@
                     <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cmbIVAPorcentajeItemStateChanged"/>
                   </Events>
                 </Component>
+                <Component class="javax.swing.JCheckBox" name="chkOferta">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Oferta (%):"/>
+                    <Property name="horizontalAlignment" type="int" value="4"/>
+                    <Property name="horizontalTextPosition" type="int" value="4"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkOfertaItemStateChanged"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chkOfertaActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JFormattedTextField" name="txtPorcentajeOferta">
+                  <Properties>
+                    <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+                      <Format format="#,##0.##" subtype="-1" type="0"/>
+                    </Property>
+                    <Property name="horizontalAlignment" type="int" value="4"/>
+                    <Property name="text" type="java.lang.String" value="0"/>
+                    <Property name="enabled" type="boolean" value="false"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPorcentajeOfertaFocusGained"/>
+                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPorcentajeOfertaFocusLost"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtPorcentajeOfertaActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JFormattedTextField" name="txtPrecioBonificado">
+                  <Properties>
+                    <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+                      <Format format="#,##0.##" subtype="-1" type="0"/>
+                    </Property>
+                    <Property name="horizontalAlignment" type="int" value="4"/>
+                    <Property name="text" type="java.lang.String" value="0"/>
+                    <Property name="enabled" type="boolean" value="false"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPrecioBonificadoFocusGained"/>
+                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPrecioBonificadoFocusLost"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtPrecioBonificadoActionPerformed"/>
+                  </Events>
+                </Component>
               </SubComponents>
             </Container>
             <Container class="javax.swing.JPanel" name="panelCantidades">
@@ -493,55 +550,34 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="lbl_CantMinima" linkSize="10" alignment="1" max="32767" attributes="0"/>
-                                      <Component id="lbl_Cantidad" linkSize="10" alignment="1" max="32767" attributes="1"/>
-                                      <Component id="lblSinLimite" alignment="1" max="32767" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="txt_CantMinima" alignment="0" max="32767" attributes="1"/>
-                                      <Component id="chkSinLimite" alignment="0" pref="137" max="32767" attributes="2"/>
-                                      <Component id="txt_Cantidad" alignment="0" max="32767" attributes="1"/>
-                                  </Group>
-                              </Group>
-                              <Group type="102" attributes="0">
-                                  <Component id="lbl_Bulto" linkSize="10" min="-2" pref="120" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="txt_Bulto" max="32767" attributes="0"/>
-                              </Group>
+                              <Component id="lbl_Bulto" max="32767" attributes="0"/>
+                              <Component id="lblSinLimite" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="chkSinLimite" pref="189" max="32767" attributes="2"/>
+                              <Component id="txt_Bulto" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="lblSinLimite" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="chkSinLimite" alignment="2" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txt_Cantidad" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbl_Cantidad" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txt_CantMinima" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbl_CantMinima" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lbl_Bulto" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txt_Bulto" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                      <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="chkSinLimite" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblSinLimite" alignment="2" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="txt_Bulto" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_Bulto" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -555,53 +591,16 @@
                     <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkSinLimiteItemStateChanged"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbl_Cantidad">
-                  <Properties>
-                    <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                      <Color blue="0" green="0" id="red" palette="1" red="ff" type="palette"/>
-                    </Property>
-                    <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="* Cant. Disponible:"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JFormattedTextField" name="txt_Cantidad">
-                  <Properties>
-                    <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-                      <Format format="#,##0.##" subtype="-1" type="0"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="0"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txt_CantidadFocusGained"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JFormattedTextField" name="txt_CantMinima">
-                  <Properties>
-                    <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-                      <Format format="#,##0.##" subtype="-1" type="0"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="0"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txt_CantMinimaFocusGained"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lbl_CantMinima">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="Cant. M&#xed;nima:"/>
-                  </Properties>
-                </Component>
                 <Component class="javax.swing.JLabel" name="lbl_Bulto">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="Cant. por Bulto:"/>
+                    <Property name="text" type="java.lang.String" value="Venta x Cant.:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JFormattedTextField" name="txt_Bulto">
                   <Properties>
                     <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-                      <Format format="#,##0.##" subtype="-1" type="0"/>
+                      <Format format="" subtype="-1" type="0"/>
                     </Property>
                     <Property name="text" type="java.lang.String" value="0"/>
                   </Properties>
@@ -613,6 +612,90 @@
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="text" type="java.lang.String" value="Sin L&#xed;mite:"/>
+                  </Properties>
+                </Component>
+              </SubComponents>
+            </Container>
+            <Container class="javax.swing.JPanel" name="pnlCantidadSucursales">
+              <Properties>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                    <EtchetBorder/>
+                  </Border>
+                </Property>
+              </Properties>
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="lblSucursal" alignment="0" min="-2" pref="69" max="-2" attributes="0"/>
+                              <Component id="lbl_Cantidad" alignment="0" min="-2" max="-2" attributes="1"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="txtCantidad" max="32767" attributes="1"/>
+                              <Component id="cmbSucursales" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblSucursal" linkSize="19" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cmbSucursales" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="txtCantidad" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_Cantidad" linkSize="19" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JLabel" name="lblSucursal">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Sucursal:"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JComboBox" name="cmbSucursales">
+                  <Properties>
+                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                      <StringArray count="0"/>
+                    </Property>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmbSucursalesActionPerformed"/>
+                  </Events>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Sucursal&gt;"/>
+                  </AuxValues>
+                </Component>
+                <Component class="javax.swing.JFormattedTextField" name="txtCantidad">
+                  <Properties>
+                    <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+                      <Format format="#,##0.##" subtype="-1" type="0"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="0"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtCantidadFocusGained"/>
+                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtCantidadKeyReleased"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl_Cantidad">
+                  <Properties>
+                    <Property name="horizontalAlignment" type="int" value="4"/>
+                    <Property name="text" type="java.lang.String" value="Cantidad:"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -648,7 +731,7 @@
                       <Component id="panel5" min="-2" max="-2" attributes="1"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="panel6" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="296" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="326" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -668,7 +751,6 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="lblDestacado" max="32767" attributes="0"/>
                               <Component id="lbl_Estante" alignment="0" max="32767" attributes="1"/>
                               <Component id="lblPublico" alignment="0" max="32767" attributes="0"/>
                               <Component id="lbl_Estanteria" alignment="0" max="32767" attributes="1"/>
@@ -680,16 +762,11 @@
                               <Component id="txt_Estanteria" alignment="0" max="32767" attributes="3"/>
                               <Component id="dc_Vencimiento" max="32767" attributes="1"/>
                               <Component id="txt_Estante" alignment="0" max="32767" attributes="3"/>
-                              <Component id="jScrollPane1" alignment="0" pref="466" max="32767" attributes="0"/>
+                              <Component id="jScrollPane1" alignment="0" pref="477" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="rbPublico" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
-                                          <Component id="rbPrivado" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Component id="chkDestacado" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="rbPublico" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                                  <Component id="rbPrivado" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
@@ -702,14 +779,9 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="lblPublico" linkSize="17" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblPublico" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="rbPublico" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="rbPrivado" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="chkDestacado" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblDestacado" linkSize="17" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
@@ -809,17 +881,6 @@
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbPrivadoActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblDestacado">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="Destacado:"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JCheckBox" name="chkDestacado">
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chkDestacadoActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>
@@ -1004,5 +1065,22 @@
         </Container>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JLabel" name="lbl_CantMinima">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="4"/>
+        <Property name="text" type="java.lang.String" value="Cant. M&#xed;nima:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JFormattedTextField" name="txt_CantMinima">
+      <Properties>
+        <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+          <Format format="#,##0.##" subtype="-1" type="0"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="0"/>
+      </Properties>
+      <Events>
+        <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txt_CantMinimaFocusGained"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>

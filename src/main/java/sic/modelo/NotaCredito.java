@@ -25,13 +25,13 @@ public class NotaCredito extends Nota implements Serializable {
     public NotaCredito() {}
 
     public NotaCredito(long idNota, long serie, long nroNota, boolean eliminada,
-            TipoDeComprobante tipoDeComprobante, LocalDateTime fecha, long idEmpresa, String nombreEmpresa, long idUsuario, String nombreUsuario,
+            TipoDeComprobante tipoDeComprobante, LocalDateTime fecha, long idSucursal, String nombreSucursal, long idUsuario, String nombreUsuario,
             long idCliente, String nombreFiscalCliente, long idProveedor, String razonSocialProveedor, long idFacturaVenta, long idFacturaCompra,
             String motivo, List<RenglonNotaCredito> renglones, BigDecimal subTotalBruto,
             BigDecimal iva21Neto, BigDecimal iva105Neto, BigDecimal total, long cae, LocalDate vencimientoCAE,
             long numSerieAfip, long numFacturaAfip) {
 
-        super(idNota, serie, nroNota, eliminada, tipoDeComprobante, fecha, idEmpresa, nombreEmpresa,
+        super(idNota, serie, nroNota, eliminada, tipoDeComprobante, fecha, idSucursal, nombreSucursal,
                 idUsuario, nombreUsuario, idCliente, nombreFiscalCliente, idProveedor, razonSocialProveedor,
                 idFacturaVenta, idFacturaCompra, motivo, subTotalBruto, iva21Neto, iva105Neto, total, cae,
                 vencimientoCAE, numSerieAfip, numFacturaAfip);

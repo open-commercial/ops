@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = {"idProductoItem", "codigoItem"})
+@EqualsAndHashCode(of = {"idProductoItem"})
 public class RenglonFactura implements Serializable {
 
     private long idRenglonFactura;
@@ -16,8 +16,8 @@ public class RenglonFactura implements Serializable {
     private String medidaItem;
     private BigDecimal cantidad;
     private BigDecimal precioUnitario;
-    private BigDecimal descuentoPorcentaje;
-    private BigDecimal descuentoNeto;
+    private BigDecimal bonificacionPorcentaje;
+    private BigDecimal bonificacionNeta;
     private BigDecimal ivaPorcentaje;
     private BigDecimal ivaNeto;
     private BigDecimal impuestoPorcentaje;

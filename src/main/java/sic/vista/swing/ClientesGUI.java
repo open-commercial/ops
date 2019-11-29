@@ -23,7 +23,7 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.CuentaCorrienteCliente;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.Localidad;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Provincia;
@@ -114,7 +114,7 @@ public class ClientesGUI extends JInternalFrame {
         encabezados[4] = "Nombre Fantasia";
         encabezados[5] = "Saldo C/C";
         encabezados[6] = "Ultimo Movimiento C/C";
-        encabezados[7] = "Bonificación";
+        encabezados[7] = "% Bonif.";
         encabezados[8] = "Credencial";
         encabezados[9] = "Viajante";
         encabezados[10] = "Condicion IVA";
@@ -290,7 +290,6 @@ public class ClientesGUI extends JInternalFrame {
                 criteria.setSentido("DESC");
                 break;
         }
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         criteria.setPagina(NUMERO_PAGINA);
         try {
             HttpEntity<BusquedaCuentaCorrienteClienteCriteria> requestEntity = new HttpEntity<>(criteria);
@@ -759,8 +758,8 @@ public class ClientesGUI extends JInternalFrame {
             this.setMaximum(true);
             if (tienePermisoSegunRoles) {
                 boolean existeClientePredeterminado = RestClient.getRestTemplate()
-                        .getForObject("/clientes/existe-predeterminado/empresas/"
-                                + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(), boolean.class);
+                        .getForObject("/clientes/existe-predeterminado/sucursales/"
+                                + SucursalActiva.getInstance().getSucursal().getIdSucursal(), boolean.class);
                 if (!existeClientePredeterminado) {
                     JOptionPane.showMessageDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_no_existe_cliente_predeterminado"),

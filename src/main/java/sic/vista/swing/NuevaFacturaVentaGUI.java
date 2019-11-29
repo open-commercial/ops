@@ -31,7 +31,8 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.CuentaCorrienteCliente;
+import sic.modelo.SucursalActiva;
 import sic.modelo.RenglonFactura;
 import sic.modelo.UsuarioActivo;
 import sic.modelo.FacturaVenta;
@@ -108,7 +109,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         factura.setIva21Neto(iva_21_netoFactura);
         factura.setTotal(new BigDecimal(txt_Total.getValue().toString()));                      
         factura.setIdCliente(this.cliente.getIdCliente());
-        factura.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
+        factura.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         return factura;
     }   
     
@@ -144,6 +145,8 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                 marcaDeRenglonesDelPedido[i] = EstadoRenglon.DESMARCADO;
             }
             this.cargarRenglonesAlTable(marcaDeRenglonesDelPedido);
+            txt_Descuento_porcentaje.setValue(pedido.getDescuentoPorcentaje());
+            txt_Recargo_porcentaje.setValue(pedido.getRecargoPorcentaje());
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -165,20 +168,18 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
     }
 
     private boolean existeClientePredeterminado() {
-        return RestClient.getRestTemplate().getForObject("/clientes/existe-predeterminado/empresas/"
-                + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(), boolean.class);
+        return RestClient.getRestTemplate().getForObject("/clientes/existe-predeterminado", boolean.class);
     }
 
     private boolean existeFormaDePagoPredeterminada() {
         FormaDePago formaDePago = RestClient.getRestTemplate()
-                .getForObject("/formas-de-pago/predeterminada",
-                        FormaDePago.class);
+                .getForObject("/formas-de-pago/predeterminada", FormaDePago.class);
         return (formaDePago != null);
     }
 
     private boolean existeTransportistaCargado() {
         if (Arrays.asList(RestClient.getRestTemplate().
-                getForObject("/transportistas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
+                getForObject("/transportistas/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
                         Transportista[].class)).isEmpty()) {
             JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                     .getString("mensaje_transportista_ninguno_cargado"), "Error", JOptionPane.ERROR_MESSAGE);
@@ -195,7 +196,6 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         txtUbicacionCliente.setText(cliente.getUbicacionFacturacion() != null ? cliente.getUbicacionFacturacion().toString() : "");
         txt_CondicionIVACliente.setText(cliente.getCategoriaIVA().toString());
         txtIdFiscalCliente.setText(cliente.getIdFiscal() != null ? cliente.getIdFiscal().toString() : "");
-        txt_Descuento_porcentaje.setValue(cliente.getBonificacion());
     }
 
     private void setColumnas() {
@@ -207,7 +207,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         encabezados[3] = "Unidad";
         encabezados[4] = "Cantidad";
         encabezados[5] = "P. Unitario";
-        encabezados[6] = "% Descuento";
+        encabezados[6] = "% Bonificacion";
         encabezados[7] = "Importe";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultado.setModel(modeloTablaResultados);
@@ -237,19 +237,19 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         tbl_Resultado.getColumnModel().getColumn(7).setPreferredWidth(120);
     }
 
-    private void agregarRenglon(RenglonFactura renglon) {
+    private boolean agregarRenglon(RenglonFactura renglon) {
+        boolean agregado = false;
         try {
-            boolean agregado = false;
             //busca entre los renglones al producto, aumenta la cantidad y recalcula el descuento        
             for (int i = 0; i < renglonesFactura.size(); i++) {
                 RenglonFactura rf;
                 if (renglonesFactura.get(i).getIdProductoItem() == renglon.getIdProductoItem()) {
-                    rf = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
+                    rf = RestClient.getRestTemplate().getForObject("/facturas/renglon-venta?"
                             + "idProducto=" + renglonesFactura.get(i).getIdProductoItem()
                             + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                             + "&movimiento=" + Movimiento.VENTA
                             + "&cantidad=" + renglonesFactura.get(i).getCantidad().add(renglon.getCantidad())
-                            + "&descuentoPorcentaje=" + renglon.getDescuentoPorcentaje(),
+                            + "&idCliente=" + this.cliente.getIdCliente(),
                             RenglonFactura.class);
                     renglonesFactura.set(i, rf);
                     agregado = true;
@@ -262,6 +262,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
             //para que baje solo el scroll vertical
             Point p = new Point(0, tbl_Resultado.getHeight());
             sp_Resultado.getViewport().setViewPosition(p);
+
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -270,6 +271,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
+        return agregado;
     }
 
     private void cargarRenglonesAlTable(EstadoRenglon[] estadosDeLosRenglones) {
@@ -315,7 +317,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
             fila[3] = renglon.getMedidaItem();
             fila[4] = renglon.getCantidad();
             fila[5] = renglon.getPrecioUnitario();
-            fila[6] = renglon.getDescuentoPorcentaje();
+            fila[6] = renglon.getBonificacionPorcentaje();
             fila[7] = renglon.getImporte();
             modeloTablaResultados.addRow(fila);
         }
@@ -324,7 +326,9 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
 
     private void buscarProductoConVentanaAuxiliar() {
         if (cantidadMaximaRenglones > renglonesFactura.size()) {
-            BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglonesFactura, this.tipoDeComprobante,  Movimiento.VENTA);
+            Movimiento movimiento = this.tipoDeComprobante.equals(TipoDeComprobante.PEDIDO) ? Movimiento.PEDIDO : Movimiento.VENTA;
+            // revisar esto, es necesario para el movimiento como String y a su vez el movimiento?
+            BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglonesFactura, this.tipoDeComprobante, this.cliente);
             buscarProductosGUI.setModal(true);
             buscarProductosGUI.setLocationRelativeTo(this);
             buscarProductosGUI.setVisible(true);
@@ -362,48 +366,42 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
     private void buscarProductoPorCodigo() {
         try {
             Producto producto = RestClient.getRestTemplate().getForObject("/productos/busqueda?"
-                    + "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
-                    + "&codigo=" + txt_CodigoProducto.getText().trim(), Producto.class);
+                    + "codigo=" + txt_CodigoProducto.getText().trim(), Producto.class);
             if (producto == null) {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                         .getString("mensaje_producto_no_encontrado"), "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                RenglonFactura renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
+                RenglonFactura renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon-venta?"
                         + "idProducto=" + producto.getIdProducto()
                         + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                         + "&movimiento=" + Movimiento.VENTA
-                        + "&cantidad=1"
-                        + "&descuentoPorcentaje=0.0",
+                        + "&cantidad=1" 
+                        + "&idCliente=" + this.cliente.getIdCliente(),
                         RenglonFactura.class);
                 boolean esValido = true;
                 Map<Long, BigDecimal> faltantes;
-                if (cmb_TipoComprobante.getSelectedItem() == TipoDeComprobante.PEDIDO) {
+                if (cmb_TipoComprobante.getSelectedItem() != TipoDeComprobante.PEDIDO) {
                     faltantes = this.getProductosSinStockDisponible(Arrays.asList(renglon));
                     if (!faltantes.isEmpty()) {
-                        esValido = false;
-                        JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                                .getString("mensaje_producto_sin_stock_suficiente"), "Error", JOptionPane.ERROR_MESSAGE);                        
-                    }
-                } else {
-                    faltantes = this.getProductosSinStockDisponible(Arrays.asList(renglon));
-                    if (faltantes.isEmpty() == false) {
                         esValido = false;
                         JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                                 .getString("mensaje_producto_sin_stock_suficiente"), "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
                 if (esValido) {
-                    this.agregarRenglon(renglon);
+                    boolean renglonCargado = this.agregarRenglon(renglon);
                     EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglonesFactura.size()];
                     if (tbl_Resultado.getRowCount() == 0) {
                         estadosRenglones[0] = EstadoRenglon.DESMARCADO;
                     } else {
                         this.cargarEstadoDeLosChkEnTabla(tbl_Resultado, estadosRenglones);
-                        estadosRenglones[tbl_Resultado.getRowCount()] = EstadoRenglon.DESMARCADO;
+                        if (!renglonCargado) {
+                            estadosRenglones[tbl_Resultado.getRowCount()] = EstadoRenglon.DESMARCADO;
+                        }
                     }
                     this.cargarRenglonesAlTable(estadosRenglones);
                     this.calcularResultados();
-                    txt_CodigoProducto.setText("");           
+                    txt_CodigoProducto.setText("");
                 }
             }
         } catch (RestClientResponseException ex) {
@@ -514,7 +512,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                 try {
                     cmb_TipoComprobante.removeAllItems();
                     tiposDeComprobante = RestClient.getRestTemplate()
-                            .getForObject("/facturas/venta/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
+                            .getForObject("/facturas/venta/tipos/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                                     + "/clientes/" + cliente.getIdCliente(), TipoDeComprobante[].class);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -531,19 +529,19 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         }
     }
 
-    private void recargarRenglonesSegunTipoDeFactura() {
+    private void recargarRenglones() {
         try {            
             List<RenglonFactura> resguardoRenglones = renglonesFactura;
             renglonesFactura = new ArrayList<>();
             resguardoRenglones.stream().map(renglonFactura -> {
                 Producto producto = RestClient.getRestTemplate()
                         .getForObject("/productos/" + renglonFactura.getIdProductoItem(), Producto.class);
-                RenglonFactura renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
+                RenglonFactura renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon-venta?"
                         + "idProducto=" + producto.getIdProducto()
                         + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
                         + "&movimiento=" + Movimiento.VENTA
                         + "&cantidad=" + renglonFactura.getCantidad()
-                        + "&descuentoPorcentaje=" + renglonFactura.getDescuentoPorcentaje(),
+                        + "&idCliente=" + this.cliente.getIdCliente(),
                         RenglonFactura.class);
                 return renglon;
             }).forEachOrdered(renglon -> this.agregarRenglon(renglon));
@@ -578,6 +576,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
             cantidades[i] = renglonesFactura.get(i).getCantidad();
         }
         ProductosParaVerificarStock productosParaVerificarStock = ProductosParaVerificarStock.builder()
+                .idSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal())
                 .cantidad(cantidades)
                 .idProducto(idsProductos)
                 .build();
@@ -880,10 +879,10 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                 .addGroup(panelRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(txt_CodigoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_BuscarPorCodigoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbtn_marcarDesmarcar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btn_BuscarProductos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btn_QuitarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(tbtn_marcarDesmarcar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btn_QuitarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_BuscarProductos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sp_Resultado, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE))
         );
@@ -1337,7 +1336,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         //para evitar que pase null cuando esta recargando el comboBox
         if (cmb_TipoComprobante.getSelectedItem() != null) {            
             this.tipoDeComprobante = (TipoDeComprobante) cmb_TipoComprobante.getSelectedItem();
-            this.recargarRenglonesSegunTipoDeFactura();
+            this.recargarRenglones();
         }
     }//GEN-LAST:event_cmb_TipoComprobanteItemStateChanged
 
@@ -1437,7 +1436,12 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_QuitarProductoActionPerformed
 
     private void btn_BuscarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarProductosActionPerformed
-        this.buscarProductoConVentanaAuxiliar();
+        if (cliente != null) {
+            this.buscarProductoConVentanaAuxiliar();
+        } else {
+            JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                    .getString("mensaje_seleccionar_cliente"), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btn_BuscarProductosActionPerformed
 
     private void tbl_ResultadoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbl_ResultadoFocusGained
@@ -1509,19 +1513,18 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
             this.setSize(sizeInternalFrame);
             this.setColumnas();
             this.setMaximum(true);
-            cantidadMaximaRenglones = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
-                    + "/cantidad-renglones", Integer.class); 
+            cantidadMaximaRenglones = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/"
+                    + SucursalActiva.getInstance().getSucursal().getIdSucursal()
+                    + "/cantidad-renglones", Integer.class);
             if (rolesDeUsuario.contains(Rol.ADMINISTRADOR)
-                || rolesDeUsuario.contains(Rol.ENCARGADO)
-                || rolesDeUsuario.contains(Rol.VENDEDOR)) {
+                    || rolesDeUsuario.contains(Rol.ENCARGADO)
+                    || rolesDeUsuario.contains(Rol.VENDEDOR)) {
                 if (this.existeClientePredeterminado()) {
-                    Cliente clientePredeterminado = RestClient.getRestTemplate()
-                            .getForObject("/clientes/predeterminado/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
-                                    Cliente.class);
-                    this.cargarCliente(clientePredeterminado);
+                    CuentaCorrienteCliente cuentaCorrienteClientePredeterminado
+                            = RestClient.getRestTemplate().getForObject("/cuentas-corriente/clientes/predeterminado", CuentaCorrienteCliente.class);
+                    this.cargarCliente(cuentaCorrienteClientePredeterminado.getCliente());
                     this.btnModificarCliente.setEnabled(true);
-                } 
+                }
             }
             if (!this.existeFormaDePagoPredeterminada() || !this.existeTransportistaCargado()) {
                 this.dispose();
@@ -1558,6 +1561,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
             gui_DetalleCliente.setVisible(true);
             try {
                 this.cargarCliente(RestClient.getRestTemplate().getForObject("/clientes/" + this.cliente.getIdCliente(), Cliente.class));
+                this.recargarRenglones();
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 this.dispose();

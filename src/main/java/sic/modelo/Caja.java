@@ -7,14 +7,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = {"id_Caja", "empresa"})
+@EqualsAndHashCode(of = {"idCaja", "idSucursal"})
 public class Caja implements Serializable {
 
     private long idCaja;
     private LocalDateTime fechaApertura;
     private LocalDateTime fechaCierre;
-    private Long idEmpresa;
-    private String nombreEmpresa;
+    private Long idSucursal;
+    private String nombreSucursal;
     private Long idUsuarioAbreCaja;
     private String nombreUsuarioAbreCaja;
     private Long idUsuarioCierraCaja;

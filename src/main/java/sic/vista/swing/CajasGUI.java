@@ -23,7 +23,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Caja;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.Usuario;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Rol;
@@ -105,7 +105,7 @@ public class CajasGUI extends JInternalFrame {
     private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
         BusquedaCajaCriteria criteria = BusquedaCajaCriteria.builder().build();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
+        criteria.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         if (chk_Fecha.isSelected()) {
             criteria.setFechaDesde((dc_FechaDesde.getDate() != null)
                     ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault())
@@ -209,14 +209,14 @@ public class CajasGUI extends JInternalFrame {
 
     private void abrirNuevaCaja() {
         boolean ultimaCajaAbierta = RestClient.getRestTemplate()
-                .getForObject("/cajas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa() + "/ultima-caja-abierta",
+                .getForObject("/cajas/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal() + "/ultima-caja-abierta",
                         boolean.class);
         if (!ultimaCajaAbierta) {
             String saldoApertura = JOptionPane.showInputDialog(this,
                     "Saldo Apertura: \n", "Abrir Caja", JOptionPane.QUESTION_MESSAGE);
             if (saldoApertura != null) {
                 try {
-                    RestClient.getRestTemplate().postForObject("/cajas/apertura/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
+                    RestClient.getRestTemplate().postForObject("/cajas/apertura/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                             + "?saldoApertura=" + new BigDecimal(saldoApertura), null, Caja.class);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

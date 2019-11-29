@@ -3,7 +3,7 @@
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
   <Properties>
     <Property name="closable" type="boolean" value="true"/>
-    <Property name="title" type="java.lang.String" value="Configuraci&#xf3;n del Sistema"/>
+    <Property name="title" type="java.lang.String" value="Configuraci&#xf3;n de Sucursal"/>
     <Property name="frameIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
       <Image iconType="3" name="/sic/icons/Gears_16x16.png"/>
     </Property>
@@ -51,11 +51,11 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
               <Component id="lbl_Leyenda" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="panelGeneral" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -75,12 +75,12 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                      <Component id="panelEmail" max="32767" attributes="0"/>
                       <Component id="panelReportes" max="32767" attributes="0"/>
                       <Component id="panelFE" alignment="0" max="32767" attributes="0"/>
+                      <Component id="panelEnvio" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -94,7 +94,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="panelFE" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="panelEmail" min="-2" max="-2" attributes="0"/>
+                  <Component id="panelEnvio" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -314,11 +314,11 @@
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="panelEmail">
+        <Container class="javax.swing.JPanel" name="panelEnvio">
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Email"/>
+                <TitledBorder title="Env&#xed;o"/>
               </Border>
             </Property>
           </Properties>
@@ -328,41 +328,20 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="lbl_CorreoElectronico" alignment="0" pref="300" max="32767" attributes="0"/>
-                          <Component id="lbl_Email" alignment="0" max="32767" attributes="0"/>
-                          <Component id="lbl_password" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="lblRetiro" min="-2" pref="300" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txtEmailPassword" alignment="1" max="32767" attributes="0"/>
-                          <Component id="txtCorreoElectronico" max="32767" attributes="0"/>
-                          <Group type="102" attributes="0">
-                              <Component id="chkEmail" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="chkRetiro" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="chkEmail" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="lbl_Email" alignment="2" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="lbl_CorreoElectronico" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtCorreoElectronico" alignment="2" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="lbl_password" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtEmailPassword" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblRetiro" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="chkRetiro" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -370,32 +349,12 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="lbl_Email">
+            <Component class="javax.swing.JLabel" name="lblRetiro">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Usar Email:"/>
+                <Property name="text" type="java.lang.String" value="Usar como punto de retiro:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JCheckBox" name="chkEmail">
-              <Events>
-                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkEmailItemStateChanged"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JLabel" name="lbl_CorreoElectronico">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Correo Electronico:"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="txtCorreoElectronico">
-              <Properties>
-                <Property name="enabled" type="boolean" value="false"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="lbl_password">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Password:"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JPasswordField" name="txtEmailPassword">
+            <Component class="javax.swing.JCheckBox" name="chkRetiro">
             </Component>
           </SubComponents>
         </Container>
@@ -406,7 +365,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="DejaVu Sans" size="15" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="La siguiente configuraci&#xf3;n se aplica a la empresa seleccionada:"/>
+        <Property name="text" type="java.lang.String" value="La siguiente configuraci&#xf3;n se aplica a la sucursal seleccionada:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="btn_Guardar">

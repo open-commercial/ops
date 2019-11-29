@@ -14,7 +14,7 @@ public class BusquedaGastoCriteria {
 
   private LocalDateTime fechaDesde;
   private LocalDateTime fechaHasta;
-  private Long idEmpresa;
+  private Long idSucursal;
   private Long idUsuario;
   private Long idFormaDePago;
   private Long nroGasto;

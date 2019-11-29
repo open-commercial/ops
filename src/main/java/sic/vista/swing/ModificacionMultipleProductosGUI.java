@@ -18,7 +18,6 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.ProductosParaActualizar;
-import sic.modelo.EmpresaActiva;
 import sic.modelo.Medida;
 import sic.modelo.Producto;
 import sic.modelo.Proveedor;
@@ -52,8 +51,8 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         try {
             cmb_Medida.removeAllItems();
             List<Medida> medidas = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                .getForObject("/medidas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
-                Medida[].class)));
+                    .getForObject("/medidas",
+                            Medida[].class)));
             medidas.stream().forEach((m) -> {
                 cmb_Medida.addItem(m);
             });
@@ -71,8 +70,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         try {
             cmb_Rubro.removeAllItems();
             List<Rubro> rubros = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                .getForObject("/rubros/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
-                Rubro[].class)));
+                    .getForObject("/rubros", Rubro[].class)));
             rubros.stream().forEach((r) -> {
                 cmb_Rubro.addItem(r);
             });

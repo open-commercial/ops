@@ -8,13 +8,9 @@ import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.JInternalFrame;
@@ -26,7 +22,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.CuentaCorrienteCliente;
 import sic.modelo.NuevoPedido;
 import sic.modelo.RenglonPedido;
 import sic.modelo.UsuarioActivo;
@@ -36,6 +32,7 @@ import sic.modelo.NuevoRenglonPedido;
 import sic.modelo.Pedido;
 import sic.modelo.Producto;
 import sic.modelo.Rol;
+import sic.modelo.SucursalActiva;
 import sic.modelo.Transportista;
 import sic.util.DecimalesRenderer;
 import sic.util.Utilidades;
@@ -60,7 +57,6 @@ public class DetallePedidoGUI extends JInternalFrame {
         this.initComponents();      
         this.pedido = pedido;
         this.modificandoPedido = modificandoPedido;
-        dc_fechaVencimiento.setDate(new Date());
         //listeners        
         btn_NuevoCliente.addKeyListener(keyHandler);
         btn_BuscarCliente.addKeyListener(keyHandler);
@@ -71,14 +67,12 @@ public class DetallePedidoGUI extends JInternalFrame {
         btn_BuscarPorCodigoProducto.addKeyListener(keyHandler);
         txt_Descuento_porcentaje.addKeyListener(keyHandler);
         txt_Recargo_porcentaje.addKeyListener(keyHandler);
-        btn_Continuar.addKeyListener(keyHandler);      
-        dc_fechaVencimiento.addKeyListener(keyHandler);     
+        btn_Continuar.addKeyListener(keyHandler);          
         btnModificarCliente.addKeyListener(keyHandler); 
     }
 
     private boolean existeClientePredeterminado() {
-        return RestClient.getRestTemplate().getForObject("/clientes/existe-predeterminado/empresas/"
-                + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(), boolean.class);
+        return RestClient.getRestTemplate().getForObject("/clientes/existe-predeterminado", boolean.class);
     }
 
     private boolean existeFormaDePagoPredeterminada() {
@@ -90,7 +84,7 @@ public class DetallePedidoGUI extends JInternalFrame {
 
     private boolean existeTransportistaCargado() {
         if (Arrays.asList(RestClient.getRestTemplate().
-                getForObject("/transportistas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
+                getForObject("/transportistas/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
                         Transportista[].class)).isEmpty()) {
             JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                     .getString("mensaje_transportista_ninguno_cargado"), "Error", JOptionPane.ERROR_MESSAGE);
@@ -107,7 +101,6 @@ public class DetallePedidoGUI extends JInternalFrame {
         txtUbicacionCliente.setText(cliente.getUbicacionFacturacion() != null ? cliente.getUbicacionFacturacion().toString() : "");
         txt_CondicionIVACliente.setText(cliente.getCategoriaIVA().toString());
         txtIdFiscalCliente.setText(cliente.getIdFiscal() != null ? cliente.getIdFiscal().toString() : "");
-        txt_Descuento_porcentaje.setValue(cliente.getBonificacion());
     }
 
     private void setColumnas() {
@@ -151,7 +144,7 @@ public class DetallePedidoGUI extends JInternalFrame {
             boolean agregado = false;
             List<NuevoRenglonPedido> nuevosRenglonesPedido = new ArrayList();
             this.renglones.forEach(r -> nuevosRenglonesPedido.add(
-                    new NuevoRenglonPedido(r.getIdProductoItem(), r.getCantidad(), r.getDescuentoPorcentaje())));
+                    new NuevoRenglonPedido(r.getIdProductoItem(), r.getCantidad())));
             for (int i = 0; i < nuevosRenglonesPedido.size(); i++) {
                 if (nuevosRenglonesPedido.get(i).getIdProductoItem() == nuevoRenglonPedido.getIdProductoItem()) {
                     nuevosRenglonesPedido.get(i).setCantidad(nuevosRenglonesPedido.get(i).getCantidad().add(nuevoRenglonPedido.getCantidad()));
@@ -162,7 +155,7 @@ public class DetallePedidoGUI extends JInternalFrame {
                 nuevosRenglonesPedido.add(nuevoRenglonPedido);
             }
             renglones.clear();
-            Collections.addAll(renglones, RestClient.getRestTemplate().postForObject("/pedidos/renglones",
+            Collections.addAll(renglones, RestClient.getRestTemplate().postForObject("/pedidos/renglones/clientes/" + this.cliente.getIdCliente(),
                     nuevosRenglonesPedido, RenglonPedido[].class));
             //para que baje solo el scroll vertical
             Point p = new Point(0, tbl_Resultado.getHeight());
@@ -187,7 +180,7 @@ public class DetallePedidoGUI extends JInternalFrame {
             fila[2] = renglon.getMedidaItem();
             fila[3] = renglon.getCantidad();
             fila[4] = renglon.getPrecioUnitario();
-            fila[5] = renglon.getDescuentoPorcentaje();
+            fila[5] = renglon.getBonificacionPorcentaje();
             fila[6] = renglon.getImporte();
             return fila;
         }).forEachOrdered(fila -> {
@@ -217,7 +210,6 @@ public class DetallePedidoGUI extends JInternalFrame {
     private void buscarProductoPorCodigo() {
         try {
             Producto producto = RestClient.getRestTemplate().getForObject("/productos/busqueda?"
-                    + "idEmpresa=" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
                     + "&codigo=" + txt_CodigoProducto.getText().trim(), Producto.class);
             if (producto == null) {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
@@ -226,7 +218,6 @@ public class DetallePedidoGUI extends JInternalFrame {
                 NuevoRenglonPedido nuevoRenglonPedido = new NuevoRenglonPedido();
                 nuevoRenglonPedido.setIdProductoItem(producto.getIdProducto());
                 nuevoRenglonPedido.setCantidad(BigDecimal.ONE);
-                nuevoRenglonPedido.setDescuentoPorcentaje(BigDecimal.ZERO);
                 this.agregarRenglon(nuevoRenglonPedido);
                 this.cargarRenglonesAlTable();
                 this.calcularResultados();
@@ -283,24 +274,10 @@ public class DetallePedidoGUI extends JInternalFrame {
 
     private void construirPedido() {
         nuevoPedido = new NuevoPedido();
-        nuevoPedido.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
-        nuevoPedido.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
         nuevoPedido.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
-        nuevoPedido.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
         nuevoPedido.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
-        if (this.dc_fechaVencimiento.getDate() != null) {
-            Calendar cal = new GregorianCalendar();
-            cal.setTime(this.dc_fechaVencimiento.getDate());
-            cal.set(Calendar.HOUR_OF_DAY, 23);
-            cal.set(Calendar.MINUTE, 59);
-            cal.set(Calendar.SECOND, 58);
-            nuevoPedido.setFechaVencimiento(cal.getTime().toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate());
-        }
         nuevoPedido.setObservaciones(txt_Observaciones.getText());
-        nuevoPedido.setRenglones(this.calcularRenglonesPedido());
-        nuevoPedido.setTotal(new BigDecimal(txt_Total.getValue().toString()));
+        nuevoPedido.setRenglones(this.calcularNuevosRenglonesPedido());
     }
     
     private void finalizarPedido() {
@@ -319,7 +296,7 @@ public class DetallePedidoGUI extends JInternalFrame {
 
     private void actualizarPedido(Pedido pedido) {
         pedido = RestClient.getRestTemplate().getForObject("/pedidos/" + pedido.getIdPedido(), Pedido.class);
-        pedido.setRenglones(this.calcularRenglonesPedido());
+        pedido.setRenglones(this.renglones);
         pedido.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));
         pedido.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
         pedido.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
@@ -336,12 +313,11 @@ public class DetallePedidoGUI extends JInternalFrame {
         }
     }
 
-    private List<RenglonPedido> calcularRenglonesPedido() {
+    private List<NuevoRenglonPedido> calcularNuevosRenglonesPedido() {
         List<NuevoRenglonPedido> nuevosRenglonesPedido = new ArrayList();
         this.renglones.forEach(r -> nuevosRenglonesPedido.add(
-                new NuevoRenglonPedido(r.getIdProductoItem(), r.getCantidad(), r.getDescuentoPorcentaje())));
-        return Arrays.asList(RestClient.getRestTemplate().postForObject("/pedidos/renglones",
-                nuevosRenglonesPedido, RenglonPedido[].class));
+                new NuevoRenglonPedido(r.getIdProductoItem(), r.getCantidad())));
+        return nuevosRenglonesPedido;
     }
 
     // Clase interna para manejar las hotkeys del TPV     
@@ -420,8 +396,6 @@ public class DetallePedidoGUI extends JInternalFrame {
         txt_Recargo_porcentaje = new javax.swing.JFormattedTextField();
         btn_Continuar = new javax.swing.JButton();
         panelEncabezado = new javax.swing.JPanel();
-        lbl_fechaDeVencimiento = new javax.swing.JLabel();
-        dc_fechaVencimiento = new com.toedter.calendar.JDateChooser();
         btn_NuevoCliente = new javax.swing.JButton();
         btn_BuscarCliente = new javax.swing.JButton();
         lblSeparadorDerecho = new javax.swing.JLabel();
@@ -620,7 +594,7 @@ public class DetallePedidoGUI extends JInternalFrame {
                         .addComponent(btn_BuscarProductos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btn_QuitarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Resultado, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE))
+                .addComponent(sp_Resultado, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE))
         );
 
         panelRenglonesLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_BuscarPorCodigoProducto, txt_CodigoProducto});
@@ -824,11 +798,6 @@ public class DetallePedidoGUI extends JInternalFrame {
             }
         });
 
-        lbl_fechaDeVencimiento.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lbl_fechaDeVencimiento.setText("Fecha de Vencimiento:");
-
-        dc_fechaVencimiento.setFocusable(false);
-
         btn_NuevoCliente.setForeground(java.awt.Color.blue);
         btn_NuevoCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddClient_16x16.png"))); // NOI18N
         btn_NuevoCliente.setText("Nuevo Cliente (F5)");
@@ -874,11 +843,7 @@ public class DetallePedidoGUI extends JInternalFrame {
                 .addComponent(btnModificarCliente)
                 .addGap(99, 99, 99)
                 .addComponent(lblSeparadorDerecho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_fechaDeVencimiento)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(dc_fechaVencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(305, 305, 305))
         );
 
         panelEncabezadoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnModificarCliente, btn_BuscarCliente, btn_NuevoCliente});
@@ -888,9 +853,6 @@ public class DetallePedidoGUI extends JInternalFrame {
             .addGroup(panelEncabezadoLayout.createSequentialGroup()
                 .addGap(6, 6, 6)
                 .addGroup(panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelEncabezadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                        .addComponent(lbl_fechaDeVencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(dc_fechaVencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(lblSeparadorDerecho, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_BuscarCliente, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_NuevoCliente, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1052,7 +1014,12 @@ public class DetallePedidoGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_QuitarProductoActionPerformed
 
     private void btn_BuscarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarProductosActionPerformed
-        this.buscarProductoConVentanaAuxiliar();
+        if (cliente != null) {
+            this.buscarProductoConVentanaAuxiliar();
+        } else {
+            JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                    .getString("mensaje_seleccionar_cliente"), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btn_BuscarProductosActionPerformed
 
     private void tbl_ResultadoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbl_ResultadoFocusGained
@@ -1101,19 +1068,18 @@ public class DetallePedidoGUI extends JInternalFrame {
             this.setSize(sizeInternalFrame);
             this.setColumnas();
             this.setMaximum(true);
-            cantidadMaximaRenglones = RestClient.getRestTemplate().getForObject("/configuraciones-del-sistema/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
-                    + "/cantidad-renglones", Integer.class); 
+            cantidadMaximaRenglones = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/"
+                    + SucursalActiva.getInstance().getSucursal().getIdSucursal()
+                    + "/cantidad-renglones", Integer.class);
             if (rolesDeUsuario.contains(Rol.ADMINISTRADOR)
-                || rolesDeUsuario.contains(Rol.ENCARGADO)
-                || rolesDeUsuario.contains(Rol.VENDEDOR)) {
+                    || rolesDeUsuario.contains(Rol.ENCARGADO)
+                    || rolesDeUsuario.contains(Rol.VENDEDOR)) {
                 if (this.existeClientePredeterminado()) {
-                    Cliente clientePredeterminado = RestClient.getRestTemplate()
-                            .getForObject("/clientes/predeterminado/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
-                                    Cliente.class);
-                    this.cargarCliente(clientePredeterminado);
+                    CuentaCorrienteCliente cuentaCorrienteClientePredeterminado
+                            = RestClient.getRestTemplate().getForObject("/cuentas-corriente/clientes/predeterminado", CuentaCorrienteCliente.class);
+                    this.cargarCliente(cuentaCorrienteClientePredeterminado.getCliente());
                     this.btnModificarCliente.setEnabled(true);
-                } 
+                }
             }
             if (!this.existeFormaDePagoPredeterminada() || !this.existeTransportistaCargado()) {
                 this.dispose();
@@ -1180,7 +1146,6 @@ public class DetallePedidoGUI extends JInternalFrame {
     private javax.swing.JButton btn_Continuar;
     private javax.swing.JButton btn_NuevoCliente;
     private javax.swing.JButton btn_QuitarProducto;
-    private com.toedter.calendar.JDateChooser dc_fechaVencimiento;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblBonificacion;
     private javax.swing.JLabel lblNombreCliente;
@@ -1192,7 +1157,6 @@ public class DetallePedidoGUI extends JInternalFrame {
     private javax.swing.JLabel lbl_Observaciones;
     private javax.swing.JLabel lbl_SubTotal;
     private javax.swing.JLabel lbl_Total;
-    private javax.swing.JLabel lbl_fechaDeVencimiento;
     private javax.swing.JLabel lbl_recargoPorcentaje;
     private javax.swing.JPanel panelCliente;
     private javax.swing.JPanel panelEncabezado;

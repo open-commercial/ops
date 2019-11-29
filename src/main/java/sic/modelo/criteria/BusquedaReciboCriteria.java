@@ -16,7 +16,7 @@ public class BusquedaReciboCriteria {
 
   private LocalDateTime fechaDesde;
   private LocalDateTime fechaHasta;
-  private Long idEmpresa;
+  private long idSucursal;
   private Long numSerie;
   private Long numRecibo;
   private String concepto;

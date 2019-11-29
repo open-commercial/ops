@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ProductosParaVerificarStock {
 
+    private Long idSucursal;
     private long[] idProducto;
     private BigDecimal[] cantidad;
 

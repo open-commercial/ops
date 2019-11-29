@@ -92,7 +92,7 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="cmbEmpresas" alignment="1" pref="439" max="32767" attributes="0"/>
+                      <Component id="cmbSucursales" alignment="1" pref="439" max="32767" attributes="0"/>
                       <Component id="lblDetalleUbicacionFacturacion" alignment="1" max="32767" attributes="0"/>
                       <Component id="lblDetalleUbicacionEnvio" alignment="1" max="32767" attributes="0"/>
                   </Group>
@@ -106,7 +106,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="rbRetiroEnSucursal" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmbEmpresas" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="cmbSucursales" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -157,7 +157,7 @@
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbDireccionEnvioItemStateChanged"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JComboBox" name="cmbEmpresas">
+        <Component class="javax.swing.JComboBox" name="cmbSucursales">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>

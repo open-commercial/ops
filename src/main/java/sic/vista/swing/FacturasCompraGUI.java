@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -25,14 +24,15 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.SucursalActiva;
 import sic.modelo.criteria.BusquedaFacturaCompraCriteria;
-import sic.modelo.EmpresaActiva;
 import sic.modelo.FacturaCompra;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
 import sic.modelo.Proveedor;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.TipoDeOperacion;
+import sic.modelo.criteria.BusquedaProveedorCriteria;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
@@ -181,7 +181,7 @@ public class FacturasCompraGUI extends JInternalFrame {
     private void buscar(boolean calcularResultados) {
         this.cambiarEstadoEnabledComponentes(false);
         BusquedaFacturaCompraCriteria criteria = new BusquedaFacturaCompraCriteria();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
+        criteria.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         if (chk_Fecha.isSelected()) {
             criteria.setFechaDesde((dc_FechaDesde.getDate() != null)
                     ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault())
@@ -306,15 +306,20 @@ public class FacturasCompraGUI extends JInternalFrame {
     }
 
     private boolean existeProveedorDisponible() {
-        return !Arrays.asList(RestClient.getRestTemplate()
-            .getForObject("/proveedores/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
-            Proveedor[].class)).isEmpty();
+        BusquedaProveedorCriteria criteriaProveedor = BusquedaProveedorCriteria.builder().pagina(0).build();
+        HttpEntity<BusquedaProveedorCriteria> requestEntity = new HttpEntity<>(criteriaProveedor);
+        PaginaRespuestaRest<Proveedor> response = RestClient.getRestTemplate()
+                .exchange("/proveedores/busqueda/criteria", HttpMethod.POST, requestEntity,
+                        new ParameterizedTypeReference<PaginaRespuestaRest<Proveedor>>() {
+                })
+                .getBody();
+        return !response.getContent().isEmpty();
     }
-       
+
     private void cargarTiposDeFactura() {
         try {
             TipoDeComprobante[] tiposDeComprobantes = RestClient.getRestTemplate()
-                    .getForObject("/facturas/tipos/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
+                    .getForObject("/facturas/tipos/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
                             TipoDeComprobante[].class);
             for (int i = 0; tiposDeComprobantes.length > i; i++) {
                 cmb_TipoFactura.addItem(tiposDeComprobantes[i]);

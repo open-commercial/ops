@@ -20,10 +20,10 @@ import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;;
+import sic.modelo.SucursalActiva;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.EmpresaActiva;
 import sic.modelo.FacturaCompra;
 import sic.modelo.Movimiento;
 import sic.modelo.Producto;
@@ -76,7 +76,6 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         dc_FechaVencimiento.setEnabled(false);
         cmb_Transportista.setEnabled(false);
         cmb_TipoFactura.setEnabled(false);
-        btn_NuevoTransportista.setEnabled(false);
         btn_BuscarProducto.setVisible(false);
         btn_NuevoProducto.setVisible(false);
         btn_QuitarDeLista.setVisible(false);
@@ -129,7 +128,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         lineaDeFactura[2] = renglon.getMedidaItem();
         lineaDeFactura[3] = renglon.getCantidad();
         lineaDeFactura[4] = renglon.getPrecioUnitario();
-        lineaDeFactura[5] = renglon.getDescuentoPorcentaje();
+        lineaDeFactura[5] = renglon.getBonificacionPorcentaje();
         lineaDeFactura[6] = renglon.getImporte();
         modeloTablaRenglones.addRow(lineaDeFactura);
         renglones.add(renglon);
@@ -153,12 +152,13 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         }
     }
 
-    private void cargarTransportistas() {        
+    private void cargarTransportistas() {
         cmb_Transportista.removeAllItems();
         try {
+            cmb_Transportista.addItem(null);
             List<Transportista> transportistas = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/transportistas/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
-                    Transportista[].class)));
+                    .getForObject("/transportistas/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
+                            Transportista[].class)));
             transportistas.stream().forEach(t -> cmb_Transportista.addItem(t));
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -195,9 +195,11 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         facturaCompra.setTotal(totalComprobante);
         facturaCompra.setObservaciones(txta_Observaciones.getText().trim());
         facturaCompra.setEliminada(false);
-        facturaCompra.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
+        facturaCompra.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         facturaCompra.setIdProveedor(proveedorSeleccionado.getIdProveedor());
-        facturaCompra.setIdTransportista(((Transportista) cmb_Transportista.getSelectedItem()).getIdTransportista());
+        if (cmb_Transportista.getSelectedItem() != null) {
+            facturaCompra.setIdTransportista(((Transportista) cmb_Transportista.getSelectedItem()).getIdTransportista());
+        }
         try {
             RestClient.getRestTemplate().postForObject("/facturas/compra",
                     facturaCompra, FacturaCompra[].class);
@@ -329,7 +331,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         encabezados[2] = "Unidad";
         encabezados[3] = "Cantidad";
         encabezados[4] = "P. Unitario";
-        encabezados[5] = "% Descuento";
+        encabezados[5] = "% Bonificación";
         encabezados[6] = "Importe";
         modeloTablaRenglones.setColumnIdentifiers(encabezados);
         tbl_Renglones.setModel(modeloTablaRenglones);
@@ -374,7 +376,10 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         cmb_TipoFactura.addItem(facturaParaMostrar.getTipoComprobante());
         txtProveedor.setText(facturaParaMostrar.getRazonSocialProveedor());        
         cmb_Transportista.addItem(facturaParaMostrar.getNombreTransportista());
-        dc_FechaVencimiento.setDate(java.sql.Date.valueOf(facturaParaMostrar.getFechaVencimiento()));
+        if (facturaParaMostrar.getFechaVencimiento() != null) {
+            Date fVencimiento = Date.from(facturaParaMostrar.getFechaVencimiento().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            dc_FechaVencimiento.setDate(fVencimiento);
+        }
         txta_Observaciones.setText(facturaParaMostrar.getObservaciones());
         txt_SubTotal.setValue(facturaParaMostrar.getSubTotal());
         txt_Descuento_Porcentaje.setValue(facturaParaMostrar.getDescuentoPorcentaje());
@@ -406,14 +411,14 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     private void cargarTiposDeFacturaDisponibles() {
         try {
             TipoDeComprobante[] tiposFactura = RestClient.getRestTemplate()
-                    .getForObject("/facturas/compra/tipos/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa()
-                    + "/proveedores/" + proveedorSeleccionado.getIdProveedor(),
-                    TipoDeComprobante[].class);
+                    .getForObject("/facturas/compra/tipos/sucursales/"
+                            + SucursalActiva.getInstance().getSucursal().getIdSucursal()
+                            + "/proveedores/" + proveedorSeleccionado.getIdProveedor(),
+                            TipoDeComprobante[].class);
             cmb_TipoFactura.removeAllItems();
             for (int i = 0; tiposFactura.length > i; i++) {
                 cmb_TipoFactura.addItem(tiposFactura[i]);
-            }            
+            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -433,12 +438,12 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
             resguardoRenglones.stream().map(rf -> {
                 Producto producto = RestClient.getRestTemplate()
                         .getForObject("/productos/" + rf.getIdProductoItem(), Producto.class);
-                RenglonFactura nuevoRenglon = RestClient.getRestTemplate().getForObject("/facturas/renglon?"
+                RenglonFactura nuevoRenglon = RestClient.getRestTemplate().getForObject("/facturas/renglon-compra?"
                         + "idProducto=" + producto.getIdProducto()
                         + "&tipoDeComprobante=" + tipoDeComprobante.name()
                         + "&movimiento=" + Movimiento.COMPRA
                         + "&cantidad=" + rf.getCantidad()
-                        + "&descuentoPorcentaje=" + rf.getDescuentoPorcentaje(),                        
+                        + "&bonificacion=" + rf.getBonificacionPorcentaje(),                        
                         RenglonFactura.class);
                 return nuevoRenglon;
             }).forEachOrdered(nuevoRenglon -> {
@@ -459,7 +464,6 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         btn_Guardar.addKeyListener(keyHandler);
         btn_NuevoProducto.addKeyListener(keyHandler);
         btn_NuevoProveedor.addKeyListener(keyHandler);
-        btn_NuevoTransportista.addKeyListener(keyHandler);
         btn_BuscarProducto.addKeyListener(keyHandler);
         btn_QuitarDeLista.addKeyListener(keyHandler);
         btnBuscarProveedor.addKeyListener(keyHandler);
@@ -515,15 +519,14 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     private void initComponents() {
 
         panelDatosComprobanteDerecho = new javax.swing.JPanel();
-        lbl_Transporte = new javax.swing.JLabel();
-        cmb_Transportista = new javax.swing.JComboBox();
-        btn_NuevoTransportista = new javax.swing.JButton();
         lbl_Proveedor = new javax.swing.JLabel();
         btn_NuevoProveedor = new javax.swing.JButton();
         lbl_TipoFactura = new javax.swing.JLabel();
         cmb_TipoFactura = new javax.swing.JComboBox();
         txtProveedor = new javax.swing.JTextField();
         btnBuscarProveedor = new javax.swing.JButton();
+        lbl_Transporte = new javax.swing.JLabel();
+        cmb_Transportista = new javax.swing.JComboBox();
         panelRenglones = new javax.swing.JPanel();
         sp_Renglones = new javax.swing.JScrollPane();
         tbl_Renglones = new javax.swing.JTable();
@@ -588,19 +591,6 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
 
         panelDatosComprobanteDerecho.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
-        lbl_Transporte.setForeground(java.awt.Color.red);
-        lbl_Transporte.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Transporte.setText("* Transporte:");
-
-        btn_NuevoTransportista.setForeground(java.awt.Color.blue);
-        btn_NuevoTransportista.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddTruck_16x16.png"))); // NOI18N
-        btn_NuevoTransportista.setText("Nuevo");
-        btn_NuevoTransportista.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_NuevoTransportistaActionPerformed(evt);
-            }
-        });
-
         lbl_Proveedor.setForeground(java.awt.Color.red);
         lbl_Proveedor.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Proveedor.setText("* Proveedor:");
@@ -633,29 +623,29 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
             }
         });
 
+        lbl_Transporte.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbl_Transporte.setText("Transporte:");
+
         javax.swing.GroupLayout panelDatosComprobanteDerechoLayout = new javax.swing.GroupLayout(panelDatosComprobanteDerecho);
         panelDatosComprobanteDerecho.setLayout(panelDatosComprobanteDerechoLayout);
         panelDatosComprobanteDerechoLayout.setHorizontalGroup(
             panelDatosComprobanteDerechoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelDatosComprobanteDerechoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelDatosComprobanteDerechoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(lbl_Proveedor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_TipoFactura, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Transporte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(panelDatosComprobanteDerechoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lbl_TipoFactura)
+                    .addComponent(lbl_Transporte, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_Proveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelDatosComprobanteDerechoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(panelDatosComprobanteDerechoLayout.createSequentialGroup()
-                        .addGroup(panelDatosComprobanteDerechoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmb_TipoFactura, 0, 260, Short.MAX_VALUE)
-                            .addComponent(cmb_Transportista, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addComponent(btn_NuevoTransportista))
-                    .addGroup(panelDatosComprobanteDerechoLayout.createSequentialGroup()
-                        .addComponent(txtProveedor)
+                .addGroup(panelDatosComprobanteDerechoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDatosComprobanteDerechoLayout.createSequentialGroup()
+                        .addComponent(txtProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)
                         .addGap(0, 0, 0)
                         .addComponent(btnBuscarProveedor)
                         .addGap(0, 0, 0)
-                        .addComponent(btn_NuevoProveedor)))
+                        .addComponent(btn_NuevoProveedor))
+                    .addComponent(cmb_TipoFactura, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cmb_Transportista, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panelDatosComprobanteDerechoLayout.setVerticalGroup(
@@ -669,17 +659,16 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
                     .addComponent(btnBuscarProveedor))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelDatosComprobanteDerechoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Transporte)
-                    .addComponent(cmb_Transportista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_NuevoTransportista))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelDatosComprobanteDerechoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_TipoFactura)
                     .addComponent(cmb_TipoFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelDatosComprobanteDerechoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lbl_Transporte)
+                    .addComponent(cmb_Transportista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panelDatosComprobanteDerechoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_NuevoTransportista, cmb_TipoFactura, cmb_Transportista, txtProveedor});
+        panelDatosComprobanteDerechoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmb_TipoFactura, cmb_Transportista, txtProveedor});
 
         panelRenglones.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
@@ -726,7 +715,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         panelRenglones.setLayout(panelRenglonesLayout);
         panelRenglonesLayout.setHorizontalGroup(
             panelRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sp_Renglones, javax.swing.GroupLayout.DEFAULT_SIZE, 877, Short.MAX_VALUE)
+            .addComponent(sp_Renglones, javax.swing.GroupLayout.DEFAULT_SIZE, 934, Short.MAX_VALUE)
             .addGroup(panelRenglonesLayout.createSequentialGroup()
                 .addComponent(btn_BuscarProducto)
                 .addGap(0, 0, 0)
@@ -747,7 +736,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
                     .addComponent(btn_NuevoProducto)
                     .addComponent(btn_QuitarDeLista))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Renglones, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE))
+                .addComponent(sp_Renglones, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE))
         );
 
         panelRenglonesLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_BuscarProducto, btn_NuevoProducto, btn_QuitarDeLista});
@@ -890,7 +879,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txt_Total)
                     .addComponent(lbl_Total, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -946,7 +935,6 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         btn_Guardar.setForeground(java.awt.Color.blue);
         btn_Guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
         btn_Guardar.setText("Guardar");
-        btn_Guardar.setEnabled(false);
         btn_Guardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_GuardarActionPerformed(evt);
@@ -1034,9 +1022,8 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(panelMisc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(panelResultados, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btn_Guardar)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
+                        .addComponent(btn_Guardar))
                     .addComponent(lblCantidadDeArticulos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -1052,24 +1039,17 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblCantidadDeArticulos, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelMisc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(panelResultados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(panelMisc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(panelResultados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btn_Guardar))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btn_NuevoTransportistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoTransportistaActionPerformed
-        DetalleTransportistaGUI gui_DetalleTransportista = new DetalleTransportistaGUI();
-        gui_DetalleTransportista.setModal(true);
-        gui_DetalleTransportista.setLocationRelativeTo(this);
-        gui_DetalleTransportista.setVisible(true);
-        this.cargarTransportistas();
-}//GEN-LAST:event_btn_NuevoTransportistaActionPerformed
 
     private void btn_NuevoProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_NuevoProveedorActionPerformed
         DetalleProveedorGUI gui_DetalleProveedor = new DetalleProveedorGUI();
@@ -1080,7 +1060,6 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
             txtProveedor.setText(gui_DetalleProveedor.getProveedorCreado().getRazonSocial());
             proveedorSeleccionado = gui_DetalleProveedor.getProveedorCreado();
             this.cargarTiposDeFacturaDisponibles();
-            this.btn_Guardar.setEnabled(true);
         }
     }//GEN-LAST:event_btn_NuevoProveedorActionPerformed
 
@@ -1099,7 +1078,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     private void btn_BuscarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarProductoActionPerformed
         if (proveedorSeleccionado != null) {
             BuscarProductosGUI gui_buscarProducto = new BuscarProductosGUI(renglones,
-                    (TipoDeComprobante) cmb_TipoFactura.getSelectedItem(), Movimiento.COMPRA);
+                    (TipoDeComprobante) cmb_TipoFactura.getSelectedItem());
             gui_buscarProducto.setModal(true);
             gui_buscarProducto.setLocationRelativeTo(this);
             gui_buscarProducto.setVisible(true);
@@ -1115,13 +1094,23 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_QuitarDeListaActionPerformed
 
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
-        if (this.guardarFactura()) {
-            int respuesta = JOptionPane.showConfirmDialog(this,
-                    "La Factura se guardó correctamente!\n¿Desea dar de alta otra Factura?",
-                    "Aviso", JOptionPane.YES_NO_OPTION);
-            this.limpiarYRecargarComponentes();
-            if (respuesta == JOptionPane.NO_OPTION) {
-                this.dispose();
+        if (txtProveedor.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                    .getString("mensaje_factura_seleccionar_proveedor"), "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            if (renglones.isEmpty()) {
+                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                        .getString("mensaje_factura_sin_renglones"), "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                if (this.guardarFactura()) {
+                    int respuesta = JOptionPane.showConfirmDialog(this,
+                            "La Factura se guardó correctamente!\n¿Desea dar de alta otra Factura?",
+                            "Aviso", JOptionPane.YES_NO_OPTION);
+                    this.limpiarYRecargarComponentes();
+                    if (respuesta == JOptionPane.NO_OPTION) {
+                        this.dispose();
+                    }
+                }
             }
         }
     }//GEN-LAST:event_btn_GuardarActionPerformed
@@ -1182,7 +1171,6 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
             proveedorSeleccionado = buscarProveedoresGUI.getProveedorSeleccionado();
             txtProveedor.setText(proveedorSeleccionado.getRazonSocial());
             this.cargarTiposDeFacturaDisponibles();
-            this.btn_Guardar.setEnabled(true);
         }
     }//GEN-LAST:event_btnBuscarProveedorActionPerformed
 
@@ -1192,7 +1180,6 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     private javax.swing.JButton btn_Guardar;
     private javax.swing.JButton btn_NuevoProducto;
     private javax.swing.JButton btn_NuevoProveedor;
-    private javax.swing.JButton btn_NuevoTransportista;
     private javax.swing.JButton btn_QuitarDeLista;
     private javax.swing.JComboBox cmb_TipoFactura;
     private javax.swing.JComboBox cmb_Transportista;

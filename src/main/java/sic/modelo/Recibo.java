@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = {"nombreEmpresa", "numSerie", "numRecibo", "fecha"})
+@EqualsAndHashCode(of = {"nombreSucursal", "numSerie", "numRecibo", "fecha"})
 public class Recibo implements Serializable {
     
     private Long idRecibo;  
@@ -19,8 +19,8 @@ public class Recibo implements Serializable {
     private BigDecimal monto;
     private long idFormaDePago;
     private String nombreFormaDePago;   
-    private long idEmpresa;
-    private String nombreEmpresa;
+    private long idSucursal;
+    private String nombreSucursal;
     private Long idCliente;
     private String nombreFiscalCliente;
     private Long idProveedor;

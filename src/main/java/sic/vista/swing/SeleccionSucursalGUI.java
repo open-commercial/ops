@@ -11,31 +11,31 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.Empresa;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.Sucursal;
+import sic.modelo.SucursalActiva;
 import sic.modelo.Rol;
 import sic.modelo.Usuario;
 import sic.modelo.UsuarioActivo;
 
-public class SeleccionEmpresaGUI extends JDialog {
+public class SeleccionSucursalGUI extends JDialog {
 
-    private List<Empresa> empresas;
+    private List<Sucursal> sucursales;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public SeleccionEmpresaGUI() {
+    public SeleccionSucursalGUI() {
         this.initComponents();
         this.setIcon();        
     }
 
     private void setIcon() {
-        ImageIcon iconoVentana = new ImageIcon(SeleccionEmpresaGUI.class.getResource("/sic/icons/Empresa_16x16.png"));
+        ImageIcon iconoVentana = new ImageIcon(SeleccionSucursalGUI.class.getResource("/sic/icons/Sucursal_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
     }
 
-    private void cargarComboBoxEmpresas() {        
-        cmb_Empresas.removeAllItems();
-        empresas.stream().forEach(e -> {
-            cmb_Empresas.addItem(e.getNombre());
+    private void cargarComboBoxSucursales() {        
+        cmb_Sucursales.removeAllItems();
+        sucursales.stream().forEach(e -> {
+            cmb_Sucursales.addItem(e.getNombre());
         });
     }
 
@@ -44,28 +44,28 @@ public class SeleccionEmpresaGUI extends JDialog {
     private void initComponents() {
 
         lbl_Leyenda = new javax.swing.JLabel();
-        cmb_Empresas = new javax.swing.JComboBox();
+        cmb_Sucursales = new javax.swing.JComboBox();
         btn_Aceptar = new javax.swing.JButton();
         lbl_Icon = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Empresas");
+        setTitle("Sucursales");
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
+            }
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
 
         lbl_Leyenda.setFont(new java.awt.Font("Dialog", 1, 15)); // NOI18N
-        lbl_Leyenda.setText("Seleccione la Empresa con la que desea trabajar:");
+        lbl_Leyenda.setText("Seleccione la Sucursal con la que desea trabajar:");
 
-        cmb_Empresas.addKeyListener(new java.awt.event.KeyAdapter() {
+        cmb_Sucursales.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                cmb_EmpresasKeyPressed(evt);
+                cmb_SucursalesKeyPressed(evt);
             }
         });
 
@@ -78,7 +78,7 @@ public class SeleccionEmpresaGUI extends JDialog {
             }
         });
 
-        lbl_Icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Empresa_32x32.png"))); // NOI18N
+        lbl_Icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Sucursal_16x16.png"))); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -90,7 +90,7 @@ public class SeleccionEmpresaGUI extends JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lbl_Icon)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmb_Empresas, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(cmb_Sucursales, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(lbl_Leyenda)
                     .addComponent(btn_Aceptar, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
@@ -102,7 +102,7 @@ public class SeleccionEmpresaGUI extends JDialog {
                 .addComponent(lbl_Leyenda)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cmb_Empresas, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmb_Sucursales, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_Icon, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btn_Aceptar)
@@ -117,19 +117,19 @@ public class SeleccionEmpresaGUI extends JDialog {
     }//GEN-LAST:event_formWindowClosing
 
     private void btn_AceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AceptarActionPerformed
-        if (cmb_Empresas.getSelectedItem() == null) {
+        if (cmb_Sucursales.getSelectedItem() == null) {
             JOptionPane.showMessageDialog(this,
-                    "Debe seleccionar una Empresa para poder continuar!\nEn "
+                    "Debe seleccionar una Sucursal para poder continuar!\nEn "
                     + "caso de que no encuentre ninguna, comuníquese con un "
                     + "Administrador del sistema",
                     "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            empresas.stream()
-                    .filter(e -> (e.getNombre().equals(cmb_Empresas.getSelectedItem())))
+            sucursales.stream()
+                    .filter(e -> (e.getNombre().equals(cmb_Sucursales.getSelectedItem())))
                     .forEachOrdered(e -> {
-                        EmpresaActiva.getInstance().setEmpresa(e);
+                        SucursalActiva.getInstance().setSucursal(e);
                         try {
-                            RestClient.getRestTemplate().put("/usuarios/" + UsuarioActivo.getInstance().getUsuario().getIdUsuario() + "/empresas/" + e.getIdEmpresa(), Usuario.class);
+                            RestClient.getRestTemplate().put("/usuarios/" + UsuarioActivo.getInstance().getUsuario().getIdUsuario() + "/sucursales/" + e.getIdSucursal(), Usuario.class);
                         } catch (RestClientResponseException ex) {
                             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                             this.dispose();
@@ -144,27 +144,27 @@ public class SeleccionEmpresaGUI extends JDialog {
         }
     }//GEN-LAST:event_btn_AceptarActionPerformed
 
-    private void cmb_EmpresasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmb_EmpresasKeyPressed
+    private void cmb_SucursalesKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmb_SucursalesKeyPressed
         if (evt.getKeyCode() == 10) {
             btn_AceptarActionPerformed(null);
         }
-    }//GEN-LAST:event_cmb_EmpresasKeyPressed
+    }//GEN-LAST:event_cmb_SucursalesKeyPressed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {
-            empresas = Arrays.asList(RestClient.getRestTemplate().getForObject("/empresas", Empresa[].class));
-            if (empresas.isEmpty() || empresas.size() > 1) {
-                if (empresas.isEmpty() && UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
-                    EmpresasGUI empresasGUI = new EmpresasGUI();
-                    empresasGUI.setModal(true);
-                    empresasGUI.setLocationRelativeTo(this);
-                    empresasGUI.setVisible(true);
+            sucursales = Arrays.asList(RestClient.getRestTemplate().getForObject("/sucursales", Sucursal[].class));
+            if (sucursales.isEmpty() || sucursales.size() > 1) {
+                if (sucursales.isEmpty() && UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)) {
+                    SucursalesGUI sucursalesGUI = new SucursalesGUI();
+                    sucursalesGUI.setModal(true);
+                    sucursalesGUI.setLocationRelativeTo(this);
+                    sucursalesGUI.setVisible(true);
                 }
-                empresas = Arrays.asList(RestClient.getRestTemplate().getForObject("/empresas", Empresa[].class));
-                this.cargarComboBoxEmpresas();
+                sucursales = Arrays.asList(RestClient.getRestTemplate().getForObject("/sucursales", Sucursal[].class));
+                this.cargarComboBoxSucursales();
             } else {
-                EmpresaActiva.getInstance().setEmpresa(empresas.get(0));
-                RestClient.getRestTemplate().put("/usuarios/" + UsuarioActivo.getInstance().getUsuario().getIdUsuario() + "/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(), Usuario.class);
+                SucursalActiva.getInstance().setSucursal(sucursales.get(0));
+                RestClient.getRestTemplate().put("/usuarios/" + UsuarioActivo.getInstance().getUsuario().getIdUsuario() + "/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(), Usuario.class);
                 this.dispose();
             }
         } catch (RestClientResponseException ex) {
@@ -180,7 +180,7 @@ public class SeleccionEmpresaGUI extends JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Aceptar;
-    private javax.swing.JComboBox cmb_Empresas;
+    private javax.swing.JComboBox cmb_Sucursales;
     private javax.swing.JLabel lbl_Icon;
     private javax.swing.JLabel lbl_Leyenda;
     // End of variables declaration//GEN-END:variables

@@ -23,7 +23,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.SucursalActiva;
 import sic.modelo.FormaDePago;
 import sic.modelo.Gasto;
 import sic.modelo.Usuario;
@@ -63,7 +63,7 @@ public class GastosGUI extends JInternalFrame {
 
     private BusquedaGastoCriteria getCriteria() {
         BusquedaGastoCriteria criteria = BusquedaGastoCriteria.builder().build();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
+        criteria.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         if (chkFecha.isSelected()) {
             criteria.setFechaDesde(
                     (dc_FechaDesde.getDate() != null)
@@ -723,8 +723,8 @@ public class GastosGUI extends JInternalFrame {
 
     private void btnCrearGastoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearGastoActionPerformed
         try {
-            if (RestClient.getRestTemplate().getForObject("/cajas/empresas/"
-                    + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa() + "/ultima-caja-abierta", boolean.class)) {
+            if (RestClient.getRestTemplate().getForObject("/cajas/sucursales/"
+                    + SucursalActiva.getInstance().getSucursal().getIdSucursal() + "/ultima-caja-abierta", boolean.class)) {
                 List<FormaDePago> formasDePago = Arrays.asList(RestClient.getRestTemplate().getForObject("/formas-de-pago", FormaDePago[].class));
                 AgregarGastoGUI agregarGasto = new AgregarGastoGUI(formasDePago);
                 agregarGasto.setLocationRelativeTo(this);

@@ -19,7 +19,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.EmpresaActiva;
 import sic.modelo.Localidad;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Provincia;
@@ -189,7 +188,6 @@ public class TransportistasGUI extends JInternalFrame {
                 criteria.setIdLocalidad(((Localidad) cmb_Localidad.getSelectedItem()).getIdLocalidad());
             }
         }
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         criteria.setPagina(NUMERO_PAGINA);
         try {
             HttpEntity<BusquedaTransportistaCriteria> requestEntity = new HttpEntity<>(criteria);

@@ -23,7 +23,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.EmpresaActiva;
+import sic.modelo.CantidadEnSucursal;
+import sic.modelo.SucursalActiva;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
 import sic.modelo.Proveedor;
@@ -65,8 +66,7 @@ public class ProductosGUI extends JInternalFrame {
     private void cargarRubros() {
         try {
             rubros = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/rubros/empresas/" + EmpresaActiva.getInstance().getEmpresa().getIdEmpresa(),
-                            Rubro[].class)));
+                    .getForObject("/rubros", Rubro[].class)));
             cmb_Rubro.removeAllItems();
             rubros.stream().forEach(r -> {
                 cmb_Rubro.addItem(r.getNombre());
@@ -83,15 +83,16 @@ public class ProductosGUI extends JInternalFrame {
 
     private void setColumnas() {        
         //nombres de columnas
-        String[] encabezados = new String[24];
+        String[] encabezados = new String[26];
         encabezados[0] = "Público";
-        encabezados[1] = "Destacado";
+        encabezados[1] = "Oferta";
         encabezados[2] = "Codigo";
         encabezados[3] = "Descripcion";
-        encabezados[4] = "Cant. Disponible";
-        encabezados[5] = "Cant. Minima";
-        encabezados[6] = "Cant. por Bulto";
-        encabezados[7] = "Sin Límite";
+        encabezados[4] = "Stock";
+        encabezados[5] = "Otras Sucursales";
+        encabezados[6] = "Venta x Cant."; 
+        encabezados[7] = "Sin Límite"; 
+        //encabezados[8] = "Cant. Mínima"; 
         encabezados[8] = "Medida";
         encabezados[9] = "Precio Costo";
         encabezados[10] = "% Ganancia";
@@ -100,14 +101,16 @@ public class ProductosGUI extends JInternalFrame {
         encabezados[13] = "% IVA";
         encabezados[14] = "IVA";
         encabezados[15] = "Precio Lista";
-        encabezados[16] = "Rubro";
-        encabezados[17] = "Fecha U. Modificacion";
-        encabezados[18] = "Estanteria";
-        encabezados[19] = "Estante";
-        encabezados[20] = "Proveedor";
-        encabezados[21] = "Fecha Alta";
-        encabezados[22] = "Fecha Vencimiento";
-        encabezados[23] = "Nota";
+        encabezados[16] = "% Oferta";
+        encabezados[17] = "Precio Oferta";
+        encabezados[18] = "Rubro";
+        encabezados[19] = "Fecha U. Modificacion";
+        encabezados[20] = "Estanteria";
+        encabezados[21] = "Estante";
+        encabezados[22] = "Proveedor";
+        encabezados[23] = "Fecha Alta";
+        encabezados[24] = "Fecha Vencimiento";
+        encabezados[25] = "Nota";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaResultados);
         //tipo de dato columnas
@@ -120,6 +123,7 @@ public class ProductosGUI extends JInternalFrame {
         tipos[5] = BigDecimal.class;
         tipos[6] = BigDecimal.class;
         tipos[7] = Boolean.class;
+        //tipos[8] = BigDecimal.class;
         tipos[8] = String.class;
         tipos[9] = BigDecimal.class;
         tipos[10] = BigDecimal.class;
@@ -128,28 +132,31 @@ public class ProductosGUI extends JInternalFrame {
         tipos[13] = BigDecimal.class;
         tipos[14] = BigDecimal.class;
         tipos[15] = BigDecimal.class;
-        tipos[16] = String.class;
-        tipos[17] = LocalDateTime.class;
+        tipos[16] = BigDecimal.class;
+        tipos[17] = BigDecimal.class;
         tipos[18] = String.class;
-        tipos[19] = String.class;
+        tipos[19] = LocalDateTime.class;
         tipos[20] = String.class;
-        tipos[21] = LocalDateTime.class;
-        tipos[22] = LocalDate.class;
-        tipos[23] = String.class;
+        tipos[21] = String.class;
+        tipos[22] = String.class;
+        tipos[23] = LocalDateTime.class;
+        tipos[24] = LocalDate.class;
+        tipos[25] = String.class;
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         //tamanios de columnas
-        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(70);
-        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(75);
+        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(60);
+        tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(60);
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(150);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(400);
-        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(110);
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(110);
-        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(110);
+        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(80);
+        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(115);
+        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(90);
         tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(80);
+        //tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(90);
         tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(100);
@@ -158,31 +165,41 @@ public class ProductosGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(13).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(14).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(15).setPreferredWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(16).setPreferredWidth(180);
-        tbl_Resultados.getColumnModel().getColumn(17).setPreferredWidth(150);
-        tbl_Resultados.getColumnModel().getColumn(18).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(19).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(20).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(21).setPreferredWidth(125);
-        tbl_Resultados.getColumnModel().getColumn(22).setPreferredWidth(125);
-        tbl_Resultados.getColumnModel().getColumn(23).setPreferredWidth(400);
+        tbl_Resultados.getColumnModel().getColumn(16).setPreferredWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(17).setPreferredWidth(100);      
+        tbl_Resultados.getColumnModel().getColumn(18).setPreferredWidth(180);
+        tbl_Resultados.getColumnModel().getColumn(19).setPreferredWidth(150);
+        tbl_Resultados.getColumnModel().getColumn(20).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(21).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(22).setPreferredWidth(250);
+        tbl_Resultados.getColumnModel().getColumn(23).setPreferredWidth(125);
+        tbl_Resultados.getColumnModel().getColumn(24).setPreferredWidth(125);
+        tbl_Resultados.getColumnModel().getColumn(25).setPreferredWidth(400);
         //renderers
-        tbl_Resultados.getColumnModel().getColumn(17).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
-        tbl_Resultados.getColumnModel().getColumn(21).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
-        tbl_Resultados.getColumnModel().getColumn(22).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(19).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(23).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(24).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 
     private void cargarResultadosAlTable() {
         productosParcial.stream().map(producto -> {
-            Object[] fila = new Object[24];
+            Object[] fila = new Object[26];
             fila[0] = producto.isPublico();
-            fila[1] =  producto.isDestacado();
+            fila[1] = producto.isOferta();
             fila[2] = producto.getCodigo();
             fila[3] = producto.getDescripcion();
-            fila[4] = producto.getCantidad();
-            fila[5] = producto.getCantMinima();
+            fila[4] = BigDecimal.ZERO;
+            producto.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
+                if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
+                    fila[4] = cantidadesEnSucursal.getCantidad();
+                }
+            });
+            fila[5] = producto.getCantidadEnSucursales().stream()
+                    .filter(cantidadEnSucursales -> !cantidadEnSucursales.idSucursal.equals(SucursalActiva.getInstance().getSucursal().getIdSucursal()))
+                    .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);
             fila[6] = producto.getBulto();
             fila[7] = producto.isIlimitado();
+            //fila[8] = producto.getCantMinima();
             fila[8] = producto.getNombreMedida();
             fila[9] = producto.getPrecioCosto();
             fila[10] = producto.getGananciaPorcentaje();
@@ -191,14 +208,16 @@ public class ProductosGUI extends JInternalFrame {
             fila[13] = producto.getIvaPorcentaje();
             fila[14] = producto.getIvaNeto();
             fila[15] = producto.getPrecioLista();
-            fila[16] = producto.getNombreRubro();
-            fila[17] = producto.getFechaUltimaModificacion();
-            fila[18] = producto.getEstanteria();
-            fila[19] = producto.getEstante();
-            fila[20] = producto.getRazonSocialProveedor();
-            fila[21] = producto.getFechaAlta();
-            fila[22] = producto.getFechaVencimiento();
-            fila[23] = producto.getNota();
+            fila[16] = producto.getPorcentajeBonificacionOferta();
+            fila[17] = producto.getPrecioListaBonificado();        
+            fila[18] = producto.getNombreRubro();
+            fila[19] = producto.getFechaUltimaModificacion();
+            fila[20] = producto.getEstanteria();
+            fila[21] = producto.getEstante();
+            fila[22] = producto.getRazonSocialProveedor();
+            fila[23] = producto.getFechaAlta();
+            fila[24] = producto.getFechaVencimiento();
+            fila[25] = producto.getNota();
             return fila;
         }).forEach(fila -> {
             modeloTablaResultados.addRow(fila);
@@ -271,9 +290,7 @@ public class ProductosGUI extends JInternalFrame {
     }
 
     private void exportar() {
-        BusquedaProductoCriteria criteria = BusquedaProductoCriteria.builder()
-                .idEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa())
-                .build();
+        BusquedaProductoCriteria criteria = BusquedaProductoCriteria.builder().build();
         if (chkCodigoODescripcion.isSelected()) {
             criteria.setCodigo(txtCodigoODescripcion.getText().trim());
             criteria.setDescripcion(txtCodigoODescripcion.getText().trim());
@@ -299,8 +316,8 @@ public class ProductosGUI extends JInternalFrame {
                 criteria.setPublico(false);
             }
         }
-        if (chkDestacados.isSelected()) {
-            criteria.setDestacado(true);
+        if (chkOfertas.isSelected()) {
+            criteria.setOferta(true);
         }
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
@@ -337,7 +354,6 @@ public class ProductosGUI extends JInternalFrame {
     private void buscar() {
         this.cambiarEstadoEnabledComponentes(false);
         BusquedaProductoCriteria criteria = BusquedaProductoCriteria.builder().build();
-        criteria.setIdEmpresa(EmpresaActiva.getInstance().getEmpresa().getIdEmpresa());
         if (chkCodigoODescripcion.isSelected()) {
             criteria.setCodigo(txtCodigoODescripcion.getText().trim());
             criteria.setDescripcion(txtCodigoODescripcion.getText().trim());
@@ -363,8 +379,8 @@ public class ProductosGUI extends JInternalFrame {
                 criteria.setPublico(false);
             }
         }
-        if (chkDestacados.isSelected()) {
-            criteria.setDestacado(true);
+        if (chkOfertas.isSelected()) {
+            criteria.setOferta(true);
         }
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
@@ -461,7 +477,7 @@ public class ProductosGUI extends JInternalFrame {
         rb_privado = new javax.swing.JRadioButton();
         txtProveedor = new javax.swing.JTextField();
         btnBuscarProveedor = new javax.swing.JButton();
-        chkDestacados = new javax.swing.JCheckBox();
+        chkOfertas = new javax.swing.JCheckBox();
         txtCodigoODescripcion = new javax.swing.JTextField();
         panelResultados = new javax.swing.JPanel();
         sp_Resultados = new javax.swing.JScrollPane();
@@ -577,7 +593,7 @@ public class ProductosGUI extends JInternalFrame {
             }
         });
 
-        chkDestacados.setText("Destacados");
+        chkOfertas.setText("Ofertas");
 
         txtCodigoODescripcion.setEnabled(false);
         txtCodigoODescripcion.addActionListener(new java.awt.event.ActionListener() {
@@ -592,66 +608,73 @@ public class ProductosGUI extends JInternalFrame {
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFiltrosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
                         .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(chkDestacados)
+                            .addComponent(chkOfertas)
                             .addComponent(chk_Proveedor)
                             .addComponent(chk_Rubro)
                             .addComponent(chkCodigoODescripcion))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cmb_Rubro, 0, 319, Short.MAX_VALUE)
+                            .addComponent(cmb_Rubro, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFiltrosLayout.createSequentialGroup()
-                                .addComponent(txtProveedor)
+                                .addComponent(txtProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
                                 .addGap(0, 0, 0)
                                 .addComponent(btnBuscarProveedor))
                             .addComponent(txtCodigoODescripcion))
-                        .addGap(25, 25, 25)
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(chk_Disponibilidad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(chk_visibilidad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
                         .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(rb_privado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(rbEnStock, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(rb_Faltantes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(rb_publico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(6, 6, 6))
+                            .addComponent(chk_visibilidad, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(chk_Disponibilidad))
+                        .addGap(18, 18, 18)
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(rb_Faltantes)
+                            .addComponent(rb_publico)
+                            .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(rb_privado, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(rbEnStock, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
                         .addComponent(btn_Buscar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
+                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chkCodigoODescripcion, chkDestacados, chk_Proveedor, chk_Rubro});
+        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chkCodigoODescripcion, chkOfertas, chk_Proveedor, chk_Rubro});
 
         panelFiltrosLayout.setVerticalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFiltrosLayout.createSequentialGroup()
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(chkCodigoODescripcion)
-                    .addComponent(txtCodigoODescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chk_Disponibilidad)
-                    .addComponent(rbEnStock))
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelFiltrosLayout.createSequentialGroup()
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(chkCodigoODescripcion)
+                            .addComponent(txtCodigoODescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(chk_Rubro)
+                            .addComponent(cmb_Rubro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(chk_Proveedor)
+                            .addComponent(txtProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnBuscarProveedor))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(chkOfertas))
+                    .addGroup(panelFiltrosLayout.createSequentialGroup()
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(rb_publico)
+                            .addComponent(chk_visibilidad))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(rb_privado)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(rbEnStock)
+                            .addComponent(chk_Disponibilidad))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(rb_Faltantes)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(chk_Rubro)
-                    .addComponent(cmb_Rubro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(rb_Faltantes))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(chk_Proveedor)
-                    .addComponent(txtProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscarProveedor)
-                    .addComponent(chk_visibilidad)
-                    .addComponent(rb_publico))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(chkDestacados)
-                    .addComponent(rb_privado))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btn_Buscar)
                     .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -744,7 +767,7 @@ public class ProductosGUI extends JInternalFrame {
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_ValorStock)
@@ -759,7 +782,7 @@ public class ProductosGUI extends JInternalFrame {
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
 
-        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descripción", "Código", "Cantidad", "Precio Costo", "% Ganancia", "Precio Lista", "Fecha Alta", "Fecha U. Modificación" }));
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descripción", "Código", "Stock", "Precio Costo", "% Ganancia", "Precio Lista", "Fecha Alta", "Fecha U. Modificación" }));
         cmbOrden.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbOrdenItemStateChanged(evt);
@@ -802,7 +825,7 @@ public class ProductosGUI extends JInternalFrame {
                 .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -912,7 +935,10 @@ public class ProductosGUI extends JInternalFrame {
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         this.setSize(sizeInternalFrame);
+        chk_Disponibilidad.setVisible(false);
         rbEnStock.setSelected(true);
+        rbEnStock.setVisible(false);
+        rb_Faltantes.setVisible(false);
         rb_publico.setSelected(true);
         this.setColumnas();
         this.cambiarEstadoDeComponentesSegunRolUsuario();
@@ -991,7 +1017,7 @@ public class ProductosGUI extends JInternalFrame {
     private javax.swing.JButton btn_Modificar;
     private javax.swing.JButton btn_Nuevo;
     private javax.swing.JCheckBox chkCodigoODescripcion;
-    private javax.swing.JCheckBox chkDestacados;
+    private javax.swing.JCheckBox chkOfertas;
     private javax.swing.JCheckBox chk_Disponibilidad;
     private javax.swing.JCheckBox chk_Proveedor;
     private javax.swing.JCheckBox chk_Rubro;

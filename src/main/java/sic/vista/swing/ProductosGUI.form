@@ -38,11 +38,11 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="panelResultados" max="32767" attributes="2"/>
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" attributes="0">
               <Component id="panelFiltros" min="-2" max="-2" attributes="2"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="panelOrden" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="38" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -50,8 +50,8 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="panelFiltros" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="panelOrden" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="panelFiltros" min="-2" max="-2" attributes="0"/>
+                  <Component id="panelOrden" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="panelResultados" max="32767" attributes="0"/>
@@ -74,77 +74,89 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="chkDestacados" linkSize="7" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="chkOfertas" linkSize="7" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="chk_Proveedor" linkSize="7" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="chk_Rubro" linkSize="7" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="chkCodigoODescripcion" linkSize="7" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="cmb_Rubro" alignment="0" pref="319" max="32767" attributes="0"/>
+                              <Component id="cmb_Rubro" alignment="0" max="32767" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="txtProveedor" max="32767" attributes="0"/>
+                                  <Component id="txtProveedor" pref="273" max="32767" attributes="0"/>
                                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Component id="btnBuscarProveedor" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="txtCodigoODescripcion" max="32767" attributes="2"/>
                           </Group>
-                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="chk_Disponibilidad" max="32767" attributes="0"/>
-                              <Component id="chk_visibilidad" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="rb_privado" alignment="0" max="32767" attributes="0"/>
-                              <Component id="rbEnStock" alignment="0" max="32767" attributes="0"/>
-                              <Component id="rb_Faltantes" alignment="0" max="32767" attributes="0"/>
-                              <Component id="rb_publico" alignment="0" max="32767" attributes="0"/>
+                              <Component id="chk_visibilidad" min="-2" pref="131" max="-2" attributes="0"/>
+                              <Component id="chk_Disponibilidad" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="rb_Faltantes" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="rb_publico" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="rb_privado" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="rbEnStock" alignment="0" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="btn_Buscar" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="lbl_cantResultados" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="chkCodigoODescripcion" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtCodigoODescripcion" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="chk_Disponibilidad" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="rbEnStock" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="chkCodigoODescripcion" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtCodigoODescripcion" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="chk_Rubro" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="cmb_Rubro" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="chk_Proveedor" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtProveedor" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnBuscarProveedor" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="chkOfertas" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="rb_publico" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="chk_visibilidad" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="rb_privado" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="rbEnStock" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="chk_Disponibilidad" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="rb_Faltantes" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="chk_Rubro" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmb_Rubro" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="rb_Faltantes" alignment="2" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="chk_Proveedor" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtProveedor" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnBuscarProveedor" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="chk_visibilidad" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="rb_publico" alignment="2" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="chkDestacados" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="rb_privado" alignment="2" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="btn_Buscar" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lbl_cantResultados" linkSize="6" alignment="2" min="-2" pref="18" max="-2" attributes="0"/>
@@ -279,9 +291,9 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBuscarProveedorActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="chkDestacados">
+        <Component class="javax.swing.JCheckBox" name="chkOfertas">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Destacados"/>
+            <Property name="text" type="java.lang.String" value="Ofertas"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtCodigoODescripcion">
@@ -326,7 +338,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="sp_Resultados" pref="242" max="32767" attributes="0"/>
+                  <Component id="sp_Resultados" pref="252" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lbl_ValorStock" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -480,7 +492,7 @@
               <StringArray count="8">
                 <StringItem index="0" value="Descripci&#xf3;n"/>
                 <StringItem index="1" value="C&#xf3;digo"/>
-                <StringItem index="2" value="Cantidad"/>
+                <StringItem index="2" value="Stock"/>
                 <StringItem index="3" value="Precio Costo"/>
                 <StringItem index="4" value="% Ganancia"/>
                 <StringItem index="5" value="Precio Lista"/>

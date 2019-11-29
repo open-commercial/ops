@@ -248,7 +248,7 @@
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="sp_Resultado" pref="201" max="32767" attributes="0"/>
+                      <Component id="sp_Resultado" pref="202" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -650,11 +650,7 @@
                       <Component id="btnModificarCliente" linkSize="25" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="99" max="-2" attributes="0"/>
                       <Component id="lblSeparadorDerecho" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="lbl_fechaDeVencimiento" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="dc_fechaVencimiento" min="-2" pref="132" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="305" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -663,10 +659,6 @@
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="lbl_fechaDeVencimiento" alignment="2" min="-2" pref="33" max="-2" attributes="0"/>
-                              <Component id="dc_fechaVencimiento" alignment="2" min="-2" max="-2" attributes="0"/>
-                          </Group>
                           <Component id="lblSeparadorDerecho" min="-2" pref="25" max="-2" attributes="0"/>
                           <Component id="btn_BuscarCliente" linkSize="16" alignment="2" min="-2" pref="15" max="-2" attributes="0"/>
                           <Component id="btn_NuevoCliente" linkSize="16" alignment="2" min="-2" pref="32" max="-2" attributes="0"/>
@@ -678,17 +670,6 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="lbl_fechaDeVencimiento">
-              <Properties>
-                <Property name="horizontalAlignment" type="int" value="2"/>
-                <Property name="text" type="java.lang.String" value="Fecha de Vencimiento:"/>
-              </Properties>
-            </Component>
-            <Component class="com.toedter.calendar.JDateChooser" name="dc_fechaVencimiento">
-              <Properties>
-                <Property name="focusable" type="boolean" value="false"/>
-              </Properties>
-            </Component>
             <Component class="javax.swing.JButton" name="btn_NuevoCliente">
               <Properties>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
