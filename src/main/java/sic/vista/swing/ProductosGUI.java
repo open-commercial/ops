@@ -92,7 +92,6 @@ public class ProductosGUI extends JInternalFrame {
         encabezados[5] = "Otras Sucursales";
         encabezados[6] = "Venta x Cant."; 
         encabezados[7] = "Sin Límite"; 
-        //encabezados[8] = "Cant. Mínima"; 
         encabezados[8] = "Medida";
         encabezados[9] = "Precio Costo";
         encabezados[10] = "% Ganancia";
@@ -199,7 +198,6 @@ public class ProductosGUI extends JInternalFrame {
                     .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);
             fila[6] = producto.getBulto();
             fila[7] = producto.isIlimitado();
-            //fila[8] = producto.getCantMinima();
             fila[8] = producto.getNombreMedida();
             fila[9] = producto.getPrecioCosto();
             fila[10] = producto.getGananciaPorcentaje();
@@ -326,7 +324,7 @@ public class ProductosGUI extends JInternalFrame {
             case 1:
                 criteria.setOrdenarPor("codigo"); break;
             case 2: 
-                criteria.setOrdenarPor("cantidad"); break;
+                criteria.setOrdenarPor("bulto"); break;
             case 3: 
                 criteria.setOrdenarPor("precioCosto");break;
             case 4: 
@@ -389,7 +387,7 @@ public class ProductosGUI extends JInternalFrame {
             case 1:
                 criteria.setOrdenarPor("codigo"); break;
             case 2:
-                criteria.setOrdenarPor("cantidad"); break;
+                criteria.setOrdenarPor("bulto"); break;
             case 3:
                 criteria.setOrdenarPor("precioCosto"); break;
             case 4:
@@ -758,7 +756,7 @@ public class ProductosGUI extends JInternalFrame {
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
 
-        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descripción", "Código", "Stock", "Precio Costo", "% Ganancia", "Precio Lista", "Fecha Alta", "Fecha U. Modificación" }));
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descripción", "Código", "Venta x Cant.", "Precio Costo", "% Ganancia", "Precio Lista", "Fecha Alta", "Fecha U. Modificación" }));
         cmbOrden.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbOrdenItemStateChanged(evt);
