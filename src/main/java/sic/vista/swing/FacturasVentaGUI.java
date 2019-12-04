@@ -1405,7 +1405,27 @@ public class FacturasVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_btn_EliminarActionPerformed
 
     private void btnEnviarEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarEmailActionPerformed
-        // TODO add your handling code here:
+        if (tbl_Resultados.getSelectedRow() != -1) {
+            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+            int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
+                    .getString("mensaje_factura_email"),
+                    "Eliminar", JOptionPane.YES_NO_OPTION);
+            if (respuesta == JOptionPane.YES_OPTION) {
+                try {
+                    RestClient.getRestTemplate().getForObject("/facturas/email/" + facturasTotal.get(indexFilaSeleccionada).getIdFactura(), Object.class);
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_email_aviso"),
+                            "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
     }//GEN-LAST:event_btnEnviarEmailActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
