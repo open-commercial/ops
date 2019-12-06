@@ -23,7 +23,7 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.CuentaCorrienteCliente;
-import sic.modelo.NuevoPedido;
+import sic.modelo.DetallePedido;
 import sic.modelo.RenglonPedido;
 import sic.modelo.UsuarioActivo;
 import sic.modelo.EstadoPedido;
@@ -46,7 +46,7 @@ public class DetallePedidoGUI extends JInternalFrame {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(1200, 700);
     private Pedido pedido;
-    private NuevoPedido nuevoPedido;
+    private DetallePedido nuevoPedido;
     private final boolean modificandoPedido;
     private int cantidadMaximaRenglones = 0;
     private BigDecimal subTotalBruto;  
@@ -273,7 +273,7 @@ public class DetallePedidoGUI extends JInternalFrame {
     }
 
     private void construirPedido() {
-        nuevoPedido = new NuevoPedido();
+        nuevoPedido = new DetallePedido();
         nuevoPedido.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
         nuevoPedido.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
         nuevoPedido.setObservaciones(txt_Observaciones.getText());
