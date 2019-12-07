@@ -475,15 +475,16 @@
         <Component class="javax.swing.JComboBox" name="cmbOrden">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="8">
+              <StringArray count="9">
                 <StringItem index="0" value="Descripci&#xf3;n"/>
                 <StringItem index="1" value="C&#xf3;digo"/>
-                <StringItem index="2" value="Venta x Cant."/>
-                <StringItem index="3" value="Precio Costo"/>
-                <StringItem index="4" value="% Ganancia"/>
-                <StringItem index="5" value="Precio Lista"/>
-                <StringItem index="6" value="Fecha Alta"/>
-                <StringItem index="7" value="Fecha U. Modificaci&#xf3;n"/>
+                <StringItem index="2" value="Total Sucursales"/>
+                <StringItem index="3" value="Venta x Cant."/>
+                <StringItem index="4" value="Precio Costo"/>
+                <StringItem index="5" value="% Ganancia"/>
+                <StringItem index="6" value="Precio Lista"/>
+                <StringItem index="7" value="Fecha Alta"/>
+                <StringItem index="8" value="Fecha U. Modificaci&#xf3;n"/>
               </StringArray>
             </Property>
           </Properties>

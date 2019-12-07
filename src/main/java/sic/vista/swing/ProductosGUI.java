@@ -321,22 +321,33 @@ public class ProductosGUI extends JInternalFrame {
         }
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
-            case 0: 
-                criteria.setOrdenarPor("descripcion");break;
+            case 0:
+                criteria.setOrdenarPor("descripcion");
+                break;
             case 1:
-                criteria.setOrdenarPor("codigo"); break;
-            case 2: 
-                criteria.setOrdenarPor("bulto"); break;
-            case 3: 
-                criteria.setOrdenarPor("precioCosto");break;
-            case 4: 
-                criteria.setOrdenarPor("gananciaPorcentaje");break;
-            case 5: 
-                criteria.setOrdenarPor("precioLista");break;
+                criteria.setOrdenarPor("codigo");
+                break;
+            case 2:
+                criteria.setOrdenarPor("cantidadTotalEnSucursales");
+                break;
+            case 3:
+                criteria.setOrdenarPor("bulto");
+                break;
+            case 4:
+                criteria.setOrdenarPor("precioCosto");
+                break;
+            case 5:
+                criteria.setOrdenarPor("gananciaPorcentaje");
+                break;
             case 6:
-                criteria.setOrdenarPor("fechaAlta");break;
+                criteria.setOrdenarPor("precioLista");
+                break;
             case 7:
-                criteria.setOrdenarPor("fechaUltimaModificacion");break;
+                criteria.setOrdenarPor("fechaAlta");
+                break;
+            case 8:
+                criteria.setOrdenarPor("fechaUltimaModificacion");
+                break;
         }
         int seleccionDireccion = cmbSentido.getSelectedIndex();
         switch (seleccionDireccion) {
@@ -385,21 +396,32 @@ public class ProductosGUI extends JInternalFrame {
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
             case 0:
-                criteria.setOrdenarPor("descripcion"); break;
+                criteria.setOrdenarPor("descripcion");
+                break;
             case 1:
-                criteria.setOrdenarPor("codigo"); break;
+                criteria.setOrdenarPor("codigo");
+                break;
             case 2:
-                criteria.setOrdenarPor("bulto"); break;
+                criteria.setOrdenarPor("cantidadTotalEnSucursales");
+                break;
             case 3:
-                criteria.setOrdenarPor("precioCosto"); break;
+                criteria.setOrdenarPor("bulto");
+                break;
             case 4:
-                criteria.setOrdenarPor("gananciaPorcentaje"); break;
+                criteria.setOrdenarPor("precioCosto");
+                break;
             case 5:
-                criteria.setOrdenarPor("precioLista"); break;
+                criteria.setOrdenarPor("gananciaPorcentaje");
+                break;
             case 6:
-                criteria.setOrdenarPor("fechaAlta"); break;
+                criteria.setOrdenarPor("precioLista");
+                break;
             case 7:
-                criteria.setOrdenarPor("fechaUltimaModificacion"); break;
+                criteria.setOrdenarPor("fechaAlta");
+                break;
+            case 8:
+                criteria.setOrdenarPor("fechaUltimaModificacion");
+                break;
         }
         int seleccionDireccion = cmbSentido.getSelectedIndex();
         switch (seleccionDireccion) {
@@ -758,7 +780,7 @@ public class ProductosGUI extends JInternalFrame {
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
 
-        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descripción", "Código", "Venta x Cant.", "Precio Costo", "% Ganancia", "Precio Lista", "Fecha Alta", "Fecha U. Modificación" }));
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descripción", "Código", "Total Sucursales", "Venta x Cant.", "Precio Costo", "% Ganancia", "Precio Lista", "Fecha Alta", "Fecha U. Modificación" }));
         cmbOrden.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbOrdenItemStateChanged(evt);
