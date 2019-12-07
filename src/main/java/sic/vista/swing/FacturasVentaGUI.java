@@ -1409,7 +1409,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
                     .getString("mensaje_factura_email"),
-                    "Eliminar", JOptionPane.YES_NO_OPTION);
+                    "Aviso", JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
                 try {
                     RestClient.getRestTemplate().getForObject("/facturas/email/" + facturasTotal.get(indexFilaSeleccionada).getIdFactura(), Object.class);
