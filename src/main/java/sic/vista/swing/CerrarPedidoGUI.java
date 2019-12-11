@@ -281,7 +281,8 @@ public class CerrarPedidoGUI extends JDialog {
             }
             if (tipoDeEnvio != null) {
                 if (nuevoPedido != null) {
-                    nuevoPedido.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
+                    nuevoPedido.setIdSucursal(rbRetiroEnSucursal.isSelected() ? 
+                            sucursales.get(cmbSucursales.getSelectedIndex()).getIdSucursal() : SucursalActiva.getInstance().getSucursal().getIdSucursal());
                     nuevoPedido.setIdCliente(cliente.getIdCliente());
                     nuevoPedido.setTipoDeEnvio(tipoDeEnvio);
                     Pedido p = RestClient.getRestTemplate().postForObject("/pedidos", nuevoPedido, Pedido.class);
@@ -295,7 +296,8 @@ public class CerrarPedidoGUI extends JDialog {
                 } else {
                     nuevoPedido = new DetallePedido();
                     nuevoPedido.setIdPedido(pedido.getIdPedido());
-                    nuevoPedido.setIdSucursal(rbRetiroEnSucursal.isSelected() ? sucursales.get(cmbSucursales.getSelectedIndex()).getIdSucursal() : null);
+                    nuevoPedido.setIdSucursal(rbRetiroEnSucursal.isSelected() ? 
+                            sucursales.get(cmbSucursales.getSelectedIndex()).getIdSucursal() : null);
                     nuevoPedido.setObservaciones(pedido.getObservaciones());
                     nuevoPedido.setRecargoPorcentaje(pedido.getRecargoPorcentaje());
                     nuevoPedido.setDescuentoPorcentaje(pedido.getDescuentoPorcentaje());
