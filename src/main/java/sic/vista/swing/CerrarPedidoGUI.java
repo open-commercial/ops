@@ -18,7 +18,7 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.Sucursal;
-import sic.modelo.DetallePedido;
+import sic.modelo.PedidoDTO;
 import sic.modelo.NuevoRenglonPedido;
 import sic.modelo.Pedido;
 import sic.modelo.SucursalActiva;
@@ -26,14 +26,14 @@ import sic.modelo.TipoDeEnvio;
 
 public class CerrarPedidoGUI extends JDialog {
 
-    private DetallePedido nuevoPedido;
+    private PedidoDTO nuevoPedido;
     private final Cliente cliente;
     private Pedido pedido;
     private boolean operacionExitosa = false;
     private List<Sucursal> sucursales;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public CerrarPedidoGUI(DetallePedido nuevoPedido, Cliente cliente) {
+    public CerrarPedidoGUI(PedidoDTO nuevoPedido, Cliente cliente) {
         this.nuevoPedido = nuevoPedido;
         this.cliente = cliente;
         this.initComponents();
@@ -294,7 +294,7 @@ public class CerrarPedidoGUI extends JDialog {
                         this.lanzarReportePedido(p);
                     }
                 } else {
-                    nuevoPedido = new DetallePedido();
+                    nuevoPedido = new PedidoDTO();
                     nuevoPedido.setIdPedido(pedido.getIdPedido());
                     nuevoPedido.setIdSucursal(rbRetiroEnSucursal.isSelected() ? 
                             sucursales.get(cmbSucursales.getSelectedIndex()).getIdSucursal() : null);

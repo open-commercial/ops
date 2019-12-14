@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class DetallePedido { 
+public class PedidoDTO { 
   
   private Long idPedido;
   private Long idSucursal;
