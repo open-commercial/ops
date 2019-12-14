@@ -1,3 +1,3 @@
 getdown.txt = 7faf8df112099d347fbac3a819ed555f
-SIC-OPS-Andromeda.jar = fd789947245f9c6caabe76a233ab0067
-digest.txt = 06c38e8bc6ea2dbf0475775ab33e4a8e
+SIC-OPS-Andromeda.jar = 94b60bb666238a87211d980e7468f743
+digest.txt = 2af1e768d492e3e73797ce64af8ac57a
