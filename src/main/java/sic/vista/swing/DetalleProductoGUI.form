@@ -54,13 +54,11 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="btnGuardar" min="-2" max="-2" attributes="0"/>
-                  <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                      <Component id="lblSinLimite" min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="txt_CantMinima" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="lbl_CantMinima" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Component id="chkSinLimite" alignment="1" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="lbl_CantMinima" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txt_CantMinima" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblSinLimite" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="chkSinLimite" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
@@ -570,9 +568,9 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txt_Bulto" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbl_Bulto" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="lbl_Bulto" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="txt_Bulto" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="26" max="32767" attributes="0"/>
                       </Group>
