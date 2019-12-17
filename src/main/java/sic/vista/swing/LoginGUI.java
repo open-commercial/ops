@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.Aplicacion;
 import sic.modelo.Credencial;
 import sic.modelo.Rol;
 import sic.modelo.Usuario;
@@ -37,7 +38,7 @@ public class LoginGUI extends JFrame {
     private void validarUsuario() {
         if (!txt_Usuario.getText().trim().equals("") || txt_Contrasenia.getPassword().length != 0) {
             try {
-                Credencial credencial = new Credencial(txt_Usuario.getText().trim(), new String(txt_Contrasenia.getPassword()));
+                Credencial credencial = new Credencial(txt_Usuario.getText().trim(), new String(txt_Contrasenia.getPassword()), Aplicacion.SIC_OPS);
                 String token = RestClient.getRestTemplate().postForObject("/login", credencial, String.class);
                 DecodedJWT jwt = JWT.decode(token);
                 UsuarioActivo.getInstance().setToken(token);
