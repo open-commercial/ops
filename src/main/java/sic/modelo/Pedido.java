@@ -22,7 +22,7 @@ public class Pedido implements Serializable {
     private String observaciones;  
     private String nombreSucursal;
     private boolean eliminado;    
-    private String nombreFiscalCliente;  
+    private Cliente cliente; 
     private String nombreUsuario;
     private Long idViajante;
     private String nombreViajante;

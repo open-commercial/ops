@@ -4,6 +4,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -17,22 +18,22 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.Sucursal;
-import sic.modelo.SucursalActiva;
-import sic.modelo.NuevoPedido;
+import sic.modelo.PedidoDTO;
+import sic.modelo.NuevoRenglonPedido;
 import sic.modelo.Pedido;
+import sic.modelo.SucursalActiva;
 import sic.modelo.TipoDeEnvio;
-import sic.modelo.UsuarioActivo;
 
 public class CerrarPedidoGUI extends JDialog {
 
-    private final NuevoPedido nuevoPedido;
+    private PedidoDTO nuevoPedido;
     private final Cliente cliente;
     private Pedido pedido;
     private boolean operacionExitosa = false;
     private List<Sucursal> sucursales;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public CerrarPedidoGUI(NuevoPedido nuevoPedido, Cliente cliente) {
+    public CerrarPedidoGUI(PedidoDTO nuevoPedido, Cliente cliente) {
         this.nuevoPedido = nuevoPedido;
         this.cliente = cliente;
         this.initComponents();
@@ -280,11 +281,11 @@ public class CerrarPedidoGUI extends JDialog {
             }
             if (tipoDeEnvio != null) {
                 if (nuevoPedido != null) {
-                    nuevoPedido.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
-                    nuevoPedido.setIdUsuario(UsuarioActivo.getInstance().getUsuario().getIdUsuario());
+                    nuevoPedido.setIdSucursal(rbRetiroEnSucursal.isSelected() ? 
+                            sucursales.get(cmbSucursales.getSelectedIndex()).getIdSucursal() : SucursalActiva.getInstance().getSucursal().getIdSucursal());
                     nuevoPedido.setIdCliente(cliente.getIdCliente());
                     nuevoPedido.setTipoDeEnvio(tipoDeEnvio);
-                    Pedido p = RestClient.getRestTemplate().postForObject("/pedidos?", nuevoPedido, Pedido.class);
+                    Pedido p = RestClient.getRestTemplate().postForObject("/pedidos", nuevoPedido, Pedido.class);
                     this.operacionExitosa = true;
                     int reply = JOptionPane.showConfirmDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
@@ -293,11 +294,19 @@ public class CerrarPedidoGUI extends JDialog {
                         this.lanzarReportePedido(p);
                     }
                 } else {
-                    RestClient.getRestTemplate().put("/pedidos?idSucursal="
-                            + SucursalActiva.getInstance().getSucursal().getIdSucursal()
-                            + "&idUsuario=" + UsuarioActivo.getInstance().getUsuario().getIdUsuario()
-                            + "&idCliente=" + cliente.getIdCliente()
-                            + "&tipoDeEnvio=" + tipoDeEnvio, pedido);
+                    nuevoPedido = new PedidoDTO();
+                    nuevoPedido.setIdPedido(pedido.getIdPedido());
+                    nuevoPedido.setIdSucursal(rbRetiroEnSucursal.isSelected() ? 
+                            sucursales.get(cmbSucursales.getSelectedIndex()).getIdSucursal() : null);
+                    nuevoPedido.setObservaciones(pedido.getObservaciones());
+                    nuevoPedido.setRecargoPorcentaje(pedido.getRecargoPorcentaje());
+                    nuevoPedido.setDescuentoPorcentaje(pedido.getDescuentoPorcentaje());
+                    List<NuevoRenglonPedido> nuevosRenglonesPedido = new ArrayList();
+                    pedido.getRenglones().forEach(r -> nuevosRenglonesPedido.add(
+                            new NuevoRenglonPedido(r.getIdProductoItem(), r.getCantidad())));
+                    nuevoPedido.setRenglones(nuevosRenglonesPedido);
+                    nuevoPedido.setTipoDeEnvio(tipoDeEnvio);                    
+                    RestClient.getRestTemplate().put("/pedidos", nuevoPedido);
                     this.operacionExitosa = true;
                     JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_pedido_actualizado"),
                             "Aviso", JOptionPane.INFORMATION_MESSAGE);
