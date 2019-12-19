@@ -23,6 +23,7 @@ import sic.modelo.UsuarioActivo;
 public class LoginGUI extends JFrame {
     
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    private static final String APP_NAME = "SIC_OPS";
     
     public LoginGUI() {
         this.initComponents();                
@@ -37,7 +38,7 @@ public class LoginGUI extends JFrame {
     private void validarUsuario() {
         if (!txt_Usuario.getText().trim().equals("") || txt_Contrasenia.getPassword().length != 0) {
             try {
-                Credencial credencial = new Credencial(txt_Usuario.getText().trim(), new String(txt_Contrasenia.getPassword()));
+                Credencial credencial = new Credencial(txt_Usuario.getText().trim(), new String(txt_Contrasenia.getPassword()), APP_NAME);
                 String token = RestClient.getRestTemplate().postForObject("/login", credencial, String.class);
                 DecodedJWT jwt = JWT.decode(token);
                 UsuarioActivo.getInstance().setToken(token);
