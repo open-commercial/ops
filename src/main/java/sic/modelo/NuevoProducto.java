@@ -26,7 +26,7 @@ public class NuevoProducto {
     private boolean ilimitado;
     private boolean publico;
     private boolean oferta;
-    private BigDecimal porcentajeBonificacionOferta;
+    private BigDecimal porcentajeBonificacionPrecio;
     private LocalDateTime fechaUltimaModificacion;
     private String estanteria;
     private String estante;

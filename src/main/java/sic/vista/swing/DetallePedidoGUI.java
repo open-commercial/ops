@@ -97,7 +97,7 @@ public class DetallePedidoGUI extends JInternalFrame {
     private void cargarCliente(Cliente cliente) {
         this.cliente = cliente;
         txtNombreCliente.setText(cliente.getNombreFiscal() + " (" + cliente.getNroCliente() + ")");
-        txtBonificacion.setText(cliente.getBonificacion().setScale(2, RoundingMode.HALF_UP) + " %");
+        txtMontoCompraMinima.setText(cliente.getMontoCompraMinima().setScale(2, RoundingMode.HALF_UP) + "");
         txtUbicacionCliente.setText(cliente.getUbicacionFacturacion() != null ? cliente.getUbicacionFacturacion().toString() : "");
         txt_CondicionIVACliente.setText(cliente.getCategoriaIVA().toString());
         txtIdFiscalCliente.setText(cliente.getIdFiscal() != null ? cliente.getIdFiscal().toString() : "");
@@ -368,9 +368,9 @@ public class DetallePedidoGUI extends JInternalFrame {
         txt_CondicionIVACliente = new javax.swing.JTextField();
         txtUbicacionCliente = new javax.swing.JTextField();
         txtNombreCliente = new javax.swing.JTextField();
-        lblBonificacion = new javax.swing.JLabel();
+        lblMontoCompraMinima = new javax.swing.JLabel();
         txtIdFiscalCliente = new javax.swing.JTextField();
-        txtBonificacion = new javax.swing.JTextField();
+        txtMontoCompraMinima = new javax.swing.JTextField();
         panelRenglones = new javax.swing.JPanel();
         sp_Resultado = new javax.swing.JScrollPane();
         tbl_Resultado = new javax.swing.JTable();
@@ -445,13 +445,13 @@ public class DetallePedidoGUI extends JInternalFrame {
         txtNombreCliente.setEditable(false);
         txtNombreCliente.setFocusable(false);
 
-        lblBonificacion.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblBonificacion.setText("Bonificación:");
+        lblMontoCompraMinima.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblMontoCompraMinima.setText("Compra Mínima $:");
 
         txtIdFiscalCliente.setEditable(false);
         txtIdFiscalCliente.setFocusable(false);
 
-        txtBonificacion.setEditable(false);
+        txtMontoCompraMinima.setEditable(false);
 
         javax.swing.GroupLayout panelClienteLayout = new javax.swing.GroupLayout(panelCliente);
         panelCliente.setLayout(panelClienteLayout);
@@ -474,9 +474,9 @@ public class DetallePedidoGUI extends JInternalFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelClienteLayout.createSequentialGroup()
                         .addComponent(txtNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 635, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblBonificacion)
+                        .addComponent(lblMontoCompraMinima)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtBonificacion))
+                        .addComponent(txtMontoCompraMinima))
                     .addComponent(txtUbicacionCliente, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(0, 0, 0))
         );
@@ -487,10 +487,10 @@ public class DetallePedidoGUI extends JInternalFrame {
             panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelClienteLayout.createSequentialGroup()
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblBonificacion)
+                    .addComponent(lblMontoCompraMinima)
                     .addComponent(txtNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblNombreCliente)
-                    .addComponent(txtBonificacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtMontoCompraMinima, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtUbicacionCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -505,7 +505,7 @@ public class DetallePedidoGUI extends JInternalFrame {
 
         panelClienteLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtIdFiscalCliente, txtNombreCliente, txtUbicacionCliente, txt_CondicionIVACliente});
 
-        panelClienteLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblBonificacion, lbl_IDFiscalCliente});
+        panelClienteLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblMontoCompraMinima, lbl_IDFiscalCliente});
 
         tbl_Resultado.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1147,7 +1147,7 @@ public class DetallePedidoGUI extends JInternalFrame {
     private javax.swing.JButton btn_NuevoCliente;
     private javax.swing.JButton btn_QuitarProducto;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lblBonificacion;
+    private javax.swing.JLabel lblMontoCompraMinima;
     private javax.swing.JLabel lblNombreCliente;
     private javax.swing.JLabel lblSeparadorDerecho;
     private javax.swing.JLabel lblUbicacionCliente;
@@ -1166,8 +1166,8 @@ public class DetallePedidoGUI extends JInternalFrame {
     private javax.swing.JPanel panelResultados;
     private javax.swing.JScrollPane sp_Resultado;
     private javax.swing.JTable tbl_Resultado;
-    private javax.swing.JTextField txtBonificacion;
     private javax.swing.JTextField txtIdFiscalCliente;
+    private javax.swing.JTextField txtMontoCompraMinima;
     private javax.swing.JTextField txtNombreCliente;
     private javax.swing.JTextField txtUbicacionCliente;
     private javax.swing.JTextField txt_CodigoProducto;

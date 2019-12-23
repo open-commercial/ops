@@ -107,7 +107,7 @@ public class BuscarClientesGUI extends JDialog {
         encabezados[1] = "CUIT o DNI";
         encabezados[2] = "R. Social o Nombre";
         encabezados[3] = "Nombre Fantasia";
-        encabezados[4] = "% Bonif.";
+        encabezados[4] = "Compra Mínima $";
         encabezados[5] = "Ubicación";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tblResultados.setModel(modeloTablaResultados);        
@@ -127,7 +127,6 @@ public class BuscarClientesGUI extends JDialog {
         tblResultados.getColumnModel().getColumn(3).setPreferredWidth(250);
         tblResultados.getColumnModel().getColumn(4).setPreferredWidth(100);
         tblResultados.getColumnModel().getColumn(5).setPreferredWidth(400);  
-        tblResultados.getColumnModel().getColumn(4).setCellRenderer(new PorcentajeRenderer());
     }
 
     private void cargarResultadosAlTable() {
@@ -137,7 +136,7 @@ public class BuscarClientesGUI extends JDialog {
             fila[1] = cliente.getIdFiscal();
             fila[2] = cliente.getNombreFiscal();
             fila[3] = cliente.getNombreFantasia();
-            fila[4] = cliente.getBonificacion().compareTo(BigDecimal.ZERO) > 0 ? cliente.getBonificacion() : BigDecimal.ZERO;
+            fila[4] = cliente.getMontoCompraMinima().compareTo(BigDecimal.ZERO) > 0 ? cliente.getMontoCompraMinima() : BigDecimal.ZERO;
             fila[5] = cliente.getUbicacionFacturacion();
             return fila;
         }).forEachOrdered(fila -> {

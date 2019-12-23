@@ -209,7 +209,7 @@ public class ProductosGUI extends JInternalFrame {
             fila[14] = producto.getIvaNeto();
             fila[15] = producto.getPrecioLista();
             fila[16] = producto.getPorcentajeBonificacionOferta();
-            fila[17] = producto.getPrecioListaBonificado();        
+            fila[17] = producto.getPrecioBonificado();        
             fila[18] = producto.getNombreRubro();
             fila[19] = producto.getFechaUltimaModificacion();
             fila[20] = producto.getEstanteria();
