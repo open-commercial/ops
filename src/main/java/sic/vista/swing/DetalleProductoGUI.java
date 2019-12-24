@@ -472,7 +472,7 @@ public class DetalleProductoGUI extends JDialog {
         });
 
         lblBonificacion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblBonificacion.setText("Porcentaje Bonif.:");
+        lblBonificacion.setText("Precio Bonif.(%):");
 
         javax.swing.GroupLayout panelPreciosLayout = new javax.swing.GroupLayout(panelPrecios);
         panelPrecios.setLayout(panelPreciosLayout);
@@ -1159,7 +1159,9 @@ public class DetalleProductoGUI extends JDialog {
     
     private void asignarPreciosDiferenciados() {
         txtPrecioBonificado.setValue(this.calcularPrecioPorcentaje(new BigDecimal(txtPrecioLista.getValue().toString()), new BigDecimal(txtPorcentajePrecioBonificado.getValue().toString())));
-        txtPrecioOferta.setValue(this.calcularPrecioPorcentaje(new BigDecimal(txtPrecioLista.getValue().toString()), new BigDecimal(txtPorcentajeOferta.getValue().toString())));
+        if (chkOferta.isSelected()) {
+            txtPrecioOferta.setValue(this.calcularPrecioPorcentaje(new BigDecimal(txtPrecioLista.getValue().toString()), new BigDecimal(txtPorcentajeOferta.getValue().toString())));
+        }
     }
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
@@ -1398,6 +1400,7 @@ public class DetalleProductoGUI extends JDialog {
     private void cmbIVAPorcentajeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbIVAPorcentajeItemStateChanged
         this.calcularIVANeto();
         this.calcularPrecioLista();
+        this.asignarPreciosDiferenciados();
     }//GEN-LAST:event_cmbIVAPorcentajeItemStateChanged
 
     private void txtPVPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPVPActionPerformed
@@ -1406,6 +1409,7 @@ public class DetalleProductoGUI extends JDialog {
         this.calcularPVP();
         this.calcularIVANeto();
         this.calcularPrecioLista();
+        this.asignarPreciosDiferenciados();
     }//GEN-LAST:event_txtPVPActionPerformed
 
     private void txtPVPFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPVPFocusLost
@@ -1417,6 +1421,7 @@ public class DetalleProductoGUI extends JDialog {
         this.calcularPVP();
         this.calcularIVANeto();
         this.calcularPrecioLista();
+        this.asignarPreciosDiferenciados();
     }//GEN-LAST:event_txtPVPFocusLost
 
     private void txtPVPFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPVPFocusGained
@@ -1459,6 +1464,7 @@ public class DetalleProductoGUI extends JDialog {
         this.calcularGananciaPorcentaje();
         this.calcularIVANeto();
         this.calcularPrecioLista();
+        this.asignarPreciosDiferenciados();
     }//GEN-LAST:event_txtGananciaPorcentajeActionPerformed
 
     private void txtGananciaPorcentajeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGananciaPorcentajeFocusLost
@@ -1472,6 +1478,7 @@ public class DetalleProductoGUI extends JDialog {
         this.calcularGananciaPorcentaje();
         this.calcularIVANeto();
         this.calcularPrecioLista();
+        this.asignarPreciosDiferenciados();
     }//GEN-LAST:event_txtGananciaPorcentajeFocusLost
 
     private void txtGananciaPorcentajeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGananciaPorcentajeFocusGained
@@ -1485,6 +1492,7 @@ public class DetalleProductoGUI extends JDialog {
         this.calcularPVP();
         this.calcularIVANeto();
         this.calcularPrecioLista();
+        this.asignarPreciosDiferenciados();
     }//GEN-LAST:event_txtPrecioCostoActionPerformed
 
     private void txtPrecioCostoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioCostoFocusLost
@@ -1495,6 +1503,7 @@ public class DetalleProductoGUI extends JDialog {
         this.calcularPVP();
         this.calcularIVANeto();
         this.calcularPrecioLista();
+        this.asignarPreciosDiferenciados();
     }//GEN-LAST:event_txtPrecioCostoFocusLost
 
     private void txtPrecioCostoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioCostoFocusGained

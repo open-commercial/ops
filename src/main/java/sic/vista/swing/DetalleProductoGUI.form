@@ -597,7 +597,7 @@
                 <Component class="javax.swing.JLabel" name="lblBonificacion">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="Porcentaje Bonif.:"/>
+                    <Property name="text" type="java.lang.String" value="Precio Bonif.(%):"/>
                   </Properties>
                 </Component>
               </SubComponents>

@@ -20,6 +20,7 @@ public class ProductosParaActualizar {
     private BigDecimal precioCosto;
     private BigDecimal precioLista;
     private BigDecimal precioVentaPublico;
+    private BigDecimal porcentajeBonificacionPrecio;
     private Boolean publico;
 
 }
