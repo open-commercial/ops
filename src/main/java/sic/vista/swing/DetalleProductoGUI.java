@@ -1042,6 +1042,8 @@ public class DetalleProductoGUI extends JDialog {
         rbPrivado.setSelected(true);
         txtPorcentajeOferta.setValue(BigDecimal.ZERO);
         txtPrecioOferta.setEnabled(false);
+        txtPrecioBonificado.setValue(BigDecimal.ZERO);
+        txtPorcentajePrecioBonificado.setValue(BigDecimal.ZERO);
     }
     
     private void cargarMedidas() {
