@@ -120,9 +120,9 @@
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="txtNombreCliente" linkSize="24" min="-2" pref="635" max="-2" attributes="2"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="lblBonificacion" min="-2" max="-2" attributes="1"/>
+                              <Component id="lblMontoCompraMinima" min="-2" max="-2" attributes="1"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="txtBonificacion" max="32767" attributes="0"/>
+                              <Component id="txtMontoCompraMinima" max="32767" attributes="0"/>
                           </Group>
                           <Component id="txtUbicacionCliente" alignment="1" max="32767" attributes="2"/>
                       </Group>
@@ -134,10 +134,10 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="lblBonificacion" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblMontoCompraMinima" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="txtNombreCliente" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="lblNombreCliente" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtBonificacion" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtMontoCompraMinima" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -198,10 +198,10 @@
                 <Property name="focusable" type="boolean" value="false"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="lblBonificacion">
+            <Component class="javax.swing.JLabel" name="lblMontoCompraMinima">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="Bonificaci&#xf3;n:"/>
+                <Property name="text" type="java.lang.String" value="Compra M&#xed;nima $:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtIdFiscalCliente">
@@ -210,7 +210,7 @@
                 <Property name="focusable" type="boolean" value="false"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="txtBonificacion">
+            <Component class="javax.swing.JTextField" name="txtMontoCompraMinima">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
               </Properties>

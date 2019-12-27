@@ -32,6 +32,7 @@ import sic.modelo.Usuario;
 import sic.modelo.UsuarioActivo;
 import sic.modelo.criteria.BusquedaCuentaCorrienteClienteCriteria;
 import sic.util.ColoresNumerosRenderer;
+import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
 import sic.util.PorcentajeRenderer;
 import sic.util.FormatosFechaHora;
@@ -114,7 +115,7 @@ public class ClientesGUI extends JInternalFrame {
         encabezados[4] = "Nombre Fantasia";
         encabezados[5] = "Saldo C/C";
         encabezados[6] = "Ultimo Movimiento C/C";
-        encabezados[7] = "% Bonif.";
+        encabezados[7] = "Compra Mín.";
         encabezados[8] = "Credencial";
         encabezados[9] = "Viajante";
         encabezados[10] = "Condicion IVA";
@@ -154,7 +155,7 @@ public class ClientesGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(110);
         tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(150);
-        tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(90);
+        tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(250);
@@ -166,7 +167,7 @@ public class ClientesGUI extends JInternalFrame {
         //renderers
         tbl_Resultados.getColumnModel().getColumn(5).setCellRenderer(new ColoresNumerosRenderer());
         tbl_Resultados.getColumnModel().getColumn(6).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
-        tbl_Resultados.getColumnModel().getColumn(7).setCellRenderer(new PorcentajeRenderer());
+        tbl_Resultados.getColumnModel().getColumn(7).setCellRenderer(new DecimalesRenderer());
         tbl_Resultados.getColumnModel().getColumn(14).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 
@@ -180,7 +181,7 @@ public class ClientesGUI extends JInternalFrame {
             fila[4] = c.getCliente().getNombreFantasia();
             fila[5] = c.getSaldo();
             fila[6] = c.getFechaUltimoMovimiento();
-            fila[7] = c.getCliente().getBonificacion();
+            fila[7] = c.getCliente().getMontoCompraMinima();
             fila[8] = c.getCliente().getNombreCredencial();
             fila[9] = c.getCliente().getNombreViajante();
             fila[10] = c.getCliente().getCategoriaIVA();

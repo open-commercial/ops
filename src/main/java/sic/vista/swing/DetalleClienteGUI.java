@@ -89,7 +89,7 @@ public class DetalleClienteGUI extends JDialog {
         txtIdFiscal.setValue(cliente.getIdFiscal());
         txtNombreFiscal.setText(cliente.getNombreFiscal());
         txtNombreFantasia.setText(cliente.getNombreFantasia());
-        txtBonificacion.setValue(cliente.getBonificacion());
+        txtMontoCompraMinima.setValue(cliente.getMontoCompraMinima());
         cmbCategoriaIVA.setSelectedItem(cliente.getCategoriaIVA());
         if (cliente.getUbicacionFacturacion() != null) {
             lblDetalleUbicacionFacturacion.setText(cliente.getUbicacionFacturacion().toString());
@@ -130,8 +130,8 @@ public class DetalleClienteGUI extends JDialog {
             lblCredencial.setEnabled(true);
             cmbCredencial.setEnabled(true);
             btnBuscarCredencial.setEnabled(true);
-            lblBonificacion.setEnabled(true);
-            txtBonificacion.setEnabled(true);
+            lblMontoCompraMinima.setEnabled(true);
+            txtMontoCompraMinima.setEnabled(true);
         } else {
             lblViajante.setEnabled(false);
             cmbViajante.setEnabled(false);
@@ -139,8 +139,8 @@ public class DetalleClienteGUI extends JDialog {
             lblCredencial.setEnabled(false);
             cmbCredencial.setEnabled(false);
             btnBuscarCredencial.setEnabled(false);
-            lblBonificacion.setEnabled(false);
-            txtBonificacion.setEnabled(false);
+            lblMontoCompraMinima.setEnabled(false);
+            txtMontoCompraMinima.setEnabled(false);
         }
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
@@ -161,8 +161,8 @@ public class DetalleClienteGUI extends JDialog {
 
         btn_Guardar = new javax.swing.JButton();
         panelPrincipal = new javax.swing.JPanel();
-        lblBonificacion = new javax.swing.JLabel();
-        txtBonificacion = new javax.swing.JFormattedTextField();
+        lblMontoCompraMinima = new javax.swing.JLabel();
+        txtMontoCompraMinima = new javax.swing.JFormattedTextField();
         lblIdFiscal = new javax.swing.JLabel();
         txtIdFiscal = new javax.swing.JFormattedTextField();
         lblNombreFiscal = new javax.swing.JLabel();
@@ -212,11 +212,11 @@ public class DetalleClienteGUI extends JDialog {
 
         panelPrincipal.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        lblBonificacion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblBonificacion.setText("% Bonificación:");
+        lblMontoCompraMinima.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblMontoCompraMinima.setText("Compra Mínima $:");
 
-        txtBonificacion.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
-        txtBonificacion.setValue(0);
+        txtMontoCompraMinima.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("###0.##"))));
+        txtMontoCompraMinima.setValue(0);
 
         lblIdFiscal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblIdFiscal.setText("CUIT o DNI:");
@@ -330,7 +330,7 @@ public class DetalleClienteGUI extends JDialog {
             .addGroup(panelPrincipalLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblBonificacion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblMontoCompraMinima, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblNombreFiscal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblNombreFantasia, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblIdFiscal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -344,7 +344,7 @@ public class DetalleClienteGUI extends JDialog {
                     .addComponent(lblCredencial, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtBonificacion)
+                    .addComponent(txtMontoCompraMinima)
                     .addComponent(txtNombreFiscal)
                     .addComponent(txtNombreFantasia)
                     .addComponent(txtIdFiscal)
@@ -377,15 +377,15 @@ public class DetalleClienteGUI extends JDialog {
                 .addContainerGap())
         );
 
-        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblBonificacion, lblCondicionIVA, lblContacto, lblCredencial, lblEmail, lblIdFiscal, lblNombreFantasia, lblNombreFiscal, lblTelefono, lblUbicacionEnvio, lblUbicacionFacturacion, lblViajante});
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblCondicionIVA, lblContacto, lblCredencial, lblEmail, lblIdFiscal, lblMontoCompraMinima, lblNombreFantasia, lblNombreFiscal, lblTelefono, lblUbicacionEnvio, lblUbicacionFacturacion, lblViajante});
 
         panelPrincipalLayout.setVerticalGroup(
             panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPrincipalLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lblBonificacion)
-                    .addComponent(txtBonificacion, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblMontoCompraMinima)
+                    .addComponent(txtMontoCompraMinima, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblNombreFiscal)
@@ -445,9 +445,9 @@ public class DetalleClienteGUI extends JDialog {
 
         panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarUsuarioViajante, btnNuevoUsuarioViajante});
 
-        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblBonificacion, lblIdFiscal});
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lblIdFiscal, lblMontoCompraMinima});
 
-        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtBonificacion, txtIdFiscal});
+        panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtIdFiscal, txtMontoCompraMinima});
 
         panelPrincipalLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnUbicacionFacturacion, lblDetalleUbicacionEnvio, lblDetalleUbicacionFacturacion});
 
@@ -482,7 +482,7 @@ public class DetalleClienteGUI extends JDialog {
             cliente.setIdFiscal((Long) txtIdFiscal.getValue());
             cliente.setNombreFiscal(txtNombreFiscal.getText().trim());
             cliente.setNombreFantasia(txtNombreFantasia.getText().trim());
-            cliente.setBonificacion(new BigDecimal(txtBonificacion.getText()));
+            cliente.setMontoCompraMinima(new BigDecimal(txtMontoCompraMinima.getText()));
             cliente.setCategoriaIVA((CategoriaIVA) cmbCategoriaIVA.getSelectedItem());
             cliente.setTelefono(txtTelefono.getText().trim());
             cliente.setContacto(txtContacto.getText().trim());
@@ -637,7 +637,6 @@ public class DetalleClienteGUI extends JDialog {
     private javax.swing.JComboBox<CategoriaIVA> cmbCategoriaIVA;
     private javax.swing.JComboBox<Usuario> cmbCredencial;
     private javax.swing.JComboBox<Usuario> cmbViajante;
-    private javax.swing.JLabel lblBonificacion;
     private javax.swing.JLabel lblCondicionIVA;
     private javax.swing.JLabel lblContacto;
     private javax.swing.JLabel lblCredencial;
@@ -645,6 +644,7 @@ public class DetalleClienteGUI extends JDialog {
     private javax.swing.JLabel lblDetalleUbicacionFacturacion;
     private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblIdFiscal;
+    private javax.swing.JLabel lblMontoCompraMinima;
     private javax.swing.JLabel lblNombreFantasia;
     private javax.swing.JLabel lblNombreFiscal;
     private javax.swing.JLabel lblTelefono;
@@ -652,10 +652,10 @@ public class DetalleClienteGUI extends JDialog {
     private javax.swing.JLabel lblUbicacionFacturacion;
     private javax.swing.JLabel lblViajante;
     private javax.swing.JPanel panelPrincipal;
-    private javax.swing.JFormattedTextField txtBonificacion;
     private javax.swing.JTextField txtContacto;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JFormattedTextField txtIdFiscal;
+    private javax.swing.JFormattedTextField txtMontoCompraMinima;
     private javax.swing.JTextField txtNombreFantasia;
     private javax.swing.JTextField txtNombreFiscal;
     private javax.swing.JTextField txtTelefono;
