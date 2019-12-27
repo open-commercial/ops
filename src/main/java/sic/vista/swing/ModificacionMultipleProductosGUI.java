@@ -198,7 +198,11 @@ public class ModificacionMultipleProductosGUI extends JDialog {
     }
     
     private BigDecimal calcularPorcentaje(BigDecimal precioBonificado, BigDecimal precioDeLista) {
-        return (new BigDecimal("100")).subtract(precioBonificado.multiply(new BigDecimal("100")).divide(precioDeLista, 2, RoundingMode.HALF_UP));
+        if (precioDeLista.compareTo(BigDecimal.ZERO) <= 0) {
+            return BigDecimal.ZERO;
+        } else {
+            return (new BigDecimal("100")).subtract(precioBonificado.multiply(new BigDecimal("100")).divide(precioDeLista, 2, RoundingMode.HALF_UP));
+        }
     }
     
     @SuppressWarnings("unchecked")
