@@ -83,7 +83,7 @@ public class ProductosGUI extends JInternalFrame {
 
     private void setColumnas() {        
         //nombres de columnas
-        String[] encabezados = new String[26];
+        String[] encabezados = new String[27];
         encabezados[0] = "Público";
         encabezados[1] = "Oferta";
         encabezados[2] = "Codigo";
@@ -92,7 +92,6 @@ public class ProductosGUI extends JInternalFrame {
         encabezados[5] = "Otras Sucursales";
         encabezados[6] = "Total Sucursales";
         encabezados[7] = "Venta x Cant."; 
-        //encabezados[8] = "Sin Límite"; 
         encabezados[8] = "Medida";
         encabezados[9] = "Precio Costo";
         encabezados[10] = "% Ganancia";
@@ -100,17 +99,18 @@ public class ProductosGUI extends JInternalFrame {
         encabezados[12] = "PVP";
         encabezados[13] = "% IVA";
         encabezados[14] = "IVA";
-        encabezados[15] = "Precio Lista";
+        encabezados[15] = "Precio Lista";        
         encabezados[16] = "% Oferta";
-        encabezados[17] = "Precio Oferta";
-        encabezados[18] = "Rubro";
-        encabezados[19] = "Fecha U. Modificacion";
-        encabezados[20] = "Estanteria";
-        encabezados[21] = "Estante";
-        encabezados[22] = "Proveedor";
-        encabezados[23] = "Fecha Alta";
-        encabezados[24] = "Fecha Vencimiento";
-        encabezados[25] = "Nota";
+        encabezados[17] = "% Bonif.";
+        encabezados[18] = "P.U. Bonif.";
+        encabezados[19] = "Rubro";
+        encabezados[20] = "Fecha U. Modificacion";
+        encabezados[21] = "Estanteria";
+        encabezados[22] = "Estante";
+        encabezados[23] = "Proveedor";
+        encabezados[24] = "Fecha Alta";
+        encabezados[25] = "Fecha Vencimiento";
+        encabezados[26] = "Nota";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaResultados);
         //tipo de dato columnas
@@ -123,7 +123,6 @@ public class ProductosGUI extends JInternalFrame {
         tipos[5] = BigDecimal.class;
         tipos[6] = BigDecimal.class;
         tipos[7] = BigDecimal.class;
-        //tipos[8] = Boolean.class;
         tipos[8] = String.class;
         tipos[9] = BigDecimal.class;
         tipos[10] = BigDecimal.class;
@@ -131,17 +130,18 @@ public class ProductosGUI extends JInternalFrame {
         tipos[12] = BigDecimal.class;
         tipos[13] = BigDecimal.class;
         tipos[14] = BigDecimal.class;
-        tipos[15] = BigDecimal.class;
+        tipos[15] = BigDecimal.class;      
         tipos[16] = BigDecimal.class;
         tipos[17] = BigDecimal.class;
-        tipos[18] = String.class;
-        tipos[19] = LocalDateTime.class;
-        tipos[20] = String.class;
+        tipos[18] = BigDecimal.class;
+        tipos[19] = String.class;
+        tipos[20] = LocalDateTime.class;
         tipos[21] = String.class;
         tipos[22] = String.class;
-        tipos[23] = LocalDateTime.class;
-        tipos[24] = LocalDate.class;
-        tipos[25] = String.class;
+        tipos[23] = String.class;
+        tipos[24] = LocalDateTime.class;
+        tipos[25] = LocalDate.class;
+        tipos[26] = String.class;
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
@@ -164,26 +164,27 @@ public class ProductosGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(12).setPreferredWidth(80);
         tbl_Resultados.getColumnModel().getColumn(13).setPreferredWidth(60);
         tbl_Resultados.getColumnModel().getColumn(14).setPreferredWidth(80);
-        tbl_Resultados.getColumnModel().getColumn(15).setPreferredWidth(90);
+        tbl_Resultados.getColumnModel().getColumn(15).setPreferredWidth(90);       
         tbl_Resultados.getColumnModel().getColumn(16).setPreferredWidth(60);
-        tbl_Resultados.getColumnModel().getColumn(17).setPreferredWidth(90);      
-        tbl_Resultados.getColumnModel().getColumn(18).setPreferredWidth(180);
-        tbl_Resultados.getColumnModel().getColumn(19).setPreferredWidth(150);
-        tbl_Resultados.getColumnModel().getColumn(20).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(17).setPreferredWidth(60);
+        tbl_Resultados.getColumnModel().getColumn(18).setPreferredWidth(90);      
+        tbl_Resultados.getColumnModel().getColumn(19).setPreferredWidth(180);
+        tbl_Resultados.getColumnModel().getColumn(20).setPreferredWidth(150);
         tbl_Resultados.getColumnModel().getColumn(21).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(22).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(23).setPreferredWidth(125);
+        tbl_Resultados.getColumnModel().getColumn(22).setPreferredWidth(200);
+        tbl_Resultados.getColumnModel().getColumn(23).setPreferredWidth(250);
         tbl_Resultados.getColumnModel().getColumn(24).setPreferredWidth(125);
-        tbl_Resultados.getColumnModel().getColumn(25).setPreferredWidth(400);
+        tbl_Resultados.getColumnModel().getColumn(25).setPreferredWidth(125);
+        tbl_Resultados.getColumnModel().getColumn(26).setPreferredWidth(400);
         //renderers
-        tbl_Resultados.getColumnModel().getColumn(19).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
-        tbl_Resultados.getColumnModel().getColumn(23).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(20).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
         tbl_Resultados.getColumnModel().getColumn(24).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(25).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 
     private void cargarResultadosAlTable() {
         productosParcial.stream().map(producto -> {
-            Object[] fila = new Object[26];
+            Object[] fila = new Object[27];
             fila[0] = producto.isPublico();
             fila[1] = producto.isOferta();
             fila[2] = producto.getCodigo();
@@ -207,17 +208,18 @@ public class ProductosGUI extends JInternalFrame {
             fila[12] = producto.getPrecioVentaPublico();
             fila[13] = producto.getIvaPorcentaje();
             fila[14] = producto.getIvaNeto();
-            fila[15] = producto.getPrecioLista();
+            fila[15] = producto.getPrecioLista();        
             fila[16] = producto.getPorcentajeBonificacionOferta();
-            fila[17] = producto.getPrecioBonificado();        
-            fila[18] = producto.getNombreRubro();
-            fila[19] = producto.getFechaUltimaModificacion();
-            fila[20] = producto.getEstanteria();
-            fila[21] = producto.getEstante();
-            fila[22] = producto.getRazonSocialProveedor();
-            fila[23] = producto.getFechaAlta();
-            fila[24] = producto.getFechaVencimiento();
-            fila[25] = producto.getNota();
+            fila[17] = producto.getPorcentajeBonificacionPrecio();
+            fila[18] = producto.getPrecioBonificado();        
+            fila[19] = producto.getNombreRubro();
+            fila[20] = producto.getFechaUltimaModificacion();
+            fila[21] = producto.getEstanteria();
+            fila[22] = producto.getEstante();
+            fila[23] = producto.getRazonSocialProveedor();
+            fila[24] = producto.getFechaAlta();
+            fila[25] = producto.getFechaVencimiento();
+            fila[26] = producto.getNota();
             return fila;
         }).forEach(fila -> {
             modeloTablaResultados.addRow(fila);

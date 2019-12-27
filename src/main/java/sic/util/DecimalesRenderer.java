@@ -14,7 +14,7 @@ public class DecimalesRenderer extends DefaultTableCellRenderer {
 
         this.setHorizontalAlignment(SwingConstants.RIGHT);
         if (value instanceof Number) {
-            DecimalFormat dFormat = new DecimalFormat("##,##0.00"); 
+            DecimalFormat dFormat = new DecimalFormat("##,##0.##"); 
             value = dFormat.format(value);
         }
         return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
