@@ -32,6 +32,7 @@ import sic.modelo.Usuario;
 import sic.modelo.UsuarioActivo;
 import sic.modelo.criteria.BusquedaCuentaCorrienteClienteCriteria;
 import sic.util.ColoresNumerosRenderer;
+import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
 import sic.util.PorcentajeRenderer;
 import sic.util.FormatosFechaHora;
@@ -166,6 +167,7 @@ public class ClientesGUI extends JInternalFrame {
         //renderers
         tbl_Resultados.getColumnModel().getColumn(5).setCellRenderer(new ColoresNumerosRenderer());
         tbl_Resultados.getColumnModel().getColumn(6).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(7).setCellRenderer(new DecimalesRenderer());
         tbl_Resultados.getColumnModel().getColumn(14).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 

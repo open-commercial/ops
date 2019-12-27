@@ -24,6 +24,7 @@ import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.criteria.BusquedaClienteCriteria;
+import sic.util.DecimalesRenderer;
 import sic.util.PorcentajeRenderer;
 import sic.util.Utilidades;
 
@@ -126,6 +127,7 @@ public class BuscarClientesGUI extends JDialog {
         tblResultados.getColumnModel().getColumn(2).setPreferredWidth(250);
         tblResultados.getColumnModel().getColumn(3).setPreferredWidth(250);
         tblResultados.getColumnModel().getColumn(4).setPreferredWidth(100);
+        tblResultados.getColumnModel().getColumn(4).setCellRenderer(new DecimalesRenderer());       
         tblResultados.getColumnModel().getColumn(5).setPreferredWidth(400);  
     }
 
