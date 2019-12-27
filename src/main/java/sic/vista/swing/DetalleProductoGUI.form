@@ -314,7 +314,7 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -336,9 +336,12 @@
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="txtGananciaPorcentaje" alignment="0" max="32767" attributes="2"/>
                                       <Component id="cmbIVAPorcentaje" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="txtPorcentajeOferta" linkSize="23" alignment="0" min="-2" pref="34" max="-2" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="txtPorcentajeOferta" max="32767" attributes="0"/>
+                                          <EmptySpace min="1" pref="1" max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
-                                  <EmptySpace max="32767" attributes="0"/>
+                                  <EmptySpace min="-2" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="txtPrecioCosto" linkSize="5" alignment="1" pref="67" max="32767" attributes="1"/>
                                       <Component id="txtGananciaNeto" linkSize="5" alignment="1" pref="102" max="32767" attributes="1"/>
@@ -350,13 +353,13 @@
                               </Group>
                               <Group type="102" attributes="0">
                                   <Component id="lblBonificacion" min="-2" pref="154" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="txtPorcentajePrecioBonificado" linkSize="23" min="-2" pref="23" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
+                                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtPorcentajePrecioBonificado" pref="34" max="32767" attributes="0"/>
+                                  <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
                                   <Component id="txtPrecioBonificado" min="-2" pref="102" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
