@@ -21,7 +21,7 @@ public class ColoresNumerosRenderer extends DefaultTableCellRenderer {
         this.setHorizontalAlignment(SwingConstants.RIGHT);        
         if (valor instanceof Number) {            
             BigDecimal numero = ((BigDecimal) valor).setScale(2, RoundingMode.HALF_UP);                        
-            DecimalFormat dFormat = new DecimalFormat("##,##0.00");                                     
+            DecimalFormat dFormat = new DecimalFormat("##,##0.##");                                     
             cell.setText(dFormat.format(numero));            
             if (numero.compareTo(BigDecimal.ZERO) > 0) {
                 cell.setBackground(Color.GREEN);

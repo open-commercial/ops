@@ -102,7 +102,7 @@ public class ProductosGUI extends JInternalFrame {
         encabezados[15] = "Precio Lista";        
         encabezados[16] = "% Oferta";
         encabezados[17] = "% Bonif.";
-        encabezados[18] = "P.U. Bonif.";
+        encabezados[18] = "Precio Bonif.";
         encabezados[19] = "Rubro";
         encabezados[20] = "Fecha U. Modificacion";
         encabezados[21] = "Estanteria";
@@ -200,7 +200,6 @@ public class ProductosGUI extends JInternalFrame {
                     .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);
             fila[6] = producto.getCantidadTotalEnSucursales();
             fila[7] = producto.getBulto();
-            //fila[8] = producto.isIlimitado();
             fila[8] = producto.getNombreMedida();
             fila[9] = producto.getPrecioCosto();
             fila[10] = producto.getGananciaPorcentaje();

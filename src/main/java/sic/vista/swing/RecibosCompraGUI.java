@@ -281,7 +281,7 @@ public class RecibosCompraGUI extends JInternalFrame {
     private void lanzarReporteRecibo() {
         Recibo recibo = RestClient.getRestTemplate()
                 .getForObject("/recibos/" + recibosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getIdRecibo(), Recibo.class);
-        DecimalFormat dFormat = new DecimalFormat("##,##0.00");
+        DecimalFormat dFormat = new DecimalFormat("##,##0.##");
         String mensaje = "Forma de Pago: " + recibo.getNombreFormaDePago()
                 + "\nMonto: " + dFormat.format(recibo.getMonto().setScale(2, RoundingMode.HALF_UP))
                 + "\nConcepto: " + recibo.getConcepto();

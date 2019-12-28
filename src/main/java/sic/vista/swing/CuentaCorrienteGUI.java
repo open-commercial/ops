@@ -442,7 +442,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                 case RECIBO:
                     Recibo recibo = RestClient.getRestTemplate()
                             .getForObject("/recibos/" + renglonCC.getIdMovimiento(), Recibo.class);
-                    DecimalFormat dFormat = new DecimalFormat("##,##0.00");
+                    DecimalFormat dFormat = new DecimalFormat("##,##0.##");
                     String mensaje = "Forma de Pago: " + recibo.getNombreFormaDePago()
                             + "\nMonto: " + dFormat.format(recibo.getMonto().setScale(2, RoundingMode.HALF_UP))
                             + "\nConcepto: " + recibo.getConcepto();

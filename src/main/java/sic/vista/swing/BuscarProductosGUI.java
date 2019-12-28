@@ -341,7 +341,7 @@ public class BuscarProductosGUI extends JDialog {
             encabezados[6] = encabezadoPrecio;
             encabezados[7] = "% Oferta";
             encabezados[8] = "% Bonif.";
-            encabezados[9] = "P.U. Bonif.";
+            encabezados[9] = "Precio Bonif.";
         }
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaResultados);

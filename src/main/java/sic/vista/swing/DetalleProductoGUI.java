@@ -998,15 +998,13 @@ public class DetalleProductoGUI extends JDialog {
         txtPrecioBonificado.setValue(productoParaModificar.getPrecioBonificado());
         if (productoParaModificar.isOferta()) {
             chkOferta.setSelected(true);
-            txtPorcentajeOferta.setValue(productoParaModificar.getPorcentajeBonificacionOferta());
-            txtPrecioOferta.setValue(productoParaModificar.getPrecioBonificado() != null
-                    ? productoParaModificar.getPrecioBonificado() : BigDecimal.ZERO);
-            txtPrecioOferta.setValue(this.calcularPrecioPorcentaje(productoParaModificar.getPrecioLista(), productoParaModificar.getPorcentajeBonificacionOferta()));
         } else {
-            txtPorcentajeOferta.setValue(BigDecimal.ZERO);
             txtPrecioOferta.setEnabled(false);
-            txtPrecioOferta.setValue(BigDecimal.ZERO);
-        }         
+        }
+        txtPorcentajeOferta.setValue(productoParaModificar.getPorcentajeBonificacionOferta());
+        txtPrecioOferta.setValue(productoParaModificar.getPrecioBonificado() != null
+                ? productoParaModificar.getPrecioBonificado() : BigDecimal.ZERO);
+        txtPrecioOferta.setValue(this.calcularPrecioPorcentaje(productoParaModificar.getPrecioLista(), productoParaModificar.getPorcentajeBonificacionOferta()));
         if (productoParaModificar.getUrlImagen() == null || "".equals(productoParaModificar.getUrlImagen())) {
             lbl_imagen.setText("SIN IMAGEN");
             imagenProducto = null;
@@ -1605,9 +1603,7 @@ public class DetalleProductoGUI extends JDialog {
                     ? new BigDecimal(txtPrecioLista.getValue().toString()) : BigDecimal.ZERO, new BigDecimal(txtPorcentajeOferta.getValue().toString())));
         } else {
             txtPorcentajeOferta.setEnabled(false);
-            txtPorcentajeOferta.setValue(BigDecimal.ZERO);
             txtPrecioOferta.setEnabled(false);
-            txtPrecioOferta.setValue(BigDecimal.ZERO);
         }
     }//GEN-LAST:event_chkOfertaItemStateChanged
 
