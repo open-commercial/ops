@@ -57,7 +57,7 @@ public class BuscarProductosGUI extends JDialog {
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int NUMERO_PAGINA = 0;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private final Dimension sizeDialog = new Dimension(1200, 800);
+    private final Dimension sizeDialog = new Dimension(1100, 700);
     
     public BuscarProductosGUI(List<RenglonFactura> renglones, TipoDeComprobante tipoDeComprobante, Cliente cliente) { 
         this.initComponents();
@@ -341,7 +341,7 @@ public class BuscarProductosGUI extends JDialog {
             encabezados[6] = encabezadoPrecio;
             encabezados[7] = "% Oferta";
             encabezados[8] = "% Bonif.";
-            encabezados[9] = "Precio Bonif.";
+            encabezados[9] = "P. Bonif.";
         }
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaResultados);
@@ -366,22 +366,22 @@ public class BuscarProductosGUI extends JDialog {
         tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(145);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(380);
         if (!busquedaParaFiltros) {
-            tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(140);
-            tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(140);
-            tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(140);
-            tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(140);
-            tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(110);
-            tbl_Resultados.getColumnModel().getColumn(4).setMaxWidth(110);
-            tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(90);
-            tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(90);
+            tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(130);
+            tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(130);
+            tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(130);
+            tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(130);
+            tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(105);
+            tbl_Resultados.getColumnModel().getColumn(4).setMaxWidth(105);
+            tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(70);
+            tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(70);
             tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(70);
             tbl_Resultados.getColumnModel().getColumn(6).setMaxWidth(70);
-            tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(80);
-            tbl_Resultados.getColumnModel().getColumn(7).setMaxWidth(80);
-            tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(80);
-            tbl_Resultados.getColumnModel().getColumn(8).setMaxWidth(80);
-            tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(80);
-            tbl_Resultados.getColumnModel().getColumn(9).setMaxWidth(80);
+            tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(70);
+            tbl_Resultados.getColumnModel().getColumn(7).setMaxWidth(70);
+            tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(70);
+            tbl_Resultados.getColumnModel().getColumn(8).setMaxWidth(70);
+            tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(70);
+            tbl_Resultados.getColumnModel().getColumn(9).setMaxWidth(70);
         }
     }
 
