@@ -666,7 +666,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         lbl_saldoFinal.setText("Saldo:");
 
         ftxtSaldoFinal.setEditable(false);
-        ftxtSaldoFinal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
+        ftxtSaldoFinal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
         ftxtSaldoFinal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         ftxtSaldoFinal.setFocusable(false);
         ftxtSaldoFinal.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
