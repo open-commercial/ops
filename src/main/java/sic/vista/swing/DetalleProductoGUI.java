@@ -953,15 +953,13 @@ public class DetalleProductoGUI extends JDialog {
         txtIVANeto.setValue(productoParaModificar.getIvaNeto());        
         txtPrecioLista.setValue(productoParaModificar.getPrecioLista());
         txtPorcentajePrecioBonificado.setValue(productoParaModificar.getPorcentajeBonificacionPrecio());
-        txtPrecioBonificado.setValue(productoParaModificar.getPrecioBonificado());
+        txtPrecioBonificado.setValue(this.calcularPrecioPorcentaje(productoParaModificar.getPrecioLista(), productoParaModificar.getPorcentajeBonificacionPrecio()));
         if (productoParaModificar.isOferta()) {
             chkOferta.setSelected(true);
         } else {
             txtPrecioOferta.setEnabled(false);
         }
         txtPorcentajeOferta.setValue(productoParaModificar.getPorcentajeBonificacionOferta());
-        txtPrecioOferta.setValue(productoParaModificar.getPrecioBonificado() != null
-                ? productoParaModificar.getPrecioBonificado() : BigDecimal.ZERO);
         txtPrecioOferta.setValue(this.calcularPrecioPorcentaje(productoParaModificar.getPrecioLista(), productoParaModificar.getPorcentajeBonificacionOferta()));
         if (productoParaModificar.getUrlImagen() == null || "".equals(productoParaModificar.getUrlImagen())) {
             lbl_imagen.setText("SIN IMAGEN");
