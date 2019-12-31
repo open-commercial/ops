@@ -47,43 +47,43 @@ public class DetalleProductoGUI extends JDialog {
     private byte[] imagenProducto = null;
     private boolean cambioImagen = false;
     private final int anchoImagenContainer = 416;
-    private final int altoImagenContainer = 312; 
+    private final int altoImagenContainer = 312;
     private Producto productoParaModificar;
-    private final TipoDeOperacion operacion;        
+    private final TipoDeOperacion operacion;
     private List<Medida> medidas;
-    private List<Rubro> rubros;  
+    private List<Rubro> rubros;
     private List<Sucursal> sucursales;
-    private Map<Long,BigDecimal> cantidadEnSucursal;
+    private Map<Long, BigDecimal> cantidadEnSucursal;
     private Proveedor proveedorSeleccionado;
     private BigDecimal precioListaAnterior = BigDecimal.ZERO;
-    private final static BigDecimal IVA_21 = new BigDecimal("21");	
+    private final static BigDecimal IVA_21 = new BigDecimal("21");
     private final static BigDecimal IVA_105 = new BigDecimal("10.5");
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleProductoGUI() {
         this.initComponents();
-        this.setIcon();                
+        this.setIcon();
         operacion = TipoDeOperacion.ALTA;
-    }       
+    }
 
     public DetalleProductoGUI(Producto producto) {
         this.initComponents();
-        this.setIcon();                
+        this.setIcon();
         operacion = TipoDeOperacion.ACTUALIZACION;
-        productoParaModificar = producto;                
-    }            
-    
+        productoParaModificar = producto;
+    }
+
     private void setIcon() {
         ImageIcon iconoVentana = new ImageIcon(DetalleProductoGUI.class.getResource("/sic/icons/Product_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
     }
-    
+
     private BigDecimal calcularPrecioPorcentaje(BigDecimal monto, BigDecimal porcentaje) {
         return monto
                 .multiply((new BigDecimal("100")).subtract(porcentaje)
                         .divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP));
     }
-    
+
     private BigDecimal calcularPorcentaje(BigDecimal precioBonificado, BigDecimal precioDeLista) {
         return (new BigDecimal("100")).subtract(precioBonificado.multiply(new BigDecimal("100")).divide(precioDeLista, 2, RoundingMode.HALF_UP));
     }
@@ -936,7 +936,7 @@ public class DetalleProductoGUI extends JDialog {
         });
         txt_Bulto.setValue(productoParaModificar.getBulto());
         cmb_Rubro.setSelectedItem(productoParaModificar.getNombreRubro());
-        txtProveedor.setText(productoParaModificar.getRazonSocialProveedor());     
+        txtProveedor.setText(productoParaModificar.getRazonSocialProveedor());
         lbl_FechaUltimaModificacion.setText(FormatosFechaHora.formatoFecha(productoParaModificar.getFechaUltimaModificacion(), FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
         lbl_FechaAlta.setText(FormatosFechaHora.formatoFecha(productoParaModificar.getFechaAlta(), FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
         if (productoParaModificar.getFechaVencimiento() != null) {
@@ -944,13 +944,13 @@ public class DetalleProductoGUI extends JDialog {
             dc_Vencimiento.setDate(fVencimiento);
         }
         txt_Estanteria.setText(productoParaModificar.getEstanteria());
-        txt_Estante.setText(productoParaModificar.getEstante());        
-        txtPrecioCosto.setValue(productoParaModificar.getPrecioCosto());        
-        txtGananciaPorcentaje.setValue(productoParaModificar.getGananciaPorcentaje());        
-        txtGananciaNeto.setValue(productoParaModificar.getGananciaNeto());        
-        txtPVP.setValue(productoParaModificar.getPrecioVentaPublico());        
-        cmbIVAPorcentaje.setSelectedItem(productoParaModificar.getIvaPorcentaje().stripTrailingZeros());        
-        txtIVANeto.setValue(productoParaModificar.getIvaNeto());        
+        txt_Estante.setText(productoParaModificar.getEstante());
+        txtPrecioCosto.setValue(productoParaModificar.getPrecioCosto());
+        txtGananciaPorcentaje.setValue(productoParaModificar.getGananciaPorcentaje());
+        txtGananciaNeto.setValue(productoParaModificar.getGananciaNeto());
+        txtPVP.setValue(productoParaModificar.getPrecioVentaPublico());
+        cmbIVAPorcentaje.setSelectedItem(productoParaModificar.getIvaPorcentaje().stripTrailingZeros());
+        txtIVANeto.setValue(productoParaModificar.getIvaNeto());
         txtPrecioLista.setValue(productoParaModificar.getPrecioLista());
         txtPorcentajePrecioBonificado.setValue(productoParaModificar.getPorcentajeBonificacionPrecio());
         txtPrecioBonificado.setValue(this.calcularPrecioPorcentaje(productoParaModificar.getPrecioLista(), productoParaModificar.getPorcentajeBonificacionPrecio()));
@@ -998,7 +998,7 @@ public class DetalleProductoGUI extends JDialog {
         txtPrecioBonificado.setValue(BigDecimal.ZERO);
         txtPorcentajePrecioBonificado.setValue(BigDecimal.ZERO);
     }
-    
+
     private void cargarMedidas() {
         cmb_Medida.removeAllItems();
         try {
@@ -1032,7 +1032,7 @@ public class DetalleProductoGUI extends JDialog {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     private void cargarSucursales() {
         this.cantidadEnSucursal = new HashMap<>();
         cmbSucursales.removeAllItems();
@@ -1068,7 +1068,7 @@ public class DetalleProductoGUI extends JDialog {
         txt_Nota.setText("");
         dc_Vencimiento.setDate(null);
     }
-    
+
     private void calcularGananciaPorcentaje() {
         BigDecimal gananciaPorcentaje = CalculosPrecioProducto.calcularGananciaPorcentaje(BigDecimal.ZERO,
                 BigDecimal.ZERO, new BigDecimal(txtPVP.getValue().toString()), BigDecimal.ZERO,
@@ -1076,18 +1076,18 @@ public class DetalleProductoGUI extends JDialog {
         txtGananciaPorcentaje.setValue(gananciaPorcentaje);
     }
 
-    private void calcularGananciaNeto() {        
+    private void calcularGananciaNeto() {
         BigDecimal gananciaNeto = CalculosPrecioProducto.calcularGananciaNeto(new BigDecimal(txtPrecioCosto.getValue().toString()),
                 new BigDecimal(txtGananciaPorcentaje.getValue().toString()));
         txtGananciaNeto.setValue(gananciaNeto);
     }
-    
-    private void calcularPVP() {                
+
+    private void calcularPVP() {
         BigDecimal pvp = CalculosPrecioProducto.calcularPVP(new BigDecimal(txtPrecioCosto.getValue().toString()),
                 new BigDecimal(txtGananciaPorcentaje.getValue().toString()));
         txtPVP.setValue(pvp);
     }
-    
+
     private void calcularIVANeto() {
         BigDecimal IVANeto = CalculosPrecioProducto.calcularIVANeto(new BigDecimal(txtPVP.getValue().toString()),
                 new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()));
@@ -1109,7 +1109,7 @@ public class DetalleProductoGUI extends JDialog {
         txtGananciaPorcentaje.setValue(gananciaPorcentaje);
         precioListaAnterior = new BigDecimal(txtPrecioLista.getValue().toString());
     }
-    
+
     private void asignarPreciosDiferenciados() {
         txtPrecioBonificado.setValue(this.calcularPrecioPorcentaje(new BigDecimal(txtPrecioLista.getValue().toString()), new BigDecimal(txtPorcentajePrecioBonificado.getValue().toString())));
         if (chkOferta.isSelected()) {
@@ -1171,6 +1171,7 @@ public class DetalleProductoGUI extends JDialog {
                     producto.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
                     producto.setPublico(rbPublico.isSelected());
                     producto.setOferta(chkOferta.isSelected());
+                    producto.setPorcentajeBonificacionOferta(new BigDecimal(txtPorcentajeOferta.getValue().toString()));
                     producto.setPorcentajeBonificacionPrecio(new BigDecimal(txtPorcentajePrecioBonificado.getValue().toString()));
                     producto.setEstanteria(txt_Estanteria.getText().trim());
                     producto.setEstante(txt_Estante.getText().trim());
@@ -1180,16 +1181,15 @@ public class DetalleProductoGUI extends JDialog {
                                 .atZone(ZoneId.systemDefault())
                                 .toLocalDate());
                     }
+                    if (imagenProducto != null) {
+                        producto.setImagen(imagenProducto);
+                    }
                     Producto productoRecuperado = RestClient.getRestTemplate().postForObject("/productos?idMedida=" + idMedida
                             + "&idRubro=" + idRubro
                             + "&idProveedor=" + ((idProveedor != null) ? idProveedor : "")
                             + "&idSucursal=" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
                             producto, Producto.class);
                     LOGGER.warn("El producto " + productoRecuperado + " se guardó correctamente");
-                    if (imagenProducto != null) {
-                        RestClient.getRestTemplate()
-                                .postForObject("/productos/" + productoRecuperado.getIdProducto() + "/imagenes", imagenProducto, String.class);
-                    }
                     int respuesta = JOptionPane.showConfirmDialog(this,
                             "El producto se guardó correctamente.\n¿Desea dar de alta otro producto?",
                             "Aviso", JOptionPane.YES_NO_OPTION);
@@ -1245,10 +1245,7 @@ public class DetalleProductoGUI extends JDialog {
                                 .toLocalDate());
                     }
                     if (cambioImagen && imagenProducto != null) {
-                        productoParaModificar.setUrlImagen(RestClient.getRestTemplate()
-                                .postForObject("/productos/" + productoParaModificar.getIdProducto() + "/imagenes", imagenProducto, String.class));
-                    } else if (cambioImagen && imagenProducto == null) {
-                        productoParaModificar.setUrlImagen(null);
+                        productoParaModificar.setImagen(imagenProducto);
                     }
                     RestClient.getRestTemplate().put("/productos?idMedida=" + idMedida
                             + "&idRubro=" + idRubro
@@ -1328,7 +1325,8 @@ public class DetalleProductoGUI extends JDialog {
     private void txtPVPFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPVPFocusLost
         try {
             txtPVP.commitEdit();
-        } catch (ParseException ex) {}
+        } catch (ParseException ex) {
+        }
         this.calcularGananciaPorcentaje();
         this.calcularGananciaNeto();
         this.calcularPVP();
@@ -1355,7 +1353,8 @@ public class DetalleProductoGUI extends JDialog {
     private void txtPrecioListaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioListaFocusLost
         try {
             txtPrecioLista.commitEdit();
-        } catch (ParseException ex) {}
+        } catch (ParseException ex) {
+        }
         this.calcularGananciaPorcentajeSegunPrecioDeLista();
         this.calcularGananciaNeto();
         this.calcularPVP();
@@ -1384,7 +1383,7 @@ public class DetalleProductoGUI extends JDialog {
         try {
             txtGananciaPorcentaje.commitEdit();
         } catch (ParseException ex) {
-            
+
         }
         this.calcularGananciaNeto();
         this.calcularPVP();
@@ -1411,7 +1410,8 @@ public class DetalleProductoGUI extends JDialog {
     private void txtPrecioCostoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioCostoFocusLost
         try {
             txtPrecioCosto.commitEdit();
-        } catch (ParseException ex) {}
+        } catch (ParseException ex) {
+        }
         this.calcularGananciaNeto();
         this.calcularPVP();
         this.calcularIVANeto();
@@ -1441,6 +1441,8 @@ public class DetalleProductoGUI extends JDialog {
         lbl_imagen.setText("SIN IMAGEN");
         imagenProducto = null;
         cambioImagen = true;
+        if (productoParaModificar != null)
+            productoParaModificar.setUrlImagen(null);
     }//GEN-LAST:event_btn_EliminarImagenActionPerformed
 
     private void btn_ExaminarArchivosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ExaminarArchivosActionPerformed
@@ -1539,10 +1541,10 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_txtPorcentajeOfertaFocusLost
 
     private void chkOfertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkOfertaActionPerformed
-        if (rbPrivado.isSelected() && chkOferta.isSelected()) {
+        if (chkOferta.isSelected() && imagenProducto == null) {
             chkOferta.setSelected(false);
             JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_producto_privado_no_en_oferta"),
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_producto_oferta_sin_imagen"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_chkOfertaActionPerformed
@@ -1680,5 +1682,5 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JTextField txt_Estanteria;
     private javax.swing.JTextArea txt_Nota;
     // End of variables declaration//GEN-END:variables
- 
+
 }

@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = {"descripcion"})
+@EqualsAndHashCode(of = {"codigo", "descripcion", "eliminado"})
 public class Producto implements Serializable {
 
     private long idProducto;
@@ -43,4 +43,5 @@ public class Producto implements Serializable {
     private LocalDate fechaVencimiento;   
     private boolean eliminado;
     private String urlImagen;
+    private byte[] imagen;
 }
