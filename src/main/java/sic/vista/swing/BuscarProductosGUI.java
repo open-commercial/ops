@@ -362,12 +362,12 @@ public class BuscarProductosGUI extends JDialog {
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
-        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(145);
-        tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(145);
+        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(120);
+        tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(120);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(380);
         if (!busquedaParaFiltros) {
-            tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(130);
-            tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(130);
+            tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(70);
+            tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(70);
             tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(130);
             tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(130);
             tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(105);
