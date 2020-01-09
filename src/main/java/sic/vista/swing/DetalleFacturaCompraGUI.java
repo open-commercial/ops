@@ -108,19 +108,6 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         dc_FechaFactura.setDate(new Date());
     }
 
-    private void cargarRenglonFactura(BuscarProductosGUI gui_buscarProducto) {
-        Producto productoSeleccionado = gui_buscarProducto.getProductoSeleccionado();
-        if (productoSeleccionado != null) {
-            if (this.existeProductoCargado(productoSeleccionado)) {
-                JOptionPane.showMessageDialog(this,
-                        "Ya esta cargado el producto \"" + gui_buscarProducto.getProductoSeleccionado().getDescripcion()
-                        + "\" en los renglones de la factura.", "Error", JOptionPane.ERROR_MESSAGE);
-            } else if (gui_buscarProducto.debeCargarRenglon()) {
-                this.agregarRenglon(gui_buscarProducto.getRenglonFactura());
-            }
-        }
-    }
-
     private void agregarRenglon(RenglonFactura renglon) {
         Object[] lineaDeFactura = new Object[7];
         lineaDeFactura[0] = renglon.getCodigoItem();
@@ -1082,7 +1069,16 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
             gui_buscarProducto.setModal(true);
             gui_buscarProducto.setLocationRelativeTo(this);
             gui_buscarProducto.setVisible(true);
-            this.cargarRenglonFactura(gui_buscarProducto);
+            Producto productoSeleccionado = gui_buscarProducto.getProductoSeleccionado();
+            if (productoSeleccionado != null) {
+                if (this.existeProductoCargado(productoSeleccionado)) {
+                    JOptionPane.showMessageDialog(this,
+                            "Ya esta cargado el producto \"" + gui_buscarProducto.getProductoSeleccionado().getDescripcion()
+                            + "\" en los renglones de la factura.", "Error", JOptionPane.ERROR_MESSAGE);
+                } else if (gui_buscarProducto.debeCargarRenglon()) {
+                    this.agregarRenglon(gui_buscarProducto.getRenglonFactura());
+                }
+            }
         } else {
             JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                     .getString("mensaje_factura_seleccionar_proveedor"), "Error", JOptionPane.ERROR_MESSAGE);

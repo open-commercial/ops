@@ -25,7 +25,6 @@ import sic.modelo.Cliente;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.criteria.BusquedaClienteCriteria;
 import sic.util.DecimalesRenderer;
-import sic.util.PorcentajeRenderer;
 import sic.util.Utilidades;
 
 public class BuscarClientesGUI extends JDialog {

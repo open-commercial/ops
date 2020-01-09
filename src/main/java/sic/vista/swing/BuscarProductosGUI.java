@@ -57,7 +57,7 @@ public class BuscarProductosGUI extends JDialog {
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int NUMERO_PAGINA = 0;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private final Dimension sizeDialog = new Dimension(1100, 700);
+    private final Dimension sizeDialog = new Dimension(1000, 600);
     
     public BuscarProductosGUI(List<RenglonFactura> renglones, TipoDeComprobante tipoDeComprobante, Cliente cliente) { 
         this.initComponents();
