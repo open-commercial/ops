@@ -45,7 +45,7 @@ import sic.util.Utilidades;
 public class DetalleProductoGUI extends JDialog {
 
     private byte[] imagenProducto = null;
-    private boolean cambioImagen = false;
+    private boolean cargoImagen = false;
     private final int anchoImagenContainer = 416;
     private final int altoImagenContainer = 312;
     private Producto productoParaModificar;
@@ -1244,7 +1244,7 @@ public class DetalleProductoGUI extends JDialog {
                                 .atZone(ZoneId.systemDefault())
                                 .toLocalDate());
                     }
-                    if (cambioImagen && imagenProducto != null) {
+                    if (cargoImagen && imagenProducto != null) {
                         productoParaModificar.setImagen(imagenProducto);
                     }
                     RestClient.getRestTemplate().put("/productos?idMedida=" + idMedida
@@ -1440,7 +1440,7 @@ public class DetalleProductoGUI extends JDialog {
         lbl_imagen.setIcon(null);
         lbl_imagen.setText("SIN IMAGEN");
         imagenProducto = null;
-        cambioImagen = true;
+        cargoImagen = true;
         if (productoParaModificar != null)
             productoParaModificar.setUrlImagen(null);
     }//GEN-LAST:event_btn_EliminarImagenActionPerformed
@@ -1459,7 +1459,7 @@ public class DetalleProductoGUI extends JDialog {
                             .getScaledInstance(anchoImagenContainer, altoImagenContainer, Image.SCALE_SMOOTH));
                     lbl_imagen.setIcon(logoRedimensionado);
                     lbl_imagen.setText("");
-                    cambioImagen = true;
+                    cargoImagen = true;
                 } else {
                     JOptionPane.showMessageDialog(this, "El tamaño del archivo seleccionado supera el límite de 1MB.",
                             "Error", JOptionPane.ERROR_MESSAGE);
@@ -1541,7 +1541,15 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_txtPorcentajeOfertaFocusLost
 
     private void chkOfertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkOfertaActionPerformed
-        if (chkOferta.isSelected() && imagenProducto == null) {
+        boolean noTieneImagen;
+        if (productoParaModificar == null) {
+            noTieneImagen = !cargoImagen;
+        } else if (cargoImagen) {
+            noTieneImagen = false;
+        } else {
+            noTieneImagen = productoParaModificar.getUrlImagen() == null || productoParaModificar.getUrlImagen().isEmpty();
+        }
+        if (chkOferta.isSelected() && noTieneImagen) {
             chkOferta.setSelected(false);
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_producto_oferta_sin_imagen"),

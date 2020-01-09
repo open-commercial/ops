@@ -170,8 +170,6 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         }
         facturaCompra.setRenglones(new ArrayList<>(renglones));
         facturaCompra.setSubTotal(new BigDecimal(txt_SubTotal.getValue().toString()));
-        facturaCompra.setRecargoPorcentaje(BigDecimal.ZERO);
-        facturaCompra.setRecargoNeto(BigDecimal.ZERO);
         facturaCompra.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_Porcentaje.getValue().toString()));
         facturaCompra.setDescuentoNeto(new BigDecimal(txt_Descuento_Neto.getValue().toString()));
         facturaCompra.setRecargoPorcentaje(new BigDecimal(txt_Recargo_Porcentaje.getValue().toString()));
