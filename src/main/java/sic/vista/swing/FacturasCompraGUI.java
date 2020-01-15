@@ -228,7 +228,7 @@ public class FacturasCompraGUI extends JInternalFrame {
                 break;
         }
         criteria.setPagina(NUMERO_PAGINA);
-        String criteriaBusqueda = "/facturas/compra/busqueda/criteria";
+        String criteriaBusqueda = "/facturas/compras/busqueda/criteria";
         try {
             if (calcularResultados) {
                this.calcularResultados(criteria);
@@ -256,9 +256,9 @@ public class FacturasCompraGUI extends JInternalFrame {
 
     private void calcularResultados(BusquedaFacturaCompraCriteria criteria) {
         txt_ResultGastoTotal.setValue(RestClient.getRestTemplate()
-                .postForObject("/facturas/total-facturado-compra/criteria",criteria, BigDecimal.class));
+                .postForObject("/facturas/compras/total-facturado/criteria",criteria, BigDecimal.class));
         txt_ResultTotalIVACompra.setValue(RestClient.getRestTemplate()
-                .postForObject("/facturas/total-iva-compra/criteria", criteria, BigDecimal.class));
+                .postForObject("/facturas/compras/total-iva/criteria", criteria, BigDecimal.class));
     }
 
     private void cargarResultadosAlTable() {

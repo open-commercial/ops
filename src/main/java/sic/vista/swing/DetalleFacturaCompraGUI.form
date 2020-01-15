@@ -353,7 +353,7 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="txt_SubTotal_Neto" max="32767" attributes="0"/>
+                      <Component id="txt_SubTotal_Bruto" max="32767" attributes="0"/>
                       <Component id="lbl_SubTotalBruto" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -401,7 +401,7 @@
                       <Component id="txt_SubTotal" linkSize="9" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="txt_Descuento_Neto" linkSize="9" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="txt_Recargo_Neto" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txt_SubTotal_Neto" linkSize="9" alignment="2" min="-2" pref="23" max="-2" attributes="0"/>
+                      <Component id="txt_SubTotal_Bruto" linkSize="9" alignment="2" min="-2" pref="23" max="-2" attributes="0"/>
                       <Component id="txt_IVA_105" linkSize="9" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="txt_IVA_21" linkSize="9" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="txt_Total" linkSize="9" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -510,7 +510,7 @@
             <Property name="text" type="java.lang.String" value="SubTotal Bruto"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txt_SubTotal_Neto">
+        <Component class="javax.swing.JFormattedTextField" name="txt_SubTotal_Bruto">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">

@@ -36,7 +36,8 @@ public class CerrarVentaGUI extends JDialog {
 
     private boolean exito;
     private boolean facturaAutorizada = false;
-    private FacturaVenta facturaVenta;
+    private final NuevaFacturaVenta nuevaFacturaVenta;
+    private final BigDecimal totalFactura;
     private final Pedido pedido;
     private final ModeloTabla modeloTabla;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
@@ -46,9 +47,10 @@ public class CerrarVentaGUI extends JDialog {
     private boolean dividir = false;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     
-    public CerrarVentaGUI(FacturaVenta facturaVenta, Pedido pedido, ModeloTabla modeloTabla) {
+    public CerrarVentaGUI(NuevaFacturaVenta nuevaFacturaVenta, Pedido pedido, BigDecimal totalFactura, ModeloTabla modeloTabla) {
         super.setModal(true);
-        this.facturaVenta = facturaVenta;
+        this.nuevaFacturaVenta = nuevaFacturaVenta;
+        this.totalFactura = totalFactura;
         this.pedido = pedido;
         this.modeloTabla = modeloTabla;
         this.initComponents();
@@ -83,7 +85,7 @@ public class CerrarVentaGUI extends JDialog {
         if (Desktop.isDesktopSupported()) {
             try {
                 byte[] reporte = RestClient.getRestTemplate()
-                        .getForObject("/facturas/" + factura.getIdFactura() + "/reporte", byte[].class);
+                        .getForObject("/facturas/ventas/" + factura.getIdFactura() + "/reporte", byte[].class);
                 File f = new File(System.getProperty("user.home") + "/" + nombreReporte + ".pdf");
                 Files.write(f.toPath(), reporte);
                 Desktop.getDesktop().open(f);
@@ -178,12 +180,9 @@ public class CerrarVentaGUI extends JDialog {
 
     private void finalizarVenta() {
         if (cmb_Transporte.getSelectedItem() != null) {
-            this.facturaVenta.setIdTransportista(((Transportista) cmb_Transporte.getSelectedItem()).getIdTransportista());
+            this.nuevaFacturaVenta.setIdTransportista(((Transportista) cmb_Transporte.getSelectedItem()).getIdTransportista());
         }
         this.armarMontosConFormasDePago();
-        NuevaFacturaVenta nuevaFacturaVenta = NuevaFacturaVenta.builder()
-                .facturaVenta(facturaVenta)
-                .build();
         try {
             if (idsFormasDePago.isEmpty() == false) {
                 Long[] formasDePago = new Long[idsFormasDePago.size()];
@@ -199,7 +198,7 @@ public class CerrarVentaGUI extends JDialog {
             if (dividir) {
                 nuevaFacturaVenta.setIndices(indicesParaDividir);
                 List<FacturaVenta> facturasDivididas = Arrays.asList(RestClient.getRestTemplate()
-                        .postForObject("/facturas/venta", nuevaFacturaVenta, FacturaVenta[].class));
+                        .postForObject("/facturas/ventas", nuevaFacturaVenta, FacturaVenta[].class));
                 facturasDivididas.forEach(fv -> {
                     fv.setRenglones(Arrays.asList(RestClient.getRestTemplate()
                             .getForObject("/facturas/" + fv.getIdFactura() + "/renglones",
@@ -241,23 +240,23 @@ public class CerrarVentaGUI extends JDialog {
                     }
                 }
             } else {
-                this.facturaVenta = Arrays.asList(RestClient.getRestTemplate().postForObject("/facturas/venta", nuevaFacturaVenta, FacturaVenta[].class)).get(0);
-                if (facturaVenta != null) {
+                FacturaVenta facturaGuardada = Arrays.asList(RestClient.getRestTemplate().postForObject("/facturas/ventas", nuevaFacturaVenta, FacturaVenta[].class)).get(0);
+                if (facturaGuardada != null) {
                     boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/"
                             + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                             + "/factura-electronica-habilitada", Boolean.class);
                     if (FEHabilitada) {
-                        this.autorizarFactura(this.facturaVenta);
+                        this.autorizarFactura(facturaGuardada);
                     }
                     if (facturaAutorizada
-                            || this.facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_X
-                            || this.facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_Y
-                            || this.facturaVenta.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
+                            || facturaGuardada.getTipoComprobante() == TipoDeComprobante.FACTURA_X
+                            || facturaGuardada.getTipoComprobante() == TipoDeComprobante.FACTURA_Y
+                            || facturaGuardada.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
                         int reply = JOptionPane.showConfirmDialog(this,
                                 ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
                                 "Aviso", JOptionPane.YES_NO_OPTION);
                         if (reply == JOptionPane.YES_OPTION) {
-                            this.lanzarReporteFactura(this.facturaVenta, "Factura");
+                            this.lanzarReporteFactura(facturaGuardada, "Factura");
                         }
                     }
                     exito = true;
@@ -279,7 +278,7 @@ public class CerrarVentaGUI extends JDialog {
                 || facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_B
                 || facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_C) {
             try {
-                facturaVenta = RestClient.getRestTemplate().postForObject("/facturas/" + facturaVenta.getIdFactura() + "/autorizacion",
+                facturaVenta = RestClient.getRestTemplate().postForObject("/facturas/ventas/" + facturaVenta.getIdFactura() + "/autorizacion",
                         null, FacturaVenta.class);
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -531,14 +530,14 @@ public class CerrarVentaGUI extends JDialog {
         this.setEstadoFormasDePago();
         cmb_Transporte.setSelectedIndex(0);
         lbl_Vendedor.setText(UsuarioActivo.getInstance().getUsuario().toString());
-        txt_MontoPago1.setValue(this.facturaVenta.getTotal());
+        txt_MontoPago1.setValue(totalFactura);
         txt_MontoPago2.setValue(0);
         txt_MontoPago3.setValue(0);
         indicesParaDividir = new int[this.modeloTabla.getRowCount()];
         if ((indicesParaDividir.length > 0) 
-                && (facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_A
-                || facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_B
-                || facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_C)) {
+                && (nuevaFacturaVenta.getTipoDeComprobante() == TipoDeComprobante.FACTURA_A
+                || nuevaFacturaVenta.getTipoDeComprobante() == TipoDeComprobante.FACTURA_B
+                || nuevaFacturaVenta.getTipoDeComprobante() == TipoDeComprobante.FACTURA_C)) {
             int j = 0;
             boolean tieneRenglonesMarcados = false;
             for (int i = 0; i < this.modeloTabla.getRowCount(); i++) {
@@ -581,7 +580,7 @@ public class CerrarVentaGUI extends JDialog {
             if (chk_FormaDePago3.isSelected() && chk_FormaDePago3.isEnabled()) {
                 totalPagos = totalPagos.add(new BigDecimal(txt_MontoPago3.getValue().toString()));
             }
-            BigDecimal totalAPagar = facturaVenta.getTotal().setScale(2, RoundingMode.FLOOR);
+            BigDecimal totalAPagar = totalFactura.setScale(2, RoundingMode.FLOOR);
             if (totalPagos.compareTo(totalAPagar) < 0) {
                 int reply = JOptionPane.showConfirmDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_montos_insuficientes"),
