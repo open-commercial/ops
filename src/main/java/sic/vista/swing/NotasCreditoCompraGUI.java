@@ -1087,22 +1087,29 @@ public class NotasCreditoCompraGUI extends JInternalFrame {
     private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-            int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
-                    .getString("mensaje_eliminar_movimientos"),
-                    "Eliminar", JOptionPane.YES_NO_OPTION);
-            if (respuesta == JOptionPane.YES_OPTION) {
-                try {
-                    RestClient.getRestTemplate().delete("/notas/" + notasTotal.get(indexFilaSeleccionada).getIdNota());
-                    this.resetScroll();
-                    this.limpiarJTable();
-                    this.buscar(true);
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+            NotaCredito notaSeleccionada = notasTotal.get(indexFilaSeleccionada);
+            if (notaSeleccionada.getIdFacturaCompra() != null) {
+                JOptionPane.showInternalMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
+                        .getString("mensaje_eliminar_movimientos"),
+                        "Eliminar", JOptionPane.YES_NO_OPTION);
+                if (respuesta == JOptionPane.YES_OPTION) {
+                    try {
+                        RestClient.getRestTemplate().delete("/notas/" + notasTotal.get(indexFilaSeleccionada).getIdNota());
+                        this.resetScroll();
+                        this.limpiarJTable();
+                        this.buscar(true);
+                    } catch (RestClientResponseException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    } catch (ResourceAccessException ex) {
+                        LOGGER.error(ex.getMessage());
+                        JOptionPane.showMessageDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         }

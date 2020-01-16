@@ -1056,18 +1056,12 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     case NOTA_DEBITO_X:
                     case NOTA_DEBITO_Y:
                     case NOTA_DEBITO_PRESUPUESTO:
-                        if (this.cliente != null) {
-                            respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
-                                    .getString("mensaje_eliminar_movimientos"),
-                                    "Eliminar", JOptionPane.YES_NO_OPTION);
-                            if (respuesta == JOptionPane.YES_OPTION) {
-                                RestClient.getRestTemplate().delete("/notas/" + renglonCC.getIdMovimiento());
-                                refrescar = true;
-                            }
-                        } else {
-                            JOptionPane.showInternalMessageDialog(this,
-                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
-                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_eliminar_movimientos"),
+                                "Eliminar", JOptionPane.YES_NO_OPTION);
+                        if (respuesta == JOptionPane.YES_OPTION) {
+                            RestClient.getRestTemplate().delete("/notas/" + renglonCC.getIdMovimiento());
+                            refrescar = true;
                         }
                         break;
                     case RECIBO: {
