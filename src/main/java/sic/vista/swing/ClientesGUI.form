@@ -406,7 +406,7 @@
                 <StringItem index="2" value="Nombre Fantasia"/>
                 <StringItem index="3" value="Saldo C/C"/>
                 <StringItem index="4" value="Ultimo Movimiento C/C"/>
-                <StringItem index="5" value="Bonificaci&#xf3;n"/>
+                <StringItem index="5" value="Compra M&#xed;n."/>
               </StringArray>
             </Property>
           </Properties>
