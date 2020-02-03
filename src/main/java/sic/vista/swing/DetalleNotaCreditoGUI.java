@@ -208,7 +208,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private void guardar() throws IOException {
         this.notaCredito.setMotivo(cmbMotivo.getSelectedItem().toString());
         if (proveedor != null) {
-            LocalDateTime hoy = LocalDateTime.now();
+            LocalDateTime hoy = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
             this.notaCredito.setFecha(LocalDateTime.ofInstant(dc_FechaNota.getDate().toInstant(), ZoneId.systemDefault())
                     .withHour(hoy.getHour()).withMinute(hoy.getMinute()).withSecond(hoy.getSecond()));
             this.notaCredito.setSerie(Long.parseLong(txt_Serie.getValue().toString()));
