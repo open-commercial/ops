@@ -140,7 +140,7 @@ public class CerrarVentaGUI extends JDialog {
             cmb_Transporte.removeAllItems();
             cmb_Transporte.addItem(null);
             List<Transportista> transportes = Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/transportistas/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
+                    .getForObject("/transportistas",
                             Transportista[].class));
             transportes.stream().forEach(t -> {
                 cmb_Transporte.addItem(t);
