@@ -179,7 +179,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
 
     private boolean existeTransportistaCargado() {
         if (Arrays.asList(RestClient.getRestTemplate().
-                getForObject("/transportistas/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
+                getForObject("/transportistas",
                         Transportista[].class)).isEmpty()) {
             JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                     .getString("mensaje_transportista_ninguno_cargado"), "Error", JOptionPane.ERROR_MESSAGE);

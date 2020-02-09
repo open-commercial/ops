@@ -177,7 +177,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         try {
             cmb_Transportista.addItem(null);
             List<Transportista> transportistas = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/transportistas/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
+                    .getForObject("/transportistas",
                             Transportista[].class)));
             transportistas.stream().forEach(t -> cmb_Transportista.addItem(t));
         } catch (RestClientResponseException ex) {
