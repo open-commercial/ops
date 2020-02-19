@@ -2,7 +2,7 @@ package sic.vista.swing;
 
 import java.awt.Dimension;
 import java.math.BigDecimal;
-import java.util.Map;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -14,17 +14,18 @@ import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.CantidadEnSucursal;
 import sic.modelo.Producto;
+import sic.modelo.ProductoFaltante;
 import sic.modelo.SucursalActiva;
 import sic.util.DecimalesRenderer;
 
 public class ProductosFaltantesGUI extends JDialog {
 
     private ModeloTabla modeloTablaFaltantes = new ModeloTabla();
-    private final Map<Long, BigDecimal> faltantes;
+    private final List<ProductoFaltante> faltantes;
     private final Dimension sizeDialog = new Dimension(920, 500);
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public ProductosFaltantesGUI(Map<Long, BigDecimal> faltantes) {
+    public ProductosFaltantesGUI(List<ProductoFaltante> faltantes) {
         super.setModal(true);
         this.initComponents();
         this.setIcon();
@@ -75,14 +76,11 @@ public class ProductosFaltantesGUI extends JDialog {
     private void cargarResultadosAlTable() {
         this.limpiarJTables();
         Object[] fila = new Object[4];
-        faltantes.forEach((id, cantidad) -> {
-            Producto p = RestClient.getRestTemplate().getForObject("/productos/" + id, Producto.class);
-            fila[0] = p.getCodigo();
-            fila[1] = p.getDescripcion();
-            fila[2] = cantidad;
-            fila[3] = p.getCantidadEnSucursales().stream().filter(cantidadEnSucursal
-                    -> cantidadEnSucursal.idSucursal.equals(SucursalActiva.getInstance().getSucursal().getIdSucursal()))
-                    .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);
+        faltantes.forEach(faltante -> {
+            fila[0] = faltante.getCodigo();
+            fila[1] = faltante.getDescripcion();
+            fila[2] = faltante.getCantidadSolicitada();
+            fila[3] = faltante.getCantidadDisponible();
             modeloTablaFaltantes.addRow(fila);
         });
         tbl_Faltantes.setModel(modeloTablaFaltantes);

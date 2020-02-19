@@ -32,6 +32,7 @@ import sic.modelo.NuevoRenglonPedido;
 import sic.modelo.Producto;
 import sic.modelo.RenglonFactura;
 import sic.modelo.PaginaRespuestaRest;
+import sic.modelo.ProductoFaltante;
 import sic.modelo.ProductosParaVerificarStock;
 import sic.modelo.RenglonPedido;
 import sic.modelo.TipoDeComprobante;
@@ -170,8 +171,9 @@ public class BuscarProductosGUI extends JDialog {
                         .idProducto(idsProductos)
                         .build();
                 HttpEntity<ProductosParaVerificarStock> requestEntity = new HttpEntity<>(productosParaVerificarStock);
-                boolean existeStockSuficiente = RestClient.getRestTemplate()
-                        .exchange("/productos/disponibilidad-stock", HttpMethod.POST, requestEntity, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {
+                boolean existeStockSuficiente;
+                existeStockSuficiente = RestClient.getRestTemplate()
+                        .exchange("/productos/disponibilidad-stock", HttpMethod.POST, requestEntity, new ParameterizedTypeReference<List<ProductoFaltante>>() {
                         })
                         .getBody().isEmpty();
                 if (!existeStockSuficiente) {

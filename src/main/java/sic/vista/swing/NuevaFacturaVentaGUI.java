@@ -42,6 +42,7 @@ import sic.modelo.NuevaFacturaVenta;
 import sic.modelo.NuevosResultadosComprobante;
 import sic.modelo.Pedido;
 import sic.modelo.Producto;
+import sic.modelo.ProductoFaltante;
 import sic.modelo.ProductosParaVerificarStock;
 import sic.modelo.Resultados;
 import sic.modelo.Rol;
@@ -372,7 +373,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                         .build();
 
                 boolean esValido = true;
-                Map<Long, BigDecimal> faltantes;
+                List<ProductoFaltante> faltantes;
                 if (cmb_TipoComprobante.getSelectedItem() != TipoDeComprobante.PEDIDO) {
                     faltantes = this.getProductosSinStockDisponible(Arrays.asList(nuevoRenglon));
                     if (!faltantes.isEmpty()) {
@@ -501,7 +502,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         }
     }
     
-    private Map<Long, BigDecimal> getProductosSinStockDisponible(List<NuevoRenglonFactura> nuevosRenglonesFactura) {
+    private List<ProductoFaltante> getProductosSinStockDisponible(List<NuevoRenglonFactura> nuevosRenglonesFactura) {
         long[] idsProductos = new long[nuevosRenglonesFactura.size()];
         BigDecimal[] cantidades = new BigDecimal[nuevosRenglonesFactura.size()];
         for (int i = 0; i < idsProductos.length; i++) {
@@ -515,7 +516,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                 .build();
         HttpEntity<ProductosParaVerificarStock> requestEntity = new HttpEntity<>(productosParaVerificarStock);
         return RestClient.getRestTemplate()
-                .exchange("/productos/disponibilidad-stock", HttpMethod.POST, requestEntity, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {
+                .exchange("/productos/disponibilidad-stock", HttpMethod.POST, requestEntity, new ParameterizedTypeReference<List<ProductoFaltante>>() {
                 }).getBody();
     }
 
@@ -1316,7 +1317,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                     this.calcularResultados();
                     try {
                         cliente = RestClient.getRestTemplate().getForObject("/clientes/" + this.cliente.getIdCliente(), Cliente.class);
-                        Map<Long, BigDecimal> faltantes;
+                        List<ProductoFaltante> faltantes;
                         List<NuevoRenglonFactura> nuevosRenglones = new ArrayList<>();
                         this.renglonesFactura.forEach(renglon -> {
                             NuevoRenglonFactura nuevoRenglon = NuevoRenglonFactura.builder()
