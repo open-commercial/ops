@@ -5,10 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -184,8 +181,9 @@ public class DetalleSucursalGUI extends JDialog {
             }
         });
 
+        lbl_Email.setForeground(java.awt.Color.red);
         lbl_Email.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Email.setText("Email:");
+        lbl_Email.setText("* Email:");
 
         lbl_Telefono.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Telefono.setText("Teléfono:");
