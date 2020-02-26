@@ -143,7 +143,8 @@ public class ModificacionMultipleProductosGUI extends JDialog {
                 || chk_Rubro.isSelected()
                 || chk_UnidadDeMedida.isSelected()
                 || chkRecargoDescuento.isSelected()
-                || chkVisibilidad.isSelected()) {
+                || chkVisibilidad.isSelected()
+                || chkVentaMinima.isSelected()) {
             btn_Guardar.setEnabled(true);
         } else {
             btn_Guardar.setEnabled(false);
@@ -249,6 +250,10 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         rbRecargo = new javax.swing.JRadioButton();
         rbDescuento = new javax.swing.JRadioButton();
         txtDescuentoRecargoPorcentaje = new javax.swing.JFormattedTextField();
+        panelCantidades = new javax.swing.JPanel();
+        lblVentaCantidadMinima = new javax.swing.JLabel();
+        txtVentaCantidadMinima = new javax.swing.JFormattedTextField();
+        chkVentaMinima = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Modificar multiples Productos");
@@ -642,7 +647,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
                     .addComponent(txtPorcentajePrecioBonificado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPrecioBonificado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblBonificacion))
-                .addContainerGap(7, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panel2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtGananciaNeto, txtIVANeto, txtPVP, txtPrecioCosto, txtPrecioLista});
@@ -696,9 +701,9 @@ public class ModificacionMultipleProductosGUI extends JDialog {
                 .addContainerGap()
                 .addGroup(panel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(chkRecargoDescuento)
-                    .addComponent(rbRecargo)
                     .addComponent(rbDescuento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtDescuentoRecargoPorcentaje))
+                    .addComponent(txtDescuentoRecargoPorcentaje)
+                    .addComponent(rbRecargo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel3Layout.setVerticalGroup(
@@ -706,13 +711,62 @@ public class ModificacionMultipleProductosGUI extends JDialog {
             .addGroup(panel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(chkRecargoDescuento)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(rbRecargo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(rbDescuento)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtDescuentoRecargoPorcentaje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
+        );
+
+        panelCantidades.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        lblVentaCantidadMinima.setForeground(java.awt.Color.lightGray);
+        lblVentaCantidadMinima.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblVentaCantidadMinima.setText("Venta x Cant.:");
+
+        txtVentaCantidadMinima.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat(""))));
+        txtVentaCantidadMinima.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtVentaCantidadMinima.setText("0");
+        txtVentaCantidadMinima.setEnabled(false);
+        txtVentaCantidadMinima.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtVentaCantidadMinimaFocusGained(evt);
+            }
+        });
+
+        chkVentaMinima.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chkVentaMinimaItemStateChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelCantidadesLayout = new javax.swing.GroupLayout(panelCantidades);
+        panelCantidades.setLayout(panelCantidadesLayout);
+        panelCantidadesLayout.setHorizontalGroup(
+            panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelCantidadesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtVentaCantidadMinima)
+                    .addGroup(panelCantidadesLayout.createSequentialGroup()
+                        .addComponent(chkVentaMinima)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblVentaCantidadMinima)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        panelCantidadesLayout.setVerticalGroup(
+            panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelCantidadesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelCantidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblVentaCantidadMinima)
+                    .addComponent(chkVentaMinima))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtVentaCantidadMinima, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -724,16 +778,18 @@ public class ModificacionMultipleProductosGUI extends JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(sp_ProductosAModificar)
                     .addComponent(panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btn_Guardar))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lbl_Indicaciones)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(panel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(44, 44, 44)
+                                .addComponent(btn_Guardar))
+                            .addComponent(panel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panelCantidades, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -747,14 +803,20 @@ public class ModificacionMultipleProductosGUI extends JDialog {
                 .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 6, Short.MAX_VALUE)
-                .addComponent(btn_Guardar)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btn_Guardar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(panel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(panel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(panelCantidades, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 25, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {panel2, panel3});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -816,6 +878,9 @@ public class ModificacionMultipleProductosGUI extends JDialog {
                     productosParaActualizar.setDescuentoRecargoPorcentaje(new BigDecimal(txtDescuentoRecargoPorcentaje.getValue().toString())
                             .multiply(new BigDecimal(-1L)));
                 }
+            }
+            if (chkVentaMinima.isSelected() == true) {
+                productosParaActualizar.setCantidadVentaMinima(new BigDecimal(txtVentaCantidadMinima.getValue().toString()));
             }
             try {
                 long[] idsProductos = new long[productosParaModificar.size()];
@@ -1135,6 +1200,23 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         txtPorcentajePrecioBonificado.setValue(this.calcularPorcentaje(new BigDecimal(txtPrecioBonificado.getValue().toString()), new BigDecimal(txtPrecioLista.getValue().toString())));
     }//GEN-LAST:event_txtPrecioBonificadoActionPerformed
 
+    private void txtVentaCantidadMinimaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtVentaCantidadMinimaFocusGained
+        SwingUtilities.invokeLater(() -> {
+            txtVentaCantidadMinima.selectAll();
+        });
+    }//GEN-LAST:event_txtVentaCantidadMinimaFocusGained
+
+    private void chkVentaMinimaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkVentaMinimaItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            lblVentaCantidadMinima.setForeground(Color.BLACK);
+            txtVentaCantidadMinima.setEnabled(true);
+        } else {
+            lblVentaCantidadMinima.setForeground(Color.LIGHT_GRAY);
+            txtVentaCantidadMinima.setEnabled(false);
+        }
+        this.habilitarBotonGuardar();
+    }//GEN-LAST:event_chkVentaMinimaItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgRecargoDescuento;
     private javax.swing.ButtonGroup bgVisibilidad;
@@ -1142,6 +1224,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
     private javax.swing.JButton btn_Guardar;
     private javax.swing.JButton btn_NuevoProveedor;
     private javax.swing.JCheckBox chkRecargoDescuento;
+    private javax.swing.JCheckBox chkVentaMinima;
     private javax.swing.JCheckBox chkVisibilidad;
     private javax.swing.JCheckBox chk_Precios;
     private javax.swing.JCheckBox chk_Proveedor;
@@ -1151,6 +1234,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
     private javax.swing.JComboBox cmb_Medida;
     private javax.swing.JComboBox cmb_Rubro;
     private javax.swing.JLabel lblBonificacion;
+    private javax.swing.JLabel lblVentaCantidadMinima;
     private javax.swing.JLabel lbl_Ganancia;
     private javax.swing.JLabel lbl_IVA;
     private javax.swing.JLabel lbl_Indicaciones;
@@ -1160,6 +1244,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
     private javax.swing.JPanel panel1;
     private javax.swing.JPanel panel2;
     private javax.swing.JPanel panel3;
+    private javax.swing.JPanel panelCantidades;
     private javax.swing.JRadioButton rbDescuento;
     private javax.swing.JRadioButton rbPrivado;
     private javax.swing.JRadioButton rbPublico;
@@ -1176,5 +1261,6 @@ public class ModificacionMultipleProductosGUI extends JDialog {
     private javax.swing.JFormattedTextField txtPrecioCosto;
     private javax.swing.JFormattedTextField txtPrecioLista;
     private javax.swing.JTextField txtProveedor;
+    private javax.swing.JFormattedTextField txtVentaCantidadMinima;
     // End of variables declaration//GEN-END:variables
 }
