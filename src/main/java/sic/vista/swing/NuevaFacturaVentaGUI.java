@@ -138,7 +138,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
             this.cargarTiposDeComprobantesDisponibles();            
             this.tipoDeComprobante = (TipoDeComprobante) cmb_TipoComprobante.getSelectedItem();
             this.renglonesFactura = new LinkedList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/facturas/renglones/pedidos/" + pedido.getIdPedido()
+                    .getForObject("/facturas/ventas/renglones/pedidos/" + pedido.getIdPedido()
                             + "?tipoDeComprobante=" + this.tipoDeComprobante.name(),
                             RenglonFactura[].class)));
             EstadoRenglon[] marcaDeRenglonesDelPedido = new EstadoRenglon[renglonesFactura.size()];
