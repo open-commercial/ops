@@ -136,6 +136,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
     }
     
     private void cargarRenglonesAlTable(List<RenglonFactura> renglones) {
+        modeloTablaRenglones = new ModeloTabla();
         this.setColumnas();
         renglones.stream().map(renglon -> {
             Object[] lineaDeFactura = new Object[7];
@@ -153,6 +154,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         if (operacionAlta) {
             this.calcularResultados();
         }
+        tbl_Renglones.setModel(modeloTablaRenglones);
         //para que baje solo el scroll vertical
         Point p = new Point(0, tbl_Renglones.getHeight());
         sp_Renglones.getViewport().setViewPosition(p);
@@ -198,6 +200,9 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
                 .numFactura(Long.parseLong(txt_NumeroFactura.getValue().toString()))
                 .idSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal())
                 .idProveedor(proveedorSeleccionado.getIdProveedor())
+                .descuentoPorcentaje(new BigDecimal(txt_Descuento_Porcentaje.getValue().toString()))
+                .recargoPorcentaje(new BigDecimal(txt_Recargo_Porcentaje.getValue().toString()))
+                .observaciones(txta_Observaciones.getText().trim())
                 .build();
         if (dc_FechaVencimiento.getDate() != null) {
             nuevaFacturaCompra.setFechaVencimiento(dc_FechaVencimiento.getDate().toInstant()
@@ -417,7 +422,6 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
             nuevosRenglones.add(nuevoRenglon);
         });
         try {
-            this.renglones.clear();
             this.renglones = new LinkedList(Arrays.asList(RestClient.getRestTemplate().
                     postForObject("/facturas/compras/renglones?tipoDeComprobante=" + this.tipoDeComprobante.name(), nuevosRenglones, RenglonFactura[].class)));
         } catch (RestClientResponseException ex) {
