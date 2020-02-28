@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;;
 import sic.modelo.SucursalActiva;
@@ -214,6 +215,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
             NuevoRenglonFactura renglonNuevo = NuevoRenglonFactura.builder()
                     .cantidad(renglon.getCantidad())
                     .idProducto(renglon.getIdProductoItem())
+                    .bonificacion(renglon.getBonificacionPorcentaje())
                     .build();
             nuevosRenglones.add(renglonNuevo);
         });
@@ -754,6 +756,9 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         txt_Descuento_Porcentaje.setText("0");
         txt_Descuento_Porcentaje.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         txt_Descuento_Porcentaje.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txt_Descuento_PorcentajeFocusGained(evt);
+            }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txt_Descuento_PorcentajeFocusLost(evt);
             }
@@ -761,6 +766,11 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         txt_Descuento_Porcentaje.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_Descuento_PorcentajeActionPerformed(evt);
+            }
+        });
+        txt_Descuento_Porcentaje.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txt_Descuento_PorcentajeKeyTyped(evt);
             }
         });
 
@@ -801,6 +811,9 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         txt_Recargo_Porcentaje.setText("0");
         txt_Recargo_Porcentaje.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
         txt_Recargo_Porcentaje.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txt_Recargo_PorcentajeFocusGained(evt);
+            }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txt_Recargo_PorcentajeFocusLost(evt);
             }
@@ -808,6 +821,11 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         txt_Recargo_Porcentaje.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_Recargo_PorcentajeActionPerformed(evt);
+            }
+        });
+        txt_Recargo_Porcentaje.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txt_Recargo_PorcentajeKeyTyped(evt);
             }
         });
 
@@ -1115,7 +1133,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
             this.recargarRenglonesSegunTipoDeFactura();
         }
     }//GEN-LAST:event_cmb_TipoFacturaItemStateChanged
-
+    
     private void txt_Recargo_PorcentajeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_Recargo_PorcentajeFocusLost
         this.calcularResultados();
     }//GEN-LAST:event_txt_Recargo_PorcentajeFocusLost
@@ -1158,6 +1176,30 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
             this.cargarTiposDeFacturaDisponibles();
         }
     }//GEN-LAST:event_btnBuscarProveedorActionPerformed
+
+    private void txt_Descuento_PorcentajeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_Descuento_PorcentajeFocusGained
+        SwingUtilities.invokeLater(() -> {
+            txt_Descuento_Porcentaje.selectAll();
+        });
+    }//GEN-LAST:event_txt_Descuento_PorcentajeFocusGained
+
+    private void txt_Recargo_PorcentajeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_Recargo_PorcentajeFocusGained
+        SwingUtilities.invokeLater(() -> {
+            txt_Recargo_Porcentaje.selectAll();
+        });
+    }//GEN-LAST:event_txt_Recargo_PorcentajeFocusGained
+
+    private void txt_Descuento_PorcentajeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_Descuento_PorcentajeKeyTyped
+        if (evt.getKeyChar() == KeyEvent.VK_MINUS) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txt_Descuento_PorcentajeKeyTyped
+
+    private void txt_Recargo_PorcentajeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_Recargo_PorcentajeKeyTyped
+        if (evt.getKeyChar() == KeyEvent.VK_MINUS) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txt_Recargo_PorcentajeKeyTyped
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarProveedor;
