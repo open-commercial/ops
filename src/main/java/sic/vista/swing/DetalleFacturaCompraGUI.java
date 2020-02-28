@@ -277,7 +277,8 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         }
     }
 
-    private void calcularResultados() {      
+    private void calcularResultados() {   
+        this.validarComponentesDeResultados();
         BigDecimal[] importe = new BigDecimal[this.renglones.size()];
         BigDecimal[] ivaPorcentajes = new BigDecimal[this.renglones.size()];
         BigDecimal[] ivaNetos = new BigDecimal[this.renglones.size()];
