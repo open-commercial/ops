@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.ParseException;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -405,8 +406,28 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                     .getString("mensaje_error_conexion"), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    private void validarComponentesDeResultados() {
+        if (txt_Descuento_porcentaje.isEditValid()) {
+            try {
+                txt_Descuento_porcentaje.commitEdit();
+            } catch (ParseException ex) {
+                String mensaje = "Se produjo un error analizando los campos.";
+                LOGGER.error(mensaje + " - " + ex.getMessage());
+            }
+        }
+         if (txt_Recargo_porcentaje.isEditValid()) {
+            try {
+                txt_Recargo_porcentaje.commitEdit();
+            } catch (ParseException ex) {
+                String mensaje = "Se produjo un error analizando los campos.";
+                LOGGER.error(mensaje + " - " + ex.getMessage());
+            }
+        }
+    }
 
     private void calcularResultados() {
+        this.validarComponentesDeResultados();
         BigDecimal[] importe = new BigDecimal[renglonesFactura.size()];
         BigDecimal[] ivaPorcentajes = new BigDecimal[renglonesFactura.size()];
         BigDecimal[] ivaNetos = new BigDecimal[renglonesFactura.size()];
