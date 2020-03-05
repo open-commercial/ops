@@ -1040,7 +1040,9 @@ public class DetalleProductoGUI extends JDialog {
             sucursales = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/sucursales",
                             Sucursal[].class)));
-            sucursales.stream().forEach(s -> cmbSucursales.addItem(s));
+            sucursales.stream().forEach(s -> {cmbSucursales.addItem(s);
+            this.cantidadEnSucursal.put(s.getIdSucursal(), BigDecimal.ZERO);
+            });
             cmbSucursales.setSelectedItem(SucursalActiva.getInstance().getSucursal());
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
