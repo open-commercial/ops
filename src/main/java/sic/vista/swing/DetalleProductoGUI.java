@@ -1058,7 +1058,7 @@ public class DetalleProductoGUI extends JDialog {
         txt_Codigo.setText("");
         txt_Descripcion.setText("");
         txtCantidad.setValue(BigDecimal.ZERO);
-        txt_Bulto.setValue(BigDecimal.ZERO);
+        txt_Bulto.setValue(BigDecimal.ONE);
         txtPrecioCosto.setValue(BigDecimal.ZERO);
         txtPVP.setValue(BigDecimal.ZERO);
         txtIVANeto.setValue(BigDecimal.ZERO);
