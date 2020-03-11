@@ -26,6 +26,7 @@ public class Cliente implements Serializable {
     private Long idCredencial;
     private String nombreCredencial;
     private boolean predeterminado;
+    private boolean puedeComprarAPlazo;
     private Ubicacion ubicacionFacturacion;
     private Ubicacion ubicacionEnvio;
     private String detalleUbicacionDeFacturacion;
