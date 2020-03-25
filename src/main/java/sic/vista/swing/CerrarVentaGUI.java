@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.SucursalActiva;
 import sic.modelo.Factura;
 import sic.modelo.FacturaVenta;
 import sic.modelo.FormaDePago;
@@ -235,6 +234,7 @@ public class CerrarVentaGUI extends JDialog {
                 }
             } else {
                 FacturaVenta facturaGuardada = Arrays.asList(RestClient.getRestTemplate().postForObject("/facturas/ventas", nuevaFacturaVenta, FacturaVenta[].class)).get(0);
+                exito = true;
                 if (tiposAutorizables.contains(facturaGuardada.getTipoComprobante()) && facturaGuardada.getCae() != 0L) {
                     facturaAutorizada = true;
                 }
@@ -249,34 +249,17 @@ public class CerrarVentaGUI extends JDialog {
                         this.lanzarReporteFactura(facturaGuardada, "Factura");
                     }
                 }
-                exito = true;
             }
             this.dispose();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            exito = true;
+            this.dispose();
         } catch (ResourceAccessException ex) {
             LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
-    private void autorizarFactura(FacturaVenta facturaVenta) {
-        if (facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_A
-                || facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_B
-                || facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_C) {
-            try {
-                facturaVenta = RestClient.getRestTemplate().postForObject("/facturas/ventas/" + facturaVenta.getIdFactura() + "/autorizacion",
-                        null, FacturaVenta.class);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
         }
     }
 
