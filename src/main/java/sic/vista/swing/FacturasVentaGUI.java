@@ -1233,13 +1233,17 @@ public class FacturasVentaGUI extends JInternalFrame {
                 if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
                     int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
                     long idFacturaSeleccionada = facturasTotal.get(indexFilaSeleccionada).getIdFactura();
-                    RestClient.getRestTemplate().postForObject("/facturas/ventas/" + idFacturaSeleccionada + "/autorizacion",
+                    FacturaVenta facturaVenta = RestClient.getRestTemplate().postForObject("/facturas/ventas/" + idFacturaSeleccionada + "/autorizacion",
                             null, FacturaVenta.class);
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_autorizada"),
-                            "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                    if (facturaVenta.getCae() != 0) {
+                        JOptionPane.showMessageDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_autorizada"),
+                                "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_no_autorizada"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                     this.limpiarYBuscar(false);
-
                 }
             } else {
                 JOptionPane.showInternalMessageDialog(this,
