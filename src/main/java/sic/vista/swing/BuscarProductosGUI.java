@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -25,13 +24,14 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.CantidadEnSucursal;
-import sic.modelo.Cliente;
 import sic.modelo.SucursalActiva;
 import sic.modelo.Movimiento;
+import sic.modelo.NuevoRenglonFactura;
 import sic.modelo.NuevoRenglonPedido;
 import sic.modelo.Producto;
 import sic.modelo.RenglonFactura;
 import sic.modelo.PaginaRespuestaRest;
+import sic.modelo.ProductoFaltante;
 import sic.modelo.ProductosParaVerificarStock;
 import sic.modelo.RenglonPedido;
 import sic.modelo.TipoDeComprobante;
@@ -49,34 +49,21 @@ public class BuscarProductosGUI extends JDialog {
     private List<RenglonFactura> renglonesFactura;
     private List<RenglonPedido> renglonesPedido;
     private Producto productoSeleccionado;
-    private RenglonFactura renglonFactura;
+    private NuevoRenglonFactura nuevoRenglonFactura;
     private NuevoRenglonPedido nuevoRenglonPedido;
     private boolean debeCargarRenglon;    
     private final boolean busquedaParaFiltros;
     private Movimiento movimiento;
-    private Cliente cliente;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int NUMERO_PAGINA = 0;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeDialog = new Dimension(1000, 600);
     
-    public BuscarProductosGUI(List<RenglonFactura> renglones, TipoDeComprobante tipoDeComprobante, Cliente cliente) { 
+    public BuscarProductosGUI(List<RenglonFactura> renglones, TipoDeComprobante tipoDeComprobante, Movimiento tipoDeMovimiento) { 
         this.initComponents();
         this.setIcon();
         this.renglonesFactura = renglones;
-        this.movimiento = Movimiento.VENTA;
-        this.tipoDeComprobante = tipoDeComprobante;
-        this.cliente = cliente;
-        this.busquedaParaFiltros = false;
-        this.setColumnas();
-        this.agregarListeners();
-    }
-    
-    public BuscarProductosGUI(List<RenglonFactura> renglones, TipoDeComprobante tipoDeComprobante) { 
-        this.initComponents();
-        this.setIcon();
-        this.renglonesFactura = renglones;
-        this.movimiento = Movimiento.COMPRA;
+        this.movimiento = tipoDeMovimiento;
         this.tipoDeComprobante = tipoDeComprobante;
         this.busquedaParaFiltros = false;
         this.setColumnas();
@@ -106,8 +93,8 @@ public class BuscarProductosGUI extends JDialog {
         return debeCargarRenglon;
     }
 
-    public RenglonFactura getRenglonFactura() {
-        return renglonFactura;
+    public NuevoRenglonFactura getRenglonFactura() {
+        return nuevoRenglonFactura;
     }
     
     public NuevoRenglonPedido getRenglonPedido() {
@@ -184,8 +171,9 @@ public class BuscarProductosGUI extends JDialog {
                         .idProducto(idsProductos)
                         .build();
                 HttpEntity<ProductosParaVerificarStock> requestEntity = new HttpEntity<>(productosParaVerificarStock);
-                boolean existeStockSuficiente = RestClient.getRestTemplate()
-                        .exchange("/productos/disponibilidad-stock", HttpMethod.POST, requestEntity, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {
+                boolean existeStockSuficiente;
+                existeStockSuficiente = RestClient.getRestTemplate()
+                        .exchange("/productos/disponibilidad-stock", HttpMethod.POST, requestEntity, new ParameterizedTypeReference<List<ProductoFaltante>>() {
                         })
                         .getBody().isEmpty();
                 if (!existeStockSuficiente) {
@@ -203,22 +191,17 @@ public class BuscarProductosGUI extends JDialog {
                             this.nuevoRenglonPedido.setIdProductoItem(productoSeleccionado.getIdProducto());
                             break;
                         case VENTA:
-                            renglonFactura = RestClient.getRestTemplate().getForObject("/facturas/renglon-venta?"
-                                    + "idProducto=" + productoSeleccionado.getIdProducto()
-                                    + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
-                                    + "&movimiento=" + movimiento
-                                    + "&cantidad=" + txtCantidad.getValue().toString()
-                                    + "&idCliente=" + this.cliente.getIdCliente(),
-                                    RenglonFactura.class);
+                            nuevoRenglonFactura = NuevoRenglonFactura.builder()
+                                    .idProducto(productoSeleccionado.getIdProducto())
+                                    .cantidad(new BigDecimal(txtCantidad.getValue().toString()))
+                                    .build();
                             break;
                         case COMPRA:
-                            renglonFactura = RestClient.getRestTemplate().getForObject("/facturas/renglon-compra?"
-                                    + "idProducto=" + productoSeleccionado.getIdProducto()
-                                    + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
-                                    + "&movimiento=" + movimiento
-                                    + "&cantidad=" + txtCantidad.getValue().toString()
-                                    + "&bonificacion=" + txtBonificacion.getValue().toString(),
-                                    RenglonFactura.class);
+                            nuevoRenglonFactura = NuevoRenglonFactura.builder()
+                                    .idProducto(productoSeleccionado.getIdProducto())
+                                    .cantidad(new BigDecimal(txtCantidad.getValue().toString()))
+                                    .bonificacion(new BigDecimal(txtBonificacion.getValue().toString()))
+                                    .build();
                             break;
                     }
                     debeCargarRenglon = true;

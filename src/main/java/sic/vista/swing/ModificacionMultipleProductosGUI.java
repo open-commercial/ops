@@ -858,11 +858,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
             if (chk_Precios.isSelected() == true) {
                 productosParaActualizar.setPrecioCosto(new BigDecimal(txtPrecioCosto.getValue().toString()));
                 productosParaActualizar.setGananciaPorcentaje(new BigDecimal(txtGananciaPorcentaje.getValue().toString()));
-                productosParaActualizar.setGananciaNeto(new BigDecimal(txtGananciaNeto.getValue().toString()));
-                productosParaActualizar.setPrecioVentaPublico(new BigDecimal(txtPVP.getValue().toString()));
                 productosParaActualizar.setIvaPorcentaje(new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()));
-                productosParaActualizar.setIvaNeto(new BigDecimal(txtIVANeto.getValue().toString()));
-                productosParaActualizar.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
                 productosParaActualizar.setPorcentajeBonificacionPrecio(new BigDecimal(txtPorcentajePrecioBonificado.getValue().toString()));
             }
             if (chkVisibilidad.isSelected() == true) {

@@ -14,8 +14,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
@@ -35,12 +35,16 @@ import sic.modelo.CuentaCorrienteCliente;
 import sic.modelo.SucursalActiva;
 import sic.modelo.RenglonFactura;
 import sic.modelo.UsuarioActivo;
-import sic.modelo.FacturaVenta;
+import sic.modelo.NuevoRenglonFactura;
 import sic.modelo.FormaDePago;
 import sic.modelo.Movimiento;
+import sic.modelo.NuevaFacturaVenta;
+import sic.modelo.NuevosResultadosComprobante;
 import sic.modelo.Pedido;
 import sic.modelo.Producto;
+import sic.modelo.ProductoFaltante;
 import sic.modelo.ProductosParaVerificarStock;
+import sic.modelo.Resultados;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.Transportista;
@@ -58,12 +62,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(1200, 700);    
     private int cantidadMaximaRenglones = 0;
-    private BigDecimal subTotalBruto;
-    private BigDecimal iva_105_netoFactura;
-    private BigDecimal iva_21_netoFactura;
     private final List<Rol> rolesDeUsuario = UsuarioActivo.getInstance().getUsuario().getRoles();
-    private final static BigDecimal IVA_21 = new BigDecimal("21");
-    private final static BigDecimal IVA_105 = new BigDecimal("10.5");
     private final static BigDecimal CIEN = new BigDecimal("100");
 
     public NuevaFacturaVentaGUI() {
@@ -84,34 +83,36 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         this.setListeners();
     }
     
-    private FacturaVenta construirFactura() {
-        FacturaVenta factura = new FacturaVenta();        
-        factura.setTipoComprobante(this.tipoDeComprobante);
+    private NuevaFacturaVenta construirNuevaFactura() {
+        NuevaFacturaVenta nuevaFacturaVenta = NuevaFacturaVenta.builder()
+                .idSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal())
+                .idCliente(this.cliente.getIdCliente())
+                .tipoDeComprobante(this.tipoDeComprobante)
+                .observaciones(this.txt_Observaciones.getText().trim())
+                .recargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()))
+                .descuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()))
+                .build();
         if (this.dc_fechaVencimiento.getDate() != null) {
             Calendar cal = new GregorianCalendar();
             cal.setTime(this.dc_fechaVencimiento.getDate());
             cal.set(Calendar.HOUR_OF_DAY, 23);
             cal.set(Calendar.MINUTE, 59);
             cal.set(Calendar.SECOND, 58);
-            factura.setFechaVencimiento(cal.getTime().toInstant()
+            nuevaFacturaVenta.setFechaVencimiento(cal.getTime().toInstant()
                     .atZone(ZoneId.systemDefault())
                     .toLocalDate());
         }
-        factura.setRenglones(this.renglonesFactura);
-        factura.setObservaciones(this.txt_Observaciones.getText().trim());      
-        factura.setSubTotal(new BigDecimal(txt_Subtotal.getValue().toString()));  
-        factura.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
-        factura.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
-        factura.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
-        factura.setRecargoNeto(new BigDecimal(txt_Recargo_neto.getValue().toString()));
-        factura.setSubTotalBruto(subTotalBruto);
-        factura.setIva105Neto(iva_105_netoFactura);
-        factura.setIva21Neto(iva_21_netoFactura);
-        factura.setTotal(new BigDecimal(txt_Total.getValue().toString()));                      
-        factura.setIdCliente(this.cliente.getIdCliente());
-        factura.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
-        return factura;
-    }   
+        List<NuevoRenglonFactura> nuevosRenglones = new ArrayList<>();
+        this.renglonesFactura.forEach(renglon -> {
+            NuevoRenglonFactura renglonNuevo = NuevoRenglonFactura.builder()
+                    .cantidad(renglon.getCantidad())
+                    .idProducto(renglon.getIdProductoItem())
+                    .build();
+            nuevosRenglones.add(renglonNuevo);
+        });
+        nuevaFacturaVenta.setRenglones(nuevosRenglones);
+        return nuevaFacturaVenta;
+    } 
     
     private void setListeners() {
         cmb_TipoComprobante.addKeyListener(keyHandler);
@@ -136,8 +137,8 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                     .getForObject("/clientes/pedidos/" + pedido.getIdPedido(), Cliente.class));
             this.cargarTiposDeComprobantesDisponibles();            
             this.tipoDeComprobante = (TipoDeComprobante) cmb_TipoComprobante.getSelectedItem();
-            this.renglonesFactura = new ArrayList(Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/facturas/renglones/pedidos/" + pedido.getIdPedido()
+            this.renglonesFactura = new LinkedList(Arrays.asList(RestClient.getRestTemplate()
+                    .getForObject("/facturas/ventas/renglones/pedidos/" + pedido.getIdPedido()
                             + "?tipoDeComprobante=" + this.tipoDeComprobante.name(),
                             RenglonFactura[].class)));
             EstadoRenglon[] marcaDeRenglonesDelPedido = new EstadoRenglon[renglonesFactura.size()];
@@ -179,7 +180,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
 
     private boolean existeTransportistaCargado() {
         if (Arrays.asList(RestClient.getRestTemplate().
-                getForObject("/transportistas/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
+                getForObject("/transportistas",
                         Transportista[].class)).isEmpty()) {
             JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                     .getString("mensaje_transportista_ninguno_cargado"), "Error", JOptionPane.ERROR_MESSAGE);
@@ -237,28 +238,25 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         tbl_Resultado.getColumnModel().getColumn(7).setPreferredWidth(120);
     }
 
-    private boolean agregarRenglon(RenglonFactura renglon) {
+    private boolean agregarRenglon(NuevoRenglonFactura nuevoRenglonFactura) {
         boolean agregado = false;
-        try {
-            //busca entre los renglones al producto, aumenta la cantidad y recalcula el descuento        
-            for (int i = 0; i < renglonesFactura.size(); i++) {
-                RenglonFactura rf;
-                if (renglonesFactura.get(i).getIdProductoItem() == renglon.getIdProductoItem()) {
-                    rf = RestClient.getRestTemplate().getForObject("/facturas/renglon-venta?"
-                            + "idProducto=" + renglonesFactura.get(i).getIdProductoItem()
-                            + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
-                            + "&movimiento=" + Movimiento.VENTA
-                            + "&cantidad=" + renglonesFactura.get(i).getCantidad().add(renglon.getCantidad())
-                            + "&idCliente=" + this.cliente.getIdCliente(),
-                            RenglonFactura.class);
-                    renglonesFactura.set(i, rf);
-                    agregado = true;
-                }
+        try {            
+            List<NuevoRenglonFactura> nuevosRenglones = new ArrayList<>();
+            this.renglonesFactura.forEach(renglon -> {
+                NuevoRenglonFactura nuevoRenglon = NuevoRenglonFactura.builder()
+                        .cantidad(renglon.getCantidad())
+                        .idProducto(renglon.getIdProductoItem())
+                        .build();
+                nuevosRenglones.add(nuevoRenglon);
+            });
+            if (nuevosRenglones.contains(nuevoRenglonFactura)) {
+                nuevosRenglones.stream().filter(renglon -> renglon.getIdProducto() == nuevoRenglonFactura.getIdProducto())
+                        .forEach(renglon -> renglon.setCantidad(renglon.getCantidad().add(nuevoRenglonFactura.getCantidad())));
+            } else {
+                nuevosRenglones.add(nuevoRenglonFactura);
             }
-            //si no encuentra el producto entre los renglones, carga un nuevo renglon        
-            if (agregado == false) {
-                renglonesFactura.add(renglon);
-            }
+            this.renglonesFactura = new LinkedList(Arrays.asList(RestClient.getRestTemplate()
+                    .postForObject("/facturas/ventas/renglones?tipoDeComprobante=" + this.tipoDeComprobante.name(), nuevosRenglones, RenglonFactura[].class)));
             //para que baje solo el scroll vertical
             Point p = new Point(0, tbl_Resultado.getHeight());
             sp_Resultado.getViewport().setViewPosition(p);
@@ -326,16 +324,14 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
 
     private void buscarProductoConVentanaAuxiliar() {
         if (cantidadMaximaRenglones > renglonesFactura.size()) {
-            Movimiento movimiento = this.tipoDeComprobante.equals(TipoDeComprobante.PEDIDO) ? Movimiento.PEDIDO : Movimiento.VENTA;
-            // revisar esto, es necesario para el movimiento como String y a su vez el movimiento?
-            BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglonesFactura, this.tipoDeComprobante, this.cliente);
+            BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglonesFactura, this.tipoDeComprobante, Movimiento.VENTA);
             buscarProductosGUI.setModal(true);
             buscarProductosGUI.setLocationRelativeTo(this);
             buscarProductosGUI.setVisible(true);
             if (buscarProductosGUI.debeCargarRenglon()) {
                 boolean renglonCargado = false;
                 for (RenglonFactura renglon : renglonesFactura) {
-                    if (renglon.getIdProductoItem() == buscarProductosGUI.getRenglonFactura().getIdProductoItem()) {
+                    if (renglon.getIdProductoItem() == buscarProductosGUI.getRenglonFactura().getIdProducto()) {
                         renglonCargado = true;
                     }
                 }
@@ -371,17 +367,15 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                         .getString("mensaje_producto_no_encontrado"), "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                RenglonFactura renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon-venta?"
-                        + "idProducto=" + producto.getIdProducto()
-                        + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
-                        + "&movimiento=" + Movimiento.VENTA
-                        + "&cantidad=1" 
-                        + "&idCliente=" + this.cliente.getIdCliente(),
-                        RenglonFactura.class);
+                NuevoRenglonFactura nuevoRenglon = NuevoRenglonFactura.builder()
+                        .cantidad(BigDecimal.ONE)
+                        .idProducto(producto.getIdProducto())
+                        .build();
+
                 boolean esValido = true;
-                Map<Long, BigDecimal> faltantes;
+                List<ProductoFaltante> faltantes;
                 if (cmb_TipoComprobante.getSelectedItem() != TipoDeComprobante.PEDIDO) {
-                    faltantes = this.getProductosSinStockDisponible(Arrays.asList(renglon));
+                    faltantes = this.getProductosSinStockDisponible(Arrays.asList(nuevoRenglon));
                     if (!faltantes.isEmpty()) {
                         esValido = false;
                         JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
@@ -389,7 +383,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                     }
                 }
                 if (esValido) {
-                    boolean renglonCargado = this.agregarRenglon(renglon);
+                    boolean renglonCargado = this.agregarRenglon(nuevoRenglon);
                     EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglonesFactura.size()];
                     if (tbl_Resultado.getRowCount() == 0) {
                         estadosRenglones[0] = EstadoRenglon.DESMARCADO;
@@ -412,7 +406,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                     .getString("mensaje_error_conexion"), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
+    
     private void validarComponentesDeResultados() {
         if (txt_Descuento_porcentaje.isEditValid()) {
             try {
@@ -433,73 +427,37 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
     }
 
     private void calcularResultados() {
-        BigDecimal subTotal = BigDecimal.ZERO;
-        BigDecimal descuentoPorcentaje;
-        BigDecimal descuentoNeto;
-        BigDecimal recargoPorcentaje;
-        BigDecimal recargoNeto;
-        BigDecimal total;
         this.validarComponentesDeResultados();
+        BigDecimal[] importe = new BigDecimal[renglonesFactura.size()];
+        BigDecimal[] ivaPorcentajes = new BigDecimal[renglonesFactura.size()];
+        BigDecimal[] ivaNetos = new BigDecimal[renglonesFactura.size()];
         BigDecimal[] cantidades = new BigDecimal[renglonesFactura.size()];
-        BigDecimal[] ivaPorcentajeRenglones = new BigDecimal[renglonesFactura.size()];
-        BigDecimal[] ivaNetoRenglones = new BigDecimal[renglonesFactura.size()];
         int indice = 0;
         for (RenglonFactura renglon : renglonesFactura) {
-            subTotal = subTotal.add(renglon.getImporte());
+            importe[indice] = renglon.getImporte();
+            ivaPorcentajes[indice] = renglon.getIvaPorcentaje();
+            ivaNetos[indice] = renglon.getIvaNeto();
             cantidades[indice] = renglon.getCantidad();
-            ivaPorcentajeRenglones[indice] = renglon.getIvaPorcentaje();
-            ivaNetoRenglones[indice] = renglon.getIvaNeto();
             indice++;
         }
-        txt_Subtotal.setValue(subTotal);
-        descuentoPorcentaje = new BigDecimal(txt_Descuento_porcentaje.getValue().toString());
-        descuentoNeto = subTotal.multiply(descuentoPorcentaje).divide(CIEN, 15, RoundingMode.HALF_UP);
-        txt_Descuento_neto.setValue(descuentoNeto);
-        recargoPorcentaje = new BigDecimal(txt_Recargo_porcentaje.getValue().toString());
-        recargoNeto = subTotal.multiply(recargoPorcentaje).divide(CIEN, 15, RoundingMode.HALF_UP);
-        txt_Recargo_neto.setValue(recargoNeto);
-        iva_105_netoFactura = BigDecimal.ZERO;
-        iva_21_netoFactura = BigDecimal.ZERO;
-        indice = cantidades.length;
-        if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.FACTURA_A || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
-            for (int i = 0; i < indice; i++) {
-                if (ivaPorcentajeRenglones[i].compareTo(IVA_105) == 0) {
-                    iva_105_netoFactura = iva_105_netoFactura.add(cantidades[i].multiply(ivaNetoRenglones[i]
-                    .subtract(ivaNetoRenglones[i].multiply(descuentoPorcentaje.divide(CIEN, 15, RoundingMode.HALF_UP)))
-                    .add(ivaNetoRenglones[i].multiply(recargoPorcentaje.divide(CIEN, 15, RoundingMode.HALF_UP)))));
-                } else if (ivaPorcentajeRenglones[i].compareTo(IVA_21) == 0) {
-                    iva_21_netoFactura = iva_21_netoFactura.add(cantidades[i].multiply(ivaNetoRenglones[i]
-                    .subtract(ivaNetoRenglones[i].multiply(descuentoPorcentaje.divide(CIEN, 15, RoundingMode.HALF_UP)))
-                    .add(ivaNetoRenglones[i].multiply(recargoPorcentaje.divide(CIEN, 15, RoundingMode.HALF_UP)))));
-                }
-            }
-        } else {
-            for (int i = 0; i < indice; i++) {
-                if (ivaPorcentajeRenglones[i].compareTo(IVA_105) == 0) {
-                    iva_105_netoFactura = iva_105_netoFactura.add(cantidades[i].multiply(ivaNetoRenglones[i]));
-                } else if (ivaPorcentajeRenglones[i].compareTo(IVA_21) == 0) {
-                    iva_21_netoFactura = iva_21_netoFactura.add(cantidades[i].multiply(ivaNetoRenglones[i]));
-                }
-            }
-        }
-        if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
-            txt_IVA105_neto.setValue(0);
-            txt_IVA21_neto.setValue(0);
-        } else {
-            txt_IVA105_neto.setValue(iva_105_netoFactura);
-            txt_IVA21_neto.setValue(iva_21_netoFactura);
-        }
-        subTotalBruto = subTotal.add(recargoNeto).subtract(descuentoNeto);
-        if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
-            subTotalBruto = subTotalBruto.subtract(iva_105_netoFactura.add(iva_21_netoFactura));
-        }
-        total = subTotalBruto.add(iva_105_netoFactura).add(iva_21_netoFactura);
-        txt_Total.setValue(total);
-        if (tipoDeComprobante == TipoDeComprobante.FACTURA_B || tipoDeComprobante == TipoDeComprobante.PRESUPUESTO) {
-            txt_SubTotalBruto.setValue(total);
-        } else {
-            txt_SubTotalBruto.setValue(subTotalBruto);
-        }
+        NuevosResultadosComprobante nuevosResultadosComprobante
+                = NuevosResultadosComprobante.builder()
+                        .importe(importe)
+                        .ivaPorcentajes(ivaPorcentajes)
+                        .ivaNetos(ivaNetos)
+                        .cantidades(cantidades)
+                        .tipoDeComprobante(tipoDeComprobante)
+                        .descuentoPorcentaje(txt_Descuento_porcentaje.getValue() != null ? new BigDecimal(txt_Descuento_porcentaje.getValue().toString()) : BigDecimal.ZERO)
+                        .recargoPorcentaje(txt_Recargo_porcentaje.getValue() != null ? new BigDecimal(txt_Recargo_porcentaje.getValue().toString()) : BigDecimal.ZERO)
+                        .build();
+        Resultados resultadosComprobante = RestClient.getRestTemplate().postForObject("/facturas/calculo-factura", nuevosResultadosComprobante, Resultados.class);
+        txt_Subtotal.setValue(resultadosComprobante.getSubTotal());
+        txt_Descuento_neto.setValue(resultadosComprobante.getDescuentoNeto());
+        txt_Recargo_neto.setValue(resultadosComprobante.getRecargoNeto());
+        txt_SubTotalBruto.setValue(resultadosComprobante.getSubTotalBruto());
+        txt_IVA105_neto.setValue(resultadosComprobante.getIva105Neto());
+        txt_IVA21_neto.setValue(resultadosComprobante.getIva21Neto());
+        txt_Total.setValue(resultadosComprobante.getTotal());
     }
 
     private void cargarTiposDeComprobantesDisponibles() {
@@ -512,7 +470,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                 try {
                     cmb_TipoComprobante.removeAllItems();
                     tiposDeComprobante = RestClient.getRestTemplate()
-                            .getForObject("/facturas/venta/tipos/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal()
+                            .getForObject("/facturas/ventas/tipos/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal()
                                     + "/clientes/" + cliente.getIdCliente(), TipoDeComprobante[].class);
                 } catch (RestClientResponseException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -530,21 +488,17 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
     }
 
     private void recargarRenglones() {
-        try {            
-            List<RenglonFactura> resguardoRenglones = renglonesFactura;
-            renglonesFactura = new ArrayList<>();
-            resguardoRenglones.stream().map(renglonFactura -> {
-                Producto producto = RestClient.getRestTemplate()
-                        .getForObject("/productos/" + renglonFactura.getIdProductoItem(), Producto.class);
-                RenglonFactura renglon = RestClient.getRestTemplate().getForObject("/facturas/renglon-venta?"
-                        + "idProducto=" + producto.getIdProducto()
-                        + "&tipoDeComprobante=" + this.tipoDeComprobante.name()
-                        + "&movimiento=" + Movimiento.VENTA
-                        + "&cantidad=" + renglonFactura.getCantidad()
-                        + "&idCliente=" + this.cliente.getIdCliente(),
-                        RenglonFactura.class);
-                return renglon;
-            }).forEachOrdered(renglon -> this.agregarRenglon(renglon));
+        try {
+            List<NuevoRenglonFactura> nuevosRenglones = new ArrayList<>();
+            this.renglonesFactura.forEach(renglon -> {
+                NuevoRenglonFactura nuevoRenglon = NuevoRenglonFactura.builder()
+                        .cantidad(renglon.getCantidad())
+                        .idProducto(renglon.getIdProductoItem())
+                        .build();
+                nuevosRenglones.add(nuevoRenglon);
+            });
+            this.renglonesFactura = new LinkedList(Arrays.asList(RestClient.getRestTemplate().
+                    postForObject("/facturas/ventas/renglones?tipoDeComprobante=" + this.tipoDeComprobante.name(), nuevosRenglones, RenglonFactura[].class)));
             EstadoRenglon[] estadosRenglones = new EstadoRenglon[renglonesFactura.size()];
             if (!renglonesFactura.isEmpty()) {
                 if (tbl_Resultado.getRowCount() == 0) {
@@ -568,12 +522,12 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         }
     }
     
-    private Map<Long, BigDecimal> getProductosSinStockDisponible(List<RenglonFactura> renglonesFactura) {
-        long[] idsProductos = new long[renglonesFactura.size()];
-        BigDecimal[] cantidades = new BigDecimal[renglonesFactura.size()];
+    private List<ProductoFaltante> getProductosSinStockDisponible(List<NuevoRenglonFactura> nuevosRenglonesFactura) {
+        long[] idsProductos = new long[nuevosRenglonesFactura.size()];
+        BigDecimal[] cantidades = new BigDecimal[nuevosRenglonesFactura.size()];
         for (int i = 0; i < idsProductos.length; i++) {
-            idsProductos[i] = renglonesFactura.get(i).getIdProductoItem();
-            cantidades[i] = renglonesFactura.get(i).getCantidad();
+            idsProductos[i] = nuevosRenglonesFactura.get(i).getIdProducto();
+            cantidades[i] = nuevosRenglonesFactura.get(i).getCantidad();
         }
         ProductosParaVerificarStock productosParaVerificarStock = ProductosParaVerificarStock.builder()
                 .idSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal())
@@ -582,7 +536,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                 .build();
         HttpEntity<ProductosParaVerificarStock> requestEntity = new HttpEntity<>(productosParaVerificarStock);
         return RestClient.getRestTemplate()
-                .exchange("/productos/disponibilidad-stock", HttpMethod.POST, requestEntity, new ParameterizedTypeReference<Map<Long, BigDecimal>>() {
+                .exchange("/productos/disponibilidad-stock", HttpMethod.POST, requestEntity, new ParameterizedTypeReference<List<ProductoFaltante>>() {
                 }).getBody();
     }
 
@@ -1383,10 +1337,18 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                     this.calcularResultados();
                     try {
                         cliente = RestClient.getRestTemplate().getForObject("/clientes/" + this.cliente.getIdCliente(), Cliente.class);
-                        Map<Long, BigDecimal> faltantes;
-                        faltantes = this.getProductosSinStockDisponible(renglonesFactura);
+                        List<ProductoFaltante> faltantes;
+                        List<NuevoRenglonFactura> nuevosRenglones = new ArrayList<>();
+                        this.renglonesFactura.forEach(renglon -> {
+                            NuevoRenglonFactura nuevoRenglon = NuevoRenglonFactura.builder()
+                                    .cantidad(renglon.getCantidad())
+                                    .idProducto(renglon.getIdProductoItem())
+                                    .build();
+                            nuevosRenglones.add(nuevoRenglon);
+                        });
+                        faltantes = this.getProductosSinStockDisponible(nuevosRenglones);
                         if (faltantes.isEmpty()) {
-                            CerrarVentaGUI cerrarVentaGUI = new CerrarVentaGUI(this.construirFactura(), this.pedido, this.modeloTablaResultados);
+                            CerrarVentaGUI cerrarVentaGUI = new CerrarVentaGUI(this.construirNuevaFactura(), this.pedido, new BigDecimal(txt_Total.getValue().toString()), this.modeloTablaResultados);
                             cerrarVentaGUI.setLocationRelativeTo(this);
                             cerrarVentaGUI.setVisible(true);
                             if (cerrarVentaGUI.isExito()) {
@@ -1415,10 +1377,6 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
 
     private void btn_QuitarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_QuitarProductoActionPerformed
         int[] indicesParaEliminar = Utilidades.getSelectedRowsModelIndices(tbl_Resultado);
-        List<RenglonFactura> renglonesParaBorrar = new ArrayList<>();
-        for (int i = 0; i < indicesParaEliminar.length; i++) {
-            renglonesParaBorrar.add(renglonesFactura.get(indicesParaEliminar[i]));
-        }
         EstadoRenglon[] estadoDeRenglones = new EstadoRenglon[renglonesFactura.size()];
         for (int i = 0; i < tbl_Resultado.getRowCount(); i++) {
             if (((boolean) tbl_Resultado.getValueAt(i, 0)) == true) {
@@ -1430,7 +1388,9 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         for (int i = 0; i < indicesParaEliminar.length; i++) {
             estadoDeRenglones[indicesParaEliminar[i]] = EstadoRenglon.ELIMINADO;
         }
-        renglonesParaBorrar.forEach(renglon -> renglonesFactura.remove(renglon));
+        for (int i = 0; i < indicesParaEliminar.length; i++) {
+            renglonesFactura.remove(indicesParaEliminar[i]);
+        }
         this.cargarRenglonesAlTable(estadoDeRenglones);
         this.calcularResultados();
     }//GEN-LAST:event_btn_QuitarProductoActionPerformed
@@ -1535,6 +1495,9 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                 btn_NuevoCliente.setEnabled(false);
                 btn_BuscarCliente.setEnabled(false);
                 this.calcularResultados();
+            } else {
+                txt_Descuento_porcentaje.setValue(BigDecimal.ZERO);
+                txt_Recargo_porcentaje.setValue(BigDecimal.ZERO);
             }
         } catch (PropertyVetoException ex) {
             String msjError = "Se produjo un error al intentar maximizar la ventana.";

@@ -20,8 +20,6 @@ public class RenglonFactura implements Serializable {
     private BigDecimal bonificacionNeta;
     private BigDecimal ivaPorcentaje;
     private BigDecimal ivaNeto;
-    private BigDecimal impuestoPorcentaje;
-    private BigDecimal impuestoNeto;
     private BigDecimal gananciaPorcentaje;
     private BigDecimal gananciaNeto;
     private BigDecimal importe;

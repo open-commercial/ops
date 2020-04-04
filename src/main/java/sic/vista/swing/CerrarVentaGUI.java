@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.SucursalActiva;
 import sic.modelo.Factura;
 import sic.modelo.FacturaVenta;
 import sic.modelo.FormaDePago;
@@ -36,7 +35,8 @@ public class CerrarVentaGUI extends JDialog {
 
     private boolean exito;
     private boolean facturaAutorizada = false;
-    private FacturaVenta facturaVenta;
+    private final NuevaFacturaVenta nuevaFacturaVenta;
+    private final BigDecimal totalFactura;
     private final Pedido pedido;
     private final ModeloTabla modeloTabla;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
@@ -46,9 +46,10 @@ public class CerrarVentaGUI extends JDialog {
     private boolean dividir = false;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     
-    public CerrarVentaGUI(FacturaVenta facturaVenta, Pedido pedido, ModeloTabla modeloTabla) {
+    public CerrarVentaGUI(NuevaFacturaVenta nuevaFacturaVenta, Pedido pedido, BigDecimal totalFactura, ModeloTabla modeloTabla) {
         super.setModal(true);
-        this.facturaVenta = facturaVenta;
+        this.nuevaFacturaVenta = nuevaFacturaVenta;
+        this.totalFactura = totalFactura;
         this.pedido = pedido;
         this.modeloTabla = modeloTabla;
         this.initComponents();
@@ -83,7 +84,7 @@ public class CerrarVentaGUI extends JDialog {
         if (Desktop.isDesktopSupported()) {
             try {
                 byte[] reporte = RestClient.getRestTemplate()
-                        .getForObject("/facturas/" + factura.getIdFactura() + "/reporte", byte[].class);
+                        .getForObject("/facturas/ventas/" + factura.getIdFactura() + "/reporte", byte[].class);
                 File f = new File(System.getProperty("user.home") + "/" + nombreReporte + ".pdf");
                 Files.write(f.toPath(), reporte);
                 Desktop.getDesktop().open(f);
@@ -138,7 +139,7 @@ public class CerrarVentaGUI extends JDialog {
             cmb_Transporte.removeAllItems();
             cmb_Transporte.addItem(null);
             List<Transportista> transportes = Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/transportistas/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
+                    .getForObject("/transportistas",
                             Transportista[].class));
             transportes.stream().forEach(t -> {
                 cmb_Transporte.addItem(t);
@@ -178,12 +179,12 @@ public class CerrarVentaGUI extends JDialog {
 
     private void finalizarVenta() {
         if (cmb_Transporte.getSelectedItem() != null) {
-            this.facturaVenta.setIdTransportista(((Transportista) cmb_Transporte.getSelectedItem()).getIdTransportista());
+            this.nuevaFacturaVenta.setIdTransportista(((Transportista) cmb_Transporte.getSelectedItem()).getIdTransportista());
         }
         this.armarMontosConFormasDePago();
-        NuevaFacturaVenta nuevaFacturaVenta = NuevaFacturaVenta.builder()
-                .facturaVenta(facturaVenta)
-                .build();
+        List<TipoDeComprobante> tiposAutorizables
+                = Arrays.asList(
+                        TipoDeComprobante.FACTURA_A, TipoDeComprobante.FACTURA_B, TipoDeComprobante.FACTURA_C);
         try {
             if (idsFormasDePago.isEmpty() == false) {
                 Long[] formasDePago = new Long[idsFormasDePago.size()];
@@ -199,28 +200,19 @@ public class CerrarVentaGUI extends JDialog {
             if (dividir) {
                 nuevaFacturaVenta.setIndices(indicesParaDividir);
                 List<FacturaVenta> facturasDivididas = Arrays.asList(RestClient.getRestTemplate()
-                        .postForObject("/facturas/venta", nuevaFacturaVenta, FacturaVenta[].class));
+                        .postForObject("/facturas/ventas", nuevaFacturaVenta, FacturaVenta[].class));
                 facturasDivididas.forEach(fv -> {
                     fv.setRenglones(Arrays.asList(RestClient.getRestTemplate()
                             .getForObject("/facturas/" + fv.getIdFactura() + "/renglones",
                                     RenglonFactura[].class)));
                 });
                 exito = true;
-                boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/"
-                        + SucursalActiva.getInstance().getSucursal().getIdSucursal()
-                        + "/factura-electronica-habilitada", Boolean.class);
-                if (FEHabilitada) {
-                    int indice = facturasDivididas.size();
-                    for (int i = 0; i < indice; i++) {
-                        if (facturasDivididas.size() == 2 && !facturasDivididas.get(i).getRenglones().isEmpty()) {
-                            if (i != 0) {
-                                this.autorizarFactura(facturasDivididas.get(i));
+                facturasDivididas.stream().filter(facturaVenta -> tiposAutorizables.contains(facturaVenta.getTipoComprobante()))
+                        .forEach(facturaVenta -> {
+                            if (facturaVenta.getCae() != 0L) {
+                                facturaAutorizada = true;
                             }
-                        } else if (facturasDivididas.size() == 1 && !facturasDivididas.get(i).getRenglones().isEmpty()) {
-                            this.autorizarFactura(facturasDivididas.get(i));
-                        }
-                    }
-                }
+                        });
                 if (facturaAutorizada) {
                     int reply = JOptionPane.showConfirmDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
@@ -239,58 +231,42 @@ public class CerrarVentaGUI extends JDialog {
                             }
                         }
                     }
+                } else {
+                    JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_alta_sin_cae"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                this.facturaVenta = Arrays.asList(RestClient.getRestTemplate().postForObject("/facturas/venta", nuevaFacturaVenta, FacturaVenta[].class)).get(0);
-                if (facturaVenta != null) {
-                    boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/"
-                            + SucursalActiva.getInstance().getSucursal().getIdSucursal()
-                            + "/factura-electronica-habilitada", Boolean.class);
-                    if (FEHabilitada) {
-                        this.autorizarFactura(this.facturaVenta);
+                FacturaVenta facturaGuardada = Arrays.asList(RestClient.getRestTemplate().postForObject("/facturas/ventas", nuevaFacturaVenta, FacturaVenta[].class)).get(0);
+                exito = true;
+                if (tiposAutorizables.contains(facturaGuardada.getTipoComprobante()) && facturaGuardada.getCae() != 0L) {
+                    facturaAutorizada = true;
+                }
+                if (facturaAutorizada
+                        || facturaGuardada.getTipoComprobante() == TipoDeComprobante.FACTURA_X
+                        || facturaGuardada.getTipoComprobante() == TipoDeComprobante.FACTURA_Y
+                        || facturaGuardada.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
+                    int reply = JOptionPane.showConfirmDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                            "Aviso", JOptionPane.YES_NO_OPTION);
+                    if (reply == JOptionPane.YES_OPTION) {
+                        this.lanzarReporteFactura(facturaGuardada, "Factura");
                     }
-                    if (facturaAutorizada
-                            || this.facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_X
-                            || this.facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_Y
-                            || this.facturaVenta.getTipoComprobante() == TipoDeComprobante.PRESUPUESTO) {
-                        int reply = JOptionPane.showConfirmDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
-                                "Aviso", JOptionPane.YES_NO_OPTION);
-                        if (reply == JOptionPane.YES_OPTION) {
-                            this.lanzarReporteFactura(this.facturaVenta, "Factura");
-                        }
-                    }
-                    exito = true;
+                } else if (!facturaAutorizada && tiposAutorizables.contains(facturaGuardada.getTipoComprobante())) {
+                    JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_alta_sin_cae"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
             this.dispose();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            exito = true;
+            this.dispose();
         } catch (ResourceAccessException ex) {
             LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-    
-    private void autorizarFactura(FacturaVenta facturaVenta) {
-        if (facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_A
-                || facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_B
-                || facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_C) {
-            try {
-                facturaVenta = RestClient.getRestTemplate().postForObject("/facturas/" + facturaVenta.getIdFactura() + "/autorizacion",
-                        null, FacturaVenta.class);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-        if (facturaVenta.getCae() != 0L) facturaAutorizada = true;
     }
 
     private void armarMontosConFormasDePago() {
@@ -531,14 +507,14 @@ public class CerrarVentaGUI extends JDialog {
         this.setEstadoFormasDePago();
         cmb_Transporte.setSelectedIndex(0);
         lbl_Vendedor.setText(UsuarioActivo.getInstance().getUsuario().toString());
-        txt_MontoPago1.setValue(this.facturaVenta.getTotal());
+        txt_MontoPago1.setValue(totalFactura);
         txt_MontoPago2.setValue(0);
         txt_MontoPago3.setValue(0);
         indicesParaDividir = new int[this.modeloTabla.getRowCount()];
         if ((indicesParaDividir.length > 0) 
-                && (facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_A
-                || facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_B
-                || facturaVenta.getTipoComprobante() == TipoDeComprobante.FACTURA_C)) {
+                && (nuevaFacturaVenta.getTipoDeComprobante() == TipoDeComprobante.FACTURA_A
+                || nuevaFacturaVenta.getTipoDeComprobante() == TipoDeComprobante.FACTURA_B
+                || nuevaFacturaVenta.getTipoDeComprobante() == TipoDeComprobante.FACTURA_C)) {
             int j = 0;
             boolean tieneRenglonesMarcados = false;
             for (int i = 0; i < this.modeloTabla.getRowCount(); i++) {
@@ -581,7 +557,7 @@ public class CerrarVentaGUI extends JDialog {
             if (chk_FormaDePago3.isSelected() && chk_FormaDePago3.isEnabled()) {
                 totalPagos = totalPagos.add(new BigDecimal(txt_MontoPago3.getValue().toString()));
             }
-            BigDecimal totalAPagar = facturaVenta.getTotal().setScale(2, RoundingMode.FLOOR);
+            BigDecimal totalAPagar = totalFactura.setScale(2, RoundingMode.FLOOR);
             if (totalPagos.compareTo(totalAPagar) < 0) {
                 int reply = JOptionPane.showConfirmDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_montos_insuficientes"),

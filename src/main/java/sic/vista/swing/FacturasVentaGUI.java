@@ -219,13 +219,13 @@ public class FacturasVentaGUI extends JInternalFrame {
 
     private void calcularResultados(BusquedaFacturaVentaCriteria criteria) {
         txt_ResultTotalFacturado.setValue(RestClient.getRestTemplate()
-                .postForObject("/facturas/total-facturado-venta/criteria", criteria, BigDecimal.class));
+                .postForObject("/facturas/ventas/total-facturado/criteria", criteria, BigDecimal.class));
         if (UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)
                 || UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ENCARGADO)) {
             txt_ResultGananciaTotal.setValue(RestClient.getRestTemplate()
-                    .postForObject("/facturas/ganancia-total/criteria", criteria, BigDecimal.class));
+                    .postForObject("/facturas/ventas/ganancia-total/criteria", criteria, BigDecimal.class));
             txt_ResultTotalIVAVenta.setValue(RestClient.getRestTemplate()
-                    .postForObject("/facturas/total-iva-venta/criteria", criteria, BigDecimal.class));
+                    .postForObject("/facturas/ventas/total-iva/criteria", criteria, BigDecimal.class));
         }
     }
 
@@ -257,7 +257,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         try {
             HttpEntity<BusquedaFacturaVentaCriteria> requestEntity = new HttpEntity<>(criteria);
             PaginaRespuestaRest<FacturaVenta> response = RestClient.getRestTemplate()
-                    .exchange("/facturas/venta/busqueda/criteria", HttpMethod.POST, requestEntity,
+                    .exchange("/facturas/ventas/busqueda/criteria", HttpMethod.POST, requestEntity,
                             new ParameterizedTypeReference<PaginaRespuestaRest<FacturaVenta>>() {
                     })
                     .getBody();
@@ -414,7 +414,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             try {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
                 byte[] reporte = RestClient.getRestTemplate()
-                        .getForObject("/facturas/" + facturasTotal.get(indexFilaSeleccionada).getIdFactura() + "/reporte",
+                        .getForObject("/facturas/ventas/" + facturasTotal.get(indexFilaSeleccionada).getIdFactura() + "/reporte",
                                 byte[].class);
                 File f = new File(System.getProperty("user.home") + "/Factura.pdf");
                 Files.write(f.toPath(), reporte);
@@ -1233,13 +1233,17 @@ public class FacturasVentaGUI extends JInternalFrame {
                 if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
                     int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
                     long idFacturaSeleccionada = facturasTotal.get(indexFilaSeleccionada).getIdFactura();
-                    RestClient.getRestTemplate().postForObject("/facturas/" + idFacturaSeleccionada + "/autorizacion",
+                    FacturaVenta facturaVenta = RestClient.getRestTemplate().postForObject("/facturas/ventas/" + idFacturaSeleccionada + "/autorizacion",
                             null, FacturaVenta.class);
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_autorizada"),
-                            "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                    if (facturaVenta.getCae() != 0) {
+                        JOptionPane.showMessageDialog(this,
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_autorizada"),
+                                "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_no_autorizada"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                     this.limpiarYBuscar(false);
-
                 }
             } else {
                 JOptionPane.showInternalMessageDialog(this,
@@ -1412,7 +1416,7 @@ public class FacturasVentaGUI extends JInternalFrame {
                     "Aviso", JOptionPane.YES_NO_OPTION);
             if (respuesta == JOptionPane.YES_OPTION) {
                 try {
-                    RestClient.getRestTemplate().getForObject("/facturas/email/" + facturasTotal.get(indexFilaSeleccionada).getIdFactura(), Object.class);
+                    RestClient.getRestTemplate().getForObject("/facturas/ventas/email/" + facturasTotal.get(indexFilaSeleccionada).getIdFactura(), Object.class);
                     JOptionPane.showMessageDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_email_aviso"),
                             "Aviso", JOptionPane.INFORMATION_MESSAGE);
