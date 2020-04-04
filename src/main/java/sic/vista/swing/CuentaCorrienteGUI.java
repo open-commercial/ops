@@ -341,7 +341,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                     case PRESUPUESTO:
                         if (Desktop.isDesktopSupported()) {
                             byte[] reporte = RestClient.getRestTemplate()
-                                    .getForObject("/facturas/" + renglonCC.getIdMovimiento() + "/reporte", byte[].class);
+                                    .getForObject("/facturas/ventas/" + renglonCC.getIdMovimiento() + "/reporte", byte[].class);
                             File f = new File(System.getProperty("user.home") + "/Factura.pdf");
                             Files.write(f.toPath(), reporte);
                             Desktop.getDesktop().open(f);
