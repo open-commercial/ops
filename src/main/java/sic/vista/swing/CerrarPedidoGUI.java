@@ -233,11 +233,14 @@ public class CerrarPedidoGUI extends JDialog {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {
             this.cargarSucursalesConPuntoDeRetiro();
-            if (sucursales.isEmpty()) {
-                cmbSucursales.setEnabled(false);
-                rbRetiroEnSucursal.setEnabled(false);
+            if (this.cliente.getUbicacionEnvio() != null) {
+                lblDetalleUbicacionEnvio.setText(this.cliente.getUbicacionEnvio().toString());
+                if (!rbDireccionFacturacion.isSelected()) {
+                    rbDireccionEnvio.setSelected(true);
+                }
             } else {
-                rbRetiroEnSucursal.setSelected(true);
+                rbDireccionEnvio.setEnabled(false);
+                lblDetalleUbicacionEnvio.setEnabled(false);
             }
             if (this.cliente.getUbicacionFacturacion() != null) {
                 lblDetalleUbicacionFacturacion.setText(this.cliente.getUbicacionFacturacion().toString());
@@ -248,14 +251,11 @@ public class CerrarPedidoGUI extends JDialog {
                 rbDireccionFacturacion.setEnabled(false);
                 lblDetalleUbicacionFacturacion.setEnabled(false);
             }
-            if (this.cliente.getUbicacionEnvio() != null) {
-                lblDetalleUbicacionEnvio.setText(this.cliente.getUbicacionEnvio().toString());
-                if (!rbDireccionFacturacion.isSelected()) {
-                    rbDireccionEnvio.setSelected(true);
-                }
+            if (sucursales.isEmpty()) {
+                cmbSucursales.setEnabled(false);
+                rbRetiroEnSucursal.setEnabled(false);
             } else {
-                rbDireccionEnvio.setEnabled(false);
-                lblDetalleUbicacionEnvio.setEnabled(false);
+                rbRetiroEnSucursal.setSelected(true);
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

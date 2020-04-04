@@ -36,6 +36,7 @@ import sic.modelo.ProductosParaVerificarStock;
 import sic.modelo.RenglonPedido;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.criteria.BusquedaProductoCriteria;
+import sic.util.ColoresCeldaRenderer;
 import sic.util.DecimalesRenderer;
 import sic.util.Utilidades;
 
@@ -376,6 +377,7 @@ public class BuscarProductosGUI extends JDialog {
             tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(70);
             tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(70);
             tbl_Resultados.getColumnModel().getColumn(6).setMaxWidth(70);
+            tbl_Resultados.getColumnModel().getColumn(6).setCellRenderer(new ColoresCeldaRenderer());
             tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(70);
             tbl_Resultados.getColumnModel().getColumn(7).setMaxWidth(70);
             tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(70);
