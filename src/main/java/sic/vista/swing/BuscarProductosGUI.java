@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
@@ -47,7 +48,8 @@ public class BuscarProductosGUI extends JDialog {
     private final List<Producto> productosTotal = new ArrayList<>();
     private List<Producto> productosParcial = new ArrayList<>();
     private List<RenglonFactura> renglonesFactura;
-    private List<RenglonPedido> renglonesPedido;
+    private List<RenglonPedido> renglonesCargadosPedido;
+    private List<RenglonPedido> renglonesDelPedido;
     private Producto productoSeleccionado;
     private NuevoRenglonFactura nuevoRenglonFactura;
     private NuevoRenglonPedido nuevoRenglonPedido;
@@ -70,10 +72,11 @@ public class BuscarProductosGUI extends JDialog {
         this.agregarListeners();
     }
     
-    public BuscarProductosGUI(List<RenglonPedido> renglones) { 
+    public BuscarProductosGUI(List<RenglonPedido> renglonesCargados, List<RenglonPedido> renglonesDelPedido) { 
         this.initComponents();
         this.setIcon();
-        this.renglonesPedido = renglones;
+        this.renglonesCargadosPedido = renglonesCargados;
+        this.renglonesDelPedido = renglonesDelPedido;
         this.movimiento = Movimiento.PEDIDO;
         this.tipoDeComprobante = TipoDeComprobante.PEDIDO;
         this.busquedaParaFiltros = false;
@@ -113,7 +116,7 @@ public class BuscarProductosGUI extends JDialog {
     private void prepararComponentes() {
         txtCantidad.setValue(1.00);
         txtBonificacion.setValue(0.00);
-        if ((renglonesFactura == null || renglonesPedido == null) && movimiento == null && tipoDeComprobante == null) {
+        if ((renglonesFactura == null || renglonesCargadosPedido == null) && movimiento == null && tipoDeComprobante == null) {
             lbl_Cantidad.setVisible(false);
             txtCantidad.setVisible(false);
             lblBonificacion.setVisible(false);
@@ -139,7 +142,7 @@ public class BuscarProductosGUI extends JDialog {
                 productosParcial = response.getContent();
                 productosTotal.addAll(productosParcial);
                 productoSeleccionado = null;
-                if (renglonesFactura != null) {
+                if (renglonesFactura != null || renglonesCargadosPedido != null) {
                     this.restarCantidadesSegunProductosYaCargados();
                 }
                 this.cargarResultadosAlTable();
@@ -162,7 +165,7 @@ public class BuscarProductosGUI extends JDialog {
             debeCargarRenglon = false;
             this.dispose();
         } else {
-            if (movimiento == Movimiento.VENTA) {
+            if (movimiento == Movimiento.VENTA || movimiento == Movimiento.PEDIDO) {
                 BigDecimal[] cantidades = {this.sumarCantidadesSegunProductosYaCargados()};
                 long[] idsProductos = {productoSeleccionado.getIdProducto()};
                 ProductosParaVerificarStock productosParaVerificarStock = ProductosParaVerificarStock.builder()
@@ -219,26 +222,61 @@ public class BuscarProductosGUI extends JDialog {
     
     private BigDecimal sumarCantidadesSegunProductosYaCargados() {
         BigDecimal cantidad = new BigDecimal(txtCantidad.getValue().toString());
-        for (RenglonFactura r : renglonesFactura) {
-            if (r.getIdProductoItem() == productoSeleccionado.getIdProducto()) {
-                cantidad = cantidad.add(r.getCantidad());
+        if (renglonesFactura != null && !renglonesFactura.isEmpty()) {
+            for (RenglonFactura r : renglonesFactura) {
+                if (r.getIdProductoItem() == productoSeleccionado.getIdProducto()) {
+                    cantidad = cantidad.add(r.getCantidad());
+                }
+            }
+        }
+        if (renglonesCargadosPedido != null && !renglonesCargadosPedido.isEmpty()) {
+            for (RenglonPedido r : renglonesCargadosPedido) {
+                if (r.getIdProductoItem() == productoSeleccionado.getIdProducto()) {
+                    cantidad = cantidad.add(r.getCantidad());
+                }
             }
         }
         return cantidad;
     }
-    
+
     private void restarCantidadesSegunProductosYaCargados() {
-        if (!(movimiento == Movimiento.PEDIDO || movimiento == Movimiento.COMPRA)) {
-            renglonesFactura.forEach((r) -> {
-                productosTotal.stream().filter((p) -> (r.getIdProductoItem() == p.getIdProducto() && p.isIlimitado() == false))
-                        .forEachOrdered((p) -> {
-                            p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
-                                if (cantidadEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
-                                    cantidadEnSucursal.setCantidad(cantidadEnSucursal.getCantidad().subtract(r.getCantidad()));
-                                }
+        if (!(movimiento == Movimiento.COMPRA)) {
+            if (renglonesFactura != null && !renglonesFactura.isEmpty()) {
+                renglonesFactura.forEach((r) -> {
+                    productosTotal.stream().filter((p) -> (r.getIdProductoItem() == p.getIdProducto() && p.isIlimitado() == false))
+                            .forEachOrdered((p) -> {
+                                p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
+                                    if (cantidadEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
+                                        cantidadEnSucursal.setCantidad(cantidadEnSucursal.getCantidad().subtract(r.getCantidad()));
+                                    }
+                                });
                             });
-                        });
-            });
+                });
+            }
+            if (renglonesDelPedido != null && !renglonesDelPedido.isEmpty()) {
+                renglonesDelPedido.forEach((r) -> {
+                    productosTotal.stream().filter((p) -> (r.getIdProductoItem() == p.getIdProducto() && p.isIlimitado() == false))
+                            .forEachOrdered((p) -> {
+                                p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
+                                    if (cantidadEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
+                                        cantidadEnSucursal.setCantidad(cantidadEnSucursal.getCantidad().add(r.getCantidad()));
+                                    }
+                                });
+                            });
+                });
+            }
+            if (renglonesCargadosPedido != null && !renglonesCargadosPedido.isEmpty()) {
+                renglonesCargadosPedido.forEach((r) -> {
+                    productosTotal.stream().filter((p) -> (r.getIdProductoItem() == p.getIdProducto() && p.isIlimitado() == false))
+                            .forEachOrdered((p) -> {
+                                p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
+                                    if (cantidadEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
+                                        cantidadEnSucursal.setCantidad(cantidadEnSucursal.getCantidad().subtract(r.getCantidad()));
+                                    }
+                                });
+                            });
+                });
+            }
         }
     }
 

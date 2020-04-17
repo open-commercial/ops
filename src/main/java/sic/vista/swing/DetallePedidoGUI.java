@@ -191,7 +191,20 @@ public class DetallePedidoGUI extends JInternalFrame {
 
     private void buscarProductoConVentanaAuxiliar() {
         if (cantidadMaximaRenglones > renglones.size()) {
-            BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglones);
+            List<RenglonPedido> renglonesDelPedido = new ArrayList<>();
+            try {
+                if (pedido.getIdPedido() != 0L) {
+                    renglonesDelPedido = Arrays.asList(RestClient.getRestTemplate()
+                            .getForObject("/pedidos/" + pedido.getIdPedido() + "/renglones", RenglonPedido[].class));
+                }
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                        .getString("mensaje_error_conexion"), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(renglones, renglonesDelPedido);
             buscarProductosGUI.setModal(true);
             buscarProductosGUI.setLocationRelativeTo(this);
             buscarProductosGUI.setVisible(true);
