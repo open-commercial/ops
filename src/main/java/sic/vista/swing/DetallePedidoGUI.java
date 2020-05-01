@@ -402,7 +402,7 @@ public class DetallePedidoGUI extends JInternalFrame {
         btnModificarCliente = new javax.swing.JButton();
 
         setResizable(true);
-        setTitle("Nuevo Pedido");
+        setToolTipText("");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/PedidoNuevo_16x16.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
@@ -1084,6 +1084,7 @@ public class DetallePedidoGUI extends JInternalFrame {
             if (!this.existeFormaDePagoPredeterminada() || !this.existeTransportistaCargado()) {
                 this.dispose();
             }
+            this.setTitle(this.modificandoPedido ? "Modificar Pedido" : "Nuevo Pedido");
             txt_Observaciones.setText(this.pedido.getObservaciones());
             if (this.pedido != null && this.pedido.getIdPedido() != 0) {
                 btn_NuevoCliente.setEnabled(false);
