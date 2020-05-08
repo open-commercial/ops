@@ -8,7 +8,6 @@ import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
@@ -169,7 +168,6 @@ public class BuscarProductosGUI extends JDialog {
                 BigDecimal[] cantidades = {this.sumarCantidadesSegunProductosYaCargados()};
                 long[] idsProductos = {productoSeleccionado.getIdProducto()};
                 ProductosParaVerificarStock productosParaVerificarStock = ProductosParaVerificarStock.builder()
-                        .idSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal())
                         .cantidad(cantidades)
                         .idProducto(idsProductos)
                         .build();

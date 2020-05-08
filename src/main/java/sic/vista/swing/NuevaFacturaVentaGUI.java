@@ -371,7 +371,6 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                         .cantidad(BigDecimal.ONE)
                         .idProducto(producto.getIdProducto())
                         .build();
-
                 boolean esValido = true;
                 List<ProductoFaltante> faltantes;
                 if (cmb_TipoComprobante.getSelectedItem() != TipoDeComprobante.PEDIDO) {
@@ -530,7 +529,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
             cantidades[i] = nuevosRenglonesFactura.get(i).getCantidad();
         }
         ProductosParaVerificarStock productosParaVerificarStock = ProductosParaVerificarStock.builder()
-                .idSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal())
+                //.idSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal())
                 .cantidad(cantidades)
                 .idProducto(idsProductos)
                 .build();
@@ -1346,7 +1345,10 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                                     .build();
                             nuevosRenglones.add(nuevoRenglon);
                         });
-                        faltantes = this.getProductosSinStockDisponible(nuevosRenglones);
+                        faltantes = new ArrayList<>();
+                        if (pedido != null) {
+                            faltantes = this.getProductosSinStockDisponible(nuevosRenglones);
+                        }
                         if (faltantes.isEmpty()) {
                             CerrarVentaGUI cerrarVentaGUI = new CerrarVentaGUI(this.construirNuevaFactura(), this.pedido, new BigDecimal(txt_Total.getValue().toString()), this.modeloTablaResultados);
                             cerrarVentaGUI.setLocationRelativeTo(this);
