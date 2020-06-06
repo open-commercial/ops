@@ -11,11 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
-import sic.RestClient;
-import sic.modelo.CantidadEnSucursal;
-import sic.modelo.Producto;
 import sic.modelo.ProductoFaltante;
-import sic.modelo.SucursalActiva;
 import sic.util.DecimalesRenderer;
 
 public class ProductosFaltantesGUI extends JDialog {

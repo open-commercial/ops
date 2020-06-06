@@ -13,6 +13,8 @@ public class PedidoDTO {
   private Long idCliente;
   private TipoDeEnvio tipoDeEnvio;
   private List<NuevoRenglonPedido> renglones;
+  private Long[] idsFormaDePago;
+  private BigDecimal[] montos;
   private BigDecimal recargoPorcentaje;
   private BigDecimal descuentoPorcentaje;
     

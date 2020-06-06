@@ -1,8 +1,6 @@
 package sic.modelo;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,10 +16,9 @@ public class NuevaFacturaVenta {
     private Long idPedido;
     private Long idCliente;
     private Long idTransportista;
-    private LocalDate fechaVencimiento;
     private TipoDeComprobante tipoDeComprobante;
     private String observaciones;
-    private List<NuevoRenglonFactura> renglones;
+    private boolean[] renglonMarcado;
     private Long[] idsFormaDePago;
     private BigDecimal[] montos;
     private int[] indices;

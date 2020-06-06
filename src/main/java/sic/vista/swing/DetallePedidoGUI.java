@@ -295,11 +295,12 @@ public class DetallePedidoGUI extends JInternalFrame {
     
     private void finalizarPedido() {
         if (nuevoPedido != null) {
-            CerrarPedidoGUI cerrarPedidoGUI = new CerrarPedidoGUI(nuevoPedido, cliente);
-            cerrarPedidoGUI.setModal(true);
-            cerrarPedidoGUI.setLocationRelativeTo(this);
-            cerrarPedidoGUI.setVisible(true);
-            if (cerrarPedidoGUI.isOperacionExitosa()) {
+            System.out.print(cliente.getNroCliente());
+            CerrarOperacionGUI cerrarOperacionGUI = new CerrarOperacionGUI(nuevoPedido, subTotalBruto, cliente);
+            cerrarOperacionGUI.setModal(true);
+            cerrarOperacionGUI.setLocationRelativeTo(this);
+            cerrarOperacionGUI.setVisible(true);
+            if (cerrarOperacionGUI.isExito()) {
                 this.dispose();
             }
         } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificandoPedido == true) {
@@ -317,11 +318,11 @@ public class DetallePedidoGUI extends JInternalFrame {
         pedido.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
         pedido.setTotalEstimado(new BigDecimal(txt_Total.getValue().toString()));
         pedido.setObservaciones(txt_Observaciones.getText());
-        CerrarPedidoGUI cerrarPedidoGUI = new CerrarPedidoGUI(pedido, cliente);
-        cerrarPedidoGUI.setModal(true);
-        cerrarPedidoGUI.setLocationRelativeTo(this);
-        cerrarPedidoGUI.setVisible(true);
-        if (cerrarPedidoGUI.isOperacionExitosa()) {
+        CerrarOperacionGUI cerrarOperacionGUI = new CerrarOperacionGUI(pedido, cliente);
+        cerrarOperacionGUI.setModal(true);
+        cerrarOperacionGUI.setLocationRelativeTo(this);
+        cerrarOperacionGUI.setVisible(true);
+        if (cerrarOperacionGUI.isExito()) {
             this.dispose();
         }
     }

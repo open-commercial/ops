@@ -21,44 +21,122 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.Cliente;
 import sic.modelo.Factura;
 import sic.modelo.FacturaVenta;
 import sic.modelo.FormaDePago;
 import sic.modelo.NuevaFacturaVenta;
+import sic.modelo.NuevoRenglonPedido;
 import sic.modelo.Pedido;
+import sic.modelo.PedidoDTO;
 import sic.modelo.RenglonFactura;
+import sic.modelo.Sucursal;
+import sic.modelo.SucursalActiva;
 import sic.modelo.TipoDeComprobante;
+import sic.modelo.TipoDeEnvio;
 import sic.modelo.Transportista;
 import sic.modelo.UsuarioActivo;
 
-public class CerrarVentaGUI extends JDialog {
+public class CerrarOperacionGUI extends JDialog {
 
     private boolean exito;
     private boolean facturaAutorizada = false;
     private final NuevaFacturaVenta nuevaFacturaVenta;
     private final BigDecimal totalFactura;
+    private PedidoDTO nuevoPedido;
     private final Pedido pedido;
+    private final Cliente cliente;
+    private List<Sucursal> sucursales;
     private final ModeloTabla modeloTabla;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int[] indicesParaDividir = null;
     private final List<Long> idsFormasDePago = new ArrayList<>();
     private final List<BigDecimal> montos = new ArrayList<>();
     private boolean dividir = false;    
+    private BigDecimal totalPedido;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     
-    public CerrarVentaGUI(NuevaFacturaVenta nuevaFacturaVenta, Pedido pedido, BigDecimal totalFactura, ModeloTabla modeloTabla) {
+    public CerrarOperacionGUI(NuevaFacturaVenta nuevaFacturaVenta, Pedido pedido, BigDecimal totalFactura, ModeloTabla modeloTabla) {
         super.setModal(true);
         this.nuevaFacturaVenta = nuevaFacturaVenta;
         this.totalFactura = totalFactura;
         this.pedido = pedido;
         this.modeloTabla = modeloTabla;
+        this.cliente = null;
         this.initComponents();
         this.setIcon();
         this.setListeners();
     }
 
+    public CerrarOperacionGUI(PedidoDTO nuevoPedido, BigDecimal totalPedido, Cliente cliente) {
+        this.nuevoPedido = nuevoPedido;
+        this.cliente = cliente;
+        this.nuevaFacturaVenta = null;
+        this.totalFactura = null;
+        this.pedido = null;
+        this.modeloTabla = null;
+        this.totalPedido = totalPedido;
+        this.initComponents();
+        this.setIcon();
+    }
+
+    public CerrarOperacionGUI(Pedido pedido, Cliente cliente) {
+        this.nuevoPedido = null;
+        this.cliente = cliente;
+        this.pedido = pedido;
+        this.nuevaFacturaVenta = null;
+        this.totalFactura = null;
+        this.modeloTabla = null;
+        this.initComponents();
+        this.setIcon();
+    }
+
     public boolean isExito() {
         return exito;
+    }
+    
+    private void setIcon() {
+        ImageIcon iconoVentana = new ImageIcon(CerrarOperacionGUI.class.getResource("/sic/icons/SIC_24_square.png"));
+        this.setIconImage(iconoVentana.getImage());
+    }
+
+    private void lanzarReportePedido(Pedido pedido) {
+        if (Desktop.isDesktopSupported()) {
+            try {
+                byte[] reporte = RestClient.getRestTemplate()
+                        .getForObject("/pedidos/" + pedido.getIdPedido() + "/reporte", byte[].class);
+                File f = new File(System.getProperty("user.home") + "/Pedido.pdf");
+                Files.write(f.toPath(), reporte);
+                Desktop.getDesktop().open(f);
+            } catch (IOException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void cargarSucursalesConPuntoDeRetiro() {
+        try {
+            sucursales = Arrays.asList(RestClient.getRestTemplate().getForObject("/sucursales?puntoDeRetiro=true", Sucursal[].class));
+            sucursales.stream().forEach(e -> {
+                cmbSucursales.addItem(e.getNombre() + ((e.getUbicacion() != null) ? (" (" + e.getUbicacion() + ")") : ""));
+            });
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            this.dispose();
+        }
     }
 
     private void setListeners() {
@@ -73,11 +151,6 @@ public class CerrarVentaGUI extends JDialog {
         txt_MontoPago3.addKeyListener(keyHandler);
         cmb_Transporte.addKeyListener(keyHandler);
         btn_Finalizar.addKeyListener(keyHandler);
-    }
-    
-    private void setIcon() {
-        ImageIcon iconoVentana = new ImageIcon(CerrarVentaGUI.class.getResource("/sic/icons/SIC_24_square.png"));
-        this.setIconImage(iconoVentana.getImage());
     }
 
     private void lanzarReporteFactura(Factura factura, String nombreReporte) {
@@ -109,72 +182,45 @@ public class CerrarVentaGUI extends JDialog {
     }
 
     private void cargarFormasDePago() {
-        try {
-            cmb_FormaDePago1.removeAllItems();
-            cmb_FormaDePago2.removeAllItems();
-            cmb_FormaDePago3.removeAllItems();
-            List<FormaDePago> formasDePago = Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/formas-de-pago", FormaDePago[].class));
-            formasDePago.stream().map(fdp -> {
-                cmb_FormaDePago1.addItem(fdp);
-                return fdp;
-            }).map(fdp -> {
-                cmb_FormaDePago2.addItem(fdp);
-                return fdp;
-            }).forEach(fdp -> {
-                cmb_FormaDePago3.addItem(fdp);
-            });
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        cmb_FormaDePago1.removeAllItems();
+        cmb_FormaDePago2.removeAllItems();
+        cmb_FormaDePago3.removeAllItems();
+        List<FormaDePago> formasDePago = Arrays.asList(RestClient.getRestTemplate()
+                .getForObject("/formas-de-pago", FormaDePago[].class));
+        formasDePago.stream().map(fdp -> {
+            cmb_FormaDePago1.addItem(fdp);
+            return fdp;
+        }).map(fdp -> {
+            cmb_FormaDePago2.addItem(fdp);
+            return fdp;
+        }).forEach(fdp -> {
+            cmb_FormaDePago3.addItem(fdp);
+        });
     }
 
     private void cargarTransportistas() {
-        try {
-            cmb_Transporte.removeAllItems();
-            cmb_Transporte.addItem(null);
-            List<Transportista> transportes = Arrays.asList(RestClient.getRestTemplate()
-                    .getForObject("/transportistas",
-                            Transportista[].class));
-            transportes.stream().forEach(t -> {
-                cmb_Transporte.addItem(t);
-            });
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        cmb_Transporte.removeAllItems();
+        cmb_Transporte.addItem(null);
+        List<Transportista> transportes = Arrays.asList(RestClient.getRestTemplate()
+                .getForObject("/transportistas",
+                        Transportista[].class));
+        transportes.stream().forEach(t -> {
+            cmb_Transporte.addItem(t);
+        });
     }
 
     private void setEstadoFormasDePago() {
-        try {
-            FormaDePago formaDePagoPredeterminada = RestClient.getRestTemplate()
-                    .getForObject("/formas-de-pago/predeterminada", FormaDePago.class);
-            cmb_FormaDePago1.setSelectedItem(formaDePagoPredeterminada);
-            cmb_FormaDePago1.setEnabled(false);
-            txt_MontoPago1.setEnabled(false);
-            cmb_FormaDePago2.setSelectedItem(formaDePagoPredeterminada);
-            txt_MontoPago2.setEnabled(false);
-            cmb_FormaDePago2.setEnabled(false);
-            cmb_FormaDePago3.setSelectedItem(formaDePagoPredeterminada);
-            cmb_FormaDePago3.setEnabled(false);
-            txt_MontoPago3.setEnabled(false);
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        FormaDePago formaDePagoPredeterminada = RestClient.getRestTemplate()
+                .getForObject("/formas-de-pago/predeterminada", FormaDePago.class);
+        cmb_FormaDePago1.setSelectedItem(formaDePagoPredeterminada);
+        cmb_FormaDePago1.setEnabled(false);
+        txt_MontoPago1.setEnabled(false);
+        cmb_FormaDePago2.setSelectedItem(formaDePagoPredeterminada);
+        txt_MontoPago2.setEnabled(false);
+        cmb_FormaDePago2.setEnabled(false);
+        cmb_FormaDePago3.setSelectedItem(formaDePagoPredeterminada);
+        cmb_FormaDePago3.setEnabled(false);
+        txt_MontoPago3.setEnabled(false);
     }
 
     private void finalizarVenta() {
@@ -200,7 +246,7 @@ public class CerrarVentaGUI extends JDialog {
             if (dividir) {
                 nuevaFacturaVenta.setIndices(indicesParaDividir);
                 List<FacturaVenta> facturasDivididas = Arrays.asList(RestClient.getRestTemplate()
-                        .postForObject("/facturas/ventas", nuevaFacturaVenta, FacturaVenta[].class));
+                        .postForObject("/facturas/ventas/pedidos/" + this.pedido.getIdPedido(), nuevaFacturaVenta, FacturaVenta[].class));
                 facturasDivididas.forEach(fv -> {
                     fv.setRenglones(Arrays.asList(RestClient.getRestTemplate()
                             .getForObject("/facturas/" + fv.getIdFactura() + "/renglones",
@@ -236,7 +282,7 @@ public class CerrarVentaGUI extends JDialog {
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                FacturaVenta facturaGuardada = Arrays.asList(RestClient.getRestTemplate().postForObject("/facturas/ventas", nuevaFacturaVenta, FacturaVenta[].class)).get(0);
+                FacturaVenta facturaGuardada = Arrays.asList(RestClient.getRestTemplate().postForObject("/facturas/ventas/pedidos/" + this.pedido.getIdPedido(), nuevaFacturaVenta, FacturaVenta[].class)).get(0);
                 exito = true;
                 if (tiposAutorizables.contains(facturaGuardada.getTipoComprobante()) && facturaGuardada.getCae() != 0L) {
                     facturaAutorizada = true;
@@ -307,6 +353,7 @@ public class CerrarVentaGUI extends JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         btn_Finalizar = new javax.swing.JButton();
         panel = new javax.swing.JPanel();
         lbl_Vendor = new javax.swing.JLabel();
@@ -325,6 +372,13 @@ public class CerrarVentaGUI extends JDialog {
         separador2 = new javax.swing.JSeparator();
         lbl_Dividido = new javax.swing.JLabel();
         cmb_Transporte = new javax.swing.JComboBox();
+        pnlCerrarPedido = new javax.swing.JPanel();
+        rbRetiroEnSucursal = new javax.swing.JRadioButton();
+        rbDireccionFacturacion = new javax.swing.JRadioButton();
+        rbDireccionEnvio = new javax.swing.JRadioButton();
+        cmbSucursales = new javax.swing.JComboBox<>();
+        lblDetalleUbicacionFacturacion = new javax.swing.JLabel();
+        lblDetalleUbicacionEnvio = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cerrar Venta");
@@ -407,22 +461,23 @@ public class CerrarVentaGUI extends JDialog {
             panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelLayout.createSequentialGroup()
+                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(separador2)
+                    .addGroup(panelLayout.createSequentialGroup()
                         .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(chk_FormaDePago2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(chk_FormaDePago1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(chk_FormaDePago3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cmb_FormaDePago3, 0, 250, Short.MAX_VALUE)
+                            .addComponent(cmb_FormaDePago3, 0, 388, Short.MAX_VALUE)
                             .addComponent(cmb_FormaDePago2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cmb_FormaDePago1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txt_MontoPago3)
-                            .addComponent(txt_MontoPago1)
-                            .addComponent(txt_MontoPago2)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txt_MontoPago1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txt_MontoPago2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txt_MontoPago3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(panelLayout.createSequentialGroup()
                         .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lbl_Transporte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -431,10 +486,9 @@ public class CerrarVentaGUI extends JDialog {
                         .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbl_Vendedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cmb_Transporte, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(separador1)
-                    .addComponent(separador2)
-                    .addComponent(lbl_Dividido, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbl_Dividido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(separador1))
+                .addContainerGap())
         );
         panelLayout.setVerticalGroup(
             panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -475,17 +529,93 @@ public class CerrarVentaGUI extends JDialog {
 
         panelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lbl_Vendedor, lbl_Vendor});
 
+        pnlCerrarPedido.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+
+        buttonGroup1.add(rbRetiroEnSucursal);
+        rbRetiroEnSucursal.setText("Retiro en sucursal:");
+        rbRetiroEnSucursal.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbRetiroEnSucursalItemStateChanged(evt);
+            }
+        });
+
+        buttonGroup1.add(rbDireccionFacturacion);
+        rbDireccionFacturacion.setText("Usar ubicación de facturación:");
+        rbDireccionFacturacion.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbDireccionFacturacionItemStateChanged(evt);
+            }
+        });
+
+        buttonGroup1.add(rbDireccionEnvio);
+        rbDireccionEnvio.setText("Usar ubicación de envío:");
+        rbDireccionEnvio.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbDireccionEnvioItemStateChanged(evt);
+            }
+        });
+
+        lblDetalleUbicacionFacturacion.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblDetalleUbicacionFacturacion.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        lblDetalleUbicacionFacturacion.setEnabled(false);
+
+        lblDetalleUbicacionEnvio.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblDetalleUbicacionEnvio.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        lblDetalleUbicacionEnvio.setEnabled(false);
+
+        javax.swing.GroupLayout pnlCerrarPedidoLayout = new javax.swing.GroupLayout(pnlCerrarPedido);
+        pnlCerrarPedido.setLayout(pnlCerrarPedidoLayout);
+        pnlCerrarPedidoLayout.setHorizontalGroup(
+            pnlCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlCerrarPedidoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(rbDireccionFacturacion)
+                    .addComponent(rbDireccionEnvio)
+                    .addComponent(rbRetiroEnSucursal))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cmbSucursales, javax.swing.GroupLayout.Alignment.TRAILING, 0, 439, Short.MAX_VALUE)
+                    .addComponent(lblDetalleUbicacionFacturacion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblDetalleUbicacionEnvio, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        pnlCerrarPedidoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {rbDireccionEnvio, rbDireccionFacturacion, rbRetiroEnSucursal});
+
+        pnlCerrarPedidoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cmbSucursales, lblDetalleUbicacionEnvio, lblDetalleUbicacionFacturacion});
+
+        pnlCerrarPedidoLayout.setVerticalGroup(
+            pnlCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlCerrarPedidoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(rbRetiroEnSucursal)
+                    .addComponent(cmbSucursales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(rbDireccionFacturacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblDetalleUbicacionFacturacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(rbDireccionEnvio)
+                    .addComponent(lblDetalleUbicacionEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btn_Finalizar)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(pnlCerrarPedido, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_Finalizar, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -493,6 +623,8 @@ public class CerrarVentaGUI extends JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlCerrarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_Finalizar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -502,33 +634,82 @@ public class CerrarVentaGUI extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        this.cargarFormasDePago();
-        this.cargarTransportistas();
-        this.setEstadoFormasDePago();
-        cmb_Transporte.setSelectedIndex(0);
-        lbl_Vendedor.setText(UsuarioActivo.getInstance().getUsuario().toString());
-        txt_MontoPago1.setValue(totalFactura);
-        txt_MontoPago2.setValue(0);
-        txt_MontoPago3.setValue(0);
-        indicesParaDividir = new int[this.modeloTabla.getRowCount()];
-        if ((indicesParaDividir.length > 0) 
-                && (nuevaFacturaVenta.getTipoDeComprobante() == TipoDeComprobante.FACTURA_A
-                || nuevaFacturaVenta.getTipoDeComprobante() == TipoDeComprobante.FACTURA_B
-                || nuevaFacturaVenta.getTipoDeComprobante() == TipoDeComprobante.FACTURA_C)) {
-            int j = 0;
-            boolean tieneRenglonesMarcados = false;
-            for (int i = 0; i < this.modeloTabla.getRowCount(); i++) {
-                if ((boolean) this.modeloTabla.getValueAt(i, 0)) {
-                    indicesParaDividir[j] = i;
-                    j++;
-                    tieneRenglonesMarcados = true;
+        try {
+            if ((this.nuevoPedido != null || this.pedido != null) && this.nuevaFacturaVenta == null) {
+                rbDireccionEnvio.setSelected(false);
+                rbDireccionFacturacion.setSelected(false);
+                rbRetiroEnSucursal.setSelected(false);
+                this.cargarSucursalesConPuntoDeRetiro();
+                if (this.cliente.getUbicacionEnvio() != null) {
+                    lblDetalleUbicacionEnvio.setText(this.cliente.getUbicacionEnvio().toString());
+                    if (!rbDireccionFacturacion.isSelected()) {
+                        rbDireccionEnvio.setSelected(true);
+                    }
+                } else {
+                    rbDireccionEnvio.setEnabled(false);
+                    lblDetalleUbicacionEnvio.setEnabled(false);
+                }
+                if (this.cliente.getUbicacionFacturacion() != null) {
+                    lblDetalleUbicacionFacturacion.setText(this.cliente.getUbicacionFacturacion().toString());
+                    if (!rbRetiroEnSucursal.isSelected()) {
+                        rbDireccionFacturacion.setSelected(true);
+                    }
+                } else {
+                    rbDireccionFacturacion.setEnabled(false);
+                    lblDetalleUbicacionFacturacion.setEnabled(false);
+                }
+                if (sucursales.isEmpty()) {
+                    cmbSucursales.setEnabled(false);
+                    rbRetiroEnSucursal.setEnabled(false);
+                } else {
+                    rbRetiroEnSucursal.setSelected(true);
                 }
             }
-            if (indicesParaDividir.length != 0 && tieneRenglonesMarcados) {
-                dividir = true;
+            else {
+                cmb_Transporte.setEnabled(false);
+                pnlCerrarPedido.setEnabled(false);
+                cmbSucursales.setEnabled(false);
+                rbRetiroEnSucursal.setEnabled(false);
+                rbDireccionFacturacion.setEnabled(false);
+                rbDireccionEnvio.setEnabled(false);
+            }
+            this.cargarFormasDePago();
+            this.cargarTransportistas();
+            this.setEstadoFormasDePago();
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        cmb_Transporte.setSelectedIndex(0);
+        lbl_Vendedor.setText(UsuarioActivo.getInstance().getUsuario().toString());
+        txt_MontoPago1.setValue(totalFactura != null ?  totalFactura : totalPedido);
+        txt_MontoPago2.setValue(0);
+        txt_MontoPago3.setValue(0);
+        if (modeloTabla != null) {
+            indicesParaDividir = new int[this.modeloTabla.getRowCount()];
+            if ((indicesParaDividir.length > 0)
+                    && (nuevaFacturaVenta.getTipoDeComprobante() == TipoDeComprobante.FACTURA_A
+                    || nuevaFacturaVenta.getTipoDeComprobante() == TipoDeComprobante.FACTURA_B
+                    || nuevaFacturaVenta.getTipoDeComprobante() == TipoDeComprobante.FACTURA_C)) {
+                int j = 0;
+                boolean tieneRenglonesMarcados = false;
+                for (int i = 0; i < this.modeloTabla.getRowCount(); i++) {
+                    if ((boolean) this.modeloTabla.getValueAt(i, 0)) {
+                        indicesParaDividir[j] = i;
+                        j++;
+                        tieneRenglonesMarcados = true;
+                    }
+                }
+                if (indicesParaDividir.length != 0 && tieneRenglonesMarcados) {
+                    dividir = true;
+                }
             }
         }
-        if (dividir) {
+        if (dividir && this.nuevoPedido == null && this.pedido == null) {
             chk_FormaDePago1.setEnabled(false);
             chk_FormaDePago2.setEnabled(false);
             chk_FormaDePago3.setEnabled(false);
@@ -544,6 +725,18 @@ public class CerrarVentaGUI extends JDialog {
     }//GEN-LAST:event_formWindowOpened
 
     private void btn_FinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_FinalizarActionPerformed
+        TipoDeEnvio tipoDeEnvio = null;
+        if (this.nuevoPedido != null || this.pedido != null) {
+            if (rbRetiroEnSucursal.isSelected()) {
+                tipoDeEnvio = TipoDeEnvio.RETIRO_EN_SUCURSAL;
+            }
+            if (rbDireccionFacturacion.isSelected()) {
+                tipoDeEnvio = TipoDeEnvio.USAR_UBICACION_FACTURACION;
+            }
+            if (rbDireccionEnvio.isSelected()) {
+                tipoDeEnvio = TipoDeEnvio.USAR_UBICACION_ENVIO;
+            }
+        }
         if (dividir) {
             this.finalizarVenta();
         } else {
@@ -551,33 +744,88 @@ public class CerrarVentaGUI extends JDialog {
             if (chk_FormaDePago1.isSelected() && chk_FormaDePago1.isEnabled()) {
                 totalPagos = totalPagos.add(new BigDecimal(txt_MontoPago1.getValue().toString()));
             }
-            if (chk_FormaDePago2.isSelected() && chk_FormaDePago2.isEnabled()) {                
+            if (chk_FormaDePago2.isSelected() && chk_FormaDePago2.isEnabled()) {
                 totalPagos = totalPagos.add(new BigDecimal(txt_MontoPago2.getValue().toString()));
             }
             if (chk_FormaDePago3.isSelected() && chk_FormaDePago3.isEnabled()) {
                 totalPagos = totalPagos.add(new BigDecimal(txt_MontoPago3.getValue().toString()));
             }
-            BigDecimal totalAPagar = totalFactura.setScale(2, RoundingMode.FLOOR);
+            BigDecimal totalAPagar = totalFactura != null ? totalFactura.setScale(2, RoundingMode.FLOOR) : totalPedido.setScale(2, RoundingMode.FLOOR);
             if (totalPagos.compareTo(totalAPagar) < 0) {
                 int reply = JOptionPane.showConfirmDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_montos_insuficientes"),
                         "Aviso", JOptionPane.YES_NO_OPTION);
-                if (reply == JOptionPane.YES_OPTION) {
+                if (reply == JOptionPane.YES_OPTION && this.nuevaFacturaVenta != null) {
                     this.finalizarVenta();
+                } else if (tipoDeEnvio != null) {
+                    this.cerrarPedido(tipoDeEnvio);
                 }
             } else if (totalPagos.compareTo(totalAPagar) > 0) {
                 int reply = JOptionPane.showConfirmDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_montos_superiores_al_total_factura"),
                         "Aviso", JOptionPane.YES_NO_OPTION);
                 if (reply == JOptionPane.YES_OPTION) {
-                    this.finalizarVenta();
+                    if (this.nuevaFacturaVenta != null) {
+                        this.finalizarVenta();
+                    } else if (tipoDeEnvio != null) {
+                        this.cerrarPedido(tipoDeEnvio);
+                    }
                 }
             } else {
-                this.finalizarVenta();
+                if (this.nuevaFacturaVenta != null) {
+                    this.finalizarVenta();
+                } else if (tipoDeEnvio != null) {
+                    this.cerrarPedido(tipoDeEnvio);
+                }
             }
         }
+
     }//GEN-LAST:event_btn_FinalizarActionPerformed
 
+    private void cerrarPedido(TipoDeEnvio tipoDeEnvio) {
+        if (nuevoPedido != null) {
+            this.armarMontosConFormasDePago();
+            nuevoPedido.setIdSucursal(rbRetiroEnSucursal.isSelected()
+                    ? sucursales.get(cmbSucursales.getSelectedIndex()).getIdSucursal() : SucursalActiva.getInstance().getSucursal().getIdSucursal());
+            nuevoPedido.setIdCliente(cliente.getIdCliente());
+            nuevoPedido.setTipoDeEnvio(tipoDeEnvio);
+            if (idsFormasDePago.isEmpty() == false) {
+                Long[] formasDePago = new Long[idsFormasDePago.size()];
+                formasDePago = idsFormasDePago.toArray(formasDePago);
+                nuevoPedido.setIdsFormaDePago(formasDePago);
+                BigDecimal[] montosPagos = new BigDecimal[montos.size()];
+                montosPagos = montos.toArray(montosPagos);
+                nuevoPedido.setMontos(montosPagos);
+            }
+            Pedido p = RestClient.getRestTemplate().postForObject("/pedidos", nuevoPedido, Pedido.class);
+            this.exito = true;
+            int reply = JOptionPane.showConfirmDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_reporte"),
+                    "Aviso", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION) {
+                this.lanzarReportePedido(p);
+            }
+        } else {
+            nuevoPedido = new PedidoDTO();
+            nuevoPedido.setIdPedido(pedido.getIdPedido());
+            nuevoPedido.setIdSucursal(rbRetiroEnSucursal.isSelected()
+                    ? sucursales.get(cmbSucursales.getSelectedIndex()).getIdSucursal() : null);
+            nuevoPedido.setObservaciones(pedido.getObservaciones());
+            nuevoPedido.setRecargoPorcentaje(pedido.getRecargoPorcentaje());
+            nuevoPedido.setDescuentoPorcentaje(pedido.getDescuentoPorcentaje());
+            List<NuevoRenglonPedido> nuevosRenglonesPedido = new ArrayList();
+            pedido.getRenglones().forEach(r -> nuevosRenglonesPedido.add(
+                    new NuevoRenglonPedido(r.getIdProductoItem(), r.getCantidad())));
+            nuevoPedido.setRenglones(nuevosRenglonesPedido);
+            nuevoPedido.setTipoDeEnvio(tipoDeEnvio);
+            RestClient.getRestTemplate().put("/pedidos", nuevoPedido);
+            this.exito = true;
+            JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_pedido_actualizado"),
+                    "Aviso", JOptionPane.INFORMATION_MESSAGE);
+        }
+        this.dispose();
+    }
+    
     private void txt_MontoPago1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_MontoPago1FocusGained
         SwingUtilities.invokeLater(() -> {
             txt_MontoPago1.selectAll();
@@ -611,20 +859,54 @@ public class CerrarVentaGUI extends JDialog {
         });
     }//GEN-LAST:event_txt_MontoPago2FocusGained
 
+    private void rbRetiroEnSucursalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbRetiroEnSucursalItemStateChanged
+        cmbSucursales.setEnabled(rbRetiroEnSucursal.isSelected());
+        lblDetalleUbicacionEnvio.setEnabled(!rbRetiroEnSucursal.isSelected());
+        lblDetalleUbicacionFacturacion.setEnabled(!rbRetiroEnSucursal.isSelected());
+    }//GEN-LAST:event_rbRetiroEnSucursalItemStateChanged
+
+    private void rbDireccionFacturacionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbDireccionFacturacionItemStateChanged
+        cmbSucursales.setEnabled(!rbDireccionFacturacion.isSelected());
+        lblDetalleUbicacionEnvio.setEnabled(!rbDireccionFacturacion.isSelected());
+        lblDetalleUbicacionFacturacion.setEnabled(rbDireccionFacturacion.isSelected());
+        if (rbDireccionFacturacion.isSelected()) {
+            if (this.cliente.getUbicacionFacturacion() != null) {
+                lblDetalleUbicacionFacturacion.setText(this.cliente.getUbicacionFacturacion().toString());
+            }
+        }
+    }//GEN-LAST:event_rbDireccionFacturacionItemStateChanged
+
+    private void rbDireccionEnvioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbDireccionEnvioItemStateChanged
+        cmbSucursales.setEnabled(!rbDireccionEnvio.isSelected());
+        lblDetalleUbicacionEnvio.setEnabled(rbDireccionEnvio.isSelected());
+        lblDetalleUbicacionFacturacion.setEnabled(!rbDireccionEnvio.isSelected());
+        if (this.cliente.getUbicacionEnvio() != null) {
+            lblDetalleUbicacionEnvio.setText(this.cliente.getUbicacionEnvio().toString());
+        }
+    }//GEN-LAST:event_rbDireccionEnvioItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Finalizar;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox chk_FormaDePago1;
     private javax.swing.JCheckBox chk_FormaDePago2;
     private javax.swing.JCheckBox chk_FormaDePago3;
+    private javax.swing.JComboBox<String> cmbSucursales;
     private javax.swing.JComboBox cmb_FormaDePago1;
     private javax.swing.JComboBox cmb_FormaDePago2;
     private javax.swing.JComboBox cmb_FormaDePago3;
     private javax.swing.JComboBox cmb_Transporte;
+    private javax.swing.JLabel lblDetalleUbicacionEnvio;
+    private javax.swing.JLabel lblDetalleUbicacionFacturacion;
     private javax.swing.JLabel lbl_Dividido;
     private javax.swing.JLabel lbl_Transporte;
     private javax.swing.JLabel lbl_Vendedor;
     private javax.swing.JLabel lbl_Vendor;
     private javax.swing.JPanel panel;
+    private javax.swing.JPanel pnlCerrarPedido;
+    private javax.swing.JRadioButton rbDireccionEnvio;
+    private javax.swing.JRadioButton rbDireccionFacturacion;
+    private javax.swing.JRadioButton rbRetiroEnSucursal;
     private javax.swing.JSeparator separador1;
     private javax.swing.JSeparator separador2;
     private javax.swing.JFormattedTextField txt_MontoPago1;
