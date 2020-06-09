@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(of = {"nombre"})
+@EqualsAndHashCode(of = {"idSucursal"})
 public class Sucursal implements Serializable {
     
     private long idSucursal;    

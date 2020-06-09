@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
@@ -80,7 +81,16 @@ public class CerrarPedidoGUI extends JDialog {
 
     private void cargarSucursalesConPuntoDeRetiro() {
         try {
-            sucursales = Arrays.asList(RestClient.getRestTemplate().getForObject("/sucursales?puntoDeRetiro=true", Sucursal[].class));
+            sucursales = new LinkedList<>(Arrays.asList(RestClient.getRestTemplate().getForObject("/sucursales?puntoDeRetiro=true", Sucursal[].class)));
+            if (pedido == null) {
+                Sucursal sucursalActiva = SucursalActiva.getInstance().getSucursal();
+                sucursales.remove(sucursalActiva);
+                sucursales.add(0, sucursalActiva);
+            } else {
+                Sucursal SucursalDePedido = RestClient.getRestTemplate().getForObject("/sucursales/" + pedido.getIdSucursal(), Sucursal.class);
+                sucursales.remove(SucursalDePedido);
+                sucursales.add(0, SucursalDePedido);
+            }
             sucursales.stream().forEach(e -> {
                 cmbSucursales.addItem(e.getNombre() + ((e.getUbicacion() != null) ? (" (" + e.getUbicacion() + ")") : ""));
             });

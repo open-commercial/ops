@@ -287,7 +287,20 @@ public class DetallePedidoGUI extends JInternalFrame {
             cerrarPedidoGUI.setLocationRelativeTo(this);
             cerrarPedidoGUI.setVisible(true);
             if (cerrarPedidoGUI.isOperacionExitosa()) {
-                this.dispose();
+                if (modificandoPedido) {
+                    this.dispose();
+                } else {
+                    int respuesta = JOptionPane.showConfirmDialog(this,
+                            "El pedido se guardó correctamente.\n¿Desea dar de alta otro pedido?",
+                            "Aviso", JOptionPane.YES_NO_OPTION);
+                    if (respuesta == JOptionPane.NO_OPTION) {
+                        this.dispose();
+                    }
+                    this.cargarComponentesIniciales();
+                    this.renglones.clear();
+                    this.cargarRenglonesAlTable();
+                    this.calcularResultados();
+                }
             }
         } else if ((pedido.getEstado() == EstadoPedido.ABIERTO || pedido.getEstado() == null) && modificandoPedido == true) {
             this.actualizarPedido(pedido);
@@ -354,7 +367,28 @@ public class DetallePedidoGUI extends JInternalFrame {
             }
         }
     };
-
+    
+    private void cargarComponentesIniciales() {
+        cantidadMaximaRenglones = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/"
+                + SucursalActiva.getInstance().getSucursal().getIdSucursal()
+                + "/cantidad-renglones", Integer.class);
+        if (rolesDeUsuario.contains(Rol.ADMINISTRADOR)
+                || rolesDeUsuario.contains(Rol.ENCARGADO)
+                || rolesDeUsuario.contains(Rol.VENDEDOR)) {
+            if (this.existeClientePredeterminado()) {
+                CuentaCorrienteCliente cuentaCorrienteClientePredeterminado
+                        = RestClient.getRestTemplate().getForObject("/cuentas-corriente/clientes/predeterminado", CuentaCorrienteCliente.class);
+                this.cargarCliente(cuentaCorrienteClientePredeterminado.getCliente());
+                this.btnModificarCliente.setEnabled(true);
+            }
+        }
+        if (!this.existeFormaDePagoPredeterminada() || !this.existeTransportistaCargado()) {
+            this.dispose();
+        }
+        this.setTitle(this.modificandoPedido ? "Modificar Pedido" : "Nuevo Pedido");
+        txt_Observaciones.setText(this.pedido.getObservaciones());
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -1068,24 +1102,7 @@ public class DetallePedidoGUI extends JInternalFrame {
             this.setSize(sizeInternalFrame);
             this.setColumnas();
             this.setMaximum(true);
-            cantidadMaximaRenglones = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/"
-                    + SucursalActiva.getInstance().getSucursal().getIdSucursal()
-                    + "/cantidad-renglones", Integer.class);
-            if (rolesDeUsuario.contains(Rol.ADMINISTRADOR)
-                    || rolesDeUsuario.contains(Rol.ENCARGADO)
-                    || rolesDeUsuario.contains(Rol.VENDEDOR)) {
-                if (this.existeClientePredeterminado()) {
-                    CuentaCorrienteCliente cuentaCorrienteClientePredeterminado
-                            = RestClient.getRestTemplate().getForObject("/cuentas-corriente/clientes/predeterminado", CuentaCorrienteCliente.class);
-                    this.cargarCliente(cuentaCorrienteClientePredeterminado.getCliente());
-                    this.btnModificarCliente.setEnabled(true);
-                }
-            }
-            if (!this.existeFormaDePagoPredeterminada() || !this.existeTransportistaCargado()) {
-                this.dispose();
-            }
-            this.setTitle(this.modificandoPedido ? "Modificar Pedido" : "Nuevo Pedido");
-            txt_Observaciones.setText(this.pedido.getObservaciones());
+            this.cargarComponentesIniciales();            
             if (this.pedido != null && this.pedido.getIdPedido() != 0) {
                 btn_NuevoCliente.setEnabled(false);
                 btn_BuscarCliente.setEnabled(false);
