@@ -81,19 +81,11 @@ public class CerrarPedidoGUI extends JDialog {
 
     private void cargarSucursalesConPuntoDeRetiro() {
         try {
-            sucursales = new LinkedList<>(Arrays.asList(RestClient.getRestTemplate().getForObject("/sucursales?puntoDeRetiro=true", Sucursal[].class)));
-            if (pedido == null) {
-                Sucursal sucursalActiva = SucursalActiva.getInstance().getSucursal();
-                sucursales.remove(sucursalActiva);
-                sucursales.add(0, sucursalActiva);
-            } else {
-                Sucursal SucursalDePedido = RestClient.getRestTemplate().getForObject("/sucursales/" + pedido.getIdSucursal(), Sucursal.class);
-                sucursales.remove(SucursalDePedido);
-                sucursales.add(0, SucursalDePedido);
-            }
-            sucursales.stream().forEach(e -> {
-                cmbSucursales.addItem(e.getNombre() + ((e.getUbicacion() != null) ? (" (" + e.getUbicacion() + ")") : ""));
+            sucursales = Arrays.asList(RestClient.getRestTemplate().getForObject("/sucursales?puntoDeRetiro=true", Sucursal[].class));
+            sucursales.stream().forEach(sucursal -> {
+                cmbSucursales.addItem(sucursal);
             });
+            cmbSucursales.setSelectedItem(SucursalActiva.getInstance().getSucursal());
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();
@@ -361,7 +353,7 @@ public class CerrarPedidoGUI extends JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrarPedido;
-    private javax.swing.JComboBox<String> cmbSucursales;
+    private javax.swing.JComboBox<Sucursal> cmbSucursales;
     private javax.swing.ButtonGroup grupoOpcionesEnvio;
     private javax.swing.JLabel lblDetalleUbicacionEnvio;
     private javax.swing.JLabel lblDetalleUbicacionFacturacion;

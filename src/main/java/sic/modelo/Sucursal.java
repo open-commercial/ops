@@ -25,6 +25,6 @@ public class Sucursal implements Serializable {
 
     @Override
     public String toString() {
-        return nombre;
+        return nombre + ((ubicacion != null) ? (" (" + ubicacion.toString() + ")") : "");
     }
 }
