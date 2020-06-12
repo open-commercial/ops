@@ -131,6 +131,7 @@ public class PrincipalGUI extends JFrame {
         mnuItmLocalidades = new javax.swing.JMenuItem();
         mnu_Stock = new javax.swing.JMenu();
         mnuItm_Productos = new javax.swing.JMenuItem();
+        mnuItm_Traspasos = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -389,6 +390,14 @@ public class PrincipalGUI extends JFrame {
             }
         });
         mnu_Stock.add(mnuItm_Productos);
+
+        mnuItm_Traspasos.setText("Traspasos");
+        mnuItm_Traspasos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuItm_TraspasosActionPerformed(evt);
+            }
+        });
+        mnu_Stock.add(mnuItm_Traspasos);
 
         mb_BarraMenues.add(mnu_Stock);
 
@@ -888,6 +897,25 @@ public class PrincipalGUI extends JFrame {
         }
     }//GEN-LAST:event_NotasDebitoCompraActionPerformed
 
+    private void mnuItm_TraspasosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItm_TraspasosActionPerformed
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), TraspasosGUI.class);
+        if (gui == null) {
+            gui = new TraspasosGUI();
+            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+            getDesktopPane().add(gui);
+            gui.setVisible(true);
+        } else {
+            try {
+                gui.setSelected(true);
+            } catch (PropertyVetoException ex) {
+                String msjError = "No se pudo seleccionar la ventana requerida.";
+                LOGGER.error(msjError + " - " + ex.getMessage());
+                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_mnuItm_TraspasosActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu NotasCompras;
     private javax.swing.JMenuItem NotasCreditoCompra;
@@ -916,6 +944,7 @@ public class PrincipalGUI extends JFrame {
     private javax.swing.JMenuItem mnuItm_Salir;
     private javax.swing.JMenuItem mnuItm_Sucursales;
     private javax.swing.JMenuItem mnuItm_Transportistas;
+    private javax.swing.JMenuItem mnuItm_Traspasos;
     private javax.swing.JMenuItem mnuItm_Usuarios;
     private javax.swing.JMenu mnu_Administracion;
     private javax.swing.JMenuItem mnu_Cajas;
