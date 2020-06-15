@@ -20,6 +20,7 @@ public class Pedido implements Serializable {
     private LocalDateTime fechaVencimiento;    
     private String observaciones;  
     private String nombreSucursal;
+    private Long idSucursal;
     private boolean eliminado;    
     private Cliente cliente; 
     private String nombreUsuario;
