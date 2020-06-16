@@ -379,7 +379,7 @@
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="btnModificarPedido" linkSize="21" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="btnEliminarPedido" linkSize="21" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnCancelarPedido" linkSize="21" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="btnVerFacturas" linkSize="21" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
@@ -401,7 +401,7 @@
                       <Component id="btnFacturar" linkSize="7" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnModificarPedido" linkSize="7" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnImprimirPedido" linkSize="7" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnEliminarPedido" linkSize="7" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnCancelarPedido" linkSize="7" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -503,7 +503,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnModificarPedidoActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btnEliminarPedido">
+        <Component class="javax.swing.JButton" name="btnCancelarPedido">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="0" red="0" type="rgb"/>
@@ -511,10 +511,10 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/sic/icons/Cancel_16x16.png"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Eliminar"/>
+            <Property name="text" type="java.lang.String" value="Cancelar"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEliminarPedidoActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCancelarPedidoActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

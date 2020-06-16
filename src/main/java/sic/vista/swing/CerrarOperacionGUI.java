@@ -52,10 +52,10 @@ public class CerrarOperacionGUI extends JDialog {
     private int[] indicesParaDividir = null;
     private final List<Long> idsFormasDePago = new ArrayList<>();
     private final List<BigDecimal> montos = new ArrayList<>();
-    private boolean dividir = false;    
+    private boolean dividir = false;
     private BigDecimal totalPedido;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    
+
     public CerrarOperacionGUI(NuevaFacturaVenta nuevaFacturaVenta, Pedido pedido, BigDecimal totalFactura, ModeloTabla modeloTabla) {
         super.setModal(true);
         this.nuevaFacturaVenta = nuevaFacturaVenta;
@@ -94,7 +94,7 @@ public class CerrarOperacionGUI extends JDialog {
     public boolean isExito() {
         return exito;
     }
-    
+
     private void setIcon() {
         ImageIcon iconoVentana = new ImageIcon(CerrarOperacionGUI.class.getResource("/sic/icons/SIC_24_square.png"));
         this.setIconImage(iconoVentana.getImage());
@@ -120,13 +120,14 @@ public class CerrarOperacionGUI extends JDialog {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     private void cargarSucursalesConPuntoDeRetiro() {
         try {
             sucursales = Arrays.asList(RestClient.getRestTemplate().getForObject("/sucursales?puntoDeRetiro=true", Sucursal[].class));
-            sucursales.stream().forEach(e -> {
-                cmbSucursales.addItem(e.getNombre() + ((e.getUbicacion() != null) ? (" (" + e.getUbicacion() + ")") : ""));
+            sucursales.stream().forEach(sucursal -> {
+                cmbSucursales.addItem(sucursal);
             });
+            cmbSucursales.setSelectedItem(SucursalActiva.getInstance().getInstance().getSucursal());
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             this.dispose();
@@ -318,16 +319,16 @@ public class CerrarOperacionGUI extends JDialog {
     private void armarMontosConFormasDePago() {
         montos.clear();
         idsFormasDePago.clear();
-        if (chk_FormaDePago1.isSelected() && chk_FormaDePago1.isEnabled()) {            
-            montos.add(new BigDecimal(txt_MontoPago1.getValue().toString()));            
-            idsFormasDePago.add(((FormaDePago) cmb_FormaDePago1.getSelectedItem()).getIdFormaDePago());            
+        if (chk_FormaDePago1.isSelected() && chk_FormaDePago1.isEnabled()) {
+            montos.add(new BigDecimal(txt_MontoPago1.getValue().toString()));
+            idsFormasDePago.add(((FormaDePago) cmb_FormaDePago1.getSelectedItem()).getIdFormaDePago());
         }
-        if (chk_FormaDePago2.isSelected() && chk_FormaDePago2.isEnabled()) {            
-            montos.add(new BigDecimal(txt_MontoPago2.getValue().toString()));            
-            idsFormasDePago.add(((FormaDePago) cmb_FormaDePago2.getSelectedItem()).getIdFormaDePago());            
+        if (chk_FormaDePago2.isSelected() && chk_FormaDePago2.isEnabled()) {
+            montos.add(new BigDecimal(txt_MontoPago2.getValue().toString()));
+            idsFormasDePago.add(((FormaDePago) cmb_FormaDePago2.getSelectedItem()).getIdFormaDePago());
         }
-        if (chk_FormaDePago3.isSelected() && chk_FormaDePago3.isEnabled()) {            
-            montos.add(new BigDecimal(txt_MontoPago3.getValue().toString()));                        
+        if (chk_FormaDePago3.isSelected() && chk_FormaDePago3.isEnabled()) {
+            montos.add(new BigDecimal(txt_MontoPago3.getValue().toString()));
             idsFormasDePago.add(((FormaDePago) cmb_FormaDePago3.getSelectedItem()).getIdFormaDePago());
         }
     }
@@ -664,8 +665,7 @@ public class CerrarOperacionGUI extends JDialog {
                 } else {
                     rbRetiroEnSucursal.setSelected(true);
                 }
-            }
-            else {
+            } else {
                 cmb_Transporte.setEnabled(false);
                 pnlCerrarPedido.setEnabled(false);
                 cmbSucursales.setEnabled(false);
@@ -686,7 +686,13 @@ public class CerrarOperacionGUI extends JDialog {
         }
         cmb_Transporte.setSelectedIndex(0);
         lbl_Vendedor.setText(UsuarioActivo.getInstance().getUsuario().toString());
-        txt_MontoPago1.setValue(totalFactura != null ?  totalFactura : totalPedido);
+        BigDecimal total;
+        if (pedido != null) {
+            total = this.pedido.getTotalActual();
+        } else {
+            total = totalFactura != null ? totalFactura : totalPedido;
+        }
+        txt_MontoPago1.setValue(total);
         txt_MontoPago2.setValue(0);
         txt_MontoPago3.setValue(0);
         if (modeloTabla != null) {
@@ -709,7 +715,7 @@ public class CerrarOperacionGUI extends JDialog {
                 }
             }
         }
-        if (dividir && this.nuevoPedido == null && this.pedido == null) {
+        if (dividir || (this.nuevoPedido == null && this.pedido != null)) {
             chk_FormaDePago1.setEnabled(false);
             chk_FormaDePago2.setEnabled(false);
             chk_FormaDePago3.setEnabled(false);
@@ -719,7 +725,8 @@ public class CerrarOperacionGUI extends JDialog {
             txt_MontoPago1.setEnabled(false);
             txt_MontoPago2.setEnabled(false);
             txt_MontoPago3.setEnabled(false);
-        } else {            
+            cmb_Transporte.setEnabled(false);
+        } else {
             lbl_Dividido.setText("");
         }
     }//GEN-LAST:event_formWindowOpened
@@ -737,8 +744,12 @@ public class CerrarOperacionGUI extends JDialog {
                 tipoDeEnvio = TipoDeEnvio.USAR_UBICACION_ENVIO;
             }
         }
-        if (dividir) {
-            this.finalizarVenta();
+        if (dividir || pedido != null) {
+            if (nuevaFacturaVenta != null) {
+                this.finalizarVenta();
+            } else {
+                this.cerrarPedido(tipoDeEnvio);
+            }
         } else {
             BigDecimal totalPagos = BigDecimal.ZERO;
             if (chk_FormaDePago1.isSelected() && chk_FormaDePago1.isEnabled()) {
@@ -750,15 +761,22 @@ public class CerrarOperacionGUI extends JDialog {
             if (chk_FormaDePago3.isSelected() && chk_FormaDePago3.isEnabled()) {
                 totalPagos = totalPagos.add(new BigDecimal(txt_MontoPago3.getValue().toString()));
             }
-            BigDecimal totalAPagar = totalFactura != null ? totalFactura.setScale(2, RoundingMode.FLOOR) : totalPedido.setScale(2, RoundingMode.FLOOR);
+            BigDecimal totalAPagar;
+            if (pedido != null) {
+                totalAPagar = this.pedido.getTotalActual();
+            } else {
+                totalAPagar = totalFactura != null ? totalFactura.setScale(2, RoundingMode.FLOOR) : totalPedido.setScale(2, RoundingMode.FLOOR);
+            }
             if (totalPagos.compareTo(totalAPagar) < 0) {
                 int reply = JOptionPane.showConfirmDialog(this,
                         ResourceBundle.getBundle("Mensajes").getString("mensaje_montos_insuficientes"),
                         "Aviso", JOptionPane.YES_NO_OPTION);
-                if (reply == JOptionPane.YES_OPTION && this.nuevaFacturaVenta != null) {
-                    this.finalizarVenta();
-                } else if (tipoDeEnvio != null) {
-                    this.cerrarPedido(tipoDeEnvio);
+                if (reply == JOptionPane.YES_OPTION) {
+                    if (this.nuevaFacturaVenta != null) {
+                        this.finalizarVenta();
+                    } else if (tipoDeEnvio != null) {
+                        this.cerrarPedido(tipoDeEnvio);
+                    }
                 }
             } else if (totalPagos.compareTo(totalAPagar) > 0) {
                 int reply = JOptionPane.showConfirmDialog(this,
@@ -825,7 +843,7 @@ public class CerrarOperacionGUI extends JDialog {
         }
         this.dispose();
     }
-    
+
     private void txt_MontoPago1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_MontoPago1FocusGained
         SwingUtilities.invokeLater(() -> {
             txt_MontoPago1.selectAll();
@@ -891,7 +909,7 @@ public class CerrarOperacionGUI extends JDialog {
     private javax.swing.JCheckBox chk_FormaDePago1;
     private javax.swing.JCheckBox chk_FormaDePago2;
     private javax.swing.JCheckBox chk_FormaDePago3;
-    private javax.swing.JComboBox<String> cmbSucursales;
+    private javax.swing.JComboBox<Sucursal> cmbSucursales;
     private javax.swing.JComboBox cmb_FormaDePago1;
     private javax.swing.JComboBox cmb_FormaDePago2;
     private javax.swing.JComboBox cmb_FormaDePago3;

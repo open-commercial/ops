@@ -20,7 +20,7 @@ public class ColoresEstadosRenderer extends DefaultTableCellRenderer {
             if (estado == EstadoPedido.ABIERTO) {
                 cell.setBackground(Color.GREEN);
             }
-            if (estado == EstadoPedido.ACTIVO) {
+            if (estado == EstadoPedido.CANCELADO) {
                 cell.setBackground(Color.YELLOW);
             }
             if (estado == EstadoPedido.CERRADO) {

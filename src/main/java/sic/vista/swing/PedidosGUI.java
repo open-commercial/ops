@@ -45,23 +45,23 @@ import sic.util.Utilidades;
 
 public class PedidosGUI extends JInternalFrame {
 
-    private List<Pedido> pedidosTotal = new ArrayList<>();    
+    private List<Pedido> pedidosTotal = new ArrayList<>();
     private List<Pedido> pedidosParcial = new ArrayList<>();
-    private ModeloTabla modeloTablaPedidos;    
+    private ModeloTabla modeloTablaPedidos;
     private Cliente clienteSeleccionado;
-    private Usuario usuarioSeleccionado;  
+    private Usuario usuarioSeleccionado;
     private Usuario viajanteSeleccionado;
     private Producto productoSeleccionado;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private final Dimension sizeInternalFrame =  new Dimension(880, 600);
+    private final Dimension sizeInternalFrame = new Dimension(880, 600);
     private static int totalElementosBusqueda;
-    private static int NUMERO_PAGINA = 0;    
+    private static int NUMERO_PAGINA = 0;
 
     public PedidosGUI() {
         this.initComponents();
         sp_Pedidos.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-            int va = scrollBar.getVisibleAmount() + 10;
+            int va  = scrollBar.getVisibleAmount() + 10;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
                 if (pedidosTotal.size() >= 10) {
                     NUMERO_PAGINA += 1;
@@ -142,7 +142,7 @@ public class PedidosGUI extends JInternalFrame {
 
     private void cambiarEstadoEnabledComponentes(boolean status) {
         chk_Fecha.setEnabled(status);
-        if (status == true && chk_Fecha.isSelected() == true) {            
+        if (status == true && chk_Fecha.isSelected() == true) {
             dc_FechaDesde.setEnabled(true);
             dc_FechaHasta.setEnabled(true);
         } else {
@@ -160,25 +160,25 @@ public class PedidosGUI extends JInternalFrame {
             btnBuscarCliente.setEnabled(true);
         } else {
             btnBuscarCliente.setEnabled(false);
-        }        
+        }
         chk_Usuario.setEnabled(status);
         if (status == true && chk_Usuario.isSelected() == true) {
             btnBuscarUsuarios.setEnabled(true);
         } else {
             btnBuscarUsuarios.setEnabled(false);
-        }        
-        btn_Buscar.setEnabled(status);        
+        }
+        btn_Buscar.setEnabled(status);
         btnNuevoPedido.setEnabled(status);
         btnVerFacturas.setEnabled(status);
         btnFacturar.setEnabled(status);
         btnModificarPedido.setEnabled(status);
-        btnEliminarPedido.setEnabled(status);
+        btnCancelarPedido.setEnabled(status);
         btnImprimirPedido.setEnabled(status);
         tbl_Pedidos.setEnabled(status);
         sp_Pedidos.setEnabled(status);
         tbl_Pedidos.requestFocus();
     }
-    
+
     private void cargarResultadosAlTable() {
         pedidosParcial.stream().map(p -> {
             Object[] fila = new Object[8];
@@ -195,7 +195,7 @@ public class PedidosGUI extends JInternalFrame {
             modeloTablaPedidos.addRow(f);
         });
         tbl_Pedidos.setModel(modeloTablaPedidos);
-        tbl_Pedidos.setDefaultRenderer(EstadoPedido.class, new ColoresEstadosRenderer());        
+        tbl_Pedidos.setDefaultRenderer(EstadoPedido.class, new ColoresEstadosRenderer());
         lbl_cantResultados.setText(totalElementosBusqueda + " pedidos encontrados");
     }
 
@@ -206,10 +206,10 @@ public class PedidosGUI extends JInternalFrame {
         Point p = new Point(0, 0);
         sp_Pedidos.getViewport().setViewPosition(p);
     }
-    
+
     private void limpiarJTables() {
         modeloTablaPedidos = new ModeloTabla();
-        tbl_Pedidos.setModel(modeloTablaPedidos);        
+        tbl_Pedidos.setModel(modeloTablaPedidos);
         this.setColumnas();
     }
 
@@ -307,16 +307,16 @@ public class PedidosGUI extends JInternalFrame {
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
                 || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-            btnEliminarPedido.setEnabled(true);
+            btnCancelarPedido.setEnabled(true);
             btnFacturar.setEnabled(true);
             chk_Usuario.setEnabled(true);
         } else {
-            btnEliminarPedido.setEnabled(false);
+            btnCancelarPedido.setEnabled(false);
             btnFacturar.setEnabled(false);
             chk_Usuario.setEnabled(false);
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -351,27 +351,27 @@ public class PedidosGUI extends JInternalFrame {
         btnFacturar = new javax.swing.JButton();
         btnImprimirPedido = new javax.swing.JButton();
         btnModificarPedido = new javax.swing.JButton();
-        btnEliminarPedido = new javax.swing.JButton();
+        btnCancelarPedido = new javax.swing.JButton();
 
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/PedidoFacturar_16x16.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
-                formInternalFrameOpened(evt);
-            }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
             }
         });
 
@@ -671,12 +671,12 @@ public class PedidosGUI extends JInternalFrame {
             }
         });
 
-        btnEliminarPedido.setForeground(new java.awt.Color(0, 0, 255));
-        btnEliminarPedido.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Cancel_16x16.png"))); // NOI18N
-        btnEliminarPedido.setText("Eliminar");
-        btnEliminarPedido.addActionListener(new java.awt.event.ActionListener() {
+        btnCancelarPedido.setForeground(new java.awt.Color(0, 0, 255));
+        btnCancelarPedido.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Cancel_16x16.png"))); // NOI18N
+        btnCancelarPedido.setText("Cancelar");
+        btnCancelarPedido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarPedidoActionPerformed(evt);
+                btnCancelarPedidoActionPerformed(evt);
             }
         });
 
@@ -690,17 +690,17 @@ public class PedidosGUI extends JInternalFrame {
                 .addGap(0, 0, 0)
                 .addComponent(btnModificarPedido)
                 .addGap(0, 0, 0)
-                .addComponent(btnEliminarPedido)
+                .addComponent(btnCancelarPedido)
                 .addGap(0, 0, 0)
                 .addComponent(btnVerFacturas)
                 .addGap(0, 0, 0)
                 .addComponent(btnFacturar)
                 .addGap(0, 0, 0)
                 .addComponent(btnImprimirPedido)
-                .addGap(0, 83, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnEliminarPedido, btnFacturar, btnImprimirPedido, btnModificarPedido, btnNuevoPedido, btnVerFacturas});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCancelarPedido, btnFacturar, btnImprimirPedido, btnModificarPedido, btnNuevoPedido, btnVerFacturas});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -713,10 +713,10 @@ public class PedidosGUI extends JInternalFrame {
                     .addComponent(btnFacturar)
                     .addComponent(btnModificarPedido)
                     .addComponent(btnImprimirPedido)
-                    .addComponent(btnEliminarPedido)))
+                    .addComponent(btnCancelarPedido)))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnEliminarPedido, btnFacturar, btnImprimirPedido, btnModificarPedido, btnNuevoPedido, btnVerFacturas});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCancelarPedido, btnFacturar, btnImprimirPedido, btnModificarPedido, btnNuevoPedido, btnVerFacturas});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -877,7 +877,7 @@ public class PedidosGUI extends JInternalFrame {
         }
         this.cambiarEstadoDeComponentesSegunRolUsuario();
     }//GEN-LAST:event_formInternalFrameOpened
-        
+
     private void btnImprimirPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirPedidoActionPerformed
         if (tbl_Pedidos.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
@@ -894,9 +894,6 @@ public class PedidosGUI extends JInternalFrame {
                 if (pedido.getEstado() == EstadoPedido.CERRADO) {
                     JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                             .getString("mensaje_pedido_facturado"), "Error", JOptionPane.ERROR_MESSAGE);
-                } else if (pedido.getEstado() == EstadoPedido.ACTIVO) {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_pedido_procesado"), "Error", JOptionPane.ERROR_MESSAGE);
                 } else if (this.existeClienteDisponible()) {
                     DetallePedidoGUI nuevoPedidoGUI = new DetallePedidoGUI(pedido, true);
                     nuevoPedidoGUI.setLocation(getDesktopPane().getWidth() / 2 - nuevoPedidoGUI.getWidth() / 2,
@@ -920,7 +917,7 @@ public class PedidosGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btnModificarPedidoActionPerformed
 
-    private void btnEliminarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarPedidoActionPerformed
+    private void btnCancelarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarPedidoActionPerformed
         try {
             if (tbl_Pedidos.getSelectedRow() != -1) {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
@@ -928,15 +925,12 @@ public class PedidosGUI extends JInternalFrame {
                 if (pedido.getEstado() == EstadoPedido.CERRADO) {
                     JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                             .getString("mensaje_pedido_facturado"), "Error", JOptionPane.ERROR_MESSAGE);
-                } else if (pedido.getEstado() == EstadoPedido.ACTIVO) {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_pedido_procesado"), "Error", JOptionPane.ERROR_MESSAGE);
                 } else if (this.existeClienteDisponible()) {
                     int respuesta = JOptionPane.showConfirmDialog(this,
                             "¿Esta seguro que desea eliminar el pedido seleccionado?",
                             "Eliminar", JOptionPane.YES_NO_OPTION);
                     if (respuesta == JOptionPane.YES_OPTION) {
-                        RestClient.getRestTemplate().delete("/pedidos/" + pedido.getIdPedido());
+                        RestClient.getRestTemplate().put("/pedidos/" + pedido.getIdPedido(), null);
                         this.resetScroll();
                         this.limpiarJTables();
                         this.buscar();
@@ -954,8 +948,8 @@ public class PedidosGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_btnEliminarPedidoActionPerformed
-      
+    }//GEN-LAST:event_btnCancelarPedidoActionPerformed
+
     private void txt_NumeroPedidoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_NumeroPedidoKeyTyped
         Utilidades.controlarEntradaSoloNumerico(evt);
     }//GEN-LAST:event_txt_NumeroPedidoKeyTyped
@@ -964,7 +958,7 @@ public class PedidosGUI extends JInternalFrame {
         if (chkEstado.isSelected() == true) {
             cmbEstado.setEnabled(true);
             cmbEstado.addItem(EstadoPedido.ABIERTO);
-            cmbEstado.addItem(EstadoPedido.ACTIVO);
+            cmbEstado.addItem(EstadoPedido.CANCELADO);
             cmbEstado.addItem(EstadoPedido.CERRADO);
             cmbEstado.requestFocus();
         } else {
@@ -1050,7 +1044,7 @@ public class PedidosGUI extends JInternalFrame {
     private javax.swing.JButton btnBuscarProductos;
     private javax.swing.JButton btnBuscarUsuarios;
     private javax.swing.JButton btnBuscarViajantes;
-    private javax.swing.JButton btnEliminarPedido;
+    private javax.swing.JButton btnCancelarPedido;
     private javax.swing.JButton btnFacturar;
     private javax.swing.JButton btnImprimirPedido;
     private javax.swing.JButton btnModificarPedido;
