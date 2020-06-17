@@ -391,6 +391,7 @@ public class PrincipalGUI extends JFrame {
         });
         mnu_Stock.add(mnuItm_Productos);
 
+        mnuItm_Traspasos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Traspaso_16x16.png"))); // NOI18N
         mnuItm_Traspasos.setText("Traspasos");
         mnuItm_Traspasos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

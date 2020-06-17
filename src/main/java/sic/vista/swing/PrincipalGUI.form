@@ -310,6 +310,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuItm_Traspasos">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/sic/icons/Traspaso_16x16.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Traspasos"/>
               </Properties>
               <Events>
