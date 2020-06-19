@@ -36,7 +36,6 @@ import sic.modelo.Producto;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.UsuarioActivo;
-import sic.modelo.criteria.BusquedaClienteCriteria;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
@@ -630,7 +629,7 @@ public class FacturasVentaGUI extends JInternalFrame {
 
         btnEnviarEmail.setForeground(java.awt.Color.blue);
         btnEnviarEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/email_16x16.png"))); // NOI18N
-        btnEnviarEmail.setText("Enviar email");
+        btnEnviarEmail.setText("Enviar por email");
         btnEnviarEmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEnviarEmailActionPerformed(evt);
@@ -642,37 +641,33 @@ public class FacturasVentaGUI extends JInternalFrame {
         panelResultadosLayout.setHorizontalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelResultadosLayout.createSequentialGroup()
-                        .addComponent(btn_VerDetalle)
-                        .addGap(0, 0, 0)
-                        .addComponent(btnEnviarEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelResultadosLayout.createSequentialGroup()
-                        .addComponent(btnCrearNotaCredito)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_Autorizar)))
+                .addComponent(btnCrearNotaCredito)
+                .addGap(0, 0, 0)
+                .addComponent(btn_Autorizar)
+                .addGap(0, 0, 0)
+                .addComponent(btn_VerDetalle)
+                .addGap(0, 0, 0)
+                .addComponent(btnEnviarEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panelNumeros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(sp_Resultados)
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCrearNotaCredito, btn_Autorizar, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCrearNotaCredito, btnEnviarEmail, btn_Autorizar, btn_VerDetalle});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
                 .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
-                .addGap(7, 7, 7)
+                .addGap(8, 8, 8)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(panelNumeros, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                        .addComponent(btnCrearNotaCredito)
+                        .addComponent(btn_Autorizar)
                         .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(btnEnviarEmail)
-                            .addComponent(btn_VerDetalle))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(btnCrearNotaCredito)
-                            .addComponent(btn_Autorizar)))))
+                            .addComponent(btn_VerDetalle)))))
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaCredito, btn_Autorizar, btn_VerDetalle});

@@ -352,6 +352,7 @@ public class PedidosGUI extends JInternalFrame {
         btnImprimirPedido = new javax.swing.JButton();
         btnModificarPedido = new javax.swing.JButton();
         btnCancelarPedido = new javax.swing.JButton();
+        btnClonarPedido = new javax.swing.JButton();
 
         setClosable(true);
         setMaximizable(true);
@@ -680,6 +681,15 @@ public class PedidosGUI extends JInternalFrame {
             }
         });
 
+        btnClonarPedido.setForeground(new java.awt.Color(0, 0, 255));
+        btnClonarPedido.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Clonar_16x16.png"))); // NOI18N
+        btnClonarPedido.setText("Clonar");
+        btnClonarPedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClonarPedidoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
@@ -697,10 +707,12 @@ public class PedidosGUI extends JInternalFrame {
                 .addComponent(btnFacturar)
                 .addGap(0, 0, 0)
                 .addComponent(btnImprimirPedido)
+                .addGap(0, 0, 0)
+                .addComponent(btnClonarPedido)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCancelarPedido, btnFacturar, btnImprimirPedido, btnModificarPedido, btnNuevoPedido, btnVerFacturas});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCancelarPedido, btnClonarPedido, btnFacturar, btnImprimirPedido, btnModificarPedido, btnNuevoPedido, btnVerFacturas});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -713,7 +725,8 @@ public class PedidosGUI extends JInternalFrame {
                     .addComponent(btnFacturar)
                     .addComponent(btnModificarPedido)
                     .addComponent(btnImprimirPedido)
-                    .addComponent(btnCancelarPedido)))
+                    .addComponent(btnCancelarPedido)
+                    .addComponent(btnClonarPedido)))
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCancelarPedido, btnFacturar, btnImprimirPedido, btnModificarPedido, btnNuevoPedido, btnVerFacturas});
@@ -725,7 +738,7 @@ public class PedidosGUI extends JInternalFrame {
             .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 142, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1039,12 +1052,17 @@ public class PedidosGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btnBuscarProductosActionPerformed
 
+    private void btnClonarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClonarPedidoActionPerformed
+        
+    }//GEN-LAST:event_btnClonarPedidoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarCliente;
     private javax.swing.JButton btnBuscarProductos;
     private javax.swing.JButton btnBuscarUsuarios;
     private javax.swing.JButton btnBuscarViajantes;
     private javax.swing.JButton btnCancelarPedido;
+    private javax.swing.JButton btnClonarPedido;
     private javax.swing.JButton btnFacturar;
     private javax.swing.JButton btnImprimirPedido;
     private javax.swing.JButton btnModificarPedido;

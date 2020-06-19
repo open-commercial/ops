@@ -67,18 +67,13 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="btn_VerDetalle" linkSize="2" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="btnEnviarEmail" min="-2" pref="188" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="btnCrearNotaCredito" linkSize="2" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="btn_Autorizar" linkSize="2" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
+                  <Component id="btnCrearNotaCredito" linkSize="2" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                  <Component id="btn_Autorizar" linkSize="2" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                  <Component id="btn_VerDetalle" linkSize="2" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                  <Component id="btnEnviarEmail" linkSize="2" min="-2" pref="188" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="panelNumeros" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -89,18 +84,15 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <Component id="sp_Resultados" pref="232" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="panelNumeros" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Group type="103" groupAlignment="2" attributes="0">
+                      <Group type="103" alignment="1" groupAlignment="2" attributes="0">
+                          <Component id="btnCrearNotaCredito" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_Autorizar" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" alignment="2" groupAlignment="2" attributes="0">
                               <Component id="btnEnviarEmail" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="btn_VerDetalle" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="btnCrearNotaCredito" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="btn_Autorizar" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -271,7 +263,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/sic/icons/email_16x16.png"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Enviar email"/>
+            <Property name="text" type="java.lang.String" value="Enviar por email"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEnviarEmailActionPerformed"/>

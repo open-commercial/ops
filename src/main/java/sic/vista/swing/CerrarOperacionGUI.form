@@ -7,7 +7,7 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
-    <Property name="title" type="java.lang.String" value="Cerrar Venta"/>
+    <Property name="title" type="java.lang.String" value="Cerrar Operaci&#xf3;n"/>
     <Property name="resizable" type="boolean" value="false"/>
   </Properties>
   <SyntheticProperties>
@@ -35,13 +35,18 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="panel" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="pnlCerrarPedido" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="btn_Finalizar" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbl_Dividido" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="btn_Finalizar" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
+                          <Component id="panel" alignment="0" max="32767" attributes="0"/>
+                          <Component id="pnlCerrarPedido" alignment="0" max="32767" attributes="0"/>
                       </Group>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -52,12 +57,17 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
               <Component id="panel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="pnlCerrarPedido" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="btn_Finalizar" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="btn_Finalizar" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lbl_Dividido" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -90,61 +100,31 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="separador2" max="32767" attributes="0"/>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="chk_FormaDePago2" alignment="0" max="32767" attributes="0"/>
-                              <Component id="chk_FormaDePago1" alignment="0" max="32767" attributes="0"/>
-                              <Component id="chk_FormaDePago3" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="cmb_FormaDePago3" pref="388" max="32767" attributes="0"/>
-                              <Component id="cmb_FormaDePago2" max="32767" attributes="0"/>
-                              <Component id="cmb_FormaDePago1" alignment="0" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txt_MontoPago1" alignment="1" min="-2" pref="128" max="-2" attributes="1"/>
-                              <Component id="txt_MontoPago2" alignment="1" min="-2" pref="128" max="-2" attributes="1"/>
-                              <Component id="txt_MontoPago3" alignment="1" min="-2" pref="128" max="-2" attributes="1"/>
-                          </Group>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="lbl_Transporte" max="32767" attributes="0"/>
-                              <Component id="lbl_Vendor" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lbl_Vendedor" max="32767" attributes="0"/>
-                              <Component id="cmb_Transporte" max="32767" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <Component id="lbl_Dividido" alignment="0" max="32767" attributes="0"/>
-                      <Component id="separador1" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                      <Component id="chk_FormaDePago2" alignment="0" max="32767" attributes="0"/>
+                      <Component id="chk_FormaDePago1" alignment="0" max="32767" attributes="0"/>
+                      <Component id="chk_FormaDePago3" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="cmb_FormaDePago3" pref="388" max="32767" attributes="0"/>
+                      <Component id="cmb_FormaDePago2" max="32767" attributes="0"/>
+                      <Component id="cmb_FormaDePago1" alignment="0" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="txt_MontoPago1" alignment="1" max="32767" attributes="1"/>
+                      <Component id="txt_MontoPago2" alignment="1" max="32767" attributes="1"/>
+                      <Component id="txt_MontoPago3" alignment="1" max="32767" attributes="1"/>
+                  </Group>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lbl_Vendedor" linkSize="9" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbl_Vendor" linkSize="9" alignment="2" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lbl_Transporte" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmb_Transporte" alignment="2" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="separador1" min="-2" pref="10" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="txt_MontoPago1" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -163,35 +143,12 @@
                       <Component id="cmb_FormaDePago3" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="chk_FormaDePago3" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="separador2" min="-2" pref="10" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="lbl_Dividido" min="-2" pref="24" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="lbl_Vendor">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Vendedor:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lbl_Vendedor">
-          <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="25" green="9c" red="1d" type="rgb"/>
-            </Property>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lbl_Transporte">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Transporte:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JSeparator" name="separador1">
-        </Component>
         <Component class="javax.swing.JCheckBox" name="chk_FormaDePago1">
           <Properties>
             <Property name="text" type="java.lang.String" value="Forma de Pago #1:"/>
@@ -276,24 +233,6 @@
             <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txt_MontoPago3FocusGained"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JSeparator" name="separador2">
-        </Component>
-        <Component class="javax.swing.JLabel" name="lbl_Dividido">
-          <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="25" green="9c" red="1d" type="rgb"/>
-            </Property>
-            <Property name="horizontalAlignment" type="int" value="2"/>
-            <Property name="text" type="java.lang.String" value="ATENCION: Este comprobante ser&#xe1; dividido"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cmb_Transporte">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-          </Properties>
-        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="pnlCerrarPedido">
@@ -316,12 +255,12 @@
                       <Component id="rbRetiroEnSucursal" linkSize="10" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="cmbSucursales" linkSize="11" alignment="1" pref="439" max="32767" attributes="0"/>
-                      <Component id="lblDetalleUbicacionFacturacion" linkSize="11" alignment="1" max="32767" attributes="0"/>
-                      <Component id="lblDetalleUbicacionEnvio" linkSize="11" alignment="1" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="cmbSucursales" alignment="0" pref="439" max="32767" attributes="0"/>
+                      <Component id="lblDetalleUbicacionFacturacion" max="32767" attributes="0"/>
+                      <Component id="lblDetalleUbicacionEnvio" alignment="0" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -412,6 +351,87 @@
               </Border>
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Component class="javax.swing.JLabel" name="lbl_Dividido">
+      <Properties>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="25" green="9c" red="1d" type="rgb"/>
+        </Property>
+        <Property name="horizontalAlignment" type="int" value="2"/>
+        <Property name="text" type="java.lang.String" value="ATENCION: El comprobante ser&#xe1; dividido!"/>
+      </Properties>
+    </Component>
+    <Container class="javax.swing.JPanel" name="jPanel1">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder/>
+          </Border>
+        </Property>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="lbl_Transporte" max="32767" attributes="0"/>
+                      <Component id="lbl_Vendor" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="lbl_Vendedor" max="32767" attributes="0"/>
+                      <Component id="cmb_Transporte" pref="602" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="lbl_Vendedor" linkSize="9" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbl_Vendor" linkSize="9" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="lbl_Transporte" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="cmb_Transporte" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="lbl_Vendor">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Vendedor:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lbl_Vendedor">
+          <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="25" green="9c" red="1d" type="rgb"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lbl_Transporte">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Transporte:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cmb_Transporte">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
           </Properties>
         </Component>
       </SubComponents>

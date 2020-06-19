@@ -33,7 +33,7 @@
           <Component id="panelResultados" max="32767" attributes="0"/>
           <Group type="102" alignment="0" attributes="0">
               <Component id="panelFiltros" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="142" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -386,6 +386,8 @@
                   <Component id="btnFacturar" linkSize="21" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="btnImprimirPedido" linkSize="21" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                  <Component id="btnClonarPedido" linkSize="21" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -402,6 +404,7 @@
                       <Component id="btnModificarPedido" linkSize="7" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnImprimirPedido" linkSize="7" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnCancelarPedido" linkSize="7" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnClonarPedido" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -515,6 +518,20 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCancelarPedidoActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnClonarPedido">
+          <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="0" red="0" type="rgb"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/sic/icons/Clonar_16x16.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Clonar"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnClonarPedidoActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
