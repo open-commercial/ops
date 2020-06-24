@@ -11,6 +11,7 @@ public class Traspaso {
     private Long idTraspaso;
     private LocalDateTime fechaDeAlta;
     private String nroTraspaso;
+    private Long nroPedido;
     private Long idSucursalOrigen;
     private String nombreSucursalOrigen;
     private Long idSucursalDestino;

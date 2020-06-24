@@ -103,36 +103,41 @@ public class TraspasosGUI extends JInternalFrame {
 
     private void setColumnasTraspasos() {
         //nombres de columnas
-        String[] encabezados = new String[5];
+        String[] encabezados = new String[6];
         encabezados[0] = "Fecha Traspaso";
         encabezados[1] = "Nº Traspaso";
-        encabezados[2] = "Sucursal Origen";
-        encabezados[3] = "Sucursal Destino";
-        encabezados[4] = "Usuario";
+        encabezados[2] = "Nº Pedido";
+        encabezados[3] = "Sucursal Origen";
+        encabezados[4] = "Sucursal Destino";
+        encabezados[5] = "Usuario";
         modeloTablaTraspasos.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaTraspasos);
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaTraspasos.getColumnCount()];
         tipos[0] = LocalDateTime.class;
         tipos[1] = String.class;
-        tipos[2] = String.class;
+        tipos[2] = Long.class;
         tipos[3] = String.class;
         tipos[4] = String.class;
+        tipos[5] = String.class;
         modeloTablaTraspasos.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
         //tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(140);
+        tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(140);
+        tbl_Resultados.getColumnModel().getColumn(0).setMinWidth(140);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(130);
-        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(220);
-        tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(220);
-        tbl_Resultados.getColumnModel().getColumn(2).setMinWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(130);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(220);
         tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(220);
         tbl_Resultados.getColumnModel().getColumn(3).setMinWidth(220);
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(220);
         tbl_Resultados.getColumnModel().getColumn(4).setMaxWidth(220);
         tbl_Resultados.getColumnModel().getColumn(4).setMinWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(5).setMinWidth(220);
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         tbl_Resultados.getColumnModel().getColumn(0).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
@@ -140,28 +145,32 @@ public class TraspasosGUI extends JInternalFrame {
 
     private void setColumnasDetalles() {
         //nombres de columnas
-        String[] encabezados = new String[3];
-        encabezados[0] = "Descripción";
-        encabezados[1] = "Medida";
-        encabezados[2] = "Cantidad";
+        String[] encabezados = new String[4];
+        encabezados[0] = "Codigo";
+        encabezados[1] = "Descripción";
+        encabezados[2] = "Medida";
+        encabezados[3] = "Cantidad";
         modeloTablaDetalle.setColumnIdentifiers(encabezados);
         tbl_Detalles.setModel(modeloTablaDetalle);
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaDetalle.getColumnCount()];
-        tipos[0] = LocalDateTime.class;
+        tipos[0] = String.class;
         tipos[1] = String.class;
         tipos[2] = String.class;
+        tipos[3] = String.class;
         modeloTablaDetalle.setClaseColumnas(tipos);
         tbl_Detalles.getTableHeader().setReorderingAllowed(false);
         tbl_Detalles.getTableHeader().setResizingAllowed(true);
         //tamanios de columnas
-        tbl_Detalles.getColumnModel().getColumn(0).setPreferredWidth(140);
-        tbl_Detalles.getColumnModel().getColumn(1).setPreferredWidth(220);
-        tbl_Detalles.getColumnModel().getColumn(1).setMaxWidth(220);
-        tbl_Detalles.getColumnModel().getColumn(1).setMinWidth(220);
+        tbl_Detalles.getColumnModel().getColumn(0).setPreferredWidth(100);
+        tbl_Detalles.getColumnModel().getColumn(0).setMaxWidth(100);
+        tbl_Detalles.getColumnModel().getColumn(0).setMinWidth(100);
         tbl_Detalles.getColumnModel().getColumn(2).setPreferredWidth(220);
         tbl_Detalles.getColumnModel().getColumn(2).setMaxWidth(220);
         tbl_Detalles.getColumnModel().getColumn(2).setMinWidth(220);
+        tbl_Detalles.getColumnModel().getColumn(3).setPreferredWidth(220);
+        tbl_Detalles.getColumnModel().getColumn(3).setMaxWidth(220);
+        tbl_Detalles.getColumnModel().getColumn(3).setMinWidth(220);
         //render para los tipos de datos
         tbl_Detalles.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
     }
@@ -225,12 +234,13 @@ public class TraspasosGUI extends JInternalFrame {
 
     private void cargarResultadosAlTable() {
         traspasosParcial.stream().map(traspaso -> {
-            Object[] fila = new Object[5];
+            Object[] fila = new Object[6];
             fila[0] = traspaso.getFechaDeAlta();
             fila[1] = traspaso.getNroTraspaso();
-            fila[2] = traspaso.getNombreSucursalOrigen();
-            fila[3] = traspaso.getNombreSucursalDestino();
-            fila[4] = traspaso.getNombreUsuario();
+            fila[2] = traspaso.getNroPedido();
+            fila[3] = traspaso.getNombreSucursalOrigen();
+            fila[4] = traspaso.getNombreSucursalDestino();
+            fila[5] = traspaso.getNombreUsuario();
             return fila;
         }).forEach(fila -> {
             modeloTablaTraspasos.addRow(fila);
@@ -251,11 +261,12 @@ public class TraspasosGUI extends JInternalFrame {
             //try
             List<RenglonTraspaso> renglonesTraspaso = Arrays.asList(RestClient.getRestTemplate()
                     .getForObject("/traspasos/" + idTraspaso + "/renglones", RenglonTraspaso[].class));
-            Object[] renglonMovimiento = new Object[3];
+            Object[] renglonMovimiento = new Object[4];
             renglonesTraspaso.forEach(renglon -> {
-                renglonMovimiento[0] = renglon.getDescripcionProducto();
-                renglonMovimiento[1] = renglon.getNombreMedidaProducto();
-                renglonMovimiento[2] = renglon.getCantidadProducto();
+                renglonMovimiento[0] = renglon.getCodigoProducto();
+                renglonMovimiento[1] = renglon.getDescripcionProducto();
+                renglonMovimiento[2] = renglon.getNombreMedidaProducto();
+                renglonMovimiento[3] = renglon.getCantidadProducto();
                 modeloTablaDetalle.addRow(renglonMovimiento);
             });
             tbl_Detalles.setModel(modeloTablaDetalle);
@@ -613,6 +624,7 @@ public class TraspasosGUI extends JInternalFrame {
         try {
             this.setSize(sizeInternalFrame);
             this.setColumnasTraspasos();
+            this.setColumnasDetalles();
             this.setMaximum(true);
             dc_FechaDesde.setDate(new Date());
             dc_FechaHasta.setDate(new Date());
@@ -649,7 +661,7 @@ public class TraspasosGUI extends JInternalFrame {
     }//GEN-LAST:event_chk_NumTraspasoItemStateChanged
 
     private void btnBuscarUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarUsuariosActionPerformed
-        Rol[] rolesParaFiltrar = new Rol[]{Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR};
+        Rol[] rolesParaFiltrar = new Rol[]{Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR, Rol.COMPRADOR};
         BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar, "Buscar Usuario");
         buscarUsuariosGUI.setModal(true);
         buscarUsuariosGUI.setLocationRelativeTo(this);

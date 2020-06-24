@@ -23,7 +23,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.CantidadEnSucursal;
 import sic.modelo.SucursalActiva;
 import sic.modelo.Movimiento;
 import sic.modelo.NuevoRenglonFactura;
@@ -245,7 +244,13 @@ public class BuscarProductosGUI extends JDialog {
                             .forEachOrdered((p) -> {
                                 p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
                                     if (cantidadEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
-                                        cantidadEnSucursal.setCantidad(cantidadEnSucursal.getCantidad().subtract(r.getCantidad()));
+                                        BigDecimal resultado = cantidadEnSucursal.getCantidad().subtract(r.getCantidad());
+                                        if (resultado.compareTo(BigDecimal.ZERO) <= 0) {
+                                            p.setCantidadTotalEnSucursales(p.getCantidadTotalEnSucursales().subtract(cantidadEnSucursal.getCantidad()).add(resultado));
+                                            cantidadEnSucursal.setCantidad(BigDecimal.ZERO);
+                                        } else {
+                                            cantidadEnSucursal.setCantidad(resultado);
+                                        }
                                     }
                                 });
                             });
@@ -264,12 +269,18 @@ public class BuscarProductosGUI extends JDialog {
                 });
             }
             if (renglonesCargadosPedido != null && !renglonesCargadosPedido.isEmpty()) {
-                renglonesCargadosPedido.forEach((r) -> {
-                    productosTotal.stream().filter((p) -> (r.getIdProductoItem() == p.getIdProducto() && p.isIlimitado() == false))
-                            .forEachOrdered((p) -> {
+                renglonesCargadosPedido.forEach(r -> {
+                    productosTotal.stream().filter(p -> (r.getIdProductoItem() == p.getIdProducto() && p.isIlimitado() == false))
+                            .forEachOrdered(p -> {
                                 p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
                                     if (cantidadEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
-                                        cantidadEnSucursal.setCantidad(cantidadEnSucursal.getCantidad().subtract(r.getCantidad()));
+                                        BigDecimal resultado = cantidadEnSucursal.getCantidad().subtract(r.getCantidad());
+                                        if (resultado.compareTo(BigDecimal.ZERO) <= 0) {
+                                            p.setCantidadTotalEnSucursales(p.getCantidadTotalEnSucursales().subtract(cantidadEnSucursal.getCantidad()).add(resultado));
+                                            cantidadEnSucursal.setCantidad(BigDecimal.ZERO);
+                                        } else {
+                                            cantidadEnSucursal.setCantidad(resultado);
+                                        }
                                     }
                                 });
                             });
@@ -312,9 +323,11 @@ public class BuscarProductosGUI extends JDialog {
                         fila[2] = cantidadesEnSucursal.getCantidad();
                     }
                 });
-                fila[3] = p.getCantidadEnSucursales().stream()
-                        .filter(cantidadEnSucursales -> !cantidadEnSucursales.idSucursal.equals(SucursalActiva.getInstance().getSucursal().getIdSucursal()))
-                        .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);
+                p.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
+                    if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
+                        fila[3] = p.getCantidadTotalEnSucursales().subtract(cantidadesEnSucursal.getCantidad());
+                    }
+                });
                 fila[4] = p.getBulto();
                 fila[5] = p.getNombreMedida();
                 BigDecimal precio = (movimiento == Movimiento.VENTA) ? p.getPrecioLista()

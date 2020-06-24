@@ -10,6 +10,7 @@ public class RenglonTraspaso {
 
     private Long idRenglonTraspaso;
     private Long idProducto;
+    private String codigoProducto;
     private String descripcionProducto;
     private String nombreMedidaProducto;
     private BigDecimal cantidadProducto;

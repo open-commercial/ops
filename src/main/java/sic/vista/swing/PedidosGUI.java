@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -34,6 +35,7 @@ import sic.modelo.Usuario;
 import sic.modelo.EstadoPedido;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
+import sic.modelo.RenglonPedido;
 import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
 import sic.modelo.criteria.BusquedaClienteCriteria;
@@ -844,20 +846,29 @@ public class PedidosGUI extends JInternalFrame {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
                 Pedido pedido = RestClient.getRestTemplate()
                         .getForObject("/pedidos/" + pedidosTotal.get(indexFilaSeleccionada).getIdPedido(), Pedido.class);
-                if (pedido.getEstado() == EstadoPedido.CERRADO) {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_pedido_facturado"), "Error", JOptionPane.ERROR_MESSAGE);
-                } else if (this.existeClienteDisponible()) {
-                    NuevaFacturaVentaGUI puntoDeVentaGUI = new NuevaFacturaVentaGUI(pedido);
-                    puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
-                            getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
-                    getDesktopPane().add(puntoDeVentaGUI);
-                    puntoDeVentaGUI.setMaximizable(true);
-                    puntoDeVentaGUI.setClosable(true);
-                    puntoDeVentaGUI.setVisible(true);
-                } else {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                switch (pedido.getEstado()) {
+                    case ABIERTO:
+                        if (this.existeClienteDisponible()) {
+                            NuevaFacturaVentaGUI puntoDeVentaGUI = new NuevaFacturaVentaGUI(pedido);
+                            puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
+                                    getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
+                            getDesktopPane().add(puntoDeVentaGUI);
+                            puntoDeVentaGUI.setMaximizable(true);
+                            puntoDeVentaGUI.setClosable(true);
+                            puntoDeVentaGUI.setVisible(true);
+                        } else {
+                            JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                        break;
+                    case CERRADO:
+                        JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_pedido_cerrado"), "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
+                    case CANCELADO:
+                        JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_pedidor_cancelado"), "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
                 }
             }
         } catch (RestClientResponseException ex) {
@@ -904,20 +915,29 @@ public class PedidosGUI extends JInternalFrame {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
                 Pedido pedido = RestClient.getRestTemplate()
                         .getForObject("/pedidos/" + pedidosTotal.get(indexFilaSeleccionada).getIdPedido(), Pedido.class);
-                if (pedido.getEstado() == EstadoPedido.CERRADO) {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_pedido_facturado"), "Error", JOptionPane.ERROR_MESSAGE);
-                } else if (this.existeClienteDisponible()) {
-                    DetallePedidoGUI nuevoPedidoGUI = new DetallePedidoGUI(pedido, true);
-                    nuevoPedidoGUI.setLocation(getDesktopPane().getWidth() / 2 - nuevoPedidoGUI.getWidth() / 2,
-                            getDesktopPane().getHeight() / 2 - nuevoPedidoGUI.getHeight() / 2);
-                    getDesktopPane().add(nuevoPedidoGUI);
-                    nuevoPedidoGUI.setMaximizable(true);
-                    nuevoPedidoGUI.setClosable(true);
-                    nuevoPedidoGUI.setVisible(true);
-                } else {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                switch (pedido.getEstado()) {
+                    case ABIERTO:
+                        if (this.existeClienteDisponible()) {
+                            DetallePedidoGUI nuevoPedidoGUI = new DetallePedidoGUI(pedido, true);
+                            nuevoPedidoGUI.setLocation(getDesktopPane().getWidth() / 2 - nuevoPedidoGUI.getWidth() / 2,
+                                    getDesktopPane().getHeight() / 2 - nuevoPedidoGUI.getHeight() / 2);
+                            getDesktopPane().add(nuevoPedidoGUI);
+                            nuevoPedidoGUI.setMaximizable(true);
+                            nuevoPedidoGUI.setClosable(true);
+                            nuevoPedidoGUI.setVisible(true);
+                        } else {
+                            JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                        break;
+                    case CERRADO:
+                        JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_pedido_cerrado"), "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
+                    case CANCELADO:
+                        JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_pedido_cancelado"), "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
                 }
             }
         } catch (RestClientResponseException ex) {
@@ -935,22 +955,26 @@ public class PedidosGUI extends JInternalFrame {
             if (tbl_Pedidos.getSelectedRow() != -1) {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
                 Pedido pedido = RestClient.getRestTemplate().getForObject("/pedidos/" + pedidosTotal.get(indexFilaSeleccionada).getIdPedido(), Pedido.class);
-                if (pedido.getEstado() == EstadoPedido.CERRADO) {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_pedido_facturado"), "Error", JOptionPane.ERROR_MESSAGE);
-                } else if (this.existeClienteDisponible()) {
-                    int respuesta = JOptionPane.showConfirmDialog(this,
-                            "¿Esta seguro que desea eliminar el pedido seleccionado?",
-                            "Eliminar", JOptionPane.YES_NO_OPTION);
-                    if (respuesta == JOptionPane.YES_OPTION) {
-                        RestClient.getRestTemplate().put("/pedidos/" + pedido.getIdPedido(), null);
-                        this.resetScroll();
-                        this.limpiarJTables();
-                        this.buscar();
-                    }
-                } else {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                switch (pedido.getEstado()) {
+                    case ABIERTO:
+                        int respuesta = JOptionPane.showConfirmDialog(this,
+                                "¿Desea cancelar el pedido seleccionado?",
+                                "Cancelar", JOptionPane.YES_NO_OPTION);
+                        if (respuesta == JOptionPane.YES_OPTION) {
+                            RestClient.getRestTemplate().put("/pedidos/" + pedido.getIdPedido(), null);
+                            this.resetScroll();
+                            this.limpiarJTables();
+                            this.buscar();
+                        }
+                        break;
+                    case CERRADO:
+                        JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_pedido_cerrado"), "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
+                    case CANCELADO:
+                        JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_pedido_cancelado"), "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
                 }
             }
         } catch (RestClientResponseException ex) {
@@ -1053,7 +1077,33 @@ public class PedidosGUI extends JInternalFrame {
     }//GEN-LAST:event_btnBuscarProductosActionPerformed
 
     private void btnClonarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClonarPedidoActionPerformed
-        
+        try {
+            if (tbl_Pedidos.getSelectedRow() != -1) {
+                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
+                Pedido pedido = RestClient.getRestTemplate()
+                        .getForObject("/pedidos/" + pedidosTotal.get(indexFilaSeleccionada).getIdPedido(), Pedido.class);
+                if (this.existeClienteDisponible()) {
+                    DetallePedidoGUI nuevoPedidoGUI = new DetallePedidoGUI(pedido.getCliente(), Arrays.asList(RestClient.getRestTemplate()
+                            .getForObject("/pedidos/" + pedido.getIdPedido() + "/renglones?clonar=true", RenglonPedido[].class)));
+                    nuevoPedidoGUI.setLocation(getDesktopPane().getWidth() / 2 - nuevoPedidoGUI.getWidth() / 2,
+                            getDesktopPane().getHeight() / 2 - nuevoPedidoGUI.getHeight() / 2);
+                    getDesktopPane().add(nuevoPedidoGUI);
+                    nuevoPedidoGUI.setMaximizable(true);
+                    nuevoPedidoGUI.setClosable(true);
+                    nuevoPedidoGUI.setVisible(true);
+                } else {
+                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnClonarPedidoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

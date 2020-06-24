@@ -18,6 +18,9 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
@@ -31,6 +34,8 @@ import sic.modelo.FormaDePago;
 import sic.modelo.NuevoRenglonPedido;
 import sic.modelo.Pedido;
 import sic.modelo.Producto;
+import sic.modelo.ProductoFaltante;
+import sic.modelo.ProductosParaVerificarStock;
 import sic.modelo.Rol;
 import sic.modelo.SucursalActiva;
 import sic.modelo.Transportista;
@@ -49,12 +54,12 @@ public class DetallePedidoGUI extends JInternalFrame {
     private PedidoDTO nuevoPedido;
     private final boolean modificandoPedido;
     private int cantidadMaximaRenglones = 0;
-    private BigDecimal subTotalBruto;  
+    private BigDecimal subTotalBruto;
     private final List<Rol> rolesDeUsuario = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final static BigDecimal CIEN = new BigDecimal("100");
 
     public DetallePedidoGUI(Pedido pedido, boolean modificandoPedido) {
-        this.initComponents();      
+        this.initComponents();
         this.pedido = pedido;
         this.modificandoPedido = modificandoPedido;
         //listeners        
@@ -67,8 +72,28 @@ public class DetallePedidoGUI extends JInternalFrame {
         btn_BuscarPorCodigoProducto.addKeyListener(keyHandler);
         txt_Descuento_porcentaje.addKeyListener(keyHandler);
         txt_Recargo_porcentaje.addKeyListener(keyHandler);
-        btn_Continuar.addKeyListener(keyHandler);          
-        btnModificarCliente.addKeyListener(keyHandler); 
+        btn_Continuar.addKeyListener(keyHandler);
+        btnModificarCliente.addKeyListener(keyHandler);
+    }
+
+    public DetallePedidoGUI(Cliente cliente, List<RenglonPedido> renglones) {
+        this.initComponents();
+        this.pedido = new Pedido();
+        this.cliente = cliente;
+        this.renglones = renglones;
+        this.modificandoPedido = false;
+        //listeners        
+        btn_NuevoCliente.addKeyListener(keyHandler);
+        btn_BuscarCliente.addKeyListener(keyHandler);
+        btn_BuscarProductos.addKeyListener(keyHandler);
+        btn_QuitarProducto.addKeyListener(keyHandler);
+        tbl_Resultado.addKeyListener(keyHandler);
+        txt_CodigoProducto.addKeyListener(keyHandler);
+        btn_BuscarPorCodigoProducto.addKeyListener(keyHandler);
+        txt_Descuento_porcentaje.addKeyListener(keyHandler);
+        txt_Recargo_porcentaje.addKeyListener(keyHandler);
+        btn_Continuar.addKeyListener(keyHandler);
+        btnModificarCliente.addKeyListener(keyHandler);
     }
 
     private boolean existeClientePredeterminado() {
@@ -228,13 +253,29 @@ public class DetallePedidoGUI extends JInternalFrame {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                         .getString("mensaje_producto_no_encontrado"), "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                NuevoRenglonPedido nuevoRenglonPedido = new NuevoRenglonPedido();
-                nuevoRenglonPedido.setIdProductoItem(producto.getIdProducto());
-                nuevoRenglonPedido.setCantidad(BigDecimal.ONE);
-                this.agregarRenglon(nuevoRenglonPedido);
-                this.cargarRenglonesAlTable();
-                this.calcularResultados();
-                txt_CodigoProducto.setText("");
+                long[] idsProductos = {producto.getIdProducto()};
+                ProductosParaVerificarStock productosParaVerificarStock = ProductosParaVerificarStock.builder()
+                        .cantidad(new BigDecimal[]{BigDecimal.ONE})
+                        .idProducto(idsProductos)
+                        .build();
+                HttpEntity<ProductosParaVerificarStock> requestEntity = new HttpEntity<>(productosParaVerificarStock);
+                boolean existeStockSuficiente;
+                existeStockSuficiente = RestClient.getRestTemplate()
+                        .exchange("/productos/disponibilidad-stock", HttpMethod.POST, requestEntity, new ParameterizedTypeReference<List<ProductoFaltante>>() {
+                        })
+                        .getBody().isEmpty();
+                if (!existeStockSuficiente) {
+                    JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                            .getString("mensaje_producto_sin_stock_suficiente"), "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    NuevoRenglonPedido nuevoRenglonPedido = new NuevoRenglonPedido();
+                    nuevoRenglonPedido.setIdProductoItem(producto.getIdProducto());
+                    nuevoRenglonPedido.setCantidad(BigDecimal.ONE);
+                    this.agregarRenglon(nuevoRenglonPedido);
+                    this.cargarRenglonesAlTable();
+                    this.calcularResultados();
+                    txt_CodigoProducto.setText("");
+                }
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -254,7 +295,7 @@ public class DetallePedidoGUI extends JInternalFrame {
                 LOGGER.error(mensaje + " - " + ex.getMessage());
             }
         }
-         if (txt_Recargo_porcentaje.isEditValid()) {
+        if (txt_Recargo_porcentaje.isEditValid()) {
             try {
                 txt_Recargo_porcentaje.commitEdit();
             } catch (ParseException ex) {
@@ -292,7 +333,7 @@ public class DetallePedidoGUI extends JInternalFrame {
         nuevoPedido.setObservaciones(txt_Observaciones.getText());
         nuevoPedido.setRenglones(this.calcularNuevosRenglonesPedido());
     }
-    
+
     private void finalizarPedido() {
         if (nuevoPedido != null) {
             System.out.print(cliente.getNroCliente());
@@ -355,15 +396,15 @@ public class DetallePedidoGUI extends JInternalFrame {
             if (evt.getKeyCode() == KeyEvent.VK_F2) {
                 btn_BuscarClienteActionPerformed(null);
             }
-            
+
             if (evt.getKeyCode() == KeyEvent.VK_F4) {
                 btn_BuscarProductosActionPerformed(null);
             }
-            
+
             if (evt.getKeyCode() == KeyEvent.VK_F5) {
                 btn_NuevoClienteActionPerformed(null);
             }
-            
+
             if (evt.getKeyCode() == KeyEvent.VK_F6) {
                 btnModificarClienteActionPerformed(null);
             }
@@ -376,12 +417,12 @@ public class DetallePedidoGUI extends JInternalFrame {
                 btn_QuitarProductoActionPerformed(null);
             }
 
-            if (evt.getSource() == tbl_Resultado && evt.getKeyCode() == KeyEvent.VK_TAB) {                
+            if (evt.getSource() == tbl_Resultado && evt.getKeyCode() == KeyEvent.VK_TAB) {
                 txt_Descuento_porcentaje.requestFocus();
             }
         }
     };
-    
+
     private void cargarComponentesIniciales() {
         cantidadMaximaRenglones = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/"
                 + SucursalActiva.getInstance().getSucursal().getIdSucursal()
@@ -389,7 +430,7 @@ public class DetallePedidoGUI extends JInternalFrame {
         if (rolesDeUsuario.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuario.contains(Rol.ENCARGADO)
                 || rolesDeUsuario.contains(Rol.VENDEDOR)) {
-            if (this.existeClientePredeterminado()) {
+            if (this.existeClientePredeterminado() && this.cliente == null) {
                 CuentaCorrienteCliente cuentaCorrienteClientePredeterminado
                         = RestClient.getRestTemplate().getForObject("/cuentas-corriente/clientes/predeterminado", CuentaCorrienteCliente.class);
                 this.cargarCliente(cuentaCorrienteClientePredeterminado.getCliente());
@@ -402,7 +443,31 @@ public class DetallePedidoGUI extends JInternalFrame {
         this.setTitle(this.modificandoPedido ? "Modificar Pedido" : "Nuevo Pedido");
         txt_Observaciones.setText(this.pedido.getObservaciones());
     }
-    
+
+    private BigDecimal[] getArrayCantidades() {
+        BigDecimal[] cantidades = new BigDecimal[renglones.size()];
+        if (renglones != null && !renglones.isEmpty()) {
+            int i = 0;
+            for (RenglonPedido r : renglones) {
+                cantidades[i] = r.getCantidad();
+                i++;
+            }
+        }
+        return cantidades;
+    }
+
+    private long[] getArrayIds() {
+        long[] ids = new long[renglones.size()];
+        if (renglones != null && !renglones.isEmpty()) {
+            int i = 0;
+            for (RenglonPedido r : renglones) {
+                ids[i] = r.getIdProductoItem();
+                i++;
+            }
+        }
+        return ids;
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -1028,12 +1093,31 @@ public class DetallePedidoGUI extends JInternalFrame {
                     this.calcularResultados();
                     try {
                         cliente = RestClient.getRestTemplate().getForObject("/clientes/" + this.cliente.getIdCliente(), Cliente.class);
-                        // Es null cuando, se genera un pedido desde el punto de venta entrando por el menu sistemas.
-                        // El Id es 0 cuando, se genera un pedido desde el punto de venta entrando por el botón nuevo de administrar pedidos.
-                        if (pedido == null || pedido.getIdPedido() == 0) {
-                            this.construirPedido();
+                        List<ProductoFaltante> faltantes;
+                        BigDecimal[] cantidades = this.getArrayCantidades();
+                        long[] idsProductos = this.getArrayIds();
+                        ProductosParaVerificarStock productosParaVerificarStock = ProductosParaVerificarStock.builder()
+                                .cantidad(cantidades)
+                                .idProducto(idsProductos)
+                                .build();
+                        HttpEntity<ProductosParaVerificarStock> requestEntity = new HttpEntity<>(productosParaVerificarStock);
+
+                        faltantes = RestClient.getRestTemplate()
+                                .exchange("/productos/disponibilidad-stock", HttpMethod.POST, requestEntity, new ParameterizedTypeReference<List<ProductoFaltante>>() {
+                                })
+                                .getBody();
+                        if (faltantes.isEmpty()) {
+                            // Es null cuando, se genera un pedido desde el punto de venta entrando por el menu sistemas.
+                            // El Id es 0 cuando, se genera un pedido desde el punto de venta entrando por el botón nuevo de administrar pedidos.
+                            if (pedido == null || pedido.getIdPedido() == 0) {
+                                this.construirPedido();
+                            }
+                            this.finalizarPedido();
+                        } else {
+                            ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(faltantes);
+                            productosFaltantesGUI.setLocationRelativeTo(this);
+                            productosFaltantesGUI.setVisible(true);
                         }
-                        this.finalizarPedido();
                     } catch (RestClientResponseException ex) {
                         JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     } catch (ResourceAccessException ex) {
@@ -1116,17 +1200,22 @@ public class DetallePedidoGUI extends JInternalFrame {
             this.setSize(sizeInternalFrame);
             this.setColumnas();
             this.setMaximum(true);
-            this.cargarComponentesIniciales();            
+            this.cargarComponentesIniciales();
+            if (cliente != null && renglones != null && !renglones.isEmpty()) {
+                this.cargarCliente(cliente);
+                this.cargarRenglonesAlTable();
+                this.calcularResultados();
+            }
             if (this.pedido != null && this.pedido.getIdPedido() != 0) {
                 btn_NuevoCliente.setEnabled(false);
                 btn_BuscarCliente.setEnabled(false);
                 this.cargarCliente(RestClient.getRestTemplate()
-                    .getForObject("/clientes/pedidos/" + pedido.getIdPedido(), Cliente.class));
+                        .getForObject("/clientes/pedidos/" + pedido.getIdPedido(), Cliente.class));
                 this.renglones.addAll(Arrays.asList(RestClient.getRestTemplate()
                         .getForObject("/pedidos/" + this.pedido.getIdPedido() + "/renglones", RenglonPedido[].class)));
                 this.cargarRenglonesAlTable();
                 this.calcularResultados();
-            }            
+            }
         } catch (PropertyVetoException ex) {
             String msjError = "Se produjo un error al intentar maximizar la ventana.";
             LOGGER.error(msjError + " - " + ex.getMessage());

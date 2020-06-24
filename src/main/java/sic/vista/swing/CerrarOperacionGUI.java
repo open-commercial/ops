@@ -646,6 +646,7 @@ public class CerrarOperacionGUI extends JDialog {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {
             if ((this.nuevoPedido != null || this.pedido != null) && this.nuevaFacturaVenta == null) {
+                lbl_Dividido.setVisible(false);
                 rbDireccionEnvio.setSelected(false);
                 rbDireccionFacturacion.setSelected(false);
                 rbRetiroEnSucursal.setSelected(false);
@@ -724,7 +725,10 @@ public class CerrarOperacionGUI extends JDialog {
                 }
             }
         }
-        if (dividir || (this.nuevoPedido == null && this.pedido != null)) {
+        if (this.nuevoPedido == null && this.pedido != null) {
+            cmb_Transporte.setEnabled(false);
+        }
+        if (dividir) {
             chk_FormaDePago1.setEnabled(false);
             chk_FormaDePago2.setEnabled(false);
             chk_FormaDePago3.setEnabled(false);

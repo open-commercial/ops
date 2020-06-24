@@ -18,13 +18,13 @@ public class ColoresEstadosRenderer extends DefaultTableCellRenderer {
         if (valor instanceof EstadoPedido) {
             EstadoPedido estado = (EstadoPedido) valor;
             if (estado == EstadoPedido.ABIERTO) {
-                cell.setBackground(Color.GREEN);
+                cell.setBackground(Color.WHITE);
             }
             if (estado == EstadoPedido.CANCELADO) {
-                cell.setBackground(Color.YELLOW);
+                cell.setBackground(Color.RED);
             }
             if (estado == EstadoPedido.CERRADO) {
-                cell.setBackground(Color.PINK);
+                cell.setBackground(Color.GREEN);
             }
         }
         if (valor instanceof EstadoCaja) {
