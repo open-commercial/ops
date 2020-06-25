@@ -151,7 +151,7 @@ public class CerrarOperacionGUI extends JDialog {
         txt_MontoPago2.addKeyListener(keyHandler);
         txt_MontoPago3.addKeyListener(keyHandler);
         cmb_Transporte.addKeyListener(keyHandler);
-        btn_Finalizar.addKeyListener(keyHandler);
+        btnFinalizar.addKeyListener(keyHandler);
     }
 
     private void lanzarReporteFactura(Factura factura, String nombreReporte) {
@@ -344,8 +344,8 @@ public class CerrarOperacionGUI extends JDialog {
                 dispose();
             }
 
-            if (evt.getKeyCode() == KeyEvent.VK_ENTER && evt.getSource() == btn_Finalizar) {
-                btn_FinalizarActionPerformed(null);
+            if (evt.getKeyCode() == KeyEvent.VK_ENTER && evt.getSource() == btnFinalizar) {
+                btnFinalizarActionPerformed(null);
             }
         }
     };
@@ -355,8 +355,8 @@ public class CerrarOperacionGUI extends JDialog {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
-        btn_Finalizar = new javax.swing.JButton();
-        panel = new javax.swing.JPanel();
+        btnFinalizar = new javax.swing.JButton();
+        panelMedio = new javax.swing.JPanel();
         chk_FormaDePago1 = new javax.swing.JCheckBox();
         cmb_FormaDePago1 = new javax.swing.JComboBox();
         txt_MontoPago1 = new javax.swing.JFormattedTextField();
@@ -366,15 +366,17 @@ public class CerrarOperacionGUI extends JDialog {
         chk_FormaDePago3 = new javax.swing.JCheckBox();
         cmb_FormaDePago3 = new javax.swing.JComboBox();
         txt_MontoPago3 = new javax.swing.JFormattedTextField();
-        pnlCerrarPedido = new javax.swing.JPanel();
+        lblSaldoCC = new javax.swing.JLabel();
+        txtSaldoCC = new javax.swing.JLabel();
+        panelInferior = new javax.swing.JPanel();
         rbRetiroEnSucursal = new javax.swing.JRadioButton();
         rbDireccionFacturacion = new javax.swing.JRadioButton();
         rbDireccionEnvio = new javax.swing.JRadioButton();
         cmbSucursales = new javax.swing.JComboBox<>();
         lblDetalleUbicacionFacturacion = new javax.swing.JLabel();
         lblDetalleUbicacionEnvio = new javax.swing.JLabel();
-        lbl_Dividido = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
+        lblDividido = new javax.swing.JLabel();
+        panelSuperior = new javax.swing.JPanel();
         lbl_Vendor = new javax.swing.JLabel();
         lbl_Vendedor = new javax.swing.JLabel();
         lbl_Transporte = new javax.swing.JLabel();
@@ -389,16 +391,16 @@ public class CerrarOperacionGUI extends JDialog {
             }
         });
 
-        btn_Finalizar.setForeground(java.awt.Color.blue);
-        btn_Finalizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
-        btn_Finalizar.setText("Finalizar");
-        btn_Finalizar.addActionListener(new java.awt.event.ActionListener() {
+        btnFinalizar.setForeground(java.awt.Color.blue);
+        btnFinalizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
+        btnFinalizar.setText("Finalizar");
+        btnFinalizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_FinalizarActionPerformed(evt);
+                btnFinalizarActionPerformed(evt);
             }
         });
 
-        panel.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        panelMedio.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         chk_FormaDePago1.setText("Forma de Pago #1:");
         chk_FormaDePago1.addItemListener(new java.awt.event.ItemListener() {
@@ -445,52 +447,66 @@ public class CerrarOperacionGUI extends JDialog {
             }
         });
 
-        javax.swing.GroupLayout panelLayout = new javax.swing.GroupLayout(panel);
-        panel.setLayout(panelLayout);
-        panelLayout.setHorizontalGroup(
-            panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelLayout.createSequentialGroup()
+        lblSaldoCC.setText("Saldo CC del Cliente $:");
+
+        txtSaldoCC.setForeground(new java.awt.Color(29, 156, 37));
+
+        javax.swing.GroupLayout panelMedioLayout = new javax.swing.GroupLayout(panelMedio);
+        panelMedio.setLayout(panelMedioLayout);
+        panelMedioLayout.setHorizontalGroup(
+            panelMedioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelMedioLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(chk_FormaDePago2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(chk_FormaDePago1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(chk_FormaDePago3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cmb_FormaDePago3, 0, 388, Short.MAX_VALUE)
-                    .addComponent(cmb_FormaDePago2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cmb_FormaDePago1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txt_MontoPago1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txt_MontoPago2, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txt_MontoPago3, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(panelMedioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelMedioLayout.createSequentialGroup()
+                        .addGroup(panelMedioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(chk_FormaDePago1)
+                            .addComponent(chk_FormaDePago2)
+                            .addComponent(chk_FormaDePago3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelMedioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmb_FormaDePago2, 0, 382, Short.MAX_VALUE)
+                            .addComponent(cmb_FormaDePago3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cmb_FormaDePago1, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelMedioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txt_MontoPago2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+                            .addComponent(txt_MontoPago1)
+                            .addComponent(txt_MontoPago3)))
+                    .addGroup(panelMedioLayout.createSequentialGroup()
+                        .addComponent(lblSaldoCC, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtSaldoCC, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        panelLayout.setVerticalGroup(
-            panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelLayout.createSequentialGroup()
+        panelMedioLayout.setVerticalGroup(
+            panelMedioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMedioLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(panelMedioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(txtSaldoCC, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSaldoCC))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panelMedioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(txt_MontoPago1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmb_FormaDePago1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chk_FormaDePago1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(panelMedioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_FormaDePago2)
                     .addComponent(cmb_FormaDePago2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txt_MontoPago2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(panelMedioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(txt_MontoPago3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmb_FormaDePago3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chk_FormaDePago3))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
-        panelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txt_MontoPago1, txt_MontoPago3});
+        panelMedioLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txt_MontoPago1, txt_MontoPago3});
 
-        pnlCerrarPedido.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        panelInferior.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         buttonGroup1.add(rbRetiroEnSucursal);
         rbRetiroEnSucursal.setText("Retiro en sucursal:");
@@ -524,49 +540,49 @@ public class CerrarOperacionGUI extends JDialog {
         lblDetalleUbicacionEnvio.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         lblDetalleUbicacionEnvio.setEnabled(false);
 
-        javax.swing.GroupLayout pnlCerrarPedidoLayout = new javax.swing.GroupLayout(pnlCerrarPedido);
-        pnlCerrarPedido.setLayout(pnlCerrarPedidoLayout);
-        pnlCerrarPedidoLayout.setHorizontalGroup(
-            pnlCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlCerrarPedidoLayout.createSequentialGroup()
+        javax.swing.GroupLayout panelInferiorLayout = new javax.swing.GroupLayout(panelInferior);
+        panelInferior.setLayout(panelInferiorLayout);
+        panelInferiorLayout.setHorizontalGroup(
+            panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelInferiorLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(rbDireccionFacturacion)
                     .addComponent(rbDireccionEnvio)
                     .addComponent(rbRetiroEnSucursal))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cmbSucursales, 0, 439, Short.MAX_VALUE)
                     .addComponent(lblDetalleUbicacionFacturacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblDetalleUbicacionEnvio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        pnlCerrarPedidoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {rbDireccionEnvio, rbDireccionFacturacion, rbRetiroEnSucursal});
+        panelInferiorLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {rbDireccionEnvio, rbDireccionFacturacion, rbRetiroEnSucursal});
 
-        pnlCerrarPedidoLayout.setVerticalGroup(
-            pnlCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlCerrarPedidoLayout.createSequentialGroup()
+        panelInferiorLayout.setVerticalGroup(
+            panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelInferiorLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(rbRetiroEnSucursal)
                     .addComponent(cmbSucursales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(rbDireccionFacturacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblDetalleUbicacionFacturacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlCerrarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(rbDireccionEnvio)
                     .addComponent(lblDetalleUbicacionEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        lbl_Dividido.setForeground(new java.awt.Color(29, 156, 37));
-        lbl_Dividido.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lbl_Dividido.setText("ATENCION: El comprobante será dividido!");
+        lblDividido.setForeground(new java.awt.Color(29, 156, 37));
+        lblDividido.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblDividido.setText("ATENCION: El comprobante será dividido!");
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        panelSuperior.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         lbl_Vendor.setText("Vendedor:");
 
@@ -574,36 +590,36 @@ public class CerrarOperacionGUI extends JDialog {
 
         lbl_Transporte.setText("Transporte:");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelSuperiorLayout = new javax.swing.GroupLayout(panelSuperior);
+        panelSuperior.setLayout(panelSuperiorLayout);
+        panelSuperiorLayout.setHorizontalGroup(
+            panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelSuperiorLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lbl_Transporte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_Vendor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lbl_Vendedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cmb_Transporte, 0, 602, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        panelSuperiorLayout.setVerticalGroup(
+            panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelSuperiorLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_Vendedor)
                     .addComponent(lbl_Vendor))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_Transporte)
                     .addComponent(cmb_Transporte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lbl_Vendedor, lbl_Vendor});
+        panelSuperiorLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {lbl_Vendedor, lbl_Vendor});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -613,14 +629,14 @@ public class CerrarOperacionGUI extends JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(lbl_Dividido)
+                        .addComponent(lblDividido)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btn_Finalizar))
+                        .addComponent(btnFinalizar))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(panel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(pnlCerrarPedido, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(panelSuperior, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panelMedio, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panelInferior, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -628,15 +644,15 @@ public class CerrarOperacionGUI extends JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlCerrarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelMedio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelInferior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_Finalizar)
-                    .addComponent(lbl_Dividido, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnFinalizar)
+                    .addComponent(lblDividido, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -646,7 +662,7 @@ public class CerrarOperacionGUI extends JDialog {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {
             if ((this.nuevoPedido != null || this.pedido != null) && this.nuevaFacturaVenta == null) {
-                lbl_Dividido.setVisible(false);
+                lblDividido.setVisible(false);
                 rbDireccionEnvio.setSelected(false);
                 rbDireccionFacturacion.setSelected(false);
                 rbRetiroEnSucursal.setSelected(false);
@@ -677,7 +693,7 @@ public class CerrarOperacionGUI extends JDialog {
                 }
             } else {
                 cmb_Transporte.setEnabled(false);
-                pnlCerrarPedido.setEnabled(false);
+                panelInferior.setEnabled(false);
                 cmbSucursales.setEnabled(false);
                 rbRetiroEnSucursal.setEnabled(false);
                 rbDireccionFacturacion.setEnabled(false);
@@ -740,11 +756,11 @@ public class CerrarOperacionGUI extends JDialog {
             txt_MontoPago3.setEnabled(false);
             cmb_Transporte.setEnabled(false);
         } else {
-            lbl_Dividido.setText("");
+            lblDividido.setText("");
         }
     }//GEN-LAST:event_formWindowOpened
 
-    private void btn_FinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_FinalizarActionPerformed
+    private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
         TipoDeEnvio tipoDeEnvio = null;
         if (this.nuevoPedido != null || this.pedido != null) {
             if (rbRetiroEnSucursal.isSelected()) {
@@ -811,7 +827,7 @@ public class CerrarOperacionGUI extends JDialog {
             }
         }
 
-    }//GEN-LAST:event_btn_FinalizarActionPerformed
+    }//GEN-LAST:event_btnFinalizarActionPerformed
 
     private void cerrarPedido(TipoDeEnvio tipoDeEnvio) {
         if (nuevoPedido != null) {
@@ -917,7 +933,7 @@ public class CerrarOperacionGUI extends JDialog {
     }//GEN-LAST:event_rbDireccionEnvioItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_Finalizar;
+    private javax.swing.JButton btnFinalizar;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox chk_FormaDePago1;
     private javax.swing.JCheckBox chk_FormaDePago2;
@@ -927,18 +943,20 @@ public class CerrarOperacionGUI extends JDialog {
     private javax.swing.JComboBox cmb_FormaDePago2;
     private javax.swing.JComboBox cmb_FormaDePago3;
     private javax.swing.JComboBox cmb_Transporte;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblDetalleUbicacionEnvio;
     private javax.swing.JLabel lblDetalleUbicacionFacturacion;
-    private javax.swing.JLabel lbl_Dividido;
+    private javax.swing.JLabel lblDividido;
+    private javax.swing.JLabel lblSaldoCC;
     private javax.swing.JLabel lbl_Transporte;
     private javax.swing.JLabel lbl_Vendedor;
     private javax.swing.JLabel lbl_Vendor;
-    private javax.swing.JPanel panel;
-    private javax.swing.JPanel pnlCerrarPedido;
+    private javax.swing.JPanel panelInferior;
+    private javax.swing.JPanel panelMedio;
+    private javax.swing.JPanel panelSuperior;
     private javax.swing.JRadioButton rbDireccionEnvio;
     private javax.swing.JRadioButton rbDireccionFacturacion;
     private javax.swing.JRadioButton rbRetiroEnSucursal;
+    private javax.swing.JLabel txtSaldoCC;
     private javax.swing.JFormattedTextField txt_MontoPago1;
     private javax.swing.JFormattedTextField txt_MontoPago2;
     private javax.swing.JFormattedTextField txt_MontoPago3;

@@ -36,15 +36,15 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="lbl_Dividido" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblDividido" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="btn_Finalizar" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnFinalizar" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
-                          <Component id="panel" alignment="0" max="32767" attributes="0"/>
-                          <Component id="pnlCerrarPedido" alignment="0" max="32767" attributes="0"/>
+                          <Component id="panelSuperior" alignment="0" max="32767" attributes="0"/>
+                          <Component id="panelMedio" alignment="0" max="32767" attributes="0"/>
+                          <Component id="panelInferior" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
@@ -57,15 +57,15 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
-              <Component id="panel" min="-2" max="-2" attributes="0"/>
+              <Component id="panelSuperior" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="pnlCerrarPedido" min="-2" max="-2" attributes="0"/>
+              <Component id="panelMedio" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="panelInferior" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btn_Finalizar" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="lbl_Dividido" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
+                  <Component id="btnFinalizar" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblDividido" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -73,7 +73,7 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JButton" name="btn_Finalizar">
+    <Component class="javax.swing.JButton" name="btnFinalizar">
       <Properties>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
@@ -84,10 +84,10 @@
         <Property name="text" type="java.lang.String" value="Finalizar"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_FinalizarActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFinalizarActionPerformed"/>
       </Events>
     </Component>
-    <Container class="javax.swing.JPanel" name="panel">
+    <Container class="javax.swing.JPanel" name="panelMedio">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -99,33 +99,47 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                      <Component id="chk_FormaDePago2" alignment="0" max="32767" attributes="0"/>
-                      <Component id="chk_FormaDePago1" alignment="0" max="32767" attributes="0"/>
-                      <Component id="chk_FormaDePago3" max="32767" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="cmb_FormaDePago3" pref="388" max="32767" attributes="0"/>
-                      <Component id="cmb_FormaDePago2" max="32767" attributes="0"/>
-                      <Component id="cmb_FormaDePago1" alignment="0" max="32767" attributes="0"/>
-                  </Group>
+              <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="txt_MontoPago1" alignment="1" max="32767" attributes="1"/>
-                      <Component id="txt_MontoPago2" alignment="1" max="32767" attributes="1"/>
-                      <Component id="txt_MontoPago3" alignment="1" max="32767" attributes="1"/>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="chk_FormaDePago1" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="chk_FormaDePago2" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="chk_FormaDePago3" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="cmb_FormaDePago2" max="32767" attributes="0"/>
+                              <Component id="cmb_FormaDePago3" max="32767" attributes="0"/>
+                              <Component id="cmb_FormaDePago1" alignment="1" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="txt_MontoPago2" alignment="0" max="32767" attributes="1"/>
+                              <Component id="txt_MontoPago1" max="32767" attributes="1"/>
+                              <Component id="txt_MontoPago3" max="32767" attributes="1"/>
+                          </Group>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <Component id="lblSaldoCC" min="-2" pref="159" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="txtSaldoCC" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="txtSaldoCC" alignment="2" min="-2" pref="16" max="-2" attributes="0"/>
+                      <Component id="lblSaldoCC" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="txt_MontoPago1" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="cmb_FormaDePago1" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -143,7 +157,7 @@
                       <Component id="cmb_FormaDePago3" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="chk_FormaDePago3" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -233,9 +247,21 @@
             <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txt_MontoPago3FocusGained"/>
           </Events>
         </Component>
+        <Component class="javax.swing.JLabel" name="lblSaldoCC">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Saldo CC del Cliente $:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="txtSaldoCC">
+          <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="25" green="9c" red="1d" type="rgb"/>
+            </Property>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JPanel" name="pnlCerrarPedido">
+    <Container class="javax.swing.JPanel" name="panelInferior">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
@@ -355,7 +381,7 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JLabel" name="lbl_Dividido">
+    <Component class="javax.swing.JLabel" name="lblDividido">
       <Properties>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="25" green="9c" red="1d" type="rgb"/>
@@ -364,7 +390,7 @@
         <Property name="text" type="java.lang.String" value="ATENCION: El comprobante ser&#xe1; dividido!"/>
       </Properties>
     </Component>
-    <Container class="javax.swing.JPanel" name="jPanel1">
+    <Container class="javax.swing.JPanel" name="panelSuperior">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
