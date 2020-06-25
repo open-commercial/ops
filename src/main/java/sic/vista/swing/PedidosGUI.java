@@ -186,12 +186,12 @@ public class PedidosGUI extends JInternalFrame {
             Object[] fila = new Object[8];
             fila[0] = p.getEstado();
             fila[1] = p.getFecha();
-            fila[2] = p.getNroPedido();
-            fila[3] = p.getCliente().getNombreFiscal();
-            fila[4] = p.getNombreUsuario();
-            fila[5] = p.getNombreViajante();
-            fila[6] = p.getTotalEstimado();
-            fila[7] = p.getTotalActual();
+            fila[2] = p.getFechaVencimiento();
+            fila[3] = p.getNroPedido();
+            fila[4] = p.getCliente().getNombreFiscal();
+            fila[5] = p.getNombreUsuario();
+            fila[6] = p.getNombreViajante();
+            fila[7] = p.getTotal();
             return fila;
         }).forEach(f -> {
             modeloTablaPedidos.addRow(f);
@@ -220,23 +220,23 @@ public class PedidosGUI extends JInternalFrame {
         String[] encabezados = new String[8];
         encabezados[0] = "Estado";
         encabezados[1] = "Fecha Pedido";
-        encabezados[2] = "Nº Pedido";
-        encabezados[3] = "Cliente";
-        encabezados[4] = "Usuario";
-        encabezados[5] = "Viajante";
-        encabezados[6] = "Total Estimado";
-        encabezados[7] = "Total Actual";
+        encabezados[2] = "Fecha Vencimiento";
+        encabezados[3] = "Nº Pedido";
+        encabezados[4] = "Cliente";
+        encabezados[5] = "Usuario";
+        encabezados[6] = "Viajante";
+        encabezados[7] = "Total";
         modeloTablaPedidos.setColumnIdentifiers(encabezados);
         tbl_Pedidos.setModel(modeloTablaPedidos);
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaPedidos.getColumnCount()];
         tipos[0] = EstadoPedido.class;
         tipos[1] = LocalDateTime.class;
-        tipos[2] = Long.class;
-        tipos[3] = String.class;
+        tipos[2] = LocalDateTime.class;
+        tipos[3] = Long.class;
         tipos[4] = String.class;
         tipos[5] = String.class;
-        tipos[6] = BigDecimal.class;
+        tipos[6] = String.class;
         tipos[7] = BigDecimal.class;
         modeloTablaPedidos.setClaseColumnas(tipos);
         tbl_Pedidos.getTableHeader().setReorderingAllowed(false);
@@ -246,22 +246,24 @@ public class PedidosGUI extends JInternalFrame {
         tbl_Pedidos.getColumnModel().getColumn(0).setMaxWidth(80);
         tbl_Pedidos.getColumnModel().getColumn(1).setPreferredWidth(140);
         tbl_Pedidos.getColumnModel().getColumn(1).setMaxWidth(140);
-        tbl_Pedidos.getColumnModel().getColumn(2).setPreferredWidth(100);
-        tbl_Pedidos.getColumnModel().getColumn(2).setMaxWidth(100);
-        tbl_Pedidos.getColumnModel().getColumn(3).setPreferredWidth(220);
-        tbl_Pedidos.getColumnModel().getColumn(3).setMaxWidth(220);
-        tbl_Pedidos.getColumnModel().getColumn(3).setMinWidth(220);
+        tbl_Pedidos.getColumnModel().getColumn(2).setPreferredWidth(140);
+        tbl_Pedidos.getColumnModel().getColumn(2).setMaxWidth(140);
+        tbl_Pedidos.getColumnModel().getColumn(3).setPreferredWidth(100);
+        tbl_Pedidos.getColumnModel().getColumn(3).setMaxWidth(100);
         tbl_Pedidos.getColumnModel().getColumn(4).setPreferredWidth(220);
         tbl_Pedidos.getColumnModel().getColumn(4).setMaxWidth(220);
         tbl_Pedidos.getColumnModel().getColumn(4).setMinWidth(220);
         tbl_Pedidos.getColumnModel().getColumn(5).setPreferredWidth(220);
         tbl_Pedidos.getColumnModel().getColumn(5).setMaxWidth(220);
         tbl_Pedidos.getColumnModel().getColumn(5).setMinWidth(220);
-        tbl_Pedidos.getColumnModel().getColumn(6).setPreferredWidth(25);
+        tbl_Pedidos.getColumnModel().getColumn(6).setPreferredWidth(220);
+        tbl_Pedidos.getColumnModel().getColumn(6).setMaxWidth(220);
+        tbl_Pedidos.getColumnModel().getColumn(6).setMinWidth(220);
         tbl_Pedidos.getColumnModel().getColumn(7).setPreferredWidth(25);
         //renderers
         tbl_Pedidos.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         tbl_Pedidos.getColumnModel().getColumn(1).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
+        tbl_Pedidos.getColumnModel().getColumn(2).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
     }
 
     private boolean existeClienteDisponible() {

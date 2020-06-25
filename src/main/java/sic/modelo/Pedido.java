@@ -33,7 +33,6 @@ public class Pedido implements Serializable {
     private BigDecimal recargoNeto;
     private BigDecimal descuentoPorcentaje;
     private BigDecimal descuentoNeto;
-    private BigDecimal totalEstimado;
-    private BigDecimal totalActual;
+    private BigDecimal total;
     private EstadoPedido estado;
 }

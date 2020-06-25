@@ -119,9 +119,10 @@ public class DetallePedidoGUI extends JInternalFrame {
         }
     }
 
-    private void cargarCliente(Cliente cliente) {
-        this.cliente = cliente;
+    private void cargarCliente(CuentaCorrienteCliente cuentaCorrienteClientePredeterminado) {
+        this.cliente = cuentaCorrienteClientePredeterminado.getCliente();
         txtNombreCliente.setText(cliente.getNombreFiscal() + " (" + cliente.getNroCliente() + ")");
+        txtSaldoCC.setText(cuentaCorrienteClientePredeterminado.getSaldo().setScale(2, RoundingMode.HALF_UP) + "");
         txtMontoCompraMinima.setText(cliente.getMontoCompraMinima().setScale(2, RoundingMode.HALF_UP) + "");
         txtUbicacionCliente.setText(cliente.getUbicacionFacturacion() != null ? cliente.getUbicacionFacturacion().toString() : "");
         txt_CondicionIVACliente.setText(cliente.getCategoriaIVA().toString());
@@ -370,7 +371,7 @@ public class DetallePedidoGUI extends JInternalFrame {
         pedido.setRecargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()));
         pedido.setDescuentoNeto(new BigDecimal(txt_Descuento_neto.getValue().toString()));
         pedido.setDescuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()));
-        pedido.setTotalEstimado(new BigDecimal(txt_Total.getValue().toString()));
+        pedido.setTotal(new BigDecimal(txt_Total.getValue().toString()));
         pedido.setObservaciones(txt_Observaciones.getText());
         CerrarOperacionGUI cerrarOperacionGUI = new CerrarOperacionGUI(pedido, cliente);
         cerrarOperacionGUI.setModal(true);
@@ -433,7 +434,7 @@ public class DetallePedidoGUI extends JInternalFrame {
             if (this.existeClientePredeterminado() && this.cliente == null) {
                 CuentaCorrienteCliente cuentaCorrienteClientePredeterminado
                         = RestClient.getRestTemplate().getForObject("/cuentas-corriente/clientes/predeterminado", CuentaCorrienteCliente.class);
-                this.cargarCliente(cuentaCorrienteClientePredeterminado.getCliente());
+                this.cargarCliente(cuentaCorrienteClientePredeterminado);
                 this.btnModificarCliente.setEnabled(true);
             }
         }
@@ -1043,7 +1044,18 @@ public class DetallePedidoGUI extends JInternalFrame {
         buscarClientesGUI.setLocationRelativeTo(this);
         buscarClientesGUI.setVisible(true);
         if (buscarClientesGUI.getClienteSeleccionado() != null) {
-            this.cargarCliente(buscarClientesGUI.getClienteSeleccionado());
+            try {
+                CuentaCorrienteCliente cuentaCorrienteCliente
+                        = RestClient.getRestTemplate().getForObject("/cuentas-corriente/clientes/" + buscarClientesGUI.getClienteSeleccionado().getIdCliente(), CuentaCorrienteCliente.class);
+                this.cargarCliente(cuentaCorrienteCliente);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_btn_BuscarClienteActionPerformed
 
@@ -1053,8 +1065,19 @@ public class DetallePedidoGUI extends JInternalFrame {
         gui_DetalleCliente.setLocationRelativeTo(this);
         gui_DetalleCliente.setVisible(true);
         if (gui_DetalleCliente.getClienteDadoDeAlta() != null) {
-            this.cargarCliente(gui_DetalleCliente.getClienteDadoDeAlta());
-            btnModificarCliente.setEnabled(true);
+            try {
+                CuentaCorrienteCliente cuentaCorrienteCliente
+                        = RestClient.getRestTemplate().getForObject("/cuentas-corriente/clientes/" + gui_DetalleCliente.getClienteDadoDeAlta().getIdCliente(), CuentaCorrienteCliente.class);
+                this.cargarCliente(cuentaCorrienteCliente);
+                btnModificarCliente.setEnabled(true);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_btn_NuevoClienteActionPerformed
 
@@ -1210,15 +1233,14 @@ public class DetallePedidoGUI extends JInternalFrame {
             this.setMaximum(true);
             this.cargarComponentesIniciales();
             if (cliente != null && renglones != null && !renglones.isEmpty()) {
-                this.cargarCliente(cliente);
+                this.cargarCliente(RestClient.getRestTemplate().getForObject("/cuentas-corriente/clientes/" + cliente.getIdCliente(), CuentaCorrienteCliente.class));
                 this.cargarRenglonesAlTable();
                 this.calcularResultados();
             }
             if (this.pedido != null && this.pedido.getIdPedido() != 0) {
                 btn_NuevoCliente.setEnabled(false);
                 btn_BuscarCliente.setEnabled(false);
-                this.cargarCliente(RestClient.getRestTemplate()
-                        .getForObject("/clientes/pedidos/" + pedido.getIdPedido(), Cliente.class));
+                this.cargarCliente(RestClient.getRestTemplate().getForObject("/cuentas-corriente/clientes/" + pedido.getCliente().getIdCliente(), CuentaCorrienteCliente.class));
                 this.renglones.addAll(Arrays.asList(RestClient.getRestTemplate()
                         .getForObject("/pedidos/" + this.pedido.getIdPedido() + "/renglones", RenglonPedido[].class)));
                 this.cargarRenglonesAlTable();
@@ -1248,7 +1270,7 @@ public class DetallePedidoGUI extends JInternalFrame {
             gui_DetalleCliente.setLocationRelativeTo(this);
             gui_DetalleCliente.setVisible(true);
             try {
-                this.cargarCliente(RestClient.getRestTemplate().getForObject("/clientes/" + this.cliente.getIdCliente(), Cliente.class));
+                this.cargarCliente(RestClient.getRestTemplate().getForObject("/cuentas-corriente/clientes/" + this.cliente.getIdCliente(), CuentaCorrienteCliente.class));
             } catch (RestClientResponseException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 this.dispose();

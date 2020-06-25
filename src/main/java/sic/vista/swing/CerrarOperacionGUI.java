@@ -22,6 +22,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
+import sic.modelo.CuentaCorrienteCliente;
 import sic.modelo.Factura;
 import sic.modelo.FacturaVenta;
 import sic.modelo.FormaDePago;
@@ -62,7 +63,7 @@ public class CerrarOperacionGUI extends JDialog {
         this.totalFactura = totalFactura;
         this.pedido = pedido;
         this.modeloTabla = modeloTabla;
-        this.cliente = null;
+        this.cliente = pedido.getCliente();
         this.initComponents();
         this.setIcon();
         this.setListeners();
@@ -330,6 +331,18 @@ public class CerrarOperacionGUI extends JDialog {
         if (chk_FormaDePago3.isSelected() && chk_FormaDePago3.isEnabled()) {
             montos.add(new BigDecimal(txt_MontoPago3.getValue().toString()));
             idsFormasDePago.add(((FormaDePago) cmb_FormaDePago3.getSelectedItem()).getIdFormaDePago());
+        }
+    }
+    
+    private void agregarPagosAlPedido() {
+        this.armarMontosConFormasDePago();
+        if (idsFormasDePago.isEmpty() == false) {
+            Long[] formasDePago = new Long[idsFormasDePago.size()];
+            formasDePago = idsFormasDePago.toArray(formasDePago);
+            nuevoPedido.setIdsFormaDePago(formasDePago);
+            BigDecimal[] montosPagos = new BigDecimal[montos.size()];
+            montosPagos = montos.toArray(montosPagos);
+            nuevoPedido.setMontos(montosPagos);
         }
     }
 
@@ -661,6 +674,9 @@ public class CerrarOperacionGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {
+            txtSaldoCC.setText(RestClient.getRestTemplate()
+                    .getForObject("/cuentas-corriente/clientes/"
+                            + this.cliente.getIdCliente(), CuentaCorrienteCliente.class).getSaldo().setScale(2, RoundingMode.HALF_UP) + "");
             if ((this.nuevoPedido != null || this.pedido != null) && this.nuevaFacturaVenta == null) {
                 lblDividido.setVisible(false);
                 rbDireccionEnvio.setSelected(false);
@@ -714,7 +730,7 @@ public class CerrarOperacionGUI extends JDialog {
         lbl_Vendedor.setText(UsuarioActivo.getInstance().getUsuario().toString());
         BigDecimal total;
         if (pedido != null) {
-            total = this.pedido.getTotalActual();
+            total = this.pedido.getTotal();
         } else {
             total = totalFactura != null ? totalFactura : totalPedido;
         }
@@ -792,7 +808,7 @@ public class CerrarOperacionGUI extends JDialog {
             }
             BigDecimal totalAPagar;
             if (pedido != null) {
-                totalAPagar = this.pedido.getTotalActual();
+                totalAPagar = this.pedido.getTotal();
             } else {
                 totalAPagar = totalFactura != null ? totalFactura.setScale(2, RoundingMode.FLOOR) : totalPedido.setScale(2, RoundingMode.FLOOR);
             }
@@ -831,19 +847,11 @@ public class CerrarOperacionGUI extends JDialog {
 
     private void cerrarPedido(TipoDeEnvio tipoDeEnvio) {
         if (nuevoPedido != null) {
-            this.armarMontosConFormasDePago();
             nuevoPedido.setIdSucursal(rbRetiroEnSucursal.isSelected()
                     ? sucursales.get(cmbSucursales.getSelectedIndex()).getIdSucursal() : SucursalActiva.getInstance().getSucursal().getIdSucursal());
             nuevoPedido.setIdCliente(cliente.getIdCliente());
             nuevoPedido.setTipoDeEnvio(tipoDeEnvio);
-            if (idsFormasDePago.isEmpty() == false) {
-                Long[] formasDePago = new Long[idsFormasDePago.size()];
-                formasDePago = idsFormasDePago.toArray(formasDePago);
-                nuevoPedido.setIdsFormaDePago(formasDePago);
-                BigDecimal[] montosPagos = new BigDecimal[montos.size()];
-                montosPagos = montos.toArray(montosPagos);
-                nuevoPedido.setMontos(montosPagos);
-            }
+            this.agregarPagosAlPedido();
             Pedido p = RestClient.getRestTemplate().postForObject("/pedidos", nuevoPedido, Pedido.class);
             this.exito = true;
             int reply = JOptionPane.showConfirmDialog(this,
@@ -865,6 +873,7 @@ public class CerrarOperacionGUI extends JDialog {
                     new NuevoRenglonPedido(r.getIdProductoItem(), r.getCantidad())));
             nuevoPedido.setRenglones(nuevosRenglonesPedido);
             nuevoPedido.setTipoDeEnvio(tipoDeEnvio);
+            this.agregarPagosAlPedido();
             RestClient.getRestTemplate().put("/pedidos", nuevoPedido);
             this.exito = true;
             JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_pedido_actualizado"),
