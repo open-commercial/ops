@@ -618,31 +618,30 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="lblNombreCliente" alignment="0" max="32767" attributes="1"/>
                               <Component id="lblUbicacionCliente" alignment="0" max="32767" attributes="1"/>
                               <Component id="lbl_CondicionIVACliente" alignment="0" min="-2" max="-2" attributes="1"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="txt_CondicionIVACliente" linkSize="24" min="-2" pref="581" max="-2" attributes="2"/>
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                                  <Component id="lbl_IDFiscalCliente" min="-2" max="-2" attributes="1"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="txtIdFiscalCliente" max="32767" attributes="2"/>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="txtNombreCliente" linkSize="24" min="-2" pref="635" max="-2" attributes="2"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lblMontoCompraMinima" min="-2" max="-2" attributes="1"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="txtMontoCompraMinima" max="32767" attributes="0"/>
-                              </Group>
-                              <Component id="txtUbicacionCliente" alignment="1" max="32767" attributes="2"/>
+                              <Component id="txt_CondicionIVACliente" max="32767" attributes="2"/>
+                              <Component id="txtUbicacionCliente" alignment="0" max="32767" attributes="2"/>
+                              <Component id="txtNombreCliente" alignment="0" max="32767" attributes="2"/>
                           </Group>
-                          <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="lblMontoCompraMinima" linkSize="25" alignment="2" min="-2" max="-2" attributes="1"/>
+                              <Component id="lblSaldoCC" linkSize="25" alignment="2" min="-2" max="-2" attributes="1"/>
+                              <Component id="lbl_IDFiscalCliente" linkSize="25" alignment="2" min="-2" max="-2" attributes="1"/>
+                          </Group>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="txtSaldoCC" alignment="2" min="-2" pref="147" max="-2" attributes="0"/>
+                              <Component id="txtIdFiscalCliente" alignment="2" min="-2" pref="147" max="-2" attributes="2"/>
+                              <Component id="txtMontoCompraMinima" alignment="2" min="-2" pref="147" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -650,21 +649,23 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="txtMontoCompraMinima" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="lblMontoCompraMinima" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="txtNombreCliente" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="lblNombreCliente" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtMontoCompraMinima" alignment="2" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtUbicacionCliente" linkSize="18" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblUbicacionCliente" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="lblUbicacionCliente" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtUbicacionCliente" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblSaldoCC" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtSaldoCC" alignment="2" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="lbl_IDFiscalCliente" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="txtIdFiscalCliente" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="txt_CondicionIVACliente" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="lbl_IDFiscalCliente" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="lbl_CondicionIVACliente" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -727,6 +728,17 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtMontoCompraMinima">
+                  <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblSaldoCC">
+                  <Properties>
+                    <Property name="horizontalAlignment" type="int" value="0"/>
+                    <Property name="text" type="java.lang.String" value="Saldo CC $:"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="txtSaldoCC">
                   <Properties>
                     <Property name="editable" type="boolean" value="false"/>
                   </Properties>

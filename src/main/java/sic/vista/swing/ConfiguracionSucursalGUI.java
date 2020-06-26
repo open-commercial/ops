@@ -49,6 +49,9 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
         if (configuracionModificar.isPuntoDeRetiro()) {
             chkRetiro.setSelected(true);
         }
+        chkPredeterminada.setSelected(configuracionModificar.isPredeterminada());
+        txtTiempoCortoEnMinutos.setValue(configuracionModificar.getVencimientoCorto());
+        txtTiempoLargoEnMinutos.setValue(configuracionModificar.getVencimientoLargo());
     }
 
     private ConfiguracionSucursal getConfiguracionSucursal() {
@@ -75,6 +78,17 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
             configuracionModificar.setPuntoDeRetiro(true);
         } else {
             configuracionModificar.setPuntoDeRetiro(false);
+        }
+        if (chkPredeterminada.isSelected()) {
+            configuracionModificar.setPredeterminada(true);
+        } else {
+            configuracionModificar.setPredeterminada(false);
+        }
+        if (txtTiempoCortoEnMinutos.getValue() != null) {
+            configuracionModificar.setVencimientoCorto(Long.parseLong(txtTiempoCortoEnMinutos.getText().trim()));
+        }
+        if (txtTiempoLargoEnMinutos.getValue() != null) {
+            configuracionModificar.setVencimientoLargo(Long.parseLong(txtTiempoLargoEnMinutos.getText().trim()));
         }
         return configuracionModificar;
     }

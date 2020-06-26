@@ -119,10 +119,10 @@ public class DetallePedidoGUI extends JInternalFrame {
         }
     }
 
-    private void cargarCliente(CuentaCorrienteCliente cuentaCorrienteClientePredeterminado) {
-        this.cliente = cuentaCorrienteClientePredeterminado.getCliente();
+    private void cargarCliente(CuentaCorrienteCliente cuentaCorrienteCliente) {
+        this.cliente = cuentaCorrienteCliente.getCliente();
         txtNombreCliente.setText(cliente.getNombreFiscal() + " (" + cliente.getNroCliente() + ")");
-        txtSaldoCC.setText(cuentaCorrienteClientePredeterminado.getSaldo().setScale(2, RoundingMode.HALF_UP) + "");
+        txtSaldoCC.setText(cuentaCorrienteCliente.getSaldo().setScale(2, RoundingMode.HALF_UP) + "");
         txtMontoCompraMinima.setText(cliente.getMontoCompraMinima().setScale(2, RoundingMode.HALF_UP) + "");
         txtUbicacionCliente.setText(cliente.getUbicacionFacturacion() != null ? cliente.getUbicacionFacturacion().toString() : "");
         txt_CondicionIVACliente.setText(cliente.getCategoriaIVA().toString());
