@@ -777,72 +777,80 @@ public class CerrarOperacionGUI extends JDialog {
     }//GEN-LAST:event_formWindowOpened
 
     private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
-        TipoDeEnvio tipoDeEnvio = null;
-        if (this.nuevoPedido != null || this.pedido != null) {
-            if (rbRetiroEnSucursal.isSelected()) {
-                tipoDeEnvio = TipoDeEnvio.RETIRO_EN_SUCURSAL;
-            }
-            if (rbDireccionFacturacion.isSelected()) {
-                tipoDeEnvio = TipoDeEnvio.USAR_UBICACION_FACTURACION;
-            }
-            if (rbDireccionEnvio.isSelected()) {
-                tipoDeEnvio = TipoDeEnvio.USAR_UBICACION_ENVIO;
-            }
-        }
-        if (dividir || pedido != null) {
-            if (nuevaFacturaVenta != null) {
-                this.finalizarVenta();
-            } else {
-                this.cerrarPedido(tipoDeEnvio);
-            }
-        } else {
-            BigDecimal totalPagos = BigDecimal.ZERO;
-            if (chk_FormaDePago1.isSelected() && chk_FormaDePago1.isEnabled()) {
-                totalPagos = totalPagos.add(new BigDecimal(txt_MontoPago1.getValue().toString()));
-            }
-            if (chk_FormaDePago2.isSelected() && chk_FormaDePago2.isEnabled()) {
-                totalPagos = totalPagos.add(new BigDecimal(txt_MontoPago2.getValue().toString()));
-            }
-            if (chk_FormaDePago3.isSelected() && chk_FormaDePago3.isEnabled()) {
-                totalPagos = totalPagos.add(new BigDecimal(txt_MontoPago3.getValue().toString()));
-            }
-            BigDecimal totalAPagar;
-            if (pedido != null) {
-                totalAPagar = this.pedido.getTotal();
-            } else {
-                totalAPagar = totalFactura != null ? totalFactura.setScale(2, RoundingMode.FLOOR) : totalPedido.setScale(2, RoundingMode.FLOOR);
-            }
-            if (totalPagos.compareTo(totalAPagar) < 0) {
-                int reply = JOptionPane.showConfirmDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_montos_insuficientes"),
-                        "Aviso", JOptionPane.YES_NO_OPTION);
-                if (reply == JOptionPane.YES_OPTION) {
-                    if (this.nuevaFacturaVenta != null) {
-                        this.finalizarVenta();
-                    } else if (tipoDeEnvio != null) {
-                        this.cerrarPedido(tipoDeEnvio);
-                    }
+        try {
+            TipoDeEnvio tipoDeEnvio = null;
+            if (this.nuevoPedido != null || this.pedido != null) {
+                if (rbRetiroEnSucursal.isSelected()) {
+                    tipoDeEnvio = TipoDeEnvio.RETIRO_EN_SUCURSAL;
                 }
-            } else if (totalPagos.compareTo(totalAPagar) > 0) {
-                int reply = JOptionPane.showConfirmDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_montos_superiores_al_total_factura"),
-                        "Aviso", JOptionPane.YES_NO_OPTION);
-                if (reply == JOptionPane.YES_OPTION) {
-                    if (this.nuevaFacturaVenta != null) {
-                        this.finalizarVenta();
-                    } else if (tipoDeEnvio != null) {
-                        this.cerrarPedido(tipoDeEnvio);
-                    }
+                if (rbDireccionFacturacion.isSelected()) {
+                    tipoDeEnvio = TipoDeEnvio.USAR_UBICACION_FACTURACION;
                 }
-            } else {
-                if (this.nuevaFacturaVenta != null) {
+                if (rbDireccionEnvio.isSelected()) {
+                    tipoDeEnvio = TipoDeEnvio.USAR_UBICACION_ENVIO;
+                }
+            }
+            if (dividir || pedido != null) {
+                if (nuevaFacturaVenta != null) {
                     this.finalizarVenta();
-                } else if (tipoDeEnvio != null) {
+                } else {
                     this.cerrarPedido(tipoDeEnvio);
                 }
+            } else {
+                BigDecimal totalPagos = BigDecimal.ZERO;
+                if (chk_FormaDePago1.isSelected() && chk_FormaDePago1.isEnabled()) {
+                    totalPagos = totalPagos.add(new BigDecimal(txt_MontoPago1.getValue().toString()));
+                }
+                if (chk_FormaDePago2.isSelected() && chk_FormaDePago2.isEnabled()) {
+                    totalPagos = totalPagos.add(new BigDecimal(txt_MontoPago2.getValue().toString()));
+                }
+                if (chk_FormaDePago3.isSelected() && chk_FormaDePago3.isEnabled()) {
+                    totalPagos = totalPagos.add(new BigDecimal(txt_MontoPago3.getValue().toString()));
+                }
+                BigDecimal totalAPagar;
+                if (pedido != null) {
+                    totalAPagar = this.pedido.getTotal();
+                } else {
+                    totalAPagar = totalFactura != null ? totalFactura.setScale(2, RoundingMode.FLOOR) : totalPedido.setScale(2, RoundingMode.FLOOR);
+                }
+                if (totalPagos.compareTo(totalAPagar) < 0) {
+                    int reply = JOptionPane.showConfirmDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_montos_insuficientes"),
+                            "Aviso", JOptionPane.YES_NO_OPTION);
+                    if (reply == JOptionPane.YES_OPTION) {
+                        if (this.nuevaFacturaVenta != null) {
+                            this.finalizarVenta();
+                        } else if (tipoDeEnvio != null) {
+                            this.cerrarPedido(tipoDeEnvio);
+                        }
+                    }
+                } else if (totalPagos.compareTo(totalAPagar) > 0) {
+                    int reply = JOptionPane.showConfirmDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_montos_superiores_al_total_factura"),
+                            "Aviso", JOptionPane.YES_NO_OPTION);
+                    if (reply == JOptionPane.YES_OPTION) {
+                        if (this.nuevaFacturaVenta != null) {
+                            this.finalizarVenta();
+                        } else if (tipoDeEnvio != null) {
+                            this.cerrarPedido(tipoDeEnvio);
+                        }
+                    }
+                } else {
+                    if (this.nuevaFacturaVenta != null) {
+                        this.finalizarVenta();
+                    } else if (tipoDeEnvio != null) {
+                        this.cerrarPedido(tipoDeEnvio);
+                    }
+                }
             }
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
-
     }//GEN-LAST:event_btnFinalizarActionPerformed
 
     private void cerrarPedido(TipoDeEnvio tipoDeEnvio) {

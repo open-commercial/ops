@@ -1,5 +1,6 @@
 package sic.vista.swing;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.KeyAdapter;
@@ -155,7 +156,12 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
     private void cargarCliente(CuentaCorrienteCliente cuentaCorrienteCliente) {
         this.cliente = cuentaCorrienteCliente.getCliente();
         txtNombreCliente.setText(cliente.getNombreFiscal() + " (" + cliente.getNroCliente() + ")");
-        txtSaldoCC.setText(cuentaCorrienteCliente.getSaldo().setScale(2, RoundingMode.HALF_UP) + "");
+        ftxtSaldoFinal.setValue(cuentaCorrienteCliente.getSaldo().setScale(2, RoundingMode.HALF_UP));
+        if (cuentaCorrienteCliente.getSaldo().setScale(2, RoundingMode.HALF_UP).compareTo(BigDecimal.ZERO) < 0) {
+            ftxtSaldoFinal.setBackground(Color.PINK);
+        } else if (cuentaCorrienteCliente.getSaldo().setScale(2, RoundingMode.HALF_UP).compareTo(BigDecimal.ZERO) >= 0) {
+            ftxtSaldoFinal.setBackground(Color.GREEN);
+        }
         txtMontoCompraMinima.setText(cliente.getMontoCompraMinima().setScale(2, RoundingMode.HALF_UP) + " %");
         txtUbicacionCliente.setText(cliente.getUbicacionFacturacion() != null ? cliente.getUbicacionFacturacion().toString() : "");
         txt_CondicionIVACliente.setText(cliente.getCategoriaIVA().toString());
@@ -478,7 +484,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         txtIdFiscalCliente = new javax.swing.JTextField();
         txtMontoCompraMinima = new javax.swing.JTextField();
         lblSaldoCC = new javax.swing.JLabel();
-        txtSaldoCC = new javax.swing.JTextField();
+        ftxtSaldoFinal = new javax.swing.JFormattedTextField();
         tbtn_marcarDesmarcar = new javax.swing.JToggleButton();
 
         setResizable(true);
@@ -839,7 +845,11 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         lblSaldoCC.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblSaldoCC.setText("Saldo CC $:");
 
-        txtSaldoCC.setEditable(false);
+        ftxtSaldoFinal.setEditable(false);
+        ftxtSaldoFinal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
+        ftxtSaldoFinal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        ftxtSaldoFinal.setFocusable(false);
+        ftxtSaldoFinal.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
 
         javax.swing.GroupLayout panelClienteLayout = new javax.swing.GroupLayout(panelCliente);
         panelCliente.setLayout(panelClienteLayout);
@@ -862,10 +872,11 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                     .addComponent(lblSaldoCC)
                     .addComponent(lbl_IDFiscalCliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(txtSaldoCC, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtIdFiscalCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtMontoCompraMinima, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                        .addComponent(txtIdFiscalCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtMontoCompraMinima, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ftxtSaldoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         panelClienteLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblMontoCompraMinima, lblSaldoCC, lbl_IDFiscalCliente});
@@ -883,7 +894,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                     .addComponent(lblUbicacionCliente)
                     .addComponent(txtUbicacionCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblSaldoCC)
-                    .addComponent(txtSaldoCC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ftxtSaldoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_IDFiscalCliente)
@@ -1165,6 +1176,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
     private javax.swing.JButton btn_AddComment;
     private javax.swing.JButton btn_Continuar;
     private javax.swing.JComboBox cmb_TipoComprobante;
+    private javax.swing.JFormattedTextField ftxtSaldoFinal;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblMontoCompraMinima;
     private javax.swing.JLabel lblNombreCliente;
@@ -1197,7 +1209,6 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
     private javax.swing.JTextField txtIdFiscalCliente;
     private javax.swing.JTextField txtMontoCompraMinima;
     private javax.swing.JTextField txtNombreCliente;
-    private javax.swing.JTextField txtSaldoCC;
     private javax.swing.JTextField txtUbicacionCliente;
     private javax.swing.JTextField txt_CondicionIVACliente;
     private javax.swing.JFormattedTextField txt_Descuento_neto;

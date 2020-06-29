@@ -1,5 +1,6 @@
 package sic.vista.swing;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.KeyAdapter;
@@ -7,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -122,7 +124,12 @@ public class DetallePedidoGUI extends JInternalFrame {
     private void cargarCliente(CuentaCorrienteCliente cuentaCorrienteCliente) {
         this.cliente = cuentaCorrienteCliente.getCliente();
         txtNombreCliente.setText(cliente.getNombreFiscal() + " (" + cliente.getNroCliente() + ")");
-        txtSaldoCC.setText(cuentaCorrienteCliente.getSaldo().setScale(2, RoundingMode.HALF_UP) + "");
+        ftxtSaldoFinal.setValue(cuentaCorrienteCliente.getSaldo().setScale(2, RoundingMode.HALF_UP));
+        if (cuentaCorrienteCliente.getSaldo().setScale(2, RoundingMode.HALF_UP).compareTo(BigDecimal.ZERO) < 0) {
+            ftxtSaldoFinal.setBackground(Color.PINK);
+        } else if (cuentaCorrienteCliente.getSaldo().setScale(2, RoundingMode.HALF_UP).compareTo(BigDecimal.ZERO) >= 0) {
+            ftxtSaldoFinal.setBackground(Color.GREEN);
+        }
         txtMontoCompraMinima.setText(cliente.getMontoCompraMinima().setScale(2, RoundingMode.HALF_UP) + "");
         txtUbicacionCliente.setText(cliente.getUbicacionFacturacion() != null ? cliente.getUbicacionFacturacion().toString() : "");
         txt_CondicionIVACliente.setText(cliente.getCategoriaIVA().toString());
@@ -486,7 +493,7 @@ public class DetallePedidoGUI extends JInternalFrame {
         txtIdFiscalCliente = new javax.swing.JTextField();
         txtMontoCompraMinima = new javax.swing.JTextField();
         lblSaldoCC = new javax.swing.JLabel();
-        txtSaldoCC = new javax.swing.JTextField();
+        ftxtSaldoFinal = new javax.swing.JFormattedTextField();
         panelRenglones = new javax.swing.JPanel();
         sp_Resultado = new javax.swing.JScrollPane();
         tbl_Resultado = new javax.swing.JTable();
@@ -572,8 +579,11 @@ public class DetallePedidoGUI extends JInternalFrame {
         lblSaldoCC.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblSaldoCC.setText("Saldo CC $:");
 
-        txtSaldoCC.setEditable(false);
-        txtSaldoCC.setFocusable(false);
+        ftxtSaldoFinal.setEditable(false);
+        ftxtSaldoFinal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
+        ftxtSaldoFinal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        ftxtSaldoFinal.setFocusable(false);
+        ftxtSaldoFinal.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
 
         javax.swing.GroupLayout panelClienteLayout = new javax.swing.GroupLayout(panelCliente);
         panelCliente.setLayout(panelClienteLayout);
@@ -596,11 +606,10 @@ public class DetallePedidoGUI extends JInternalFrame {
                     .addComponent(lblSaldoCC, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_IdFiscalCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtIdFiscalCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(txtSaldoCC, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                        .addComponent(txtMontoCompraMinima, javax.swing.GroupLayout.Alignment.TRAILING)))
+                .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtIdFiscalCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                    .addComponent(txtMontoCompraMinima, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                    .addComponent(ftxtSaldoFinal))
                 .addContainerGap())
         );
         panelClienteLayout.setVerticalGroup(
@@ -616,7 +625,7 @@ public class DetallePedidoGUI extends JInternalFrame {
                     .addComponent(lblUbicacionCliente)
                     .addComponent(txtUbicacionCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblSaldoCC)
-                    .addComponent(txtSaldoCC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ftxtSaldoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_CondicionIVACliente)
@@ -1113,49 +1122,53 @@ public class DetallePedidoGUI extends JInternalFrame {
 
     private void btn_ContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ContinuarActionPerformed
         if (cliente != null) {
-            if (renglones.isEmpty()) {
+            if ((new BigDecimal(String.valueOf(txt_Total.getValue())).compareTo(cliente.getMontoCompraMinima())) < 0) {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                        .getString("mensaje_factura_sin_renglones"), "Error", JOptionPane.ERROR_MESSAGE);
+                        .getString("mensaje_pedido_no_supera_compra_minima"), "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                if (new BigDecimal(txt_Descuento_porcentaje.getValue().toString()).compareTo(CIEN) > 0) {
+                if (renglones.isEmpty()) {
                     JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_factura_descuento_mayor_cien"), "Error", JOptionPane.ERROR_MESSAGE);
+                            .getString("mensaje_factura_sin_renglones"), "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    this.calcularResultados();
-                    try {
-                        cliente = RestClient.getRestTemplate().getForObject("/clientes/" + this.cliente.getIdCliente(), Cliente.class);
-                        List<ProductoFaltante> faltantes;
-                        BigDecimal[] cantidades = this.getArrayCantidades();
-                        long[] idsProductos = this.getArrayIds();
-                        ProductosParaVerificarStock productosParaVerificarStock = ProductosParaVerificarStock.builder()
-                                .cantidad(cantidades)
-                                .idProducto(idsProductos)
-                                .build();
-                        HttpEntity<ProductosParaVerificarStock> requestEntity = new HttpEntity<>(productosParaVerificarStock);
+                    if (new BigDecimal(txt_Descuento_porcentaje.getValue().toString()).compareTo(CIEN) > 0) {
+                        JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_factura_descuento_mayor_cien"), "Error", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        this.calcularResultados();
+                        try {
+                            List<ProductoFaltante> faltantes;
+                            BigDecimal[] cantidades = this.getArrayCantidades();
+                            long[] idsProductos = this.getArrayIds();
+                            ProductosParaVerificarStock productosParaVerificarStock = ProductosParaVerificarStock.builder()
+                                    .cantidad(cantidades)
+                                    .idProducto(idsProductos)
+                                    .build();
+                            HttpEntity<ProductosParaVerificarStock> requestEntity = new HttpEntity<>(productosParaVerificarStock);
 
-                        faltantes = RestClient.getRestTemplate()
-                                .exchange("/productos/disponibilidad-stock", HttpMethod.POST, requestEntity, new ParameterizedTypeReference<List<ProductoFaltante>>() {
-                                })
-                                .getBody();
-                        if (faltantes.isEmpty()) {
-                            // Es null cuando, se genera un pedido desde el punto de venta entrando por el menu sistemas.
-                            // El Id es 0 cuando, se genera un pedido desde el punto de venta entrando por el botón nuevo de administrar pedidos.
-                            if (pedido == null || pedido.getIdPedido() == 0) {
-                                this.construirPedido();
+                            faltantes = RestClient.getRestTemplate()
+                                    .exchange("/productos/disponibilidad-stock", HttpMethod.POST, requestEntity, new ParameterizedTypeReference<List<ProductoFaltante>>() {
+                                    })
+                                    .getBody();
+                            if (faltantes.isEmpty()) {
+                                // Es null cuando, se genera un pedido desde el punto de venta entrando por el menu sistemas.
+                                // El Id es 0 cuando, se genera un pedido desde el punto de venta entrando por el botón nuevo de administrar pedidos.
+                                if (pedido == null || pedido.getIdPedido() == 0) {
+                                    this.construirPedido();
+                                }
+                                this.finalizarPedido();
+                            } else {
+                                ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(faltantes);
+                                productosFaltantesGUI.setLocationRelativeTo(this);
+                                productosFaltantesGUI.setVisible(true);
                             }
-                            this.finalizarPedido();
-                        } else {
-                            ProductosFaltantesGUI productosFaltantesGUI = new ProductosFaltantesGUI(faltantes);
-                            productosFaltantesGUI.setLocationRelativeTo(this);
-                            productosFaltantesGUI.setVisible(true);
+                        } catch (RestClientResponseException ex) {
+                            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                        } catch (ResourceAccessException ex) {
+                            LOGGER.error(ex.getMessage());
+                            JOptionPane.showMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
                         }
-                    } catch (RestClientResponseException ex) {
-                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    } catch (ResourceAccessException ex) {
-                        LOGGER.error(ex.getMessage());
-                        JOptionPane.showMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -1297,6 +1310,7 @@ public class DetallePedidoGUI extends JInternalFrame {
     private javax.swing.JButton btn_Continuar;
     private javax.swing.JButton btn_NuevoCliente;
     private javax.swing.JButton btn_QuitarProducto;
+    private javax.swing.JFormattedTextField ftxtSaldoFinal;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblMontoCompraMinima;
     private javax.swing.JLabel lblNombreCliente;
@@ -1321,7 +1335,6 @@ public class DetallePedidoGUI extends JInternalFrame {
     private javax.swing.JTextField txtIdFiscalCliente;
     private javax.swing.JTextField txtMontoCompraMinima;
     private javax.swing.JTextField txtNombreCliente;
-    private javax.swing.JTextField txtSaldoCC;
     private javax.swing.JTextField txtUbicacionCliente;
     private javax.swing.JTextField txt_CodigoProducto;
     private javax.swing.JTextField txt_CondicionIVACliente;
