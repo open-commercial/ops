@@ -819,7 +819,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         lblUbicacionCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblUbicacionCliente.setText("Ubicación:");
 
-        lbl_IDFiscalCliente.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_IDFiscalCliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lbl_IDFiscalCliente.setText("CUIT o DNI:");
 
         lbl_CondicionIVACliente.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -837,7 +837,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         txtIdFiscalCliente.setEditable(false);
         txtIdFiscalCliente.setFocusable(false);
 
-        lblSaldoCC.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblSaldoCC.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblSaldoCC.setText("Saldo CC $:");
 
         ftxtSaldoFinal.setEditable(false);
@@ -846,8 +846,8 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         ftxtSaldoFinal.setFocusable(false);
         ftxtSaldoFinal.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
 
-        lblMontoCompraMinima.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblMontoCompraMinima.setText("Compra Mínima $:");
+        lblMontoCompraMinima.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblMontoCompraMinima.setText("Compra Mín. $:");
 
         ftxtCompraMinima.setEditable(false);
         ftxtCompraMinima.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
@@ -894,9 +894,8 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(txtNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblNombreCliente)
-                    .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                        .addComponent(lbl_IDFiscalCliente)
-                        .addComponent(txtIdFiscalCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(lbl_IDFiscalCliente)
+                    .addComponent(txtIdFiscalCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblUbicacionCliente)
