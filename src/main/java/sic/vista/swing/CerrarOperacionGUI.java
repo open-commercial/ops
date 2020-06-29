@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.Files;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -333,7 +334,7 @@ public class CerrarOperacionGUI extends JDialog {
             idsFormasDePago.add(((FormaDePago) cmb_FormaDePago3.getSelectedItem()).getIdFormaDePago());
         }
     }
-    
+
     private void agregarPagosAlPedido() {
         this.armarMontosConFormasDePago();
         if (idsFormasDePago.isEmpty() == false) {
@@ -674,9 +675,10 @@ public class CerrarOperacionGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {
-            txtSaldoCC.setText(RestClient.getRestTemplate()
+            DecimalFormat dFormat = new DecimalFormat("##,##0.##");
+            txtSaldoCC.setText(dFormat.format(RestClient.getRestTemplate()
                     .getForObject("/cuentas-corriente/clientes/"
-                            + this.cliente.getIdCliente(), CuentaCorrienteCliente.class).getSaldo().setScale(2, RoundingMode.HALF_UP) + "");
+                            + this.cliente.getIdCliente(), CuentaCorrienteCliente.class).getSaldo().setScale(2, RoundingMode.HALF_UP)));
             if ((this.nuevoPedido != null || this.pedido != null) && this.nuevaFacturaVenta == null) {
                 lblDividido.setVisible(false);
                 rbDireccionEnvio.setSelected(false);
@@ -757,8 +759,9 @@ public class CerrarOperacionGUI extends JDialog {
                 }
             }
         }
-        if (this.nuevoPedido == null && this.pedido != null) {
+        if (this.nuevoPedido != null || this.pedido != null) {
             cmb_Transporte.setEnabled(false);
+            lbl_Transporte.setEnabled(false);
         }
         if (dividir) {
             chk_FormaDePago1.setEnabled(false);

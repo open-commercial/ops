@@ -8,7 +8,6 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -130,7 +129,7 @@ public class DetallePedidoGUI extends JInternalFrame {
         } else if (cuentaCorrienteCliente.getSaldo().setScale(2, RoundingMode.HALF_UP).compareTo(BigDecimal.ZERO) >= 0) {
             ftxtSaldoFinal.setBackground(Color.GREEN);
         }
-        txtMontoCompraMinima.setText(cliente.getMontoCompraMinima().setScale(2, RoundingMode.HALF_UP) + "");
+        ftxtCompraMinima.setText(cliente.getMontoCompraMinima().setScale(2, RoundingMode.HALF_UP) + "");
         txtUbicacionCliente.setText(cliente.getUbicacionFacturacion() != null ? cliente.getUbicacionFacturacion().toString() : "");
         txt_CondicionIVACliente.setText(cliente.getCategoriaIVA().toString());
         txtIdFiscalCliente.setText(cliente.getIdFiscal() != null ? cliente.getIdFiscal().toString() : "");
@@ -491,9 +490,9 @@ public class DetallePedidoGUI extends JInternalFrame {
         txtNombreCliente = new javax.swing.JTextField();
         lblMontoCompraMinima = new javax.swing.JLabel();
         txtIdFiscalCliente = new javax.swing.JTextField();
-        txtMontoCompraMinima = new javax.swing.JTextField();
         lblSaldoCC = new javax.swing.JLabel();
         ftxtSaldoFinal = new javax.swing.JFormattedTextField();
+        ftxtCompraMinima = new javax.swing.JFormattedTextField();
         panelRenglones = new javax.swing.JPanel();
         sp_Resultado = new javax.swing.JScrollPane();
         tbl_Resultado = new javax.swing.JTable();
@@ -574,8 +573,6 @@ public class DetallePedidoGUI extends JInternalFrame {
         txtIdFiscalCliente.setEditable(false);
         txtIdFiscalCliente.setFocusable(false);
 
-        txtMontoCompraMinima.setEditable(false);
-
         lblSaldoCC.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblSaldoCC.setText("Saldo CC $:");
 
@@ -584,6 +581,12 @@ public class DetallePedidoGUI extends JInternalFrame {
         ftxtSaldoFinal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         ftxtSaldoFinal.setFocusable(false);
         ftxtSaldoFinal.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+
+        ftxtCompraMinima.setEditable(false);
+        ftxtCompraMinima.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
+        ftxtCompraMinima.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        ftxtCompraMinima.setFocusable(false);
+        ftxtCompraMinima.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
 
         javax.swing.GroupLayout panelClienteLayout = new javax.swing.GroupLayout(panelCliente);
         panelCliente.setLayout(panelClienteLayout);
@@ -608,8 +611,8 @@ public class DetallePedidoGUI extends JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txtIdFiscalCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                    .addComponent(txtMontoCompraMinima, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                    .addComponent(ftxtSaldoFinal))
+                    .addComponent(ftxtSaldoFinal)
+                    .addComponent(ftxtCompraMinima))
                 .addContainerGap())
         );
         panelClienteLayout.setVerticalGroup(
@@ -627,11 +630,14 @@ public class DetallePedidoGUI extends JInternalFrame {
                     .addComponent(lblSaldoCC)
                     .addComponent(ftxtSaldoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_CondicionIVACliente)
-                    .addComponent(txt_CondicionIVACliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblMontoCompraMinima)
-                    .addComponent(txtMontoCompraMinima, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                        .addComponent(lbl_CondicionIVACliente)
+                        .addComponent(txt_CondicionIVACliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblMontoCompraMinima))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelClienteLayout.createSequentialGroup()
+                        .addComponent(ftxtCompraMinima, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
 
         panelClienteLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtIdFiscalCliente, txtNombreCliente, txtUbicacionCliente, txt_CondicionIVACliente});
@@ -725,7 +731,7 @@ public class DetallePedidoGUI extends JInternalFrame {
                         .addComponent(btn_BuscarProductos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btn_QuitarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Resultado, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE))
+                .addComponent(sp_Resultado, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
         );
 
         panelRenglonesLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_BuscarPorCodigoProducto, txt_CodigoProducto});
@@ -1310,6 +1316,7 @@ public class DetallePedidoGUI extends JInternalFrame {
     private javax.swing.JButton btn_Continuar;
     private javax.swing.JButton btn_NuevoCliente;
     private javax.swing.JButton btn_QuitarProducto;
+    private javax.swing.JFormattedTextField ftxtCompraMinima;
     private javax.swing.JFormattedTextField ftxtSaldoFinal;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblMontoCompraMinima;
@@ -1333,7 +1340,6 @@ public class DetallePedidoGUI extends JInternalFrame {
     private javax.swing.JScrollPane sp_Resultado;
     private javax.swing.JTable tbl_Resultado;
     private javax.swing.JTextField txtIdFiscalCliente;
-    private javax.swing.JTextField txtMontoCompraMinima;
     private javax.swing.JTextField txtNombreCliente;
     private javax.swing.JTextField txtUbicacionCliente;
     private javax.swing.JTextField txt_CodigoProducto;

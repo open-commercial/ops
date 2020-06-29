@@ -698,7 +698,7 @@ public class TraspasosGUI extends JInternalFrame {
                 row++;
             }
             try {
-                if (row != 0) {
+                if (row != -1) {
                     this.cargarTablaDetalle(this.traspasosTotal.get(row).getIdTraspaso());
                 } else {
                     this.limpiarTablaDetalle();
