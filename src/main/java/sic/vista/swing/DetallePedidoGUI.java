@@ -1128,7 +1128,7 @@ public class DetallePedidoGUI extends JInternalFrame {
 
     private void btn_ContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ContinuarActionPerformed
         if (cliente != null) {
-            if ((new BigDecimal(String.valueOf(txt_Total.getValue())).compareTo(cliente.getMontoCompraMinima())) < 0) {
+            if (txt_Total.getValue() != null && (new BigDecimal(String.valueOf(txt_Total.getValue())).compareTo(cliente.getMontoCompraMinima())) < 0) {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                         .getString("mensaje_pedido_no_supera_compra_minima"), "Error", JOptionPane.ERROR_MESSAGE);
             } else {
