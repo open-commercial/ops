@@ -1,5 +1,6 @@
 package sic.vista.swing;
 
+import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -676,9 +677,15 @@ public class CerrarOperacionGUI extends JDialog {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {
             DecimalFormat dFormat = new DecimalFormat("##,##0.##");
-            txtSaldoCC.setText(dFormat.format(RestClient.getRestTemplate()
+            BigDecimal saldoCC = RestClient.getRestTemplate()
                     .getForObject("/cuentas-corriente/clientes/"
-                            + this.cliente.getIdCliente(), CuentaCorrienteCliente.class).getSaldo().setScale(2, RoundingMode.HALF_UP)));
+                            + this.cliente.getIdCliente(), CuentaCorrienteCliente.class).getSaldo().setScale(2, RoundingMode.HALF_UP);
+            txtSaldoCC.setText(dFormat.format(saldoCC));
+            if (saldoCC.compareTo(BigDecimal.ZERO) < 0) {
+                txtSaldoCC.setForeground(Color.RED);                
+            } else if (saldoCC.compareTo(BigDecimal.ZERO) >= 0) {
+                txtSaldoCC.setForeground(Color.GREEN);
+            }
             if ((this.nuevoPedido != null || this.pedido != null) && this.nuevaFacturaVenta == null) {
                 lblDividido.setVisible(false);
                 rbDireccionEnvio.setSelected(false);

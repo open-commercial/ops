@@ -408,9 +408,24 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
 
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
         try {
-            RestClient.getRestTemplate().put("/configuraciones-sucursal", this.getConfiguracionSucursal());
-            JOptionPane.showMessageDialog(this, "La configuración se guardó correctamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
-            this.dispose();
+            ConfiguracionSucursal cds = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/" + configuracionModificar.getIdSucursal(), ConfiguracionSucursal.class);
+            if (!chkPredeterminada.isSelected() && cds.isPredeterminada()) {
+                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sucursal_cambiar_predeterminada"), "Error", JOptionPane.ERROR_MESSAGE);
+                chkPredeterminada.setSelected(true);
+            } else {
+                try {
+                    RestClient.getRestTemplate().put("/configuraciones-sucursal", this.getConfiguracionSucursal());
+                    JOptionPane.showMessageDialog(this, "La configuración se guardó correctamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+                    this.dispose();
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
