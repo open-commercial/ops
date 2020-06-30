@@ -694,7 +694,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lbl_IDFiscalCliente">
                   <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
+                    <Property name="horizontalAlignment" type="int" value="2"/>
                     <Property name="text" type="java.lang.String" value="CUIT o DNI:"/>
                   </Properties>
                 </Component>
@@ -730,7 +730,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblSaldoCC">
                   <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
+                    <Property name="horizontalAlignment" type="int" value="2"/>
                     <Property name="text" type="java.lang.String" value="Saldo CC $:"/>
                   </Properties>
                 </Component>
@@ -749,8 +749,8 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblMontoCompraMinima">
                   <Properties>
-                    <Property name="horizontalAlignment" type="int" value="0"/>
-                    <Property name="text" type="java.lang.String" value="Compra M&#xed;nima $:"/>
+                    <Property name="horizontalAlignment" type="int" value="2"/>
+                    <Property name="text" type="java.lang.String" value="Compra M&#xed;n. $:"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JFormattedTextField" name="ftxtCompraMinima">
