@@ -255,7 +255,7 @@
         <Component class="javax.swing.JLabel" name="txtSaldoCC">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="25" green="9c" red="1d" type="rgb"/>
+              <Color blue="0" green="ff" id="green" palette="1" red="0" type="palette"/>
             </Property>
           </Properties>
         </Component>

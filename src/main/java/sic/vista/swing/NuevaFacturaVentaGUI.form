@@ -658,10 +658,8 @@
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="txtNombreCliente" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="lblNombreCliente" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Group type="103" alignment="2" groupAlignment="2" attributes="0">
-                                  <Component id="lbl_IDFiscalCliente" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
-                                  <Component id="txtIdFiscalCliente" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="lbl_IDFiscalCliente" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtIdFiscalCliente" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">

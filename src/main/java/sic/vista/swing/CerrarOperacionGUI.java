@@ -57,6 +57,7 @@ public class CerrarOperacionGUI extends JDialog {
     private final List<BigDecimal> montos = new ArrayList<>();
     private boolean dividir = false;
     private BigDecimal totalPedido;
+    private BigDecimal total;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public CerrarOperacionGUI(NuevaFacturaVenta nuevaFacturaVenta, Pedido pedido, BigDecimal totalFactura, ModeloTabla modeloTabla) {
@@ -464,7 +465,7 @@ public class CerrarOperacionGUI extends JDialog {
 
         lblSaldoCC.setText("Saldo CC del Cliente $:");
 
-        txtSaldoCC.setForeground(new java.awt.Color(29, 156, 37));
+        txtSaldoCC.setForeground(java.awt.Color.green);
 
         javax.swing.GroupLayout panelMedioLayout = new javax.swing.GroupLayout(panelMedio);
         panelMedio.setLayout(panelMedioLayout);
@@ -480,12 +481,12 @@ public class CerrarOperacionGUI extends JDialog {
                             .addComponent(chk_FormaDePago3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelMedioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmb_FormaDePago2, 0, 382, Short.MAX_VALUE)
+                            .addComponent(cmb_FormaDePago2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cmb_FormaDePago3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cmb_FormaDePago1, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelMedioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txt_MontoPago2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+                            .addComponent(txt_MontoPago2, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txt_MontoPago1)
                             .addComponent(txt_MontoPago3)))
                     .addGroup(panelMedioLayout.createSequentialGroup()
@@ -675,16 +676,17 @@ public class CerrarOperacionGUI extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        BigDecimal saldoCC = BigDecimal.ZERO;
         try {
             DecimalFormat dFormat = new DecimalFormat("##,##0.##");
-            BigDecimal saldoCC = RestClient.getRestTemplate()
+            saldoCC = RestClient.getRestTemplate()
                     .getForObject("/cuentas-corriente/clientes/"
                             + this.cliente.getIdCliente(), CuentaCorrienteCliente.class).getSaldo().setScale(2, RoundingMode.HALF_UP);
             txtSaldoCC.setText(dFormat.format(saldoCC));
             if (saldoCC.compareTo(BigDecimal.ZERO) < 0) {
-                txtSaldoCC.setForeground(Color.RED);                
+                txtSaldoCC.setForeground(Color.RED);
             } else if (saldoCC.compareTo(BigDecimal.ZERO) >= 0) {
-                txtSaldoCC.setForeground(Color.GREEN);
+                txtSaldoCC.setForeground(new Color(29,156,37));
             }
             if ((this.nuevoPedido != null || this.pedido != null) && this.nuevaFacturaVenta == null) {
                 lblDividido.setVisible(false);
@@ -717,7 +719,7 @@ public class CerrarOperacionGUI extends JDialog {
                     rbRetiroEnSucursal.setSelected(true);
                 }
             } else {
-                cmb_Transporte.setEnabled(false);
+                cmb_Transporte.setEnabled(true);
                 panelInferior.setEnabled(false);
                 cmbSucursales.setEnabled(false);
                 rbRetiroEnSucursal.setEnabled(false);
@@ -737,13 +739,18 @@ public class CerrarOperacionGUI extends JDialog {
         }
         cmb_Transporte.setSelectedIndex(0);
         lbl_Vendedor.setText(UsuarioActivo.getInstance().getUsuario().toString());
-        BigDecimal total;
         if (pedido != null) {
             total = this.pedido.getTotal();
         } else {
             total = totalFactura != null ? totalFactura : totalPedido;
         }
-        txt_MontoPago1.setValue(total);
+        if (saldoCC.compareTo(BigDecimal.ZERO) > 0) {
+            total = total.subtract(saldoCC.abs());
+            txt_MontoPago1.setValue(total.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : total);
+        } else {
+            total = total.add(saldoCC.abs());
+            txt_MontoPago1.setValue(total);
+        }
         txt_MontoPago2.setValue(0);
         txt_MontoPago3.setValue(0);
         if (modeloTabla != null) {
@@ -766,7 +773,7 @@ public class CerrarOperacionGUI extends JDialog {
                 }
             }
         }
-        if (this.nuevoPedido != null || this.pedido != null) {
+        if (nuevaFacturaVenta == null && (this.nuevoPedido != null || this.pedido != null)) {
             cmb_Transporte.setEnabled(false);
             lbl_Transporte.setEnabled(false);
         }
@@ -780,7 +787,6 @@ public class CerrarOperacionGUI extends JDialog {
             txt_MontoPago1.setEnabled(false);
             txt_MontoPago2.setEnabled(false);
             txt_MontoPago3.setEnabled(false);
-            cmb_Transporte.setEnabled(false);
         } else {
             lblDividido.setText("");
         }
@@ -817,13 +823,10 @@ public class CerrarOperacionGUI extends JDialog {
                 if (chk_FormaDePago3.isSelected() && chk_FormaDePago3.isEnabled()) {
                     totalPagos = totalPagos.add(new BigDecimal(txt_MontoPago3.getValue().toString()));
                 }
-                BigDecimal totalAPagar;
                 if (pedido != null) {
-                    totalAPagar = this.pedido.getTotal();
-                } else {
-                    totalAPagar = totalFactura != null ? totalFactura.setScale(2, RoundingMode.FLOOR) : totalPedido.setScale(2, RoundingMode.FLOOR);
+                    total = totalFactura != null ? totalFactura.setScale(2, RoundingMode.FLOOR) : totalPedido.setScale(2, RoundingMode.FLOOR);
                 }
-                if (totalPagos.compareTo(totalAPagar) < 0) {
+                if (totalPagos.compareTo(total) < 0) {
                     int reply = JOptionPane.showConfirmDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_montos_insuficientes"),
                             "Aviso", JOptionPane.YES_NO_OPTION);
@@ -834,7 +837,7 @@ public class CerrarOperacionGUI extends JDialog {
                             this.cerrarPedido(tipoDeEnvio);
                         }
                     }
-                } else if (totalPagos.compareTo(totalAPagar) > 0) {
+                } else if (totalPagos.compareTo(total) > 0) {
                     int reply = JOptionPane.showConfirmDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_montos_superiores_al_total_factura"),
                             "Aviso", JOptionPane.YES_NO_OPTION);

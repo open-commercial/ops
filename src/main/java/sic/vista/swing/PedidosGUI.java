@@ -129,7 +129,7 @@ public class PedidosGUI extends JInternalFrame {
             gui_facturaVenta.setLocation(getDesktopPane().getWidth() / 2 - gui_facturaVenta.getWidth() / 2,
                     getDesktopPane().getHeight() / 2 - gui_facturaVenta.getHeight() / 2);
             getDesktopPane().add(gui_facturaVenta);
-            long numeroDePedido = (long) tbl_Pedidos.getValueAt(tbl_Pedidos.getSelectedRow(), 2);
+            long numeroDePedido = (long) tbl_Pedidos.getValueAt(tbl_Pedidos.getSelectedRow(), 3);
             gui_facturaVenta.setVisible(true);
             gui_facturaVenta.buscarPorNroPedido(numeroDePedido);
             try {

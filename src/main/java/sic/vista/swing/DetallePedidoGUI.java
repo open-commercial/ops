@@ -129,7 +129,7 @@ public class DetallePedidoGUI extends JInternalFrame {
         } else if (cuentaCorrienteCliente.getSaldo().setScale(2, RoundingMode.HALF_UP).compareTo(BigDecimal.ZERO) >= 0) {
             ftxtSaldoFinal.setBackground(Color.GREEN);
         }
-        ftxtCompraMinima.setText(cliente.getMontoCompraMinima().setScale(2, RoundingMode.HALF_UP) + "");
+        ftxtCompraMinima.setValue(cliente.getMontoCompraMinima().setScale(2, RoundingMode.HALF_UP));
         txtUbicacionCliente.setText(cliente.getUbicacionFacturacion() != null ? cliente.getUbicacionFacturacion().toString() : "");
         txt_CondicionIVACliente.setText(cliente.getCategoriaIVA().toString());
         txtIdFiscalCliente.setText(cliente.getIdFiscal() != null ? cliente.getIdFiscal().toString() : "");
@@ -358,6 +358,7 @@ public class DetallePedidoGUI extends JInternalFrame {
                     if (respuesta == JOptionPane.NO_OPTION) {
                         this.dispose();
                     }
+                    this.cliente = null;
                     this.cargarComponentesIniciales();
                     this.renglones.clear();
                     this.cargarRenglonesAlTable();
@@ -1149,13 +1150,15 @@ public class DetallePedidoGUI extends JInternalFrame {
                                     .cantidad(cantidades)
                                     .idProducto(idsProductos)
                                     .build();
+                            if (pedido != null) {
+                                productosParaVerificarStock.setIdPedido(pedido.getIdPedido());
+                            }
                             HttpEntity<ProductosParaVerificarStock> requestEntity = new HttpEntity<>(productosParaVerificarStock);
-
                             faltantes = RestClient.getRestTemplate()
                                     .exchange("/productos/disponibilidad-stock", HttpMethod.POST, requestEntity, new ParameterizedTypeReference<List<ProductoFaltante>>() {
                                     })
                                     .getBody();
-                            if (faltantes.isEmpty()) {
+                            if (faltantes != null && faltantes.isEmpty()) {
                                 // Es null cuando, se genera un pedido desde el punto de venta entrando por el menu sistemas.
                                 // El Id es 0 cuando, se genera un pedido desde el punto de venta entrando por el botón nuevo de administrar pedidos.
                                 if (pedido == null || pedido.getIdPedido() == 0) {

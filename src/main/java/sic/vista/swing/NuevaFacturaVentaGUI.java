@@ -162,7 +162,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         } else if (cuentaCorrienteCliente.getSaldo().setScale(2, RoundingMode.HALF_UP).compareTo(BigDecimal.ZERO) >= 0) {
             ftxtSaldoFinal.setBackground(Color.GREEN);
         }
-        ftxtCompraMinima.setText(cliente.getMontoCompraMinima().setScale(2, RoundingMode.HALF_UP) + "");
+        ftxtCompraMinima.setValue(cliente.getMontoCompraMinima().setScale(2, RoundingMode.HALF_UP));
         txtUbicacionCliente.setText(cliente.getUbicacionFacturacion() != null ? cliente.getUbicacionFacturacion().toString() : "");
         txt_CondicionIVACliente.setText(cliente.getCategoriaIVA().toString());
         txtIdFiscalCliente.setText(cliente.getIdFiscal() != null ? cliente.getIdFiscal().toString() : "");
@@ -205,40 +205,6 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         tbl_Resultado.getColumnModel().getColumn(5).setPreferredWidth(120);
         tbl_Resultado.getColumnModel().getColumn(6).setPreferredWidth(120);
         tbl_Resultado.getColumnModel().getColumn(7).setPreferredWidth(120);
-    }
-
-    private boolean agregarRenglon(NuevoRenglonFactura nuevoRenglonFactura) {
-        boolean agregado = false;
-        try {            
-            List<NuevoRenglonFactura> nuevosRenglones = new ArrayList<>();
-            this.renglonesFactura.forEach(renglon -> {
-                NuevoRenglonFactura nuevoRenglon = NuevoRenglonFactura.builder()
-                        .cantidad(renglon.getCantidad())
-                        .idProducto(renglon.getIdProductoItem())
-                        .build();
-                nuevosRenglones.add(nuevoRenglon);
-            });
-            if (nuevosRenglones.contains(nuevoRenglonFactura)) {
-                nuevosRenglones.stream().filter(renglon -> renglon.getIdProducto() == nuevoRenglonFactura.getIdProducto())
-                        .forEach(renglon -> renglon.setCantidad(renglon.getCantidad().add(nuevoRenglonFactura.getCantidad())));
-            } else {
-                nuevosRenglones.add(nuevoRenglonFactura);
-            }
-            this.renglonesFactura = new LinkedList(Arrays.asList(RestClient.getRestTemplate()
-                    .postForObject("/facturas/ventas/renglones?tipoDeComprobante=" + this.tipoDeComprobante.name(), nuevosRenglones, RenglonFactura[].class)));
-            //para que baje solo el scroll vertical
-            Point p = new Point(0, tbl_Resultado.getHeight());
-            sp_Resultado.getViewport().setViewPosition(p);
-
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        return agregado;
     }
 
     private void cargarRenglonesAlTable(EstadoRenglon[] estadosDeLosRenglones) {
