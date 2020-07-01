@@ -745,8 +745,8 @@ public class CerrarOperacionGUI extends JDialog {
             total = totalFactura != null ? totalFactura : totalPedido;
         }
         if (saldoCC.compareTo(BigDecimal.ZERO) > 0) {
-            total = total.subtract(saldoCC.abs());
-            txt_MontoPago1.setValue(total.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : total);
+            total = saldoCC.subtract(total);// total.subtract(saldoCC.abs());
+            txt_MontoPago1.setValue(total.compareTo(BigDecimal.ZERO) > 0 ? BigDecimal.ZERO : total.abs());
         } else {
             total = total.add(saldoCC.abs());
             txt_MontoPago1.setValue(total);
@@ -829,17 +829,6 @@ public class CerrarOperacionGUI extends JDialog {
                 if (totalPagos.compareTo(total) < 0) {
                     int reply = JOptionPane.showConfirmDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_montos_insuficientes"),
-                            "Aviso", JOptionPane.YES_NO_OPTION);
-                    if (reply == JOptionPane.YES_OPTION) {
-                        if (this.nuevaFacturaVenta != null) {
-                            this.finalizarVenta();
-                        } else if (tipoDeEnvio != null) {
-                            this.cerrarPedido(tipoDeEnvio);
-                        }
-                    }
-                } else if (totalPagos.compareTo(total) > 0) {
-                    int reply = JOptionPane.showConfirmDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_montos_superiores_al_total_factura"),
                             "Aviso", JOptionPane.YES_NO_OPTION);
                     if (reply == JOptionPane.YES_OPTION) {
                         if (this.nuevaFacturaVenta != null) {
