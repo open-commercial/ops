@@ -745,7 +745,7 @@ public class CerrarOperacionGUI extends JDialog {
             total = totalFactura != null ? totalFactura : totalPedido;
         }
         if (saldoCC.compareTo(BigDecimal.ZERO) > 0) {
-            total = saldoCC.subtract(total);// total.subtract(saldoCC.abs());
+            total = saldoCC.subtract(total);
             txt_MontoPago1.setValue(total.compareTo(BigDecimal.ZERO) > 0 ? BigDecimal.ZERO : total.abs());
         } else {
             total = total.add(saldoCC.abs());
