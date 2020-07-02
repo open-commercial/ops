@@ -223,7 +223,7 @@ public class BuscarProductosGUI extends JDialog {
             }
         }
     }
-    
+
     private BigDecimal sumarCantidadesSegunProductosYaCargados() {
         BigDecimal cantidad = new BigDecimal(txtCantidad.getValue().toString());
         if (renglonesFactura != null && !renglonesFactura.isEmpty()) {
@@ -263,67 +263,56 @@ public class BuscarProductosGUI extends JDialog {
                             });
                 });
             }
-            Map<Long, BigDecimal> renglonesInicialesAux = new HashMap<>();
+            Map<Long, BigDecimal> cantidadesNuevasAux = new HashMap<>();
             if (renglonesIniciales != null && !renglonesIniciales.isEmpty() && cantidadesNuevas != null && !cantidadesNuevas.isEmpty()) {
                 cantidadesNuevas.forEach((id, cantidad) -> {
                     renglonesIniciales.stream().filter(renglonInicial -> renglonInicial.getIdProductoItem() == id)
                             .forEach(renglonInical -> {
                                 BigDecimal diferencia = cantidad.subtract(renglonInical.getCantidad());
                                 if (diferencia.compareTo(BigDecimal.ZERO) != 0) {
-                                    renglonesInicialesAux.put(id, diferencia);
+                                    cantidadesNuevasAux.put(id, diferencia);
                                 } else {
-                                    renglonesInicialesAux.put(id, BigDecimal.ZERO);
+                                    cantidadesNuevasAux.put(id, BigDecimal.ZERO);
                                 }
                             });
                 });
             }
-            if (cantidadesNuevas != null && !cantidadesNuevas.isEmpty()) {
-                cantidadesNuevas.forEach((id, cantidad) -> {
-                    if (cantidad.compareTo(BigDecimal.ZERO) != 0) {
-                        productosTotal.stream().filter(producto -> (id == producto.getIdProducto() && producto.isIlimitado() == false))
-                                .forEachOrdered(p -> {
-                                    p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
-                                        if (cantidadEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
-                                            BigDecimal resultado = cantidadEnSucursal.getCantidad().subtract(cantidad);
-                                            if (resultado.compareTo(BigDecimal.ZERO) >= 0) {
-                                                cantidadEnSucursal.setCantidad(cantidadEnSucursal.getCantidad().subtract(cantidad));
-                                            } else {
-                                                cantidadEnSucursal.setCantidad(BigDecimal.ZERO);
-                                            }
-                                            p.setCantidadTotalEnSucursales(p.getCantidadTotalEnSucursales().subtract(cantidad));
-                                        }
-                                    });
-                                });
-                    }
-                });
-                cantidadesNuevas.keySet().forEach(id -> {
-                    renglonesIniciales.stream().filter(renglonInicial -> renglonInicial.getIdProductoItem() != id).forEach(renglonInicial
-                            -> {
-                        productosTotal.stream().filter(p -> (renglonInicial.getIdProductoItem() == p.getIdProducto() && p.isIlimitado() == false))
-                                .forEachOrdered(p -> {
-                                    p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
-                                        if (cantidadEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
-                                            cantidadEnSucursal.setCantidad(cantidadEnSucursal.getCantidad().add(renglonInicial.getCantidad()));
-                                            p.setCantidadTotalEnSucursales(p.getCantidadTotalEnSucursales().add(renglonInicial.getCantidad()));
-                                        }
-                                    });
-                                });
-                    }
-                    );
-                });
-            } else {
-                renglonesIniciales.forEach(renglonInicial -> {
-                    productosTotal.stream().filter(producto -> (renglonInicial.getIdProductoItem() == producto.getIdProducto() && producto.isIlimitado() == false))
+            cantidadesNuevasAux.forEach((id, cantidad) -> {
+                if (cantidad.compareTo(BigDecimal.ZERO) != 0) {
+                    productosTotal.stream().filter(producto -> (id == producto.getIdProducto() && producto.isIlimitado() == false))
                             .forEachOrdered(p -> {
                                 p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
                                     if (cantidadEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
-                                        cantidadEnSucursal.setCantidad(cantidadEnSucursal.getCantidad().add(renglonInicial.getCantidad()));
-                                        p.setCantidadTotalEnSucursales(p.getCantidadTotalEnSucursales().add(renglonInicial.getCantidad()));
+                                        BigDecimal resultado = cantidadEnSucursal.getCantidad().subtract(cantidad);
+                                        if (resultado.compareTo(BigDecimal.ZERO) >= 0) {
+                                            cantidadEnSucursal.setCantidad(resultado);
+                                        } else {
+                                            cantidadEnSucursal.setCantidad(BigDecimal.ZERO);
+                                        }
+                                        p.setCantidadTotalEnSucursales(p.getCantidadTotalEnSucursales().subtract(cantidad));
                                     }
                                 });
                             });
-                });
-            }
+                }
+            });
+            Map<Long, BigDecimal> cantidadesInicialesAux = new HashMap<>();
+            renglonesIniciales.forEach(renglonInicial -> {
+                cantidadesInicialesAux.put(renglonInicial.getIdProductoItem(), renglonInicial.getCantidad());
+            });
+            cantidadesNuevas.keySet().forEach(id -> {
+                cantidadesInicialesAux.remove(id);
+            });
+            cantidadesInicialesAux.forEach((id, cantidad) -> {
+                productosTotal.stream().filter(p -> (id == p.getIdProducto() && p.isIlimitado() == false))
+                        .forEachOrdered(p -> {
+                            p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
+                                if (cantidadEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
+                                    cantidadEnSucursal.setCantidad(cantidadEnSucursal.getCantidad().add(cantidad));
+                                    p.setCantidadTotalEnSucursales(p.getCantidadTotalEnSucursales().add(cantidad));
+                                }
+                            });
+                        });
+            });
         }
     }
 

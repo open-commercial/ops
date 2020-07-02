@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -367,7 +366,7 @@ public class DetallePedidoGUI extends JInternalFrame {
                     }
                     this.cliente = null;
                     this.cargarComponentesIniciales();
-                    this.renglones.clear();
+                    this.renglones = new ArrayList<>();
                     this.cargarRenglonesAlTable();
                     this.calcularResultados();
                 }
