@@ -242,7 +242,9 @@ public class DetallePedidoGUI extends JInternalFrame {
             }
             Map<Long, BigDecimal> idsAndCantidadesNuevas = new HashMap<>();
             renglones.forEach(renglon -> idsAndCantidadesNuevas.put(renglon.getIdProductoItem(), renglon.getCantidad()));
-            BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(idsAndCantidadesNuevas, renglonesDelPedido, idPedido);
+            Map<Long, BigDecimal> idsAndCantidadesIniciales = new HashMap<>();
+            renglonesDelPedido.forEach(renglon -> idsAndCantidadesIniciales.put(renglon.getIdProductoItem(), renglon.getCantidad()));
+            BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI(idsAndCantidadesNuevas, idsAndCantidadesIniciales, idPedido);
             buscarProductosGUI.setModal(true);
             buscarProductosGUI.setLocationRelativeTo(this);
             buscarProductosGUI.setVisible(true);
