@@ -265,7 +265,7 @@ public class BuscarProductosGUI extends JDialog {
             }
             Map<Long, BigDecimal> cantidadesNuevasAux = new HashMap<>();
             if (renglonesIniciales != null && !renglonesIniciales.isEmpty() && cantidadesNuevas != null && !cantidadesNuevas.isEmpty()) {
-                cantidadesNuevas.forEach((id, cantidad) -> {
+                cantidadesNuevas.forEach((id, cantidad) -> { //Realizar la diferencia entre la cantidad nueva y la cantidad inicial
                     renglonesIniciales.stream().filter(renglonInicial -> renglonInicial.getIdProductoItem() == id)
                             .forEach(renglonInical -> {
                                 BigDecimal diferencia = cantidad.subtract(renglonInical.getCantidad());
@@ -277,7 +277,7 @@ public class BuscarProductosGUI extends JDialog {
                             });
                 });
             }
-            cantidadesNuevasAux.forEach((id, cantidad) -> {
+            cantidadesNuevasAux.forEach((id, cantidad) -> {// restar el resultado de la operación anterior
                 if (cantidad.compareTo(BigDecimal.ZERO) != 0) {
                     productosTotal.stream().filter(producto -> (id == producto.getIdProducto() && producto.isIlimitado() == false))
                             .forEachOrdered(p -> {
@@ -302,7 +302,7 @@ public class BuscarProductosGUI extends JDialog {
             cantidadesNuevas.keySet().forEach(id -> {
                 cantidadesInicialesAux.remove(id);
             });
-            cantidadesInicialesAux.forEach((id, cantidad) -> {
+            cantidadesInicialesAux.forEach((id, cantidad) -> { // sumar los renglones iniciales faltantes en los nuevos renglones
                 productosTotal.stream().filter(p -> (id == p.getIdProducto() && p.isIlimitado() == false))
                         .forEachOrdered(p -> {
                             p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
