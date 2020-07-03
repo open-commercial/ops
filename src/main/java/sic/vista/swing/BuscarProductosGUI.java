@@ -8,7 +8,9 @@ import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -23,7 +25,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
-import sic.modelo.CantidadEnSucursal;
 import sic.modelo.SucursalActiva;
 import sic.modelo.Movimiento;
 import sic.modelo.NuevoRenglonFactura;
@@ -47,7 +48,9 @@ public class BuscarProductosGUI extends JDialog {
     private final List<Producto> productosTotal = new ArrayList<>();
     private List<Producto> productosParcial = new ArrayList<>();
     private List<RenglonFactura> renglonesFactura;
-    private List<RenglonPedido> renglonesPedido;
+    private Map<Long, BigDecimal> cantidadesNuevas;
+    private Map<Long, BigDecimal> cantidadesIniciales;
+    private Long idPedido;
     private Producto productoSeleccionado;
     private NuevoRenglonFactura nuevoRenglonFactura;
     private NuevoRenglonPedido nuevoRenglonPedido;
@@ -57,7 +60,7 @@ public class BuscarProductosGUI extends JDialog {
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int NUMERO_PAGINA = 0;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private final Dimension sizeDialog = new Dimension(1000, 600);
+    private final Dimension sizeDialog = new Dimension(1100, 600);
     
     public BuscarProductosGUI(List<RenglonFactura> renglones, TipoDeComprobante tipoDeComprobante, Movimiento tipoDeMovimiento) { 
         this.initComponents();
@@ -70,10 +73,12 @@ public class BuscarProductosGUI extends JDialog {
         this.agregarListeners();
     }
     
-    public BuscarProductosGUI(List<RenglonPedido> renglones) { 
+    public BuscarProductosGUI(Map<Long, BigDecimal> cantidadesNuevas, Map<Long, BigDecimal> cantidadesIniciales, Long idPedido) { 
         this.initComponents();
         this.setIcon();
-        this.renglonesPedido = renglones;
+        this.cantidadesNuevas = cantidadesNuevas;
+        this.cantidadesIniciales = cantidadesIniciales;
+        this.idPedido = idPedido;
         this.movimiento = Movimiento.PEDIDO;
         this.tipoDeComprobante = TipoDeComprobante.PEDIDO;
         this.busquedaParaFiltros = false;
@@ -113,7 +118,7 @@ public class BuscarProductosGUI extends JDialog {
     private void prepararComponentes() {
         txtCantidad.setValue(1.00);
         txtBonificacion.setValue(0.00);
-        if ((renglonesFactura == null || renglonesPedido == null) && movimiento == null && tipoDeComprobante == null) {
+        if ((renglonesFactura == null || cantidadesNuevas == null) && movimiento == null && tipoDeComprobante == null) {
             lbl_Cantidad.setVisible(false);
             txtCantidad.setVisible(false);
             lblBonificacion.setVisible(false);
@@ -139,7 +144,7 @@ public class BuscarProductosGUI extends JDialog {
                 productosParcial = response.getContent();
                 productosTotal.addAll(productosParcial);
                 productoSeleccionado = null;
-                if (renglonesFactura != null) {
+                if (renglonesFactura != null || cantidadesNuevas != null) {
                     this.restarCantidadesSegunProductosYaCargados();
                 }
                 this.cargarResultadosAlTable();
@@ -162,14 +167,16 @@ public class BuscarProductosGUI extends JDialog {
             debeCargarRenglon = false;
             this.dispose();
         } else {
-            if (movimiento == Movimiento.VENTA) {
+            if (movimiento == Movimiento.PEDIDO) {
                 BigDecimal[] cantidades = {this.sumarCantidadesSegunProductosYaCargados()};
                 long[] idsProductos = {productoSeleccionado.getIdProducto()};
                 ProductosParaVerificarStock productosParaVerificarStock = ProductosParaVerificarStock.builder()
-                        .idSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal())
                         .cantidad(cantidades)
                         .idProducto(idsProductos)
                         .build();
+                if (this.idPedido != null) {
+                    productosParaVerificarStock.setIdPedido(this.idPedido);
+                }
                 HttpEntity<ProductosParaVerificarStock> requestEntity = new HttpEntity<>(productosParaVerificarStock);
                 boolean existeStockSuficiente;
                 existeStockSuficiente = RestClient.getRestTemplate()
@@ -189,12 +196,6 @@ public class BuscarProductosGUI extends JDialog {
                             this.nuevoRenglonPedido = new NuevoRenglonPedido();
                             this.nuevoRenglonPedido.setCantidad(new BigDecimal(txtCantidad.getValue().toString()));
                             this.nuevoRenglonPedido.setIdProductoItem(productoSeleccionado.getIdProducto());
-                            break;
-                        case VENTA:
-                            nuevoRenglonFactura = NuevoRenglonFactura.builder()
-                                    .idProducto(productoSeleccionado.getIdProducto())
-                                    .cantidad(new BigDecimal(txtCantidad.getValue().toString()))
-                                    .build();
                             break;
                         case COMPRA:
                             nuevoRenglonFactura = NuevoRenglonFactura.builder()
@@ -216,29 +217,93 @@ public class BuscarProductosGUI extends JDialog {
             }
         }
     }
-    
+
     private BigDecimal sumarCantidadesSegunProductosYaCargados() {
         BigDecimal cantidad = new BigDecimal(txtCantidad.getValue().toString());
-        for (RenglonFactura r : renglonesFactura) {
-            if (r.getIdProductoItem() == productoSeleccionado.getIdProducto()) {
-                cantidad = cantidad.add(r.getCantidad());
+        if (renglonesFactura != null && !renglonesFactura.isEmpty()) {
+            for (RenglonFactura r : renglonesFactura) {
+                if (r.getIdProductoItem() == productoSeleccionado.getIdProducto()) {
+                    cantidad = cantidad.add(r.getCantidad());
+                }
+            }
+        }
+        if (cantidadesNuevas != null && !cantidadesNuevas.isEmpty()) {
+            for (Long id : cantidadesNuevas.keySet()) {
+                if (id == productoSeleccionado.getIdProducto()) {
+                    cantidad = cantidad.add(cantidadesNuevas.get(id));
+                }
             }
         }
         return cantidad;
     }
-    
+
     private void restarCantidadesSegunProductosYaCargados() {
-        if (!(movimiento == Movimiento.PEDIDO || movimiento == Movimiento.COMPRA)) {
-            renglonesFactura.forEach((r) -> {
-                productosTotal.stream().filter((p) -> (r.getIdProductoItem() == p.getIdProducto() && p.isIlimitado() == false))
-                        .forEachOrdered((p) -> {
-                            p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
-                                if (cantidadEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
-                                    cantidadEnSucursal.setCantidad(cantidadEnSucursal.getCantidad().subtract(r.getCantidad()));
-                                }
+        if (movimiento == Movimiento.PEDIDO) {
+            Map<Long, BigDecimal> cantidadesNuevasAux = new HashMap<>();
+            if (cantidadesIniciales == null || cantidadesIniciales.isEmpty()) {// Pedido nuevo
+                if (cantidadesNuevas != null && !cantidadesNuevas.isEmpty()) {
+                    cantidadesNuevas.forEach((id, cantidad) -> { // se restan las cantidades nuevas a los resultados
+                        productosTotal.stream().filter(p -> (id == p.getIdProducto() && p.isIlimitado() == false))
+                                .forEachOrdered(p -> {
+                                    p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
+                                        if (cantidadEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
+                                            BigDecimal resultado = cantidadEnSucursal.getCantidad().subtract(cantidad);
+                                            if (resultado.compareTo(BigDecimal.ZERO) >= 0) {
+                                                cantidadEnSucursal.setCantidad(resultado);
+                                            } else {
+                                                cantidadEnSucursal.setCantidad(BigDecimal.ZERO);
+                                            }
+                                            p.setCantidadTotalEnSucursales(p.getCantidadTotalEnSucursales().subtract(cantidad));
+                                        }
+                                    });
+                                });
+                    });
+                }
+            } else { // actualización (las cantidades iniciales son de un pedido guardado
+                cantidadesNuevas.forEach((id, cantidadNueva) -> { //Realizar la diferencia entre la cantidad nueva y la cantidad inicial
+                    BigDecimal cantidadInicial = cantidadesIniciales.get(id);
+                    if (cantidadInicial != null) {
+                        BigDecimal diferencia = cantidadNueva.subtract(cantidadInicial);
+                        if (diferencia.compareTo(BigDecimal.ZERO) != 0) {
+                            cantidadesNuevasAux.put(id, diferencia);
+                        } else {
+                            cantidadesNuevasAux.put(id, BigDecimal.ZERO);
+                        }
+                    }
+                });
+                cantidadesNuevasAux.forEach((id, cantidad) -> {// restar el resultado de la operación anterior
+                    if (cantidad.compareTo(BigDecimal.ZERO) != 0) {
+                        productosTotal.stream().filter(producto -> (id == producto.getIdProducto() && producto.isIlimitado() == false))
+                                .forEachOrdered(p -> {
+                                    p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
+                                        if (cantidadEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
+                                            BigDecimal resultado = cantidadEnSucursal.getCantidad().subtract(cantidad);
+                                            if (resultado.compareTo(BigDecimal.ZERO) >= 0) {
+                                                cantidadEnSucursal.setCantidad(resultado);
+                                            } else {
+                                                cantidadEnSucursal.setCantidad(BigDecimal.ZERO);
+                                            }
+                                            p.setCantidadTotalEnSucursales(p.getCantidadTotalEnSucursales().subtract(cantidad));
+                                        }
+                                    });
+                                });
+                    }
+                });
+                cantidadesNuevas.keySet().forEach(id -> {
+                    cantidadesIniciales.remove(id);
+                });
+                cantidadesIniciales.forEach((id, cantidad) -> { // sumar los renglones iniciales faltantes en los nuevos renglones
+                    productosTotal.stream().filter(p -> (id == p.getIdProducto() && p.isIlimitado() == false))
+                            .forEachOrdered(p -> {
+                                p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
+                                    if (cantidadEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
+                                        cantidadEnSucursal.setCantidad(cantidadEnSucursal.getCantidad().add(cantidad));
+                                        p.setCantidadTotalEnSucursales(p.getCantidadTotalEnSucursales().add(cantidad));
+                                    }
+                                });
                             });
-                        });
-            });
+                });
+            }
         }
     }
 
@@ -276,13 +341,14 @@ public class BuscarProductosGUI extends JDialog {
                         fila[2] = cantidadesEnSucursal.getCantidad();
                     }
                 });
-                fila[3] = p.getCantidadEnSucursales().stream()
-                        .filter(cantidadEnSucursales -> !cantidadEnSucursales.idSucursal.equals(SucursalActiva.getInstance().getSucursal().getIdSucursal()))
-                        .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);
+                p.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
+                    if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
+                        fila[3] = p.getCantidadTotalEnSucursales().subtract(cantidadesEnSucursal.getCantidad());
+                    }
+                });
                 fila[4] = p.getBulto();
                 fila[5] = p.getNombreMedida();
-                BigDecimal precio = (movimiento == Movimiento.VENTA) ? p.getPrecioLista()
-                        : (movimiento == Movimiento.PEDIDO) ? p.getPrecioLista()
+                BigDecimal precio = (movimiento == Movimiento.PEDIDO) ? p.getPrecioLista()
                                 : (movimiento == Movimiento.COMPRA) ? p.getPrecioCosto() : BigDecimal.ZERO;
                 fila[6] = precio;
                 fila[7] = p.getPorcentajeBonificacionOferta();
@@ -319,8 +385,7 @@ public class BuscarProductosGUI extends JDialog {
             encabezados[3] = "Otras Sucursales";
             encabezados[4] = "Venta x Cant.";
             encabezados[5] = "Medida";
-            String encabezadoPrecio = (movimiento == Movimiento.VENTA) ? "P. Lista"
-                    : (movimiento == Movimiento.PEDIDO) ? "P. Lista"
+            String encabezadoPrecio = (movimiento == Movimiento.PEDIDO) ? "P. Lista"
                             : (movimiento == Movimiento.COMPRA) ? "P.Costo" : "";
             encabezados[6] = encabezadoPrecio;
             encabezados[7] = "% Oferta";

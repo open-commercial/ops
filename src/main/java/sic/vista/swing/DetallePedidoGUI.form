@@ -101,32 +101,32 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="lblNombreCliente" alignment="0" max="32767" attributes="1"/>
                           <Component id="lblUbicacionCliente" alignment="0" max="32767" attributes="1"/>
                           <Component id="lbl_CondicionIVACliente" alignment="0" min="-2" max="-2" attributes="1"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="txt_CondicionIVACliente" linkSize="24" min="-2" pref="581" max="-2" attributes="2"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="lbl_IDFiscalCliente" min="-2" max="-2" attributes="1"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="txtIdFiscalCliente" max="32767" attributes="2"/>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="txtNombreCliente" linkSize="24" min="-2" pref="635" max="-2" attributes="2"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="lblMontoCompraMinima" min="-2" max="-2" attributes="1"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="txtMontoCompraMinima" max="32767" attributes="0"/>
-                          </Group>
-                          <Component id="txtUbicacionCliente" alignment="1" max="32767" attributes="2"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="txtUbicacionCliente" alignment="0" pref="690" max="32767" attributes="2"/>
+                          <Component id="txt_CondicionIVACliente" max="32767" attributes="2"/>
+                          <Component id="txtNombreCliente" alignment="0" max="32767" attributes="2"/>
                       </Group>
-                      <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="lblMontoCompraMinima" max="32767" attributes="1"/>
+                          <Component id="lblSaldoCC" max="32767" attributes="0"/>
+                          <Component id="lbl_IdFiscalCliente" max="32767" attributes="1"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="txtIdFiscalCliente" pref="130" max="32767" attributes="2"/>
+                          <Component id="ftxtSaldoFinal" alignment="0" max="32767" attributes="0"/>
+                          <Component id="ftxtCompraMinima" alignment="0" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -134,22 +134,29 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="lblMontoCompraMinima" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtNombreCliente" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="lblNombreCliente" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtMontoCompraMinima" alignment="2" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="txtUbicacionCliente" linkSize="18" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblUbicacionCliente" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtNombreCliente" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbl_IdFiscalCliente" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtIdFiscalCliente" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="txtIdFiscalCliente" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="txt_CondicionIVACliente" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="lbl_IDFiscalCliente" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="lbl_CondicionIVACliente" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblUbicacionCliente" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtUbicacionCliente" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblSaldoCC" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="ftxtSaldoFinal" alignment="2" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="2" attributes="0">
+                              <Component id="lbl_CondicionIVACliente" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="txt_CondicionIVACliente" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblMontoCompraMinima" linkSize="21" alignment="2" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="ftxtCompraMinima" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
               </Group>
@@ -168,9 +175,9 @@
                 <Property name="text" type="java.lang.String" value="Ubicaci&#xf3;n:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="lbl_IDFiscalCliente">
+            <Component class="javax.swing.JLabel" name="lbl_IdFiscalCliente">
               <Properties>
-                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="horizontalAlignment" type="int" value="2"/>
                 <Property name="text" type="java.lang.String" value="CUIT o DNI:"/>
               </Properties>
             </Component>
@@ -200,8 +207,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="lblMontoCompraMinima">
               <Properties>
-                <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="Compra M&#xed;nima $:"/>
+                <Property name="horizontalAlignment" type="int" value="2"/>
+                <Property name="text" type="java.lang.String" value="Compra M&#xed;n. $:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtIdFiscalCliente">
@@ -210,9 +217,36 @@
                 <Property name="focusable" type="boolean" value="false"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="txtMontoCompraMinima">
+            <Component class="javax.swing.JLabel" name="lblSaldoCC">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="2"/>
+                <Property name="text" type="java.lang.String" value="Saldo CC $:"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JFormattedTextField" name="ftxtSaldoFinal">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+                  <Format format="#,##0.##" subtype="-1" type="0"/>
+                </Property>
+                <Property name="horizontalAlignment" type="int" value="4"/>
+                <Property name="focusable" type="boolean" value="false"/>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="12" style="1"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JFormattedTextField" name="ftxtCompraMinima">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+                  <Format format="#,##0.##" subtype="-1" type="0"/>
+                </Property>
+                <Property name="horizontalAlignment" type="int" value="4"/>
+                <Property name="focusable" type="boolean" value="false"/>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="12" style="1"/>
+                </Property>
               </Properties>
             </Component>
           </SubComponents>
@@ -248,7 +282,7 @@
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="sp_Resultado" pref="202" max="32767" attributes="0"/>
+                      <Component id="sp_Resultado" pref="200" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -649,7 +683,7 @@
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Component id="btnModificarCliente" linkSize="25" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="99" max="-2" attributes="0"/>
-                      <Component id="lblSeparadorDerecho" max="32767" attributes="0"/>
+                      <Component id="lblSeparadorDerecho" pref="55" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="305" max="-2" attributes="0"/>
                   </Group>
               </Group>

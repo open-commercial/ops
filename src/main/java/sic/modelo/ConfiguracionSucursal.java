@@ -16,6 +16,9 @@ public class ConfiguracionSucursal implements Serializable {
     private String passwordCertificadoAfip;
     private int nroPuntoDeVentaAfip;
     private boolean puntoDeRetiro;
+    private boolean predeterminada;
+    private long vencimientoLargo;
+    private long vencimientoCorto;
     private long idSucursal;
     private String nombreSucursal;
 

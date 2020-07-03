@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Data;
@@ -18,7 +17,7 @@ public class Pedido implements Serializable {
     private long idPedido;
     private long nroPedido;    
     private LocalDateTime fecha;    
-    private LocalDate fechaVencimiento;    
+    private LocalDateTime fechaVencimiento;    
     private String observaciones;  
     private String nombreSucursal;
     private Long idSucursal;
@@ -34,7 +33,6 @@ public class Pedido implements Serializable {
     private BigDecimal recargoNeto;
     private BigDecimal descuentoPorcentaje;
     private BigDecimal descuentoNeto;
-    private BigDecimal totalEstimado;
-    private BigDecimal totalActual;
+    private BigDecimal total;
     private EstadoPedido estado;
 }

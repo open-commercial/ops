@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -34,6 +35,7 @@ import sic.modelo.Usuario;
 import sic.modelo.EstadoPedido;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
+import sic.modelo.RenglonPedido;
 import sic.modelo.Rol;
 import sic.modelo.UsuarioActivo;
 import sic.modelo.criteria.BusquedaClienteCriteria;
@@ -45,23 +47,23 @@ import sic.util.Utilidades;
 
 public class PedidosGUI extends JInternalFrame {
 
-    private List<Pedido> pedidosTotal = new ArrayList<>();    
+    private List<Pedido> pedidosTotal = new ArrayList<>();
     private List<Pedido> pedidosParcial = new ArrayList<>();
-    private ModeloTabla modeloTablaPedidos;    
+    private ModeloTabla modeloTablaPedidos;
     private Cliente clienteSeleccionado;
-    private Usuario usuarioSeleccionado;  
+    private Usuario usuarioSeleccionado;
     private Usuario viajanteSeleccionado;
     private Producto productoSeleccionado;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private final Dimension sizeInternalFrame =  new Dimension(880, 600);
+    private final Dimension sizeInternalFrame = new Dimension(880, 600);
     private static int totalElementosBusqueda;
-    private static int NUMERO_PAGINA = 0;    
+    private static int NUMERO_PAGINA = 0;
 
     public PedidosGUI() {
         this.initComponents();
         sp_Pedidos.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-            int va = scrollBar.getVisibleAmount() + 10;
+            int va  = scrollBar.getVisibleAmount() + 10;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
                 if (pedidosTotal.size() >= 10) {
                     NUMERO_PAGINA += 1;
@@ -127,7 +129,7 @@ public class PedidosGUI extends JInternalFrame {
             gui_facturaVenta.setLocation(getDesktopPane().getWidth() / 2 - gui_facturaVenta.getWidth() / 2,
                     getDesktopPane().getHeight() / 2 - gui_facturaVenta.getHeight() / 2);
             getDesktopPane().add(gui_facturaVenta);
-            long numeroDePedido = (long) tbl_Pedidos.getValueAt(tbl_Pedidos.getSelectedRow(), 2);
+            long numeroDePedido = (long) tbl_Pedidos.getValueAt(tbl_Pedidos.getSelectedRow(), 3);
             gui_facturaVenta.setVisible(true);
             gui_facturaVenta.buscarPorNroPedido(numeroDePedido);
             try {
@@ -142,7 +144,7 @@ public class PedidosGUI extends JInternalFrame {
 
     private void cambiarEstadoEnabledComponentes(boolean status) {
         chk_Fecha.setEnabled(status);
-        if (status == true && chk_Fecha.isSelected() == true) {            
+        if (status == true && chk_Fecha.isSelected() == true) {
             dc_FechaDesde.setEnabled(true);
             dc_FechaHasta.setEnabled(true);
         } else {
@@ -160,42 +162,42 @@ public class PedidosGUI extends JInternalFrame {
             btnBuscarCliente.setEnabled(true);
         } else {
             btnBuscarCliente.setEnabled(false);
-        }        
+        }
         chk_Usuario.setEnabled(status);
         if (status == true && chk_Usuario.isSelected() == true) {
             btnBuscarUsuarios.setEnabled(true);
         } else {
             btnBuscarUsuarios.setEnabled(false);
-        }        
-        btn_Buscar.setEnabled(status);        
+        }
+        btn_Buscar.setEnabled(status);
         btnNuevoPedido.setEnabled(status);
         btnVerFacturas.setEnabled(status);
         btnFacturar.setEnabled(status);
         btnModificarPedido.setEnabled(status);
-        btnEliminarPedido.setEnabled(status);
+        btnCancelarPedido.setEnabled(status);
         btnImprimirPedido.setEnabled(status);
         tbl_Pedidos.setEnabled(status);
         sp_Pedidos.setEnabled(status);
         tbl_Pedidos.requestFocus();
     }
-    
+
     private void cargarResultadosAlTable() {
         pedidosParcial.stream().map(p -> {
             Object[] fila = new Object[8];
             fila[0] = p.getEstado();
             fila[1] = p.getFecha();
-            fila[2] = p.getNroPedido();
-            fila[3] = p.getCliente().getNombreFiscal();
-            fila[4] = p.getNombreUsuario();
-            fila[5] = p.getNombreViajante();
-            fila[6] = p.getTotalEstimado();
-            fila[7] = p.getTotalActual();
+            fila[2] = p.getFechaVencimiento();
+            fila[3] = p.getNroPedido();
+            fila[4] = p.getCliente().getNombreFiscal();
+            fila[5] = p.getNombreUsuario();
+            fila[6] = p.getNombreViajante();
+            fila[7] = p.getTotal();
             return fila;
         }).forEach(f -> {
             modeloTablaPedidos.addRow(f);
         });
         tbl_Pedidos.setModel(modeloTablaPedidos);
-        tbl_Pedidos.setDefaultRenderer(EstadoPedido.class, new ColoresEstadosRenderer());        
+        tbl_Pedidos.setDefaultRenderer(EstadoPedido.class, new ColoresEstadosRenderer());
         lbl_cantResultados.setText(totalElementosBusqueda + " pedidos encontrados");
     }
 
@@ -206,10 +208,10 @@ public class PedidosGUI extends JInternalFrame {
         Point p = new Point(0, 0);
         sp_Pedidos.getViewport().setViewPosition(p);
     }
-    
+
     private void limpiarJTables() {
         modeloTablaPedidos = new ModeloTabla();
-        tbl_Pedidos.setModel(modeloTablaPedidos);        
+        tbl_Pedidos.setModel(modeloTablaPedidos);
         this.setColumnas();
     }
 
@@ -218,23 +220,23 @@ public class PedidosGUI extends JInternalFrame {
         String[] encabezados = new String[8];
         encabezados[0] = "Estado";
         encabezados[1] = "Fecha Pedido";
-        encabezados[2] = "Nº Pedido";
-        encabezados[3] = "Cliente";
-        encabezados[4] = "Usuario";
-        encabezados[5] = "Viajante";
-        encabezados[6] = "Total Estimado";
-        encabezados[7] = "Total Actual";
+        encabezados[2] = "Fecha Vencimiento";
+        encabezados[3] = "Nº Pedido";
+        encabezados[4] = "Cliente";
+        encabezados[5] = "Usuario";
+        encabezados[6] = "Viajante";
+        encabezados[7] = "Total";
         modeloTablaPedidos.setColumnIdentifiers(encabezados);
         tbl_Pedidos.setModel(modeloTablaPedidos);
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaPedidos.getColumnCount()];
         tipos[0] = EstadoPedido.class;
         tipos[1] = LocalDateTime.class;
-        tipos[2] = Long.class;
-        tipos[3] = String.class;
+        tipos[2] = LocalDateTime.class;
+        tipos[3] = Long.class;
         tipos[4] = String.class;
         tipos[5] = String.class;
-        tipos[6] = BigDecimal.class;
+        tipos[6] = String.class;
         tipos[7] = BigDecimal.class;
         modeloTablaPedidos.setClaseColumnas(tipos);
         tbl_Pedidos.getTableHeader().setReorderingAllowed(false);
@@ -244,22 +246,24 @@ public class PedidosGUI extends JInternalFrame {
         tbl_Pedidos.getColumnModel().getColumn(0).setMaxWidth(80);
         tbl_Pedidos.getColumnModel().getColumn(1).setPreferredWidth(140);
         tbl_Pedidos.getColumnModel().getColumn(1).setMaxWidth(140);
-        tbl_Pedidos.getColumnModel().getColumn(2).setPreferredWidth(100);
-        tbl_Pedidos.getColumnModel().getColumn(2).setMaxWidth(100);
-        tbl_Pedidos.getColumnModel().getColumn(3).setPreferredWidth(220);
-        tbl_Pedidos.getColumnModel().getColumn(3).setMaxWidth(220);
-        tbl_Pedidos.getColumnModel().getColumn(3).setMinWidth(220);
+        tbl_Pedidos.getColumnModel().getColumn(2).setPreferredWidth(140);
+        tbl_Pedidos.getColumnModel().getColumn(2).setMaxWidth(140);
+        tbl_Pedidos.getColumnModel().getColumn(3).setPreferredWidth(100);
+        tbl_Pedidos.getColumnModel().getColumn(3).setMaxWidth(100);
         tbl_Pedidos.getColumnModel().getColumn(4).setPreferredWidth(220);
         tbl_Pedidos.getColumnModel().getColumn(4).setMaxWidth(220);
         tbl_Pedidos.getColumnModel().getColumn(4).setMinWidth(220);
         tbl_Pedidos.getColumnModel().getColumn(5).setPreferredWidth(220);
         tbl_Pedidos.getColumnModel().getColumn(5).setMaxWidth(220);
         tbl_Pedidos.getColumnModel().getColumn(5).setMinWidth(220);
-        tbl_Pedidos.getColumnModel().getColumn(6).setPreferredWidth(25);
+        tbl_Pedidos.getColumnModel().getColumn(6).setPreferredWidth(220);
+        tbl_Pedidos.getColumnModel().getColumn(6).setMaxWidth(220);
+        tbl_Pedidos.getColumnModel().getColumn(6).setMinWidth(220);
         tbl_Pedidos.getColumnModel().getColumn(7).setPreferredWidth(25);
         //renderers
         tbl_Pedidos.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         tbl_Pedidos.getColumnModel().getColumn(1).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
+        tbl_Pedidos.getColumnModel().getColumn(2).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
     }
 
     private boolean existeClienteDisponible() {
@@ -307,16 +311,16 @@ public class PedidosGUI extends JInternalFrame {
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
                 || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
-            btnEliminarPedido.setEnabled(true);
+            btnCancelarPedido.setEnabled(true);
             btnFacturar.setEnabled(true);
             chk_Usuario.setEnabled(true);
         } else {
-            btnEliminarPedido.setEnabled(false);
+            btnCancelarPedido.setEnabled(false);
             btnFacturar.setEnabled(false);
             chk_Usuario.setEnabled(false);
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -351,27 +355,28 @@ public class PedidosGUI extends JInternalFrame {
         btnFacturar = new javax.swing.JButton();
         btnImprimirPedido = new javax.swing.JButton();
         btnModificarPedido = new javax.swing.JButton();
-        btnEliminarPedido = new javax.swing.JButton();
+        btnCancelarPedido = new javax.swing.JButton();
+        btnClonarPedido = new javax.swing.JButton();
 
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/PedidoFacturar_16x16.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
-                formInternalFrameOpened(evt);
-            }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
             }
         });
 
@@ -671,12 +676,21 @@ public class PedidosGUI extends JInternalFrame {
             }
         });
 
-        btnEliminarPedido.setForeground(new java.awt.Color(0, 0, 255));
-        btnEliminarPedido.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Cancel_16x16.png"))); // NOI18N
-        btnEliminarPedido.setText("Eliminar");
-        btnEliminarPedido.addActionListener(new java.awt.event.ActionListener() {
+        btnCancelarPedido.setForeground(new java.awt.Color(0, 0, 255));
+        btnCancelarPedido.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Cancel_16x16.png"))); // NOI18N
+        btnCancelarPedido.setText("Cancelar");
+        btnCancelarPedido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarPedidoActionPerformed(evt);
+                btnCancelarPedidoActionPerformed(evt);
+            }
+        });
+
+        btnClonarPedido.setForeground(new java.awt.Color(0, 0, 255));
+        btnClonarPedido.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Clonar_16x16.png"))); // NOI18N
+        btnClonarPedido.setText("Clonar");
+        btnClonarPedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClonarPedidoActionPerformed(evt);
             }
         });
 
@@ -690,17 +704,19 @@ public class PedidosGUI extends JInternalFrame {
                 .addGap(0, 0, 0)
                 .addComponent(btnModificarPedido)
                 .addGap(0, 0, 0)
-                .addComponent(btnEliminarPedido)
+                .addComponent(btnCancelarPedido)
                 .addGap(0, 0, 0)
                 .addComponent(btnVerFacturas)
                 .addGap(0, 0, 0)
                 .addComponent(btnFacturar)
                 .addGap(0, 0, 0)
                 .addComponent(btnImprimirPedido)
-                .addGap(0, 83, Short.MAX_VALUE))
+                .addGap(0, 0, 0)
+                .addComponent(btnClonarPedido)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnEliminarPedido, btnFacturar, btnImprimirPedido, btnModificarPedido, btnNuevoPedido, btnVerFacturas});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCancelarPedido, btnClonarPedido, btnFacturar, btnImprimirPedido, btnModificarPedido, btnNuevoPedido, btnVerFacturas});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -713,10 +729,11 @@ public class PedidosGUI extends JInternalFrame {
                     .addComponent(btnFacturar)
                     .addComponent(btnModificarPedido)
                     .addComponent(btnImprimirPedido)
-                    .addComponent(btnEliminarPedido)))
+                    .addComponent(btnCancelarPedido)
+                    .addComponent(btnClonarPedido)))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnEliminarPedido, btnFacturar, btnImprimirPedido, btnModificarPedido, btnNuevoPedido, btnVerFacturas});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCancelarPedido, btnFacturar, btnImprimirPedido, btnModificarPedido, btnNuevoPedido, btnVerFacturas});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -725,7 +742,7 @@ public class PedidosGUI extends JInternalFrame {
             .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 142, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -831,20 +848,29 @@ public class PedidosGUI extends JInternalFrame {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
                 Pedido pedido = RestClient.getRestTemplate()
                         .getForObject("/pedidos/" + pedidosTotal.get(indexFilaSeleccionada).getIdPedido(), Pedido.class);
-                if (pedido.getEstado() == EstadoPedido.CERRADO) {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_pedido_facturado"), "Error", JOptionPane.ERROR_MESSAGE);
-                } else if (this.existeClienteDisponible()) {
-                    NuevaFacturaVentaGUI puntoDeVentaGUI = new NuevaFacturaVentaGUI(pedido);
-                    puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
-                            getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
-                    getDesktopPane().add(puntoDeVentaGUI);
-                    puntoDeVentaGUI.setMaximizable(true);
-                    puntoDeVentaGUI.setClosable(true);
-                    puntoDeVentaGUI.setVisible(true);
-                } else {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                switch (pedido.getEstado()) {
+                    case ABIERTO:
+                        if (this.existeClienteDisponible()) {
+                            NuevaFacturaVentaGUI puntoDeVentaGUI = new NuevaFacturaVentaGUI(pedido);
+                            puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
+                                    getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
+                            getDesktopPane().add(puntoDeVentaGUI);
+                            puntoDeVentaGUI.setMaximizable(true);
+                            puntoDeVentaGUI.setClosable(true);
+                            puntoDeVentaGUI.setVisible(true);
+                        } else {
+                            JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                        break;
+                    case CERRADO:
+                        JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_pedido_cerrado"), "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
+                    case CANCELADO:
+                        JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_pedidor_cancelado"), "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
                 }
             }
         } catch (RestClientResponseException ex) {
@@ -877,7 +903,7 @@ public class PedidosGUI extends JInternalFrame {
         }
         this.cambiarEstadoDeComponentesSegunRolUsuario();
     }//GEN-LAST:event_formInternalFrameOpened
-        
+
     private void btnImprimirPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirPedidoActionPerformed
         if (tbl_Pedidos.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
@@ -891,23 +917,29 @@ public class PedidosGUI extends JInternalFrame {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
                 Pedido pedido = RestClient.getRestTemplate()
                         .getForObject("/pedidos/" + pedidosTotal.get(indexFilaSeleccionada).getIdPedido(), Pedido.class);
-                if (pedido.getEstado() == EstadoPedido.CERRADO) {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_pedido_facturado"), "Error", JOptionPane.ERROR_MESSAGE);
-                } else if (pedido.getEstado() == EstadoPedido.ACTIVO) {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_pedido_procesado"), "Error", JOptionPane.ERROR_MESSAGE);
-                } else if (this.existeClienteDisponible()) {
-                    DetallePedidoGUI nuevoPedidoGUI = new DetallePedidoGUI(pedido, true);
-                    nuevoPedidoGUI.setLocation(getDesktopPane().getWidth() / 2 - nuevoPedidoGUI.getWidth() / 2,
-                            getDesktopPane().getHeight() / 2 - nuevoPedidoGUI.getHeight() / 2);
-                    getDesktopPane().add(nuevoPedidoGUI);
-                    nuevoPedidoGUI.setMaximizable(true);
-                    nuevoPedidoGUI.setClosable(true);
-                    nuevoPedidoGUI.setVisible(true);
-                } else {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                switch (pedido.getEstado()) {
+                    case ABIERTO:
+                        if (this.existeClienteDisponible()) {
+                            DetallePedidoGUI nuevoPedidoGUI = new DetallePedidoGUI(pedido, true);
+                            nuevoPedidoGUI.setLocation(getDesktopPane().getWidth() / 2 - nuevoPedidoGUI.getWidth() / 2,
+                                    getDesktopPane().getHeight() / 2 - nuevoPedidoGUI.getHeight() / 2);
+                            getDesktopPane().add(nuevoPedidoGUI);
+                            nuevoPedidoGUI.setMaximizable(true);
+                            nuevoPedidoGUI.setClosable(true);
+                            nuevoPedidoGUI.setVisible(true);
+                        } else {
+                            JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                        break;
+                    case CERRADO:
+                        JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_pedido_cerrado"), "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
+                    case CANCELADO:
+                        JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_pedido_cancelado"), "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
                 }
             }
         } catch (RestClientResponseException ex) {
@@ -920,30 +952,31 @@ public class PedidosGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btnModificarPedidoActionPerformed
 
-    private void btnEliminarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarPedidoActionPerformed
+    private void btnCancelarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarPedidoActionPerformed
         try {
             if (tbl_Pedidos.getSelectedRow() != -1) {
                 int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
                 Pedido pedido = RestClient.getRestTemplate().getForObject("/pedidos/" + pedidosTotal.get(indexFilaSeleccionada).getIdPedido(), Pedido.class);
-                if (pedido.getEstado() == EstadoPedido.CERRADO) {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_pedido_facturado"), "Error", JOptionPane.ERROR_MESSAGE);
-                } else if (pedido.getEstado() == EstadoPedido.ACTIVO) {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_pedido_procesado"), "Error", JOptionPane.ERROR_MESSAGE);
-                } else if (this.existeClienteDisponible()) {
-                    int respuesta = JOptionPane.showConfirmDialog(this,
-                            "¿Esta seguro que desea eliminar el pedido seleccionado?",
-                            "Eliminar", JOptionPane.YES_NO_OPTION);
-                    if (respuesta == JOptionPane.YES_OPTION) {
-                        RestClient.getRestTemplate().delete("/pedidos/" + pedido.getIdPedido());
-                        this.resetScroll();
-                        this.limpiarJTables();
-                        this.buscar();
-                    }
-                } else {
-                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                switch (pedido.getEstado()) {
+                    case ABIERTO:
+                        int respuesta = JOptionPane.showConfirmDialog(this,
+                                "¿Desea cancelar el pedido seleccionado?",
+                                "Cancelar", JOptionPane.YES_NO_OPTION);
+                        if (respuesta == JOptionPane.YES_OPTION) {
+                            RestClient.getRestTemplate().put("/pedidos/" + pedido.getIdPedido(), null);
+                            this.resetScroll();
+                            this.limpiarJTables();
+                            this.buscar();
+                        }
+                        break;
+                    case CERRADO:
+                        JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_pedido_cerrado"), "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
+                    case CANCELADO:
+                        JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_pedido_cancelado"), "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
                 }
             }
         } catch (RestClientResponseException ex) {
@@ -954,8 +987,8 @@ public class PedidosGUI extends JInternalFrame {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_btnEliminarPedidoActionPerformed
-      
+    }//GEN-LAST:event_btnCancelarPedidoActionPerformed
+
     private void txt_NumeroPedidoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_NumeroPedidoKeyTyped
         Utilidades.controlarEntradaSoloNumerico(evt);
     }//GEN-LAST:event_txt_NumeroPedidoKeyTyped
@@ -964,7 +997,7 @@ public class PedidosGUI extends JInternalFrame {
         if (chkEstado.isSelected() == true) {
             cmbEstado.setEnabled(true);
             cmbEstado.addItem(EstadoPedido.ABIERTO);
-            cmbEstado.addItem(EstadoPedido.ACTIVO);
+            cmbEstado.addItem(EstadoPedido.CANCELADO);
             cmbEstado.addItem(EstadoPedido.CERRADO);
             cmbEstado.requestFocus();
         } else {
@@ -1045,12 +1078,43 @@ public class PedidosGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btnBuscarProductosActionPerformed
 
+    private void btnClonarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClonarPedidoActionPerformed
+        try {
+            if (tbl_Pedidos.getSelectedRow() != -1) {
+                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Pedidos);
+                Pedido pedido = RestClient.getRestTemplate()
+                        .getForObject("/pedidos/" + pedidosTotal.get(indexFilaSeleccionada).getIdPedido(), Pedido.class);
+                if (this.existeClienteDisponible()) {
+                    DetallePedidoGUI nuevoPedidoGUI = new DetallePedidoGUI(pedido.getCliente(), Arrays.asList(RestClient.getRestTemplate()
+                            .getForObject("/pedidos/" + pedido.getIdPedido() + "/renglones?clonar=true", RenglonPedido[].class)));
+                    nuevoPedidoGUI.setLocation(getDesktopPane().getWidth() / 2 - nuevoPedidoGUI.getWidth() / 2,
+                            getDesktopPane().getHeight() / 2 - nuevoPedidoGUI.getHeight() / 2);
+                    getDesktopPane().add(nuevoPedidoGUI);
+                    nuevoPedidoGUI.setMaximizable(true);
+                    nuevoPedidoGUI.setClosable(true);
+                    nuevoPedidoGUI.setVisible(true);
+                } else {
+                    JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnClonarPedidoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarCliente;
     private javax.swing.JButton btnBuscarProductos;
     private javax.swing.JButton btnBuscarUsuarios;
     private javax.swing.JButton btnBuscarViajantes;
-    private javax.swing.JButton btnEliminarPedido;
+    private javax.swing.JButton btnCancelarPedido;
+    private javax.swing.JButton btnClonarPedido;
     private javax.swing.JButton btnFacturar;
     private javax.swing.JButton btnImprimirPedido;
     private javax.swing.JButton btnModificarPedido;

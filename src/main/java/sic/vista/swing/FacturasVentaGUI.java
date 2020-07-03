@@ -36,7 +36,6 @@ import sic.modelo.Producto;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.UsuarioActivo;
-import sic.modelo.criteria.BusquedaClienteCriteria;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
 import sic.util.FormatosFechaHora;
@@ -328,7 +327,6 @@ public class FacturasVentaGUI extends JInternalFrame {
             txt_NumeroPedido.setEnabled(false);
         }
         btn_Buscar.setEnabled(status);
-        btnNuevaFactura.setEnabled(status);
         btn_VerDetalle.setEnabled(status);
         btn_Autorizar.setEnabled(status);
         tbl_Resultados.setEnabled(status);
@@ -439,26 +437,8 @@ public class FacturasVentaGUI extends JInternalFrame {
         }
     }
 
-    private boolean existeClienteDisponible() {
-        BusquedaClienteCriteria criteriaCliente = BusquedaClienteCriteria.builder()
-                .pagina(0)
-                .build();
-        HttpEntity<BusquedaClienteCriteria> requestEntity = new HttpEntity<>(criteriaCliente);
-        PaginaRespuestaRest<Cliente> response = RestClient.getRestTemplate()
-                .exchange("/clientes/busqueda/criteria", HttpMethod.POST, requestEntity,
-                        new ParameterizedTypeReference<PaginaRespuestaRest<Cliente>>() {
-                })
-                .getBody();
-        return !response.getContent().isEmpty();
-    }
-
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
         List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
-        if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
-            btn_Eliminar.setEnabled(true);
-        } else {
-            btn_Eliminar.setEnabled(false);
-        }
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
             txt_ResultGananciaTotal.setVisible(true);
@@ -475,12 +455,10 @@ public class FacturasVentaGUI extends JInternalFrame {
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
                 || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
             tienePermisoSegunRoles = true;
-            btnNuevaFactura.setEnabled(true);
             btn_Autorizar.setEnabled(true);
             chk_Usuario.setEnabled(true);
         } else {
             tienePermisoSegunRoles = false;
-            btnNuevaFactura.setEnabled(false);
             btn_Autorizar.setEnabled(false);
             chk_Usuario.setEnabled(false);
         }
@@ -501,10 +479,8 @@ public class FacturasVentaGUI extends JInternalFrame {
         txt_ResultTotalFacturado = new javax.swing.JFormattedTextField();
         txt_ResultGananciaTotal = new javax.swing.JFormattedTextField();
         txt_ResultTotalIVAVenta = new javax.swing.JFormattedTextField();
-        btnNuevaFactura = new javax.swing.JButton();
         btn_Autorizar = new javax.swing.JButton();
         btnCrearNotaCredito = new javax.swing.JButton();
-        btn_Eliminar = new javax.swing.JButton();
         btnEnviarEmail = new javax.swing.JButton();
         panelFiltros = new javax.swing.JPanel();
         subPanelFiltros1 = new javax.swing.JPanel();
@@ -544,20 +520,20 @@ public class FacturasVentaGUI extends JInternalFrame {
         setTitle("Administrar Facturas de Venta");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/SIC_16_square.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
-                formInternalFrameOpened(evt);
-            }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
             }
         });
 
@@ -633,15 +609,6 @@ public class FacturasVentaGUI extends JInternalFrame {
                     .addComponent(txt_ResultTotalFacturado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        btnNuevaFactura.setForeground(java.awt.Color.blue);
-        btnNuevaFactura.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Add_16x16.png"))); // NOI18N
-        btnNuevaFactura.setText("Nueva Factura");
-        btnNuevaFactura.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNuevaFacturaActionPerformed(evt);
-            }
-        });
-
         btn_Autorizar.setForeground(java.awt.Color.blue);
         btn_Autorizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Certificate_16x16.png"))); // NOI18N
         btn_Autorizar.setText("Autorizar");
@@ -660,18 +627,9 @@ public class FacturasVentaGUI extends JInternalFrame {
             }
         });
 
-        btn_Eliminar.setForeground(java.awt.Color.blue);
-        btn_Eliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Cancel_16x16.png"))); // NOI18N
-        btn_Eliminar.setText("Eliminar ");
-        btn_Eliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_EliminarActionPerformed(evt);
-            }
-        });
-
         btnEnviarEmail.setForeground(java.awt.Color.blue);
         btnEnviarEmail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/email_16x16.png"))); // NOI18N
-        btnEnviarEmail.setText("Enviar email");
+        btnEnviarEmail.setText("Enviar por email");
         btnEnviarEmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEnviarEmailActionPerformed(evt);
@@ -683,46 +641,36 @@ public class FacturasVentaGUI extends JInternalFrame {
         panelResultadosLayout.setHorizontalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(panelResultadosLayout.createSequentialGroup()
-                        .addComponent(btnNuevaFactura, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_VerDetalle)
-                        .addGap(0, 0, 0)
-                        .addComponent(btnEnviarEmail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(panelResultadosLayout.createSequentialGroup()
-                        .addComponent(btnCrearNotaCredito)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_Autorizar)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_Eliminar)))
+                .addComponent(btnCrearNotaCredito)
+                .addGap(0, 0, 0)
+                .addComponent(btn_Autorizar)
+                .addGap(0, 0, 0)
+                .addComponent(btn_VerDetalle)
+                .addGap(0, 0, 0)
+                .addComponent(btnEnviarEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panelNumeros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(sp_Resultados)
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCrearNotaCredito, btnNuevaFactura, btn_Autorizar, btn_Eliminar, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCrearNotaCredito, btnEnviarEmail, btn_Autorizar, btn_VerDetalle});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
                 .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
-                .addGap(7, 7, 7)
+                .addGap(8, 8, 8)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(panelNumeros, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                        .addComponent(btnCrearNotaCredito)
+                        .addComponent(btn_Autorizar)
                         .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(btnEnviarEmail)
-                            .addComponent(btn_VerDetalle)
-                            .addComponent(btnNuevaFactura))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(btn_Eliminar)
-                            .addComponent(btn_Autorizar)
-                            .addComponent(btnCrearNotaCredito)))))
+                            .addComponent(btn_VerDetalle)))))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaCredito, btnNuevaFactura, btn_Autorizar, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaCredito, btn_Autorizar, btn_VerDetalle});
 
         panelFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
 
@@ -1180,34 +1128,6 @@ public class FacturasVentaGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_chk_TipoFacturaItemStateChanged
 
-    private void btnNuevaFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaFacturaActionPerformed
-        if (this.existeClienteDisponible()) {
-            JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), NuevaFacturaVentaGUI.class);
-            if (gui == null) {
-                NuevaFacturaVentaGUI puntoDeVentaGUI = new NuevaFacturaVentaGUI();
-                puntoDeVentaGUI.setLocation(getDesktopPane().getWidth() / 2 - puntoDeVentaGUI.getWidth() / 2,
-                        getDesktopPane().getHeight() / 2 - puntoDeVentaGUI.getHeight() / 2);
-                getDesktopPane().add(puntoDeVentaGUI);
-                puntoDeVentaGUI.setMaximizable(true);
-                puntoDeVentaGUI.setClosable(true);
-                puntoDeVentaGUI.setVisible(true);
-            } else {
-                //selecciona y trae al frente el internalframe
-                try {
-                    gui.setSelected(true);
-                } catch (PropertyVetoException ex) {
-                    String msjError = "No se pudo seleccionar la ventana requerida.";
-                    LOGGER.error(msjError + " - " + ex.getMessage());
-                    JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        } else {
-            JOptionPane.showInternalMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_sin_cliente"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_btnNuevaFacturaActionPerformed
-
     private void txt_SerieFacturaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_SerieFacturaKeyTyped
         Utilidades.controlarEntradaSoloNumerico(evt);
     }//GEN-LAST:event_txt_SerieFacturaKeyTyped
@@ -1386,28 +1306,6 @@ public class FacturasVentaGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btnBuscarViajantesActionPerformed
 
-    private void btn_EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1) {
-            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-            int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
-                    .getString("mensaje_eliminar_movimientos"),
-                    "Eliminar", JOptionPane.YES_NO_OPTION);
-            if (respuesta == JOptionPane.YES_OPTION) {
-                try {
-                    RestClient.getRestTemplate().delete("/facturas/" + facturasTotal.get(indexFilaSeleccionada).getIdFactura());
-                    this.limpiarYBuscar(true);
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }
-    }//GEN-LAST:event_btn_EliminarActionPerformed
-
     private void btnEnviarEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarEmailActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
@@ -1439,10 +1337,8 @@ public class FacturasVentaGUI extends JInternalFrame {
     private javax.swing.JButton btnBuscarViajantes;
     private javax.swing.JButton btnCrearNotaCredito;
     private javax.swing.JButton btnEnviarEmail;
-    private javax.swing.JButton btnNuevaFactura;
     private javax.swing.JButton btn_Autorizar;
     private javax.swing.JButton btn_Buscar;
-    private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_VerDetalle;
     private javax.swing.JCheckBox chk_Cliente;
     private javax.swing.JCheckBox chk_Fecha;

@@ -49,6 +49,9 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
         if (configuracionModificar.isPuntoDeRetiro()) {
             chkRetiro.setSelected(true);
         }
+        chkPredeterminada.setSelected(configuracionModificar.isPredeterminada());
+        txtTiempoCortoEnMinutos.setValue(configuracionModificar.getVencimientoCorto());
+        txtTiempoLargoEnMinutos.setValue(configuracionModificar.getVencimientoLargo());
     }
 
     private ConfiguracionSucursal getConfiguracionSucursal() {
@@ -76,6 +79,17 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
         } else {
             configuracionModificar.setPuntoDeRetiro(false);
         }
+        if (chkPredeterminada.isSelected()) {
+            configuracionModificar.setPredeterminada(true);
+        } else {
+            configuracionModificar.setPredeterminada(false);
+        }
+        if (txtTiempoCortoEnMinutos.getValue() != null) {
+            configuracionModificar.setVencimientoCorto(Long.parseLong(txtTiempoCortoEnMinutos.getText().trim()));
+        }
+        if (txtTiempoLargoEnMinutos.getValue() != null) {
+            configuracionModificar.setVencimientoLargo(Long.parseLong(txtTiempoLargoEnMinutos.getText().trim()));
+        }
         return configuracionModificar;
     }
 
@@ -83,7 +97,8 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panelGeneral = new javax.swing.JPanel();
+        lbl_Leyenda = new javax.swing.JLabel();
+        btn_Guardar = new javax.swing.JButton();
         panelReportes = new javax.swing.JPanel();
         lbl_PreImpresas = new javax.swing.JLabel();
         chk_PreImpresas = new javax.swing.JCheckBox();
@@ -104,31 +119,46 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
         panelEnvio = new javax.swing.JPanel();
         lblRetiro = new javax.swing.JLabel();
         chkRetiro = new javax.swing.JCheckBox();
-        lbl_Leyenda = new javax.swing.JLabel();
-        btn_Guardar = new javax.swing.JButton();
+        panelPedidos = new javax.swing.JPanel();
+        lblPredeterminada = new javax.swing.JLabel();
+        chkPredeterminada = new javax.swing.JCheckBox();
+        lblTiempoCorto = new javax.swing.JLabel();
+        txtTiempoCortoEnMinutos = new javax.swing.JFormattedTextField();
+        lblTiempoLargo = new javax.swing.JLabel();
+        txtTiempoLargoEnMinutos = new javax.swing.JFormattedTextField();
 
         setClosable(true);
         setTitle("Configuración de Sucursal");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Gears_16x16.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
-                formInternalFrameOpened(evt);
-            }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
+            }
         });
 
-        panelGeneral.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        lbl_Leyenda.setFont(new java.awt.Font("DejaVu Sans", 1, 15)); // NOI18N
+        lbl_Leyenda.setText("La siguiente configuración se aplica a la sucursal seleccionada:");
+
+        btn_Guardar.setForeground(java.awt.Color.blue);
+        btn_Guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
+        btn_Guardar.setText("Guardar");
+        btn_Guardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_GuardarActionPerformed(evt);
+            }
+        });
 
         panelReportes.setBorder(javax.swing.BorderFactory.createTitledBorder("Reportes"));
 
@@ -163,11 +193,11 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
                 .addGroup(panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_PreImpresas)
                     .addComponent(chk_PreImpresas))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelReportesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_CantMaxRenglones)
                     .addComponent(txt_CantMaximaRenglones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         panelFE.setBorder(javax.swing.BorderFactory.createTitledBorder("Factura Electronica"));
@@ -226,7 +256,7 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
                     .addGroup(panelFELayout.createSequentialGroup()
                         .addComponent(btn_BuscarCertificado)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_certEstado, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))
+                        .addComponent(lbl_certEstado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(panelFELayout.createSequentialGroup()
                         .addGroup(panelFELayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txt_PuntoDeVentaNro)
@@ -274,7 +304,7 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
                 .addComponent(lblRetiro, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chkRetiro)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(208, Short.MAX_VALUE))
         );
         panelEnvioLayout.setVerticalGroup(
             panelEnvioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -286,41 +316,57 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout panelGeneralLayout = new javax.swing.GroupLayout(panelGeneral);
-        panelGeneral.setLayout(panelGeneralLayout);
-        panelGeneralLayout.setHorizontalGroup(
-            panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelGeneralLayout.createSequentialGroup()
+        panelPedidos.setBorder(javax.swing.BorderFactory.createTitledBorder("Pedidos"));
+
+        lblPredeterminada.setText("Usar como predeterminada:");
+
+        lblTiempoCorto.setText("Tiempo de vida corto (minutos):");
+
+        txtTiempoCortoEnMinutos.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+
+        lblTiempoLargo.setText("Tiempo de vida largo (minutos):");
+
+        txtTiempoLargoEnMinutos.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+
+        javax.swing.GroupLayout panelPedidosLayout = new javax.swing.GroupLayout(panelPedidos);
+        panelPedidos.setLayout(panelPedidosLayout);
+        panelPedidosLayout.setHorizontalGroup(
+            panelPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPedidosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(panelReportes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelFE, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelEnvio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(panelPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblTiempoLargo, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                    .addComponent(lblPredeterminada, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTiempoCorto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(panelPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelPedidosLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(chkPredeterminada)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(panelPedidosLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtTiempoCortoEnMinutos)
+                            .addComponent(txtTiempoLargoEnMinutos))))
+                .addContainerGap())
+        );
+        panelPedidosLayout.setVerticalGroup(
+            panelPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPedidosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(chkPredeterminada)
+                    .addComponent(lblPredeterminada))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTiempoCorto)
+                    .addComponent(txtTiempoCortoEnMinutos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lblTiempoLargo)
+                    .addComponent(txtTiempoLargoEnMinutos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        panelGeneralLayout.setVerticalGroup(
-            panelGeneralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelGeneralLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panelReportes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelFE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        lbl_Leyenda.setFont(new java.awt.Font("DejaVu Sans", 1, 15)); // NOI18N
-        lbl_Leyenda.setText("La siguiente configuración se aplica a la sucursal seleccionada:");
-
-        btn_Guardar.setForeground(java.awt.Color.blue);
-        btn_Guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
-        btn_Guardar.setText("Guardar");
-        btn_Guardar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_GuardarActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -329,26 +375,32 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btn_Guardar))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbl_Leyenda)
-                            .addComponent(panelGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                    .addComponent(lbl_Leyenda)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(btn_Guardar)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(panelPedidos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panelReportes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panelFE, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panelEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(lbl_Leyenda)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelGeneral, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelReportes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelFE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelPedidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_Guardar)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -356,9 +408,24 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
 
     private void btn_GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarActionPerformed
         try {
-            RestClient.getRestTemplate().put("/configuraciones-sucursal", this.getConfiguracionSucursal());
-            JOptionPane.showMessageDialog(this, "La configuración se guardó correctamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
-            this.dispose();
+            ConfiguracionSucursal cds = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/" + configuracionModificar.getIdSucursal(), ConfiguracionSucursal.class);
+            if (!chkPredeterminada.isSelected() && cds.isPredeterminada()) {
+                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_sucursal_cambiar_predeterminada"), "Error", JOptionPane.ERROR_MESSAGE);
+                chkPredeterminada.setSelected(true);
+            } else {
+                try {
+                    RestClient.getRestTemplate().put("/configuraciones-sucursal", this.getConfiguracionSucursal());
+                    JOptionPane.showMessageDialog(this, "La configuración se guardó correctamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+                    this.dispose();
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -428,10 +495,14 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_BuscarCertificado;
     private javax.swing.JButton btn_Guardar;
+    private javax.swing.JCheckBox chkPredeterminada;
     private javax.swing.JCheckBox chkRetiro;
     private javax.swing.JCheckBox chk_PreImpresas;
     private javax.swing.JCheckBox chk_UsarFE;
+    private javax.swing.JLabel lblPredeterminada;
     private javax.swing.JLabel lblRetiro;
+    private javax.swing.JLabel lblTiempoCorto;
+    private javax.swing.JLabel lblTiempoLargo;
     private javax.swing.JLabel lbl_CantMaxRenglones;
     private javax.swing.JLabel lbl_Certificado;
     private javax.swing.JLabel lbl_Contrasenia;
@@ -443,8 +514,10 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
     private javax.swing.JLabel lbl_certEstado;
     private javax.swing.JPanel panelEnvio;
     private javax.swing.JPanel panelFE;
-    private javax.swing.JPanel panelGeneral;
+    private javax.swing.JPanel panelPedidos;
     private javax.swing.JPanel panelReportes;
+    private javax.swing.JFormattedTextField txtTiempoCortoEnMinutos;
+    private javax.swing.JFormattedTextField txtTiempoLargoEnMinutos;
     private javax.swing.JFormattedTextField txt_CantMaximaRenglones;
     private javax.swing.JTextField txt_FirmanteCert;
     private javax.swing.JTextField txt_PuntoDeVentaNro;

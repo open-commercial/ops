@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class ProductosParaVerificarStock {
 
     private Long idSucursal;
+    private Long idPedido;
     private long[] idProducto;
     private BigDecimal[] cantidad;
 
