@@ -826,7 +826,10 @@ public class CerrarOperacionGUI extends JDialog {
                 if (pedido != null) {
                     total = totalFactura != null ? totalFactura.setScale(2, RoundingMode.FLOOR) : totalPedido.setScale(2, RoundingMode.FLOOR);
                 }
-                if (totalPagos.compareTo(total) < 0) {
+                BigDecimal saldoCC = RestClient.getRestTemplate()
+                        .getForObject("/cuentas-corriente/clientes/"
+                                + this.cliente.getIdCliente(), CuentaCorrienteCliente.class).getSaldo().setScale(2, RoundingMode.HALF_UP);
+                if (totalPagos.add(saldoCC).compareTo(total) < 0) {
                     int reply = JOptionPane.showConfirmDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_montos_insuficientes"),
                             "Aviso", JOptionPane.YES_NO_OPTION);
