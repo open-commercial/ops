@@ -75,6 +75,10 @@ public class PrincipalGUI extends JFrame {
             mnu_Stock.setVisible(false);
             mnu_Administracion.setVisible(false);
         }
+        if (rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
+            mnu_Stock.setVisible(true);
+            mnuItm_Productos.setVisible(false);
+        }
         tienePermisoSegunRoles = rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
                 || rolesDeUsuarioActivo.contains(Rol.VENDEDOR);
