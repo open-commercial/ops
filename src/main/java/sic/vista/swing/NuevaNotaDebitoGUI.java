@@ -3,6 +3,7 @@ package sic.vista.swing;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.util.ResourceBundle;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -29,18 +30,21 @@ public class NuevaNotaDebitoGUI extends JDialog {
 
     public NuevaNotaDebitoGUI(Cliente cliente) {
         this.initComponents();
+        this.setIcon();
         this.cliente = cliente;
         this.proveedor = null;
     }
 
     public NuevaNotaDebitoGUI(Proveedor proveedor) {
         this.initComponents();
+        this.setIcon();
         this.cliente = null;
         this.proveedor = proveedor;
     }
 
     public NuevaNotaDebitoGUI(Cliente cliente, Long idRecibo) {
         this.initComponents();
+        this.setIcon();
         this.cliente = cliente;
         this.proveedor = null;
         this.idRecibo = idRecibo;
@@ -48,9 +52,15 @@ public class NuevaNotaDebitoGUI extends JDialog {
 
     public NuevaNotaDebitoGUI(Proveedor proveedor, Long idRecibo) {
         this.initComponents();
+        this.setIcon();
         this.cliente = null;
         this.proveedor = proveedor;
         this.idRecibo = idRecibo;
+    }
+    
+    private void setIcon() {
+        ImageIcon iconoVentana = new ImageIcon(DetalleNotaCreditoGUI.class.getResource("/sic/icons/SIC_24_square.png"));
+        this.setIconImage(iconoVentana.getImage());
     }
     
     public NotaDebito getNotaDebitoCalculada() {
@@ -70,6 +80,7 @@ public class NuevaNotaDebitoGUI extends JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nueva Nota de Debito");
+        setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -105,20 +116,15 @@ public class NuevaNotaDebitoGUI extends JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lbl_TipoDeComprobante)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(lblGastoAdministrativo, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblGastoAdministrativo, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
+                    .addComponent(lbl_TipoDeComprobante, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(cmbTipoDeComprobante, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ftxt_Monto, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cmbTipoDeComprobante, 0, 234, Short.MAX_VALUE)
+                    .addComponent(ftxt_Monto))
                 .addContainerGap())
         );
-
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblGastoAdministrativo, lbl_TipoDeComprobante});
-
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()

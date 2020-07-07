@@ -21,7 +21,7 @@ public class ColoresEstadosRenderer extends DefaultTableCellRenderer {
                 cell.setBackground(Color.WHITE);
             }
             if (estado == EstadoPedido.CANCELADO) {
-                cell.setBackground(Color.RED);
+                cell.setBackground(Color.PINK);
             }
             if (estado == EstadoPedido.CERRADO) {
                 cell.setBackground(Color.GREEN);

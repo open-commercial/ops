@@ -3,6 +3,7 @@ package sic.vista.swing;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.util.ResourceBundle;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -27,16 +28,23 @@ public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
 
     public NuevaNotaCreditoSinFacturaGUI(Cliente cliente) {
         this.initComponents();
+        this.setIcon();
         this.idCliente = cliente.getIdCliente();
         this.idProveedor = null;
     }
 
     public NuevaNotaCreditoSinFacturaGUI(Proveedor proveedor) {
         this.initComponents();
+        this.setIcon();
         this.idCliente = null;
         this.idProveedor = proveedor.getIdProveedor();
     }
 
+    private void setIcon() {
+        ImageIcon iconoVentana = new ImageIcon(DetalleNotaCreditoGUI.class.getResource("/sic/icons/SIC_24_square.png"));
+        this.setIconImage(iconoVentana.getImage());
+    }
+    
     public NotaCredito getNotaCreditoCalculadaSinFactura() {
         return notaCreditoCalculada;
     }
