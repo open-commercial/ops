@@ -828,8 +828,8 @@ public class CerrarOperacionGUI extends JDialog {
                 }
                 BigDecimal saldoCC = RestClient.getRestTemplate()
                         .getForObject("/cuentas-corriente/clientes/"
-                                + this.cliente.getIdCliente(), CuentaCorrienteCliente.class).getSaldo().setScale(2, RoundingMode.HALF_UP);
-                if (totalPagos.add(saldoCC).compareTo(total) < 0) {
+                                + this.cliente.getIdCliente(), CuentaCorrienteCliente.class).getSaldo().setScale(2, RoundingMode.DOWN);
+                if (totalPagos.add(saldoCC).compareTo(total.setScale(2, RoundingMode.DOWN)) < 0) {
                     int reply = JOptionPane.showConfirmDialog(this,
                             ResourceBundle.getBundle("Mensajes").getString("mensaje_montos_insuficientes"),
                             "Aviso", JOptionPane.YES_NO_OPTION);
