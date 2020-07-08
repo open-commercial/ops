@@ -173,6 +173,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="chkEnvioGratuito">
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkEnvioGratuitoItemStateChanged"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="ftfCostoDeEnvio">
           <Properties>

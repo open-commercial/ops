@@ -94,9 +94,17 @@ public class LocalidadesGUI extends JInternalFrame {
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
         //tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(0).setMinWidth(100);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(320);
+        tbl_Resultados.getColumnModel().getColumn(1).setMaxWidth(320);
+        tbl_Resultados.getColumnModel().getColumn(1).setMinWidth(320);
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(2).setMinWidth(220);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(3).setMinWidth(100);
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(110);
         tbl_Resultados.getColumnModel().getColumn(4).setCellRenderer(new DecimalesRenderer());
     }
@@ -261,20 +269,20 @@ public class LocalidadesGUI extends JInternalFrame {
         setTitle("Administrar Localidades");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Map_16x16.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
-                formInternalFrameOpened(evt);
-            }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
             }
         });
 
@@ -391,7 +399,6 @@ public class LocalidadesGUI extends JInternalFrame {
 
             }
         ));
-        tbl_Resultados.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         tbl_Resultados.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         sp_Resultados.setViewportView(tbl_Resultados);
 

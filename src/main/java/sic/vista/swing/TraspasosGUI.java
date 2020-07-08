@@ -128,7 +128,11 @@ public class TraspasosGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(140);
         tbl_Resultados.getColumnModel().getColumn(0).setMinWidth(140);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(1).setMaxWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(1).setMinWidth(130);
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(2).setMinWidth(130);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(220);
         tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(220);
         tbl_Resultados.getColumnModel().getColumn(3).setMinWidth(220);
@@ -136,8 +140,6 @@ public class TraspasosGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(4).setMaxWidth(220);
         tbl_Resultados.getColumnModel().getColumn(4).setMinWidth(220);
         tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(220);
-        tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(220);
-        tbl_Resultados.getColumnModel().getColumn(5).setMinWidth(220);
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         tbl_Resultados.getColumnModel().getColumn(0).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
@@ -162,9 +164,9 @@ public class TraspasosGUI extends JInternalFrame {
         tbl_Detalles.getTableHeader().setReorderingAllowed(false);
         tbl_Detalles.getTableHeader().setResizingAllowed(true);
         //tamanios de columnas
-        tbl_Detalles.getColumnModel().getColumn(0).setPreferredWidth(100);
-        tbl_Detalles.getColumnModel().getColumn(0).setMaxWidth(100);
-        tbl_Detalles.getColumnModel().getColumn(0).setMinWidth(100);
+        tbl_Detalles.getColumnModel().getColumn(0).setPreferredWidth(150);
+        tbl_Detalles.getColumnModel().getColumn(0).setMaxWidth(150);
+        tbl_Detalles.getColumnModel().getColumn(0).setMinWidth(150);
         tbl_Detalles.getColumnModel().getColumn(2).setPreferredWidth(220);
         tbl_Detalles.getColumnModel().getColumn(2).setMaxWidth(220);
         tbl_Detalles.getColumnModel().getColumn(2).setMinWidth(220);

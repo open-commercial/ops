@@ -74,6 +74,12 @@ public class DetalleLocalidadGUI extends javax.swing.JDialog {
 
         lblDetalleProvincia.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
+        chkEnvioGratuito.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chkEnvioGratuitoItemStateChanged(evt);
+            }
+        });
+
         ftfCostoDeEnvio.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
         ftfCostoDeEnvio.setHorizontalAlignment(javax.swing.JTextField.LEFT);
 
@@ -202,7 +208,18 @@ public class DetalleLocalidadGUI extends javax.swing.JDialog {
         } else {
             ftfCostoDeEnvio.setValue(BigDecimal.ZERO);
         }
+        if (this.localidadSeleccionada.isEnvioGratuito()) {
+            ftfCostoDeEnvio.setEnabled(false);
+        }
     }//GEN-LAST:event_formWindowOpened
+
+    private void chkEnvioGratuitoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkEnvioGratuitoItemStateChanged
+        if (chkEnvioGratuito.isSelected()) {
+            ftfCostoDeEnvio.setEnabled(false);
+        } else {
+            ftfCostoDeEnvio.setEnabled(true);
+        }
+    }//GEN-LAST:event_chkEnvioGratuitoItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
