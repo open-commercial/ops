@@ -15,6 +15,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.JInternalFrame;
@@ -1085,8 +1086,8 @@ public class PedidosGUI extends JInternalFrame {
                 Pedido pedido = RestClient.getRestTemplate()
                         .getForObject("/pedidos/" + pedidosTotal.get(indexFilaSeleccionada).getIdPedido(), Pedido.class);
                 if (this.existeClienteDisponible()) {
-                    DetallePedidoGUI nuevoPedidoGUI = new DetallePedidoGUI(pedido.getCliente(), Arrays.asList(RestClient.getRestTemplate()
-                            .getForObject("/pedidos/" + pedido.getIdPedido() + "/renglones?clonar=true", RenglonPedido[].class)));
+                    DetallePedidoGUI nuevoPedidoGUI = new DetallePedidoGUI(pedido.getCliente(), new LinkedList<RenglonPedido>(Arrays.asList(RestClient.getRestTemplate()
+                            .getForObject("/pedidos/" + pedido.getIdPedido() + "/renglones?clonar=true", RenglonPedido[].class))));
                     nuevoPedidoGUI.setLocation(getDesktopPane().getWidth() / 2 - nuevoPedidoGUI.getWidth() / 2,
                             getDesktopPane().getHeight() / 2 - nuevoPedidoGUI.getHeight() / 2);
                     getDesktopPane().add(nuevoPedidoGUI);
