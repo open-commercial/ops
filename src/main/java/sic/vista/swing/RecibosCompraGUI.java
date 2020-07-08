@@ -153,11 +153,23 @@ public class RecibosCompraGUI extends JInternalFrame {
         tbl_Resultados.getTableHeader().setResizingAllowed(true);        
         //tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(140);
+        tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(140);
+        tbl_Resultados.getColumnModel().getColumn(0).setMinWidth(140);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(1).setMaxWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(1).setMinWidth(130);
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(310);
+        tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(310);
+        tbl_Resultados.getColumnModel().getColumn(2).setMinWidth(310);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(180);
+        tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(180);
+        tbl_Resultados.getColumnModel().getColumn(3).setMinWidth(180);
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(4).setMaxWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(4).setMinWidth(220);
         tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(5).setMinWidth(130);
         tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(320);
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
@@ -341,20 +353,20 @@ public class RecibosCompraGUI extends JInternalFrame {
         setTitle("Administrar Recibos de Compra");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Stamp_16x16.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
-                formInternalFrameOpened(evt);
-            }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
             }
         });
 
@@ -368,7 +380,6 @@ public class RecibosCompraGUI extends JInternalFrame {
 
             }
         ));
-        tbl_Resultados.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         tbl_Resultados.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         sp_Resultados.setViewportView(tbl_Resultados);
 
