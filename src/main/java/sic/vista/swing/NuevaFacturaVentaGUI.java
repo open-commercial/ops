@@ -371,23 +371,6 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
-    private List<ProductoFaltante> getProductosSinStockDisponible(List<NuevoRenglonFactura> nuevosRenglonesFactura) {
-        long[] idsProductos = new long[nuevosRenglonesFactura.size()];
-        BigDecimal[] cantidades = new BigDecimal[nuevosRenglonesFactura.size()];
-        for (int i = 0; i < idsProductos.length; i++) {
-            idsProductos[i] = nuevosRenglonesFactura.get(i).getIdProducto();
-            cantidades[i] = nuevosRenglonesFactura.get(i).getCantidad();
-        }
-        ProductosParaVerificarStock productosParaVerificarStock = ProductosParaVerificarStock.builder()
-                .cantidad(cantidades)
-                .idProducto(idsProductos)
-                .build();
-        HttpEntity<ProductosParaVerificarStock> requestEntity = new HttpEntity<>(productosParaVerificarStock);
-        return RestClient.getRestTemplate()
-                .exchange("/productos/disponibilidad-stock", HttpMethod.POST, requestEntity, new ParameterizedTypeReference<List<ProductoFaltante>>() {
-                }).getBody();
-    }
 
     // Clase interna para manejar las hotkeys del TPV     
     class HotKeysHandler extends KeyAdapter {
@@ -396,6 +379,9 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
         public void keyPressed(KeyEvent evt) {
             if (evt.getSource() == tbl_Resultado && evt.getKeyCode() == KeyEvent.VK_TAB) {
                 txt_Descuento_porcentaje.requestFocus();
+            }
+            if (evt.getKeyCode() == KeyEvent.VK_F9) {
+                btn_ContinuarActionPerformed(null);
             }
         }
     };

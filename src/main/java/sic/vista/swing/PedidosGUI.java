@@ -870,7 +870,7 @@ public class PedidosGUI extends JInternalFrame {
                         break;
                     case CANCELADO:
                         JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                                .getString("mensaje_pedidor_cancelado"), "Error", JOptionPane.ERROR_MESSAGE);
+                                .getString("mensaje_pedido_cancelado"), "Error", JOptionPane.ERROR_MESSAGE);
                         break;
                 }
             }
