@@ -1,11 +1,15 @@
 package sic.vista.swing;
 
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -312,6 +316,7 @@ public class TraspasosGUI extends JInternalFrame {
         sp_Detalle = new javax.swing.JScrollPane();
         tbl_Detalles = new javax.swing.JTable();
         lbl_movimientos = new javax.swing.JLabel();
+        btnImprimirPedido = new javax.swing.JButton();
         panelFiltros = new javax.swing.JPanel();
         subPanelFiltros2 = new javax.swing.JPanel();
         chk_NumTraspaso = new javax.swing.JCheckBox();
@@ -386,25 +391,43 @@ public class TraspasosGUI extends JInternalFrame {
 
         lbl_movimientos.setText("Detalle Traspaso (Seleccione uno de la lista superior)");
 
+        btnImprimirPedido.setForeground(new java.awt.Color(0, 0, 255));
+        btnImprimirPedido.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/target_16x16.png"))); // NOI18N
+        btnImprimirPedido.setText("Ver Detalle");
+        btnImprimirPedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImprimirPedidoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sp_Resultados)
+            .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 815, Short.MAX_VALUE)
             .addComponent(sp_Detalle)
             .addGroup(panelResultadosLayout.createSequentialGroup()
                 .addComponent(lbl_movimientos, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(panelResultadosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnImprimirPedido)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_movimientos)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Detalle, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE))
+                .addComponent(sp_Detalle, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnImprimirPedido)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {sp_Detalle, sp_Resultados});
 
         panelFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
 
@@ -716,8 +739,36 @@ public class TraspasosGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_tbl_ResultadosKeyPressed
 
+    private void btnImprimirPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirPedidoActionPerformed
+        if (Desktop.isDesktopSupported()) {
+            try {
+                byte[] reporte = RestClient.getRestTemplate().postForObject("/traspasos/reporte/criteria", this.getCriteria(), byte[].class);
+                File f = new File(System.getProperty("user.home") + "/Traspasos.pdf");
+                Files.write(f.toPath(), reporte);
+                Desktop.getDesktop().open(f);
+            } catch (IOException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnImprimirPedidoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarUsuarios;
+    private javax.swing.JButton btnImprimirPedido;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JCheckBox chk_Fecha;
     private javax.swing.JCheckBox chk_NumTraspaso;
