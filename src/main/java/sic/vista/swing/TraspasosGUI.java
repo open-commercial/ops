@@ -392,8 +392,8 @@ public class TraspasosGUI extends JInternalFrame {
         lbl_movimientos.setText("Detalle Traspaso (Seleccione uno de la lista superior)");
 
         btnImprimirPedido.setForeground(new java.awt.Color(0, 0, 255));
-        btnImprimirPedido.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/target_16x16.png"))); // NOI18N
-        btnImprimirPedido.setText("Ver Detalle");
+        btnImprimirPedido.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Export_16x16.png"))); // NOI18N
+        btnImprimirPedido.setText("Exportar");
         btnImprimirPedido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnImprimirPedidoActionPerformed(evt);
@@ -404,15 +404,13 @@ public class TraspasosGUI extends JInternalFrame {
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 815, Short.MAX_VALUE)
+            .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 988, Short.MAX_VALUE)
             .addComponent(sp_Detalle)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(lbl_movimientos, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_movimientos, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnImprimirPedido))
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnImprimirPedido)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -421,10 +419,9 @@ public class TraspasosGUI extends JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_movimientos)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Detalle, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                .addComponent(sp_Detalle, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnImprimirPedido)
-                .addContainerGap())
+                .addComponent(btnImprimirPedido))
         );
 
         panelFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
@@ -613,7 +610,7 @@ public class TraspasosGUI extends JInternalFrame {
                 .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(117, Short.MAX_VALUE))
+                .addContainerGap(290, Short.MAX_VALUE))
             .addComponent(panelResultados, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
