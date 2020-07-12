@@ -35,7 +35,7 @@
               <Component id="panelFiltros" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="panelOrden" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="117" max="32767" attributes="0"/>
+              <EmptySpace pref="290" max="32767" attributes="0"/>
           </Group>
           <Component id="panelResultados" alignment="1" max="32767" attributes="0"/>
       </Group>
@@ -66,10 +66,13 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="sp_Resultados" alignment="0" max="32767" attributes="0"/>
+              <Component id="sp_Resultados" alignment="0" pref="988" max="32767" attributes="0"/>
               <Component id="sp_Detalle" alignment="0" max="32767" attributes="0"/>
-              <Group type="102" alignment="0" attributes="0">
-                  <Component id="lbl_movimientos" min="-2" pref="386" max="-2" attributes="0"/>
+              <Group type="102" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="lbl_movimientos" alignment="0" min="-2" pref="386" max="-2" attributes="0"/>
+                      <Component id="btnImprimirPedido" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -77,11 +80,13 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="sp_Resultados" pref="192" max="32767" attributes="0"/>
+                  <Component id="sp_Resultados" min="-2" pref="195" max="-2" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="lbl_movimientos" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="sp_Detalle" pref="240" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="sp_Detalle" pref="201" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="btnImprimirPedido" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -136,6 +141,20 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Detalle Traspaso (Seleccione uno de la lista superior)"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnImprimirPedido">
+          <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="0" red="0" type="rgb"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/sic/icons/Export_16x16.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Exportar"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnImprimirPedidoActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
