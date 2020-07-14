@@ -77,8 +77,8 @@ public class TraspasosGUI extends JInternalFrame {
         if (chk_NumTraspaso.isSelected()) {
             criteria.setNroTraspaso(txt_NroTraspaso.getText());
         }
-        if (chk_NumPedido.isSelected()) {
-            criteria.setNroPedido(Long.valueOf(txt_NroPedido.getText()));
+        if (chk_NumPedido.isSelected() && txt_NroPedido.getValue() != null) {
+            criteria.setNroPedido(Long.valueOf(txt_NroPedido.getValue().toString()));
         }
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
