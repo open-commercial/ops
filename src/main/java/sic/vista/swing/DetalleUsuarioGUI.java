@@ -1,9 +1,9 @@
 package sic.vista.swing;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -309,7 +309,7 @@ public class DetalleUsuarioGUI extends JDialog {
                     usuario.setUsername(txtUsername.getText().trim());
                     usuario.setPassword(new String(txt_Contrasenia.getPassword()));
                     usuario.setHabilitado(chkHabilitado.isSelected());
-                    List<Rol> roles = new ArrayList<>();
+                    Set<Rol> roles = new HashSet<>();
                     if (chk_Administrador.isSelected()) roles.add(Rol.ADMINISTRADOR);
                     if (chk_Encargado.isSelected()) roles.add(Rol.ENCARGADO);
                     if (chk_Vendedor.isSelected()) roles.add(Rol.VENDEDOR);
@@ -332,7 +332,7 @@ public class DetalleUsuarioGUI extends JDialog {
                     usuarioParaModificar.setUsername(txtUsername.getText().trim());
                     usuarioParaModificar.setHabilitado(chkHabilitado.isSelected());
                     usuarioParaModificar.setPassword(new String(txt_Contrasenia.getPassword()));                    
-                    List<Rol> roles = new ArrayList<>();
+                    Set<Rol> roles = new HashSet<>();
                     if (chk_Administrador.isSelected()) roles.add(Rol.ADMINISTRADOR);                  
                     if (chk_Encargado.isSelected()) roles.add(Rol.ENCARGADO);
                     if (chk_Vendedor.isSelected()) roles.add(Rol.VENDEDOR);

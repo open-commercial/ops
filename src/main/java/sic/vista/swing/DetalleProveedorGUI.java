@@ -1,7 +1,7 @@
 package sic.vista.swing;
 
-import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -67,7 +67,7 @@ public class DetalleProveedorGUI extends JDialog {
     }
 
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        Set<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)) {
             btnUbicacion.setEnabled(true);

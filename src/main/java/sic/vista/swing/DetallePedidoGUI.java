@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -58,7 +59,7 @@ public class DetallePedidoGUI extends JInternalFrame {
     private final boolean modificandoPedido;
     private int cantidadMaximaRenglones = 0;
     private BigDecimal subTotalBruto;
-    private final List<Rol> rolesDeUsuario = UsuarioActivo.getInstance().getUsuario().getRoles();
+    private final Set<Rol> rolesDeUsuario = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final static BigDecimal CIEN = new BigDecimal("100");
 
     public DetallePedidoGUI(Pedido pedido, boolean modificandoPedido) {

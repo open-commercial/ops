@@ -1,8 +1,8 @@
 package sic.vista.swing;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -113,7 +113,7 @@ public class DetalleClienteGUI extends JDialog {
     }
     
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        Set<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
             btnNuevoUsuarioViajante.setEnabled(true);
             lblCredencial.setEnabled(true);

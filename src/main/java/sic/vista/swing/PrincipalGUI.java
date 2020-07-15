@@ -2,8 +2,8 @@ package sic.vista.swing;
 
 import java.awt.Dimension;
 import java.beans.PropertyVetoException;
-import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
@@ -55,7 +55,7 @@ public class PrincipalGUI extends JFrame {
     }
     
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        Set<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
             mnuItm_Sucursales.setVisible(true);
             mnuItm_Configuracion.setVisible(true);

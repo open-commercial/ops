@@ -2,7 +2,6 @@ package sic.vista.swing;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
@@ -14,6 +13,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
@@ -21,9 +21,6 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
@@ -37,8 +34,6 @@ import sic.modelo.FormaDePago;
 import sic.modelo.NuevaFacturaVenta;
 import sic.modelo.NuevosResultadosComprobante;
 import sic.modelo.Pedido;
-import sic.modelo.ProductoFaltante;
-import sic.modelo.ProductosParaVerificarStock;
 import sic.modelo.Resultados;
 import sic.modelo.Rol;
 import sic.modelo.TipoDeComprobante;
@@ -55,7 +50,7 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final Dimension sizeInternalFrame = new Dimension(1200, 700);    
-    private final List<Rol> rolesDeUsuario = UsuarioActivo.getInstance().getUsuario().getRoles();
+    private final Set<Rol> rolesDeUsuario = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final static BigDecimal CIEN = new BigDecimal("100");
     
     public NuevaFacturaVentaGUI(Pedido pedido) {
@@ -75,14 +70,6 @@ public class NuevaFacturaVentaGUI extends JInternalFrame {
                 .recargoPorcentaje(new BigDecimal(txt_Recargo_porcentaje.getValue().toString()))
                 .descuentoPorcentaje(new BigDecimal(txt_Descuento_porcentaje.getValue().toString()))
                 .build();
-        List<NuevoRenglonFactura> nuevosRenglones = new ArrayList<>();
-        this.renglonesFactura.forEach(renglon -> {
-            NuevoRenglonFactura renglonNuevo = NuevoRenglonFactura.builder()
-                    .cantidad(renglon.getCantidad())
-                    .idProducto(renglon.getIdProductoItem())
-                    .build();
-            nuevosRenglones.add(renglonNuevo);
-        });
         return nuevaFacturaVenta;
     } 
     

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
@@ -338,46 +339,8 @@ public class NotasDebitoCompraGUI extends JInternalFrame {
         }
     }
 
-    private void lanzarReporteNota() {
-        if (Desktop.isDesktopSupported()) {
-            try {
-                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                if (Desktop.isDesktopSupported()) {
-                    byte[] reporte = RestClient.getRestTemplate()
-                            .getForObject("/notas/"
-                                    + ((notasTotal.size() > 0)
-                                    ? notasTotal.get(indexFilaSeleccionada).getIdNota() : notasTotal.get(indexFilaSeleccionada).getIdNota())
-                                    + "/reporte", byte[].class);
-                    File f = new File(System.getProperty("user.home") + "/NotaDebito.pdf");
-                    Files.write(f.toPath(), reporte);
-                    Desktop.getDesktop().open(f);
-                } else {
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            } catch (IOException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
     private void cambiarEstadoDeComponentesSegunRolUsuario() {
-        List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+        Set<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
         if (rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
             btn_Eliminar.setEnabled(true);
         } else {

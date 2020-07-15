@@ -90,10 +90,8 @@
                       <Group type="103" alignment="1" groupAlignment="2" attributes="0">
                           <Component id="btnCrearNotaCredito" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="btn_Autorizar" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" alignment="2" groupAlignment="2" attributes="0">
-                              <Component id="btnEnviarEmail" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="btn_VerDetalle" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="btnEnviarEmail" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_VerDetalle" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>

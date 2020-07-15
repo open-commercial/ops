@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javax.swing.DefaultListModel;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
@@ -22,7 +23,7 @@ public class DetalleMedidaGUI extends JInternalFrame {
 
     private final DefaultListModel modeloList = new DefaultListModel();
     private Medida medidaSeleccionada;
-    private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
+    private final Set<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleMedidaGUI() {

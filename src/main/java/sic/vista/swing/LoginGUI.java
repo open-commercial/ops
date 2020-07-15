@@ -4,8 +4,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import java.awt.event.KeyEvent;
-import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -65,7 +65,7 @@ public class LoginGUI extends JFrame {
 
     private void ingresar() {
         if (UsuarioActivo.getInstance().getUsuario() != null) {
-            List<Rol> rolesDeUsuario = UsuarioActivo.getInstance().getUsuario().getRoles();
+            Set<Rol> rolesDeUsuario = UsuarioActivo.getInstance().getUsuario().getRoles();
             if (rolesDeUsuario.contains(Rol.ADMINISTRADOR)
                     || rolesDeUsuario.contains(Rol.ENCARGADO)
                     || rolesDeUsuario.contains(Rol.VENDEDOR)) {
