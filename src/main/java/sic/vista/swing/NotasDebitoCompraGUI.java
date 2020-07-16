@@ -1,14 +1,10 @@
 package sic.vista.swing;
 
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
-import java.io.File;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -334,44 +330,6 @@ public class NotasDebitoCompraGUI extends JInternalFrame {
             LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void lanzarReporteNota() {
-        if (Desktop.isDesktopSupported()) {
-            try {
-                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                if (Desktop.isDesktopSupported()) {
-                    byte[] reporte = RestClient.getRestTemplate()
-                            .getForObject("/notas/"
-                                    + ((notasTotal.size() > 0)
-                                    ? notasTotal.get(indexFilaSeleccionada).getIdNota() : notasTotal.get(indexFilaSeleccionada).getIdNota())
-                                    + "/reporte", byte[].class);
-                    File f = new File(System.getProperty("user.home") + "/NotaDebito.pdf");
-                    Files.write(f.toPath(), reporte);
-                    Desktop.getDesktop().open(f);
-                } else {
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            } catch (IOException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
