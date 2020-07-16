@@ -710,11 +710,6 @@ public class DetalleProductoGUI extends JDialog {
 
         bgVisibilidad.add(rbPrivado);
         rbPrivado.setText("Privado");
-        rbPrivado.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbPrivadoActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout panel5Layout = new javax.swing.GroupLayout(panel5);
         panel5.setLayout(panel5Layout);
@@ -1487,15 +1482,6 @@ public class DetalleProductoGUI extends JDialog {
             txtProveedor.setText(proveedorSeleccionado.getRazonSocial());
         }
     }//GEN-LAST:event_btnBuscarProveedorActionPerformed
-
-    private void rbPrivadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbPrivadoActionPerformed
-        if (rbPrivado.isSelected() && chkOferta.isSelected()) {
-            rbPublico.setSelected(true);
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_producto_privado_no_en_oferta"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_rbPrivadoActionPerformed
 
     private void cmbSucursalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbSucursalesActionPerformed
         BigDecimal cantidad = cantidadEnSucursal.get(((Sucursal) cmbSucursales.getSelectedItem()).getIdSucursal());

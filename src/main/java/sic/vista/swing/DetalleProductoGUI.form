@@ -906,9 +906,6 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="Privado"/>
                   </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbPrivadoActionPerformed"/>
-                  </Events>
                 </Component>
               </SubComponents>
             </Container>
