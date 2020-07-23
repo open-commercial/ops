@@ -21,6 +21,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Localidad;
+import sic.modelo.LocalidadesParaActualizarDTO;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Provincia;
 import sic.modelo.Rol;
@@ -240,6 +241,18 @@ public class LocalidadesGUI extends JInternalFrame {
         }
     }
 
+    private long[] getIdsLocalidades(int[] indices) {
+        List<Localidad> localidadesSeleccionadas = new ArrayList<>();
+        for (int i = 0; i < indices.length; i++) {
+            localidadesSeleccionadas.add(localidadesTotal.get(indices[i]));
+        }
+        long[] idsLocalidades = new long[localidadesSeleccionadas.size()];
+        for (int i = 0; i < localidadesSeleccionadas.size(); ++i) {
+            idsLocalidades[i] = localidadesSeleccionadas.get(i).getIdLocalidad();
+        }
+        return idsLocalidades;
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -399,7 +412,7 @@ public class LocalidadesGUI extends JInternalFrame {
 
             }
         ));
-        tbl_Resultados.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tbl_Resultados.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         sp_Resultados.setViewportView(tbl_Resultados);
 
         btnModificarLocalidad.setForeground(java.awt.Color.blue);
@@ -515,12 +528,22 @@ public class LocalidadesGUI extends JInternalFrame {
 
     private void btnModificarLocalidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarLocalidadActionPerformed
         if (tbl_Resultados.getSelectedRow() != -1) {
-            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-            DetalleLocalidadGUI modificarLocalidadGUI = new DetalleLocalidadGUI(localidadesTotal.get(indexFilaSeleccionada));
-            modificarLocalidadGUI.setModal(true);
-            modificarLocalidadGUI.setLocationRelativeTo(this);
-            modificarLocalidadGUI.setVisible(true);
-            this.limpiarYBuscar();
+            if (tbl_Resultados.getSelectedRowCount() > 1) {
+                ModificacionMultipleLocalidadesGUI modificacionMultipleLocalidadesGUI
+                        = new ModificacionMultipleLocalidadesGUI(LocalidadesParaActualizarDTO.builder().idLocalidad(this.getIdsLocalidades(Utilidades.getSelectedRowsModelIndices(tbl_Resultados)))
+                                .build());
+                modificacionMultipleLocalidadesGUI.setModal(true);
+                modificacionMultipleLocalidadesGUI.setLocationRelativeTo(this);
+                modificacionMultipleLocalidadesGUI.setVisible(true);
+                this.limpiarYBuscar();
+            } else {
+                int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+                DetalleLocalidadGUI modificarLocalidadGUI = new DetalleLocalidadGUI(localidadesTotal.get(indexFilaSeleccionada));
+                modificarLocalidadGUI.setModal(true);
+                modificarLocalidadGUI.setLocationRelativeTo(this);
+                modificarLocalidadGUI.setVisible(true);
+                this.limpiarYBuscar();
+            }
         }
     }//GEN-LAST:event_btnModificarLocalidadActionPerformed
 
