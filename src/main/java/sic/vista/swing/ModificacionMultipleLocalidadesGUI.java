@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,16 +16,22 @@ import sic.RestClient;
 import sic.modelo.Localidad;
 import sic.modelo.LocalidadesParaActualizarDTO;
 
-public class ModificacionMultipleLocalidadesGUI extends javax.swing.JDialog {
+public class ModificacionMultipleLocalidadesGUI extends JDialog {
 
     private List<Localidad> localidadesParaModificar;
-    private ModeloTabla modeloTablaLocalidades = new ModeloTabla();
-    private LocalidadesParaActualizarDTO localidadesParaActualizarDTO;
+    private final ModeloTabla modeloTablaLocalidades = new ModeloTabla();
+    private final LocalidadesParaActualizarDTO localidadesParaActualizarDTO;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public ModificacionMultipleLocalidadesGUI(LocalidadesParaActualizarDTO localidadesParaActualizarDTO) {
-        initComponents();
+        this.initComponents();
+        this.setIcon();
         this.localidadesParaActualizarDTO = localidadesParaActualizarDTO;
+    }
+    
+    private void setIcon() {
+        ImageIcon iconoVentana = new ImageIcon(ModificacionMultipleProductosGUI.class.getResource("/sic/icons/Map_16x16.png"));
+        this.setIconImage(iconoVentana.getImage());
     }
 
     private void cargarLocalidades() {
@@ -44,6 +52,7 @@ public class ModificacionMultipleLocalidadesGUI extends javax.swing.JDialog {
     }
 
     private void prepararComponentes() {
+        rbNoGratuito.setSelected(true);
         ftfCostoDeEnvio.setValue(BigDecimal.ZERO);
         this.setColumnas();
     }
@@ -93,13 +102,17 @@ public class ModificacionMultipleLocalidadesGUI extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        bgTipoEnvio = new javax.swing.ButtonGroup();
         panel1 = new javax.swing.JPanel();
-        jScrollPanel1 = new javax.swing.JScrollPane();
-        tblLocalidades = new javax.swing.JTable();
         chkCostoDeEnvio = new javax.swing.JCheckBox();
-        chkEnvioGratuito = new javax.swing.JCheckBox();
         ftfCostoDeEnvio = new javax.swing.JFormattedTextField();
+        chkEnvio = new javax.swing.JCheckBox();
+        rbGratuito = new javax.swing.JRadioButton();
+        rbNoGratuito = new javax.swing.JRadioButton();
         btnAceptar = new javax.swing.JButton();
+        lblIndicaciones = new javax.swing.JLabel();
+        spResultados = new javax.swing.JScrollPane();
+        tblLocalidades = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Modificar multiples Localidades");
@@ -110,15 +123,7 @@ public class ModificacionMultipleLocalidadesGUI extends javax.swing.JDialog {
             }
         });
 
-        tblLocalidades.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-
-            }
-        ));
-        jScrollPanel1.setViewportView(tblLocalidades);
+        panel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         chkCostoDeEnvio.setText("Costo de Envío: ");
         chkCostoDeEnvio.addItemListener(new java.awt.event.ItemListener() {
@@ -127,10 +132,23 @@ public class ModificacionMultipleLocalidadesGUI extends javax.swing.JDialog {
             }
         });
 
-        chkEnvioGratuito.setText("Envio Gratuito");
-
         ftfCostoDeEnvio.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
         ftfCostoDeEnvio.setEnabled(false);
+
+        chkEnvio.setText("Envío:");
+        chkEnvio.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chkEnvioItemStateChanged(evt);
+            }
+        });
+
+        bgTipoEnvio.add(rbGratuito);
+        rbGratuito.setText("Gratuito");
+        rbGratuito.setEnabled(false);
+
+        bgTipoEnvio.add(rbNoGratuito);
+        rbNoGratuito.setText("No Gratuito");
+        rbNoGratuito.setEnabled(false);
 
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
         panel1.setLayout(panel1Layout);
@@ -138,39 +156,53 @@ public class ModificacionMultipleLocalidadesGUI extends javax.swing.JDialog {
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(chkEnvioGratuito)
-                    .addGroup(panel1Layout.createSequentialGroup()
-                        .addComponent(chkCostoDeEnvio)
-                        .addGap(0, 0, 0)
-                        .addComponent(ftfCostoDeEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(392, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                .addGap(1, 1, 1)
-                .addComponent(jScrollPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE))
+                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(chkCostoDeEnvio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(chkEnvio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(rbNoGratuito, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rbGratuito, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ftfCostoDeEnvio))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        panel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chkCostoDeEnvio, chkEnvioGratuito});
-
         panel1Layout.setVerticalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel1Layout.createSequentialGroup()
-                .addComponent(jScrollPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap()
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(chkCostoDeEnvio)
                     .addComponent(ftfCostoDeEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chkEnvioGratuito))
+                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(chkEnvio)
+                    .addComponent(rbGratuito))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(rbNoGratuito)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        btnAceptar.setForeground(java.awt.Color.blue);
         btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Accept_16x16.png"))); // NOI18N
         btnAceptar.setText("Guardar");
+        btnAceptar.setEnabled(false);
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAceptarActionPerformed(evt);
             }
         });
+
+        lblIndicaciones.setText("Localidades que se van a modificar:");
+
+        tblLocalidades.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        spResultados.setViewportView(tblLocalidades);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -179,18 +211,27 @@ public class ModificacionMultipleLocalidadesGUI extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(spResultados, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnAceptar)))
+                        .addComponent(btnAceptar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblIndicaciones)
+                            .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(lblIndicaciones)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(spResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnAceptar)
                 .addContainerGap())
         );
@@ -205,7 +246,7 @@ public class ModificacionMultipleLocalidadesGUI extends javax.swing.JDialog {
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         this.localidadesParaActualizarDTO.setCostoDeEnvio(new BigDecimal(ftfCostoDeEnvio.getValue().toString()));
-        this.localidadesParaActualizarDTO.setEnvioGratuito(chkEnvioGratuito.isSelected());
+        //this.localidadesParaActualizarDTO.setEnvioGratuito(chkEnvioGratuito.isSelected());
         try {
             RestClient.getRestTemplate().put("/ubicaciones/multiples", this.localidadesParaActualizarDTO);
             JOptionPane.showMessageDialog(this, "Las localidades se modificaron correctamente.",
@@ -229,13 +270,27 @@ public class ModificacionMultipleLocalidadesGUI extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_chkCostoDeEnvioItemStateChanged
 
+    private void chkEnvioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkEnvioItemStateChanged
+        if (chkEnvio.isSelected() == true) {
+            rbGratuito.setEnabled(true);
+            rbNoGratuito.setEnabled(true);
+        } else {
+            rbGratuito.setEnabled(false);
+            rbNoGratuito.setEnabled(false);
+        }
+    }//GEN-LAST:event_chkEnvioItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup bgTipoEnvio;
     private javax.swing.JButton btnAceptar;
     private javax.swing.JCheckBox chkCostoDeEnvio;
-    private javax.swing.JCheckBox chkEnvioGratuito;
+    private javax.swing.JCheckBox chkEnvio;
     private javax.swing.JFormattedTextField ftfCostoDeEnvio;
-    private javax.swing.JScrollPane jScrollPanel1;
+    private javax.swing.JLabel lblIndicaciones;
     private javax.swing.JPanel panel1;
+    private javax.swing.JRadioButton rbGratuito;
+    private javax.swing.JRadioButton rbNoGratuito;
+    private javax.swing.JScrollPane spResultados;
     private javax.swing.JTable tblLocalidades;
     // End of variables declaration//GEN-END:variables
 }
