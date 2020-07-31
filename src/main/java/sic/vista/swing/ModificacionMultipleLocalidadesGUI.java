@@ -20,35 +20,17 @@ public class ModificacionMultipleLocalidadesGUI extends JDialog {
 
     private List<Localidad> localidadesParaModificar;
     private final ModeloTabla modeloTablaLocalidades = new ModeloTabla();
-    private final LocalidadesParaActualizarDTO localidadesParaActualizarDTO;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    public ModificacionMultipleLocalidadesGUI(LocalidadesParaActualizarDTO localidadesParaActualizarDTO) {
+    public ModificacionMultipleLocalidadesGUI(List<Localidad> localidadesParaModificar) {
         this.initComponents();
         this.setIcon();
-        this.localidadesParaActualizarDTO = localidadesParaActualizarDTO;
+        this.localidadesParaModificar = localidadesParaModificar;
     }
     
     private void setIcon() {
         ImageIcon iconoVentana = new ImageIcon(ModificacionMultipleProductosGUI.class.getResource("/sic/icons/Map_16x16.png"));
         this.setIconImage(iconoVentana.getImage());
-    }
-
-    private void cargarLocalidades() {
-        try {
-            this.localidadesParaModificar = new ArrayList();
-            for (int i = 0; i < localidadesParaActualizarDTO.getIdLocalidad().length; ++i) {
-                localidadesParaModificar.add(RestClient.getRestTemplate().getForObject("/ubicaciones/localidades/" + localidadesParaActualizarDTO.getIdLocalidad()[i], Localidad.class));
-            }
-            this.cargarResultadosAlTable();
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
     }
 
     private void prepararComponentes() {
@@ -96,6 +78,14 @@ public class ModificacionMultipleLocalidadesGUI extends JDialog {
             modeloTablaLocalidades.addRow(f);
         });
         tblLocalidades.setModel(modeloTablaLocalidades);
+    }
+    
+    private long[] getIdsLocalidades(List<Localidad> localidades) {
+        long[] idsLocalidades = new long[localidades.size()];
+        for (int i = 0; i < localidades.size(); ++i) {
+            idsLocalidades[i] = localidades.get(i).getIdLocalidad();
+        }
+        return idsLocalidades;
     }
 
     @SuppressWarnings("unchecked")
@@ -211,7 +201,7 @@ public class ModificacionMultipleLocalidadesGUI extends JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spResultados, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
+                    .addComponent(spResultados, javax.swing.GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnAceptar))
@@ -241,14 +231,21 @@ public class ModificacionMultipleLocalidadesGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.prepararComponentes();
-        this.cargarLocalidades();
+        this.cargarResultadosAlTable();
     }//GEN-LAST:event_formWindowOpened
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        this.localidadesParaActualizarDTO.setCostoDeEnvio(new BigDecimal(ftfCostoDeEnvio.getValue().toString()));
-        //this.localidadesParaActualizarDTO.setEnvioGratuito(chkEnvioGratuito.isSelected());
+        LocalidadesParaActualizarDTO localidadesParaActualizarDTO = LocalidadesParaActualizarDTO.builder()
+                .idLocalidad(this.getIdsLocalidades(this.localidadesParaModificar))
+                .build();
+        if (chkCostoDeEnvio.isSelected()) {
+            localidadesParaActualizarDTO.setCostoDeEnvio(new BigDecimal(ftfCostoDeEnvio.getValue().toString()));
+        }
+        if (chkEnvio.isSelected()) {
+            localidadesParaActualizarDTO.setEnvioGratuito(rbGratuito.isSelected());
+        }
         try {
-            RestClient.getRestTemplate().put("/ubicaciones/multiples", this.localidadesParaActualizarDTO);
+            RestClient.getRestTemplate().put("/ubicaciones/multiples", localidadesParaActualizarDTO);
             JOptionPane.showMessageDialog(this, "Las localidades se modificaron correctamente.",
                     "Aviso", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
@@ -265,8 +262,12 @@ public class ModificacionMultipleLocalidadesGUI extends JDialog {
     private void chkCostoDeEnvioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkCostoDeEnvioItemStateChanged
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             ftfCostoDeEnvio.setEnabled(true);
+            btnAceptar.setEnabled(true);
         } else {
             ftfCostoDeEnvio.setEnabled(false);
+            if (!chkEnvio.isSelected()) {
+                btnAceptar.setEnabled(false);
+            }
         }
     }//GEN-LAST:event_chkCostoDeEnvioItemStateChanged
 
@@ -274,9 +275,13 @@ public class ModificacionMultipleLocalidadesGUI extends JDialog {
         if (chkEnvio.isSelected() == true) {
             rbGratuito.setEnabled(true);
             rbNoGratuito.setEnabled(true);
+            btnAceptar.setEnabled(true);
         } else {
             rbGratuito.setEnabled(false);
             rbNoGratuito.setEnabled(false);
+            if (!chkCostoDeEnvio.isSelected()) {
+                btnAceptar.setEnabled(false);
+            }
         }
     }//GEN-LAST:event_chkEnvioItemStateChanged
 

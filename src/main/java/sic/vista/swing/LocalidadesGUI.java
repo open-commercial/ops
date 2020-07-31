@@ -240,17 +240,13 @@ public class LocalidadesGUI extends JInternalFrame {
             btnModificarLocalidad.setEnabled(false);
         }
     }
-
-    private long[] getIdsLocalidades(int[] indices) {
+    
+    private List<Localidad> getSeleccionMultipleDeLocalidades(int[] indices) {
         List<Localidad> localidadesSeleccionadas = new ArrayList<>();
         for (int i = 0; i < indices.length; i++) {
             localidadesSeleccionadas.add(localidadesTotal.get(indices[i]));
         }
-        long[] idsLocalidades = new long[localidadesSeleccionadas.size()];
-        for (int i = 0; i < localidadesSeleccionadas.size(); ++i) {
-            idsLocalidades[i] = localidadesSeleccionadas.get(i).getIdLocalidad();
-        }
-        return idsLocalidades;
+        return localidadesSeleccionadas;
     }
 
     @SuppressWarnings("unchecked")
@@ -530,8 +526,7 @@ public class LocalidadesGUI extends JInternalFrame {
         if (tbl_Resultados.getSelectedRow() != -1) {
             if (tbl_Resultados.getSelectedRowCount() > 1) {
                 ModificacionMultipleLocalidadesGUI modificacionMultipleLocalidadesGUI
-                        = new ModificacionMultipleLocalidadesGUI(LocalidadesParaActualizarDTO.builder().idLocalidad(this.getIdsLocalidades(Utilidades.getSelectedRowsModelIndices(tbl_Resultados)))
-                                .build());
+                        = new ModificacionMultipleLocalidadesGUI(this.getSeleccionMultipleDeLocalidades(Utilidades.getSelectedRowsModelIndices(tbl_Resultados)));
                 modificacionMultipleLocalidadesGUI.setModal(true);
                 modificacionMultipleLocalidadesGUI.setLocationRelativeTo(this);
                 modificacionMultipleLocalidadesGUI.setVisible(true);
