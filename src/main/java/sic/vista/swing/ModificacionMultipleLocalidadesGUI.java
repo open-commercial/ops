@@ -2,7 +2,6 @@ package sic.vista.swing;
 
 import java.awt.event.ItemEvent;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
@@ -18,7 +17,7 @@ import sic.modelo.LocalidadesParaActualizarDTO;
 
 public class ModificacionMultipleLocalidadesGUI extends JDialog {
 
-    private List<Localidad> localidadesParaModificar;
+    private final List<Localidad> localidadesParaModificar;
     private final ModeloTabla modeloTablaLocalidades = new ModeloTabla();
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
