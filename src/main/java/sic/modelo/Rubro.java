@@ -10,7 +10,6 @@ public class Rubro implements Serializable {
 
     private long idRubro;
     private String nombre;
-    private boolean eliminado;
 
     @Override
     public String toString() {

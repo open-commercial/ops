@@ -166,7 +166,7 @@ public class TraspasosGUI extends JInternalFrame {
         tipos[0] = String.class;
         tipos[1] = String.class;
         tipos[2] = String.class;
-        tipos[3] = String.class;
+        tipos[3] = BigDecimal.class;
         modeloTablaDetalle.setClaseColumnas(tipos);
         tbl_Detalles.getTableHeader().setReorderingAllowed(false);
         tbl_Detalles.getTableHeader().setResizingAllowed(true);

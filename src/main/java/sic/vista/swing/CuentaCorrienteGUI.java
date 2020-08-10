@@ -987,7 +987,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                         case FACTURA_A:
                         case FACTURA_B:
                         case FACTURA_C:
-                            RestClient.getRestTemplate().postForObject("/facturas/" + renglonCC.getIdMovimiento() + "/autorizacion",
+                            RestClient.getRestTemplate().postForObject("/facturas/ventas/" + renglonCC.getIdMovimiento() + "/autorizacion",
                                     null, FacturaVenta.class);
                             JOptionPane.showMessageDialog(this,
                                     ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_autorizada"),
