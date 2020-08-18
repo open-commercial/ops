@@ -482,6 +482,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         btn_Autorizar = new javax.swing.JButton();
         btnCrearNotaCredito = new javax.swing.JButton();
         btnEnviarEmail = new javax.swing.JButton();
+        btnCrearRemito = new javax.swing.JButton();
         panelFiltros = new javax.swing.JPanel();
         subPanelFiltros1 = new javax.swing.JPanel();
         chk_Cliente = new javax.swing.JCheckBox();
@@ -636,36 +637,53 @@ public class FacturasVentaGUI extends JInternalFrame {
             }
         });
 
+        btnCrearRemito.setForeground(java.awt.Color.blue);
+        btnCrearRemito.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Add_16x16.png"))); // NOI18N
+        btnCrearRemito.setText("Nuevo Remito");
+        btnCrearRemito.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearRemitoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(btnCrearNotaCredito)
-                .addGap(0, 0, 0)
-                .addComponent(btn_Autorizar)
-                .addGap(0, 0, 0)
-                .addComponent(btn_VerDetalle)
-                .addGap(0, 0, 0)
-                .addComponent(btnEnviarEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelResultadosLayout.createSequentialGroup()
+                        .addComponent(btn_Autorizar)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_VerDetalle)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnEnviarEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelResultadosLayout.createSequentialGroup()
+                        .addComponent(btnCrearRemito)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnCrearNotaCredito)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panelNumeros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(sp_Resultados)
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCrearNotaCredito, btnEnviarEmail, btn_Autorizar, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCrearNotaCredito, btnCrearRemito, btnEnviarEmail, btn_Autorizar, btn_VerDetalle});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
-                .addGap(8, 8, 8)
-                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(panelNumeros, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                        .addComponent(btnCrearNotaCredito)
-                        .addComponent(btn_Autorizar)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
+                        .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnCrearNotaCredito)
+                            .addComponent(btnCrearRemito))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(btn_Autorizar)
                             .addComponent(btnEnviarEmail)
                             .addComponent(btn_VerDetalle)))))
         );
@@ -1033,7 +1051,7 @@ public class FacturasVentaGUI extends JInternalFrame {
                 .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(165, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1330,12 +1348,36 @@ public class FacturasVentaGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btnEnviarEmailActionPerformed
 
+    private void btnCrearRemitoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearRemitoActionPerformed
+        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
+            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
+            FacturaVenta factura = facturasTotal.get(indexFilaSeleccionada);
+            try {
+                NuevoRemitoGUI nuevoRemito = new NuevoRemitoGUI(factura);
+                nuevoRemito.setLocation(getDesktopPane().getWidth() / 2 - nuevoRemito.getWidth() / 2,
+                        getDesktopPane().getHeight() / 2 - nuevoRemito.getHeight() / 2);
+                getDesktopPane().add(nuevoRemito);
+                nuevoRemito.setMaximizable(true);
+                nuevoRemito.setClosable(true);
+                nuevoRemito.setVisible(true);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnCrearRemitoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarCliente;
     private javax.swing.JButton btnBuscarProductos;
     private javax.swing.JButton btnBuscarUsuarios;
     private javax.swing.JButton btnBuscarViajantes;
     private javax.swing.JButton btnCrearNotaCredito;
+    private javax.swing.JButton btnCrearRemito;
     private javax.swing.JButton btnEnviarEmail;
     private javax.swing.JButton btn_Autorizar;
     private javax.swing.JButton btn_Buscar;

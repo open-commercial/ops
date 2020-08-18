@@ -127,6 +127,7 @@ public class PrincipalGUI extends JFrame {
         NotasDebitoVenta = new javax.swing.JMenuItem();
         mnu_Administracion = new javax.swing.JMenu();
         mnuItm_Transportistas = new javax.swing.JMenuItem();
+        mnuItmRemitos = new javax.swing.JMenuItem();
         mnuItm_FormasDePago = new javax.swing.JMenuItem();
         mnu_Cajas = new javax.swing.JMenuItem();
         mnuItmGastos = new javax.swing.JMenuItem();
@@ -327,6 +328,14 @@ public class PrincipalGUI extends JFrame {
             }
         });
         mnu_Administracion.add(mnuItm_Transportistas);
+
+        mnuItmRemitos.setText("Remitos");
+        mnuItmRemitos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuItmRemitosActionPerformed(evt);
+            }
+        });
+        mnu_Administracion.add(mnuItmRemitos);
 
         mnuItm_FormasDePago.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Wallet_16x16.png"))); // NOI18N
         mnuItm_FormasDePago.setText("Formas de Pago");
@@ -921,6 +930,25 @@ public class PrincipalGUI extends JFrame {
         }
     }//GEN-LAST:event_mnuItm_TraspasosActionPerformed
 
+    private void mnuItmRemitosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmRemitosActionPerformed
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), TraspasosGUI.class);
+        if (gui == null) {
+            gui = new RemitosGUI();
+            gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - gui.getHeight() / 2);
+            getDesktopPane().add(gui);
+            gui.setVisible(true);
+        } else {
+            try {
+                gui.setSelected(true);
+            } catch (PropertyVetoException ex) {
+                String msjError = "No se pudo seleccionar la ventana requerida.";
+                LOGGER.error(msjError + " - " + ex.getMessage());
+                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), msjError, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_mnuItmRemitosActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu NotasCompras;
     private javax.swing.JMenuItem NotasCreditoCompra;
@@ -933,6 +961,7 @@ public class PrincipalGUI extends JFrame {
     private javax.swing.JMenuItem mnuItmGastos;
     private javax.swing.JMenuItem mnuItmLocalidades;
     private javax.swing.JMenuItem mnuItmMedidas;
+    private javax.swing.JMenuItem mnuItmRemitos;
     private javax.swing.JMenuItem mnuItmRubros;
     private javax.swing.JMenuItem mnuItm_CambiarSucursal;
     private javax.swing.JMenuItem mnuItm_CambiarUser;

@@ -21,8 +21,13 @@ public enum TipoDeComprobante {
     NOTA_DEBITO_C("Nota de Debito \"C\""), 
     NOTA_DEBITO_PRESUPUESTO("Nota de Debito \"P\""),    
     NOTA_DEBITO_Y("Nota de Debito \"Y\""),    
-    NOTA_DEBITO_X("Nota de Debito \"X\"");
-    
+    NOTA_DEBITO_X("Nota de Debito \"X\""),
+    REMITO_A("Remito A"),
+    REMITO_B("Remito B"),
+    REMITO_C("Remito C"),
+    REMITO_X("Remito X"),
+    REMITO_PRESUPUESTO("Remito Presupuesto");
+
     private final String text;
 
     private TipoDeComprobante(final String text) {

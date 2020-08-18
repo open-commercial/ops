@@ -67,7 +67,7 @@
                   <Component id="btnFinalizar" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="lblDividido" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -282,7 +282,7 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="cmbSucursales" alignment="0" pref="439" max="32767" attributes="0"/>
+                      <Component id="cmbSucursales" alignment="0" max="32767" attributes="0"/>
                       <Component id="lblDetalleUbicacionFacturacion" max="32767" attributes="0"/>
                       <Component id="lblDetalleUbicacionEnvio" alignment="0" max="32767" attributes="0"/>
                   </Group>
@@ -404,15 +404,9 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="lbl_Transporte" max="32767" attributes="0"/>
-                      <Component id="lbl_Vendor" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="lbl_Vendor" min="-2" pref="84" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="lbl_Vendedor" max="32767" attributes="0"/>
-                      <Component id="cmb_Transporte" pref="602" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="lbl_Vendedor" min="-2" pref="602" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -424,11 +418,6 @@
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lbl_Vendedor" linkSize="9" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lbl_Vendor" linkSize="9" alignment="2" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="lbl_Transporte" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmb_Transporte" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -445,18 +434,6 @@
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="25" green="9c" red="1d" type="rgb"/>
-            </Property>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lbl_Transporte">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Transporte:"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cmb_Transporte">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
             </Property>
           </Properties>
         </Component>

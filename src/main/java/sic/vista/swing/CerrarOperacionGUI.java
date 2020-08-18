@@ -154,7 +154,6 @@ public class CerrarOperacionGUI extends JDialog {
         txt_MontoPago1.addKeyListener(keyHandler);
         txt_MontoPago2.addKeyListener(keyHandler);
         txt_MontoPago3.addKeyListener(keyHandler);
-        cmb_Transporte.addKeyListener(keyHandler);
         btnFinalizar.addKeyListener(keyHandler);
     }
 
@@ -203,17 +202,6 @@ public class CerrarOperacionGUI extends JDialog {
         });
     }
 
-    private void cargarTransportistas() {
-        cmb_Transporte.removeAllItems();
-        cmb_Transporte.addItem(null);
-        List<Transportista> transportes = Arrays.asList(RestClient.getRestTemplate()
-                .getForObject("/transportistas",
-                        Transportista[].class));
-        transportes.stream().forEach(t -> {
-            cmb_Transporte.addItem(t);
-        });
-    }
-
     private void setEstadoFormasDePago() {
         FormaDePago formaDePagoPredeterminada = RestClient.getRestTemplate()
                 .getForObject("/formas-de-pago/predeterminada", FormaDePago.class);
@@ -229,9 +217,6 @@ public class CerrarOperacionGUI extends JDialog {
     }
 
     private void finalizarVenta() {
-        if (cmb_Transporte.getSelectedItem() != null) {
-            this.nuevaFacturaVenta.setIdTransportista(((Transportista) cmb_Transporte.getSelectedItem()).getIdTransportista());
-        }
         this.armarMontosConFormasDePago();
         List<TipoDeComprobante> tiposAutorizables
                 = Arrays.asList(
@@ -395,8 +380,6 @@ public class CerrarOperacionGUI extends JDialog {
         panelSuperior = new javax.swing.JPanel();
         lbl_Vendor = new javax.swing.JLabel();
         lbl_Vendedor = new javax.swing.JLabel();
-        lbl_Transporte = new javax.swing.JLabel();
-        cmb_Transporte = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cerrar Operación");
@@ -568,7 +551,7 @@ public class CerrarOperacionGUI extends JDialog {
                     .addComponent(rbRetiroEnSucursal))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cmbSucursales, 0, 439, Short.MAX_VALUE)
+                    .addComponent(cmbSucursales, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblDetalleUbicacionFacturacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblDetalleUbicacionEnvio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -604,21 +587,15 @@ public class CerrarOperacionGUI extends JDialog {
 
         lbl_Vendedor.setForeground(new java.awt.Color(29, 156, 37));
 
-        lbl_Transporte.setText("Transporte:");
-
         javax.swing.GroupLayout panelSuperiorLayout = new javax.swing.GroupLayout(panelSuperior);
         panelSuperior.setLayout(panelSuperiorLayout);
         panelSuperiorLayout.setHorizontalGroup(
             panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelSuperiorLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lbl_Transporte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Vendor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(lbl_Vendor, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lbl_Vendedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cmb_Transporte, 0, 602, Short.MAX_VALUE))
+                .addComponent(lbl_Vendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 602, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelSuperiorLayout.setVerticalGroup(
@@ -628,10 +605,6 @@ public class CerrarOperacionGUI extends JDialog {
                 .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_Vendedor)
                     .addComponent(lbl_Vendor))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Transporte)
-                    .addComponent(cmb_Transporte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -719,7 +692,6 @@ public class CerrarOperacionGUI extends JDialog {
                     rbRetiroEnSucursal.setSelected(true);
                 }
             } else {
-                cmb_Transporte.setEnabled(true);
                 panelInferior.setEnabled(false);
                 cmbSucursales.setEnabled(false);
                 rbRetiroEnSucursal.setEnabled(false);
@@ -727,7 +699,6 @@ public class CerrarOperacionGUI extends JDialog {
                 rbDireccionEnvio.setEnabled(false);
             }
             this.cargarFormasDePago();
-            this.cargarTransportistas();
             this.setEstadoFormasDePago();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -737,7 +708,6 @@ public class CerrarOperacionGUI extends JDialog {
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-        cmb_Transporte.setSelectedIndex(0);
         lbl_Vendedor.setText(UsuarioActivo.getInstance().getUsuario().toString());
         if (pedido != null) {
             total = this.pedido.getTotal();
@@ -772,10 +742,6 @@ public class CerrarOperacionGUI extends JDialog {
                     dividir = true;
                 }
             }
-        }
-        if (nuevaFacturaVenta == null && (this.nuevoPedido != null || this.pedido != null)) {
-            cmb_Transporte.setEnabled(false);
-            lbl_Transporte.setEnabled(false);
         }
         if (dividir) {
             chk_FormaDePago1.setEnabled(false);
@@ -964,12 +930,10 @@ public class CerrarOperacionGUI extends JDialog {
     private javax.swing.JComboBox cmb_FormaDePago1;
     private javax.swing.JComboBox cmb_FormaDePago2;
     private javax.swing.JComboBox cmb_FormaDePago3;
-    private javax.swing.JComboBox cmb_Transporte;
     private javax.swing.JLabel lblDetalleUbicacionEnvio;
     private javax.swing.JLabel lblDetalleUbicacionFacturacion;
     private javax.swing.JLabel lblDividido;
     private javax.swing.JLabel lblSaldoCC;
-    private javax.swing.JLabel lbl_Transporte;
     private javax.swing.JLabel lbl_Vendedor;
     private javax.swing.JLabel lbl_Vendor;
     private javax.swing.JPanel panelInferior;
