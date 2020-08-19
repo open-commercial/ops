@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -556,6 +557,9 @@ public class NuevoRemitoGUI extends javax.swing.JInternalFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 ftfCostoDeEnvioFocusGained(evt);
             }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                ftfCostoDeEnvioFocusLost(evt);
+            }
         });
         ftfCostoDeEnvio.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -895,46 +899,67 @@ public class NuevoRemitoGUI extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_chkPackItemStateChanged
 
     private void ftxtCantCajaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftxtCantCajaFocusLost
-        if (ftxtCantCaja.getValue() != null) {
+        try {
+            ftxtCantCaja.commitEdit();
             this.calcularCantidadDeBultos();
+        } catch (ParseException ex) {
         }
     }//GEN-LAST:event_ftxtCantCajaFocusLost
 
     private void ftxtCantBolsaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftxtCantBolsaFocusLost
-        if (ftxtCantBolsa.getValue() != null) {
+        try {
+            ftxtCantBolsa.commitEdit();
             this.calcularCantidadDeBultos();
+        } catch (ParseException ex) {
         }
     }//GEN-LAST:event_ftxtCantBolsaFocusLost
 
     private void ftxtCantRolloFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftxtCantRolloFocusLost
-        if (ftxtCantRollo.getValue() != null) {
+        try {
+            ftxtCantRollo.commitEdit();
             this.calcularCantidadDeBultos();
+        } catch (ParseException ex) {
         }
     }//GEN-LAST:event_ftxtCantRolloFocusLost
 
     private void ftxtCantBaldeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftxtCantBaldeFocusLost
-        if (ftxtCantBalde.getValue() != null) {
+        try {
+            ftxtCantBalde.commitEdit();
             this.calcularCantidadDeBultos();
+        } catch (ParseException ex) {
         }
     }//GEN-LAST:event_ftxtCantBaldeFocusLost
 
     private void ftxtCantSobreFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftxtCantSobreFocusLost
-        if (ftxtCantSobre.getValue() != null) {
+        try {
+            ftxtCantSobre.commitEdit();
             this.calcularCantidadDeBultos();
+        } catch (ParseException ex) {
         }
     }//GEN-LAST:event_ftxtCantSobreFocusLost
 
     private void ftxtCantAtadoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftxtCantAtadoFocusLost
-        if (ftxtCantAtado.getValue() != null) {
+        try {
+            ftxtCantAtado.commitEdit();
             this.calcularCantidadDeBultos();
+        } catch (ParseException ex) {
         }
     }//GEN-LAST:event_ftxtCantAtadoFocusLost
 
     private void ftxtCantPackFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftxtCantPackFocusLost
-        if (ftxtCantPack.getValue() != null) {
+        try {
+            ftxtCantPack.commitEdit();
             this.calcularCantidadDeBultos();
+        } catch (ParseException ex) {
         }
     }//GEN-LAST:event_ftxtCantPackFocusLost
+
+    private void ftfCostoDeEnvioFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftfCostoDeEnvioFocusLost
+        try {
+            ftfCostoDeEnvio.commitEdit();
+        } catch (ParseException ex) {
+        }
+    }//GEN-LAST:event_ftfCostoDeEnvioFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox chkAtado;

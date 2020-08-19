@@ -60,7 +60,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         this.initComponents();
         sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
             JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-            int va = scrollBar.getVisibleAmount() + 10;
+            int va  = scrollBar.getVisibleAmount() + 10;
             if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
                 if (facturasTotal.size() >= 10) {
                     NUMERO_PAGINA += 1;
@@ -1068,11 +1068,11 @@ public class FacturasVentaGUI extends JInternalFrame {
     private void chk_FechaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_FechaItemStateChanged
         if (chk_Fecha.isSelected() == true) {
             dc_FechaDesde.setEnabled(true);
-            dc_FechaHasta.setEnabled(true);            
+            dc_FechaHasta.setEnabled(true);
             dc_FechaDesde.requestFocus();
         } else {
             dc_FechaDesde.setEnabled(false);
-            dc_FechaHasta.setEnabled(false);            
+            dc_FechaHasta.setEnabled(false);
         }
 }//GEN-LAST:event_chk_FechaItemStateChanged
 
@@ -1157,7 +1157,7 @@ public class FacturasVentaGUI extends JInternalFrame {
     private void txt_NumeroPedidoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_NumeroPedidoKeyTyped
         Utilidades.controlarEntradaSoloNumerico(evt);
     }//GEN-LAST:event_txt_NumeroPedidoKeyTyped
-  
+
     private void chk_NumeroPedidoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_NumeroPedidoItemStateChanged
         txt_NumeroPedido.setEnabled(chk_NumeroPedido.isSelected());
     }//GEN-LAST:event_chk_NumeroPedidoItemStateChanged
@@ -1352,21 +1352,26 @@ public class FacturasVentaGUI extends JInternalFrame {
         if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             FacturaVenta factura = facturasTotal.get(indexFilaSeleccionada);
-            try {
-                NuevoRemitoGUI nuevoRemito = new NuevoRemitoGUI(factura);
-                nuevoRemito.setLocation(getDesktopPane().getWidth() / 2 - nuevoRemito.getWidth() / 2,
-                        getDesktopPane().getHeight() / 2 - nuevoRemito.getHeight() / 2);
-                getDesktopPane().add(nuevoRemito);
-                nuevoRemito.setMaximizable(true);
-                nuevoRemito.setClosable(true);
-                nuevoRemito.setVisible(true);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+            if (factura.getRemito() == null) {
+                try {
+                    NuevoRemitoGUI nuevoRemito = new NuevoRemitoGUI(factura);
+                    nuevoRemito.setLocation(getDesktopPane().getWidth() / 2 - nuevoRemito.getWidth() / 2,
+                            getDesktopPane().getHeight() / 2 - nuevoRemito.getHeight() / 2);
+                    getDesktopPane().add(nuevoRemito);
+                    nuevoRemito.setMaximizable(true);
+                    nuevoRemito.setClosable(true);
+                    nuevoRemito.setVisible(true);
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                        .getString("mensaje_error_remito_ya_existente"), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnCrearRemitoActionPerformed
