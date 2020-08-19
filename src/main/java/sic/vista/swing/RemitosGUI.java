@@ -112,13 +112,15 @@ public class RemitosGUI extends JInternalFrame {
 
     private void setColumnas() {
         //nombres de columnas
-        String[] encabezados = new String[6];
+        String[] encabezados = new String[8];
         encabezados[0] = "Fecha Remito";
-        encabezados[1] = "Nº Remito";
-        encabezados[2] = "Usuario";
-        encabezados[3] = "Cliente";
-        encabezados[4] = "Transportista";
-        encabezados[5] = "Costo de Envio";
+        encabezados[1] = "Tipo";
+        encabezados[2] = "Nº Remito";
+        encabezados[3] = "Usuario";
+        encabezados[4] = "Cliente";
+        encabezados[5] = "Transportista";
+        encabezados[6] = "Costo de Envio";
+        encabezados[7] = "Detalle Envio";
         modeloTablaRemitos.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaRemitos);
         //tipo de dato columnas
@@ -128,27 +130,34 @@ public class RemitosGUI extends JInternalFrame {
         tipos[2] = String.class;
         tipos[3] = String.class;
         tipos[4] = String.class;
-        tipos[5] = BigDecimal.class;
+        tipos[5] = String.class;
+        tipos[6] = BigDecimal.class;
+        tipos[7] = String.class;
         modeloTablaRemitos.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
         //tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(140);
         tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(140);
-        tbl_Resultados.getColumnModel().getColumn(0).setMinWidth(140);
+        tbl_Resultados.getColumnModel().getColumn(0).setMinWidth(140);        
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(130);
         tbl_Resultados.getColumnModel().getColumn(1).setMaxWidth(130);
-        tbl_Resultados.getColumnModel().getColumn(1).setMinWidth(130);
-        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(220);
-        tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(220);
-        tbl_Resultados.getColumnModel().getColumn(2).setMinWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(1).setMinWidth(130);        
+        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(2).setMinWidth(130);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(220);
         tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(220);
         tbl_Resultados.getColumnModel().getColumn(3).setMinWidth(220);
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(220);
         tbl_Resultados.getColumnModel().getColumn(4).setMaxWidth(220);
         tbl_Resultados.getColumnModel().getColumn(4).setMinWidth(220);
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(320);
+        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(5).setMinWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(6).setMaxWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(6).setMinWidth(130);
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         tbl_Resultados.getColumnModel().getColumn(0).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
@@ -228,13 +237,15 @@ public class RemitosGUI extends JInternalFrame {
 
     private void cargarResultadosAlTable() {
         remitosParcial.stream().map(remito -> {
-            Object[] fila = new Object[6];
+            Object[] fila = new Object[8];
             fila[0] = remito.getFecha();
-            fila[1] = remito.getSerie() + " - " + remito.getNroRemito();
-            fila[2] = remito.getNombreUsuario();
-            fila[3] = remito.getNombreFiscalCliente();
-            fila[4] = remito.getNombreTransportista();
-            fila[5] = remito.getCostoDeEnvio();
+            fila[1] = remito.getTipoComprobante();
+            fila[2] = remito.getSerie() + " - " + remito.getNroRemito();
+            fila[3] = remito.getNombreUsuario();
+            fila[4] = remito.getNombreFiscalCliente();
+            fila[5] = remito.getNombreTransportista();
+            fila[6] = remito.getCostoDeEnvio();
+            fila[7] = remito.getDetalleEnvio();
             return fila;
         }).forEach(fila -> {
             modeloTablaRemitos.addRow(fila);
@@ -326,7 +337,7 @@ public class RemitosGUI extends JInternalFrame {
         setMaximizable(true);
         setResizable(true);
         setTitle("Administrar Remitos");
-        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Map_16x16.png"))); // NOI18N
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/SIC_16_square.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
@@ -368,7 +379,6 @@ public class RemitosGUI extends JInternalFrame {
         });
 
         btn_Eliminar.setForeground(java.awt.Color.blue);
-        btn_Eliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/CoinsDel_16x16.png"))); // NOI18N
         btn_Eliminar.setText("Eliminar ");
         btn_Eliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
