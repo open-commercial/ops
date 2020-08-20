@@ -40,25 +40,28 @@ public class DetalleRubroGUI extends JInternalFrame {
         btn_Agregar = new javax.swing.JButton();
         btn_Actualizar = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
+        lblImagen = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        textAreaImagenHtml = new javax.swing.JTextArea();
 
         setClosable(true);
         setTitle("Administrar Rubros");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Block.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
-                formInternalFrameOpened(evt);
-            }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
             }
         });
 
@@ -78,7 +81,7 @@ public class DetalleRubroGUI extends JInternalFrame {
             panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelSuperiorLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(sp_ListaRubros)
+                .addComponent(sp_ListaRubros, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)
                 .addContainerGap())
         );
         panelSuperiorLayout.setVerticalGroup(
@@ -127,24 +130,36 @@ public class DetalleRubroGUI extends JInternalFrame {
             }
         });
 
+        lblImagen.setText("Imagen (html):");
+
+        textAreaImagenHtml.setColumns(20);
+        textAreaImagenHtml.setRows(5);
+        jScrollPane1.setViewportView(textAreaImagenHtml);
+
         javax.swing.GroupLayout panelInferiorLayout = new javax.swing.GroupLayout(panelInferior);
         panelInferior.setLayout(panelInferiorLayout);
         panelInferiorLayout.setHorizontalGroup(
             panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelInferiorLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
                     .addGroup(panelInferiorLayout.createSequentialGroup()
-                        .addComponent(lblNombre)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_Nuevo))
-                    .addGroup(panelInferiorLayout.createSequentialGroup()
-                        .addComponent(btn_Agregar)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_Actualizar)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_Eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(panelInferiorLayout.createSequentialGroup()
+                                    .addComponent(lblNombre)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(txt_Nuevo))
+                                .addGroup(panelInferiorLayout.createSequentialGroup()
+                                    .addComponent(btn_Agregar)
+                                    .addGap(0, 0, 0)
+                                    .addComponent(btn_Actualizar)
+                                    .addGap(0, 0, 0)
+                                    .addComponent(btn_Eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(lblImagen))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         panelInferiorLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Actualizar, btn_Agregar, btn_Eliminar});
@@ -156,6 +171,10 @@ public class DetalleRubroGUI extends JInternalFrame {
                 .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblNombre)
                     .addComponent(txt_Nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblImagen)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_Agregar)
@@ -170,11 +189,14 @@ public class DetalleRubroGUI extends JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(panelInferior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelInferior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {panelInferior, panelSuperior});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -192,6 +214,7 @@ public class DetalleRubroGUI extends JInternalFrame {
         try {
             Rubro rubro = new Rubro();
             rubro.setNombre(txt_Nuevo.getText().trim());
+            rubro.setImagenHtml(textAreaImagenHtml.getText().trim());
             RestClient.getRestTemplate().postForObject("/rubros", rubro, Rubro.class);
             txt_Nuevo.setText("");
             this.cargarListRubros();
@@ -210,6 +233,7 @@ public class DetalleRubroGUI extends JInternalFrame {
             if (lst_Rubros.getSelectedValue() != null) {
                 rubroSeleccionado = (Rubro) lst_Rubros.getSelectedValue();
                 txt_Nuevo.setText(rubroSeleccionado.getNombre());
+                textAreaImagenHtml.setText(rubroSeleccionado.getImagenHtml());
             }
         }
     }//GEN-LAST:event_lst_RubrosValueChanged
@@ -223,6 +247,7 @@ public class DetalleRubroGUI extends JInternalFrame {
                 Rubro rubroModificado = new Rubro();
                 rubroModificado.setIdRubro(rubroSeleccionado.getIdRubro());
                 rubroModificado.setNombre(txt_Nuevo.getText().trim());
+                rubroModificado.setImagenHtml(textAreaImagenHtml.getText().trim());
                 RestClient.getRestTemplate().put("/rubros", rubroModificado);
                 txt_Nuevo.setText("");
                 rubroSeleccionado = null;
@@ -283,11 +308,14 @@ public class DetalleRubroGUI extends JInternalFrame {
     private javax.swing.JButton btn_Actualizar;
     private javax.swing.JButton btn_Agregar;
     private javax.swing.JButton btn_Eliminar;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblImagen;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JList lst_Rubros;
     private javax.swing.JPanel panelInferior;
     private javax.swing.JPanel panelSuperior;
     private javax.swing.JScrollPane sp_ListaRubros;
+    private javax.swing.JTextArea textAreaImagenHtml;
     private javax.swing.JTextField txt_Nuevo;
     // End of variables declaration//GEN-END:variables
 }

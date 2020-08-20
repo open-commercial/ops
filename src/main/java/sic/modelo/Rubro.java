@@ -10,6 +10,7 @@ public class Rubro implements Serializable {
 
     private long idRubro;
     private String nombre;
+    private String imagenHtml;
 
     @Override
     public String toString() {
