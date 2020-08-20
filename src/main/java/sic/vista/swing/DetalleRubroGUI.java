@@ -217,6 +217,7 @@ public class DetalleRubroGUI extends JInternalFrame {
             rubro.setImagenHtml(textAreaImagenHtml.getText().trim());
             RestClient.getRestTemplate().postForObject("/rubros", rubro, Rubro.class);
             txt_Nuevo.setText("");
+            textAreaImagenHtml.setText("");
             this.cargarListRubros();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -250,6 +251,7 @@ public class DetalleRubroGUI extends JInternalFrame {
                 rubroModificado.setImagenHtml(textAreaImagenHtml.getText().trim());
                 RestClient.getRestTemplate().put("/rubros", rubroModificado);
                 txt_Nuevo.setText("");
+                textAreaImagenHtml.setText("");                
                 rubroSeleccionado = null;
                 this.cargarListRubros();
             }
@@ -271,6 +273,7 @@ public class DetalleRubroGUI extends JInternalFrame {
             } else {
                 RestClient.getRestTemplate().delete("/rubros/" + rubroSeleccionado.getIdRubro());
                 txt_Nuevo.setText("");
+                textAreaImagenHtml.setText("");
                 rubroSeleccionado = null;
                 cargarListRubros();
             }
