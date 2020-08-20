@@ -20,6 +20,8 @@ public class BusquedaFacturaVentaCriteria {
     private Long numSerie;
     private Long numFactura;
     private Long nroPedido;
+    private Long serieRemito;
+    private Long nroRemito;
     private Long idProducto;
     private Long idSucursal;
     private Integer pagina;
