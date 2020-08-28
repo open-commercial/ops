@@ -456,9 +456,9 @@
               <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/sic/icons/PedidoFacturas_16x16.png"/>
+              <Image iconType="3" name="/sic/icons/Link_16x16.png"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Ver Facturas"/>
+            <Property name="text" type="java.lang.String" value="Ver Factura"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVerFacturasActionPerformed"/>

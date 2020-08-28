@@ -430,6 +430,7 @@ public class RemitosGUI extends JInternalFrame {
         });
 
         btn_Eliminar.setForeground(java.awt.Color.blue);
+        btn_Eliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Cancel_16x16.png"))); // NOI18N
         btn_Eliminar.setText("Eliminar ");
         btn_Eliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -438,6 +439,7 @@ public class RemitosGUI extends JInternalFrame {
         });
 
         btnVerFacturas.setForeground(java.awt.Color.blue);
+        btnVerFacturas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Link_16x16.png"))); // NOI18N
         btnVerFacturas.setText("Ver Factura");
         btnVerFacturas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -455,9 +457,9 @@ public class RemitosGUI extends JInternalFrame {
                     .addGroup(panelResultadosLayout.createSequentialGroup()
                         .addComponent(btn_VerDetalle)
                         .addGap(0, 0, 0)
-                        .addComponent(btnVerFacturas, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_Eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
-                        .addComponent(btn_Eliminar)
+                        .addComponent(btnVerFacturas)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 1084, Short.MAX_VALUE)))
         );
@@ -471,11 +473,11 @@ public class RemitosGUI extends JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btnVerFacturas)
-                    .addComponent(btn_VerDetalle)
-                    .addComponent(btn_Eliminar)))
+                    .addComponent(btn_Eliminar)
+                    .addComponent(btn_VerDetalle)))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Eliminar, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnVerFacturas, btn_Eliminar, btn_VerDetalle});
 
         panelFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
 

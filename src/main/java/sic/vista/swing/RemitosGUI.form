@@ -70,11 +70,11 @@
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="btn_VerDetalle" linkSize="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_VerDetalle" linkSize="26" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="btnVerFacturas" linkSize="2" min="-2" pref="130" max="-2" attributes="0"/>
+                          <Component id="btn_Eliminar" linkSize="26" min="-2" pref="128" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="btn_Eliminar" linkSize="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnVerFacturas" linkSize="26" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                       <Component id="sp_Resultados" pref="1084" max="32767" attributes="0"/>
@@ -88,9 +88,9 @@
                   <Component id="sp_Resultados" pref="366" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="btnVerFacturas" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="btn_VerDetalle" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnVerFacturas" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="btn_Eliminar" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btn_VerDetalle" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -141,6 +141,9 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
             </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/sic/icons/Cancel_16x16.png"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Eliminar "/>
           </Properties>
           <Events>
@@ -151,6 +154,9 @@
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/sic/icons/Link_16x16.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Ver Factura"/>
           </Properties>
