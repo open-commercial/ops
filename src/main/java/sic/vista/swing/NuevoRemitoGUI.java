@@ -935,7 +935,7 @@ public class NuevoRemitoGUI extends JDialog {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.cargarTransportistas();
-        this.setTitle("Nuevo Remito de Factura " + facturaVenta.getTipoComprobante()  + " Nº " + facturaVenta.getNumSerie() + " - " + facturaVenta.getNumFactura());
+        this.setTitle("Nuevo Remito de " + facturaVenta.getTipoComprobante()  + " Nº " + facturaVenta.getNumSerie() + " - " + facturaVenta.getNumFactura());
         ftxtCantCaja.setValue(BigDecimal.ONE);
         ftxtCantBolsa.setValue(BigDecimal.ONE);
         ftxtCantRollo.setValue(BigDecimal.ONE);
@@ -944,6 +944,7 @@ public class NuevoRemitoGUI extends JDialog {
         ftxtCantAtado.setValue(BigDecimal.ONE);
         ftxtCantPack.setValue(BigDecimal.ONE);
         ftxtCantBultos.setValue(BigDecimal.ZERO);
+        ftfCostoDeEnvio.setValue(BigDecimal.ZERO);
     }//GEN-LAST:event_formWindowOpened
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -76,7 +76,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         txt_NumeroPedido.setText(String.valueOf(nroPedido));
         this.limpiarYBuscar(true);
     }
-    
+
     public void buscarPorRemito(long serieRemito, long nroRemito, TipoDeComprobante tipoDeComprobante) {
         chkNumRemito.setSelected(true);
         txtSerieRemito.setEnabled(true);
@@ -162,6 +162,10 @@ public class FacturasVentaGUI extends JInternalFrame {
         }
         if (chk_NumeroPedido.isSelected()) {
             criteria.setNroPedido(Long.parseLong(txt_NumeroPedido.getText()));
+        }
+        if (chkNumRemito.isSelected()) {
+            criteria.setSerieRemito(Long.valueOf(txtSerieRemito.getText()));
+            criteria.setNroRemito(Long.valueOf(txtNroRemito.getText()));
         }
         return criteria;
     }
@@ -517,6 +521,7 @@ public class FacturasVentaGUI extends JInternalFrame {
         btnCrearNotaCredito = new javax.swing.JButton();
         btnEnviarEmail = new javax.swing.JButton();
         btnCrearRemito = new javax.swing.JButton();
+        btnVerRemito = new javax.swing.JButton();
         panelFiltros = new javax.swing.JPanel();
         subPanelFiltros1 = new javax.swing.JPanel();
         chk_Cliente = new javax.swing.JCheckBox();
@@ -684,6 +689,15 @@ public class FacturasVentaGUI extends JInternalFrame {
             }
         });
 
+        btnVerRemito.setForeground(java.awt.Color.blue);
+        btnVerRemito.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Link_16x16.png"))); // NOI18N
+        btnVerRemito.setText("Ver Remito");
+        btnVerRemito.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerRemitoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
@@ -695,17 +709,19 @@ public class FacturasVentaGUI extends JInternalFrame {
                         .addGap(0, 0, 0)
                         .addComponent(btn_VerDetalle)
                         .addGap(0, 0, 0)
-                        .addComponent(btnEnviarEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnVerRemito))
                     .addGroup(panelResultadosLayout.createSequentialGroup()
                         .addComponent(btnCrearRemito)
                         .addGap(0, 0, 0)
-                        .addComponent(btnCrearNotaCredito)))
+                        .addComponent(btnCrearNotaCredito)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnEnviarEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panelNumeros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(sp_Resultados)
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCrearNotaCredito, btnCrearRemito, btnEnviarEmail, btn_Autorizar, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCrearNotaCredito, btnCrearRemito, btnEnviarEmail, btnVerRemito, btn_Autorizar, btn_VerDetalle});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -716,13 +732,15 @@ public class FacturasVentaGUI extends JInternalFrame {
                     .addComponent(panelNumeros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelResultadosLayout.createSequentialGroup()
                         .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnCrearNotaCredito)
+                            .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnCrearNotaCredito)
+                                .addComponent(btnEnviarEmail))
                             .addComponent(btnCrearRemito))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(btn_Autorizar)
-                            .addComponent(btnEnviarEmail)
-                            .addComponent(btn_VerDetalle)))))
+                            .addComponent(btn_VerDetalle)
+                            .addComponent(btnVerRemito)))))
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaCredito, btn_Autorizar, btn_VerDetalle});
@@ -1052,8 +1070,6 @@ public class FacturasVentaGUI extends JInternalFrame {
                     .addComponent(txtNroRemito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        subPanelFiltros2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {chk_Fecha, chk_NumFactura, chk_NumeroPedido});
 
         subPanelFiltros2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {dc_FechaDesde, dc_FechaHasta});
 
@@ -1467,24 +1483,52 @@ public class FacturasVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_btnCrearRemitoActionPerformed
 
     private void chkNumRemitoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkNumRemitoItemStateChanged
-        // TODO add your handling code here:
+        if (chkNumRemito.isSelected() == true) {
+            txtNroRemito.setEnabled(true);
+            txtSerieRemito.setEnabled(true);
+            txtSerieRemito.requestFocus();
+        } else {
+            txtNroRemito.setEnabled(false);
+            txtSerieRemito.setEnabled(false);
+        }
     }//GEN-LAST:event_chkNumRemitoItemStateChanged
 
     private void txtSerieRemitoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSerieRemitoActionPerformed
-        // TODO add your handling code here:
+        btn_BuscarActionPerformed(null);
     }//GEN-LAST:event_txtSerieRemitoActionPerformed
 
     private void txtSerieRemitoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSerieRemitoKeyTyped
-        // TODO add your handling code here:
+        Utilidades.controlarEntradaSoloNumerico(evt);
     }//GEN-LAST:event_txtSerieRemitoKeyTyped
 
     private void txtNroRemitoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNroRemitoActionPerformed
-        // TODO add your handling code here:
+        btn_BuscarActionPerformed(null);
     }//GEN-LAST:event_txtNroRemitoActionPerformed
 
     private void txtNroRemitoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNroRemitoKeyTyped
-        // TODO add your handling code here:
+        Utilidades.controlarEntradaSoloNumerico(evt);
     }//GEN-LAST:event_txtNroRemitoKeyTyped
+
+    private void btnVerRemitoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerRemitoActionPerformed
+        if (tbl_Resultados.getSelectedRow() != -1) {
+            RemitosGUI guiRemitos = new RemitosGUI();
+            guiRemitos.setLocation(getDesktopPane().getWidth() / 2 - guiRemitos.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - guiRemitos.getHeight() / 2);
+            getDesktopPane().add(guiRemitos);
+            long nroSerie = facturasTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getNumSerie();
+            long nroDeFactura = facturasTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getNumFactura();
+            TipoDeComprobante tipoDeComprobante = facturasTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getTipoComprobante();
+            guiRemitos.setVisible(true);
+            guiRemitos.buscarPorFactura(nroSerie, nroDeFactura, tipoDeComprobante);
+            try {
+                guiRemitos.setSelected(true);
+            } catch (PropertyVetoException ex) {
+                String mensaje = "No se pudo seleccionar la ventana requerida.";
+                LOGGER.error(mensaje + " - " + ex.getMessage());
+                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnVerRemitoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarCliente;
@@ -1494,6 +1538,7 @@ public class FacturasVentaGUI extends JInternalFrame {
     private javax.swing.JButton btnCrearNotaCredito;
     private javax.swing.JButton btnCrearRemito;
     private javax.swing.JButton btnEnviarEmail;
+    private javax.swing.JButton btnVerRemito;
     private javax.swing.JButton btn_Autorizar;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_VerDetalle;

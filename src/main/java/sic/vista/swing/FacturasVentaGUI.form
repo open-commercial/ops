@@ -73,12 +73,14 @@
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Component id="btn_VerDetalle" linkSize="2" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Component id="btnEnviarEmail" linkSize="2" min="-2" pref="188" max="-2" attributes="0"/>
+                          <Component id="btnVerRemito" linkSize="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="btnCrearRemito" linkSize="2" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Component id="btnCrearNotaCredito" linkSize="2" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                          <Component id="btnEnviarEmail" linkSize="2" min="-2" pref="188" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
@@ -96,14 +98,17 @@
                       <Component id="panelNumeros" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="btnCrearNotaCredito" linkSize="3" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="btnCrearNotaCredito" linkSize="3" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnEnviarEmail" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
                               <Component id="btnCrearRemito" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="btn_Autorizar" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnEnviarEmail" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="btn_VerDetalle" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnVerRemito" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -292,6 +297,20 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCrearRemitoActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnVerRemito">
+          <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/sic/icons/Link_16x16.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Ver Remito"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVerRemitoActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
@@ -593,18 +612,18 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="chk_Fecha" linkSize="17" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="chk_Fecha" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="dc_FechaDesde" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="dc_FechaHasta" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="chk_NumeroPedido" linkSize="17" alignment="2" min="-2" pref="23" max="-2" attributes="0"/>
+                          <Component id="chk_NumeroPedido" alignment="2" min="-2" pref="23" max="-2" attributes="0"/>
                           <Component id="txt_NumeroPedido" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="chk_NumFactura" linkSize="17" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="chk_NumFactura" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="txt_SerieFactura" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="separador" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="txt_NroFactura" alignment="2" min="-2" max="-2" attributes="0"/>

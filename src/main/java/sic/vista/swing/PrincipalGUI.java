@@ -121,13 +121,13 @@ public class PrincipalGUI extends JFrame {
         mnuItm_FacturasVenta = new javax.swing.JMenuItem();
         mnuItm_RecibosVenta = new javax.swing.JMenuItem();
         mnuItm_Pedidos = new javax.swing.JMenuItem();
+        mnuItmRemitos = new javax.swing.JMenuItem();
         mnuItm_Clientes = new javax.swing.JMenuItem();
         NotasVenta = new javax.swing.JMenu();
         NotasCreditoVenta = new javax.swing.JMenuItem();
         NotasDebitoVenta = new javax.swing.JMenuItem();
         mnu_Administracion = new javax.swing.JMenu();
         mnuItm_Transportistas = new javax.swing.JMenuItem();
-        mnuItmRemitos = new javax.swing.JMenuItem();
         mnuItm_FormasDePago = new javax.swing.JMenuItem();
         mnu_Cajas = new javax.swing.JMenuItem();
         mnuItmGastos = new javax.swing.JMenuItem();
@@ -287,6 +287,14 @@ public class PrincipalGUI extends JFrame {
         });
         mnu_Ventas.add(mnuItm_Pedidos);
 
+        mnuItmRemitos.setText("Remitos");
+        mnuItmRemitos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuItmRemitosActionPerformed(evt);
+            }
+        });
+        mnu_Ventas.add(mnuItmRemitos);
+
         mnuItm_Clientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Client_16x16.png"))); // NOI18N
         mnuItm_Clientes.setText("Clientes");
         mnuItm_Clientes.addActionListener(new java.awt.event.ActionListener() {
@@ -328,14 +336,6 @@ public class PrincipalGUI extends JFrame {
             }
         });
         mnu_Administracion.add(mnuItm_Transportistas);
-
-        mnuItmRemitos.setText("Remitos");
-        mnuItmRemitos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuItmRemitosActionPerformed(evt);
-            }
-        });
-        mnu_Administracion.add(mnuItmRemitos);
 
         mnuItm_FormasDePago.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Wallet_16x16.png"))); // NOI18N
         mnuItm_FormasDePago.setText("Formas de Pago");
@@ -931,7 +931,7 @@ public class PrincipalGUI extends JFrame {
     }//GEN-LAST:event_mnuItm_TraspasosActionPerformed
 
     private void mnuItmRemitosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItmRemitosActionPerformed
-        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), TraspasosGUI.class);
+        JInternalFrame gui = Utilidades.estaEnDesktop(getDesktopPane(), RemitosGUI.class);
         if (gui == null) {
             gui = new RemitosGUI();
             gui.setLocation(getDesktopPane().getWidth() / 2 - gui.getWidth() / 2,
