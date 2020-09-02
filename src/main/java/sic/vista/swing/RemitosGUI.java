@@ -297,6 +297,7 @@ public class RemitosGUI extends JInternalFrame {
     
     private void cargarTiposDeRemito() {
         try {
+            cmbTipoRemito.removeAllItems();
             TipoDeComprobante[] tiposDeComprobantes = RestClient.getRestTemplate()
                     .getForObject("/remitos/tipos/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
                             TipoDeComprobante[].class);
