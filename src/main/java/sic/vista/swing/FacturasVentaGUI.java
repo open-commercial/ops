@@ -429,7 +429,7 @@ public class FacturasVentaGUI extends JInternalFrame {
 
     private void cargarTiposDeFactura() {
         try {
-            cmbOrden.removeAllItems();
+            cmb_TipoFactura.removeAllItems();
             TipoDeComprobante[] tiposDeComprobantes = RestClient.getRestTemplate()
                     .getForObject("/facturas/tipos/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
                             TipoDeComprobante[].class);
