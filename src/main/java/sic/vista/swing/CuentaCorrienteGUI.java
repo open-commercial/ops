@@ -378,6 +378,24 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                                     "Error", JOptionPane.ERROR_MESSAGE);
                         }
                         break;
+                    case REMITO_A:
+                    case REMITO_B:
+                    case REMITO_C:
+                    case REMITO_X:
+                    case REMITO_PRESUPUESTO:
+                        if (Desktop.isDesktopSupported()) {
+                            byte[] reporte = RestClient.getRestTemplate()
+                                    .getForObject("/remitos/" + renglonCC.getIdMovimiento() + "/reporte",
+                                            byte[].class);
+                            File f = new File(System.getProperty("user.home") + "/Remito.pdf");
+                            Files.write(f.toPath(), reporte);
+                            Desktop.getDesktop().open(f);
+                        } else {
+                            JOptionPane.showMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                        break;
                     default:
                         JOptionPane.showInternalMessageDialog(this,
                                 ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
@@ -1036,6 +1054,25 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                                     "Eliminar", JOptionPane.YES_NO_OPTION);
                             if (respuesta == JOptionPane.YES_OPTION) {
                                 RestClient.getRestTemplate().delete("/facturas/" + renglonCC.getIdMovimiento());
+                                refrescar = true;
+                            }
+                        } else {
+                            JOptionPane.showInternalMessageDialog(this,
+                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                        break;
+                    case REMITO_A:
+                    case REMITO_B:
+                    case REMITO_C:
+                    case REMITO_X:
+                    case REMITO_PRESUPUESTO:
+                        if (this.cliente != null) {
+                            respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
+                                    .getString("mensaje_eliminar_movimientos"),
+                                    "Eliminar", JOptionPane.YES_NO_OPTION);
+                            if (respuesta == JOptionPane.YES_OPTION) {
+                                RestClient.getRestTemplate().delete("/remitos/" + renglonCC.getIdMovimiento());
                                 refrescar = true;
                             }
                         } else {

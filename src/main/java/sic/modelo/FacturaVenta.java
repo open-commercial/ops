@@ -15,4 +15,5 @@ public class FacturaVenta extends Factura implements Serializable {
     private Long idViajanteCliente;
     private String nombreViajanteCliente;
     private String ubicacionCliente;
+    private Remito remito;
 }
