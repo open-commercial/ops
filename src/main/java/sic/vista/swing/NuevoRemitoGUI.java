@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -27,14 +28,20 @@ import sic.modelo.Transportista;
 
 public class NuevoRemitoGUI extends JDialog {
 
-    private FacturaVenta facturaVenta;
+    private final FacturaVenta facturaVenta;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public NuevoRemitoGUI(FacturaVenta facturaVenta) {
-        initComponents();
+        this.initComponents();
+        this.setIcon();
         this.facturaVenta = facturaVenta;
     }
 
+    private void setIcon() {
+        ImageIcon iconoVentana = new ImageIcon(BuscarProductosGUI.class.getResource("/sic/icons/SIC_16_square.png"));
+        this.setIconImage(iconoVentana.getImage());
+    }
+    
     private void cargarTransportistas() {
         cmbTransportista.removeAllItems();
         List<Transportista> transportes = Arrays.asList(RestClient.getRestTemplate()
@@ -176,6 +183,7 @@ public class NuevoRemitoGUI extends JDialog {
         lblAceptar = new javax.swing.JButton();
 
         setModal(true);
+        setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -566,7 +574,7 @@ public class NuevoRemitoGUI extends JDialog {
             .addGroup(pnlDetallesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
                     .addGroup(pnlDetallesLayout.createSequentialGroup()
                         .addGroup(pnlDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblCostoDeEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -621,10 +629,10 @@ public class NuevoRemitoGUI extends JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(pnlRenglones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(pnlDetalles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(pnpPesoVolumen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -766,7 +774,7 @@ public class NuevoRemitoGUI extends JDialog {
 
     private void ftfCostoDeEnvioFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftfCostoDeEnvioFocusGained
         SwingUtilities.invokeLater(() -> {
-            ftxtCantCaja.selectAll();
+            ftfCostoDeEnvio.selectAll();
         });
     }//GEN-LAST:event_ftfCostoDeEnvioFocusGained
 

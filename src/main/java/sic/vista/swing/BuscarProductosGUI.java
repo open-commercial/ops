@@ -34,7 +34,6 @@ import sic.modelo.RenglonFactura;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.ProductoFaltante;
 import sic.modelo.ProductosParaVerificarStock;
-import sic.modelo.RenglonPedido;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.criteria.BusquedaProductoCriteria;
 import sic.util.ColoresCeldaRenderer;
