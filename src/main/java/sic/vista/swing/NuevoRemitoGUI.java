@@ -355,6 +355,7 @@ public class NuevoRemitoGUI extends JDialog {
 
         lblBultos.setText("Total de Bultos:");
 
+        ftxtCantBultos.setEditable(false);
         ftxtCantBultos.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
         ftxtCantBultos.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
