@@ -18,6 +18,7 @@ public class ProductosParaActualizar {
     private BigDecimal ivaPorcentaje;
     private BigDecimal precioCosto;
     private BigDecimal porcentajeBonificacionPrecio;
+    private BigDecimal porcentajeBonificacionOferta;
     private Boolean publico;
 
 }

@@ -39,19 +39,14 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="sp_ProductosAModificar" max="32767" attributes="0"/>
                   <Component id="panel1" alignment="0" max="32767" attributes="2"/>
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lbl_Indicaciones" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="panel2" min="-2" max="-2" attributes="2"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="panel3" max="32767" attributes="0"/>
-                                  <Component id="panelCantidades" max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
+                  <Component id="lbl_Indicaciones" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="panel2" min="-2" max="-2" attributes="2"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="panel3" max="32767" attributes="0"/>
+                          <Component id="panelCantidades" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -73,8 +68,8 @@
               <Component id="panel1" min="-2" max="-2" attributes="1"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="panel2" min="-2" max="-2" attributes="3"/>
-                  <Group type="102" alignment="0" attributes="0">
+                  <Component id="panel2" alignment="1" min="-2" max="-2" attributes="3"/>
+                  <Group type="102" attributes="0">
                       <Component id="panel3" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="panelCantidades" min="-2" max="-2" attributes="1"/>
@@ -310,53 +305,49 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Component id="chk_Precios" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="lbl_PrecioCosto" max="32767" attributes="1"/>
-                                      <Component id="lbl_Ganancia" max="32767" attributes="1"/>
-                                  </Group>
-                                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Component id="txtGananciaPorcentaje" min="-2" pref="74" max="-2" attributes="2"/>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="lbl_PVP" alignment="0" pref="153" max="32767" attributes="0"/>
-                              <Component id="lbl_IVA" alignment="1" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="cmbIVAPorcentaje" min="-2" pref="74" max="-2" attributes="0"/>
-                      </Group>
-                      <Component id="lbl_PrecioLista" alignment="0" min="-2" pref="153" max="-2" attributes="1"/>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="lblBonificacion" min="-2" pref="154" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="txtPorcentajePrecioBonificado" max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="txtPrecioBonificado" max="32767" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="lbl_PrecioCosto" linkSize="17" max="32767" attributes="1"/>
+                              <Component id="lbl_Ganancia" linkSize="17" max="32767" attributes="1"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                      </Group>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtPrecioLista" linkSize="4" pref="92" max="32767" attributes="1"/>
-                              <Component id="txtIVANeto" linkSize="4" alignment="0" pref="92" max="32767" attributes="2"/>
-                              <Component id="txtPVP" linkSize="4" alignment="0" max="32767" attributes="0"/>
-                              <Component id="txtGananciaNeto" linkSize="4" alignment="0" max="32767" attributes="1"/>
-                              <Component id="txtPrecioCosto" linkSize="4" alignment="0" max="32767" attributes="1"/>
+                              <Component id="chk_Precios" min="-2" max="-2" attributes="0"/>
+                              <Component id="chkOferta" linkSize="17" min="-2" pref="121" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="lbl_PVP" linkSize="17" alignment="0" pref="153" max="32767" attributes="0"/>
+                                  <Component id="lbl_IVA" linkSize="17" alignment="1" max="32767" attributes="0"/>
+                              </Group>
+                              <Component id="lblBonificacion" linkSize="17" alignment="0" min="-2" pref="154" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="txtPorcentajeOferta" linkSize="16" alignment="2" min="-2" pref="48" max="-2" attributes="0"/>
+                      <Component id="txtPorcentajePrecioBonificado" linkSize="16" alignment="2" max="32767" attributes="0"/>
+                      <Component id="cmbIVAPorcentaje" linkSize="16" alignment="2" min="-2" pref="74" max="-2" attributes="0"/>
+                      <Component id="txtGananciaPorcentaje" linkSize="16" alignment="2" min="-2" pref="74" max="-2" attributes="2"/>
+                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="txtPrecioBonificado" alignment="0" max="32767" attributes="0"/>
+                      <Component id="txtPrecioLista" linkSize="4" pref="92" max="32767" attributes="1"/>
+                      <Component id="txtIVANeto" linkSize="4" alignment="0" pref="92" max="32767" attributes="2"/>
+                      <Component id="txtPVP" linkSize="4" alignment="0" max="32767" attributes="0"/>
+                      <Component id="txtGananciaNeto" linkSize="4" alignment="0" max="32767" attributes="1"/>
+                      <Component id="txtPrecioCosto" linkSize="4" alignment="0" max="32767" attributes="1"/>
+                      <Component id="txtPrecioOferta" alignment="0" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="15" max="32767" attributes="0"/>
+              </Group>
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                  <Component id="lbl_PrecioLista" linkSize="17" min="-2" pref="153" max="-2" attributes="1"/>
+                  <EmptySpace pref="201" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -398,7 +389,13 @@
                       <Component id="txtPrecioBonificado" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="lblBonificacion" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="txtPorcentajeOferta" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtPrecioOferta" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="chkOferta" alignment="2" min="-2" pref="10" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="12" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -588,6 +585,48 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtPrecioBonificadoActionPerformed"/>
           </Events>
         </Component>
+        <Component class="javax.swing.JCheckBox" name="chkOferta">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Oferta (%):"/>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="horizontalTextPosition" type="int" value="4"/>
+          </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkOfertaItemStateChanged"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chkOfertaActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="txtPorcentajeOferta">
+          <Properties>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format format="#,##0.##" subtype="-1" type="0"/>
+            </Property>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="0"/>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPorcentajeOfertaFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPorcentajeOfertaFocusLost"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtPorcentajeOfertaActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="txtPrecioOferta">
+          <Properties>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format format="#,##0.##" subtype="-1" type="0"/>
+            </Property>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="0"/>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPrecioOfertaFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPrecioOfertaFocusLost"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtPrecioOfertaActionPerformed"/>
+          </Events>
+        </Component>
       </SubComponents>
     </Container>
     <Component class="javax.swing.JButton" name="btn_Guardar">
@@ -706,12 +745,11 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="txtVentaCantidadMinima" max="32767" attributes="0"/>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="chkVentaMinima" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      </Group>
                       <Group type="102" attributes="0">
-                          <Component id="lblVentaCantidadMinima" min="-2" pref="95" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="chkVentaMinima" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblVentaCantidadMinima" min="-2" pref="95" max="-2" attributes="0"/>
+                          </Group>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
