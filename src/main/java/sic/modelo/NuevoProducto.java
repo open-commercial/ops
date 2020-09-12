@@ -30,8 +30,6 @@ public class NuevoProducto {
     private BigDecimal porcentajeBonificacionOferta;
     private BigDecimal porcentajeBonificacionPrecio;
     private LocalDateTime fechaUltimaModificacion;
-    private String estanteria;
-    private String estante;
     private String nota;
     private LocalDate fechaVencimiento;
     private boolean eliminado;

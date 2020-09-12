@@ -139,10 +139,6 @@ public class DetalleProductoGUI extends JDialog {
         panelPropiedades = new javax.swing.JPanel();
         panel5 = new javax.swing.JPanel();
         lbl_Ven = new javax.swing.JLabel();
-        lbl_Estanteria = new javax.swing.JLabel();
-        txt_Estanteria = new javax.swing.JTextField();
-        lbl_Estante = new javax.swing.JLabel();
-        txt_Estante = new javax.swing.JTextField();
         dc_Vencimiento = new com.toedter.calendar.JDateChooser();
         lbl_Nota = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -686,12 +682,6 @@ public class DetalleProductoGUI extends JDialog {
         lbl_Ven.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbl_Ven.setText("Vencimiento:");
 
-        lbl_Estanteria.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Estanteria.setText("Estantería:");
-
-        lbl_Estante.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lbl_Estante.setText("Estante:");
-
         dc_Vencimiento.setDateFormatString("dd/MM/yyyy");
 
         lbl_Nota.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -717,17 +707,13 @@ public class DetalleProductoGUI extends JDialog {
             panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel5Layout.createSequentialGroup()
                 .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lbl_Estante, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblPublico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_Estanteria, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_Ven, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_Nota, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txt_Estanteria)
                     .addComponent(dc_Vencimiento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txt_Estante)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 477, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
                     .addGroup(panel5Layout.createSequentialGroup()
                         .addComponent(rbPublico)
                         .addGap(8, 8, 8)
@@ -747,14 +733,6 @@ public class DetalleProductoGUI extends JDialog {
                 .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_Ven)
                     .addComponent(dc_Vencimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Estanteria)
-                    .addComponent(txt_Estanteria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_Estante)
-                    .addComponent(txt_Estante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_Nota)
@@ -823,7 +801,7 @@ public class DetalleProductoGUI extends JDialog {
                 .addComponent(panel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(326, 326, 326))
+                .addGap(384, 384, 384))
         );
 
         tpTabs.addTab("Propiedades", panelPropiedades);
@@ -938,8 +916,6 @@ public class DetalleProductoGUI extends JDialog {
             Date fVencimiento = Date.from(productoParaModificar.getFechaVencimiento().atStartOfDay(ZoneId.systemDefault()).toInstant());
             dc_Vencimiento.setDate(fVencimiento);
         }
-        txt_Estanteria.setText(productoParaModificar.getEstanteria());
-        txt_Estante.setText(productoParaModificar.getEstante());
         txtPrecioCosto.setValue(productoParaModificar.getPrecioCosto());
         txtGananciaPorcentaje.setValue(productoParaModificar.getGananciaPorcentaje());
         txtGananciaNeto.setValue(productoParaModificar.getGananciaNeto());
@@ -1060,8 +1036,6 @@ public class DetalleProductoGUI extends JDialog {
         txtGananciaPorcentaje.setValue(BigDecimal.ZERO);
         txtGananciaNeto.setValue(BigDecimal.ZERO);
         txtPrecioLista.setValue(BigDecimal.ZERO);
-        txt_Estanteria.setText("");
-        txt_Estante.setText("");
         txt_Nota.setText("");
         dc_Vencimiento.setDate(null);
     }
@@ -1170,8 +1144,6 @@ public class DetalleProductoGUI extends JDialog {
                     producto.setOferta(chkOferta.isSelected());
                     producto.setPorcentajeBonificacionOferta(new BigDecimal(txtPorcentajeOferta.getValue().toString()));
                     producto.setPorcentajeBonificacionPrecio(new BigDecimal(txtPorcentajePrecioBonificado.getValue().toString()));
-                    producto.setEstanteria(txt_Estanteria.getText().trim());
-                    producto.setEstante(txt_Estante.getText().trim());
                     producto.setNota(txt_Nota.getText().trim());
                     if (dc_Vencimiento.getDate() != null) {
                         producto.setFechaVencimiento(dc_Vencimiento.getDate().toInstant()
@@ -1210,8 +1182,6 @@ public class DetalleProductoGUI extends JDialog {
                         if (crearNuevaCantidadEnSucursal) {
                             CantidadEnSucursal cantidadNuevaEnSucursal = new CantidadEnSucursal();
                             cantidadNuevaEnSucursal.setCantidad(cantidadEnSucursal.get(idSucursal));
-                            cantidadNuevaEnSucursal.setEstante(txt_Estante.getText().trim());
-                            cantidadNuevaEnSucursal.setEstanteria(txt_Estanteria.getText().trim());
                             cantidadNuevaEnSucursal.setIdSucursal(idSucursal);
                             cantidadesNuevas.add(cantidadNuevaEnSucursal);
                         }
@@ -1226,8 +1196,6 @@ public class DetalleProductoGUI extends JDialog {
                     productoParaModificar.setIvaNeto(new BigDecimal(txtIVANeto.getValue().toString()));
                     productoParaModificar.setPrecioLista(new BigDecimal(txtPrecioLista.getValue().toString()));
                     productoParaModificar.setPublico(rbPublico.isSelected());
-                    productoParaModificar.setEstanteria(txt_Estanteria.getText().trim());
-                    productoParaModificar.setEstante(txt_Estante.getText().trim());
                     productoParaModificar.setNota(txt_Nota.getText().trim());
                     productoParaModificar.setOferta(chkOferta.isSelected());
                     productoParaModificar.setPorcentajeBonificacionPrecio(new BigDecimal(txtPorcentajePrecioBonificado.getValue().toString()));
@@ -1630,8 +1598,6 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JLabel lbl_Cantidad;
     private javax.swing.JLabel lbl_Codigo;
     private javax.swing.JLabel lbl_Descripcion;
-    private javax.swing.JLabel lbl_Estante;
-    private javax.swing.JLabel lbl_Estanteria;
     private javax.swing.JLabel lbl_FA;
     private javax.swing.JLabel lbl_FUM;
     private javax.swing.JLabel lbl_FechaAlta;
@@ -1674,8 +1640,6 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.JFormattedTextField txt_Bulto;
     private javax.swing.JTextField txt_Codigo;
     private javax.swing.JTextField txt_Descripcion;
-    private javax.swing.JTextField txt_Estante;
-    private javax.swing.JTextField txt_Estanteria;
     private javax.swing.JTextArea txt_Nota;
     // End of variables declaration//GEN-END:variables
 
