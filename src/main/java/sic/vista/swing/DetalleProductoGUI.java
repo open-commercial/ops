@@ -1537,12 +1537,6 @@ public class DetalleProductoGUI extends JDialog {
         } else {
             noTieneImagen = productoParaModificar.getUrlImagen() == null || productoParaModificar.getUrlImagen().isEmpty();
         }
-        if (chkOferta.isSelected() && noTieneImagen) {
-            chkOferta.setSelected(false);
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_producto_oferta_sin_imagen"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
     }//GEN-LAST:event_chkOfertaActionPerformed
 
     private void txtPrecioOfertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioOfertaActionPerformed

@@ -583,11 +583,6 @@ public class ModificacionMultipleProductosGUI extends JDialog {
                 chkOfertaItemStateChanged(evt);
             }
         });
-        chkOferta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chkOfertaActionPerformed(evt);
-            }
-        });
 
         txtPorcentajeOferta.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
         txtPorcentajeOferta.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -1285,19 +1280,6 @@ public class ModificacionMultipleProductosGUI extends JDialog {
             txtPrecioOferta.setEnabled(false);
         }
     }//GEN-LAST:event_chkOfertaItemStateChanged
-
-    private void chkOfertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkOfertaActionPerformed
-        boolean noTieneImagen = false;
-        for (Producto producto : productosParaModificar) {
-            noTieneImagen = producto.getUrlImagen() == null || producto.getUrlImagen().isEmpty();
-        }
-        if (chkOferta.isSelected() && noTieneImagen) {
-            chkOferta.setSelected(false);
-            JOptionPane.showMessageDialog(this,
-                ResourceBundle.getBundle("Mensajes").getString("mensaje_producto_oferta_sin_imagen"),
-                "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_chkOfertaActionPerformed
 
     private void txtPorcentajeOfertaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPorcentajeOfertaFocusGained
         SwingUtilities.invokeLater(() -> {
