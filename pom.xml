@@ -8,7 +8,7 @@
     <artifactId>sic-ops</artifactId>
     <version>Andromeda</version>
     <packaging>jar</packaging>
-    <name>SIC-OPS</name>
+    <name>sic-ops</name>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
