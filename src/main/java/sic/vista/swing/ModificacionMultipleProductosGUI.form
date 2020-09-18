@@ -39,18 +39,26 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="sp_ProductosAModificar" max="32767" attributes="0"/>
                   <Component id="panel1" alignment="0" max="32767" attributes="2"/>
-                  <Component id="lbl_Indicaciones" min="-2" max="-2" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="panel2" min="-2" max="-2" attributes="2"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="panel3" max="32767" attributes="0"/>
-                          <Component id="panelCantidades" max="32767" attributes="0"/>
-                      </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="lbl_Indicaciones" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
+                      <Component id="panel2" min="-2" max="-2" attributes="2"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="panel3" max="32767" attributes="0"/>
+                                  <Component id="panelCantidades" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -68,16 +76,16 @@
               <Component id="panel1" min="-2" max="-2" attributes="1"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="panel2" alignment="1" min="-2" max="-2" attributes="3"/>
+                  <Component id="panel2" min="-2" max="-2" attributes="3"/>
                   <Group type="102" attributes="0">
                       <Component id="panel3" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="panelCantidades" min="-2" max="-2" attributes="1"/>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
+              <Component id="btn_Guardar" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -305,27 +313,16 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="lbl_PrecioCosto" linkSize="17" max="32767" attributes="1"/>
-                              <Component id="lbl_Ganancia" linkSize="17" max="32767" attributes="1"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="chk_Precios" min="-2" max="-2" attributes="0"/>
-                              <Component id="chkOferta" linkSize="17" min="-2" pref="121" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="lbl_PVP" linkSize="17" alignment="0" pref="153" max="32767" attributes="0"/>
-                                  <Component id="lbl_IVA" linkSize="17" alignment="1" max="32767" attributes="0"/>
-                              </Group>
-                              <Component id="lblBonificacion" linkSize="17" alignment="0" min="-2" pref="154" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="32767" attributes="0"/>
-                      </Group>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="lblBonificacion" linkSize="17" pref="154" max="32767" attributes="0"/>
+                      <Component id="lbl_PrecioLista" linkSize="17" pref="153" max="32767" attributes="1"/>
+                      <Component id="lbl_IVA" linkSize="17" max="32767" attributes="0"/>
+                      <Component id="lbl_PVP" linkSize="17" pref="153" max="32767" attributes="0"/>
+                      <Component id="lbl_Ganancia" linkSize="17" max="32767" attributes="1"/>
+                      <Component id="lbl_PrecioCosto" linkSize="17" max="32767" attributes="1"/>
+                      <Component id="chkOferta" max="32767" attributes="0"/>
                   </Group>
+                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="txtPorcentajeOferta" linkSize="16" alignment="2" min="-2" pref="48" max="-2" attributes="0"/>
                       <Component id="txtPorcentajePrecioBonificado" linkSize="16" alignment="2" max="32767" attributes="0"/>
@@ -342,12 +339,12 @@
                       <Component id="txtPrecioCosto" linkSize="4" alignment="0" max="32767" attributes="1"/>
                       <Component id="txtPrecioOferta" alignment="0" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="15" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" attributes="0">
                   <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                  <Component id="lbl_PrecioLista" linkSize="17" min="-2" pref="153" max="-2" attributes="1"/>
-                  <EmptySpace pref="201" max="32767" attributes="0"/>
+                  <Component id="chk_Precios" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="331" pref="331" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -391,11 +388,11 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="chkOferta" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="txtPorcentajeOferta" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="txtPrecioOferta" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="chkOferta" alignment="2" min="-2" pref="10" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="12" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -549,10 +546,11 @@
         <Component class="javax.swing.JLabel" name="lblBonificacion">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="c0" green="c0" id="lightGray" palette="1" red="c0" type="palette"/>
+              <Color blue="c0" green="c0" red="c0" type="rgb"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="Precio Bonif.(%):"/>
+            <Property name="horizontalTextPosition" type="int" value="4"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="txtPorcentajePrecioBonificado">
@@ -591,6 +589,9 @@
             <Property name="enabled" type="boolean" value="false"/>
             <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="horizontalTextPosition" type="int" value="4"/>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[105, 15]"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkOfertaItemStateChanged"/>
@@ -749,7 +750,7 @@
                               <Component id="chkVentaMinima" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="lblVentaCantidadMinima" min="-2" pref="95" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="29" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
