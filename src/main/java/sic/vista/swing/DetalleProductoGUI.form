@@ -741,11 +741,11 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="panel6" max="32767" attributes="0"/>
                           <Component id="panel5" max="32767" attributes="2"/>
-                          <Component id="panel6" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -758,7 +758,7 @@
                       <Component id="panel5" min="-2" max="-2" attributes="1"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="panel6" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="384" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="366" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -806,12 +806,12 @@
                               <Component id="rbPublico" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="rbPrivado" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="lbl_Ven" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="dc_Vencimiento" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="lbl_Nota" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jScrollPane1" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -914,7 +914,7 @@
                               <Component id="lbl_FUM" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="lbl_FechaUltimaModificacion" alignment="2" min="-2" pref="23" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="lbl_FA" alignment="2" min="-2" max="-2" attributes="1"/>
                               <Component id="lbl_FechaAlta" alignment="2" min="-2" pref="23" max="-2" attributes="0"/>
