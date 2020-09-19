@@ -107,7 +107,7 @@ public class TraspasosGUI extends JInternalFrame {
         criteria.setPagina(NUMERO_PAGINA);
         return criteria;
     }
-
+    
     private void setColumnasTraspasos() {
         //nombres de columnas
         String[] encabezados = new String[6];
@@ -764,6 +764,7 @@ public class TraspasosGUI extends JInternalFrame {
     private void btnImprimirPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirPedidoActionPerformed
         if (Desktop.isDesktopSupported()) {
             try {
+                this.resetScroll();
                 byte[] reporte = RestClient.getRestTemplate().postForObject("/traspasos/reporte/criteria", this.getCriteria(), byte[].class);
                 File f = new File(System.getProperty("user.home") + "/Traspasos.pdf");
                 Files.write(f.toPath(), reporte);
