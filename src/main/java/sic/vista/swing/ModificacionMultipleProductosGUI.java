@@ -182,6 +182,10 @@ public class ModificacionMultipleProductosGUI extends JDialog {
                 new BigDecimal(cmbIVAPorcentaje.getSelectedItem().toString()));
         txtPrecioLista.setValue(precioDeLista);
     }
+    
+    private void calcularPrecioOferta() {
+        txtPrecioOferta.setValue(this.calcularPrecioPorcentaje(new BigDecimal(txtPrecioLista.getValue().toString()), new BigDecimal(txtPorcentajeOferta.getValue().toString())));
+    }
 
     private void calcularGananciaPorcentajeSegunPrecioDeLista() {
         BigDecimal gananciaPorcentaje = CalculosPrecioProducto.calcularGananciaPorcentaje(
@@ -999,6 +1003,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
     private void cmbIVAPorcentajeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbIVAPorcentajeItemStateChanged
         this.calcularIVANeto();
         this.calcularPrecioLista();
+        this.calcularPrecioOferta();
         txtPrecioBonificado.setValue(this.calcularPrecioPorcentaje(new BigDecimal(txtPrecioLista.getValue().toString()), new BigDecimal(txtPorcentajePrecioBonificado.getValue().toString())));
     }//GEN-LAST:event_cmbIVAPorcentajeItemStateChanged
 
@@ -1041,6 +1046,8 @@ public class ModificacionMultipleProductosGUI extends JDialog {
             txtPorcentajePrecioBonificado.setEnabled(false);
             txtPrecioBonificado.setEnabled(false);
             chkOferta.setEnabled(false);
+            txtPorcentajeOferta.setEnabled(false);
+            txtPrecioOferta.setEnabled(false);
         }
         this.habilitarBotonGuardar();
     }//GEN-LAST:event_chk_PreciosItemStateChanged
@@ -1057,6 +1064,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         this.calcularPVP();
         this.calcularIVANeto();
         this.calcularPrecioLista();
+        this.calcularPrecioOferta();
         txtPrecioBonificado.setValue(this.calcularPrecioPorcentaje(new BigDecimal(txtPrecioLista.getValue().toString()), new BigDecimal(txtPorcentajePrecioBonificado.getValue().toString())));
     }//GEN-LAST:event_txtPVPActionPerformed
 
@@ -1072,6 +1080,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         this.calcularGananciaPorcentaje();
         this.calcularIVANeto();
         this.calcularPrecioLista();
+        this.calcularPrecioOferta();
         txtPrecioBonificado.setValue(this.calcularPrecioPorcentaje(new BigDecimal(txtPrecioLista.getValue().toString()), new BigDecimal(txtPorcentajePrecioBonificado.getValue().toString())));
     }//GEN-LAST:event_txtGananciaPorcentajeActionPerformed
 
@@ -1086,6 +1095,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         this.calcularPVP();
         this.calcularIVANeto();
         this.calcularPrecioLista();  
+        this.calcularPrecioOferta();
         txtPrecioBonificado.setValue(this.calcularPrecioPorcentaje(new BigDecimal(txtPrecioLista.getValue().toString()), new BigDecimal(txtPorcentajePrecioBonificado.getValue().toString())));
     }//GEN-LAST:event_txtPrecioCostoActionPerformed
 
@@ -1095,6 +1105,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         this.calcularPVP();
         this.calcularIVANeto();
         this.calcularPrecioLista();
+        this.calcularPrecioOferta();
         txtPrecioBonificado.setValue(this.calcularPrecioPorcentaje(new BigDecimal(txtPrecioLista.getValue().toString()), new BigDecimal(txtPorcentajePrecioBonificado.getValue().toString())));
     }//GEN-LAST:event_txtPrecioListaActionPerformed
 
@@ -1113,6 +1124,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         this.calcularPVP();
         this.calcularIVANeto();
         this.calcularPrecioLista();
+        this.calcularPrecioOferta();
         txtPrecioBonificado.setValue(this.calcularPrecioPorcentaje(new BigDecimal(txtPrecioLista.getValue().toString()), new BigDecimal(txtPorcentajePrecioBonificado.getValue().toString())));
     }//GEN-LAST:event_txtPrecioCostoFocusLost
 
@@ -1125,6 +1137,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         this.calcularPVP();
         this.calcularIVANeto();
         this.calcularPrecioLista();
+        this.calcularPrecioOferta();
         txtPrecioBonificado.setValue(this.calcularPrecioPorcentaje(new BigDecimal(txtPrecioLista.getValue().toString()), new BigDecimal(txtPorcentajePrecioBonificado.getValue().toString())));
     }//GEN-LAST:event_txtPVPFocusLost
 
@@ -1137,6 +1150,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         this.calcularGananciaPorcentaje();
         this.calcularIVANeto();
         this.calcularPrecioLista();
+        this.calcularPrecioOferta();
         txtPrecioBonificado.setValue(this.calcularPrecioPorcentaje(new BigDecimal(txtPrecioLista.getValue().toString()), new BigDecimal(txtPorcentajePrecioBonificado.getValue().toString())));
     }//GEN-LAST:event_txtGananciaPorcentajeFocusLost
 
@@ -1149,6 +1163,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         this.calcularPVP();
         this.calcularIVANeto();
         this.calcularPrecioLista();
+        this.calcularPrecioOferta();
         txtPrecioBonificado.setValue(this.calcularPrecioPorcentaje(new BigDecimal(txtPrecioLista.getValue().toString()), new BigDecimal(txtPorcentajePrecioBonificado.getValue().toString())));
     }//GEN-LAST:event_txtPrecioListaFocusLost
 
@@ -1170,6 +1185,8 @@ public class ModificacionMultipleProductosGUI extends JDialog {
             rbDescuento.setEnabled(true);
             txtDescuentoRecargoPorcentaje.setEnabled(true);
             chk_Precios.setSelected(false);
+            txtPorcentajeOferta.setEnabled(false);
+            txtPrecioOferta.setEnabled(false);
         } else {
             rbRecargo.setEnabled(false);
             rbDescuento.setEnabled(false);
