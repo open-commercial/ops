@@ -35,8 +35,6 @@ public class Producto implements Serializable {
     private BigDecimal porcentajeBonificacionPrecio;
     private BigDecimal precioBonificado;
     private LocalDateTime fechaUltimaModificacion;    
-    private String estanteria;    
-    private String estante;        
     private String razonSocialProveedor;    
     private String nota;    
     private LocalDateTime fechaAlta;    
