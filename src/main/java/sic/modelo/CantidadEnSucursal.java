@@ -10,8 +10,6 @@ public class CantidadEnSucursal {
 
     private Long idCantidadSucursal;
     private BigDecimal cantidad;
-    private String estanteria;
-    private String estante;
     public Long idSucursal;
     public String nombreSucursal;
 }

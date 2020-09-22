@@ -741,11 +741,11 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="panel6" max="32767" attributes="0"/>
                           <Component id="panel5" max="32767" attributes="2"/>
-                          <Component id="panel6" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -758,7 +758,7 @@
                       <Component id="panel5" min="-2" max="-2" attributes="1"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="panel6" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="326" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="366" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -778,18 +778,14 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="lbl_Estante" alignment="0" max="32767" attributes="1"/>
                               <Component id="lblPublico" alignment="0" max="32767" attributes="0"/>
-                              <Component id="lbl_Estanteria" alignment="0" max="32767" attributes="1"/>
                               <Component id="lbl_Ven" alignment="0" max="32767" attributes="1"/>
                               <Component id="lbl_Nota" alignment="0" pref="142" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txt_Estanteria" alignment="0" max="32767" attributes="3"/>
                               <Component id="dc_Vencimiento" max="32767" attributes="1"/>
-                              <Component id="txt_Estante" alignment="0" max="32767" attributes="3"/>
-                              <Component id="jScrollPane1" alignment="0" pref="477" max="32767" attributes="0"/>
+                              <Component id="jScrollPane1" alignment="0" pref="480" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <Component id="rbPublico" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
@@ -810,22 +806,12 @@
                               <Component id="rbPublico" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="rbPrivado" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="lbl_Ven" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="dc_Vencimiento" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="lbl_Estanteria" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="txt_Estanteria" alignment="2" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="lbl_Estante" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="txt_Estante" alignment="2" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="lbl_Nota" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jScrollPane1" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -841,22 +827,6 @@
                     <Property name="horizontalAlignment" type="int" value="4"/>
                     <Property name="text" type="java.lang.String" value="Vencimiento:"/>
                   </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lbl_Estanteria">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="Estanter&#xed;a:"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txt_Estanteria">
-                </Component>
-                <Component class="javax.swing.JLabel" name="lbl_Estante">
-                  <Properties>
-                    <Property name="horizontalAlignment" type="int" value="4"/>
-                    <Property name="text" type="java.lang.String" value="Estante:"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txt_Estante">
                 </Component>
                 <Component class="com.toedter.calendar.JDateChooser" name="dc_Vencimiento">
                   <Properties>
@@ -944,7 +914,7 @@
                               <Component id="lbl_FUM" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="lbl_FechaUltimaModificacion" alignment="2" min="-2" pref="23" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="lbl_FA" alignment="2" min="-2" max="-2" attributes="1"/>
                               <Component id="lbl_FechaAlta" alignment="2" min="-2" pref="23" max="-2" attributes="0"/>

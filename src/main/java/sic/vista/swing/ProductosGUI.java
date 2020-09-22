@@ -83,7 +83,7 @@ public class ProductosGUI extends JInternalFrame {
 
     private void setColumnas() {        
         //nombres de columnas
-        String[] encabezados = new String[27];
+        String[] encabezados = new String[25];
         encabezados[0] = "Público";
         encabezados[1] = "Oferta";
         encabezados[2] = "Codigo";
@@ -105,12 +105,10 @@ public class ProductosGUI extends JInternalFrame {
         encabezados[18] = "Precio Bonif.";
         encabezados[19] = "Rubro";
         encabezados[20] = "Fecha U. Modificacion";
-        encabezados[21] = "Estanteria";
-        encabezados[22] = "Estante";
-        encabezados[23] = "Proveedor";
-        encabezados[24] = "Fecha Alta";
-        encabezados[25] = "Fecha Vencimiento";
-        encabezados[26] = "Nota";
+        encabezados[21] = "Proveedor";
+        encabezados[22] = "Fecha Alta";
+        encabezados[23] = "Fecha Vencimiento";
+        encabezados[24] = "Nota";
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaResultados);
         //tipo de dato columnas
@@ -137,11 +135,9 @@ public class ProductosGUI extends JInternalFrame {
         tipos[19] = String.class;
         tipos[20] = LocalDateTime.class;
         tipos[21] = String.class;
-        tipos[22] = String.class;
-        tipos[23] = String.class;
-        tipos[24] = LocalDateTime.class;
-        tipos[25] = LocalDate.class;
-        tipos[26] = String.class;
+        tipos[22] = LocalDateTime.class;
+        tipos[23] = LocalDate.class;
+        tipos[24] = String.class;
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
@@ -170,16 +166,14 @@ public class ProductosGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(18).setPreferredWidth(90);      
         tbl_Resultados.getColumnModel().getColumn(19).setPreferredWidth(180);
         tbl_Resultados.getColumnModel().getColumn(20).setPreferredWidth(150);
-        tbl_Resultados.getColumnModel().getColumn(21).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(22).setPreferredWidth(200);
-        tbl_Resultados.getColumnModel().getColumn(23).setPreferredWidth(250);
-        tbl_Resultados.getColumnModel().getColumn(24).setPreferredWidth(125);
-        tbl_Resultados.getColumnModel().getColumn(25).setPreferredWidth(125);
-        tbl_Resultados.getColumnModel().getColumn(26).setPreferredWidth(400);
+        tbl_Resultados.getColumnModel().getColumn(21).setPreferredWidth(250);
+        tbl_Resultados.getColumnModel().getColumn(22).setPreferredWidth(125);
+        tbl_Resultados.getColumnModel().getColumn(23).setPreferredWidth(125);
+        tbl_Resultados.getColumnModel().getColumn(24).setPreferredWidth(400);
         //renderers
         tbl_Resultados.getColumnModel().getColumn(20).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
-        tbl_Resultados.getColumnModel().getColumn(24).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
-        tbl_Resultados.getColumnModel().getColumn(25).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(22).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(23).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 
     private void cargarResultadosAlTable() {
@@ -213,12 +207,10 @@ public class ProductosGUI extends JInternalFrame {
             fila[18] = producto.getPrecioBonificado();        
             fila[19] = producto.getNombreRubro();
             fila[20] = producto.getFechaUltimaModificacion();
-            fila[21] = producto.getEstanteria();
-            fila[22] = producto.getEstante();
-            fila[23] = producto.getRazonSocialProveedor();
-            fila[24] = producto.getFechaAlta();
-            fila[25] = producto.getFechaVencimiento();
-            fila[26] = producto.getNota();
+            fila[21] = producto.getRazonSocialProveedor();
+            fila[22] = producto.getFechaAlta();
+            fila[23] = producto.getFechaVencimiento();
+            fila[24] = producto.getNota();
             return fila;
         }).forEach(fila -> {
             modeloTablaResultados.addRow(fila);
