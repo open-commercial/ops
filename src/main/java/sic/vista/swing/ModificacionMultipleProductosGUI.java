@@ -1301,9 +1301,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
     }//GEN-LAST:event_chkOfertaItemStateChanged
 
     private void txtPorcentajeOfertaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPorcentajeOfertaFocusGained
-        SwingUtilities.invokeLater(() -> {
-            txtPorcentajeOferta.selectAll();
-        });
+        SwingUtilities.invokeLater(() -> txtPorcentajeOferta.selectAll());
     }//GEN-LAST:event_txtPorcentajeOfertaFocusGained
 
     private void txtPorcentajeOfertaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPorcentajeOfertaFocusLost
