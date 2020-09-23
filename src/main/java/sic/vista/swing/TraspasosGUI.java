@@ -762,30 +762,31 @@ public class TraspasosGUI extends JInternalFrame {
     }//GEN-LAST:event_tbl_ResultadosKeyPressed
 
     private void btnImprimirPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirPedidoActionPerformed
-        if (Desktop.isDesktopSupported()) {
-            try {
-                this.resetScroll();
-                byte[] reporte = RestClient.getRestTemplate().postForObject("/traspasos/reporte/criteria", this.getCriteria(), byte[].class);
-                File f = new File(System.getProperty("user.home") + "/Traspasos.pdf");
-                Files.write(f.toPath(), reporte);
-                Desktop.getDesktop().open(f);
-            } catch (IOException ex) {
-                LOGGER.error(ex.getMessage());
+        if (!traspasosTotal.isEmpty()) {
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    byte[] reporte = RestClient.getRestTemplate().postForObject("/traspasos/reporte/criteria", this.getCriteria(), byte[].class);
+                    File f = new File(System.getProperty("user.home") + "/Traspasos.pdf");
+                    Files.write(f.toPath(), reporte);
+                    Desktop.getDesktop().open(f);
+                } catch (IOException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (RestClientResponseException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (ResourceAccessException ex) {
+                    LOGGER.error(ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
                 JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_IOException"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } else {
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnImprimirPedidoActionPerformed
 
