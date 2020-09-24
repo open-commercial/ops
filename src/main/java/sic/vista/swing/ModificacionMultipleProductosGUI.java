@@ -1030,6 +1030,10 @@ public class ModificacionMultipleProductosGUI extends JDialog {
             txtPorcentajePrecioBonificado.setEnabled(true);
             txtPrecioBonificado.setEnabled(true);
             chkOferta.setEnabled(true);
+            if (chkOferta.isSelected()) {
+                txtPorcentajeOferta.setEnabled(true);
+                txtPrecioOferta.setEnabled(true);
+            }
         } else {
             lbl_PrecioCosto.setForeground(Color.LIGHT_GRAY);
             txtPrecioCosto.setEnabled(false);
