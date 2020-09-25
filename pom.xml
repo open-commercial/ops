@@ -5,10 +5,10 @@
     
     <modelVersion>4.0.0</modelVersion>
     <groupId>sic-ops</groupId>
-    <artifactId>sic-ops</artifactId>
+    <artifactId>SIC-OPS</artifactId>
     <version>Andromeda</version>
     <packaging>jar</packaging>
-    <name>sic-ops</name>
+    <name>SIC-OPS</name>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
