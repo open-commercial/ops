@@ -386,11 +386,6 @@ public class DetalleProductoGUI extends JDialog {
                 chkOfertaItemStateChanged(evt);
             }
         });
-        chkOferta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chkOfertaActionPerformed(evt);
-            }
-        });
 
         txtPorcentajeOferta.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
         txtPorcentajeOferta.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -1496,23 +1491,6 @@ public class DetalleProductoGUI extends JDialog {
         txtPrecioOferta.setValue(this.calcularPrecioPorcentaje(new BigDecimal(txtPrecioLista.getValue().toString()), new BigDecimal(txtPorcentajeOferta.getValue().toString())));
     }//GEN-LAST:event_txtPorcentajeOfertaFocusLost
 
-    private void chkOfertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkOfertaActionPerformed
-        boolean noTieneImagen;
-        if (productoParaModificar == null) {
-            noTieneImagen = !cargoImagen;
-        } else if (cargoImagen) {
-            noTieneImagen = false;
-        } else {
-            noTieneImagen = productoParaModificar.getUrlImagen() == null || productoParaModificar.getUrlImagen().isEmpty();
-        }
-        if (chkOferta.isSelected() && noTieneImagen) {
-            chkOferta.setSelected(false);
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_producto_oferta_sin_imagen"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_chkOfertaActionPerformed
-
     private void txtPrecioOfertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioOfertaActionPerformed
         try {
             txtPrecioOferta.commitEdit();
@@ -1530,15 +1508,11 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_txtPrecioOfertaFocusLost
 
     private void txtPrecioOfertaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioOfertaFocusGained
-        SwingUtilities.invokeLater(() -> {
-            txtPrecioOferta.selectAll();
-        });
+        SwingUtilities.invokeLater(() -> txtPrecioOferta.selectAll());
     }//GEN-LAST:event_txtPrecioOfertaFocusGained
 
     private void txtPorcentajePrecioBonificadoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPorcentajePrecioBonificadoFocusGained
-        SwingUtilities.invokeLater(() -> {
-            txtPorcentajePrecioBonificado.selectAll();
-        });
+        SwingUtilities.invokeLater(() -> txtPorcentajePrecioBonificado.selectAll());
     }//GEN-LAST:event_txtPorcentajePrecioBonificadoFocusGained
 
     private void txtPorcentajePrecioBonificadoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPorcentajePrecioBonificadoFocusLost
@@ -1554,9 +1528,7 @@ public class DetalleProductoGUI extends JDialog {
     }//GEN-LAST:event_txtPorcentajePrecioBonificadoActionPerformed
 
     private void txtPrecioBonificadoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioBonificadoFocusGained
-        SwingUtilities.invokeLater(() -> {
-            txtPrecioBonificado.selectAll();
-        });
+        SwingUtilities.invokeLater(() -> txtPrecioBonificado.selectAll());
     }//GEN-LAST:event_txtPrecioBonificadoFocusGained
 
     private void txtPrecioBonificadoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPrecioBonificadoFocusLost
