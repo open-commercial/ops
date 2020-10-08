@@ -152,6 +152,13 @@ public class FacturasCompraGUI extends JInternalFrame {
 
     private void cambiarEstadoEnabledComponentes(boolean status) {
         chk_Fecha.setEnabled(status);
+        if (status == true && chk_FechaAlta.isSelected() == true) {
+            dc_FechaDesdeAlta.setEnabled(true);
+            dc_FechaHastaAlta.setEnabled(true);
+        } else {
+            dc_FechaDesdeAlta.setEnabled(false);
+            dc_FechaHastaAlta.setEnabled(false);
+        }
         if (status == true && chk_Fecha.isSelected() == true) {
             dc_FechaDesde.setEnabled(true);
             dc_FechaHasta.setEnabled(true);
@@ -223,9 +230,12 @@ public class FacturasCompraGUI extends JInternalFrame {
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
             case 0:
-                criteria.setOrdenarPor("fecha");
+                criteria.setOrdenarPor("fechaAlta");
                 break;
             case 1:
+                criteria.setOrdenarPor("fecha");
+                break;
+            case 2:
                 criteria.setOrdenarPor("total");
                 break;
         }
@@ -505,7 +515,7 @@ public class FacturasCompraGUI extends JInternalFrame {
                             .addGroup(panelFiltros1Layout.createSequentialGroup()
                                 .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dc_FechaHasta, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE))
+                                .addComponent(dc_FechaHasta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(panelFiltros1Layout.createSequentialGroup()
                                 .addGroup(panelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(txtProducto)
@@ -519,11 +529,13 @@ public class FacturasCompraGUI extends JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(dc_FechaDesdeAlta, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dc_FechaHastaAlta, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)))
+                        .addComponent(dc_FechaHastaAlta, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
         panelFiltros1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chk_Fecha, chk_Producto, chk_Proveedor});
+
+        panelFiltros1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {dc_FechaDesdeAlta, dc_FechaHastaAlta});
 
         panelFiltros1Layout.setVerticalGroup(
             panelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -652,25 +664,25 @@ public class FacturasCompraGUI extends JInternalFrame {
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
                         .addComponent(panelFiltros1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panelFiltros2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 3, Short.MAX_VALUE))
+                        .addComponent(panelFiltros2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
                         .addComponent(btn_Buscar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_CantRegistrosEncontrados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGap(6, 6, 6))
+                        .addComponent(lbl_CantRegistrosEncontrados, javax.swing.GroupLayout.DEFAULT_SIZE, 747, Short.MAX_VALUE))))
         );
         panelFiltrosLayout.setVerticalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFiltrosLayout.createSequentialGroup()
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelFiltros2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panelFiltros1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(panelFiltros1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelFiltrosLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(panelFiltros2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btn_Buscar)
                     .addComponent(lbl_CantRegistrosEncontrados, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         panelResultados.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados"));
@@ -752,7 +764,7 @@ public class FacturasCompraGUI extends JInternalFrame {
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
@@ -774,7 +786,7 @@ public class FacturasCompraGUI extends JInternalFrame {
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
 
-        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha Factura", "Total" }));
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fecha Alta", "Fecha Factura", "Total" }));
         cmbOrden.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbOrdenItemStateChanged(evt);
@@ -835,6 +847,8 @@ public class FacturasCompraGUI extends JInternalFrame {
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         this.setSize(sizeInternalFrame);
         this.setColumnas();
+        dc_FechaDesdeAlta.setDate(new Date());
+        dc_FechaHastaAlta.setDate(new Date());
         dc_FechaDesde.setDate(new Date());
         dc_FechaHasta.setDate(new Date());
         try {
@@ -1023,7 +1037,14 @@ public class FacturasCompraGUI extends JInternalFrame {
     }//GEN-LAST:event_btnBuscarProductosActionPerformed
 
     private void chk_FechaAltaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_FechaAltaItemStateChanged
-        // TODO add your handling code here:
+        if (chk_Fecha.isSelected() == true) {
+            dc_FechaDesdeAlta.setEnabled(true);
+            dc_FechaHastaAlta.setEnabled(true);
+            dc_FechaDesdeAlta.requestFocus();
+        } else {
+            dc_FechaDesdeAlta.setEnabled(false);
+            dc_FechaHastaAlta.setEnabled(false);
+        }
     }//GEN-LAST:event_chk_FechaAltaItemStateChanged
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
