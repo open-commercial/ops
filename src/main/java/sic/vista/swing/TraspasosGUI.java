@@ -340,8 +340,8 @@ public class TraspasosGUI extends JInternalFrame {
         chk_Producto = new javax.swing.JCheckBox();
         txtProducto = new javax.swing.JTextField();
         btnBuscarProductos = new javax.swing.JButton();
-        lbl_cantResultados = new javax.swing.JLabel();
         btn_Buscar = new javax.swing.JButton();
+        lbl_cantResultados = new javax.swing.JLabel();
         panelOrden = new javax.swing.JPanel();
         cmbOrden = new javax.swing.JComboBox<>();
         cmbSentido = new javax.swing.JComboBox<>();
@@ -425,11 +425,11 @@ public class TraspasosGUI extends JInternalFrame {
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_movimientos)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Detalle, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
+                .addComponent(sp_Detalle, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnImprimirPedido))
         );
@@ -529,8 +529,6 @@ public class TraspasosGUI extends JInternalFrame {
             }
         });
 
-        lbl_cantResultados.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-
         btn_Buscar.setForeground(java.awt.Color.blue);
         btn_Buscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Search_16x16.png"))); // NOI18N
         btn_Buscar.setText("Buscar");
@@ -539,6 +537,8 @@ public class TraspasosGUI extends JInternalFrame {
                 btn_BuscarActionPerformed(evt);
             }
         });
+
+        lbl_cantResultados.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
         javax.swing.GroupLayout subPanelFiltrosLayout = new javax.swing.GroupLayout(subPanelFiltros);
         subPanelFiltros.setLayout(subPanelFiltrosLayout);
@@ -560,27 +560,30 @@ public class TraspasosGUI extends JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(txt_NroPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(subPanelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(subPanelFiltrosLayout.createSequentialGroup()
                                 .addComponent(chk_Producto)
-                                .addGap(0, 0, 0)
-                                .addComponent(txtProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, 0)
-                                .addComponent(btnBuscarProductos))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(subPanelFiltrosLayout.createSequentialGroup()
                                 .addComponent(chk_Usuario)
-                                .addGap(0, 0, 0)
-                                .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, 0)
-                                .addComponent(btnBuscarUsuarios))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, subPanelFiltrosLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, 0)
+                        .addGroup(subPanelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(subPanelFiltrosLayout.createSequentialGroup()
+                                .addComponent(btnBuscarUsuarios)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(subPanelFiltrosLayout.createSequentialGroup()
+                                .addComponent(btnBuscarProductos)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(subPanelFiltrosLayout.createSequentialGroup()
                         .addComponent(btn_Buscar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(12, 12, 12))))
         );
-
-        subPanelFiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txtProducto, txtUsuario});
 
         subPanelFiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chk_Producto, chk_Usuario});
 
@@ -590,28 +593,28 @@ public class TraspasosGUI extends JInternalFrame {
             subPanelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(subPanelFiltrosLayout.createSequentialGroup()
                 .addGroup(subPanelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(chk_Fecha)
+                    .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chk_Producto)
                     .addComponent(txtProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscarProductos)
-                    .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chk_Fecha))
+                    .addComponent(btnBuscarProductos))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(subPanelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(chk_NumTraspaso)
                     .addComponent(txt_NroTraspaso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chk_Usuario)
-                    .addComponent(btnBuscarUsuarios)
-                    .addComponent(chk_NumTraspaso))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarUsuarios))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(subPanelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chk_NumPedido)
                     .addComponent(txt_NroPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(subPanelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_Buscar))
-                .addGap(0, 6, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(subPanelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btn_Buscar)
+                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         subPanelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarUsuarios, txtProducto, txtUsuario});
@@ -624,16 +627,11 @@ public class TraspasosGUI extends JInternalFrame {
         panelFiltros.setLayout(panelFiltrosLayout);
         panelFiltrosLayout.setHorizontalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelFiltrosLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(subPanelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(subPanelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         panelFiltrosLayout.setVerticalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelFiltrosLayout.createSequentialGroup()
-                .addComponent(subPanelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 12, Short.MAX_VALUE))
+            .addComponent(subPanelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
@@ -686,28 +684,14 @@ public class TraspasosGUI extends JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void chk_FechaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_FechaItemStateChanged
-        if (chk_Fecha.isSelected() == true) {
-            dc_FechaDesde.setEnabled(true);
-            dc_FechaHasta.setEnabled(true);
-            dc_FechaDesde.requestFocus();
-        } else {
-            dc_FechaDesde.setEnabled(false);
-            dc_FechaHasta.setEnabled(false);
-        }
-}//GEN-LAST:event_chk_FechaItemStateChanged
-
-    private void btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarActionPerformed
-        this.limpiarYBuscar();
-}//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         try {
@@ -732,45 +716,6 @@ public class TraspasosGUI extends JInternalFrame {
     private void cmbSentidoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbSentidoItemStateChanged
         this.limpiarYBuscar();
     }//GEN-LAST:event_cmbSentidoItemStateChanged
-
-    private void txt_NroTraspasoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_NroTraspasoKeyTyped
-        Utilidades.controlarEntradaSoloNumerico(evt);
-    }//GEN-LAST:event_txt_NroTraspasoKeyTyped
-
-    private void txt_NroTraspasoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_NroTraspasoActionPerformed
-        btn_BuscarActionPerformed(null);
-    }//GEN-LAST:event_txt_NroTraspasoActionPerformed
-
-    private void chk_NumTraspasoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_NumTraspasoItemStateChanged
-        if (chk_NumTraspaso.isSelected() == true) {
-            txt_NroTraspaso.setEnabled(true);
-        } else {
-            txt_NroTraspaso.setEnabled(false);
-        }
-    }//GEN-LAST:event_chk_NumTraspasoItemStateChanged
-
-    private void btnBuscarUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarUsuariosActionPerformed
-        Rol[] rolesParaFiltrar = new Rol[]{Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR, Rol.COMPRADOR};
-        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar, "Buscar Usuario");
-        buscarUsuariosGUI.setModal(true);
-        buscarUsuariosGUI.setLocationRelativeTo(this);
-        buscarUsuariosGUI.setVisible(true);
-        if (buscarUsuariosGUI.getUsuarioSeleccionado() != null) {
-            usuarioSeleccionado = buscarUsuariosGUI.getUsuarioSeleccionado();
-            txtUsuario.setText(usuarioSeleccionado.toString());
-        }
-    }//GEN-LAST:event_btnBuscarUsuariosActionPerformed
-
-    private void chk_UsuarioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UsuarioItemStateChanged
-        if (chk_Usuario.isSelected() == true) {
-            btnBuscarUsuarios.setEnabled(true);
-            btnBuscarUsuarios.requestFocus();
-            txtUsuario.setEnabled(true);
-        } else {
-            btnBuscarUsuarios.setEnabled(false);
-            txtUsuario.setEnabled(false);
-        }
-    }//GEN-LAST:event_chk_UsuarioItemStateChanged
 
     private void tbl_ResultadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_ResultadosMouseClicked
         this.cargarTablaDetalle(traspasosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getIdTraspaso());
@@ -832,21 +777,20 @@ public class TraspasosGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btnImprimirPedidoActionPerformed
 
-    private void chk_NumPedidoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_NumPedidoItemStateChanged
-        if (chk_NumPedido.isSelected() == true) {
-            txt_NroPedido.setEnabled(true);
-        } else {
-            txt_NroPedido.setEnabled(false);
+    private void btn_BuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BuscarActionPerformed
+        this.limpiarYBuscar();
+    }//GEN-LAST:event_btn_BuscarActionPerformed
+
+    private void btnBuscarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProductosActionPerformed
+        BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI();
+        buscarProductosGUI.setModal(true);
+        buscarProductosGUI.setLocationRelativeTo(this);
+        buscarProductosGUI.setVisible(true);
+        productoSeleccionado = buscarProductosGUI.getProductoSeleccionado();
+        if (productoSeleccionado != null) {
+            txtProducto.setText(productoSeleccionado.getDescripcion());
         }
-    }//GEN-LAST:event_chk_NumPedidoItemStateChanged
-
-    private void txt_NroPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_NroPedidoActionPerformed
-        btn_BuscarActionPerformed(null);
-    }//GEN-LAST:event_txt_NroPedidoActionPerformed
-
-    private void txt_NroPedidoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_NroPedidoKeyTyped
-        Utilidades.controlarEntradaSoloNumerico(evt);
-    }//GEN-LAST:event_txt_NroPedidoKeyTyped
+    }//GEN-LAST:event_btnBuscarProductosActionPerformed
 
     private void chk_ProductoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_ProductoItemStateChanged
         if (chk_Producto.isSelected() == true) {
@@ -859,16 +803,71 @@ public class TraspasosGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_chk_ProductoItemStateChanged
 
-    private void btnBuscarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProductosActionPerformed
-        BuscarProductosGUI buscarProductosGUI = new BuscarProductosGUI();
-        buscarProductosGUI.setModal(true);
-        buscarProductosGUI.setLocationRelativeTo(this);
-        buscarProductosGUI.setVisible(true);
-        productoSeleccionado = buscarProductosGUI.getProductoSeleccionado();
-        if (productoSeleccionado != null) {
-            txtProducto.setText(productoSeleccionado.getDescripcion());
+    private void txt_NroPedidoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_NroPedidoKeyTyped
+        Utilidades.controlarEntradaSoloNumerico(evt);
+    }//GEN-LAST:event_txt_NroPedidoKeyTyped
+
+    private void txt_NroPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_NroPedidoActionPerformed
+        btn_BuscarActionPerformed(null);
+    }//GEN-LAST:event_txt_NroPedidoActionPerformed
+
+    private void chk_NumPedidoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_NumPedidoItemStateChanged
+        if (chk_NumPedido.isSelected() == true) {
+            txt_NroPedido.setEnabled(true);
+        } else {
+            txt_NroPedido.setEnabled(false);
         }
-    }//GEN-LAST:event_btnBuscarProductosActionPerformed
+    }//GEN-LAST:event_chk_NumPedidoItemStateChanged
+
+    private void btnBuscarUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarUsuariosActionPerformed
+        Rol[] rolesParaFiltrar = new Rol[]{Rol.ADMINISTRADOR, Rol.ENCARGADO, Rol.VENDEDOR, Rol.COMPRADOR};
+        BuscarUsuariosGUI buscarUsuariosGUI = new BuscarUsuariosGUI(rolesParaFiltrar, "Buscar Usuario");
+        buscarUsuariosGUI.setModal(true);
+        buscarUsuariosGUI.setLocationRelativeTo(this);
+        buscarUsuariosGUI.setVisible(true);
+        if (buscarUsuariosGUI.getUsuarioSeleccionado() != null) {
+            usuarioSeleccionado = buscarUsuariosGUI.getUsuarioSeleccionado();
+            txtUsuario.setText(usuarioSeleccionado.toString());
+        }
+    }//GEN-LAST:event_btnBuscarUsuariosActionPerformed
+
+    private void chk_UsuarioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_UsuarioItemStateChanged
+        if (chk_Usuario.isSelected() == true) {
+            btnBuscarUsuarios.setEnabled(true);
+            btnBuscarUsuarios.requestFocus();
+            txtUsuario.setEnabled(true);
+        } else {
+            btnBuscarUsuarios.setEnabled(false);
+            txtUsuario.setEnabled(false);
+        }
+    }//GEN-LAST:event_chk_UsuarioItemStateChanged
+
+    private void chk_FechaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_FechaItemStateChanged
+        if (chk_Fecha.isSelected() == true) {
+            dc_FechaDesde.setEnabled(true);
+            dc_FechaHasta.setEnabled(true);
+            dc_FechaDesde.requestFocus();
+        } else {
+            dc_FechaDesde.setEnabled(false);
+            dc_FechaHasta.setEnabled(false);
+        }
+    }//GEN-LAST:event_chk_FechaItemStateChanged
+
+    private void txt_NroTraspasoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_NroTraspasoKeyTyped
+        Utilidades.controlarEntradaSoloNumerico(evt);
+    }//GEN-LAST:event_txt_NroTraspasoKeyTyped
+
+    private void txt_NroTraspasoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_NroTraspasoActionPerformed
+        btn_BuscarActionPerformed(null);
+    }//GEN-LAST:event_txt_NroTraspasoActionPerformed
+
+    private void chk_NumTraspasoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_NumTraspasoItemStateChanged
+        if (chk_NumTraspaso.isSelected() == true) {
+            txt_NroTraspaso.setEnabled(true);
+        } else {
+            txt_NroTraspaso.setEnabled(false);
+        }
+    }//GEN-LAST:event_chk_NumTraspasoItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarProductos;
