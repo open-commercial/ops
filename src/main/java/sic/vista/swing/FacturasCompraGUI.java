@@ -127,7 +127,7 @@ public class FacturasCompraGUI extends JInternalFrame {
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);        
         //Tamanios de columnas
-        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(140);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(120);
@@ -146,7 +146,9 @@ public class FacturasCompraGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(16).setPreferredWidth(120);
         //renderers        
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
-        tbl_Resultados.setDefaultRenderer(LocalDateTime.class, new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
+        //tbl_Resultados.setDefaultRenderer(LocalDateTime.class, new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(0).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(1).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
         tbl_Resultados.setDefaultRenderer(LocalDate.class, new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 
@@ -201,10 +203,10 @@ public class FacturasCompraGUI extends JInternalFrame {
                     : null);
         }       
         if (chk_FechaAlta.isSelected()) {
-            criteria.setFechaDesdeAlta((dc_FechaDesdeAlta.getDate() != null)
+            criteria.setFechaAltaDesde((dc_FechaDesdeAlta.getDate() != null)
                     ? LocalDateTime.ofInstant(dc_FechaDesdeAlta.getDate().toInstant(), ZoneId.systemDefault())
                     : null);
-            criteria.setFechaHastaAlta((dc_FechaHastaAlta.getDate() != null)
+            criteria.setFechaAltaHasta((dc_FechaHastaAlta.getDate() != null)
                     ? LocalDateTime.ofInstant(dc_FechaHastaAlta.getDate().toInstant(), ZoneId.systemDefault())
                     : null);
         }                
@@ -1037,7 +1039,7 @@ public class FacturasCompraGUI extends JInternalFrame {
     }//GEN-LAST:event_btnBuscarProductosActionPerformed
 
     private void chk_FechaAltaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_FechaAltaItemStateChanged
-        if (chk_Fecha.isSelected() == true) {
+        if (chk_FechaAlta.isSelected() == true) {
             dc_FechaDesdeAlta.setEnabled(true);
             dc_FechaHastaAlta.setEnabled(true);
             dc_FechaDesdeAlta.requestFocus();
