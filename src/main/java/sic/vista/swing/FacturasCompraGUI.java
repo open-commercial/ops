@@ -195,10 +195,10 @@ public class FacturasCompraGUI extends JInternalFrame {
         BusquedaFacturaCompraCriteria criteria = new BusquedaFacturaCompraCriteria();
         criteria.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         if (chk_Fecha.isSelected()) {
-            criteria.setFechaDesde((dc_FechaDesde.getDate() != null)
+            criteria.setFechaFacturaDesde((dc_FechaDesde.getDate() != null)
                     ? LocalDateTime.ofInstant(dc_FechaDesde.getDate().toInstant(), ZoneId.systemDefault())
                     : null);
-            criteria.setFechaHasta((dc_FechaHasta.getDate() != null)
+            criteria.setFechaFacturaHasta((dc_FechaHasta.getDate() != null)
                     ? LocalDateTime.ofInstant(dc_FechaHasta.getDate().toInstant(), ZoneId.systemDefault())
                     : null);
         }       
