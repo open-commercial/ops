@@ -362,8 +362,11 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
         }
         cmb_TipoFactura.removeAllItems();
         cmb_TipoFactura.addItem(facturaParaMostrar.getTipoComprobante());
-        txtProveedor.setText(facturaParaMostrar.getRazonSocialProveedor());        
+        txtProveedor.setText(facturaParaMostrar.getRazonSocialProveedor());
         cmb_Transportista.addItem(facturaParaMostrar.getNombreTransportista());
+        dc_FechaFactura.setDate(java.util.Date
+                .from(facturaParaMostrar.getFecha().atZone(ZoneId.systemDefault())
+                        .toInstant()));
         if (facturaParaMostrar.getFechaVencimiento() != null) {
             Date fVencimiento = Date.from(facturaParaMostrar.getFechaVencimiento().atStartOfDay(ZoneId.systemDefault()).toInstant());
             dc_FechaVencimiento.setDate(fVencimiento);

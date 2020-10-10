@@ -11,8 +11,10 @@ import sic.modelo.TipoDeComprobante;
 @NoArgsConstructor
 public class BusquedaFacturaCompraCriteria {
 
-    private LocalDateTime fechaDesde;
-    private LocalDateTime fechaHasta;
+    private LocalDateTime fechaAltaDesde;
+    private LocalDateTime fechaAltaHasta;
+    private LocalDateTime fechaFacturaDesde;
+    private LocalDateTime fechaFacturaHasta;
     private Long idProveedor;
     private Long numSerie;
     private Long numFactura;

@@ -1,6 +1,7 @@
 package sic.modelo;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -10,5 +11,6 @@ public class FacturaCompra extends Factura implements Serializable {
 
       private Long idProveedor;
       private String razonSocialProveedor;
+      private LocalDateTime fechaAlta;
       
 }

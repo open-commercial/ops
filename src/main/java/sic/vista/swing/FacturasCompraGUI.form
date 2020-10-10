@@ -36,6 +36,7 @@
               <Component id="panelFiltros" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="panelOrden" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -43,8 +44,8 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="panelFiltros" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="panelOrden" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="panelOrden" min="-2" max="-2" attributes="0"/>
+                  <Component id="panelFiltros" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="panelResultados" max="32767" attributes="0"/>
@@ -67,12 +68,11 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
                           <Component id="panelFiltros1" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="panelFiltros2" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="3" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
                           <Component id="btn_Buscar" min="-2" max="-2" attributes="0"/>
@@ -80,7 +80,7 @@
                           <Component id="lbl_CantRegistrosEncontrados" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -91,12 +91,12 @@
                       <Component id="panelFiltros1" min="-2" max="-2" attributes="0"/>
                       <Component id="panelFiltros2" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="btn_Buscar" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lbl_CantRegistrosEncontrados" alignment="2" min="-2" pref="25" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -126,7 +126,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="chk_Fecha" linkSize="20" alignment="0" min="-2" pref="140" max="-2" attributes="0"/>
                           <Component id="chk_Proveedor" linkSize="20" min="-2" pref="140" max="-2" attributes="0"/>
@@ -134,12 +134,12 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
                               <Component id="dc_FechaDesde" min="-2" pref="190" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="dc_FechaHasta" pref="185" max="32767" attributes="0"/>
+                              <Component id="dc_FechaHasta" min="-2" pref="190" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="102" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="txtProducto" max="32767" attributes="0"/>
                                   <Component id="txtProveedor" max="32767" attributes="0"/>
@@ -152,11 +152,24 @@
                           </Group>
                       </Group>
                   </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="chk_FechaAlta" min="-2" pref="140" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="dc_FechaDesdeAlta" linkSize="26" min="-2" pref="190" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="dc_FechaHastaAlta" linkSize="26" min="-2" pref="51" max="-2" attributes="0"/>
+                  </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="2" attributes="0">
+                          <Component id="dc_FechaHastaAlta" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="dc_FechaDesdeAlta" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="chk_FechaAlta" alignment="2" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
                           <Component id="dc_FechaHasta" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="dc_FechaDesde" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -252,6 +265,26 @@
                 <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_ProductoItemStateChanged"/>
               </Events>
             </Component>
+            <Component class="javax.swing.JCheckBox" name="chk_FechaAlta">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Fecha Alta:"/>
+              </Properties>
+              <Events>
+                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chk_FechaAltaItemStateChanged"/>
+              </Events>
+            </Component>
+            <Component class="com.toedter.calendar.JDateChooser" name="dc_FechaDesdeAlta">
+              <Properties>
+                <Property name="dateFormatString" type="java.lang.String" value="dd/MM/yyyy"/>
+                <Property name="enabled" type="boolean" value="false"/>
+              </Properties>
+            </Component>
+            <Component class="com.toedter.calendar.JDateChooser" name="dc_FechaHastaAlta">
+              <Properties>
+                <Property name="dateFormatString" type="java.lang.String" value="dd/MM/yyyy"/>
+                <Property name="enabled" type="boolean" value="false"/>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="panelFiltros2">
@@ -289,7 +322,6 @@
                           <Component id="txt_NroFactura" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="chk_NumFactura" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -376,7 +408,7 @@
                   <Component id="btn_VerDetalle" linkSize="7" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="btnCrearNotaCredito" linkSize="7" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="261" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="lbl_TotalFacturado" alignment="1" min="-2" max="-2" attributes="1"/>
                       <Component id="lbl_TotalIVACompra" alignment="1" min="-2" max="-2" attributes="1"/>
@@ -393,7 +425,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="sp_Resultados" pref="314" max="32767" attributes="0"/>
+                  <Component id="sp_Resultados" pref="272" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
@@ -556,9 +588,10 @@
         <Component class="javax.swing.JComboBox" name="cmbOrden">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="2">
-                <StringItem index="0" value="Fecha Factura"/>
-                <StringItem index="1" value="Total"/>
+              <StringArray count="3">
+                <StringItem index="0" value="Fecha Alta"/>
+                <StringItem index="1" value="Fecha Factura"/>
+                <StringItem index="2" value="Total"/>
               </StringArray>
             </Property>
           </Properties>
