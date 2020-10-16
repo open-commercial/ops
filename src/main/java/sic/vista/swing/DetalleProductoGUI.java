@@ -56,6 +56,7 @@ public class DetalleProductoGUI extends JDialog {
     private Map<Long, BigDecimal> cantidadEnSucursal;
     private Proveedor proveedorSeleccionado;
     private BigDecimal precioListaAnterior = BigDecimal.ZERO;
+    private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final static BigDecimal IVA_21 = new BigDecimal("21");
     private final static BigDecimal IVA_105 = new BigDecimal("10.5");
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -1248,6 +1249,14 @@ public class DetalleProductoGUI extends JDialog {
         }
         if (!UsuarioActivo.getInstance().getUsuario().getRoles().contains(Rol.ADMINISTRADOR)
                 && operacion == TipoDeOperacion.ACTUALIZACION) {
+            lbl_Cantidad.setEnabled(false);
+            txtCantidad.setEnabled(false);
+            lbl_Bulto.setEnabled(false);
+            txt_Bulto.setEnabled(false);
+        }
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            lblSucursal.setEnabled(false);
+            cmbSucursales.setEnabled(false);
             lbl_Cantidad.setEnabled(false);
             txtCantidad.setEnabled(false);
             lbl_Bulto.setEnabled(false);

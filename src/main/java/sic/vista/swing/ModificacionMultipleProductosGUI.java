@@ -22,7 +22,9 @@ import sic.modelo.ProductosParaActualizar;
 import sic.modelo.Medida;
 import sic.modelo.Producto;
 import sic.modelo.Proveedor;
+import sic.modelo.Rol;
 import sic.modelo.Rubro;
+import sic.modelo.UsuarioActivo;
 import sic.util.CalculosPrecioProducto;
 
 public class ModificacionMultipleProductosGUI extends JDialog {
@@ -31,6 +33,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
     private Proveedor proveedorSeleccionado;
     private ModeloTabla modeloTablaProductos;
     private BigDecimal precioListaAnterior = BigDecimal.ZERO;
+    private final List<Rol> rolesDeUsuarioActivo = UsuarioActivo.getInstance().getUsuario().getRoles();
     private final static BigDecimal IVA_21 = new BigDecimal("21");	
     private final static BigDecimal IVA_105 = new BigDecimal("10.5");
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -98,6 +101,9 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         txtPorcentajePrecioBonificado.setValue(BigDecimal.ZERO);
         txtPrecioBonificado.setValue(BigDecimal.ZERO);
         txtPorcentajeOferta.setValue(BigDecimal.ZERO);
+        if (!rolesDeUsuarioActivo.contains(Rol.ADMINISTRADOR)) {
+            chkVentaMinima.setEnabled(false);
+        } 
     }
     
     private void setColumnas() {
