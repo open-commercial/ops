@@ -364,7 +364,6 @@ public class FacturasVentaGUI extends JInternalFrame {
         }
         btn_Buscar.setEnabled(status);
         btn_VerDetalle.setEnabled(status);
-        btn_Autorizar.setEnabled(status);
         tbl_Resultados.setEnabled(status);
         sp_Resultados.setEnabled(status);
         tbl_Resultados.requestFocus();
@@ -491,11 +490,9 @@ public class FacturasVentaGUI extends JInternalFrame {
                 || rolesDeUsuarioActivo.contains(Rol.ENCARGADO)
                 || rolesDeUsuarioActivo.contains(Rol.VENDEDOR)) {
             tienePermisoSegunRoles = true;
-            btn_Autorizar.setEnabled(true);
             chk_Usuario.setEnabled(true);
         } else {
             tienePermisoSegunRoles = false;
-            btn_Autorizar.setEnabled(false);
             chk_Usuario.setEnabled(false);
         }
     }
@@ -515,7 +512,6 @@ public class FacturasVentaGUI extends JInternalFrame {
         txt_ResultTotalFacturado = new javax.swing.JFormattedTextField();
         txt_ResultGananciaTotal = new javax.swing.JFormattedTextField();
         txt_ResultTotalIVAVenta = new javax.swing.JFormattedTextField();
-        btn_Autorizar = new javax.swing.JButton();
         btnCrearNotaCredito = new javax.swing.JButton();
         btnEnviarEmail = new javax.swing.JButton();
         btnCrearRemito = new javax.swing.JButton();
@@ -651,15 +647,6 @@ public class FacturasVentaGUI extends JInternalFrame {
                     .addComponent(txt_ResultTotalFacturado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
-        btn_Autorizar.setForeground(java.awt.Color.blue);
-        btn_Autorizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Certificate_16x16.png"))); // NOI18N
-        btn_Autorizar.setText("Autorizar");
-        btn_Autorizar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_AutorizarActionPerformed(evt);
-            }
-        });
-
         btnCrearNotaCredito.setForeground(java.awt.Color.blue);
         btnCrearNotaCredito.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Add_16x16.png"))); // NOI18N
         btnCrearNotaCredito.setText("Nueva Nota Credito");
@@ -703,15 +690,13 @@ public class FacturasVentaGUI extends JInternalFrame {
             .addGroup(panelResultadosLayout.createSequentialGroup()
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelResultadosLayout.createSequentialGroup()
-                        .addComponent(btn_Autorizar)
-                        .addGap(0, 0, 0)
-                        .addComponent(btn_VerDetalle)
-                        .addGap(0, 0, 0)
-                        .addComponent(btnVerRemito))
-                    .addGroup(panelResultadosLayout.createSequentialGroup()
                         .addComponent(btnCrearRemito)
                         .addGap(0, 0, 0)
-                        .addComponent(btnCrearNotaCredito)
+                        .addComponent(btnCrearNotaCredito))
+                    .addGroup(panelResultadosLayout.createSequentialGroup()
+                        .addComponent(btn_VerDetalle)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnVerRemito)
                         .addGap(0, 0, 0)
                         .addComponent(btnEnviarEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -719,7 +704,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             .addComponent(sp_Resultados)
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCrearNotaCredito, btnCrearRemito, btnEnviarEmail, btnVerRemito, btn_Autorizar, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCrearNotaCredito, btnCrearRemito, btnEnviarEmail, btnVerRemito, btn_VerDetalle});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -730,18 +715,16 @@ public class FacturasVentaGUI extends JInternalFrame {
                     .addComponent(panelNumeros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelResultadosLayout.createSequentialGroup()
                         .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(btnCrearNotaCredito)
-                                .addComponent(btnEnviarEmail))
+                            .addComponent(btnCrearNotaCredito)
                             .addComponent(btnCrearRemito))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(btn_Autorizar)
-                            .addComponent(btn_VerDetalle)
-                            .addComponent(btnVerRemito)))))
+                            .addComponent(btnEnviarEmail)
+                            .addComponent(btnVerRemito)
+                            .addComponent(btn_VerDetalle)))))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaCredito, btn_Autorizar, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCrearNotaCredito, btn_VerDetalle});
 
         panelFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
 
@@ -1267,42 +1250,6 @@ public class FacturasVentaGUI extends JInternalFrame {
         txt_NumeroPedido.setEnabled(chk_NumeroPedido.isSelected());
     }//GEN-LAST:event_chk_NumeroPedidoItemStateChanged
 
-    private void btn_AutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_AutorizarActionPerformed
-        try {
-            boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/"
-                    + SucursalActiva.getInstance().getSucursal().getIdSucursal()
-                    + "/factura-electronica-habilitada", Boolean.class);
-            if (FEHabilitada) {
-                if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
-                    int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-                    long idFacturaSeleccionada = facturasTotal.get(indexFilaSeleccionada).getIdFactura();
-                    FacturaVenta facturaVenta = RestClient.getRestTemplate().postForObject("/facturas/ventas/" + idFacturaSeleccionada + "/autorizacion",
-                            null, FacturaVenta.class);
-                    if (facturaVenta.getCae() != 0) {
-                        JOptionPane.showMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_autorizada"),
-                                "Aviso", JOptionPane.INFORMATION_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_no_autorizada"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                    this.limpiarYBuscar(false);
-                }
-            } else {
-                JOptionPane.showInternalMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_sucursal_fe_habilitada"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_btn_AutorizarActionPerformed
-
     private void txt_SerieFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_SerieFacturaActionPerformed
         btn_BuscarActionPerformed(null);
     }//GEN-LAST:event_txt_SerieFacturaActionPerformed
@@ -1537,7 +1484,6 @@ public class FacturasVentaGUI extends JInternalFrame {
     private javax.swing.JButton btnCrearRemito;
     private javax.swing.JButton btnEnviarEmail;
     private javax.swing.JButton btnVerRemito;
-    private javax.swing.JButton btn_Autorizar;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_VerDetalle;
     private javax.swing.JCheckBox chkNumRemito;

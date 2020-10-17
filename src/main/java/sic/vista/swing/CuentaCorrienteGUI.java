@@ -33,7 +33,6 @@ import sic.modelo.CuentaCorrienteCliente;
 import sic.modelo.CuentaCorrienteProveedor;
 import sic.modelo.SucursalActiva;
 import sic.modelo.FacturaCompra;
-import sic.modelo.FacturaVenta;
 import sic.modelo.NotaCredito;
 import sic.modelo.NotaDebito;
 import sic.modelo.PaginaRespuestaRest;
@@ -1002,16 +1001,6 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                             }
                             this.refrescarVista();
                             break;
-                        case FACTURA_A:
-                        case FACTURA_B:
-                        case FACTURA_C:
-                            RestClient.getRestTemplate().postForObject("/facturas/ventas/" + renglonCC.getIdMovimiento() + "/autorizacion",
-                                    null, FacturaVenta.class);
-                            JOptionPane.showMessageDialog(this,
-                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_autorizada"),
-                                    "Aviso", JOptionPane.INFORMATION_MESSAGE);
-                            this.refrescarVista();
-                            break;
                         default:
                             JOptionPane.showInternalMessageDialog(this,
                                     ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
@@ -1042,26 +1031,6 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             int respuesta;
             try {
                 switch (renglonCC.getTipoComprobante()) {
-                    case FACTURA_A:
-                    case FACTURA_B:
-                    case FACTURA_C:
-                    case FACTURA_Y:
-                    case FACTURA_X:
-                    case PRESUPUESTO:
-                        if (this.cliente != null) {
-                            respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
-                                    .getString("mensaje_eliminar_movimientos"),
-                                    "Eliminar", JOptionPane.YES_NO_OPTION);
-                            if (respuesta == JOptionPane.YES_OPTION) {
-                                RestClient.getRestTemplate().delete("/facturas/" + renglonCC.getIdMovimiento());
-                                refrescar = true;
-                            }
-                        } else {
-                            JOptionPane.showInternalMessageDialog(this,
-                                    ResourceBundle.getBundle("Mensajes").getString("mensaje_tipoDeMovimiento_incorrecto"),
-                                    "Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                        break;
                     case REMITO_A:
                     case REMITO_B:
                     case REMITO_C:

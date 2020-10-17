@@ -267,9 +267,7 @@ public class CerrarOperacionGUI extends JDialog {
                             }
                         }
                     }
-                } else {
-                    JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_alta_sin_cae"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    this.dispose();
                 }
             } else {
                 FacturaVenta facturaGuardada = Arrays.asList(RestClient.getRestTemplate().postForObject("/facturas/ventas/pedidos/" + this.pedido.getIdPedido(), nuevaFacturaVenta, FacturaVenta[].class)).get(0);
@@ -287,15 +285,12 @@ public class CerrarOperacionGUI extends JDialog {
                     if (reply == JOptionPane.YES_OPTION) {
                         this.lanzarReporteFactura(facturaGuardada, "Factura");
                     }
-                } else if (!facturaAutorizada && tiposAutorizables.contains(facturaGuardada.getTipoComprobante())) {
-                    JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_factura_alta_sin_cae"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    this.dispose();
                 }
             }
-            this.dispose();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            exito = true;
+            exito = false;
             this.dispose();
         } catch (ResourceAccessException ex) {
             LOGGER.error(ex.getMessage());
