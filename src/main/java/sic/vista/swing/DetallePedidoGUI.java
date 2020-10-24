@@ -262,8 +262,8 @@ public class DetallePedidoGUI extends JInternalFrame {
 
     private void buscarProductoPorCodigo() {
         try {
-            Producto producto = RestClient.getRestTemplate().getForObject("/productos/busqueda?"
-                    + "&codigo=" + txt_CodigoProducto.getText().trim(), Producto.class);
+            Producto producto = RestClient.getRestTemplate().getForObject("/productos/busqueda/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal()
+                    + "?&codigo=" + txt_CodigoProducto.getText().trim(), Producto.class);
             if (producto == null) {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                         .getString("mensaje_producto_no_encontrado"), "Error", JOptionPane.ERROR_MESSAGE);

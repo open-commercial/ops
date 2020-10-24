@@ -128,8 +128,8 @@ public class ProductosGUI extends JInternalFrame {
         tipos[12] = BigDecimal.class;
         tipos[13] = BigDecimal.class;
         tipos[14] = BigDecimal.class;
-        tipos[15] = BigDecimal.class;      
-        tipos[16] = BigDecimal.class;
+        tipos[15] = BigDecimal.class;
+        tipos[16] = BigDecimal.class;      
         tipos[17] = BigDecimal.class;
         tipos[18] = BigDecimal.class;
         tipos[19] = String.class;
@@ -178,18 +178,18 @@ public class ProductosGUI extends JInternalFrame {
 
     private void cargarResultadosAlTable() {
         productosParcial.stream().map(producto -> {
-            Object[] fila = new Object[27];
+            Object[] fila = new Object[25];
             fila[0] = producto.isPublico();
             fila[1] = producto.isOferta();
             fila[2] = producto.getCodigo();
             fila[3] = producto.getDescripcion();
             fila[4] = BigDecimal.ZERO;
-            producto.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
+            producto.getCantidadEnSucursalesDisponible().forEach(cantidadesEnSucursal -> {
                 if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
                     fila[4] = cantidadesEnSucursal.getCantidad();
                 }
             });
-            fila[5] = producto.getCantidadEnSucursales().stream()
+            fila[5] = producto.getCantidadEnSucursalesDisponible().stream()
                     .filter(cantidadEnSucursales -> !cantidadEnSucursales.idSucursal.equals(SucursalActiva.getInstance().getSucursal().getIdSucursal()))
                     .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);
             fila[6] = producto.getCantidadTotalEnSucursales();
@@ -427,7 +427,7 @@ public class ProductosGUI extends JInternalFrame {
         try {
             HttpEntity<BusquedaProductoCriteria> requestEntity = new HttpEntity<>(criteria);
             PaginaRespuestaRest<Producto> response = RestClient.getRestTemplate()
-                    .exchange("/productos/busqueda/criteria", HttpMethod.POST, requestEntity,
+                    .exchange("/productos/busqueda/criteria/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(), HttpMethod.POST, requestEntity,
                             new ParameterizedTypeReference<PaginaRespuestaRest<Producto>>() {
                     })
                     .getBody();

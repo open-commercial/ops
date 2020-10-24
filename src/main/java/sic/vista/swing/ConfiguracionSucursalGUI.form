@@ -359,28 +359,33 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="lblTiempoLargo" pref="300" max="32767" attributes="0"/>
                       <Component id="lblPredeterminada" max="32767" attributes="0"/>
                       <Component id="lblTiempoCorto" max="32767" attributes="0"/>
+                      <Component id="lblComparteStock" max="32767" attributes="0"/>
                   </Group>
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-                          <Component id="chkPredeterminada" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="chkPredeterminada" min="-2" max="-2" attributes="0"/>
+                      <Component id="chkComparteStock" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+              <Group type="102" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="312" pref="312" max="-2" attributes="0"/>
+                          <Component id="txtTiempoLargoEnMinutos" max="32767" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtTiempoCortoEnMinutos" max="32767" attributes="0"/>
-                              <Component id="txtTiempoLargoEnMinutos" max="32767" attributes="0"/>
-                          </Group>
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="312" pref="312" max="-2" attributes="0"/>
+                          <Component id="txtTiempoCortoEnMinutos" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -388,9 +393,9 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="chkPredeterminada" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblPredeterminada" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="lblPredeterminada" min="-2" max="-2" attributes="0"/>
+                      <Component id="chkPredeterminada" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -403,6 +408,11 @@
                       <Component id="txtTiempoLargoEnMinutos" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="lblComparteStock" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="chkComparteStock" alignment="1" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -438,6 +448,13 @@
               <Format format="#0" subtype="-1" type="0"/>
             </Property>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblComparteStock">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Comparte Stock:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="chkComparteStock">
         </Component>
       </SubComponents>
     </Container>
