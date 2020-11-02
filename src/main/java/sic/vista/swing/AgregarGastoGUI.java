@@ -2,7 +2,6 @@ package sic.vista.swing;
 
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
@@ -17,6 +16,7 @@ import sic.RestClient;
 import sic.modelo.SucursalActiva;
 import sic.modelo.FormaDePago;
 import sic.modelo.Gasto;
+import sic.modelo.NuevoGasto;
 
 public class AgregarGastoGUI extends JDialog {
     
@@ -34,13 +34,13 @@ public class AgregarGastoGUI extends JDialog {
         this.setIconImage(iconoVentana.getImage());
     }
     
-    public Gasto construirGasto(String concepto, BigDecimal monto) {      
-        Gasto gasto = new Gasto();
-        gasto.setConcepto(concepto);
-        gasto.setEliminado(false);
-        gasto.setFecha(LocalDateTime.now());
-        gasto.setMonto(monto);
-        return gasto;
+    public NuevoGasto construirGasto(String concepto, BigDecimal monto) {      
+        NuevoGasto nuevoGasto = new NuevoGasto();
+        nuevoGasto.setConcepto(concepto);
+        nuevoGasto.setMonto(monto);
+        nuevoGasto.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
+        nuevoGasto.setIdFormaDePago(((FormaDePago) cmb_FormaDePago.getSelectedItem()).getIdFormaDePago());
+        return nuevoGasto;
     }
 
     @SuppressWarnings("unchecked")
@@ -172,12 +172,10 @@ public class AgregarGastoGUI extends JDialog {
         if (ftxt_Concepto.getText() == null) {
             ftxt_Concepto.setText("");
         }
-        Gasto gasto = this.construirGasto(ftxt_Concepto.getText().trim(), new BigDecimal(ftxt_Monto.getValue().toString()));
+        NuevoGasto nuevoGasto = this.construirGasto(ftxt_Concepto.getText().trim(), new BigDecimal(ftxt_Monto.getValue().toString()));
         try {
-            RestClient.getRestTemplate().postForObject("/gastos?idSucursal="
-                    + SucursalActiva.getInstance().getSucursal().getIdSucursal()
-                    + "&idFormaDePago=" + ((FormaDePago) cmb_FormaDePago.getSelectedItem()).getIdFormaDePago(),
-                    gasto, Gasto.class);
+            RestClient.getRestTemplate().postForObject("/gastos",
+                    nuevoGasto, Gasto.class);
             this.dispose();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
