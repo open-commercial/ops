@@ -83,7 +83,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="chkBolsa" linkSize="1" min="-2" max="-2" attributes="0"/>
                               <Component id="chkRollo" linkSize="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="chkBalde" linkSize="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="chkTacho" linkSize="1" min="-2" max="-2" attributes="0"/>
                               <Component id="chkSobre" linkSize="1" min="-2" max="-2" attributes="0"/>
                               <Component id="chkAtado" linkSize="1" min="-2" max="-2" attributes="0"/>
                               <Component id="chkPack" linkSize="1" min="-2" max="-2" attributes="0"/>
@@ -93,7 +93,7 @@
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="ftxtCantBolsa" linkSize="7" alignment="2" min="-2" pref="58" max="-2" attributes="0"/>
                               <Component id="ftxtCantRollo" linkSize="7" alignment="2" min="-2" pref="56" max="-2" attributes="0"/>
-                              <Component id="ftxtCantBalde" linkSize="7" alignment="2" min="-2" pref="54" max="-2" attributes="0"/>
+                              <Component id="ftxtCantTacho" linkSize="7" alignment="2" min="-2" pref="54" max="-2" attributes="0"/>
                               <Component id="ftxtCantSobre" linkSize="7" alignment="2" min="-2" pref="52" max="-2" attributes="0"/>
                               <Component id="ftxtCantAtado" linkSize="7" alignment="2" min="-2" pref="46" max="-2" attributes="0"/>
                               <Component id="ftxtCantPack" linkSize="7" alignment="2" min="-2" pref="37" max="-2" attributes="0"/>
@@ -144,8 +144,8 @@
                   </Group>
                   <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="chkBalde" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="ftxtCantBalde" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="chkTacho" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftxtCantTacho" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblUn4" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -203,12 +203,12 @@
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkRolloItemStateChanged"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="chkBalde">
+        <Component class="javax.swing.JCheckBox" name="chkTacho">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Balde"/>
+            <Property name="text" type="java.lang.String" value="Tacho"/>
           </Properties>
           <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkBaldeItemStateChanged"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkTachoItemStateChanged"/>
           </Events>
         </Component>
         <Component class="javax.swing.JCheckBox" name="chkAtado">
@@ -274,7 +274,7 @@
             <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="ftxtCantRolloKeyTyped"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="ftxtCantBalde">
+        <Component class="javax.swing.JFormattedTextField" name="ftxtCantTacho">
           <Properties>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
               <Format format="#,##0.##" subtype="-1" type="0"/>
@@ -282,9 +282,9 @@
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="ftxtCantBaldeFocusGained"/>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="ftxtCantBaldeFocusLost"/>
-            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="ftxtCantBaldeKeyTyped"/>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="ftxtCantTachoFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="ftxtCantTachoFocusLost"/>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="ftxtCantTachoKeyTyped"/>
           </Events>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="ftxtCantSobre">

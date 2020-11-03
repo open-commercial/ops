@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class NuevoRemito {
 
-  private long idFacturaVenta;
+  private long[] idFacturaVenta;
   private long idTransportista;
   private TipoBulto[] tiposDeBulto;
   private BigDecimal[] cantidadPorBulto;

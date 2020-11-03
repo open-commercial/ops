@@ -34,7 +34,9 @@ import sic.modelo.Usuario;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
 import sic.modelo.Rol;
+import sic.modelo.Sucursal;
 import sic.modelo.TipoDeComprobante;
+import sic.modelo.Ubicacion;
 import sic.modelo.UsuarioActivo;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
@@ -586,7 +588,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             }
         ));
         tbl_Resultados.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        tbl_Resultados.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tbl_Resultados.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         sp_Resultados.setViewportView(tbl_Resultados);
 
         btn_VerDetalle.setForeground(java.awt.Color.blue);
@@ -1401,28 +1403,50 @@ public class FacturasVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_btnEnviarEmailActionPerformed
 
     private void btnCrearRemitoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearRemitoActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
-            int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
-            FacturaVenta factura = facturasTotal.get(indexFilaSeleccionada);
-            if (factura.getRemito() == null) {
-                try {
-                    NuevoRemitoGUI nuevoRemito = new NuevoRemitoGUI(factura);
-                    nuevoRemito.setLocation(getDesktopPane().getWidth() / 2 - nuevoRemito.getWidth() / 2,
-                            getDesktopPane().getHeight() / 2 - nuevoRemito.getHeight() / 2);
-                    nuevoRemito.setModal(true);
-                    nuevoRemito.setLocationRelativeTo(this);
-                    nuevoRemito.setVisible(true);
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+        if (tbl_Resultados.getSelectedRow() != -1) {
+            List<FacturaVenta> facturas = new ArrayList<>();
+            int[] indices = Utilidades.getSelectedRowsModelIndices(tbl_Resultados);
+            for (int i = 0; i < indices.length; i++) {
+                facturas.add(facturasTotal.get(indices[i]));
+            }
+            String nroDeCliente = null;
+            Long idSucursal = null;
+            int i = 0;
+            for (FacturaVenta facturaVenta : facturas) {
+                if (facturaVenta.getRemito() != null) {
+                    JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                            .getString("mensaje_error_remito_ya_existente"), "Error", JOptionPane.ERROR_MESSAGE);
                 }
-            } else {
-                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                        .getString("mensaje_error_remito_ya_existente"), "Error", JOptionPane.ERROR_MESSAGE);
+                if (i == 0) {
+                    nroDeCliente = facturaVenta.getNroDeCliente();
+                    idSucursal = facturaVenta.getIdSucursal();
+                } else {
+                    if (!nroDeCliente.equals(facturaVenta.getNroDeCliente())) {
+                        JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_remito_facturas_diferentes_clientes"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    if (!idSucursal.equals(facturaVenta.getIdSucursal())) {
+                        JOptionPane.showMessageDialog(this,
+                            ResourceBundle.getBundle("Mensajes").getString("mensaje_remito_facturas_diferentes_sucursales"),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+            try {
+                NuevoRemitoGUI nuevoRemito = new NuevoRemitoGUI(facturas);
+                nuevoRemito.setLocation(getDesktopPane().getWidth() / 2 - nuevoRemito.getWidth() / 2,
+                        getDesktopPane().getHeight() / 2 - nuevoRemito.getHeight() / 2);
+                nuevoRemito.setModal(true);
+                nuevoRemito.setLocationRelativeTo(this);
+                nuevoRemito.setVisible(true);
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnCrearRemitoActionPerformed
