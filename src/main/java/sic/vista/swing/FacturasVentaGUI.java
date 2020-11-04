@@ -174,26 +174,27 @@ public class FacturasVentaGUI extends JInternalFrame {
 
     private void setColumnas() {
         //nombres de columnas
-        String[] encabezados = new String[19];
+        String[] encabezados = new String[20];
         encabezados[0] = "CAE";
         encabezados[1] = "Fecha Factura";
         encabezados[2] = "Tipo";
         encabezados[3] = "Nº Factura";
         encabezados[4] = "Nº Pedido";
-        encabezados[5] = "Cliente";
-        encabezados[6] = "Usuario";
-        encabezados[7] = "Viajante";
-        encabezados[8] = "Total";
-        encabezados[9] = "SubTotal";
-        encabezados[10] = "% Descuento";
-        encabezados[11] = "Descuento neto";
-        encabezados[12] = "% Recargo";
-        encabezados[13] = "Recargo neto";
-        encabezados[14] = "SubTotal bruto";
-        encabezados[15] = "IVA 10.5% neto";
-        encabezados[16] = "IVA 21% neto";
-        encabezados[17] = "Nº Factura Afip";
-        encabezados[18] = "Vencimiento CAE";
+        encabezados[5] = "Nº Remito";       
+        encabezados[6] = "Cliente";
+        encabezados[7] = "Usuario";
+        encabezados[8] = "Viajante";
+        encabezados[9] = "Total";
+        encabezados[10] = "SubTotal";
+        encabezados[11] = "% Descuento";
+        encabezados[12] = "Descuento neto";
+        encabezados[13] = "% Recargo";
+        encabezados[14] = "Recargo neto";
+        encabezados[15] = "SubTotal bruto";
+        encabezados[16] = "IVA 10.5% neto";
+        encabezados[17] = "IVA 21% neto";
+        encabezados[18] = "Nº Factura Afip";
+        encabezados[19] = "Vencimiento CAE";
         modeloTablaFacturas.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaFacturas);
         //tipo de dato columnas
@@ -202,11 +203,11 @@ public class FacturasVentaGUI extends JInternalFrame {
         tipos[1] = LocalDateTime.class;
         tipos[2] = TipoDeComprobante.class;
         tipos[3] = String.class;
-        tipos[4] = Long.class;
-        tipos[5] = String.class;
+        tipos[4] = Long.class;      
+        tipos[5] = Long.class;       
         tipos[6] = String.class;
         tipos[7] = String.class;
-        tipos[8] = BigDecimal.class;
+        tipos[8] = String.class;
         tipos[9] = BigDecimal.class;
         tipos[10] = BigDecimal.class;
         tipos[11] = BigDecimal.class;
@@ -215,8 +216,9 @@ public class FacturasVentaGUI extends JInternalFrame {
         tipos[14] = BigDecimal.class;
         tipos[15] = BigDecimal.class;
         tipos[16] = BigDecimal.class;
-        tipos[17] = String.class;
-        tipos[18] = LocalDateTime.class;
+        tipos[17] = BigDecimal.class;
+        tipos[18] = String.class;
+        tipos[19] = LocalDateTime.class;
         modeloTablaFacturas.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
@@ -227,17 +229,18 @@ public class FacturasVentaGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(4).setMaxWidth(100);
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(220);
-        tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(220);
-        tbl_Resultados.getColumnModel().getColumn(5).setMinWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(100);
+        tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(100);
         tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(220);
         tbl_Resultados.getColumnModel().getColumn(6).setMaxWidth(220);
         tbl_Resultados.getColumnModel().getColumn(6).setMinWidth(220);
         tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(220);
         tbl_Resultados.getColumnModel().getColumn(7).setMaxWidth(220);
         tbl_Resultados.getColumnModel().getColumn(7).setMinWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(8).setMaxWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(8).setMinWidth(220);
         //tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(190);
-        tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(11).setPreferredWidth(120);
@@ -248,10 +251,11 @@ public class FacturasVentaGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(16).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(17).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(18).setPreferredWidth(120);
+        tbl_Resultados.getColumnModel().getColumn(19).setPreferredWidth(120);
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         tbl_Resultados.getColumnModel().getColumn(1).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
-        tbl_Resultados.getColumnModel().getColumn(18).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
+        tbl_Resultados.getColumnModel().getColumn(19).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHA_HISPANO));
     }
 
     private void calcularResultados(BusquedaFacturaVentaCriteria criteria) {
@@ -373,30 +377,31 @@ public class FacturasVentaGUI extends JInternalFrame {
 
     private void cargarResultadosAlTable() {
         facturasParcial.stream().map(factura -> {
-            Object[] fila = new Object[19];
+            Object[] fila = new Object[20];
             fila[0] = factura.getCae() == 0 ? "" : factura.getCae();
             fila[1] = factura.getFecha();
             fila[2] = factura.getTipoComprobante();
             fila[3] = factura.getNumSerie() + " - " + factura.getNumFactura();
             fila[4] = factura.getNroPedido();
-            fila[5] = factura.getNombreFiscalCliente();
-            fila[6] = factura.getNombreUsuario();
-            fila[7] = factura.getNombreViajanteCliente();
-            fila[8] = factura.getTotal();
-            fila[9] = factura.getSubTotal();
-            fila[10] = factura.getDescuentoPorcentaje();
-            fila[11] = factura.getDescuentoNeto();
-            fila[12] = factura.getRecargoPorcentaje();
-            fila[13] = factura.getRecargoNeto();
-            fila[14] = factura.getSubTotalBruto();
-            fila[15] = factura.getIva105Neto();
-            fila[16] = factura.getIva21Neto();
+            fila[5] = factura.getRemito() != null ? factura.getRemito().getNroRemito() : "";
+            fila[6] = factura.getNombreFiscalCliente();
+            fila[7] = factura.getNombreUsuario();
+            fila[8] = factura.getNombreViajanteCliente();
+            fila[9] = factura.getTotal();
+            fila[10] = factura.getSubTotal();
+            fila[11] = factura.getDescuentoPorcentaje();
+            fila[12] = factura.getDescuentoNeto();
+            fila[13] = factura.getRecargoPorcentaje();
+            fila[14] = factura.getRecargoNeto();
+            fila[15] = factura.getSubTotalBruto();
+            fila[16] = factura.getIva105Neto();
+            fila[17] = factura.getIva21Neto();
             if (factura.getNumSerieAfip() == 0 && factura.getNumFacturaAfip() == 0) {
-                fila[17] = "";
+                fila[18] = "";
             } else {
-                fila[17] = factura.getNumSerieAfip() + " - " + factura.getNumFacturaAfip();
+                fila[18] = factura.getNumSerieAfip() + " - " + factura.getNumFacturaAfip();
             }
-            fila[18] = factura.getVencimientoCae();
+            fila[19] = factura.getVencimientoCae();
             return fila;
         }).forEach(fila -> {
             modeloTablaFacturas.addRow(fila);
@@ -1409,48 +1414,58 @@ public class FacturasVentaGUI extends JInternalFrame {
             for (int i = 0; i < indices.length; i++) {
                 facturas.add(facturasTotal.get(indices[i]));
             }
-            String nroDeCliente = null;
+            long idCliente = 0L;
             Long idSucursal = null;
             int i = 0;
+            boolean debeLanzarVistaRemito = true;
             for (FacturaVenta facturaVenta : facturas) {
                 if (facturaVenta.getRemito() != null) {
                     JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                             .getString("mensaje_error_remito_ya_existente"), "Error", JOptionPane.ERROR_MESSAGE);
                 }
                 if (i == 0) {
-                    nroDeCliente = facturaVenta.getNroDeCliente();
+                    idCliente = facturaVenta.getIdCliente();
                     idSucursal = facturaVenta.getIdSucursal();
                 } else {
-                    if (!nroDeCliente.equals(facturaVenta.getNroDeCliente())) {
+                    if (idCliente != facturaVenta.getIdCliente()) {
                         JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_remito_facturas_diferentes_clientes"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_remito_facturas_diferentes_clientes"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        debeLanzarVistaRemito = false;
                     }
-                    if (!idSucursal.equals(facturaVenta.getIdSucursal())) {
+                    if (idSucursal != facturaVenta.getIdSucursal()) {
                         JOptionPane.showMessageDialog(this,
-                            ResourceBundle.getBundle("Mensajes").getString("mensaje_remito_facturas_diferentes_sucursales"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_remito_facturas_diferentes_sucursales"),
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        debeLanzarVistaRemito = false;
                     }
                 }
+                i++;
             }
-            try {
-                NuevoRemitoGUI nuevoRemito = new NuevoRemitoGUI(facturas);
-                nuevoRemito.setLocation(getDesktopPane().getWidth() / 2 - nuevoRemito.getWidth() / 2,
-                        getDesktopPane().getHeight() / 2 - nuevoRemito.getHeight() / 2);
-                nuevoRemito.setModal(true);
-                nuevoRemito.setLocationRelativeTo(this);
-                nuevoRemito.setVisible(true);
-            } catch (RestClientResponseException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (ResourceAccessException ex) {
-                LOGGER.error(ex.getMessage());
-                JOptionPane.showMessageDialog(this,
-                        ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+            if (debeLanzarVistaRemito) {
+                this.lanzarVistaNuevoRemito(facturas);
             }
         }
     }//GEN-LAST:event_btnCrearRemitoActionPerformed
 
+    private void lanzarVistaNuevoRemito(List<FacturaVenta> facturas) {
+        try {
+            NuevoRemitoGUI nuevoRemito = new NuevoRemitoGUI(facturas);
+            nuevoRemito.setLocation(getDesktopPane().getWidth() / 2 - nuevoRemito.getWidth() / 2,
+                    getDesktopPane().getHeight() / 2 - nuevoRemito.getHeight() / 2);
+            nuevoRemito.setModal(true);
+            nuevoRemito.setLocationRelativeTo(this);
+            nuevoRemito.setVisible(true);
+        } catch (RestClientResponseException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ResourceAccessException ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
     private void chkNumRemitoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkNumRemitoItemStateChanged
         if (chkNumRemito.isSelected() == true) {
             txtNroRemito.setEnabled(true);
@@ -1479,16 +1494,15 @@ public class FacturasVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_txtNroRemitoKeyTyped
 
     private void btnVerRemitoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerRemitoActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1) {
+        if (tbl_Resultados.getSelectedRow() != -1 && facturasTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getRemito() != null) {
             RemitosGUI guiRemitos = new RemitosGUI();
             guiRemitos.setLocation(getDesktopPane().getWidth() / 2 - guiRemitos.getWidth() / 2,
                     getDesktopPane().getHeight() / 2 - guiRemitos.getHeight() / 2);
             getDesktopPane().add(guiRemitos);
-            long nroSerie = facturasTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getNumSerie();
-            long nroDeFactura = facturasTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getNumFactura();
-            TipoDeComprobante tipoDeComprobante = facturasTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getTipoComprobante();
+            long nroSerie = facturasTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getRemito().getSerie();
+            long nroDeRemito = facturasTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getRemito().getNroRemito();
             guiRemitos.setVisible(true);
-            guiRemitos.buscarPorFactura(nroSerie, nroDeFactura, tipoDeComprobante);
+            guiRemitos.buscarPorNroRemito(nroSerie, nroDeRemito);
             try {
                 guiRemitos.setSelected(true);
             } catch (PropertyVetoException ex) {
