@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 public class Credencial {    
     
     private String username;
-    private String password;
-    private String aplicacion;
+    private String password;    
 }
