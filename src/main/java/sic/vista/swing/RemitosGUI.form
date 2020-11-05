@@ -36,7 +36,7 @@
               <Component id="panelFiltros" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="panelOrden" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="90" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -75,7 +75,7 @@
                           <Component id="btn_Eliminar" linkSize="26" min="-2" pref="128" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
-                      <Component id="sp_Resultados" pref="1108" max="32767" attributes="0"/>
+                      <Component id="sp_Resultados" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -83,7 +83,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <Component id="sp_Resultados" pref="445" max="32767" attributes="0"/>
+                  <Component id="sp_Resultados" pref="436" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="btn_Eliminar" linkSize="3" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -181,56 +181,52 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="btn_Buscar" min="-2" max="-2" attributes="0"/>
+                      <Component id="btn_Buscar" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="lbl_cantResultados" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="chkFecha" linkSize="24" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="lbl_cantResultados" max="32767" attributes="0"/>
+                              <Component id="dc_FechaDesde" min="-2" pref="149" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="dc_FechaHasta" max="32767" attributes="0"/>
                           </Group>
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="2" attributes="0">
-                                  <Component id="chkTransportista" linkSize="23" alignment="2" min="-2" pref="132" max="-2" attributes="0"/>
-                                  <Component id="chkNumRemito" linkSize="23" alignment="2" min="-2" pref="121" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="chk_Cliente" linkSize="24" max="32767" attributes="0"/>
+                                  <Component id="chk_Usuario" linkSize="24" pref="121" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Component id="txt_SerieRemito" min="-2" pref="59" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="separador" min="-2" pref="14" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="txt_NroRemito" min="-2" pref="152" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="cmbTransportista" alignment="0" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="txtUsuario" linkSize="22" alignment="1" min="-2" pref="264" max="-2" attributes="0"/>
+                                  <Component id="txtCliente" linkSize="22" alignment="1" min="-2" pref="265" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="chkFecha" linkSize="24" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="dc_FechaDesde" min="-2" pref="149" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="dc_FechaHasta" max="32767" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                          <Component id="chk_Cliente" linkSize="24" max="32767" attributes="0"/>
-                                          <Component id="chk_Usuario" linkSize="24" pref="121" max="32767" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="txtUsuario" linkSize="22" alignment="1" min="-2" pref="264" max="-2" attributes="0"/>
-                                          <Component id="txtCliente" linkSize="22" alignment="1" min="-2" pref="265" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="btnBuscarUsuarios" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="btnBuscarCliente" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="btnBuscarUsuarios" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnBuscarCliente" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="2" attributes="0">
+                          <Component id="chkTransportista" linkSize="23" alignment="2" min="-2" pref="132" max="-2" attributes="0"/>
+                          <Component id="chkNumRemito" linkSize="23" alignment="2" min="-2" pref="121" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="txt_SerieRemito" min="-2" pref="59" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="separador" min="-2" pref="14" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="txt_NroRemito" pref="152" max="32767" attributes="0"/>
+                          </Group>
+                          <Component id="cmbTransportista" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -238,39 +234,34 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="chkNumRemito" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="txt_SerieRemito" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="separador" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="txt_NroRemito" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="chk_Usuario" linkSize="20" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtUsuario" linkSize="5" alignment="2" min="-2" pref="8" max="-2" attributes="0"/>
+                          <Component id="separador" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txt_SerieRemito" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="chkNumRemito" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="btnBuscarUsuarios" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtUsuario" linkSize="5" alignment="2" min="-2" pref="8" max="-2" attributes="0"/>
+                          <Component id="chk_Usuario" linkSize="20" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="2" attributes="0">
-                                  <Component id="chk_Cliente" linkSize="20" alignment="2" min="-2" max="-2" attributes="0"/>
-                                  <Component id="txtCliente" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
-                                  <Component id="btnBuscarCliente" alignment="2" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="2" attributes="0">
-                                  <Component id="chkFecha" linkSize="20" alignment="2" min="-2" max="-2" attributes="0"/>
-                                  <Component id="dc_FechaDesde" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
-                                  <Component id="dc_FechaHasta" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Group type="103" alignment="0" groupAlignment="2" attributes="0">
-                              <Component id="chkTransportista" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="cmbTransportista" alignment="2" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                      <Group type="103" groupAlignment="2" attributes="0">
+                          <Component id="cmbTransportista" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="chkTransportista" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnBuscarCliente" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtCliente" linkSize="5" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="chk_Cliente" linkSize="20" alignment="2" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="2" attributes="0">
+                          <Component id="chkFecha" linkSize="20" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="dc_FechaDesde" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="dc_FechaHasta" linkSize="18" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
                           <Component id="btn_Buscar" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="lbl_cantResultados" alignment="2" min="-2" pref="27" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace pref="9" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

@@ -15,7 +15,6 @@ public class Remito {
   private LocalDateTime fecha;
   private long serie;
   private long nroRemito;
-  private TipoDeComprobante tipoComprobante;
   private Long idCliente;
   private String nombreFiscalCliente;
   private String nroDeCliente;
