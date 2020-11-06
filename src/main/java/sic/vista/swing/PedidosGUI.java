@@ -643,7 +643,7 @@ public class PedidosGUI extends JInternalFrame {
 
         btnVerFacturas.setForeground(java.awt.Color.blue);
         btnVerFacturas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Link_16x16.png"))); // NOI18N
-        btnVerFacturas.setText("Ver Factura");
+        btnVerFacturas.setText("Ver Facturas");
         btnVerFacturas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVerFacturasActionPerformed(evt);

@@ -383,7 +383,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             fila[2] = factura.getTipoComprobante();
             fila[3] = factura.getNumSerie() + " - " + factura.getNumFactura();
             fila[4] = factura.getNroPedido();
-            fila[5] = factura.getRemito() != null ? factura.getRemito().getNroRemito() : "";
+            fila[5] = factura.getRemito() != null ? factura.getRemito().getSerie() + " - " + factura.getRemito().getNroRemito() : "";
             fila[6] = factura.getNombreFiscalCliente();
             fila[7] = factura.getNombreUsuario();
             fila[8] = factura.getNombreViajanteCliente();
@@ -1187,7 +1187,11 @@ public class FacturasVentaGUI extends JInternalFrame {
 }//GEN-LAST:event_btn_BuscarActionPerformed
 
     private void btn_VerDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_VerDetalleActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1) {
+        if (tbl_Resultados.getSelectedRows().length > 1) {
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_seleccion_multiple"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (tbl_Resultados.getSelectedRow() != -1) {
             this.lanzarReporteFactura();
         }
 }//GEN-LAST:event_btn_VerDetalleActionPerformed
@@ -1301,7 +1305,11 @@ public class FacturasVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_cmbSentidoItemStateChanged
 
     private void btnCrearNotaCreditoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearNotaCreditoActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
+        if (tbl_Resultados.getSelectedRows().length > 1) {
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_seleccion_multiple"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (tbl_Resultados.getSelectedRow() != -1 && tbl_Resultados.getSelectedRowCount() == 1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             FacturaVenta factura = facturasTotal.get(indexFilaSeleccionada);
             if (factura.getTipoComprobante() == TipoDeComprobante.FACTURA_A
@@ -1384,7 +1392,11 @@ public class FacturasVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_btnBuscarViajantesActionPerformed
 
     private void btnEnviarEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarEmailActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1) {
+        if (tbl_Resultados.getSelectedRows().length > 1) {
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_seleccion_multiple"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (tbl_Resultados.getSelectedRow() != -1) {
             int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
             int respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
                     .getString("mensaje_factura_email"),
@@ -1422,6 +1434,7 @@ public class FacturasVentaGUI extends JInternalFrame {
                 if (facturaVenta.getRemito() != null) {
                     JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                             .getString("mensaje_error_remito_ya_existente"), "Error", JOptionPane.ERROR_MESSAGE);
+                    debeLanzarVistaRemito = false;
                 }
                 if (i == 0) {
                     idCliente = facturaVenta.getIdCliente();
@@ -1444,6 +1457,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             }
             if (debeLanzarVistaRemito) {
                 this.lanzarVistaNuevoRemito(facturas);
+                this.limpiarYBuscar(true);
             }
         }
     }//GEN-LAST:event_btnCrearRemitoActionPerformed
@@ -1494,21 +1508,31 @@ public class FacturasVentaGUI extends JInternalFrame {
     }//GEN-LAST:event_txtNroRemitoKeyTyped
 
     private void btnVerRemitoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerRemitoActionPerformed
-        if (tbl_Resultados.getSelectedRow() != -1 && facturasTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getRemito() != null) {
-            RemitosGUI guiRemitos = new RemitosGUI();
-            guiRemitos.setLocation(getDesktopPane().getWidth() / 2 - guiRemitos.getWidth() / 2,
-                    getDesktopPane().getHeight() / 2 - guiRemitos.getHeight() / 2);
-            getDesktopPane().add(guiRemitos);
-            long nroSerie = facturasTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getRemito().getSerie();
-            long nroDeRemito = facturasTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getRemito().getNroRemito();
-            guiRemitos.setVisible(true);
-            guiRemitos.buscarPorNroRemito(nroSerie, nroDeRemito);
-            try {
-                guiRemitos.setSelected(true);
-            } catch (PropertyVetoException ex) {
-                String mensaje = "No se pudo seleccionar la ventana requerida.";
-                LOGGER.error(mensaje + " - " + ex.getMessage());
-                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+        if (tbl_Resultados.getSelectedRows().length > 1) {
+            JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_seleccion_multiple"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (tbl_Resultados.getSelectedRow() != -1) {
+            if (facturasTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getRemito() != null) {
+                RemitosGUI guiRemitos = new RemitosGUI();
+                guiRemitos.setLocation(getDesktopPane().getWidth() / 2 - guiRemitos.getWidth() / 2,
+                        getDesktopPane().getHeight() / 2 - guiRemitos.getHeight() / 2);
+                getDesktopPane().add(guiRemitos);
+                long nroSerie = facturasTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getRemito().getSerie();
+                long nroDeRemito = facturasTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getRemito().getNroRemito();
+                guiRemitos.setVisible(true);
+                guiRemitos.buscarPorNroRemito(nroSerie, nroDeRemito);
+                try {
+                    guiRemitos.setSelected(true);
+                } catch (PropertyVetoException ex) {
+                    String mensaje = "No se pudo seleccionar la ventana requerida.";
+                    LOGGER.error(mensaje + " - " + ex.getMessage());
+                    JOptionPane.showInternalMessageDialog(this.getDesktopPane(), mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        ResourceBundle.getBundle("Mensajes").getString("mensaje_remito_factura_sin_remito"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnVerRemitoActionPerformed
