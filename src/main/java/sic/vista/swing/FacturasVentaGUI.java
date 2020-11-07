@@ -1435,6 +1435,7 @@ public class FacturasVentaGUI extends JInternalFrame {
                     JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                             .getString("mensaje_error_remito_ya_existente"), "Error", JOptionPane.ERROR_MESSAGE);
                     debeLanzarVistaRemito = false;
+                    break;
                 }
                 if (i == 0) {
                     idCliente = facturaVenta.getIdCliente();
