@@ -28,15 +28,18 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="lblAceptar" min="-2" max="-2" attributes="0"/>
-                  <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="lblAceptar" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
                       <Component id="pnlRenglones" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="pnlDetalles" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="pnpPesoVolumen" max="32767" attributes="0"/>
+                          <Component id="pnlDetalles" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -48,15 +51,15 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Group type="102" attributes="0">
                       <Component id="pnpPesoVolumen" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnlDetalles" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="pnlRenglones" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
               <Component id="lblAceptar" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
@@ -83,7 +86,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="chkBolsa" linkSize="1" min="-2" max="-2" attributes="0"/>
                               <Component id="chkRollo" linkSize="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="chkBalde" linkSize="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="chkTacho" linkSize="1" min="-2" max="-2" attributes="0"/>
                               <Component id="chkSobre" linkSize="1" min="-2" max="-2" attributes="0"/>
                               <Component id="chkAtado" linkSize="1" min="-2" max="-2" attributes="0"/>
                               <Component id="chkPack" linkSize="1" min="-2" max="-2" attributes="0"/>
@@ -93,7 +96,7 @@
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="ftxtCantBolsa" linkSize="7" alignment="2" min="-2" pref="58" max="-2" attributes="0"/>
                               <Component id="ftxtCantRollo" linkSize="7" alignment="2" min="-2" pref="56" max="-2" attributes="0"/>
-                              <Component id="ftxtCantBalde" linkSize="7" alignment="2" min="-2" pref="54" max="-2" attributes="0"/>
+                              <Component id="ftxtCantTacho" linkSize="7" alignment="2" min="-2" pref="54" max="-2" attributes="0"/>
                               <Component id="ftxtCantSobre" linkSize="7" alignment="2" min="-2" pref="52" max="-2" attributes="0"/>
                               <Component id="ftxtCantAtado" linkSize="7" alignment="2" min="-2" pref="46" max="-2" attributes="0"/>
                               <Component id="ftxtCantPack" linkSize="7" alignment="2" min="-2" pref="37" max="-2" attributes="0"/>
@@ -113,9 +116,16 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="lblBultos" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="ftxtCantBultos" min="-2" pref="58" max="-2" attributes="0"/>
+                          <Component id="ftxtCantBultos" max="32767" attributes="0"/>
                       </Group>
                       <Component id="sepRenglones" alignment="0" max="32767" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="chkBalde" linkSize="1" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="ftxtCantBalde" linkSize="7" min="-2" pref="37" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="lblUn8" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -126,47 +136,53 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="ftxtCantCaja" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftxtCantCaja" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="chkCaja" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblUn1" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="chkBolsa" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="ftxtCantBolsa" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftxtCantBolsa" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblUn2" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="chkRollo" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="ftxtCantRollo" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftxtCantRollo" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblUn3" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="chkBalde" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="ftxtCantBalde" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="chkTacho" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftxtCantTacho" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblUn4" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="chkSobre" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="ftxtCantSobre" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftxtCantSobre" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblUn5" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="chkAtado" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="ftxtCantAtado" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftxtCantAtado" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblUn6" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="chkPack" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="ftxtCantPack" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftxtCantPack" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblUn7" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="chkBalde" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftxtCantBalde" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblUn8" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="sepRenglones" min="-2" pref="10" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -203,12 +219,12 @@
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkRolloItemStateChanged"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="chkBalde">
+        <Component class="javax.swing.JCheckBox" name="chkTacho">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Balde"/>
+            <Property name="text" type="java.lang.String" value="Tacho"/>
           </Properties>
           <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkBaldeItemStateChanged"/>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkTachoItemStateChanged"/>
           </Events>
         </Component>
         <Component class="javax.swing.JCheckBox" name="chkAtado">
@@ -274,7 +290,7 @@
             <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="ftxtCantRolloKeyTyped"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="ftxtCantBalde">
+        <Component class="javax.swing.JFormattedTextField" name="ftxtCantTacho">
           <Properties>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
               <Format format="#,##0.##" subtype="-1" type="0"/>
@@ -282,9 +298,9 @@
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="ftxtCantBaldeFocusGained"/>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="ftxtCantBaldeFocusLost"/>
-            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="ftxtCantBaldeKeyTyped"/>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="ftxtCantTachoFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="ftxtCantTachoFocusLost"/>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="ftxtCantTachoKeyTyped"/>
           </Events>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="ftxtCantSobre">
@@ -376,6 +392,32 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblUn7">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="UN"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="chkBalde">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Balde"/>
+          </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkBaldeItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="ftxtCantBalde">
+          <Properties>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format format="#,##0.##" subtype="-1" type="0"/>
+            </Property>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="ftxtCantBaldeFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="ftxtCantBaldeFocusLost"/>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="ftxtCantBaldeKeyTyped"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblUn8">
           <Properties>
             <Property name="text" type="java.lang.String" value="UN"/>
           </Properties>
@@ -475,23 +517,25 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jScrollPane1" alignment="1" pref="428" max="32767" attributes="0"/>
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lblCostoDeEnvio" linkSize="5" alignment="0" min="-2" pref="134" max="-2" attributes="0"/>
-                              <Component id="lblObservaciones" linkSize="5" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblTransportista" linkSize="5" alignment="0" min="-2" pref="144" max="-2" attributes="0"/>
+                      <Component id="jScrollPane1" alignment="1" pref="443" max="32767" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="lblCostoDeEnvio" linkSize="5" alignment="0" pref="134" max="32767" attributes="0"/>
+                              <Component id="lblObservaciones" linkSize="5" alignment="0" max="32767" attributes="0"/>
+                              <Component id="lblTransportista" linkSize="5" alignment="0" pref="144" max="32767" attributes="0"/>
+                              <Component id="lblTotalFacturas" alignment="0" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="ftfCostoDeEnvio" max="32767" attributes="0"/>
                               <Component id="cmbTransportista" max="32767" attributes="0"/>
+                              <Component id="ftfCostoDeEnvio" max="32767" attributes="0"/>
+                              <Component id="lblTotalF" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -504,8 +548,13 @@
                       <Component id="lblTransportista" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="lblTotalFacturas" max="32767" attributes="0"/>
+                      <Component id="lblTotalF" linkSize="12" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="ftfCostoDeEnvio" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftfCostoDeEnvio" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblCostoDeEnvio" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -570,6 +619,13 @@
             </Component>
           </SubComponents>
         </Container>
+        <Component class="javax.swing.JLabel" name="lblTotalFacturas">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Total Facturas ($):"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblTotalF">
+        </Component>
       </SubComponents>
     </Container>
     <Component class="javax.swing.JButton" name="lblAceptar">

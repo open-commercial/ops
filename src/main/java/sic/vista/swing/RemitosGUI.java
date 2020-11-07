@@ -33,7 +33,6 @@ import sic.modelo.Usuario;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Remito;
 import sic.modelo.Rol;
-import sic.modelo.TipoDeComprobante;
 import sic.modelo.Transportista;
 import sic.modelo.UsuarioActivo;
 import sic.modelo.criteria.BusquedaRemitoCriteria;
@@ -90,15 +89,8 @@ public class RemitosGUI extends JInternalFrame {
             criteria.setSerieRemito(Long.valueOf(txt_SerieRemito.getText()));
             criteria.setNroRemito(Long.valueOf(txt_NroRemito.getText()));
         }
-        if (chkTipoComprobante.isSelected()) {
-            criteria.setTipoDeRemito(((TipoDeComprobante) cmbTipoRemito.getSelectedItem()));
-        }
         if (chkTransportista.isSelected()) {
             criteria.setIdTransportista(((Transportista) cmbTransportista.getSelectedItem()).getIdTransportista());
-        }
-        if (chk_NumFactura.isSelected()) {
-            criteria.setSerieFacturaVenta(Long.valueOf(txt_SerieFactura.getText()));
-            criteria.setNroFacturaVenta(Long.valueOf(txt_NroFactura.getText()));
         }
         int seleccionOrden = cmbOrden.getSelectedIndex();
         switch (seleccionOrden) {
@@ -127,15 +119,14 @@ public class RemitosGUI extends JInternalFrame {
 
     private void setColumnas() {
         //nombres de columnas
-        String[] encabezados = new String[8];
+        String[] encabezados = new String[7];
         encabezados[0] = "Fecha Remito";
-        encabezados[1] = "Tipo";
-        encabezados[2] = "Nº Remito";
-        encabezados[3] = "Usuario";
-        encabezados[4] = "Cliente";
-        encabezados[5] = "Transportista";
-        encabezados[6] = "Costo de Envio";
-        encabezados[7] = "Ubicacion";
+        encabezados[1] = "Nº Remito";
+        encabezados[2] = "Usuario";
+        encabezados[3] = "Cliente";
+        encabezados[4] = "Transportista";
+        encabezados[5] = "Costo de Envio";
+        encabezados[6] = "Ubicacion";
         modeloTablaRemitos.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaRemitos);
         //tipo de dato columnas
@@ -145,34 +136,30 @@ public class RemitosGUI extends JInternalFrame {
         tipos[2] = String.class;
         tipos[3] = String.class;
         tipos[4] = String.class;
-        tipos[5] = String.class;
-        tipos[6] = BigDecimal.class;
-        tipos[7] = String.class;
+        tipos[5] = BigDecimal.class;
+        tipos[6] = String.class;
         modeloTablaRemitos.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
         tbl_Resultados.getTableHeader().setResizingAllowed(true);
         //tamanios de columnas
         tbl_Resultados.getColumnModel().getColumn(0).setPreferredWidth(140);
         tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(140);
-        tbl_Resultados.getColumnModel().getColumn(0).setMinWidth(140);        
+        tbl_Resultados.getColumnModel().getColumn(0).setMinWidth(140);             
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(130);
         tbl_Resultados.getColumnModel().getColumn(1).setMaxWidth(130);
-        tbl_Resultados.getColumnModel().getColumn(1).setMinWidth(130);        
-        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(130);
-        tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(130);
-        tbl_Resultados.getColumnModel().getColumn(2).setMinWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(1).setMinWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(220);
+        tbl_Resultados.getColumnModel().getColumn(2).setMinWidth(220);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(220);
         tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(220);
         tbl_Resultados.getColumnModel().getColumn(3).setMinWidth(220);
         tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(220);
         tbl_Resultados.getColumnModel().getColumn(4).setMaxWidth(220);
         tbl_Resultados.getColumnModel().getColumn(4).setMinWidth(220);
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(220);
-        tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(220);
-        tbl_Resultados.getColumnModel().getColumn(5).setMinWidth(220);
-        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(130);
-        tbl_Resultados.getColumnModel().getColumn(6).setMaxWidth(130);
-        tbl_Resultados.getColumnModel().getColumn(6).setMinWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(130);
+        tbl_Resultados.getColumnModel().getColumn(5).setMinWidth(130);
         //render para los tipos de datos
         tbl_Resultados.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
         tbl_Resultados.getColumnModel().getColumn(0).setCellRenderer(new FechasRenderer(FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
@@ -231,14 +218,7 @@ public class RemitosGUI extends JInternalFrame {
         } else {
             txt_SerieRemito.setEnabled(false);
             txt_NroRemito.setEnabled(false);
-        }
-        
-        chkTipoComprobante.setEnabled(status);
-        if (status == true && chkTipoComprobante.isSelected() == true) {
-            cmbTipoRemito.setEnabled(true);
-        } else {
-            cmbTipoRemito.setEnabled(false);
-        }       
+        } 
         btn_Buscar.setEnabled(status);
         btn_Eliminar.setEnabled(status);
         btn_VerDetalle.setEnabled(status);
@@ -249,15 +229,14 @@ public class RemitosGUI extends JInternalFrame {
 
     private void cargarResultadosAlTable() {
         remitosParcial.stream().map(remito -> {
-            Object[] fila = new Object[8];
+            Object[] fila = new Object[7];
             fila[0] = remito.getFecha();
-            fila[1] = remito.getTipoComprobante();
-            fila[2] = remito.getSerie() + " - " + remito.getNroRemito();
-            fila[3] = remito.getNombreUsuario();
-            fila[4] = remito.getNombreFiscalCliente();
-            fila[5] = remito.getNombreTransportista();
-            fila[6] = remito.getCostoDeEnvio();
-            fila[7] = remito.getDetalleEnvio();
+            fila[1] = remito.getSerie() + " - " + remito.getNroRemito();
+            fila[2] = remito.getNombreUsuario();
+            fila[3] = remito.getNombreFiscalCliente();
+            fila[4] = remito.getNombreTransportista();
+            fila[5] = remito.getCostoDeEnvio();
+            fila[6] = remito.getDetalleEnvio();
             return fila;
         }).forEach(fila -> {
             modeloTablaRemitos.addRow(fila);
@@ -294,46 +273,6 @@ public class RemitosGUI extends JInternalFrame {
             btn_Eliminar.setEnabled(false);
         }
     }
-    
-    private void cargarTiposDeRemito() {
-        try {
-            cmbTipoRemito.removeAllItems();
-            TipoDeComprobante[] tiposDeComprobantes = RestClient.getRestTemplate()
-                    .getForObject("/remitos/tipos/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(),
-                            TipoDeComprobante[].class);
-            for (int i = 0; tiposDeComprobantes.length > i; i++) {
-                cmbTipoRemito.addItem(tiposDeComprobantes[i]);
-            }
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void verFacturas() {
-        if (tbl_Resultados.getSelectedRow() != -1) {
-            FacturasVentaGUI gui_facturaVenta = new FacturasVentaGUI();
-            gui_facturaVenta.setLocation(getDesktopPane().getWidth() / 2 - gui_facturaVenta.getWidth() / 2,
-                    getDesktopPane().getHeight() / 2 - gui_facturaVenta.getHeight() / 2);
-            getDesktopPane().add(gui_facturaVenta);
-            long nroSerie = remitosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getSerie();
-            long nroRemito = remitosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getNroRemito();
-            TipoDeComprobante tipoDeComprobante = remitosTotal.get(Utilidades.getSelectedRowModelIndice(tbl_Resultados)).getTipoComprobante();
-            gui_facturaVenta.setVisible(true);
-            gui_facturaVenta.buscarPorRemito(nroSerie, nroRemito, tipoDeComprobante);
-            try {
-                gui_facturaVenta.setSelected(true);
-            } catch (PropertyVetoException ex) {
-                String mensaje = "No se pudo seleccionar la ventana requerida.";
-                LOGGER.error(mensaje + " - " + ex.getMessage());
-                JOptionPane.showInternalMessageDialog(this.getDesktopPane(), mensaje, "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
 
     private void cargarTransportistas() {
         try {
@@ -354,33 +293,12 @@ public class RemitosGUI extends JInternalFrame {
         }
     }
     
-    public void buscarPorFactura(long serieFactura, long nroFactura, TipoDeComprobante tipoDeComprobante) {
-        chk_NumFactura.setSelected(true);
-        txt_SerieFactura.setEnabled(true);
-        txt_NroFactura.setEnabled(true);
-        txt_SerieFactura.setText(String.valueOf(serieFactura));
-        txt_NroFactura.setText(String.valueOf(nroFactura));
-        chkTipoComprobante.setSelected(true);
-        chkTipoComprobante.setEnabled(true);
-        this.cargarTiposDeRemito();
-        switch (tipoDeComprobante) {
-            case FACTURA_A:
-                cmbTipoRemito.setSelectedItem(TipoDeComprobante.REMITO_A);
-                break;
-            case FACTURA_B:
-                cmbTipoRemito.setSelectedItem(TipoDeComprobante.REMITO_B);
-                break;
-            case FACTURA_C:
-                cmbTipoRemito.setSelectedItem(TipoDeComprobante.REMITO_C);
-                break;
-            case FACTURA_X:
-                cmbTipoRemito.setSelectedItem(TipoDeComprobante.REMITO_X);
-                break;
-            case PRESUPUESTO:
-                cmbTipoRemito.setSelectedItem(TipoDeComprobante.REMITO_PRESUPUESTO);
-                break;
-        }
-        cmbTipoRemito.setSelectedItem(tipoDeComprobante);
+    public void buscarPorNroRemito(long serieRemito, long nroRemito) {
+        chkNumRemito.setSelected(true);
+        txt_SerieRemito.setEnabled(true);
+        txt_NroRemito.setEnabled(true);
+        txt_SerieRemito.setText(String.valueOf(serieRemito));
+        txt_NroRemito.setText(String.valueOf(nroRemito));
         this.limpiarYBuscar();
     }
         
@@ -393,21 +311,14 @@ public class RemitosGUI extends JInternalFrame {
         tbl_Resultados = new javax.swing.JTable();
         btn_VerDetalle = new javax.swing.JButton();
         btn_Eliminar = new javax.swing.JButton();
-        btnVerFacturas = new javax.swing.JButton();
         panelFiltros = new javax.swing.JPanel();
         subPanelFiltros1 = new javax.swing.JPanel();
         txt_SerieRemito = new javax.swing.JFormattedTextField();
         separador = new javax.swing.JLabel();
         txt_NroRemito = new javax.swing.JFormattedTextField();
         chkNumRemito = new javax.swing.JCheckBox();
-        chkTipoComprobante = new javax.swing.JCheckBox();
-        cmbTipoRemito = new javax.swing.JComboBox<>();
         cmbTransportista = new javax.swing.JComboBox<>();
         chkTransportista = new javax.swing.JCheckBox();
-        chk_NumFactura = new javax.swing.JCheckBox();
-        txt_SerieFactura = new javax.swing.JFormattedTextField();
-        separador1 = new javax.swing.JLabel();
-        txt_NroFactura = new javax.swing.JFormattedTextField();
         chk_Usuario = new javax.swing.JCheckBox();
         txtUsuario = new javax.swing.JTextField();
         btnBuscarUsuarios = new javax.swing.JButton();
@@ -477,15 +388,6 @@ public class RemitosGUI extends JInternalFrame {
             }
         });
 
-        btnVerFacturas.setForeground(java.awt.Color.blue);
-        btnVerFacturas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Link_16x16.png"))); // NOI18N
-        btnVerFacturas.setText("Ver Factura");
-        btnVerFacturas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVerFacturasActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
@@ -497,26 +399,23 @@ public class RemitosGUI extends JInternalFrame {
                         .addComponent(btn_VerDetalle)
                         .addGap(0, 0, 0)
                         .addComponent(btn_Eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(btnVerFacturas)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 1108, Short.MAX_VALUE)))
+                    .addComponent(sp_Resultados)))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnVerFacturas, btn_Eliminar, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_Eliminar, btn_VerDetalle});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btnVerFacturas)
                     .addComponent(btn_Eliminar)
                     .addComponent(btn_VerDetalle)))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnVerFacturas, btn_Eliminar, btn_VerDetalle});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Eliminar, btn_VerDetalle});
 
         panelFiltros.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtros"));
 
@@ -559,60 +458,12 @@ public class RemitosGUI extends JInternalFrame {
             }
         });
 
-        chkTipoComprobante.setText("Tipo de Remito:");
-        chkTipoComprobante.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                chkTipoComprobanteItemStateChanged(evt);
-            }
-        });
-
-        cmbTipoRemito.setEnabled(false);
-
         cmbTransportista.setEnabled(false);
 
         chkTransportista.setText("Transportista:");
         chkTransportista.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 chkTransportistaItemStateChanged(evt);
-            }
-        });
-
-        chk_NumFactura.setText("Nº Factura:");
-        chk_NumFactura.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                chk_NumFacturaItemStateChanged(evt);
-            }
-        });
-
-        txt_SerieFactura.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        txt_SerieFactura.setText("0");
-        txt_SerieFactura.setEnabled(false);
-        txt_SerieFactura.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_SerieFacturaActionPerformed(evt);
-            }
-        });
-        txt_SerieFactura.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txt_SerieFacturaKeyTyped(evt);
-            }
-        });
-
-        separador1.setFont(new java.awt.Font("DejaVu Sans", 0, 15)); // NOI18N
-        separador1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        separador1.setText("-");
-
-        txt_NroFactura.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        txt_NroFactura.setText("0");
-        txt_NroFactura.setEnabled(false);
-        txt_NroFactura.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_NroFacturaActionPerformed(evt);
-            }
-        });
-        txt_NroFactura.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txt_NroFacturaKeyTyped(evt);
             }
         });
 
@@ -684,96 +535,76 @@ public class RemitosGUI extends JInternalFrame {
         subPanelFiltros1Layout.setHorizontalGroup(
             subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(subPanelFiltros1Layout.createSequentialGroup()
-                .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(subPanelFiltros1Layout.createSequentialGroup()
                         .addComponent(btn_Buscar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(subPanelFiltros1Layout.createSequentialGroup()
-                        .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, subPanelFiltros1Layout.createSequentialGroup()
-                                .addComponent(chk_NumFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(subPanelFiltros1Layout.createSequentialGroup()
+                                .addComponent(chkFecha)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txt_SerieFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txt_NroFactura))
+                                .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(subPanelFiltros1Layout.createSequentialGroup()
                                 .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                                     .addComponent(chkTransportista, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(chkTipoComprobante)
                                     .addComponent(chkNumRemito, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, subPanelFiltros1Layout.createSequentialGroup()
+                                    .addGroup(subPanelFiltros1Layout.createSequentialGroup()
                                         .addComponent(txt_SerieRemito, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(separador, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txt_NroRemito, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(cmbTipoRemito, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(txt_NroRemito, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(cmbTransportista, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(subPanelFiltros1Layout.createSequentialGroup()
-                                .addComponent(chkFecha)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dc_FechaHasta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(subPanelFiltros1Layout.createSequentialGroup()
-                                .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(chk_Cliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(chk_Usuario, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtUsuario, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtCliente, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnBuscarUsuarios)
-                                    .addComponent(btnBuscarCliente))))))
-                .addGap(0, 0, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(chk_Cliente)
+                            .addComponent(chk_Usuario))
+                        .addGap(0, 0, 0)
+                        .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtUsuario, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCliente, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnBuscarUsuarios)
+                            .addComponent(btnBuscarCliente))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         subPanelFiltros1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txtCliente, txtUsuario});
 
-        subPanelFiltros1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chkNumRemito, chkTipoComprobante, chkTransportista, chk_NumFactura});
+        subPanelFiltros1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chkNumRemito, chkTransportista});
 
-        subPanelFiltros1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chkFecha, chk_Cliente, chk_Usuario});
+        subPanelFiltros1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chk_Cliente, chk_Usuario});
 
         subPanelFiltros1Layout.setVerticalGroup(
             subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(subPanelFiltros1Layout.createSequentialGroup()
                 .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(chkNumRemito)
-                    .addComponent(txt_SerieRemito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(separador)
-                    .addComponent(txt_NroRemito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chkFecha)
+                    .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chk_Usuario)
                     .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscarUsuarios))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(chkTipoComprobante)
-                    .addComponent(cmbTipoRemito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chk_Cliente)
+                    .addComponent(btnBuscarCliente)
                     .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscarCliente))
+                    .addComponent(chk_Cliente)
+                    .addComponent(txt_NroRemito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(separador)
+                    .addComponent(txt_SerieRemito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chkNumRemito))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(chkTransportista)
                     .addComponent(cmbTransportista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chkFecha)
-                    .addComponent(dc_FechaDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(dc_FechaHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(chk_NumFactura)
-                    .addComponent(txt_SerieFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(separador1)
-                    .addComponent(txt_NroFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(chkTransportista))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(subPanelFiltros1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btn_Buscar)
                     .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -791,13 +622,12 @@ public class RemitosGUI extends JInternalFrame {
         panelFiltrosLayout.setHorizontalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFiltrosLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(subPanelFiltros1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(subPanelFiltros1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         panelFiltrosLayout.setVerticalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(subPanelFiltros1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(subPanelFiltros1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
@@ -1012,21 +842,6 @@ public class RemitosGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btnBuscarClienteActionPerformed
 
-    private void chkTipoComprobanteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkTipoComprobanteItemStateChanged
-        if (chkTipoComprobante.isSelected() == true) {
-            cmbTipoRemito.setEnabled(true);
-            this.cargarTiposDeRemito();
-            cmbTipoRemito.requestFocus();
-        } else {
-            cmbTipoRemito.setEnabled(false);
-            cmbTipoRemito.removeAllItems();
-        }
-    }//GEN-LAST:event_chkTipoComprobanteItemStateChanged
-
-    private void btnVerFacturasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerFacturasActionPerformed
-        this.verFacturas();
-    }//GEN-LAST:event_btnVerFacturasActionPerformed
-
     private void chkTransportistaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkTransportistaItemStateChanged
         if (chkTransportista.isSelected() == true) {
             cmbTransportista.setEnabled(true);
@@ -1049,50 +864,19 @@ public class RemitosGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_chkNumRemitoItemStateChanged
 
-    private void chk_NumFacturaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chk_NumFacturaItemStateChanged
-        if (chk_NumFactura.isSelected() == true) {
-            txt_NroFactura.setEnabled(true);
-            txt_SerieFactura.setEnabled(true);
-            txt_SerieFactura.requestFocus();
-        } else {
-            txt_NroFactura.setEnabled(false);
-            txt_SerieFactura.setEnabled(false);
-        }
-    }//GEN-LAST:event_chk_NumFacturaItemStateChanged
-
-    private void txt_SerieFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_SerieFacturaActionPerformed
-        btn_BuscarActionPerformed(null);
-    }//GEN-LAST:event_txt_SerieFacturaActionPerformed
-
-    private void txt_SerieFacturaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_SerieFacturaKeyTyped
-        Utilidades.controlarEntradaSoloNumerico(evt);
-    }//GEN-LAST:event_txt_SerieFacturaKeyTyped
-
-    private void txt_NroFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_NroFacturaActionPerformed
-        btn_BuscarActionPerformed(null);
-    }//GEN-LAST:event_txt_NroFacturaActionPerformed
-
-    private void txt_NroFacturaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_NroFacturaKeyTyped
-        Utilidades.controlarEntradaSoloNumerico(evt);
-    }//GEN-LAST:event_txt_NroFacturaKeyTyped
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarCliente;
     private javax.swing.JButton btnBuscarUsuarios;
-    private javax.swing.JButton btnVerFacturas;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_VerDetalle;
     private javax.swing.JCheckBox chkFecha;
     private javax.swing.JCheckBox chkNumRemito;
-    private javax.swing.JCheckBox chkTipoComprobante;
     private javax.swing.JCheckBox chkTransportista;
     private javax.swing.JCheckBox chk_Cliente;
-    private javax.swing.JCheckBox chk_NumFactura;
     private javax.swing.JCheckBox chk_Usuario;
     private javax.swing.JComboBox<String> cmbOrden;
     private javax.swing.JComboBox<String> cmbSentido;
-    private javax.swing.JComboBox<TipoDeComprobante> cmbTipoRemito;
     private javax.swing.JComboBox<Transportista> cmbTransportista;
     private com.toedter.calendar.JDateChooser dc_FechaDesde;
     private com.toedter.calendar.JDateChooser dc_FechaHasta;
@@ -1101,15 +885,12 @@ public class RemitosGUI extends JInternalFrame {
     private javax.swing.JPanel panelOrden;
     private javax.swing.JPanel panelResultados;
     private javax.swing.JLabel separador;
-    private javax.swing.JLabel separador1;
     private javax.swing.JScrollPane sp_Resultados;
     private javax.swing.JPanel subPanelFiltros1;
     private javax.swing.JTable tbl_Resultados;
     private javax.swing.JTextField txtCliente;
     private javax.swing.JTextField txtUsuario;
-    private javax.swing.JFormattedTextField txt_NroFactura;
     private javax.swing.JFormattedTextField txt_NroRemito;
-    private javax.swing.JFormattedTextField txt_SerieFactura;
     private javax.swing.JFormattedTextField txt_SerieRemito;
     // End of variables declaration//GEN-END:variables
 }
