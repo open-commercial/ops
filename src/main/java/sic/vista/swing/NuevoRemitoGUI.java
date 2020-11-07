@@ -140,6 +140,7 @@ public class NuevoRemitoGUI extends JDialog {
                 .add((ftxtCantTacho.isEnabled() && ftxtCantTacho.getText().trim() != null ? new BigDecimal(ftxtCantTacho.getText().trim()) : BigDecimal.ZERO))
                 .add((ftxtCantSobre.isEnabled() && ftxtCantSobre.getText().trim() != null ? new BigDecimal(ftxtCantSobre.getText().trim()) : BigDecimal.ZERO))
                 .add((ftxtCantAtado.isEnabled() && ftxtCantAtado.getText().trim() != null ? new BigDecimal(ftxtCantAtado.getText().trim()) : BigDecimal.ZERO))
+                .add((ftxtCantBalde.isEnabled() && ftxtCantBalde.getText().trim() != null ? new BigDecimal(ftxtCantBalde.getText().trim()) : BigDecimal.ZERO))
                 .add((ftxtCantPack.isEnabled() && ftxtCantPack.getText().trim() != null ? new BigDecimal(ftxtCantPack.getText().trim()) : BigDecimal.ZERO)));
     }
     
@@ -427,40 +428,39 @@ public class NuevoRemitoGUI extends JDialog {
             pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlRenglonesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(pnlRenglonesLayout.createSequentialGroup()
-                            .addGroup(pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(chkBolsa)
-                                .addComponent(chkRollo)
-                                .addComponent(chkTacho)
-                                .addComponent(chkSobre)
-                                .addComponent(chkAtado)
-                                .addComponent(chkPack)
-                                .addComponent(chkCaja))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                                .addComponent(ftxtCantBolsa, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(ftxtCantRollo, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(ftxtCantTacho, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(ftxtCantSobre, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(ftxtCantAtado, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(ftxtCantPack, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(ftxtCantCaja, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lblUn1)
-                                .addComponent(lblUn2)
-                                .addComponent(lblUn3)
-                                .addComponent(lblUn4)
-                                .addComponent(lblUn5)
-                                .addComponent(lblUn6)
-                                .addComponent(lblUn7)))
-                        .addGroup(pnlRenglonesLayout.createSequentialGroup()
-                            .addComponent(lblBultos)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(ftxtCantBultos, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(sepRenglones))
+                .addGroup(pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(pnlRenglonesLayout.createSequentialGroup()
+                        .addGroup(pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(chkBolsa)
+                            .addComponent(chkRollo)
+                            .addComponent(chkTacho)
+                            .addComponent(chkSobre)
+                            .addComponent(chkAtado)
+                            .addComponent(chkPack)
+                            .addComponent(chkCaja))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(ftxtCantBolsa, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ftxtCantRollo, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ftxtCantTacho, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ftxtCantSobre, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ftxtCantAtado, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ftxtCantPack, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ftxtCantCaja, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblUn1)
+                            .addComponent(lblUn2)
+                            .addComponent(lblUn3)
+                            .addComponent(lblUn4)
+                            .addComponent(lblUn5)
+                            .addComponent(lblUn6)
+                            .addComponent(lblUn7)))
+                    .addGroup(pnlRenglonesLayout.createSequentialGroup()
+                        .addComponent(lblBultos)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ftxtCantBultos))
+                    .addComponent(sepRenglones)
                     .addGroup(pnlRenglonesLayout.createSequentialGroup()
                         .addComponent(chkBalde)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -512,7 +512,7 @@ public class NuevoRemitoGUI extends JDialog {
                     .addComponent(chkPack)
                     .addComponent(ftxtCantPack, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblUn7))
-                .addGap(7, 7, 7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(chkBalde)
                     .addComponent(ftxtCantBalde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -621,7 +621,7 @@ public class NuevoRemitoGUI extends JDialog {
         txtAreaObservaciones.setRows(5);
         jScrollPane1.setViewportView(txtAreaObservaciones);
 
-        lblTotalFacturas.setText("Total Facturas:");
+        lblTotalFacturas.setText("Total Facturas ($):");
 
         javax.swing.GroupLayout pnlDetallesLayout = new javax.swing.GroupLayout(pnlDetalles);
         pnlDetalles.setLayout(pnlDetallesLayout);
@@ -630,27 +630,22 @@ public class NuevoRemitoGUI extends JDialog {
             .addGroup(pnlDetallesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
                     .addGroup(pnlDetallesLayout.createSequentialGroup()
-                        .addGroup(pnlDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblCostoDeEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblObservaciones)
-                            .addComponent(lblTransportista, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblTotalFacturas))
+                        .addGroup(pnlDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblCostoDeEnvio, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
+                            .addComponent(lblObservaciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblTransportista, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
+                            .addComponent(lblTotalFacturas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnlDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cmbTransportista, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(pnlDetallesLayout.createSequentialGroup()
-                                .addGroup(pnlDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(ftfCostoDeEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblTotalF, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                            .addComponent(ftfCostoDeEnvio)
+                            .addComponent(lblTotalF, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
 
         pnlDetallesLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lblCostoDeEnvio, lblObservaciones, lblTransportista});
-
-        pnlDetallesLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ftfCostoDeEnvio, lblTotalF});
 
         pnlDetallesLayout.setVerticalGroup(
             pnlDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -667,7 +662,7 @@ public class NuevoRemitoGUI extends JDialog {
                 .addGroup(pnlDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(ftfCostoDeEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblCostoDeEnvio))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblObservaciones)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -692,16 +687,17 @@ public class NuevoRemitoGUI extends JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(pnlRenglones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(pnlDetalles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(pnpPesoVolumen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lblAceptar)))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(lblAceptar))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(pnlRenglones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(pnpPesoVolumen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(pnlDetalles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1021,7 +1017,7 @@ public class NuevoRemitoGUI extends JDialog {
         if (facturaVenta.size() == 1) {
             this.setTitle("Nuevo Remito de " + facturaVenta.get(0).getTipoComprobante() + " Nº " + facturaVenta.get(0).getNumSerie() + " - " + facturaVenta.get(0).getNumFactura());
         } else {
-            this.setTitle("Nuevo Remito de Facturas");
+            this.setTitle("Nuevo Remito de varias Facturas");
         }
         ftxtCantCaja.setValue(BigDecimal.ONE);
         ftxtCantBolsa.setValue(BigDecimal.ONE);
