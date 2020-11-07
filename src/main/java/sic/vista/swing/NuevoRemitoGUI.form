@@ -520,23 +520,25 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jScrollPane1" alignment="1" pref="443" max="32767" attributes="0"/>
-                      <Group type="102" attributes="0">
+                      <Component id="jScrollPane1" alignment="1" max="32767" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="lblCostoDeEnvio" linkSize="5" alignment="0" min="-2" pref="134" max="-2" attributes="0"/>
                               <Component id="lblObservaciones" linkSize="5" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="lblTransportista" linkSize="5" alignment="0" min="-2" pref="144" max="-2" attributes="0"/>
+                              <Component id="lblTotalFacturas" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="ftfCostoDeEnvio" max="32767" attributes="0"/>
                               <Component id="cmbTransportista" max="32767" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="ftfCostoDeEnvio" linkSize="11" min="-2" pref="293" max="-2" attributes="0"/>
+                                      <Component id="lblTotalF" linkSize="11" min="-2" pref="293" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              </Group>
                           </Group>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="lblTotalFacturas" linkSize="5" min="-2" pref="134" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="ftfTotalFacturas" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -552,13 +554,13 @@
                       <Component id="lblTransportista" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="ftfTotalFacturas" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblTotalFacturas" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="lblTotalFacturas" max="32767" attributes="0"/>
+                      <Component id="lblTotalF" linkSize="12" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="ftfCostoDeEnvio" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftfCostoDeEnvio" linkSize="12" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblCostoDeEnvio" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -628,18 +630,7 @@
             <Property name="text" type="java.lang.String" value="Total Facturas:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="ftfTotalFacturas">
-          <Properties>
-            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-              <Format format="#,##0.##" subtype="-1" type="0"/>
-            </Property>
-            <Property name="enabled" type="boolean" value="false"/>
-          </Properties>
-          <Events>
-            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="ftfTotalFacturasFocusGained"/>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="ftfTotalFacturasFocusLost"/>
-            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="ftfTotalFacturasKeyTyped"/>
-          </Events>
+        <Component class="javax.swing.JLabel" name="lblTotalF">
         </Component>
       </SubComponents>
     </Container>

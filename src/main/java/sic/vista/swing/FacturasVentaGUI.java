@@ -1457,7 +1457,6 @@ public class FacturasVentaGUI extends JInternalFrame {
             }
             if (debeLanzarVistaRemito) {
                 this.lanzarVistaNuevoRemito(facturas);
-                this.limpiarYBuscar(true);
             }
         }
     }//GEN-LAST:event_btnCrearRemitoActionPerformed
@@ -1470,6 +1469,9 @@ public class FacturasVentaGUI extends JInternalFrame {
             nuevoRemito.setModal(true);
             nuevoRemito.setLocationRelativeTo(this);
             nuevoRemito.setVisible(true);
+            if (nuevoRemito.isExito()) {
+                this.limpiarYBuscar(true);
+            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
