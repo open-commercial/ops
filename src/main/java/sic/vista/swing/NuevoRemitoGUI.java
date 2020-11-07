@@ -1038,19 +1038,32 @@ public class NuevoRemitoGUI extends JDialog {
     }//GEN-LAST:event_formWindowOpened
 
     private void chkBaldeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkBaldeItemStateChanged
-        // TODO add your handling code here:
+        if (chkBalde.isSelected()) {
+            ftxtCantBalde.setEnabled(true);
+        } else {
+            ftxtCantBalde.setEnabled(false);
+        }
+        this.calcularCantidadDeBultos();
     }//GEN-LAST:event_chkBaldeItemStateChanged
 
     private void ftxtCantBaldeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftxtCantBaldeFocusGained
-        // TODO add your handling code here:
+        SwingUtilities.invokeLater(() -> {
+            ftxtCantBalde.selectAll();
+        });
     }//GEN-LAST:event_ftxtCantBaldeFocusGained
 
     private void ftxtCantBaldeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftxtCantBaldeFocusLost
-        // TODO add your handling code here:
+        try {
+            ftxtCantBalde.commitEdit();
+            this.calcularCantidadDeBultos();
+        } catch (ParseException ex) {
+        }
     }//GEN-LAST:event_ftxtCantBaldeFocusLost
 
     private void ftxtCantBaldeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ftxtCantBaldeKeyTyped
-        // TODO add your handling code here:
+        if (evt.getKeyChar() == KeyEvent.VK_MINUS) {
+            evt.consume();
+        }
     }//GEN-LAST:event_ftxtCantBaldeKeyTyped
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
