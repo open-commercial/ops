@@ -75,6 +75,9 @@ public class NuevoRemitoGUI extends JDialog {
         if (chkPack.isSelected() && ftxtCantPack.getValue() != null) {
             tiposDeBulto.add(TipoBulto.PACK);
         }
+        if (chkBalde.isSelected() && ftxtCantBalde.getValue() != null) {
+            tiposDeBulto.add(TipoBulto.BALDE);
+        }
         TipoBulto[] arrayTipoBulto = new TipoBulto[tiposDeBulto.size()];
         tiposDeBulto.toArray(arrayTipoBulto);
         return arrayTipoBulto;
@@ -167,6 +170,9 @@ public class NuevoRemitoGUI extends JDialog {
         lblUn5 = new javax.swing.JLabel();
         lblUn6 = new javax.swing.JLabel();
         lblUn7 = new javax.swing.JLabel();
+        chkBalde = new javax.swing.JCheckBox();
+        ftxtCantBalde = new javax.swing.JFormattedTextField();
+        lblUn8 = new javax.swing.JLabel();
         pnpPesoVolumen = new javax.swing.JPanel();
         ftxtPeso = new javax.swing.JFormattedTextField();
         ftxtVolumen = new javax.swing.JFormattedTextField();
@@ -384,51 +390,83 @@ public class NuevoRemitoGUI extends JDialog {
 
         lblUn7.setText("UN");
 
+        chkBalde.setText("Balde");
+        chkBalde.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chkBaldeItemStateChanged(evt);
+            }
+        });
+
+        ftxtCantBalde.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
+        ftxtCantBalde.setEnabled(false);
+        ftxtCantBalde.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                ftxtCantBaldeFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                ftxtCantBaldeFocusLost(evt);
+            }
+        });
+        ftxtCantBalde.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                ftxtCantBaldeKeyTyped(evt);
+            }
+        });
+
+        lblUn8.setText("UN");
+
         javax.swing.GroupLayout pnlRenglonesLayout = new javax.swing.GroupLayout(pnlRenglones);
         pnlRenglones.setLayout(pnlRenglonesLayout);
         pnlRenglonesLayout.setHorizontalGroup(
             pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlRenglonesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(pnlRenglonesLayout.createSequentialGroup()
+                            .addGroup(pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(chkBolsa)
+                                .addComponent(chkRollo)
+                                .addComponent(chkTacho)
+                                .addComponent(chkSobre)
+                                .addComponent(chkAtado)
+                                .addComponent(chkPack)
+                                .addComponent(chkCaja))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                                .addComponent(ftxtCantBolsa, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(ftxtCantRollo, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(ftxtCantTacho, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(ftxtCantSobre, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(ftxtCantAtado, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(ftxtCantPack, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(ftxtCantCaja, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lblUn1)
+                                .addComponent(lblUn2)
+                                .addComponent(lblUn3)
+                                .addComponent(lblUn4)
+                                .addComponent(lblUn5)
+                                .addComponent(lblUn6)
+                                .addComponent(lblUn7)))
+                        .addGroup(pnlRenglonesLayout.createSequentialGroup()
+                            .addComponent(lblBultos)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(ftxtCantBultos, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(sepRenglones))
                     .addGroup(pnlRenglonesLayout.createSequentialGroup()
-                        .addGroup(pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(chkBolsa)
-                            .addComponent(chkRollo)
-                            .addComponent(chkTacho)
-                            .addComponent(chkSobre)
-                            .addComponent(chkAtado)
-                            .addComponent(chkPack)
-                            .addComponent(chkCaja))
+                        .addComponent(chkBalde)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(ftxtCantBolsa, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ftxtCantRollo, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ftxtCantTacho, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ftxtCantSobre, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ftxtCantAtado, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ftxtCantPack, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ftxtCantCaja, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(ftxtCantBalde, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblUn1)
-                            .addComponent(lblUn2)
-                            .addComponent(lblUn3)
-                            .addComponent(lblUn4)
-                            .addComponent(lblUn5)
-                            .addComponent(lblUn6)
-                            .addComponent(lblUn7)))
-                    .addGroup(pnlRenglonesLayout.createSequentialGroup()
-                        .addComponent(lblBultos)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ftxtCantBultos, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(sepRenglones))
+                        .addComponent(lblUn8)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pnlRenglonesLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chkAtado, chkBolsa, chkCaja, chkPack, chkRollo, chkSobre, chkTacho});
+        pnlRenglonesLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chkAtado, chkBalde, chkBolsa, chkCaja, chkPack, chkRollo, chkSobre, chkTacho});
 
-        pnlRenglonesLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ftxtCantAtado, ftxtCantBolsa, ftxtCantCaja, ftxtCantPack, ftxtCantRollo, ftxtCantSobre, ftxtCantTacho});
+        pnlRenglonesLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {ftxtCantAtado, ftxtCantBalde, ftxtCantBolsa, ftxtCantCaja, ftxtCantPack, ftxtCantRollo, ftxtCantSobre, ftxtCantTacho});
 
         pnlRenglonesLayout.setVerticalGroup(
             pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -468,7 +506,12 @@ public class NuevoRemitoGUI extends JDialog {
                     .addComponent(chkPack)
                     .addComponent(ftxtCantPack, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblUn7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(7, 7, 7)
+                .addGroup(pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(chkBalde)
+                    .addComponent(ftxtCantBalde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblUn8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sepRenglones, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlRenglonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
@@ -477,7 +520,9 @@ public class NuevoRemitoGUI extends JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pnlRenglonesLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {chkAtado, chkBolsa, chkCaja, chkPack, chkRollo, chkSobre, chkTacho});
+        pnlRenglonesLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {chkAtado, chkBalde, chkBolsa, chkCaja, chkPack, chkRollo, chkSobre, chkTacho});
+
+        pnlRenglonesLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {ftxtCantAtado, ftxtCantBalde, ftxtCantBolsa, ftxtCantCaja, ftxtCantPack, ftxtCantRollo, ftxtCantSobre, ftxtCantTacho});
 
         pnpPesoVolumen.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
@@ -1006,8 +1051,25 @@ public class NuevoRemitoGUI extends JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_ftfTotalFacturasKeyTyped
 
+    private void chkBaldeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkBaldeItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_chkBaldeItemStateChanged
+
+    private void ftxtCantBaldeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftxtCantBaldeFocusGained
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ftxtCantBaldeFocusGained
+
+    private void ftxtCantBaldeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ftxtCantBaldeFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ftxtCantBaldeFocusLost
+
+    private void ftxtCantBaldeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ftxtCantBaldeKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ftxtCantBaldeKeyTyped
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox chkAtado;
+    private javax.swing.JCheckBox chkBalde;
     private javax.swing.JCheckBox chkBolsa;
     private javax.swing.JCheckBox chkCaja;
     private javax.swing.JCheckBox chkPack;
@@ -1018,6 +1080,7 @@ public class NuevoRemitoGUI extends JDialog {
     private javax.swing.JFormattedTextField ftfCostoDeEnvio;
     private javax.swing.JFormattedTextField ftfTotalFacturas;
     private javax.swing.JFormattedTextField ftxtCantAtado;
+    private javax.swing.JFormattedTextField ftxtCantBalde;
     private javax.swing.JFormattedTextField ftxtCantBolsa;
     private javax.swing.JFormattedTextField ftxtCantBultos;
     private javax.swing.JFormattedTextField ftxtCantCaja;
@@ -1042,6 +1105,7 @@ public class NuevoRemitoGUI extends JDialog {
     private javax.swing.JLabel lblUn5;
     private javax.swing.JLabel lblUn6;
     private javax.swing.JLabel lblUn7;
+    private javax.swing.JLabel lblUn8;
     private javax.swing.JLabel lblVolumen;
     private javax.swing.JPanel pnlDetalles;
     private javax.swing.JPanel pnlRenglones;

@@ -50,8 +50,8 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
             chkRetiro.setSelected(true);
         }
         chkPredeterminada.setSelected(configuracionModificar.isPredeterminada());
-        txtTiempoCortoEnMinutos.setValue(configuracionModificar.getVencimientoCorto());
-        txtTiempoLargoEnMinutos.setValue(configuracionModificar.getVencimientoLargo());
+        txtTiempoCortoEnHoras.setValue(configuracionModificar.getVencimientoCorto() / 60);
+        txtTiempoLargoEnHoras.setValue(configuracionModificar.getVencimientoLargo() / 60);
     }
 
     private ConfiguracionSucursal getConfiguracionSucursal() {
@@ -84,11 +84,11 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
         } else {
             configuracionModificar.setPredeterminada(false);
         }
-        if (txtTiempoCortoEnMinutos.getValue() != null) {
-            configuracionModificar.setVencimientoCorto(Long.parseLong(txtTiempoCortoEnMinutos.getText().trim()));
+        if (txtTiempoCortoEnHoras.getValue() != null) {
+            configuracionModificar.setVencimientoCorto(Long.parseLong(txtTiempoCortoEnHoras.getText().trim()) * 60);
         }
-        if (txtTiempoLargoEnMinutos.getValue() != null) {
-            configuracionModificar.setVencimientoLargo(Long.parseLong(txtTiempoLargoEnMinutos.getText().trim()));
+        if (txtTiempoLargoEnHoras.getValue() != null) {
+            configuracionModificar.setVencimientoLargo(Long.parseLong(txtTiempoLargoEnHoras.getText().trim()) * 60);
         }
         return configuracionModificar;
     }
@@ -123,9 +123,9 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
         lblPredeterminada = new javax.swing.JLabel();
         chkPredeterminada = new javax.swing.JCheckBox();
         lblTiempoCorto = new javax.swing.JLabel();
-        txtTiempoCortoEnMinutos = new javax.swing.JFormattedTextField();
+        txtTiempoCortoEnHoras = new javax.swing.JFormattedTextField();
         lblTiempoLargo = new javax.swing.JLabel();
-        txtTiempoLargoEnMinutos = new javax.swing.JFormattedTextField();
+        txtTiempoLargoEnHoras = new javax.swing.JFormattedTextField();
 
         setClosable(true);
         setTitle("Configuración de Sucursal");
@@ -320,13 +320,13 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
 
         lblPredeterminada.setText("Usar como predeterminada:");
 
-        lblTiempoCorto.setText("Tiempo de vida corto (minutos):");
+        lblTiempoCorto.setText("Tiempo de vida corto (horas):");
 
-        txtTiempoCortoEnMinutos.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        txtTiempoCortoEnHoras.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
 
-        lblTiempoLargo.setText("Tiempo de vida largo (minutos):");
+        lblTiempoLargo.setText("Tiempo de vida largo (horas):");
 
-        txtTiempoLargoEnMinutos.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        txtTiempoLargoEnHoras.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
 
         javax.swing.GroupLayout panelPedidosLayout = new javax.swing.GroupLayout(panelPedidos);
         panelPedidos.setLayout(panelPedidosLayout);
@@ -346,8 +346,8 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
                     .addGroup(panelPedidosLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtTiempoCortoEnMinutos)
-                            .addComponent(txtTiempoLargoEnMinutos))))
+                            .addComponent(txtTiempoCortoEnHoras)
+                            .addComponent(txtTiempoLargoEnHoras))))
                 .addContainerGap())
         );
         panelPedidosLayout.setVerticalGroup(
@@ -360,11 +360,11 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTiempoCorto)
-                    .addComponent(txtTiempoCortoEnMinutos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTiempoCortoEnHoras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblTiempoLargo)
-                    .addComponent(txtTiempoLargoEnMinutos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTiempoLargoEnHoras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -516,8 +516,8 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
     private javax.swing.JPanel panelFE;
     private javax.swing.JPanel panelPedidos;
     private javax.swing.JPanel panelReportes;
-    private javax.swing.JFormattedTextField txtTiempoCortoEnMinutos;
-    private javax.swing.JFormattedTextField txtTiempoLargoEnMinutos;
+    private javax.swing.JFormattedTextField txtTiempoCortoEnHoras;
+    private javax.swing.JFormattedTextField txtTiempoLargoEnHoras;
     private javax.swing.JFormattedTextField txt_CantMaximaRenglones;
     private javax.swing.JTextField txt_FirmanteCert;
     private javax.swing.JTextField txt_PuntoDeVentaNro;

@@ -7,5 +7,6 @@ public enum TipoBulto {
   TACHO,
   SOBRE,
   ATADO,
+  BALDE,
   PACK;
 }

@@ -80,44 +80,53 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="chkBolsa" linkSize="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="chkRollo" linkSize="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="chkTacho" linkSize="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="chkSobre" linkSize="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="chkAtado" linkSize="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="chkPack" linkSize="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="chkCaja" linkSize="1" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="chkBolsa" linkSize="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="chkRollo" linkSize="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="chkTacho" linkSize="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="chkSobre" linkSize="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="chkAtado" linkSize="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="chkPack" linkSize="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="chkCaja" linkSize="1" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="2" attributes="0">
+                                  <Component id="ftxtCantBolsa" linkSize="7" alignment="2" min="-2" pref="58" max="-2" attributes="0"/>
+                                  <Component id="ftxtCantRollo" linkSize="7" alignment="2" min="-2" pref="56" max="-2" attributes="0"/>
+                                  <Component id="ftxtCantTacho" linkSize="7" alignment="2" min="-2" pref="54" max="-2" attributes="0"/>
+                                  <Component id="ftxtCantSobre" linkSize="7" alignment="2" min="-2" pref="52" max="-2" attributes="0"/>
+                                  <Component id="ftxtCantAtado" linkSize="7" alignment="2" min="-2" pref="46" max="-2" attributes="0"/>
+                                  <Component id="ftxtCantPack" linkSize="7" alignment="2" min="-2" pref="37" max="-2" attributes="0"/>
+                                  <Component id="ftxtCantCaja" linkSize="7" alignment="2" min="-2" pref="53" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="lblUn1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblUn2" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblUn3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblUn4" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblUn5" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblUn6" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblUn7" min="-2" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="ftxtCantBolsa" linkSize="7" alignment="2" min="-2" pref="58" max="-2" attributes="0"/>
-                              <Component id="ftxtCantRollo" linkSize="7" alignment="2" min="-2" pref="56" max="-2" attributes="0"/>
-                              <Component id="ftxtCantTacho" linkSize="7" alignment="2" min="-2" pref="54" max="-2" attributes="0"/>
-                              <Component id="ftxtCantSobre" linkSize="7" alignment="2" min="-2" pref="52" max="-2" attributes="0"/>
-                              <Component id="ftxtCantAtado" linkSize="7" alignment="2" min="-2" pref="46" max="-2" attributes="0"/>
-                              <Component id="ftxtCantPack" linkSize="7" alignment="2" min="-2" pref="37" max="-2" attributes="0"/>
-                              <Component id="ftxtCantCaja" linkSize="7" alignment="2" min="-2" pref="53" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="lblBultos" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="ftxtCantBultos" min="-2" pref="58" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lblUn1" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblUn2" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblUn3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblUn4" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblUn5" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblUn6" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblUn7" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="sepRenglones" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="lblBultos" min="-2" max="-2" attributes="0"/>
+                          <Component id="chkBalde" linkSize="1" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="ftxtCantBultos" min="-2" pref="58" max="-2" attributes="0"/>
+                          <Component id="ftxtCantBalde" linkSize="7" min="-2" pref="37" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="lblUn8" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="sepRenglones" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -128,47 +137,53 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="ftxtCantCaja" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftxtCantCaja" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="chkCaja" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblUn1" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="chkBolsa" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="ftxtCantBolsa" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftxtCantBolsa" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblUn2" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="chkRollo" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="ftxtCantRollo" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftxtCantRollo" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblUn3" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="chkTacho" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="ftxtCantTacho" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftxtCantTacho" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblUn4" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="chkSobre" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="ftxtCantSobre" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftxtCantSobre" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblUn5" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="chkAtado" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="ftxtCantAtado" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftxtCantAtado" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblUn6" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="chkPack" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="ftxtCantPack" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftxtCantPack" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="lblUn7" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="chkBalde" linkSize="2" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="ftxtCantBalde" linkSize="8" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblUn8" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="sepRenglones" min="-2" pref="10" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
@@ -378,6 +393,32 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblUn7">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="UN"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="chkBalde">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Balde"/>
+          </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkBaldeItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="ftxtCantBalde">
+          <Properties>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format format="#,##0.##" subtype="-1" type="0"/>
+            </Property>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="ftxtCantBaldeFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="ftxtCantBaldeFocusLost"/>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="ftxtCantBaldeKeyTyped"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblUn8">
           <Properties>
             <Property name="text" type="java.lang.String" value="UN"/>
           </Properties>
