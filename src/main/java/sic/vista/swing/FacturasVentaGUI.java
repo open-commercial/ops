@@ -34,9 +34,7 @@ import sic.modelo.Usuario;
 import sic.modelo.PaginaRespuestaRest;
 import sic.modelo.Producto;
 import sic.modelo.Rol;
-import sic.modelo.Sucursal;
 import sic.modelo.TipoDeComprobante;
-import sic.modelo.Ubicacion;
 import sic.modelo.UsuarioActivo;
 import sic.util.DecimalesRenderer;
 import sic.util.FechasRenderer;
@@ -79,35 +77,6 @@ public class FacturasVentaGUI extends JInternalFrame {
         this.limpiarYBuscar(true);
     }
 
-    public void buscarPorRemito(long serieRemito, long nroRemito, TipoDeComprobante tipoDeComprobante) {
-        chkNumRemito.setSelected(true);
-        txtSerieRemito.setEnabled(true);
-        txtNroRemito.setEnabled(true);
-        txtSerieRemito.setText(String.valueOf(serieRemito));
-        txtNroRemito.setText(String.valueOf(nroRemito));
-        chk_TipoFactura.setSelected(true);
-        cmb_TipoFactura.setEnabled(true);
-        this.cargarTiposDeFactura();
-        switch (tipoDeComprobante) {
-            case REMITO_A:
-                cmb_TipoFactura.setSelectedItem(TipoDeComprobante.FACTURA_A);
-                break;
-            case REMITO_B:
-                cmb_TipoFactura.setSelectedItem(TipoDeComprobante.FACTURA_B);
-                break;
-            case REMITO_C:
-                cmb_TipoFactura.setSelectedItem(TipoDeComprobante.FACTURA_C);
-                break;
-            case REMITO_X:
-                cmb_TipoFactura.setSelectedItem(TipoDeComprobante.FACTURA_X);
-                break;
-            case REMITO_PRESUPUESTO:
-                cmb_TipoFactura.setSelectedItem(TipoDeComprobante.PRESUPUESTO);
-                break;
-        }
-        cmb_TipoFactura.setSelectedItem(tipoDeComprobante);
-        this.limpiarYBuscar(true);
-    }
 
     public void buscarPorSerieNroTipo(long nroSerie, long nroFactura,
             TipoDeComprobante tipoDeComprobante, long idCliente) {

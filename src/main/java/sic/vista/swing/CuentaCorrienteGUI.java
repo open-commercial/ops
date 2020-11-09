@@ -377,11 +377,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
                                     "Error", JOptionPane.ERROR_MESSAGE);
                         }
                         break;
-                    case REMITO_A:
-                    case REMITO_B:
-                    case REMITO_C:
-                    case REMITO_X:
-                    case REMITO_PRESUPUESTO:
+                    case REMITO:
                         if (Desktop.isDesktopSupported()) {
                             byte[] reporte = RestClient.getRestTemplate()
                                     .getForObject("/remitos/" + renglonCC.getIdMovimiento() + "/reporte",
@@ -1031,11 +1027,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             int respuesta;
             try {
                 switch (renglonCC.getTipoComprobante()) {
-                    case REMITO_A:
-                    case REMITO_B:
-                    case REMITO_C:
-                    case REMITO_X:
-                    case REMITO_PRESUPUESTO:
+                    case REMITO:
                         if (this.cliente != null) {
                             respuesta = JOptionPane.showConfirmDialog(this, ResourceBundle.getBundle("Mensajes")
                                     .getString("mensaje_eliminar_movimientos"),
