@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sic.modelo.TipoDeComprobante;
 
 @Data
 @AllArgsConstructor
@@ -17,7 +16,6 @@ public class BusquedaRemitoCriteria {
     private LocalDateTime fechaHasta;
     private Long serieRemito;
     private Long nroRemito;
-    private TipoDeComprobante tipoDeRemito;
     private Long idCliente;
     private Long idSucursal;
     private Long idUsuario;
