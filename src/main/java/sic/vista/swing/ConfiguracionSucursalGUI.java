@@ -20,6 +20,7 @@ import sic.util.Utilidades;
 public class ConfiguracionSucursalGUI extends JInternalFrame {
 
     private ConfiguracionSucursal configuracionModificar;  
+    private static final long HORA_EN_MINUTOS = 60;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     
     public ConfiguracionSucursalGUI() {
@@ -50,8 +51,8 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
             chkRetiro.setSelected(true);
         }
         chkPredeterminada.setSelected(configuracionModificar.isPredeterminada());
-        txtTiempoCortoEnMinutos.setValue(configuracionModificar.getVencimientoCorto());
-        txtTiempoLargoEnMinutos.setValue(configuracionModificar.getVencimientoLargo());
+        txtTiempoCorto.setValue(configuracionModificar.getVencimientoCorto() / HORA_EN_MINUTOS);
+        txtTiempoLargo.setValue(configuracionModificar.getVencimientoLargo() / HORA_EN_MINUTOS);
         chkComparteStock.setSelected(configuracionModificar.isComparteStock());
     }
 
@@ -85,11 +86,11 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
         } else {
             configuracionModificar.setPredeterminada(false);
         }
-        if (txtTiempoCortoEnMinutos.getValue() != null) {
-            configuracionModificar.setVencimientoCorto(Long.parseLong(txtTiempoCortoEnMinutos.getText().trim()));
+        if (txtTiempoCorto.getValue() != null) {
+            configuracionModificar.setVencimientoCorto(Long.parseLong(txtTiempoCorto.getText().trim()) * HORA_EN_MINUTOS);
         }
-        if (txtTiempoLargoEnMinutos.getValue() != null) {
-            configuracionModificar.setVencimientoLargo(Long.parseLong(txtTiempoLargoEnMinutos.getText().trim()));
+        if (txtTiempoLargo.getValue() != null) {
+            configuracionModificar.setVencimientoLargo(Long.parseLong(txtTiempoLargo.getText().trim()) * HORA_EN_MINUTOS);
         }
         if (chkComparteStock.isSelected()) {
             configuracionModificar.setComparteStock(true);
@@ -129,9 +130,9 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
         lblPredeterminada = new javax.swing.JLabel();
         chkPredeterminada = new javax.swing.JCheckBox();
         lblTiempoCorto = new javax.swing.JLabel();
-        txtTiempoCortoEnMinutos = new javax.swing.JFormattedTextField();
+        txtTiempoCorto = new javax.swing.JFormattedTextField();
         lblTiempoLargo = new javax.swing.JLabel();
-        txtTiempoLargoEnMinutos = new javax.swing.JFormattedTextField();
+        txtTiempoLargo = new javax.swing.JFormattedTextField();
         lblComparteStock = new javax.swing.JLabel();
         chkComparteStock = new javax.swing.JCheckBox();
 
@@ -328,13 +329,13 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
 
         lblPredeterminada.setText("Usar como predeterminada:");
 
-        lblTiempoCorto.setText("Tiempo de vida corto (minutos):");
+        lblTiempoCorto.setText("Tiempo de vida corto (horas):");
 
-        txtTiempoCortoEnMinutos.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        txtTiempoCorto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
 
-        lblTiempoLargo.setText("Tiempo de vida largo (minutos):");
+        lblTiempoLargo.setText("Tiempo de vida largo (horas):");
 
-        txtTiempoLargoEnMinutos.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        txtTiempoLargo.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
 
         lblComparteStock.setText("Comparte Stock:");
 
@@ -355,13 +356,10 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
                     .addComponent(chkComparteStock))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(panelPedidosLayout.createSequentialGroup()
+                .addGap(312, 312, 312)
                 .addGroup(panelPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelPedidosLayout.createSequentialGroup()
-                        .addGap(312, 312, 312)
-                        .addComponent(txtTiempoLargoEnMinutos))
-                    .addGroup(panelPedidosLayout.createSequentialGroup()
-                        .addGap(312, 312, 312)
-                        .addComponent(txtTiempoCortoEnMinutos)))
+                    .addComponent(txtTiempoLargo)
+                    .addComponent(txtTiempoCorto))
                 .addGap(6, 6, 6))
         );
         panelPedidosLayout.setVerticalGroup(
@@ -374,11 +372,11 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTiempoCorto)
-                    .addComponent(txtTiempoCortoEnMinutos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTiempoCorto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lblTiempoLargo)
-                    .addComponent(txtTiempoLargoEnMinutos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTiempoLargo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblComparteStock, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -536,8 +534,8 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
     private javax.swing.JPanel panelFE;
     private javax.swing.JPanel panelPedidos;
     private javax.swing.JPanel panelReportes;
-    private javax.swing.JFormattedTextField txtTiempoCortoEnMinutos;
-    private javax.swing.JFormattedTextField txtTiempoLargoEnMinutos;
+    private javax.swing.JFormattedTextField txtTiempoCorto;
+    private javax.swing.JFormattedTextField txtTiempoLargo;
     private javax.swing.JFormattedTextField txt_CantMaximaRenglones;
     private javax.swing.JTextField txt_FirmanteCert;
     private javax.swing.JTextField txt_PuntoDeVentaNro;

@@ -375,15 +375,10 @@
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
               <Group type="102" attributes="0">
+                  <EmptySpace min="312" pref="312" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="312" pref="312" max="-2" attributes="0"/>
-                          <Component id="txtTiempoLargoEnMinutos" max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="312" pref="312" max="-2" attributes="0"/>
-                          <Component id="txtTiempoCortoEnMinutos" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="txtTiempoLargo" max="32767" attributes="0"/>
+                      <Component id="txtTiempoCorto" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
               </Group>
@@ -400,12 +395,12 @@
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lblTiempoCorto" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtTiempoCortoEnMinutos" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtTiempoCorto" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lblTiempoLargo" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtTiempoLargoEnMinutos" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtTiempoLargo" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -427,10 +422,10 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lblTiempoCorto">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Tiempo de vida corto (minutos):"/>
+            <Property name="text" type="java.lang.String" value="Tiempo de vida corto (horas):"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txtTiempoCortoEnMinutos">
+        <Component class="javax.swing.JFormattedTextField" name="txtTiempoCorto">
           <Properties>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
               <Format format="#0" subtype="-1" type="0"/>
@@ -439,10 +434,10 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lblTiempoLargo">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Tiempo de vida largo (minutos):"/>
+            <Property name="text" type="java.lang.String" value="Tiempo de vida largo (horas):"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txtTiempoLargoEnMinutos">
+        <Component class="javax.swing.JFormattedTextField" name="txtTiempoLargo">
           <Properties>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
               <Format format="#0" subtype="-1" type="0"/>
