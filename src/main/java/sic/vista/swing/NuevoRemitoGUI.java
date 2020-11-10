@@ -108,6 +108,9 @@ public class NuevoRemitoGUI extends JDialog {
         if (chkPack.isSelected() && ftxtCantPack.getValue() != null) {
             cantidades.add(new BigDecimal(ftxtCantPack.getValue().toString()));
         }
+        if (chkBalde.isSelected() && ftxtCantBalde.getValue() != null) {
+            cantidades.add(new BigDecimal(ftxtCantBalde.getValue().toString()));
+        }
         BigDecimal[] arrayCantidades = new BigDecimal[cantidades.size()];
         cantidades.toArray(arrayCantidades);
         return arrayCantidades;

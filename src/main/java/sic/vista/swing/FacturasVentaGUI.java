@@ -1415,12 +1415,14 @@ public class FacturasVentaGUI extends JInternalFrame {
                                 ResourceBundle.getBundle("Mensajes").getString("mensaje_remito_facturas_diferentes_clientes"),
                                 "Error", JOptionPane.ERROR_MESSAGE);
                         debeLanzarVistaRemito = false;
+                        break;
                     }
                     if (idSucursal != facturaVenta.getIdSucursal()) {
                         JOptionPane.showMessageDialog(this,
                                 ResourceBundle.getBundle("Mensajes").getString("mensaje_remito_facturas_diferentes_sucursales"),
                                 "Error", JOptionPane.ERROR_MESSAGE);
                         debeLanzarVistaRemito = false;
+                        break;
                     }
                 }
                 i++;
