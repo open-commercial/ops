@@ -2,7 +2,6 @@ package sic.vista.swing;
 
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.event.AdjustmentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
@@ -15,7 +14,6 @@ import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollBar;
 import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +23,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.CantidadEnSucursal;
 import sic.modelo.SucursalActiva;
 import sic.modelo.Movimiento;
 import sic.modelo.NuevoRenglonFactura;
@@ -353,17 +352,15 @@ public class BuscarProductosGUI extends JDialog {
                             fila[2] = cantidadesEnSucursal.getCantidad();
                         }
                     });
-                    p.getCantidadEnSucursalesDisponible().forEach(cantidadesEnSucursal -> {
-                        if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
-                            fila[3] = p.getCantidadTotalEnSucursales().subtract(cantidadesEnSucursal.getCantidad());
-                        }
-                    });
+                    fila[3] = p.getCantidadEnSucursalesDisponible().stream()
+                            .filter(cantidadEnSucursales -> !cantidadEnSucursales.idSucursal.equals(SucursalActiva.getInstance().getSucursal().getIdSucursal()))
+                            .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);
                 }
                 fila[4] = p.getCantidadReservada();
                 fila[5] = p.getBulto();
                 fila[6] = p.getNombreMedida();
                 BigDecimal precio = (movimiento == Movimiento.PEDIDO) ? p.getPrecioLista()
-                                : (movimiento == Movimiento.COMPRA) ? p.getPrecioCosto() : BigDecimal.ZERO;
+                        : (movimiento == Movimiento.COMPRA) ? p.getPrecioCosto() : BigDecimal.ZERO;
                 fila[7] = precio;
                 fila[8] = p.getPorcentajeBonificacionOferta();
                 fila[9] = p.getPorcentajeBonificacionPrecio();
@@ -461,16 +458,16 @@ public class BuscarProductosGUI extends JDialog {
         txtCantidad.addKeyListener(keyHandler);
         btnAceptar.addKeyListener(keyHandler);
         txtBonificacion.addKeyListener(keyHandler);
-        sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
-            JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-            int va = scrollBar.getVisibleAmount() + 10;
-            if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (productosTotal.size() >= 10) {
-                    NUMERO_PAGINA += 1;
-                    buscar();
-                }
-            }
-        });
+//        sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
+//            JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
+//            int va = scrollBar.getVisibleAmount() + 10;
+//            if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
+//                if (productosTotal.size() >= 10) {
+//                    NUMERO_PAGINA += 1;
+//                    buscar();
+//                }
+//            }
+//        });
     }
 
     /**
@@ -501,6 +498,7 @@ public class BuscarProductosGUI extends JDialog {
         txtaNotaProducto = new javax.swing.JTextArea();
         lblBonificacion = new javax.swing.JLabel();
         txtBonificacion = new javax.swing.JFormattedTextField();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -620,6 +618,13 @@ public class BuscarProductosGUI extends JDialog {
             }
         });
 
+        jButton1.setText("Ver más resultados");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelFondoLayout = new javax.swing.GroupLayout(panelFondo);
         panelFondo.setLayout(panelFondoLayout);
         panelFondoLayout.setHorizontalGroup(
@@ -645,7 +650,8 @@ public class BuscarProductosGUI extends JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtBonificacion)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -661,7 +667,9 @@ public class BuscarProductosGUI extends JDialog {
                     .addComponent(btnBuscar)
                     .addComponent(txtCriteriaBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panelFondoLayout.createSequentialGroup()
@@ -802,9 +810,17 @@ public class BuscarProductosGUI extends JDialog {
         });
     }//GEN-LAST:event_txtBonificacionFocusGained
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (productosTotal.size() >= 10) {
+            NUMERO_PAGINA += 1;
+            buscar();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel lblBonificacion;
     private javax.swing.JLabel lbl_Cantidad;
     private javax.swing.JPanel panelFondo;

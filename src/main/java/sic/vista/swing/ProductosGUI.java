@@ -3,7 +3,6 @@ package sic.vista.swing;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,7 +13,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -51,16 +49,6 @@ public class ProductosGUI extends JInternalFrame {
 
     public ProductosGUI() {
         this.initComponents();        
-        sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
-            JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-            int va = scrollBar.getVisibleAmount() + 10;
-            if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (productosTotal.size() >= 10) {
-                    NUMERO_PAGINA += 1;
-                    buscar();
-                }
-            }
-        });
     }
 
     private void cargarRubros() {
@@ -184,12 +172,12 @@ public class ProductosGUI extends JInternalFrame {
             fila[2] = producto.getCodigo();
             fila[3] = producto.getDescripcion();
             fila[4] = BigDecimal.ZERO;
-            producto.getCantidadEnSucursalesDisponible().forEach(cantidadesEnSucursal -> {
+            producto.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
                 if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
                     fila[4] = cantidadesEnSucursal.getCantidad();
                 }
             });
-            fila[5] = producto.getCantidadEnSucursalesDisponible().stream()
+            fila[5] = producto.getCantidadEnSucursales().stream()
                     .filter(cantidadEnSucursales -> !cantidadEnSucursales.idSucursal.equals(SucursalActiva.getInstance().getSucursal().getIdSucursal()))
                     .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);
             fila[6] = producto.getCantidadTotalEnSucursales();
@@ -500,6 +488,7 @@ public class ProductosGUI extends JInternalFrame {
         txt_ValorStock = new javax.swing.JFormattedTextField();
         lbl_ValorStock = new javax.swing.JLabel();
         btnExportar = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         panelOrden = new javax.swing.JPanel();
         cmbOrden = new javax.swing.JComboBox<>();
         cmbSentido = new javax.swing.JComboBox<>();
@@ -733,24 +722,34 @@ public class ProductosGUI extends JInternalFrame {
             }
         });
 
+        jButton1.setText("Ver más resultados");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(btn_Nuevo)
-                .addGap(0, 0, 0)
-                .addComponent(btn_Modificar)
-                .addGap(0, 0, 0)
-                .addComponent(btn_Eliminar)
-                .addGap(0, 0, 0)
-                .addComponent(btnExportar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lbl_ValorStock)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txt_ValorStock, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
+                        .addComponent(btn_Nuevo)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_Modificar)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_Eliminar)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnExportar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 340, Short.MAX_VALUE)
+                        .addComponent(lbl_ValorStock)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txt_ValorStock, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(sp_Resultados, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
-            .addComponent(sp_Resultados)
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnExportar, btn_Eliminar, btn_Modificar, btn_Nuevo});
@@ -758,7 +757,10 @@ public class ProductosGUI extends JInternalFrame {
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_ValorStock)
@@ -1029,7 +1031,14 @@ public class ProductosGUI extends JInternalFrame {
             txtProveedor.setText(proveedorSeleccionado.getRazonSocial());
         }
     }//GEN-LAST:event_btnBuscarProveedorActionPerformed
-    
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (productosTotal.size() >= 10) {
+            NUMERO_PAGINA += 1;
+            buscar();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgDisponibilidad;
     private javax.swing.ButtonGroup bgVisibilidad;
@@ -1048,6 +1057,7 @@ public class ProductosGUI extends JInternalFrame {
     private javax.swing.JComboBox<String> cmbOrden;
     private javax.swing.JComboBox<String> cmbSentido;
     private javax.swing.JComboBox cmb_Rubro;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel lbl_ValorStock;
     private javax.swing.JLabel lbl_cantResultados;
     private javax.swing.JPanel panelFiltros;
