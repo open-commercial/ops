@@ -353,7 +353,7 @@ public class BuscarProductosGUI extends JDialog {
                             fila[2] = cantidadesEnSucursal.getCantidad();
                         }
                     });
-                    p.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
+                    p.getCantidadEnSucursalesDisponible().forEach(cantidadesEnSucursal -> {
                         if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
                             fila[3] = p.getCantidadTotalEnSucursales().subtract(cantidadesEnSucursal.getCantidad());
                         }
