@@ -58,7 +58,7 @@ public class BuscarProductosGUI extends JDialog {
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int NUMERO_PAGINA = 0;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private final Dimension sizeDialog = new Dimension(1100, 600);
+    private final Dimension sizeDialog = new Dimension(1100, 400);
     
     public BuscarProductosGUI(List<RenglonFactura> renglones, TipoDeComprobante tipoDeComprobante, Movimiento tipoDeMovimiento) { 
         this.initComponents();
@@ -249,7 +249,7 @@ public class BuscarProductosGUI extends JDialog {
                     cantidadesNuevas.forEach((id, cantidad) -> { // se restan las cantidades nuevas a los resultados
                         productosTotal.stream().filter(p -> (id == p.getIdProducto() && p.isIlimitado() == false))
                                 .forEachOrdered(p -> {
-                                    p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
+                                    p.getCantidadEnSucursalesDisponible().forEach(cantidadEnSucursal -> {
                                         if (cantidadEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
                                             BigDecimal resultado = cantidadEnSucursal.getCantidad().subtract(cantidad);
                                             if (resultado.compareTo(BigDecimal.ZERO) >= 0) {
@@ -279,7 +279,7 @@ public class BuscarProductosGUI extends JDialog {
                     if (cantidad.compareTo(BigDecimal.ZERO) != 0) {
                         productosTotal.stream().filter(producto -> (id == producto.getIdProducto() && producto.isIlimitado() == false))
                                 .forEachOrdered(p -> {
-                                    p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
+                                    p.getCantidadEnSucursalesDisponible().forEach(cantidadEnSucursal -> {
                                         if (cantidadEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
                                             BigDecimal resultado = cantidadEnSucursal.getCantidad().subtract(cantidad);
                                             if (resultado.compareTo(BigDecimal.ZERO) >= 0) {
@@ -299,7 +299,7 @@ public class BuscarProductosGUI extends JDialog {
                 cantidadesIniciales.forEach((id, cantidad) -> { // sumar los renglones iniciales faltantes en los nuevos renglones
                     productosTotal.stream().filter(p -> (id == p.getIdProducto() && p.isIlimitado() == false))
                             .forEachOrdered(p -> {
-                                p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
+                                p.getCantidadEnSucursalesDisponible().forEach(cantidadEnSucursal -> {
                                     if (cantidadEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
                                         cantidadEnSucursal.setCantidad(cantidadEnSucursal.getCantidad().add(cantidad));
                                         p.setCantidadTotalEnSucursales(p.getCantidadTotalEnSucursales().add(cantidad));
@@ -357,9 +357,13 @@ public class BuscarProductosGUI extends JDialog {
                             fila[2] = cantidadesEnSucursal.getCantidad();
                         }
                     });
-                    fila[3] = p.getCantidadEnSucursalesDisponible().stream()
-                            .filter(cantidadEnSucursales -> !cantidadEnSucursales.idSucursal.equals(SucursalActiva.getInstance().getSucursal().getIdSucursal()))
-                            .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);
+                    p.getCantidadEnSucursalesDisponible().stream()
+                            .filter(cantidadEnSucursales 
+                                    -> !cantidadEnSucursales.idSucursal.equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())).forEach(cantidadesEnSucursal -> {
+                        if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
+                            fila[3] = p.getCantidadTotalEnSucursales().subtract(cantidadesEnSucursal.getCantidad());
+                        }
+                    });
                 }
                 fila[4] = p.getCantidadReservada();
                 fila[5] = p.getBulto();
@@ -463,16 +467,6 @@ public class BuscarProductosGUI extends JDialog {
         txtCantidad.addKeyListener(keyHandler);
         btnAceptar.addKeyListener(keyHandler);
         txtBonificacion.addKeyListener(keyHandler);
-//        sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
-//            JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-//            int va = scrollBar.getVisibleAmount() + 10;
-//            if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-//                if (productosTotal.size() >= 10) {
-//                    NUMERO_PAGINA += 1;
-//                    buscar();
-//                }
-//            }
-//        });
     }
 
     /**

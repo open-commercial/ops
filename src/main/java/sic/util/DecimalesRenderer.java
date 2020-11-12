@@ -16,6 +16,8 @@ public class DecimalesRenderer extends DefaultTableCellRenderer {
         if (value instanceof Number) {
             DecimalFormat dFormat = new DecimalFormat("##,##0.##"); 
             value = dFormat.format(value);
+        } else {
+            value = "0";
         }
         return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
     }
