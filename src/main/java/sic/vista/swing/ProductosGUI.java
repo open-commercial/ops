@@ -166,7 +166,7 @@ public class ProductosGUI extends JInternalFrame {
 
     private void cargarResultadosAlTable() {
         productosParcial.stream().map(producto -> {
-            Object[] fila = new Object[26];
+            Object[] fila = new Object[25];
             fila[0] = producto.isPublico();
             fila[1] = producto.isOferta();
             fila[2] = producto.getCodigo();
@@ -179,27 +179,26 @@ public class ProductosGUI extends JInternalFrame {
             });
             fila[5] = producto.getCantidadEnSucursales().stream()
                     .filter(cantidadEnSucursales -> !cantidadEnSucursales.idSucursal.equals(SucursalActiva.getInstance().getSucursal().getIdSucursal()))
-                    .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);
-            fila[6] = producto.getCantidadTotalEnSucursales();          
-            fila[7] = producto.getCantidadReservada();           
-            fila[8] = producto.getBulto();
-            fila[9] = producto.getNombreMedida();
-            fila[10] = producto.getPrecioCosto();
-            fila[11] = producto.getGananciaPorcentaje();
-            fila[12] = producto.getGananciaNeto();
-            fila[13] = producto.getPrecioVentaPublico();
-            fila[14] = producto.getIvaPorcentaje();
-            fila[15] = producto.getIvaNeto();
-            fila[16] = producto.getPrecioLista();        
-            fila[17] = producto.getPorcentajeBonificacionOferta();
-            fila[18] = producto.getPorcentajeBonificacionPrecio();
-            fila[19] = producto.getPrecioBonificado();        
-            fila[20] = producto.getNombreRubro();
-            fila[21] = producto.getFechaUltimaModificacion();
-            fila[22] = producto.getRazonSocialProveedor();
-            fila[23] = producto.getFechaAlta();
-            fila[24] = producto.getFechaVencimiento();
-            fila[25] = producto.getNota();
+                    .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);         
+            fila[6] = producto.getCantidadReservada();           
+            fila[7] = producto.getBulto();
+            fila[8] = producto.getNombreMedida();
+            fila[9] = producto.getPrecioCosto();
+            fila[10] = producto.getGananciaPorcentaje();
+            fila[11] = producto.getGananciaNeto();
+            fila[12] = producto.getPrecioVentaPublico();
+            fila[13] = producto.getIvaPorcentaje();
+            fila[14] = producto.getIvaNeto();
+            fila[15] = producto.getPrecioLista();        
+            fila[16] = producto.getPorcentajeBonificacionOferta();
+            fila[17] = producto.getPorcentajeBonificacionPrecio();
+            fila[18] = producto.getPrecioBonificado();        
+            fila[19] = producto.getNombreRubro();
+            fila[20] = producto.getFechaUltimaModificacion();
+            fila[21] = producto.getRazonSocialProveedor();
+            fila[22] = producto.getFechaAlta();
+            fila[23] = producto.getFechaVencimiento();
+            fila[24] = producto.getNota();
             return fila;
         }).forEach(fila -> {
             modeloTablaResultados.addRow(fila);
@@ -751,12 +750,12 @@ public class ProductosGUI extends JInternalFrame {
                         .addComponent(btn_Eliminar)
                         .addGap(0, 0, 0)
                         .addComponent(btnExportar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 340, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 346, Short.MAX_VALUE)
                         .addComponent(lbl_ValorStock)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txt_ValorStock, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(sp_Resultados, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addContainerGap())
+                .addGap(0, 0, 0))
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnExportar, btn_Eliminar, btn_Modificar, btn_Nuevo});
