@@ -147,6 +147,11 @@ public class BuscarProductosGUI extends JDialog {
                     this.restarCantidadesSegunProductosYaCargados();
                 }
                 this.cargarResultadosAlTable();
+                if (response.isLast()) {
+                    btnVerMas.setEnabled(false);
+                } else {
+                    btnVerMas.setEnabled(true);
+                }
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -498,7 +503,7 @@ public class BuscarProductosGUI extends JDialog {
         txtaNotaProducto = new javax.swing.JTextArea();
         lblBonificacion = new javax.swing.JLabel();
         txtBonificacion = new javax.swing.JFormattedTextField();
-        jButton1 = new javax.swing.JButton();
+        btnVerMas = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -618,10 +623,11 @@ public class BuscarProductosGUI extends JDialog {
             }
         });
 
-        jButton1.setText("Ver más resultados");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnVerMas.setForeground(java.awt.Color.blue);
+        btnVerMas.setText("Ver más resultados");
+        btnVerMas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnVerMasActionPerformed(evt);
             }
         });
 
@@ -651,7 +657,7 @@ public class BuscarProductosGUI extends JDialog {
                                 .addComponent(txtBonificacion)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnVerMas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -667,9 +673,9 @@ public class BuscarProductosGUI extends JDialog {
                     .addComponent(btnBuscar)
                     .addComponent(txtCriteriaBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnVerMas)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panelFondoLayout.createSequentialGroup()
@@ -810,17 +816,17 @@ public class BuscarProductosGUI extends JDialog {
         });
     }//GEN-LAST:event_txtBonificacionFocusGained
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnVerMasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerMasActionPerformed
         if (productosTotal.size() >= 10) {
             NUMERO_PAGINA += 1;
             buscar();
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnVerMasActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnBuscar;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnVerMas;
     private javax.swing.JLabel lblBonificacion;
     private javax.swing.JLabel lbl_Cantidad;
     private javax.swing.JPanel panelFondo;
