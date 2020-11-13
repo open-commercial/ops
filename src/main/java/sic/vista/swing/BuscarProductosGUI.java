@@ -171,30 +171,31 @@ public class BuscarProductosGUI extends JDialog {
             debeCargarRenglon = false;
             this.dispose();
         } else {
-            if (movimiento == Movimiento.PEDIDO) {
-                BigDecimal[] cantidades = {this.sumarCantidadesSegunProductosYaCargados()};
-                long[] idsProductos = {productoSeleccionado.getIdProducto()};
-                ProductosParaVerificarStock productosParaVerificarStock = ProductosParaVerificarStock.builder()
-                        .cantidad(cantidades)
-                        .idProducto(idsProductos)
-                        .build();
-                if (this.idPedido != null) {
-                    productosParaVerificarStock.setIdPedido(this.idPedido);
+            try {
+                if (movimiento == Movimiento.PEDIDO) {
+                    BigDecimal[] cantidades = {this.sumarCantidadesSegunProductosYaCargados()};
+                    long[] idsProductos = {productoSeleccionado.getIdProducto()};
+                    ProductosParaVerificarStock productosParaVerificarStock = ProductosParaVerificarStock.builder()
+                            .cantidad(cantidades)
+                            .idProducto(idsProductos)
+                            .idSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal())
+                            .build();
+                    if (this.idPedido != null) {
+                        productosParaVerificarStock.setIdPedido(this.idPedido);
+                    }
+                    HttpEntity<ProductosParaVerificarStock> requestEntity = new HttpEntity<>(productosParaVerificarStock);
+                    boolean existeStockSuficiente;
+                    existeStockSuficiente = RestClient.getRestTemplate()
+                            .exchange("/productos/disponibilidad-stock", HttpMethod.POST, requestEntity, new ParameterizedTypeReference<List<ProductoFaltante>>() {
+                            })
+                            .getBody().isEmpty();
+                    if (!existeStockSuficiente) {
+                        JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_producto_sin_stock_suficiente"), "Error", JOptionPane.ERROR_MESSAGE);
+                        esValido = false;
+                    }
                 }
-                HttpEntity<ProductosParaVerificarStock> requestEntity = new HttpEntity<>(productosParaVerificarStock);
-                boolean existeStockSuficiente;
-                existeStockSuficiente = RestClient.getRestTemplate()
-                        .exchange("/productos/disponibilidad-stock", HttpMethod.POST, requestEntity, new ParameterizedTypeReference<List<ProductoFaltante>>() {
-                        })
-                        .getBody().isEmpty();
-                if (!existeStockSuficiente) {
-                    JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_producto_sin_stock_suficiente"), "Error", JOptionPane.ERROR_MESSAGE);
-                    esValido = false;
-                }
-            }
-            if (esValido) {
-                try {
+                if (esValido) {
                     switch (movimiento) {
                         case PEDIDO:
                             this.nuevoRenglonPedido = new NuevoRenglonPedido();
@@ -211,13 +212,13 @@ public class BuscarProductosGUI extends JDialog {
                     }
                     debeCargarRenglon = true;
                     this.dispose();
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -357,15 +358,12 @@ public class BuscarProductosGUI extends JDialog {
                             fila[2] = cantidadesEnSucursal.getCantidad();
                         }
                     });
-                    BigDecimal cantidadEnOtrasSucursales = BigDecimal.ZERO;
-                    p.getCantidadEnSucursalesDisponible().stream()
-                            .filter(cantidadEnSucursales 
-                                    -> !cantidadEnSucursales.idSucursal.equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())).forEach(cantidadesEnSucursal -> {
-                        if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
-                            cantidadEnOtrasSucursales.add(p.getCantidadTotalEnSucursales().subtract(cantidadesEnSucursal.getCantidad()));
-                        }
-                    });
-                    fila[3] = cantidadEnOtrasSucursales;
+                    BigDecimal cantidadEnOtrasSucursales
+                            = p.getCantidadEnSucursalesDisponible().stream()
+                                    .filter(cantidadDisponible
+                                            -> !cantidadDisponible.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal()))
+                                    .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);
+                    fila[3] = cantidadEnOtrasSucursales;                
                 }
                 fila[4] = p.getCantidadReservada();
                 fila[5] = p.getBulto();
