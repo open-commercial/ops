@@ -357,13 +357,15 @@ public class BuscarProductosGUI extends JDialog {
                             fila[2] = cantidadesEnSucursal.getCantidad();
                         }
                     });
+                    BigDecimal cantidadEnOtrasSucursales = BigDecimal.ZERO;
                     p.getCantidadEnSucursalesDisponible().stream()
                             .filter(cantidadEnSucursales 
                                     -> !cantidadEnSucursales.idSucursal.equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())).forEach(cantidadesEnSucursal -> {
                         if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
-                            fila[3] = p.getCantidadTotalEnSucursales().subtract(cantidadesEnSucursal.getCantidad());
+                            cantidadEnOtrasSucursales.add(p.getCantidadTotalEnSucursales().subtract(cantidadesEnSucursal.getCantidad()));
                         }
                     });
+                    fila[3] = cantidadEnOtrasSucursales;
                 }
                 fila[4] = p.getCantidadReservada();
                 fila[5] = p.getBulto();
