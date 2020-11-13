@@ -76,7 +76,7 @@ public class ProductosGUI extends JInternalFrame {
         encabezados[1] = "Oferta";
         encabezados[2] = "Codigo";
         encabezados[3] = "Descripcion";
-        encabezados[4] = "Cant. Sucursal";
+        encabezados[4] = "Stock";
         encabezados[5] = "Otras Sucursales"; 
         encabezados[6] = "Reservado";       
         encabezados[7] = "Venta x Cant."; 
@@ -136,7 +136,7 @@ public class ProductosGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(60);
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(400);
-        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(105);
+        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(60);
         tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(115);
         tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(75);
         tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(90);        
