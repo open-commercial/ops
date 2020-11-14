@@ -1395,8 +1395,7 @@ public class FacturasVentaGUI extends JInternalFrame {
             for (int i = 0; i < indices.length; i++) {
                 facturas.add(facturasTotal.get(indices[i]));
             }
-            long idCliente = 0L;
-            Long idSucursal = null;
+            long idPedido = 0L;
             int i = 0;
             boolean debeLanzarVistaRemito = true;
             for (FacturaVenta facturaVenta : facturas) {
@@ -1407,19 +1406,11 @@ public class FacturasVentaGUI extends JInternalFrame {
                     break;
                 }
                 if (i == 0) {
-                    idCliente = facturaVenta.getIdCliente();
-                    idSucursal = facturaVenta.getIdSucursal();
+                    idPedido = facturaVenta.getIdPedido();
                 } else {
-                    if (idCliente != facturaVenta.getIdCliente()) {
+                    if (idPedido != facturaVenta.getIdPedido()) {
                         JOptionPane.showMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_remito_facturas_diferentes_clientes"),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                        debeLanzarVistaRemito = false;
-                        break;
-                    }
-                    if (idSucursal != facturaVenta.getIdSucursal()) {
-                        JOptionPane.showMessageDialog(this,
-                                ResourceBundle.getBundle("Mensajes").getString("mensaje_remito_facturas_diferentes_sucursales"),
+                                ResourceBundle.getBundle("Mensajes").getString("mensaje_remito_facturas_diferentes_pedidos"),
                                 "Error", JOptionPane.ERROR_MESSAGE);
                         debeLanzarVistaRemito = false;
                         break;
