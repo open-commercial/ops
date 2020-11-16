@@ -437,14 +437,14 @@ public class BuscarProductosGUI extends JDialog {
         tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(120);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(380);
         if (!busquedaParaFiltros) {
-            tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(70);
-            tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(70);
-            tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(130);
-            tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(130);
-            tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(105);
-            tbl_Resultados.getColumnModel().getColumn(4).setMaxWidth(105);
-            tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(105);
-            tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(105);
+            tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(60);
+            tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(60);
+            tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(140);
+            tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(140);
+            tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(80);
+            tbl_Resultados.getColumnModel().getColumn(4).setMaxWidth(80);
+            tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(100);
+            tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(100);
             tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(70);
             tbl_Resultados.getColumnModel().getColumn(6).setMaxWidth(70);
             tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(70);
@@ -651,7 +651,7 @@ public class BuscarProductosGUI extends JDialog {
                                 .addComponent(txtBonificacion)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnVerMas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnVerMas, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -668,7 +668,7 @@ public class BuscarProductosGUI extends JDialog {
                     .addComponent(txtCriteriaBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(btnVerMas)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
