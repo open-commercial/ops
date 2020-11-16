@@ -1157,6 +1157,7 @@ public class DetallePedidoGUI extends JInternalFrame {
                             ProductosParaVerificarStock productosParaVerificarStock = ProductosParaVerificarStock.builder()
                                     .cantidad(cantidades)
                                     .idProducto(idsProductos)
+                                    .idSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal())
                                     .build();
                             if (pedido != null) {
                                 productosParaVerificarStock.setIdPedido(pedido.getIdPedido());
