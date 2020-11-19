@@ -259,14 +259,7 @@ public class BuscarProductosGUI extends JDialog {
                                             } else {
                                                 cantidadEnSucursal.setCantidad(BigDecimal.ZERO);
                                             }
-                                            p.setCantidadTotalEnSucursales(p.getCantidadTotalEnSucursales().subtract(cantidad));
-                                        } else {
-                                            resultado = p.getCantidadTotalEnSucursales().subtract(cantidad);
-                                            if (resultado.compareTo(BigDecimal.ZERO) >= 0) {
-                                                cantidadEnSucursal.setCantidad(resultado);
-                                            } else {
-                                                cantidadEnSucursal.setCantidad(BigDecimal.ZERO);
-                                            }
+                                        p.setCantidadTotalEnSucursalesDisponible(p.getCantidadTotalEnSucursalesDisponible().subtract(cantidad));
                                         }
                                     });
                                 });
@@ -296,7 +289,7 @@ public class BuscarProductosGUI extends JDialog {
                                             } else {
                                                 cantidadEnSucursal.setCantidad(BigDecimal.ZERO);
                                             }
-                                            p.setCantidadTotalEnSucursales(p.getCantidadTotalEnSucursales().subtract(cantidad));
+                                            p.setCantidadTotalEnSucursalesDisponible(p.getCantidadTotalEnSucursalesDisponible().subtract(cantidad));
                                         }
                                     });
                                 });
@@ -311,7 +304,7 @@ public class BuscarProductosGUI extends JDialog {
                                 p.getCantidadEnSucursalesDisponible().forEach(cantidadEnSucursal -> {
                                     if (cantidadEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
                                         cantidadEnSucursal.setCantidad(cantidadEnSucursal.getCantidad().add(cantidad));
-                                        p.setCantidadTotalEnSucursales(p.getCantidadTotalEnSucursales().add(cantidad));
+                                        p.setCantidadTotalEnSucursalesDisponible(p.getCantidadTotalEnSucursalesDisponible().add(cantidad));
                                     }
                                 });
                             });
@@ -366,12 +359,11 @@ public class BuscarProductosGUI extends JDialog {
                             fila[2] = cantidadesEnSucursal.getCantidad();
                         }
                     });
-                    BigDecimal cantidadEnOtrasSucursales
-                            = p.getCantidadEnSucursalesDisponible().stream()
-                                    .filter(cantidadDisponible
-                                            -> !cantidadDisponible.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal()))
-                                    .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);
-                    fila[3] = cantidadEnOtrasSucursales;                
+                    p.getCantidadEnSucursalesDisponible().forEach(cantidadesEnSucursal -> {
+                        if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
+                            fila[3] = p.getCantidadTotalEnSucursalesDisponible().subtract(cantidadesEnSucursal.getCantidad());
+                        }
+                });         
                 }
                 fila[4] = p.getCantidadReservada();
                 fila[5] = p.getBulto();
