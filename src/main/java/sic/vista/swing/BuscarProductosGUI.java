@@ -361,7 +361,8 @@ public class BuscarProductosGUI extends JDialog {
                     });
                     p.getCantidadEnSucursalesDisponible().forEach(cantidadesEnSucursal -> {
                         if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
-                            fila[3] = p.getCantidadTotalEnSucursalesDisponible().subtract(cantidadesEnSucursal.getCantidad());
+                            BigDecimal otrasSucursales = p.getCantidadTotalEnSucursalesDisponible().subtract(cantidadesEnSucursal.getCantidad());
+                            fila[3] = otrasSucursales.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : otrasSucursales;
                         }
                 });         
                 }
