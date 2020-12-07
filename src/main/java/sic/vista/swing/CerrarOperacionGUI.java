@@ -797,8 +797,8 @@ public class CerrarOperacionGUI extends JDialog {
     }//GEN-LAST:event_btnFinalizarActionPerformed
 
     private void cerrarPedido(TipoDeEnvio tipoDeEnvio) {
+        nuevoPedido.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
         if (nuevoPedido != null) {
-            nuevoPedido.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
             nuevoPedido.setIdCliente(cliente.getIdCliente());
             nuevoPedido.setTipoDeEnvio(tipoDeEnvio);
             this.agregarPagosAlPedido();
