@@ -851,6 +851,9 @@
                         <Property name="lineWrap" type="boolean" value="true"/>
                         <Property name="rows" type="int" value="5"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_NotaKeyTyped"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>

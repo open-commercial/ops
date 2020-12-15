@@ -686,6 +686,11 @@ public class DetalleProductoGUI extends JDialog {
         txt_Nota.setColumns(20);
         txt_Nota.setLineWrap(true);
         txt_Nota.setRows(5);
+        txt_Nota.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txt_NotaKeyTyped(evt);
+            }
+        });
         jScrollPane1.setViewportView(txt_Nota);
 
         lblPublico.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -1555,6 +1560,11 @@ public class DetalleProductoGUI extends JDialog {
         }
         txtPorcentajePrecioBonificado.setValue(this.calcularPorcentaje(new BigDecimal(txtPrecioBonificado.getValue().toString()), new BigDecimal(txtPrecioLista.getValue().toString())));
     }//GEN-LAST:event_txtPrecioBonificadoActionPerformed
+
+    private void txt_NotaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_NotaKeyTyped
+        if (txt_Nota.getText().length() > 249)
+            evt.consume();
+    }//GEN-LAST:event_txt_NotaKeyTyped
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgVisibilidad;
