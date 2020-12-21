@@ -19,6 +19,7 @@ public class ExportGUI extends JDialog {
 
     private BusquedaProductoCriteria criteriaProducto;
     private BusquedaCuentaCorrienteClienteCriteria criteriaCuentaCorrienteCliente;
+    private boolean listaClientes; 
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     
     public ExportGUI(BusquedaProductoCriteria criteriaProducto) {
@@ -26,9 +27,10 @@ public class ExportGUI extends JDialog {
         this.criteriaProducto = criteriaProducto;
     }
     
-    public ExportGUI(BusquedaCuentaCorrienteClienteCriteria criteriaCuentaCorrienteCliente) {
+    public ExportGUI(BusquedaCuentaCorrienteClienteCriteria criteriaCuentaCorrienteCliente, boolean listaClientes) {
         this.initComponents();
         this.criteriaCuentaCorrienteCliente = criteriaCuentaCorrienteCliente;
+        this.listaClientes = listaClientes;
     }
     
     @SuppressWarnings("unchecked")
@@ -106,11 +108,30 @@ public class ExportGUI extends JDialog {
     private void btnExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcelActionPerformed
         try {
             if (this.criteriaCuentaCorrienteCliente != null) {
-                byte[] reporte = RestClient.getRestTemplate().postForObject("/cuentas-corriente/clientes/reporte/criteria?formato=xlsx", this.criteriaCuentaCorrienteCliente, byte[].class);
-                File f = new File(System.getProperty("user.home") + "/" + "CuentaCorriente.xlsx");
-                Files.write(f.toPath(), reporte);
-                Desktop.getDesktop().open(f);
+                if (listaClientes) {
+                    byte[] reporte = RestClient.getRestTemplate().postForObject("/cuentas-corriente/lista-clientes/reporte/criteria?formato=xlsx", this.criteriaCuentaCorrienteCliente, byte[].class);
+                    File f = new File(System.getProperty("user.home") + "/" + "CuentaCorriente.xlsx");
+                    Files.write(f.toPath(), reporte);
+                    Desktop.getDesktop().open(f);
+                } else {
+                    byte[] reporte = RestClient.getRestTemplate().postForObject("/cuentas-corriente/clientes/reporte/criteria?formato=xlsx", this.criteriaCuentaCorrienteCliente, byte[].class);
+                    File f = new File(System.getProperty("user.home") + "/" + "CuentaCorriente.xlsx");
+                    Files.write(f.toPath(), reporte);
+                    Desktop.getDesktop().open(f);
+                }
             }
+//            if (this.criteriaCuentaCorrienteCliente != null && !listaClientes) {
+//                byte[] reporte = RestClient.getRestTemplate().postForObject("/cuentas-corriente/clientes/reporte/criteria?formato=xlsx", this.criteriaCuentaCorrienteCliente, byte[].class);
+//                File f = new File(System.getProperty("user.home") + "/" + "CuentaCorriente.xlsx");
+//                Files.write(f.toPath(), reporte);
+//                Desktop.getDesktop().open(f);
+//            }
+//            if (this.criteriaCuentaCorrienteCliente != null && listaClientes) {
+//                byte[] reporte = RestClient.getRestTemplate().postForObject("/cuentas-corriente/lista-clientes/reporte/criteria", this.criteriaCuentaCorrienteCliente, byte[].class);
+//                File f = new File(System.getProperty("user.home") + "/" + "CuentaCorriente.xlsx");
+//                Files.write(f.toPath(), reporte);
+//                Desktop.getDesktop().open(f);
+//            }
             if (this.criteriaProducto != null) {
                 byte[] reporte = RestClient.getRestTemplate().postForObject("/productos/reporte/criteria?formato=xlsx", this.criteriaProducto, byte[].class);
                 File f = new File(System.getProperty("user.home") + "/" + "ListaPrecios.xlsx");
@@ -136,10 +157,17 @@ public class ExportGUI extends JDialog {
     private void btnPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPDFActionPerformed
         try {
             if (this.criteriaCuentaCorrienteCliente != null) {
-                byte[] reporte = RestClient.getRestTemplate().postForObject("/cuentas-corriente/clientes/reporte/criteria?formato=pdf", this.criteriaCuentaCorrienteCliente, byte[].class);
-                File f = new File(System.getProperty("user.home") + "/" + "CuentaCorriente.pdf");
-                Files.write(f.toPath(), reporte);
-                Desktop.getDesktop().open(f);
+                if (listaClientes) {
+                    byte[] reporte = RestClient.getRestTemplate().postForObject("/cuentas-corriente/lista-clientes/reporte/criteria?formato=pdf", this.criteriaCuentaCorrienteCliente, byte[].class);
+                    File f = new File(System.getProperty("user.home") + "/" + "ListaClientes.pdf");
+                    Files.write(f.toPath(), reporte);
+                    Desktop.getDesktop().open(f);
+                } else {
+                    byte[] reporte = RestClient.getRestTemplate().postForObject("/cuentas-corriente/clientes/reporte/criteria?formato=pdf", this.criteriaCuentaCorrienteCliente, byte[].class);
+                    File f = new File(System.getProperty("user.home") + "/" + "CuentaCorriente.pdf");
+                    Files.write(f.toPath(), reporte);
+                    Desktop.getDesktop().open(f);
+                }
             }
             if (this.criteriaProducto != null) {
                 byte[] reporte = RestClient.getRestTemplate().postForObject("/productos/reporte/criteria?formato=pdf", this.criteriaProducto, byte[].class);
