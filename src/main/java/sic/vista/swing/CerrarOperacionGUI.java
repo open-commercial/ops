@@ -797,10 +797,10 @@ public class CerrarOperacionGUI extends JDialog {
     }//GEN-LAST:event_btnFinalizarActionPerformed
 
     private void cerrarPedido(TipoDeEnvio tipoDeEnvio) {
-        nuevoPedido.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
-        if (nuevoPedido != null) {
+        if (pedido == null) { 
             nuevoPedido.setIdCliente(cliente.getIdCliente());
             nuevoPedido.setTipoDeEnvio(tipoDeEnvio);
+            nuevoPedido.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
             this.agregarPagosAlPedido();
             Pedido p = RestClient.getRestTemplate().postForObject("/pedidos", nuevoPedido, Pedido.class);
             this.exito = true;
@@ -816,6 +816,7 @@ public class CerrarOperacionGUI extends JDialog {
             nuevoPedido.setObservaciones(pedido.getObservaciones());
             nuevoPedido.setRecargoPorcentaje(pedido.getRecargoPorcentaje());
             nuevoPedido.setDescuentoPorcentaje(pedido.getDescuentoPorcentaje());
+            nuevoPedido.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
             List<NuevoRenglonPedido> nuevosRenglonesPedido = new ArrayList();
             pedido.getRenglones().forEach(r -> nuevosRenglonesPedido.add(
                     new NuevoRenglonPedido(r.getIdProductoItem(), r.getCantidad())));
