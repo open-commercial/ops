@@ -103,6 +103,7 @@ public class SucursalesGUI extends JDialog {
         btn_EliminarSucursal.setForeground(java.awt.Color.blue);
         btn_EliminarSucursal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/RemoveSucursal_16x16.png"))); // NOI18N
         btn_EliminarSucursal.setText("Eliminar");
+        btn_EliminarSucursal.setEnabled(false);
         btn_EliminarSucursal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_EliminarSucursalActionPerformed(evt);
