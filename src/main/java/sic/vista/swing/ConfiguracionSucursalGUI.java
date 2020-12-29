@@ -431,6 +431,8 @@ public class ConfiguracionSucursalGUI extends JInternalFrame {
             } else {
                 try {
                     RestClient.getRestTemplate().put("/configuraciones-sucursal", this.getConfiguracionSucursal());
+                    SucursalActiva.getInstance().getSucursal().setConfiguracionSucursal(RestClient.getRestTemplate()
+                            .getForObject("/configuraciones-sucursal/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(), ConfiguracionSucursal.class));
                     JOptionPane.showMessageDialog(this, "La configuración se guardó correctamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
                     this.dispose();
                 } catch (RestClientResponseException ex) {
