@@ -208,8 +208,9 @@ public class DetalleSucursalGUI extends JDialog {
         lblTamanioMax.setForeground(java.awt.Color.gray);
         lblTamanioMax.setText("Maximo 1MB");
 
+        lblUbicacion.setForeground(java.awt.Color.red);
         lblUbicacion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblUbicacion.setText("Ubicación:");
+        lblUbicacion.setText("* Ubicación:");
 
         btnUbicacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/EditMap_16x16.png"))); // NOI18N
         btnUbicacion.addActionListener(new java.awt.event.ActionListener() {
@@ -375,9 +376,7 @@ public class DetalleSucursalGUI extends JDialog {
                 }
                 sucursal.setEmail(txt_Email.getText().trim());
                 sucursal.setTelefono(txt_Telefono.getText().trim());
-                if (this.ubicacion != null) {
-                    sucursal.setUbicacion(this.ubicacion);
-                }
+                sucursal.setUbicacion(this.ubicacion);
                 sucursal = RestClient.getRestTemplate().postForObject("/sucursales", sucursal, Sucursal.class);
                 mensaje = "La Sucursal " + txt_Nombre.getText().trim() + " se guardó correctamente.";
                 if (logo == null) {
@@ -399,9 +398,7 @@ public class DetalleSucursalGUI extends JDialog {
                         .toLocalDateTime());
                 sucursalModificar.setEmail(txt_Email.getText().trim());
                 sucursalModificar.setTelefono(txt_Telefono.getText().trim());
-                if (this.ubicacion != null) {
-                    sucursalModificar.setUbicacion(this.ubicacion);
-                }
+                sucursalModificar.setUbicacion(this.ubicacion);
                 if (cambioLogo && logo != null) {
                     sucursalModificar.setLogo(RestClient.getRestTemplate()
                             .postForObject("/sucursales/" + sucursalModificar.getIdSucursal() + "/logo", logo, String.class));

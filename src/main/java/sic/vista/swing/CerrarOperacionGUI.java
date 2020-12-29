@@ -623,34 +623,10 @@ public class CerrarOperacionGUI extends JDialog {
                 txtSaldoCC.setForeground(new Color(29,156,37));
             }
             if ((this.nuevoPedido != null || this.pedido != null) && this.nuevaFacturaVenta == null) {
-                lblDividido.setVisible(false);
-                rbDomicilio.setSelected(false);
-                rbRetiroEnSucursal.setSelected(false);
-//                if (SucursalActiva.getInstance().getSucursal().getConfiguracionSucursal().isPuntoDeRetiro()) {
-                    rbRetiroEnSucursal.setEnabled(true);
-                    rbRetiroEnSucursal.setSelected(true);
-//                } else {
-//                    rbRetiroEnSucursal.setEnabled(false);
-//                    rbRetiroEnSucursal.setSelected(false);
-//                }
-//                if (this.cliente.getUbicacionEnvio() != null) {
-//                    lblDetalleEnvio.setText(this.cliente.getUbicacionEnvio().toString());
-//                    if (!rbDomicilio.isSelected()) {
-//                        rbDireccionEnvio.setSelected(true);
-//                    }
-//                } else {
-//                    rbDireccionEnvio.setEnabled(false);
-//                    lblDetalleEnvio.setEnabled(false);
-//                }
-//                if (this.cliente.getUbicacionFacturacion() != null) {
-//                    lblDetalleUbicacionFacturacion.setText(this.cliente.getUbicacionFacturacion().toString());
-//                    if (!rbRetiroEnSucursal.isSelected()) {
-//                        rbDomicilio.setSelected(true);
-//                    }
-//                } else {
-//                    rbDomicilio.setEnabled(false);
-//                    lblDetalleUbicacionFacturacion.setEnabled(false);
-//                }
+                lblDividido.setVisible(false);           
+                rbRetiroEnSucursal.setEnabled(SucursalActiva.getInstance().getSucursal().getConfiguracionSucursal().isPuntoDeRetiro());
+                rbRetiroEnSucursal.setSelected(SucursalActiva.getInstance().getSucursal().getConfiguracionSucursal().isPuntoDeRetiro());  
+                rbDomicilio.setSelected(!SucursalActiva.getInstance().getSucursal().getConfiguracionSucursal().isPuntoDeRetiro());  
             } else {
                 panelInferior.setEnabled(false);
                 rbRetiroEnSucursal.setEnabled(false);
@@ -870,10 +846,10 @@ public class CerrarOperacionGUI extends JDialog {
     private void rbDomicilioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbDomicilioItemStateChanged
         cmbEnvio.setEnabled(true);
         if (this.cliente.getUbicacionFacturacion() != null) {
-            cmbEnvio.addItem("Usar ubicacion de Facturacion");
+            cmbEnvio.addItem("Usar ubicación de facturación");
         }
         if (this.cliente.getUbicacionEnvio() != null) {
-            cmbEnvio.addItem("Usar ubicacion de envío");
+            cmbEnvio.addItem("Usar ubicación de envío");
         }
         if (cmbEnvio.getItemCount() > 0) {
             lblDetalleEnvio.setEnabled(true);
