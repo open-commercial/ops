@@ -2,7 +2,6 @@ package sic.vista.swing;
 
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.event.AdjustmentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
@@ -15,7 +14,6 @@ import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollBar;
 import javax.swing.SwingUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +23,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.CantidadEnSucursal;
 import sic.modelo.SucursalActiva;
 import sic.modelo.Movimiento;
 import sic.modelo.NuevoRenglonFactura;
@@ -59,7 +58,7 @@ public class BuscarProductosGUI extends JDialog {
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int NUMERO_PAGINA = 0;    
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private final Dimension sizeDialog = new Dimension(1100, 600);
+    private final Dimension sizeDialog = new Dimension(1100, 400);
     
     public BuscarProductosGUI(List<RenglonFactura> renglones, TipoDeComprobante tipoDeComprobante, Movimiento tipoDeMovimiento) { 
         this.initComponents();
@@ -137,8 +136,9 @@ public class BuscarProductosGUI extends JDialog {
                 criteria.setPagina(NUMERO_PAGINA);
                 HttpEntity<BusquedaProductoCriteria> requestEntity = new HttpEntity<>(criteria);
                 PaginaRespuestaRest<Producto> response = RestClient.getRestTemplate()
-                        .exchange("/productos/busqueda/criteria", HttpMethod.POST, requestEntity,
-                                new ParameterizedTypeReference<PaginaRespuestaRest<Producto>>() {})
+                        .exchange("/productos/busqueda/criteria/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(), HttpMethod.POST, requestEntity,
+                                new ParameterizedTypeReference<PaginaRespuestaRest<Producto>>() {
+                        })
                         .getBody();
                 productosParcial = response.getContent();
                 productosTotal.addAll(productosParcial);
@@ -147,6 +147,11 @@ public class BuscarProductosGUI extends JDialog {
                     this.restarCantidadesSegunProductosYaCargados();
                 }
                 this.cargarResultadosAlTable();
+                if (response.isLast()) {
+                    btnVerMas.setEnabled(false);
+                } else {
+                    btnVerMas.setEnabled(true);
+                }
             }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -166,30 +171,31 @@ public class BuscarProductosGUI extends JDialog {
             debeCargarRenglon = false;
             this.dispose();
         } else {
-            if (movimiento == Movimiento.PEDIDO) {
-                BigDecimal[] cantidades = {this.sumarCantidadesSegunProductosYaCargados()};
-                long[] idsProductos = {productoSeleccionado.getIdProducto()};
-                ProductosParaVerificarStock productosParaVerificarStock = ProductosParaVerificarStock.builder()
-                        .cantidad(cantidades)
-                        .idProducto(idsProductos)
-                        .build();
-                if (this.idPedido != null) {
-                    productosParaVerificarStock.setIdPedido(this.idPedido);
+            try {
+                if (movimiento == Movimiento.PEDIDO) {
+                    BigDecimal[] cantidades = {this.sumarCantidadesSegunProductosYaCargados()};
+                    long[] idsProductos = {productoSeleccionado.getIdProducto()};
+                    ProductosParaVerificarStock productosParaVerificarStock = ProductosParaVerificarStock.builder()
+                            .cantidad(cantidades)
+                            .idProducto(idsProductos)
+                            .idSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal())
+                            .build();
+                    if (this.idPedido != null) {
+                        productosParaVerificarStock.setIdPedido(this.idPedido);
+                    }
+                    HttpEntity<ProductosParaVerificarStock> requestEntity = new HttpEntity<>(productosParaVerificarStock);
+                    boolean existeStockSuficiente;
+                    existeStockSuficiente = RestClient.getRestTemplate()
+                            .exchange("/productos/disponibilidad-stock", HttpMethod.POST, requestEntity, new ParameterizedTypeReference<List<ProductoFaltante>>() {
+                            })
+                            .getBody().isEmpty();
+                    if (!existeStockSuficiente) {
+                        JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_producto_sin_stock_suficiente"), "Error", JOptionPane.ERROR_MESSAGE);
+                        esValido = false;
+                    }
                 }
-                HttpEntity<ProductosParaVerificarStock> requestEntity = new HttpEntity<>(productosParaVerificarStock);
-                boolean existeStockSuficiente;
-                existeStockSuficiente = RestClient.getRestTemplate()
-                        .exchange("/productos/disponibilidad-stock", HttpMethod.POST, requestEntity, new ParameterizedTypeReference<List<ProductoFaltante>>() {
-                        })
-                        .getBody().isEmpty();
-                if (!existeStockSuficiente) {
-                    JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
-                            .getString("mensaje_producto_sin_stock_suficiente"), "Error", JOptionPane.ERROR_MESSAGE);
-                    esValido = false;
-                }
-            }
-            if (esValido) {
-                try {
+                if (esValido) {
                     switch (movimiento) {
                         case PEDIDO:
                             this.nuevoRenglonPedido = new NuevoRenglonPedido();
@@ -206,13 +212,13 @@ public class BuscarProductosGUI extends JDialog {
                     }
                     debeCargarRenglon = true;
                     this.dispose();
-                } catch (RestClientResponseException ex) {
-                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                } catch (ResourceAccessException ex) {
-                    LOGGER.error(ex.getMessage());
-                    JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
+            } catch (RestClientResponseException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ResourceAccessException ex) {
+                LOGGER.error(ex.getMessage());
+                JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -244,15 +250,16 @@ public class BuscarProductosGUI extends JDialog {
                     cantidadesNuevas.forEach((id, cantidad) -> { // se restan las cantidades nuevas a los resultados
                         productosTotal.stream().filter(p -> (id == p.getIdProducto() && p.isIlimitado() == false))
                                 .forEachOrdered(p -> {
-                                    p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
+                                    p.getCantidadEnSucursalesDisponible().forEach(cantidadEnSucursal -> {
+                                        BigDecimal resultado;
                                         if (cantidadEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
-                                            BigDecimal resultado = cantidadEnSucursal.getCantidad().subtract(cantidad);
+                                            resultado = cantidadEnSucursal.getCantidad().subtract(cantidad);
                                             if (resultado.compareTo(BigDecimal.ZERO) >= 0) {
                                                 cantidadEnSucursal.setCantidad(resultado);
                                             } else {
                                                 cantidadEnSucursal.setCantidad(BigDecimal.ZERO);
                                             }
-                                            p.setCantidadTotalEnSucursales(p.getCantidadTotalEnSucursales().subtract(cantidad));
+                                        p.setCantidadTotalEnSucursalesDisponible(p.getCantidadTotalEnSucursalesDisponible().subtract(cantidad));
                                         }
                                     });
                                 });
@@ -274,7 +281,7 @@ public class BuscarProductosGUI extends JDialog {
                     if (cantidad.compareTo(BigDecimal.ZERO) != 0) {
                         productosTotal.stream().filter(producto -> (id == producto.getIdProducto() && producto.isIlimitado() == false))
                                 .forEachOrdered(p -> {
-                                    p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
+                                    p.getCantidadEnSucursalesDisponible().forEach(cantidadEnSucursal -> {
                                         if (cantidadEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
                                             BigDecimal resultado = cantidadEnSucursal.getCantidad().subtract(cantidad);
                                             if (resultado.compareTo(BigDecimal.ZERO) >= 0) {
@@ -282,7 +289,7 @@ public class BuscarProductosGUI extends JDialog {
                                             } else {
                                                 cantidadEnSucursal.setCantidad(BigDecimal.ZERO);
                                             }
-                                            p.setCantidadTotalEnSucursales(p.getCantidadTotalEnSucursales().subtract(cantidad));
+                                            p.setCantidadTotalEnSucursalesDisponible(p.getCantidadTotalEnSucursalesDisponible().subtract(cantidad));
                                         }
                                     });
                                 });
@@ -294,10 +301,10 @@ public class BuscarProductosGUI extends JDialog {
                 cantidadesIniciales.forEach((id, cantidad) -> { // sumar los renglones iniciales faltantes en los nuevos renglones
                     productosTotal.stream().filter(p -> (id == p.getIdProducto() && p.isIlimitado() == false))
                             .forEachOrdered(p -> {
-                                p.getCantidadEnSucursales().forEach(cantidadEnSucursal -> {
+                                p.getCantidadEnSucursalesDisponible().forEach(cantidadEnSucursal -> {
                                     if (cantidadEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
                                         cantidadEnSucursal.setCantidad(cantidadEnSucursal.getCantidad().add(cantidad));
-                                        p.setCantidadTotalEnSucursales(p.getCantidadTotalEnSucursales().add(cantidad));
+                                        p.setCantidadTotalEnSucursalesDisponible(p.getCantidadTotalEnSucursalesDisponible().add(cantidad));
                                     }
                                 });
                             });
@@ -331,28 +338,43 @@ public class BuscarProductosGUI extends JDialog {
 
     private void cargarResultadosAlTable() {
         productosParcial.stream().map(p -> {
-            Object[] fila = new Object[busquedaParaFiltros ? 2 : 10];
+            Object[] fila = new Object[busquedaParaFiltros ? 2 : 11];
             fila[0] = p.getCodigo();
             fila[1] = p.getDescripcion();
             if (!busquedaParaFiltros) {
-                p.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
-                    if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
-                        fila[2] = cantidadesEnSucursal.getCantidad();
-                    }
-                });
-                p.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
-                    if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
-                        fila[3] = p.getCantidadTotalEnSucursales().subtract(cantidadesEnSucursal.getCantidad());
-                    }
-                });
-                fila[4] = p.getBulto();
-                fila[5] = p.getNombreMedida();
+                if (movimiento == Movimiento.COMPRA) {
+                    p.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
+                        if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
+                            fila[2] = cantidadesEnSucursal.getCantidad();
+                        }
+                    });
+                    p.getCantidadEnSucursales().forEach(cantidadesEnSucursal -> {
+                        if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
+                            fila[3] = p.getCantidadTotalEnSucursales().subtract(cantidadesEnSucursal.getCantidad());
+                        }
+                    });
+                } else {
+                    p.getCantidadEnSucursalesDisponible().forEach(cantidadesEnSucursal -> {
+                        if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
+                            fila[2] = cantidadesEnSucursal.getCantidad();
+                        }
+                    });
+                    p.getCantidadEnSucursalesDisponible().forEach(cantidadesEnSucursal -> {
+                        if (cantidadesEnSucursal.getIdSucursal().equals(SucursalActiva.getInstance().getSucursal().getIdSucursal())) {
+                            BigDecimal otrasSucursales = p.getCantidadTotalEnSucursalesDisponible().subtract(cantidadesEnSucursal.getCantidad());
+                            fila[3] = otrasSucursales.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : otrasSucursales;
+                        }
+                });         
+                }
+                fila[4] = p.getCantidadReservada();
+                fila[5] = p.getBulto();
+                fila[6] = p.getNombreMedida();
                 BigDecimal precio = (movimiento == Movimiento.PEDIDO) ? p.getPrecioLista()
-                                : (movimiento == Movimiento.COMPRA) ? p.getPrecioCosto() : BigDecimal.ZERO;
-                fila[6] = precio;
-                fila[7] = p.getPorcentajeBonificacionOferta();
-                fila[8] = p.getPorcentajeBonificacionPrecio();
-                fila[9] = p.getPrecioBonificado();
+                        : (movimiento == Movimiento.COMPRA) ? p.getPrecioCosto() : BigDecimal.ZERO;
+                fila[7] = precio;
+                fila[8] = p.getPorcentajeBonificacionOferta();
+                fila[9] = p.getPorcentajeBonificacionPrecio();
+                fila[10] = p.getPrecioBonificado();
             }
             return fila;
         }).forEach(fila -> {
@@ -376,20 +398,21 @@ public class BuscarProductosGUI extends JDialog {
     }
 
     private void setColumnas() {
-        String[] encabezados = new String[busquedaParaFiltros ? 2 : 10];
+        String[] encabezados = new String[busquedaParaFiltros ? 2 : 11];
         encabezados[0] = "Codigo";
         encabezados[1] = "Descripción";
         if (!busquedaParaFiltros) {
             encabezados[2] = "Stock";
             encabezados[3] = "Otras Sucursales";
-            encabezados[4] = "Venta x Cant.";
-            encabezados[5] = "Medida";
+            encabezados[4] = "Reservado";
+            encabezados[5] = "Venta x Cant.";
+            encabezados[6] = "Medida";
             String encabezadoPrecio = (movimiento == Movimiento.PEDIDO) ? "P. Lista"
                             : (movimiento == Movimiento.COMPRA) ? "P.Costo" : "";
-            encabezados[6] = encabezadoPrecio;
-            encabezados[7] = "% Oferta";
-            encabezados[8] = "% Bonif.";
-            encabezados[9] = "P. Bonif.";
+            encabezados[7] = encabezadoPrecio;
+            encabezados[8] = "% Oferta";
+            encabezados[9] = "% Bonif.";
+            encabezados[10] = "P. Bonif.";
         }
         modeloTablaResultados.setColumnIdentifiers(encabezados);
         tbl_Resultados.setModel(modeloTablaResultados);
@@ -400,11 +423,12 @@ public class BuscarProductosGUI extends JDialog {
             tipos[2] = BigDecimal.class;
             tipos[3] = BigDecimal.class;
             tipos[4] = BigDecimal.class;
-            tipos[5] = String.class;
-            tipos[6] = BigDecimal.class;
+            tipos[5] = BigDecimal.class;
+            tipos[6] = String.class;
             tipos[7] = BigDecimal.class;
             tipos[8] = BigDecimal.class;
             tipos[9] = BigDecimal.class;
+            tipos[10] = BigDecimal.class;
         }
         modeloTablaResultados.setClaseColumnas(tipos);
         tbl_Resultados.getTableHeader().setReorderingAllowed(false);
@@ -414,23 +438,25 @@ public class BuscarProductosGUI extends JDialog {
         tbl_Resultados.getColumnModel().getColumn(0).setMaxWidth(120);
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(380);
         if (!busquedaParaFiltros) {
-            tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(70);
-            tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(70);
-            tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(130);
-            tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(130);
-            tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(105);
-            tbl_Resultados.getColumnModel().getColumn(4).setMaxWidth(105);
-            tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(70);
-            tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(70);
+            tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(60);
+            tbl_Resultados.getColumnModel().getColumn(2).setMaxWidth(60);
+            tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(140);
+            tbl_Resultados.getColumnModel().getColumn(3).setMaxWidth(140);
+            tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(80);
+            tbl_Resultados.getColumnModel().getColumn(4).setMaxWidth(80);
+            tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(100);
+            tbl_Resultados.getColumnModel().getColumn(5).setMaxWidth(100);
             tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(70);
             tbl_Resultados.getColumnModel().getColumn(6).setMaxWidth(70);
-            tbl_Resultados.getColumnModel().getColumn(6).setCellRenderer(new ColoresCeldaRenderer());
             tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(70);
             tbl_Resultados.getColumnModel().getColumn(7).setMaxWidth(70);
+            tbl_Resultados.getColumnModel().getColumn(7).setCellRenderer(new ColoresCeldaRenderer());
             tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(70);
             tbl_Resultados.getColumnModel().getColumn(8).setMaxWidth(70);
             tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(70);
             tbl_Resultados.getColumnModel().getColumn(9).setMaxWidth(70);
+            tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(70);
+            tbl_Resultados.getColumnModel().getColumn(10).setMaxWidth(70);
         }
     }
 
@@ -442,16 +468,6 @@ public class BuscarProductosGUI extends JDialog {
         txtCantidad.addKeyListener(keyHandler);
         btnAceptar.addKeyListener(keyHandler);
         txtBonificacion.addKeyListener(keyHandler);
-        sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
-            JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-            int va = scrollBar.getVisibleAmount() + 10;
-            if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (productosTotal.size() >= 10) {
-                    NUMERO_PAGINA += 1;
-                    buscar();
-                }
-            }
-        });
     }
 
     /**
@@ -482,6 +498,7 @@ public class BuscarProductosGUI extends JDialog {
         txtaNotaProducto = new javax.swing.JTextArea();
         lblBonificacion = new javax.swing.JLabel();
         txtBonificacion = new javax.swing.JFormattedTextField();
+        btnVerMas = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -601,6 +618,14 @@ public class BuscarProductosGUI extends JDialog {
             }
         });
 
+        btnVerMas.setForeground(java.awt.Color.blue);
+        btnVerMas.setText("Ver más resultados");
+        btnVerMas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerMasActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelFondoLayout = new javax.swing.GroupLayout(panelFondo);
         panelFondo.setLayout(panelFondoLayout);
         panelFondoLayout.setHorizontalGroup(
@@ -626,7 +651,8 @@ public class BuscarProductosGUI extends JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtBonificacion)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnVerMas, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -642,7 +668,9 @@ public class BuscarProductosGUI extends JDialog {
                     .addComponent(btnBuscar)
                     .addComponent(txtCriteriaBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(btnVerMas)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panelFondoLayout.createSequentialGroup()
@@ -783,9 +811,17 @@ public class BuscarProductosGUI extends JDialog {
         });
     }//GEN-LAST:event_txtBonificacionFocusGained
 
+    private void btnVerMasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerMasActionPerformed
+        if (productosTotal.size() >= 10) {
+            NUMERO_PAGINA += 1;
+            buscar();
+        }
+    }//GEN-LAST:event_btnVerMasActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnVerMas;
     private javax.swing.JLabel lblBonificacion;
     private javax.swing.JLabel lbl_Cantidad;
     private javax.swing.JPanel panelFondo;

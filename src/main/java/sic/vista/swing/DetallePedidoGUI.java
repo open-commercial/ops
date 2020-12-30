@@ -262,8 +262,8 @@ public class DetallePedidoGUI extends JInternalFrame {
 
     private void buscarProductoPorCodigo() {
         try {
-            Producto producto = RestClient.getRestTemplate().getForObject("/productos/busqueda?"
-                    + "&codigo=" + txt_CodigoProducto.getText().trim(), Producto.class);
+            Producto producto = RestClient.getRestTemplate().getForObject("/productos/busqueda/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal()
+                    + "?&codigo=" + txt_CodigoProducto.getText().trim(), Producto.class);
             if (producto == null) {
                 JOptionPane.showMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                         .getString("mensaje_producto_no_encontrado"), "Error", JOptionPane.ERROR_MESSAGE);
@@ -1157,6 +1157,7 @@ public class DetallePedidoGUI extends JInternalFrame {
                             ProductosParaVerificarStock productosParaVerificarStock = ProductosParaVerificarStock.builder()
                                     .cantidad(cantidades)
                                     .idProducto(idsProductos)
+                                    .idSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal())
                                     .build();
                             if (pedido != null) {
                                 productosParaVerificarStock.setIdPedido(pedido.getIdPedido());

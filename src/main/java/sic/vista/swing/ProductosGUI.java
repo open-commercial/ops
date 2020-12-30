@@ -3,7 +3,6 @@ package sic.vista.swing;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,7 +13,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -40,7 +38,7 @@ import sic.util.Utilidades;
 public class ProductosGUI extends JInternalFrame {
 
     private ModeloTabla modeloTablaResultados = new ModeloTabla();
-    private List<Producto> productosTotal = new ArrayList<>();
+    private final List<Producto> productosTotal = new ArrayList<>();
     private List<Producto> productosParcial = new ArrayList<>();
     private Proveedor proveedorSeleccionado;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -51,16 +49,6 @@ public class ProductosGUI extends JInternalFrame {
 
     public ProductosGUI() {
         this.initComponents();        
-        sp_Resultados.getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> {
-            JScrollBar scrollBar = (JScrollBar) e.getAdjustable();
-            int va = scrollBar.getVisibleAmount() + 10;
-            if (scrollBar.getValue() >= (scrollBar.getMaximum() - va)) {
-                if (productosTotal.size() >= 10) {
-                    NUMERO_PAGINA += 1;
-                    buscar();
-                }
-            }
-        });
     }
 
     private void cargarRubros() {
@@ -88,9 +76,9 @@ public class ProductosGUI extends JInternalFrame {
         encabezados[1] = "Oferta";
         encabezados[2] = "Codigo";
         encabezados[3] = "Descripcion";
-        encabezados[4] = "Cant. Sucursal";
-        encabezados[5] = "Otras Sucursales";
-        encabezados[6] = "Total Sucursales";
+        encabezados[4] = "Stock";
+        encabezados[5] = "Otras Sucursales"; 
+        encabezados[6] = "Reservado";       
         encabezados[7] = "Venta x Cant."; 
         encabezados[8] = "Medida";
         encabezados[9] = "Precio Costo";
@@ -128,8 +116,8 @@ public class ProductosGUI extends JInternalFrame {
         tipos[12] = BigDecimal.class;
         tipos[13] = BigDecimal.class;
         tipos[14] = BigDecimal.class;
-        tipos[15] = BigDecimal.class;      
-        tipos[16] = BigDecimal.class;
+        tipos[15] = BigDecimal.class;
+        tipos[16] = BigDecimal.class;      
         tipos[17] = BigDecimal.class;
         tipos[18] = BigDecimal.class;
         tipos[19] = String.class;
@@ -148,11 +136,10 @@ public class ProductosGUI extends JInternalFrame {
         tbl_Resultados.getColumnModel().getColumn(1).setPreferredWidth(60);
         tbl_Resultados.getColumnModel().getColumn(2).setPreferredWidth(120);
         tbl_Resultados.getColumnModel().getColumn(3).setPreferredWidth(400);
-        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(111);
-        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(111);
-        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(111);
-        tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(90);
-        //tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(80);
+        tbl_Resultados.getColumnModel().getColumn(4).setPreferredWidth(60);
+        tbl_Resultados.getColumnModel().getColumn(5).setPreferredWidth(115);
+        tbl_Resultados.getColumnModel().getColumn(6).setPreferredWidth(75);
+        tbl_Resultados.getColumnModel().getColumn(7).setPreferredWidth(90);        
         tbl_Resultados.getColumnModel().getColumn(8).setPreferredWidth(70);
         tbl_Resultados.getColumnModel().getColumn(9).setPreferredWidth(100);
         tbl_Resultados.getColumnModel().getColumn(10).setPreferredWidth(100);
@@ -178,7 +165,7 @@ public class ProductosGUI extends JInternalFrame {
 
     private void cargarResultadosAlTable() {
         productosParcial.stream().map(producto -> {
-            Object[] fila = new Object[27];
+            Object[] fila = new Object[25];
             fila[0] = producto.isPublico();
             fila[1] = producto.isOferta();
             fila[2] = producto.getCodigo();
@@ -191,8 +178,8 @@ public class ProductosGUI extends JInternalFrame {
             });
             fila[5] = producto.getCantidadEnSucursales().stream()
                     .filter(cantidadEnSucursales -> !cantidadEnSucursales.idSucursal.equals(SucursalActiva.getInstance().getSucursal().getIdSucursal()))
-                    .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);
-            fila[6] = producto.getCantidadTotalEnSucursales();
+                    .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);         
+            fila[6] = producto.getCantidadReservada();           
             fila[7] = producto.getBulto();
             fila[8] = producto.getNombreMedida();
             fila[9] = producto.getPrecioCosto();
@@ -427,7 +414,7 @@ public class ProductosGUI extends JInternalFrame {
         try {
             HttpEntity<BusquedaProductoCriteria> requestEntity = new HttpEntity<>(criteria);
             PaginaRespuestaRest<Producto> response = RestClient.getRestTemplate()
-                    .exchange("/productos/busqueda/criteria", HttpMethod.POST, requestEntity,
+                    .exchange("/productos/busqueda/criteria/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal(), HttpMethod.POST, requestEntity,
                             new ParameterizedTypeReference<PaginaRespuestaRest<Producto>>() {
                     })
                     .getBody();
@@ -436,6 +423,11 @@ public class ProductosGUI extends JInternalFrame {
             productosParcial = response.getContent();
             productosTotal.addAll(productosParcial);
             this.cargarResultadosAlTable();
+            if (response.isLast()) {
+                btnVerMas.setEnabled(false);
+            } else {
+                btnVerMas.setEnabled(true);
+            }
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
@@ -500,6 +492,7 @@ public class ProductosGUI extends JInternalFrame {
         txt_ValorStock = new javax.swing.JFormattedTextField();
         lbl_ValorStock = new javax.swing.JLabel();
         btnExportar = new javax.swing.JButton();
+        btnVerMas = new javax.swing.JButton();
         panelOrden = new javax.swing.JPanel();
         cmbOrden = new javax.swing.JComboBox<>();
         cmbSentido = new javax.swing.JComboBox<>();
@@ -608,34 +601,33 @@ public class ProductosGUI extends JInternalFrame {
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFiltrosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(panelFiltrosLayout.createSequentialGroup()
+                            .addComponent(btn_Buscar)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(panelFiltrosLayout.createSequentialGroup()
+                            .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                                .addComponent(chk_Proveedor)
+                                .addComponent(chk_Rubro)
+                                .addComponent(chkCodigoODescripcion))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(cmb_Rubro, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFiltrosLayout.createSequentialGroup()
+                                    .addComponent(txtProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
+                                    .addGap(0, 0, 0)
+                                    .addComponent(btnBuscarProveedor))
+                                .addComponent(txtCodigoODescripcion))))
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(chk_Proveedor)
-                            .addComponent(chk_Rubro)
-                            .addComponent(chkCodigoODescripcion))
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(chk_visibilidad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(chkOfertas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cmb_Rubro, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFiltrosLayout.createSequentialGroup()
-                                .addComponent(txtProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
-                                .addGap(0, 0, 0)
-                                .addComponent(btnBuscarProveedor))
-                            .addComponent(txtCodigoODescripcion))
+                        .addComponent(rb_publico)
                         .addGap(18, 18, 18)
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelFiltrosLayout.createSequentialGroup()
-                                .addComponent(chk_visibilidad, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(rb_publico)
-                                    .addComponent(rb_privado, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(chkOfertas))
-                        .addGap(2, 2, 2))
-                    .addGroup(panelFiltrosLayout.createSequentialGroup()
-                        .addComponent(btn_Buscar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(rb_privado, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -644,29 +636,27 @@ public class ProductosGUI extends JInternalFrame {
         panelFiltrosLayout.setVerticalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFiltrosLayout.createSequentialGroup()
-                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelFiltrosLayout.createSequentialGroup()
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(chkCodigoODescripcion)
-                            .addComponent(txtCodigoODescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(chk_Rubro)
-                            .addComponent(cmb_Rubro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(chk_Proveedor)
-                            .addComponent(txtProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnBuscarProveedor)
-                            .addComponent(chkOfertas)))
-                    .addGroup(panelFiltrosLayout.createSequentialGroup()
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(rb_publico)
-                            .addComponent(chk_visibilidad))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(rb_privado)))
-                .addGap(18, 18, 18)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(chkCodigoODescripcion)
+                    .addComponent(txtCodigoODescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(chk_Rubro)
+                    .addComponent(cmb_Rubro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(chk_Proveedor)
+                    .addComponent(txtProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarProveedor))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(chk_visibilidad)
+                    .addComponent(rb_publico)
+                    .addComponent(rb_privado))
+                .addGap(14, 14, 14)
+                .addComponent(chkOfertas)
+                .addGap(18, 18, 18)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btn_Buscar)
                     .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -733,24 +723,35 @@ public class ProductosGUI extends JInternalFrame {
             }
         });
 
+        btnVerMas.setForeground(java.awt.Color.blue);
+        btnVerMas.setText("Ver más resultados");
+        btnVerMas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerMasActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(btn_Nuevo)
-                .addGap(0, 0, 0)
-                .addComponent(btn_Modificar)
-                .addGap(0, 0, 0)
-                .addComponent(btn_Eliminar)
-                .addGap(0, 0, 0)
-                .addComponent(btnExportar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lbl_ValorStock)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txt_ValorStock, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addComponent(sp_Resultados)
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnVerMas, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelResultadosLayout.createSequentialGroup()
+                        .addComponent(btn_Nuevo)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_Modificar)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_Eliminar)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnExportar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 346, Short.MAX_VALUE)
+                        .addComponent(lbl_ValorStock)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txt_ValorStock, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(sp_Resultados, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(0, 0, 0))
         );
 
         panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnExportar, btn_Eliminar, btn_Modificar, btn_Nuevo});
@@ -758,7 +759,9 @@ public class ProductosGUI extends JInternalFrame {
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(btnVerMas)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lbl_ValorStock)
@@ -840,7 +843,7 @@ public class ProductosGUI extends JInternalFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(rb_Faltantes)
-                            .addComponent(rbEnStock, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))))
+                            .addComponent(rbEnStock, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1029,12 +1032,20 @@ public class ProductosGUI extends JInternalFrame {
             txtProveedor.setText(proveedorSeleccionado.getRazonSocial());
         }
     }//GEN-LAST:event_btnBuscarProveedorActionPerformed
-    
+
+    private void btnVerMasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerMasActionPerformed
+        if (productosTotal.size() >= 10) {
+            NUMERO_PAGINA += 1;
+            buscar();
+        }
+    }//GEN-LAST:event_btnVerMasActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgDisponibilidad;
     private javax.swing.ButtonGroup bgVisibilidad;
     private javax.swing.JButton btnBuscarProveedor;
     private javax.swing.JButton btnExportar;
+    private javax.swing.JButton btnVerMas;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_Modificar;

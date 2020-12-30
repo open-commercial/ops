@@ -33,11 +33,9 @@ import sic.modelo.NuevoRenglonPedido;
 import sic.modelo.Pedido;
 import sic.modelo.PedidoDTO;
 import sic.modelo.RenglonFactura;
-import sic.modelo.Sucursal;
 import sic.modelo.SucursalActiva;
 import sic.modelo.TipoDeComprobante;
 import sic.modelo.TipoDeEnvio;
-import sic.modelo.Transportista;
 import sic.modelo.UsuarioActivo;
 
 public class CerrarOperacionGUI extends JDialog {
@@ -49,7 +47,6 @@ public class CerrarOperacionGUI extends JDialog {
     private PedidoDTO nuevoPedido;
     private final Pedido pedido;
     private final Cliente cliente;
-    private List<Sucursal> sucursales;
     private final ModeloTabla modeloTabla;
     private final HotKeysHandler keyHandler = new HotKeysHandler();
     private int[] indicesParaDividir = null;
@@ -122,25 +119,6 @@ public class CerrarOperacionGUI extends JDialog {
             JOptionPane.showMessageDialog(this,
                     ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
                     "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void cargarSucursalesConPuntoDeRetiro() {
-        try {
-            sucursales = Arrays.asList(RestClient.getRestTemplate().getForObject("/sucursales?puntoDeRetiro=true", Sucursal[].class));
-            sucursales.stream().forEach(sucursal -> {
-                cmbSucursales.addItem(sucursal);
-            });
-            cmbSucursales.setSelectedItem(SucursalActiva.getInstance().getInstance().getSucursal());
-        } catch (RestClientResponseException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            this.dispose();
-        } catch (ResourceAccessException ex) {
-            LOGGER.error(ex.getMessage());
-            JOptionPane.showMessageDialog(this,
-                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_conexion"),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-            this.dispose();
         }
     }
 
@@ -366,11 +344,9 @@ public class CerrarOperacionGUI extends JDialog {
         txtSaldoCC = new javax.swing.JLabel();
         panelInferior = new javax.swing.JPanel();
         rbRetiroEnSucursal = new javax.swing.JRadioButton();
-        rbDireccionFacturacion = new javax.swing.JRadioButton();
-        rbDireccionEnvio = new javax.swing.JRadioButton();
-        cmbSucursales = new javax.swing.JComboBox<>();
-        lblDetalleUbicacionFacturacion = new javax.swing.JLabel();
-        lblDetalleUbicacionEnvio = new javax.swing.JLabel();
+        rbDomicilio = new javax.swing.JRadioButton();
+        lblDetalleEnvio = new javax.swing.JLabel();
+        cmbEnvio = new javax.swing.JComboBox<>();
         lblDividido = new javax.swing.JLabel();
         panelSuperior = new javax.swing.JPanel();
         lbl_Vendor = new javax.swing.JLabel();
@@ -503,36 +479,31 @@ public class CerrarOperacionGUI extends JDialog {
         panelInferior.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 
         buttonGroup1.add(rbRetiroEnSucursal);
-        rbRetiroEnSucursal.setText("Retiro en sucursal:");
+        rbRetiroEnSucursal.setText("Retiro en sucursal");
         rbRetiroEnSucursal.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 rbRetiroEnSucursalItemStateChanged(evt);
             }
         });
 
-        buttonGroup1.add(rbDireccionFacturacion);
-        rbDireccionFacturacion.setText("Usar ubicación de facturación:");
-        rbDireccionFacturacion.addItemListener(new java.awt.event.ItemListener() {
+        buttonGroup1.add(rbDomicilio);
+        rbDomicilio.setText("Envio a domicilio:");
+        rbDomicilio.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                rbDireccionFacturacionItemStateChanged(evt);
+                rbDomicilioItemStateChanged(evt);
             }
         });
 
-        buttonGroup1.add(rbDireccionEnvio);
-        rbDireccionEnvio.setText("Usar ubicación de envío:");
-        rbDireccionEnvio.addItemListener(new java.awt.event.ItemListener() {
+        lblDetalleEnvio.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblDetalleEnvio.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        lblDetalleEnvio.setEnabled(false);
+
+        cmbEnvio.setEnabled(false);
+        cmbEnvio.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                rbDireccionEnvioItemStateChanged(evt);
+                cmbEnvioItemStateChanged(evt);
             }
         });
-
-        lblDetalleUbicacionFacturacion.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblDetalleUbicacionFacturacion.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        lblDetalleUbicacionFacturacion.setEnabled(false);
-
-        lblDetalleUbicacionEnvio.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblDetalleUbicacionEnvio.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        lblDetalleUbicacionEnvio.setEnabled(false);
 
         javax.swing.GroupLayout panelInferiorLayout = new javax.swing.GroupLayout(panelInferior);
         panelInferior.setLayout(panelInferiorLayout);
@@ -540,35 +511,30 @@ public class CerrarOperacionGUI extends JDialog {
             panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelInferiorLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(rbDireccionFacturacion)
-                    .addComponent(rbDireccionEnvio)
-                    .addComponent(rbRetiroEnSucursal))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cmbSucursales, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblDetalleUbicacionFacturacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblDetalleUbicacionEnvio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelInferiorLayout.createSequentialGroup()
+                        .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(rbDomicilio)
+                            .addComponent(rbRetiroEnSucursal))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbEnvio, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblDetalleEnvio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        panelInferiorLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {rbDireccionEnvio, rbDireccionFacturacion, rbRetiroEnSucursal});
+        panelInferiorLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {rbDomicilio, rbRetiroEnSucursal});
 
         panelInferiorLayout.setVerticalGroup(
             panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelInferiorLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(rbRetiroEnSucursal)
-                    .addComponent(cmbSucursales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(rbRetiroEnSucursal)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(rbDireccionFacturacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblDetalleUbicacionFacturacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rbDomicilio)
+                    .addComponent(cmbEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(rbDireccionEnvio)
-                    .addComponent(lblDetalleUbicacionEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(lblDetalleEnvio, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -591,7 +557,7 @@ public class CerrarOperacionGUI extends JDialog {
                 .addComponent(lbl_Vendor, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_Vendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 602, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
         panelSuperiorLayout.setVerticalGroup(
             panelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -657,41 +623,14 @@ public class CerrarOperacionGUI extends JDialog {
                 txtSaldoCC.setForeground(new Color(29,156,37));
             }
             if ((this.nuevoPedido != null || this.pedido != null) && this.nuevaFacturaVenta == null) {
-                lblDividido.setVisible(false);
-                rbDireccionEnvio.setSelected(false);
-                rbDireccionFacturacion.setSelected(false);
-                rbRetiroEnSucursal.setSelected(false);
-                this.cargarSucursalesConPuntoDeRetiro();
-                if (this.cliente.getUbicacionEnvio() != null) {
-                    lblDetalleUbicacionEnvio.setText(this.cliente.getUbicacionEnvio().toString());
-                    if (!rbDireccionFacturacion.isSelected()) {
-                        rbDireccionEnvio.setSelected(true);
-                    }
-                } else {
-                    rbDireccionEnvio.setEnabled(false);
-                    lblDetalleUbicacionEnvio.setEnabled(false);
-                }
-                if (this.cliente.getUbicacionFacturacion() != null) {
-                    lblDetalleUbicacionFacturacion.setText(this.cliente.getUbicacionFacturacion().toString());
-                    if (!rbRetiroEnSucursal.isSelected()) {
-                        rbDireccionFacturacion.setSelected(true);
-                    }
-                } else {
-                    rbDireccionFacturacion.setEnabled(false);
-                    lblDetalleUbicacionFacturacion.setEnabled(false);
-                }
-                if (sucursales.isEmpty()) {
-                    cmbSucursales.setEnabled(false);
-                    rbRetiroEnSucursal.setEnabled(false);
-                } else {
-                    rbRetiroEnSucursal.setSelected(true);
-                }
+                lblDividido.setVisible(false);           
+                rbRetiroEnSucursal.setEnabled(SucursalActiva.getInstance().getSucursal().getConfiguracionSucursal().isPuntoDeRetiro());
+                rbRetiroEnSucursal.setSelected(SucursalActiva.getInstance().getSucursal().getConfiguracionSucursal().isPuntoDeRetiro());  
+                rbDomicilio.setSelected(!SucursalActiva.getInstance().getSucursal().getConfiguracionSucursal().isPuntoDeRetiro());  
             } else {
                 panelInferior.setEnabled(false);
-                cmbSucursales.setEnabled(false);
                 rbRetiroEnSucursal.setEnabled(false);
-                rbDireccionFacturacion.setEnabled(false);
-                rbDireccionEnvio.setEnabled(false);
+                rbDomicilio.setEnabled(false);
             }
             this.cargarFormasDePago();
             this.setEstadoFormasDePago();
@@ -760,11 +699,18 @@ public class CerrarOperacionGUI extends JDialog {
                 if (rbRetiroEnSucursal.isSelected()) {
                     tipoDeEnvio = TipoDeEnvio.RETIRO_EN_SUCURSAL;
                 }
-                if (rbDireccionFacturacion.isSelected()) {
-                    tipoDeEnvio = TipoDeEnvio.USAR_UBICACION_FACTURACION;
-                }
-                if (rbDireccionEnvio.isSelected()) {
-                    tipoDeEnvio = TipoDeEnvio.USAR_UBICACION_ENVIO;
+                if (rbDomicilio.isSelected()) {
+                    switch (cmbEnvio.getSelectedIndex()) {
+                        case 0:
+                            tipoDeEnvio = TipoDeEnvio.USAR_UBICACION_FACTURACION;
+                            break;
+                        case 1:
+                            tipoDeEnvio = TipoDeEnvio.USAR_UBICACION_ENVIO;
+                            break;
+                        default:
+                            tipoDeEnvio = TipoDeEnvio.RETIRO_EN_SUCURSAL;
+                            break;
+                    }
                 }
             }
             if (dividir || pedido != null) {
@@ -810,6 +756,10 @@ public class CerrarOperacionGUI extends JDialog {
                 }
             }
         } catch (RestClientResponseException ex) {
+            if (nuevoPedido != null) {
+                nuevoPedido.setMontos(null);
+                nuevoPedido.setIdsFormaDePago(null);
+            }
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (ResourceAccessException ex) {
             LOGGER.error(ex.getMessage());
@@ -820,11 +770,10 @@ public class CerrarOperacionGUI extends JDialog {
     }//GEN-LAST:event_btnFinalizarActionPerformed
 
     private void cerrarPedido(TipoDeEnvio tipoDeEnvio) {
-        if (nuevoPedido != null) {
-            nuevoPedido.setIdSucursal(rbRetiroEnSucursal.isSelected()
-                    ? sucursales.get(cmbSucursales.getSelectedIndex()).getIdSucursal() : SucursalActiva.getInstance().getSucursal().getIdSucursal());
+        if (pedido == null) { 
             nuevoPedido.setIdCliente(cliente.getIdCliente());
             nuevoPedido.setTipoDeEnvio(tipoDeEnvio);
+            nuevoPedido.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
             this.agregarPagosAlPedido();
             Pedido p = RestClient.getRestTemplate().postForObject("/pedidos", nuevoPedido, Pedido.class);
             this.exito = true;
@@ -837,11 +786,10 @@ public class CerrarOperacionGUI extends JDialog {
         } else {
             nuevoPedido = new PedidoDTO();
             nuevoPedido.setIdPedido(pedido.getIdPedido());
-            nuevoPedido.setIdSucursal(rbRetiroEnSucursal.isSelected()
-                    ? sucursales.get(cmbSucursales.getSelectedIndex()).getIdSucursal() : null);
             nuevoPedido.setObservaciones(pedido.getObservaciones());
             nuevoPedido.setRecargoPorcentaje(pedido.getRecargoPorcentaje());
             nuevoPedido.setDescuentoPorcentaje(pedido.getDescuentoPorcentaje());
+            nuevoPedido.setIdSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal());
             List<NuevoRenglonPedido> nuevosRenglonesPedido = new ArrayList();
             pedido.getRenglones().forEach(r -> nuevosRenglonesPedido.add(
                     new NuevoRenglonPedido(r.getIdProductoItem(), r.getCantidad())));
@@ -890,30 +838,37 @@ public class CerrarOperacionGUI extends JDialog {
     }//GEN-LAST:event_txt_MontoPago2FocusGained
 
     private void rbRetiroEnSucursalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbRetiroEnSucursalItemStateChanged
-        cmbSucursales.setEnabled(rbRetiroEnSucursal.isSelected());
-        lblDetalleUbicacionEnvio.setEnabled(!rbRetiroEnSucursal.isSelected());
-        lblDetalleUbicacionFacturacion.setEnabled(!rbRetiroEnSucursal.isSelected());
+        cmbEnvio.setEnabled(!rbRetiroEnSucursal.isSelected());
+        cmbEnvio.removeAllItems();
+        lblDetalleEnvio.setEnabled(!rbRetiroEnSucursal.isSelected());
     }//GEN-LAST:event_rbRetiroEnSucursalItemStateChanged
 
-    private void rbDireccionFacturacionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbDireccionFacturacionItemStateChanged
-        cmbSucursales.setEnabled(!rbDireccionFacturacion.isSelected());
-        lblDetalleUbicacionEnvio.setEnabled(!rbDireccionFacturacion.isSelected());
-        lblDetalleUbicacionFacturacion.setEnabled(rbDireccionFacturacion.isSelected());
-        if (rbDireccionFacturacion.isSelected()) {
-            if (this.cliente.getUbicacionFacturacion() != null) {
-                lblDetalleUbicacionFacturacion.setText(this.cliente.getUbicacionFacturacion().toString());
-            }
+    private void rbDomicilioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbDomicilioItemStateChanged
+        cmbEnvio.setEnabled(true);
+        if (this.cliente.getUbicacionFacturacion() != null) {
+            cmbEnvio.addItem("Usar ubicación de facturación");
         }
-    }//GEN-LAST:event_rbDireccionFacturacionItemStateChanged
-
-    private void rbDireccionEnvioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbDireccionEnvioItemStateChanged
-        cmbSucursales.setEnabled(!rbDireccionEnvio.isSelected());
-        lblDetalleUbicacionEnvio.setEnabled(rbDireccionEnvio.isSelected());
-        lblDetalleUbicacionFacturacion.setEnabled(!rbDireccionEnvio.isSelected());
         if (this.cliente.getUbicacionEnvio() != null) {
-            lblDetalleUbicacionEnvio.setText(this.cliente.getUbicacionEnvio().toString());
+            cmbEnvio.addItem("Usar ubicación de envío");
         }
-    }//GEN-LAST:event_rbDireccionEnvioItemStateChanged
+        if (cmbEnvio.getItemCount() > 0) {
+            lblDetalleEnvio.setEnabled(true);
+        }
+    }//GEN-LAST:event_rbDomicilioItemStateChanged
+
+    private void cmbEnvioItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbEnvioItemStateChanged
+        switch (cmbEnvio.getSelectedIndex()) {
+            case 0:
+                lblDetalleEnvio.setText(this.cliente.getUbicacionFacturacion().toString());
+                break;
+            case 1:
+                lblDetalleEnvio.setText(this.cliente.getUbicacionEnvio().toString());
+                break;
+            default:
+                lblDetalleEnvio.setText("");
+                break;
+        }
+    }//GEN-LAST:event_cmbEnvioItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnFinalizar;
@@ -921,12 +876,11 @@ public class CerrarOperacionGUI extends JDialog {
     private javax.swing.JCheckBox chk_FormaDePago1;
     private javax.swing.JCheckBox chk_FormaDePago2;
     private javax.swing.JCheckBox chk_FormaDePago3;
-    private javax.swing.JComboBox<Sucursal> cmbSucursales;
+    private javax.swing.JComboBox<String> cmbEnvio;
     private javax.swing.JComboBox cmb_FormaDePago1;
     private javax.swing.JComboBox cmb_FormaDePago2;
     private javax.swing.JComboBox cmb_FormaDePago3;
-    private javax.swing.JLabel lblDetalleUbicacionEnvio;
-    private javax.swing.JLabel lblDetalleUbicacionFacturacion;
+    private javax.swing.JLabel lblDetalleEnvio;
     private javax.swing.JLabel lblDividido;
     private javax.swing.JLabel lblSaldoCC;
     private javax.swing.JLabel lbl_Vendedor;
@@ -934,8 +888,7 @@ public class CerrarOperacionGUI extends JDialog {
     private javax.swing.JPanel panelInferior;
     private javax.swing.JPanel panelMedio;
     private javax.swing.JPanel panelSuperior;
-    private javax.swing.JRadioButton rbDireccionEnvio;
-    private javax.swing.JRadioButton rbDireccionFacturacion;
+    private javax.swing.JRadioButton rbDomicilio;
     private javax.swing.JRadioButton rbRetiroEnSucursal;
     private javax.swing.JLabel txtSaldoCC;
     private javax.swing.JFormattedTextField txt_MontoPago1;
