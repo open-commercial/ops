@@ -17,9 +17,8 @@ public class ConfiguracionSucursal implements Serializable {
     private int nroPuntoDeVentaAfip;
     private boolean puntoDeRetiro;
     private boolean predeterminada;
+    private boolean comparteStock;
     private long vencimientoLargo;
     private long vencimientoCorto;
-    private long idSucursal;
-    private String nombreSucursal;
 
 }

@@ -51,7 +51,7 @@
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="rb_Faltantes" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="rbEnStock" alignment="0" pref="148" max="32767" attributes="0"/>
+                          <Component id="rbEnStock" alignment="0" pref="411" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -96,41 +96,40 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="chk_Proveedor" linkSize="7" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="chk_Rubro" linkSize="7" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="chkCodigoODescripcion" linkSize="7" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="btn_Buscar" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lbl_cantResultados" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="cmb_Rubro" alignment="0" max="32767" attributes="0"/>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="txtProveedor" pref="273" max="32767" attributes="0"/>
-                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                                  <Component id="btnBuscarProveedor" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="2" attributes="0">
+                                  <Component id="chk_Proveedor" linkSize="7" alignment="2" min="-2" max="-2" attributes="0"/>
+                                  <Component id="chk_Rubro" linkSize="7" alignment="2" min="-2" max="-2" attributes="0"/>
+                                  <Component id="chkCodigoODescripcion" linkSize="7" alignment="2" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="txtCodigoODescripcion" max="32767" attributes="2"/>
-                          </Group>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Component id="chk_visibilidad" min="-2" pref="131" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="rb_publico" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="rb_privado" alignment="0" min="-2" pref="94" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="cmb_Rubro" alignment="0" max="32767" attributes="0"/>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Component id="txtProveedor" pref="273" max="32767" attributes="0"/>
+                                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                      <Component id="btnBuscarProveedor" min="-2" max="-2" attributes="0"/>
                                   </Group>
+                                  <Component id="txtCodigoODescripcion" max="32767" attributes="2"/>
                               </Group>
-                              <Component id="chkOfertas" linkSize="7" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="btn_Buscar" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="chk_visibilidad" max="32767" attributes="0"/>
+                              <Component id="chkOfertas" linkSize="7" alignment="1" max="32767" attributes="0"/>
+                          </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="lbl_cantResultados" max="32767" attributes="0"/>
+                          <Component id="rb_publico" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="rb_privado" min="-2" pref="94" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
@@ -140,38 +139,33 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="chkCodigoODescripcion" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtCodigoODescripcion" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="chk_Rubro" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="cmb_Rubro" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="2" attributes="0">
-                              <Component id="chk_Proveedor" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtProveedor" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnBuscarProveedor" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="chkOfertas" alignment="2" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="rb_publico" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="chk_visibilidad" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="rb_privado" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
-                      <Component id="btn_Buscar" linkSize="6" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="lbl_cantResultados" linkSize="6" alignment="2" min="-2" pref="18" max="-2" attributes="0"/>
+                      <Component id="chkCodigoODescripcion" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtCodigoODescripcion" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="chk_Rubro" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="cmb_Rubro" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="chk_Proveedor" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtProveedor" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnBuscarProveedor" linkSize="4" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="chk_visibilidad" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="rb_publico" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="rb_privado" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                  <Component id="chkOfertas" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="btn_Buscar" linkSize="6" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbl_cantResultados" linkSize="6" min="-2" pref="18" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -305,27 +299,34 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <Component id="btn_Nuevo" linkSize="1" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="btnVerMas" alignment="1" max="32767" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="btn_Nuevo" linkSize="1" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                          <Component id="btn_Modificar" linkSize="1" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                          <Component id="btn_Eliminar" linkSize="1" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                          <Component id="btnExportar" linkSize="1" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="346" max="32767" attributes="0"/>
+                          <Component id="lbl_ValorStock" min="-2" max="-2" attributes="1"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="txt_ValorStock" min="-2" pref="170" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="sp_Resultados" alignment="1" max="32767" attributes="0"/>
+                  </Group>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="btn_Modificar" linkSize="1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="btn_Eliminar" linkSize="1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="btnExportar" linkSize="1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
-                  <Component id="lbl_ValorStock" min="-2" max="-2" attributes="1"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="txt_ValorStock" min="-2" pref="170" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
               </Group>
-              <Component id="sp_Resultados" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="sp_Resultados" pref="276" max="32767" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="sp_Resultados" pref="217" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+                  <Component id="btnVerMas" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="lbl_ValorStock" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="txt_ValorStock" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -434,6 +435,17 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExportarActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnVerMas">
+          <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Ver m&#xe1;s resultados"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVerMasActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

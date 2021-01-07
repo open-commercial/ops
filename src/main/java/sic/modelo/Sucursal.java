@@ -19,6 +19,7 @@ public class Sucursal implements Serializable {
     private String email;
     private String telefono;
     private Ubicacion ubicacion;
+    private ConfiguracionSucursal configuracionSucursal;
     private String detalleUbicacion;
     private String logo;
     private boolean eliminada;

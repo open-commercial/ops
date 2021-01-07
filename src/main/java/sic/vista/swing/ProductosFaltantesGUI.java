@@ -18,7 +18,7 @@ public class ProductosFaltantesGUI extends JDialog {
 
     private ModeloTabla modeloTablaFaltantes = new ModeloTabla();
     private final List<ProductoFaltante> faltantes;
-    private final Dimension sizeDialog = new Dimension(920, 500);
+    private final Dimension sizeDialog = new Dimension(1000, 500);
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public ProductosFaltantesGUI(List<ProductoFaltante> faltantes) {
@@ -35,19 +35,21 @@ public class ProductosFaltantesGUI extends JDialog {
 
     private void setColumnas() {
         //nombres de columnas
-        String[] encabezados = new String[4];
+        String[] encabezados = new String[5];
         encabezados[0] = "Codigo";
         encabezados[1] = "Descripcion";
-        encabezados[2] = "Cant. Solicitada";
-        encabezados[3] = "Cant. Disponible";
+        encabezados[2] = "Sucursal";
+        encabezados[3] = "Cant. Solicitada";
+        encabezados[4] = "Cant. Disponible";
         modeloTablaFaltantes.setColumnIdentifiers(encabezados);
         tbl_Faltantes.setModel(modeloTablaFaltantes);
         //tipo de dato columnas
         Class[] tipos = new Class[modeloTablaFaltantes.getColumnCount()];
         tipos[0] = String.class;
         tipos[1] = String.class;
-        tipos[2] = BigDecimal.class;
+        tipos[2] = String.class;
         tipos[3] = BigDecimal.class;
+        tipos[4] = BigDecimal.class;
         modeloTablaFaltantes.setClaseColumnas(tipos);
         tbl_Faltantes.getTableHeader().setReorderingAllowed(false);
         tbl_Faltantes.getTableHeader().setResizingAllowed(true);                
@@ -55,10 +57,12 @@ public class ProductosFaltantesGUI extends JDialog {
         tbl_Faltantes.getColumnModel().getColumn(0).setPreferredWidth(130);
         tbl_Faltantes.getColumnModel().getColumn(0).setMaxWidth(130);
         tbl_Faltantes.getColumnModel().getColumn(1).setPreferredWidth(300);
-        tbl_Faltantes.getColumnModel().getColumn(2).setPreferredWidth(120);
-        tbl_Faltantes.getColumnModel().getColumn(2).setMaxWidth(120);
+        tbl_Faltantes.getColumnModel().getColumn(2).setPreferredWidth(160);
+        tbl_Faltantes.getColumnModel().getColumn(2).setMaxWidth(160);
         tbl_Faltantes.getColumnModel().getColumn(3).setPreferredWidth(120);
         tbl_Faltantes.getColumnModel().getColumn(3).setMaxWidth(120);
+        tbl_Faltantes.getColumnModel().getColumn(4).setPreferredWidth(120);
+        tbl_Faltantes.getColumnModel().getColumn(4).setMaxWidth(120);
         //renderers
         tbl_Faltantes.setDefaultRenderer(BigDecimal.class, new DecimalesRenderer());
     }
@@ -71,12 +75,13 @@ public class ProductosFaltantesGUI extends JDialog {
 
     private void cargarResultadosAlTable() {
         this.limpiarJTables();
-        Object[] fila = new Object[4];
+        Object[] fila = new Object[5];
         faltantes.forEach(faltante -> {
             fila[0] = faltante.getCodigo();
             fila[1] = faltante.getDescripcion();
-            fila[2] = faltante.getCantidadSolicitada();
-            fila[3] = faltante.getCantidadDisponible();
+            fila[2] = faltante.getNombreSucursal();
+            fila[3] = faltante.getCantidadSolicitada();
+            fila[4] = faltante.getCantidadDisponible();
             modeloTablaFaltantes.addRow(fila);
         });
         tbl_Faltantes.setModel(modeloTablaFaltantes);

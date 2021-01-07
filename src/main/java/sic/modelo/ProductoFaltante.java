@@ -15,6 +15,8 @@ public class ProductoFaltante {
     private long idProducto;
     private String codigo;
     private String descripcion;
+    private long idSucursal;
+    private String nombreSucursal;
     private BigDecimal cantidadSolicitada;
     private BigDecimal cantidadDisponible;
 }
