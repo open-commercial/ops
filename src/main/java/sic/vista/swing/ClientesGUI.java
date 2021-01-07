@@ -2,6 +2,7 @@ package sic.vista.swing;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Desktop;
 import java.awt.event.AdjustmentEvent;
 import java.beans.PropertyVetoException;
 import java.math.BigDecimal;
@@ -343,6 +344,59 @@ public class ClientesGUI extends JInternalFrame {
             tienePermisoSegunRoles = false;
         }
     }
+    
+    private void exportar() {
+        BusquedaCuentaCorrienteClienteCriteria criteria = BusquedaCuentaCorrienteClienteCriteria.builder().build();
+        if (chkCriteria.isSelected()) {
+            criteria.setNombreFiscal(txtCriteria.getText().trim());
+            criteria.setNombreFantasia(txtCriteria.getText().trim());
+            criteria.setNroDeCliente(txtCriteria.getText().trim());
+        }
+        if (chkViajante.isSelected() && viajanteSeleccionado != null) {
+            criteria.setIdViajante(viajanteSeleccionado.getIdUsuario());
+        }
+        if (chk_Ubicacion.isSelected()) {
+            criteria.setIdProvincia(((Provincia) (cmbProvincia.getSelectedItem())).getIdProvincia());
+            if (!((Localidad) cmbLocalidad.getSelectedItem()).getNombre().equals("Todas")) {
+                criteria.setIdLocalidad(((Localidad) cmbLocalidad.getSelectedItem()).getIdLocalidad());
+            }
+        }
+        int seleccionOrden = cmbOrden.getSelectedIndex();
+        switch (seleccionOrden) {
+            case 0:
+                criteria.setOrdenarPor("cliente.nombreFiscal");
+                break;
+            case 1:
+                criteria.setOrdenarPor("cliente.fechaAlta");
+                break;
+            case 2:
+                criteria.setOrdenarPor("cliente.nombreFantasia");
+                break;
+            case 3:
+                criteria.setOrdenarPor("saldo");
+                break;
+            case 4:
+                criteria.setOrdenarPor("fechaUltimoMovimiento");
+                break;
+            case 5:
+                criteria.setOrdenarPor("cliente.montoCompraMinima");
+                break;
+        }
+        int seleccionDireccion = cmbSentido.getSelectedIndex();
+        switch (seleccionDireccion) {
+            case 0:
+                criteria.setSentido("ASC");
+                break;
+            case 1:
+                criteria.setSentido("DESC");
+                break;
+        }
+        criteria.setPagina(NUMERO_PAGINA);
+        ExportGUI exportGUI = new ExportGUI(criteria, true);
+        exportGUI.setModal(true);
+        exportGUI.setLocationRelativeTo(this);
+        exportGUI.setVisible(true);
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -367,6 +421,7 @@ public class ClientesGUI extends JInternalFrame {
         btn_Eliminar = new javax.swing.JButton();
         btn_setPredeterminado = new javax.swing.JButton();
         btnCuentaCorriente = new javax.swing.JButton();
+        btnExportar = new javax.swing.JButton();
         panelOrden = new javax.swing.JPanel();
         cmbOrden = new javax.swing.JComboBox<>();
         cmbSentido = new javax.swing.JComboBox<>();
@@ -377,20 +432,20 @@ public class ClientesGUI extends JInternalFrame {
         setTitle("Administrar Clientes");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Client_16x16.png"))); // NOI18N
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
-                formInternalFrameOpened(evt);
-            }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
             }
             public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
             }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
             }
         });
 
@@ -571,34 +626,50 @@ public class ClientesGUI extends JInternalFrame {
             }
         });
 
+        btnExportar.setForeground(java.awt.Color.blue);
+        btnExportar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/Export_16x16.png"))); // NOI18N
+        btnExportar.setText("Exportar");
+        btnExportar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExportarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelResultadosLayout = new javax.swing.GroupLayout(panelResultados);
         panelResultados.setLayout(panelResultadosLayout);
         panelResultadosLayout.setHorizontalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(sp_Resultados)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(btn_Nuevo)
-                .addGap(0, 0, 0)
-                .addComponent(btn_Modificar)
-                .addGap(0, 0, 0)
-                .addComponent(btn_Eliminar)
-                .addGap(0, 0, 0)
-                .addComponent(btn_setPredeterminado)
-                .addGap(0, 0, 0)
-                .addComponent(btnCuentaCorriente)
-                .addGap(0, 94, Short.MAX_VALUE))
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelResultadosLayout.createSequentialGroup()
+                        .addComponent(btn_Nuevo)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_Modificar)
+                        .addGap(0, 0, 0)
+                        .addComponent(btn_Eliminar))
+                    .addGroup(panelResultadosLayout.createSequentialGroup()
+                        .addComponent(btn_setPredeterminado)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnCuentaCorriente)
+                        .addGap(0, 0, 0)
+                        .addComponent(btnExportar)))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCuentaCorriente, btn_Eliminar, btn_Modificar, btn_Nuevo, btn_setPredeterminado});
+        panelResultadosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnCuentaCorriente, btnExportar, btn_Eliminar, btn_Modificar, btn_Nuevo, btn_setPredeterminado});
 
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btn_setPredeterminado)
                     .addComponent(btnCuentaCorriente)
+                    .addComponent(btnExportar))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btn_Eliminar)
                     .addComponent(btn_Modificar)
                     .addComponent(btn_Nuevo)))
@@ -652,7 +723,7 @@ public class ClientesGUI extends JInternalFrame {
                 .addComponent(panelFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelOrden, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(457, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -875,9 +946,22 @@ public class ClientesGUI extends JInternalFrame {
         this.limpiarYBuscar();
     }//GEN-LAST:event_cmbOrdenItemStateChanged
 
+    private void btnExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarActionPerformed
+        if (!cuentasCorrienteClienteTotal.isEmpty()) {
+            if (Desktop.isDesktopSupported()) {
+                this.exportar();
+            } else {
+                JOptionPane.showMessageDialog(this,
+                    ResourceBundle.getBundle("Mensajes").getString("mensaje_error_plataforma_no_soportada"),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnExportarActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarViajante;
     private javax.swing.JButton btnCuentaCorriente;
+    private javax.swing.JButton btnExportar;
     private javax.swing.JButton btn_Buscar;
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_Modificar;

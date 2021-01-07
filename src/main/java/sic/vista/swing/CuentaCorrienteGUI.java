@@ -1114,7 +1114,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         if (Desktop.isDesktopSupported()) {
             ExportGUI exportGUI = new ExportGUI(BusquedaCuentaCorrienteClienteCriteria.builder()
                     .idCliente(this.cliente.getIdCliente())
-                    .build());
+                    .build(), false);
             exportGUI.setModal(true);
             exportGUI.setLocationRelativeTo(this);
             exportGUI.setVisible(true);
