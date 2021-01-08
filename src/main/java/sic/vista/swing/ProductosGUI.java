@@ -382,19 +382,19 @@ public class ProductosGUI extends JInternalFrame {
                 criteria.setOrdenarPor("codigo");
                 break;
             case 2:
-                criteria.setOrdenarPor("cantidadTotalEnSucursales");
+                criteria.setOrdenarPor("cantidadProducto.cantidadTotalEnSucursales");
                 break;
             case 3:
-                criteria.setOrdenarPor("bulto");
+                criteria.setOrdenarPor("cantidadProducto.bulto");
                 break;
             case 4:
-                criteria.setOrdenarPor("precioCosto");
+                criteria.setOrdenarPor("precioProducto.precioCosto");
                 break;
             case 5:
-                criteria.setOrdenarPor("gananciaPorcentaje");
+                criteria.setOrdenarPor("precioProducto.gananciaPorcentaje");
                 break;
             case 6:
-                criteria.setOrdenarPor("precioLista");
+                criteria.setOrdenarPor("precioProducto.precioLista");
                 break;
             case 7:
                 criteria.setOrdenarPor("fechaAlta");
