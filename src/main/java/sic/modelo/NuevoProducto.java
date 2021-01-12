@@ -11,8 +11,7 @@ public class NuevoProducto {
 
     private String codigo;
     private String descripcion;
-    private Map<Long,BigDecimal> cantidadEnSucursal;
-    private boolean hayStock;
+    private Map<Long,BigDecimal> cantidadEnSucursal;    
     private BigDecimal precioBonificado;
     private BigDecimal cantMinima;
     private BigDecimal bulto;
