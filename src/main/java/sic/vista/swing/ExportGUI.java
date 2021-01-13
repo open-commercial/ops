@@ -4,6 +4,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -12,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
+import sic.modelo.SucursalActiva;
+import sic.modelo.UsuarioActivo;
 import sic.modelo.criteria.BusquedaCuentaCorrienteClienteCriteria;
 import sic.modelo.criteria.BusquedaProductoCriteria;
 
@@ -120,23 +123,13 @@ public class ExportGUI extends JDialog {
                     Desktop.getDesktop().open(f);
                 }
             }
-//            if (this.criteriaCuentaCorrienteCliente != null && !listaClientes) {
-//                byte[] reporte = RestClient.getRestTemplate().postForObject("/cuentas-corriente/clientes/reporte/criteria?formato=xlsx", this.criteriaCuentaCorrienteCliente, byte[].class);
-//                File f = new File(System.getProperty("user.home") + "/" + "CuentaCorriente.xlsx");
-//                Files.write(f.toPath(), reporte);
-//                Desktop.getDesktop().open(f);
-//            }
-//            if (this.criteriaCuentaCorrienteCliente != null && listaClientes) {
-//                byte[] reporte = RestClient.getRestTemplate().postForObject("/cuentas-corriente/lista-clientes/reporte/criteria", this.criteriaCuentaCorrienteCliente, byte[].class);
-//                File f = new File(System.getProperty("user.home") + "/" + "CuentaCorriente.xlsx");
-//                Files.write(f.toPath(), reporte);
-//                Desktop.getDesktop().open(f);
-//            }
             if (this.criteriaProducto != null) {
-                byte[] reporte = RestClient.getRestTemplate().postForObject("/productos/reporte/criteria?formato=xlsx", this.criteriaProducto, byte[].class);
-                File f = new File(System.getProperty("user.home") + "/" + "ListaPrecios.xlsx");
-                Files.write(f.toPath(), reporte);
-                Desktop.getDesktop().open(f);
+                RestClient.getRestTemplate().postForObject("/productos/reporte/criteria/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal() + "?formato=xlsx", this.criteriaProducto, String.class);
+                JOptionPane.showMessageDialog(this,
+                        MessageFormat.format(ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_reporte_productos_email"),
+                                SucursalActiva.getInstance().getSucursal().getEmail()),
+                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
             }
             this.dispose();
         } catch (IOException ex) {
@@ -170,10 +163,12 @@ public class ExportGUI extends JDialog {
                 }
             }
             if (this.criteriaProducto != null) {
-                byte[] reporte = RestClient.getRestTemplate().postForObject("/productos/reporte/criteria?formato=pdf", this.criteriaProducto, byte[].class);
-                File f = new File(System.getProperty("user.home") + "/" + "ListaPrecios.pdf");
-                Files.write(f.toPath(), reporte);
-                Desktop.getDesktop().open(f);
+                RestClient.getRestTemplate().postForObject("/productos/reporte/criteria/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal() + "?formato=pdf", this.criteriaProducto, String.class);
+                JOptionPane.showMessageDialog(this,
+                        MessageFormat.format(ResourceBundle.getBundle("Mensajes")
+                                .getString("mensaje_reporte_productos_email"),
+                                SucursalActiva.getInstance().getSucursal().getEmail()),
+                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
             }
             this.dispose();
         } catch (IOException ex) {
