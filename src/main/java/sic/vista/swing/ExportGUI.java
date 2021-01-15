@@ -124,12 +124,10 @@ public class ExportGUI extends JDialog {
                 }
             }
             if (this.criteriaProducto != null) {
-                RestClient.getRestTemplate().postForObject("/productos/reporte/criteria/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal() + "?formato=xlsx", this.criteriaProducto, String.class);
-                JOptionPane.showMessageDialog(this,
-                        MessageFormat.format(ResourceBundle.getBundle("Mensajes")
-                                .getString("mensaje_reporte_productos_email"),
-                                SucursalActiva.getInstance().getSucursal().getEmail()),
-                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                byte[] reporte = RestClient.getRestTemplate().postForObject("/productos/reporte/criteria?formato=xlsx", this.criteriaProducto, byte[].class);
+                File f = new File(System.getProperty("user.home") + "/" + "ListaPrecios.xlsx");
+                Files.write(f.toPath(), reporte);
+                Desktop.getDesktop().open(f);
             }
             this.dispose();
         } catch (IOException ex) {
@@ -163,12 +161,10 @@ public class ExportGUI extends JDialog {
                 }
             }
             if (this.criteriaProducto != null) {
-                RestClient.getRestTemplate().postForObject("/productos/reporte/criteria/sucursales/" + SucursalActiva.getInstance().getSucursal().getIdSucursal() + "?formato=pdf", this.criteriaProducto, String.class);
-                JOptionPane.showMessageDialog(this,
-                        MessageFormat.format(ResourceBundle.getBundle("Mensajes")
-                                .getString("mensaje_reporte_productos_email"),
-                                SucursalActiva.getInstance().getSucursal().getEmail()),
-                        "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                byte[] reporte = RestClient.getRestTemplate().postForObject("/productos/reporte/criteria?formato=pdf", this.criteriaProducto, byte[].class);
+                File f = new File(System.getProperty("user.home") + "/" + "ListaPrecios.pdf");
+                Files.write(f.toPath(), reporte);
+                Desktop.getDesktop().open(f);
             }
             this.dispose();
         } catch (IOException ex) {
