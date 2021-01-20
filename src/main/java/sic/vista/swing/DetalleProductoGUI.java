@@ -154,7 +154,6 @@ public class DetalleProductoGUI extends JDialog {
         lbl_FechaAlta = new javax.swing.JLabel();
         panelImagen = new javax.swing.JPanel();
         lbl_imagen = new javax.swing.JLabel();
-        btn_EliminarImagen = new javax.swing.JButton();
         btn_ExaminarArchivos = new javax.swing.JButton();
         lblAspectRatio = new javax.swing.JLabel();
         lblTamanioMax = new javax.swing.JLabel();
@@ -812,14 +811,6 @@ public class DetalleProductoGUI extends JDialog {
         lbl_imagen.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         lbl_imagen.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        btn_EliminarImagen.setForeground(java.awt.Color.blue);
-        btn_EliminarImagen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/RemovePicture_16x16.png"))); // NOI18N
-        btn_EliminarImagen.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_EliminarImagenActionPerformed(evt);
-            }
-        });
-
         btn_ExaminarArchivos.setForeground(java.awt.Color.blue);
         btn_ExaminarArchivos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sic/icons/AddPicture_16x16.png"))); // NOI18N
         btn_ExaminarArchivos.addActionListener(new java.awt.event.ActionListener() {
@@ -843,16 +834,11 @@ public class DetalleProductoGUI extends JDialog {
                 .addComponent(lbl_imagen, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(btn_ExaminarArchivos, javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(btn_EliminarImagen, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(btn_ExaminarArchivos)
                     .addComponent(lblAspectRatio)
                     .addComponent(lblTamanioMax))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
-
-        panelImagenLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_EliminarImagen, btn_ExaminarArchivos});
-
         panelImagenLayout.setVerticalGroup(
             panelImagenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelImagenLayout.createSequentialGroup()
@@ -861,8 +847,6 @@ public class DetalleProductoGUI extends JDialog {
                     .addComponent(lbl_imagen, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelImagenLayout.createSequentialGroup()
                         .addComponent(btn_ExaminarArchivos)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btn_EliminarImagen)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblTamanioMax)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1410,15 +1394,6 @@ public class DetalleProductoGUI extends JDialog {
         }
     }//GEN-LAST:event_btn_NuevoProveedorActionPerformed
 
-    private void btn_EliminarImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_EliminarImagenActionPerformed
-        lbl_imagen.setIcon(null);
-        lbl_imagen.setText("SIN IMAGEN");
-        imagenProducto = null;
-        cargoImagen = true;
-        if (productoParaModificar != null)
-            productoParaModificar.setUrlImagen(null);
-    }//GEN-LAST:event_btn_EliminarImagenActionPerformed
-
     private void btn_ExaminarArchivosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ExaminarArchivosActionPerformed
         JFileChooser menuElegirLogo = new JFileChooser();
         menuElegirLogo.setAcceptAllFileFilterUsed(false);
@@ -1570,7 +1545,6 @@ public class DetalleProductoGUI extends JDialog {
     private javax.swing.ButtonGroup bgVisibilidad;
     private javax.swing.JButton btnBuscarProveedor;
     private javax.swing.JButton btnGuardar;
-    private javax.swing.JButton btn_EliminarImagen;
     private javax.swing.JButton btn_ExaminarArchivos;
     private javax.swing.JButton btn_NuevoProveedor;
     private javax.swing.JCheckBox chkOferta;

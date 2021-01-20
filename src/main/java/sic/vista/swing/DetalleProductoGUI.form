@@ -970,14 +970,11 @@
                       <Component id="lbl_imagen" min="-2" pref="416" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="btn_ExaminarArchivos" linkSize="11" alignment="1" min="-2" max="-2" attributes="1"/>
-                              <Component id="btn_EliminarImagen" linkSize="11" alignment="1" min="-2" max="-2" attributes="1"/>
-                          </Group>
+                          <Component id="btn_ExaminarArchivos" min="-2" max="-2" attributes="1"/>
                           <Component id="lblAspectRatio" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="lblTamanioMax" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="54" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -989,8 +986,6 @@
                           <Component id="lbl_imagen" min="-2" pref="312" max="-2" attributes="1"/>
                           <Group type="102" attributes="0">
                               <Component id="btn_ExaminarArchivos" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btn_EliminarImagen" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="lblTamanioMax" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -1014,19 +1009,6 @@
                 </Property>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
               </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="btn_EliminarImagen">
-              <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
-                </Property>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/sic/icons/RemovePicture_16x16.png"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_EliminarImagenActionPerformed"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btn_ExaminarArchivos">
               <Properties>
