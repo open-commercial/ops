@@ -399,7 +399,13 @@ public class ProductosGUI extends JInternalFrame {
             case 7:
                 criteria.setOrdenarPor("fechaAlta");
                 break;
-            case 8:
+                            case 8:
+                criteria.setOrdenarPor("proveedor.razonSocial");
+                break;
+            case 9:
+                criteria.setOrdenarPor("rubro.nombre");
+                break;
+            case 10:
                 criteria.setOrdenarPor("fechaUltimaModificacion");
                 break;
         }
@@ -776,7 +782,7 @@ public class ProductosGUI extends JInternalFrame {
 
         panelOrden.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordenar por"));
 
-        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descripción", "Código", "Total Sucursales", "Venta x Cant.", "Precio Costo", "% Ganancia", "Precio Lista", "Fecha Alta", "Fecha U. Modificación" }));
+        cmbOrden.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descripción", "Código", "Total Sucursales", "Venta x Cant.", "Precio Costo", "% Ganancia", "Precio Lista", "Fecha Alta", "Proveedor", "Rubro", "Fecha U. Modificación" }));
         cmbOrden.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cmbOrdenItemStateChanged(evt);
