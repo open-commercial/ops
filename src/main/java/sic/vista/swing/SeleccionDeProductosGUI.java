@@ -38,6 +38,7 @@ public class SeleccionDeProductosGUI extends JDialog {
     private final List<BigDecimal> cantidades;
     private final List<Long> idsRenglonesFactura;  
     private NotaCredito notaCreditoCalculada;
+    private NuevaNotaCreditoDeFactura nuevaNotaCreditoDeFactura;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public SeleccionDeProductosGUI(long idFactura) {        
@@ -51,6 +52,10 @@ public class SeleccionDeProductosGUI extends JDialog {
     
     public NotaCredito getNotaCreditoCalculada() {
         return notaCreditoCalculada;
+    }
+    
+    public NuevaNotaCreditoDeFactura getNuevaNotaCreditoDeFactura() {
+        return nuevaNotaCreditoDeFactura;
     }
     
     private void setIcon() {
@@ -298,6 +303,7 @@ public class SeleccionDeProductosGUI extends JDialog {
                         .idsRenglonesFactura(idsRenglonesFactura.toArray(new Long[idsRenglonesFactura.size()]))
                         .modificaStock(chkModificarStock.isSelected())
                         .build();
+                this.nuevaNotaCreditoDeFactura = notaCreditoDeFactura;
                 this.notaCreditoCalculada = RestClient.getRestTemplate().postForObject("/notas/credito/calculos", notaCreditoDeFactura, NotaCredito.class);
                 this.dispose();
             }

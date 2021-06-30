@@ -17,5 +17,6 @@ public class NuevaNotaCreditoDeFactura {
     private Long[] idsRenglonesFactura;
     private boolean modificaStock;
     private String motivo;
+    private DetalleCompra detalleCompra;
 
 }

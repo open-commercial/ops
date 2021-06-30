@@ -19,5 +19,6 @@ public class NuevaNotaCreditoSinFactura {
     private TipoDeComprobante tipo;
     private String detalle;
     private String motivo;
+    private DetalleCompra detalleCompra;
 
 }

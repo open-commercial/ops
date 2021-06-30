@@ -21,6 +21,8 @@ import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.SucursalActiva;
 import sic.modelo.NotaCredito;
+import sic.modelo.NuevaNotaCreditoDeFactura;
+import sic.modelo.NuevaNotaCreditoSinFactura;
 import sic.modelo.Proveedor;
 import sic.modelo.TipoDeComprobante;
 import sic.util.DecimalesRenderer;
@@ -33,16 +35,27 @@ public class DetalleNotaCreditoGUI extends JDialog {
     private Proveedor proveedor;
     private long idNotaCredito;
     private NotaCredito notaCredito;
+    private NuevaNotaCreditoDeFactura nuevaNotaCreditoDeFactura;
+    private NuevaNotaCreditoSinFactura nuevaNotaCreditoSinFactura;
     private boolean notaCreditoCreada;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private BigDecimal subTotalBruto = BigDecimal.ZERO;
     private BigDecimal iva_105_netoFactura = BigDecimal.ZERO;
     private BigDecimal iva_21_netoFactura = BigDecimal.ZERO;
 
-    public DetalleNotaCreditoGUI(NotaCredito notaCredito) {
+    public DetalleNotaCreditoGUI(NotaCredito notaCredito, NuevaNotaCreditoDeFactura nuevaNotaCreditoDeFactura) {
         this.initComponents();
         this.setIcon();
         this.notaCredito = notaCredito;
+        this.nuevaNotaCreditoDeFactura = nuevaNotaCreditoDeFactura;
+        this.notaCreditoCreada = false;
+    }
+
+    public DetalleNotaCreditoGUI(NotaCredito notaCredito, NuevaNotaCreditoSinFactura nuevaNotaCreditoSinFactura) {
+        this.initComponents();
+        this.setIcon();
+        this.notaCredito = notaCredito;
+        this.nuevaNotaCreditoSinFactura = nuevaNotaCreditoSinFactura;
         this.notaCreditoCreada = false;
     }
 
@@ -205,19 +218,52 @@ public class DetalleNotaCreditoGUI extends JDialog {
         this.setIconImage(iconoVentana.getImage());
     }
 
-    private void guardar() throws IOException {
-        this.notaCredito.setMotivo(cmbMotivo.getSelectedItem().toString());
-        if (proveedor != null) {
-            LocalDateTime hoy = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
-            this.notaCredito.setFecha(LocalDateTime.ofInstant(dc_FechaNota.getDate().toInstant(), ZoneId.systemDefault())
-                    .withHour(hoy.getHour()).withMinute(hoy.getMinute()).withSecond(hoy.getSecond()));
-            this.notaCredito.setSerie(Long.parseLong(txt_Serie.getValue().toString()));
-            this.notaCredito.setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
-            this.notaCredito.setCae(Long.parseLong(txt_CAE.getValue().toString()));
-
-        }
-        NotaCredito nc = RestClient.getRestTemplate()
-                .postForObject("/notas/credito", this.notaCredito, NotaCredito.class);
+    private void guardar() throws IOException {   
+        //this.notaCredito.getIdFacturaVenta()
+        boolean esNotaDeFactura = this.notaCredito.getIdFacturaVenta() != null || this.notaCredito.getIdFacturaCompra() != null;      
+        NotaCredito nc;
+        if (esNotaDeFactura) {
+            
+            this.nuevaNotaCreditoDeFactura.setMotivo(cmbMotivo.getSelectedItem().toString());
+            this.asignarDetalleCompra();
+            nc = RestClient.getRestTemplate()
+                    .postForObject("/notas/credito/factura", this.nuevaNotaCreditoDeFactura, NotaCredito.class);
+        } else {
+            this.nuevaNotaCreditoSinFactura.setMotivo(cmbMotivo.getSelectedItem().toString());
+            this.asignarDetalleCompra();
+            nc = RestClient.getRestTemplate()
+                    .postForObject("/notas/credito/sin-factura", this.nuevaNotaCreditoSinFactura, NotaCredito.class);
+        }       
+//                        NuevaNotaCreditoDeFactura notaCreditoDeFactura = NuevaNotaCreditoDeFactura
+//                        .builder()
+//                        .idFactura(this.notaCredito.getIdFacturaVenta() != null ? this.notaCredito.getIdFacturaVenta() : this.notaCredito.getIdFacturaCompra())
+//                        .cantidades(cantidades.toArray(new BigDecimal[cantidades.size()]))
+//                        .idsRenglonesFactura(idsRenglonesFactura.toArray(new Long[idsRenglonesFactura.size()]))
+//                        .modificaStock(chkModificarStock.isSelected())
+//                        .build();
+//                        
+//                                    NuevaNotaCreditoSinFactura nuevaNotaCreditoSinFactura = NuevaNotaCreditoSinFactura
+//                    .builder()
+//                    .idCliente(idCliente)
+//                    .idProveedor(idProveedor)
+//                    .idSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal())
+//                    .monto(new BigDecimal(ftxt_Monto.getValue().toString()))
+//                    .tipo(((TipoDeComprobante) cmbTipoDeComprobante.getSelectedItem()))
+//                    .detalle(ftxtDetalle.getText().trim())
+//                    .build();
+//        
+//        this.notaCredito.setMotivo(cmbMotivo.getSelectedItem().toString());
+//        if (proveedor != null) {
+//            LocalDateTime hoy = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
+//            this.notaCredito.setFecha(LocalDateTime.ofInstant(dc_FechaNota.getDate().toInstant(), ZoneId.systemDefault())
+//                    .withHour(hoy.getHour()).withMinute(hoy.getMinute()).withSecond(hoy.getSecond()));
+//            this.notaCredito.setSerie(Long.parseLong(txt_Serie.getValue().toString()));
+//            this.notaCredito.setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
+//            this.notaCredito.setCae(Long.parseLong(txt_CAE.getValue().toString()));
+//
+//        }
+//        NotaCredito nc = RestClient.getRestTemplate()
+//                .postForObject("/notas/credito", this.notaCredito, NotaCredito.class);
         if (nc != null) {
             notaCreditoCreada = true;
             boolean FEHabilitada = RestClient.getRestTemplate()
@@ -231,6 +277,27 @@ public class DetalleNotaCreditoGUI extends JDialog {
                 this.lanzarReporteNotaCredito(nc.getIdNota());
             } else {
                 JOptionPane.showMessageDialog(this, "La Nota se guardó correctamente!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }
+
+    private void asignarDetalleCompra() {
+        if (proveedor != null) {
+            LocalDateTime hoy = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
+            if (nuevaNotaCreditoDeFactura != null) {
+                nuevaNotaCreditoDeFactura.getDetalleCompra().setFecha(LocalDateTime.ofInstant(dc_FechaNota.getDate().toInstant(), ZoneId.systemDefault())
+                        .withHour(hoy.getHour()).withMinute(hoy.getMinute()).withSecond(hoy.getSecond()));
+                nuevaNotaCreditoDeFactura.getDetalleCompra().setSerie(Long.parseLong(txt_Serie.getValue().toString()));
+                nuevaNotaCreditoDeFactura.getDetalleCompra().setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
+                nuevaNotaCreditoDeFactura.getDetalleCompra().setCAE(Long.parseLong(txt_CAE.getValue().toString()));
+
+            }
+            if (nuevaNotaCreditoSinFactura != null) {
+                nuevaNotaCreditoSinFactura.getDetalleCompra().setFecha(LocalDateTime.ofInstant(dc_FechaNota.getDate().toInstant(), ZoneId.systemDefault())
+                        .withHour(hoy.getHour()).withMinute(hoy.getMinute()).withSecond(hoy.getSecond()));
+                nuevaNotaCreditoSinFactura.getDetalleCompra().setSerie(Long.parseLong(txt_Serie.getValue().toString()));
+                nuevaNotaCreditoSinFactura.getDetalleCompra().setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
+                nuevaNotaCreditoSinFactura.getDetalleCompra().setCAE(Long.parseLong(txt_CAE.getValue().toString()));
             }
         }
     }
