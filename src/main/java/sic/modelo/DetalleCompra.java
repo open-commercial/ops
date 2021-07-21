@@ -1,6 +1,6 @@
 package sic.modelo;
 
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,15 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class NuevaNotaDebitoDeRecibo {
+public class DetalleCompra {
 
-    private long idRecibo;
-    private BigDecimal gastoAdministrativo;
-    private String motivo;
+    private LocalDateTime fecha;
     private Long serie;
     private Long nroNota;
     private Long CAE;
-    private TipoDeComprobante tipoDeComprobante;
-    private DetalleCompra detalleCompra;
-
 }

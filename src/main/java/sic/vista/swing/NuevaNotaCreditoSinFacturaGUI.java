@@ -15,6 +15,7 @@ import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.SucursalActiva;
 import sic.modelo.NotaCredito;
+import sic.modelo.NuevaNotaCreditoDeFactura;
 import sic.modelo.NuevaNotaCreditoSinFactura;
 import sic.modelo.Proveedor;
 import sic.modelo.TipoDeComprobante;
@@ -24,6 +25,7 @@ public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
     private final Long idCliente;
     private final Long idProveedor;
     private NotaCredito notaCreditoCalculada;
+    private NuevaNotaCreditoSinFactura nuevaNotaCreditoSinFactura;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public NuevaNotaCreditoSinFacturaGUI(Cliente cliente) {
@@ -45,6 +47,10 @@ public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
         this.setIconImage(iconoVentana.getImage());
     }
     
+    public NuevaNotaCreditoSinFactura getNuevaNotaCreditoDeFactura() {
+        return nuevaNotaCreditoSinFactura;
+    }
+        
     public NotaCredito getNotaCreditoCalculadaSinFactura() {
         return notaCreditoCalculada;
     }
@@ -213,7 +219,7 @@ public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
             ftxtDetalle.setText("");
         }
         try {
-            NuevaNotaCreditoSinFactura nuevaNotaCreditoSinFactura = NuevaNotaCreditoSinFactura
+            this.nuevaNotaCreditoSinFactura = NuevaNotaCreditoSinFactura
                     .builder()
                     .idCliente(idCliente)
                     .idProveedor(idProveedor)
@@ -222,7 +228,7 @@ public class NuevaNotaCreditoSinFacturaGUI extends JDialog {
                     .tipo(((TipoDeComprobante) cmbTipoDeComprobante.getSelectedItem()))
                     .detalle(ftxtDetalle.getText().trim())
                     .build();
-            notaCreditoCalculada = RestClient.getRestTemplate().postForObject("/notas/credito/calculos-sin-factura", nuevaNotaCreditoSinFactura, NotaCredito.class);
+            notaCreditoCalculada = RestClient.getRestTemplate().postForObject("/notas/credito/calculos-sin-factura", this.nuevaNotaCreditoSinFactura, NotaCredito.class);
             this.dispose();
         } catch (RestClientResponseException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

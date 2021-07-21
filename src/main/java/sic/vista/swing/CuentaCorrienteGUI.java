@@ -506,7 +506,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
         seleccionDeProductosGUI.setLocationRelativeTo(this);
         seleccionDeProductosGUI.setVisible(true);
         if (seleccionDeProductosGUI.getNotaCreditoCalculada() != null) {
-            DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(seleccionDeProductosGUI.getNotaCreditoCalculada());
+            DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(seleccionDeProductosGUI.getNotaCreditoCalculada(), seleccionDeProductosGUI.getNuevaNotaCreditoDeFactura());
             detalleNotaCredito.setModal(true);
             detalleNotaCredito.setLocationRelativeTo(this);
             detalleNotaCredito.setVisible(true);
@@ -530,7 +530,7 @@ public class CuentaCorrienteGUI extends JInternalFrame {
             nuevaNotaDeCreditoSinFactura.setVisible(true);
         }
         if (nuevaNotaDeCreditoSinFactura != null && nuevaNotaDeCreditoSinFactura.getNotaCreditoCalculadaSinFactura() != null) {
-            DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(nuevaNotaDeCreditoSinFactura.getNotaCreditoCalculadaSinFactura());
+            DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(nuevaNotaDeCreditoSinFactura.getNotaCreditoCalculadaSinFactura(), nuevaNotaDeCreditoSinFactura.getNuevaNotaCreditoDeFactura());
             detalleNotaCredito.setModal(true);
             detalleNotaCredito.setLocationRelativeTo(this);
             detalleNotaCredito.setVisible(true);

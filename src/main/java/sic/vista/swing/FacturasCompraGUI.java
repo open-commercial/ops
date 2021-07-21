@@ -988,7 +988,7 @@ public class FacturasCompraGUI extends JInternalFrame {
                 seleccionDeProductosGUI.setVisible(true);
                 try {
                     if (seleccionDeProductosGUI.getNotaCreditoCalculada() != null) {
-                        DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(seleccionDeProductosGUI.getNotaCreditoCalculada());
+                        DetalleNotaCreditoGUI detalleNotaCredito = new DetalleNotaCreditoGUI(seleccionDeProductosGUI.getNotaCreditoCalculada(), seleccionDeProductosGUI.getNuevaNotaCreditoDeFactura());
                         detalleNotaCredito.setModal(true);
                         detalleNotaCredito.setLocationRelativeTo(this);
                         detalleNotaCredito.setVisible(true);
