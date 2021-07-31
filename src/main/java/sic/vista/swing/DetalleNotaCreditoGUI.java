@@ -19,6 +19,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
+import sic.modelo.DetalleCompra;
 import sic.modelo.SucursalActiva;
 import sic.modelo.NotaCredito;
 import sic.modelo.NuevaNotaCreditoDeFactura;
@@ -253,6 +254,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
         if (proveedor != null) {
             LocalDateTime hoy = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
             if (nuevaNotaCreditoDeFactura != null) {
+                nuevaNotaCreditoDeFactura.setDetalleCompra(new DetalleCompra());
                 nuevaNotaCreditoDeFactura.getDetalleCompra().setFecha(LocalDateTime.ofInstant(dc_FechaNota.getDate().toInstant(), ZoneId.systemDefault())
                         .withHour(hoy.getHour()).withMinute(hoy.getMinute()).withSecond(hoy.getSecond()));
                 nuevaNotaCreditoDeFactura.getDetalleCompra().setSerie(Long.parseLong(txt_Serie.getValue().toString()));
@@ -261,6 +263,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
 
             }
             if (nuevaNotaCreditoSinFactura != null) {
+                nuevaNotaCreditoSinFactura.setDetalleCompra(new DetalleCompra());
                 nuevaNotaCreditoSinFactura.getDetalleCompra().setFecha(LocalDateTime.ofInstant(dc_FechaNota.getDate().toInstant(), ZoneId.systemDefault())
                         .withHour(hoy.getHour()).withMinute(hoy.getMinute()).withSecond(hoy.getSecond()));
                 nuevaNotaCreditoSinFactura.getDetalleCompra().setSerie(Long.parseLong(txt_Serie.getValue().toString()));

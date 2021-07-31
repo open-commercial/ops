@@ -407,20 +407,20 @@ public class NotasCreditoCompraGUI extends JInternalFrame {
                 .postForObject("/notas/total-credito/criteria", criteria, BigDecimal.class));
     }
 
-    private void verFacturaVenta() throws PropertyVetoException {
+    private void verFacturaCompra() throws PropertyVetoException {
         int indexFilaSeleccionada = Utilidades.getSelectedRowModelIndice(tbl_Resultados);
         if (tbl_Resultados.getSelectedRow() != -1) {
-            if (notasTotal.get(indexFilaSeleccionada).getIdFacturaVenta() != null) {
-                FacturasVentaGUI gui_facturaVenta = new FacturasVentaGUI();
-                gui_facturaVenta.setLocation(getDesktopPane().getWidth() / 2 - gui_facturaVenta.getWidth() / 2,
-                        getDesktopPane().getHeight() / 2 - gui_facturaVenta.getHeight() / 2);
-                getDesktopPane().add(gui_facturaVenta);
+            if (notasTotal.get(indexFilaSeleccionada).getIdFacturaCompra() != null) {
+                FacturasCompraGUI gui_facturaCompra = new FacturasCompraGUI();
+                gui_facturaCompra.setLocation(getDesktopPane().getWidth() / 2 - gui_facturaCompra.getWidth() / 2,
+                        getDesktopPane().getHeight() / 2 - gui_facturaCompra.getHeight() / 2);
+                getDesktopPane().add(gui_facturaCompra);
                 Factura factura = RestClient.getRestTemplate()
-                        .getForObject("/facturas/" + notasTotal.get(indexFilaSeleccionada).getIdFacturaVenta(), Factura.class);
-                gui_facturaVenta.setVisible(true);
-                gui_facturaVenta.buscarPorSerieNroTipo(factura.getNumSerie(), factura.getNumFactura(),
-                        factura.getTipoComprobante(), notasTotal.get(indexFilaSeleccionada).getIdCliente());
-                gui_facturaVenta.setSelected(true);
+                        .getForObject("/facturas/" + notasTotal.get(indexFilaSeleccionada).getIdFacturaCompra(), Factura.class);
+                gui_facturaCompra.setVisible(true);
+                gui_facturaCompra.buscarPorSerieYNroFactura(factura.getNumSerie(), factura.getNumFactura(),
+                        factura.getTipoComprobante(), notasTotal.get(indexFilaSeleccionada).getIdProveedor());
+                gui_facturaCompra.setSelected(true);
             } else {
                 JOptionPane.showInternalMessageDialog(this, ResourceBundle.getBundle("Mensajes")
                         .getString("mensaje_nota_credito_sin_factura_relacionada"), "Error", JOptionPane.ERROR_MESSAGE);
@@ -963,7 +963,7 @@ public class NotasCreditoCompraGUI extends JInternalFrame {
 
     private void btnVerFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerFacturaActionPerformed
         try {
-            this.verFacturaVenta();
+            this.verFacturaCompra();
         } catch (PropertyVetoException ex) {
             String mensaje = "No se pudo seleccionar la ventana requerida.";
             LOGGER.error(mensaje + " - " + ex.getMessage());
