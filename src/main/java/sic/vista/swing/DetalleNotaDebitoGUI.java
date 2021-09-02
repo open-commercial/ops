@@ -3,14 +3,11 @@ package sic.vista.swing;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
@@ -143,15 +140,14 @@ public class DetalleNotaDebitoGUI extends JDialog {
         }
     }
 
-    private void guardar() throws IOException {
-                    
+    private void guardar() throws IOException {                   
         NotaDebito nd;
             if (recibo == null) {
                 NuevaNotaDebitoSinRecibo nuevaNotaCreditoSinRecibo = NuevaNotaDebitoSinRecibo
                         .builder()
                         .idCliente(cliente != null ? cliente.getIdCliente() : null)
                         .idProveedor(proveedor != null ? proveedor.getIdProveedor() : null)
-                        .gastoAdministrativo(notaDebito.getMontoNoGravado())
+                        .gastoAdministrativo(notaDebito.getRenglonesNotaDebito().get(1).getImporteNeto())
                         .tipoDeComprobante(notaDebito.getTipoComprobante())
                         .idSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal())
                         .motivo(cmbDescripcionRenglon2.getSelectedItem().toString())
@@ -161,34 +157,12 @@ public class DetalleNotaDebitoGUI extends JDialog {
                 NuevaNotaDebitoDeRecibo nuevaNotaDebitoDeRecibo = NuevaNotaDebitoDeRecibo
                         .builder()
                         .idRecibo(recibo.getIdRecibo())
-                        .gastoAdministrativo(notaDebito.getMontoNoGravado())
+                        .gastoAdministrativo(notaDebito.getRenglonesNotaDebito().get(1).getImporteNeto())
                         .tipoDeComprobante(notaDebito.getTipoComprobante())
                         .motivo(cmbDescripcionRenglon2.getSelectedItem().toString())
                         .build();
                 nd = RestClient.getRestTemplate().postForObject("/notas/debito", nuevaNotaDebitoDeRecibo, NotaDebito.class);
             } 
-        
-        
-//        notaDebito.setMotivo(cmbDescripcionRenglon2.getSelectedItem().toString());
-//        String uri = "/notas/debito";
-//        if (proveedor != null) {
-//            notaDebito.setSerie(Long.parseLong(txt_Serie.getValue().toString()));
-//            notaDebito.setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
-//            notaDebito.setCae(Long.parseLong(txt_CAE.getValue().toString()));
-//            notaDebito.setIdProveedor(proveedor.getIdProveedor());
-//            if (this.dcFechaNota.isVisible() && this.dcFechaNota.getDate() != null) {
-//                Calendar cal = new GregorianCalendar();
-//                cal.setTime(this.dcFechaNota.getDate());
-//                cal.set(Calendar.HOUR_OF_DAY, 00);
-//                cal.set(Calendar.MINUTE, 00);
-//                cal.set(Calendar.SECOND, 00);
-//                notaDebito.setFecha(cal.toInstant()
-//                        .atZone(ZoneId.systemDefault())
-//                        .toLocalDateTime());
-//            }
-//        }
-//        NotaDebito nd = RestClient.getRestTemplate()
-//                .postForObject(uri, notaDebito, NotaDebito.class);
         if (nd != null) {
             notaDebitoCreada = true;
             boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/"
