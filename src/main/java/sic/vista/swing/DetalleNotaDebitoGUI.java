@@ -147,7 +147,7 @@ public class DetalleNotaDebitoGUI extends JDialog {
                         .builder()
                         .idCliente(cliente != null ? cliente.getIdCliente() : null)
                         .idProveedor(proveedor != null ? proveedor.getIdProveedor() : null)
-                        .gastoAdministrativo(notaDebito.getRenglonesNotaDebito().get(1).getImporteNeto())
+                        .gastoAdministrativo(notaDebito.getRenglonesNotaDebito().get(0).getImporteNeto())
                         .tipoDeComprobante(notaDebito.getTipoComprobante())
                         .idSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal())
                         .motivo(cmbDescripcionRenglon2.getSelectedItem().toString())
