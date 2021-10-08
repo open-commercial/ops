@@ -15,7 +15,6 @@ import sic.RestClient;
 import sic.modelo.Cliente;
 import sic.modelo.SucursalActiva;
 import sic.modelo.NotaCredito;
-import sic.modelo.NuevaNotaCreditoDeFactura;
 import sic.modelo.NuevaNotaCreditoSinFactura;
 import sic.modelo.Proveedor;
 import sic.modelo.TipoDeComprobante;

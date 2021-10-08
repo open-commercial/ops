@@ -259,7 +259,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
                         .withHour(hoy.getHour()).withMinute(hoy.getMinute()).withSecond(hoy.getSecond()));
                 nuevaNotaCreditoDeFactura.getDetalleCompra().setSerie(Long.parseLong(txt_Serie.getValue().toString()));
                 nuevaNotaCreditoDeFactura.getDetalleCompra().setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
-                nuevaNotaCreditoDeFactura.getDetalleCompra().setCAE(Long.parseLong(txt_CAE.getValue().toString()));
+                nuevaNotaCreditoDeFactura.getDetalleCompra().setCae(Long.parseLong(txt_CAE.getValue().toString()));
 
             }
             if (nuevaNotaCreditoSinFactura != null) {
@@ -268,7 +268,7 @@ public class DetalleNotaCreditoGUI extends JDialog {
                         .withHour(hoy.getHour()).withMinute(hoy.getMinute()).withSecond(hoy.getSecond()));
                 nuevaNotaCreditoSinFactura.getDetalleCompra().setSerie(Long.parseLong(txt_Serie.getValue().toString()));
                 nuevaNotaCreditoSinFactura.getDetalleCompra().setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
-                nuevaNotaCreditoSinFactura.getDetalleCompra().setCAE(Long.parseLong(txt_CAE.getValue().toString()));
+                nuevaNotaCreditoSinFactura.getDetalleCompra().setCae(Long.parseLong(txt_CAE.getValue().toString()));
             }
         }
     }
