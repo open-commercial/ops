@@ -21,7 +21,6 @@ public class Producto implements Serializable {
     private BigDecimal cantidadTotalEnSucursales;
     private BigDecimal cantidadTotalEnSucursalesDisponible;
     private BigDecimal cantMinima;
-    private BigDecimal bulto;
     private String nombreMedida;
     private BigDecimal precioCosto;
     private BigDecimal gananciaPorcentaje;

@@ -14,7 +14,6 @@ public class NuevoProducto {
     private Map<Long,BigDecimal> cantidadEnSucursal;    
     private BigDecimal precioBonificado;
     private BigDecimal cantMinima;
-    private BigDecimal bulto;
     private BigDecimal precioCosto;
     private BigDecimal gananciaPorcentaje;
     private BigDecimal gananciaNeto;
