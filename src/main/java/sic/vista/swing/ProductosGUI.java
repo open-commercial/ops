@@ -180,7 +180,7 @@ public class ProductosGUI extends JInternalFrame {
                     .filter(cantidadEnSucursales -> !cantidadEnSucursales.idSucursal.equals(SucursalActiva.getInstance().getSucursal().getIdSucursal()))
                     .map(CantidadEnSucursal::getCantidad).reduce(BigDecimal.ZERO, BigDecimal::add);         
             fila[6] = producto.getCantidadReservada();           
-            fila[7] = producto.getBulto();
+            fila[7] = producto.getCantMinima();
             fila[8] = producto.getNombreMedida();
             fila[9] = producto.getPrecioCosto();
             fila[10] = producto.getGananciaPorcentaje();

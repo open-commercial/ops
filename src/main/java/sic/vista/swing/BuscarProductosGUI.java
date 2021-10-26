@@ -366,7 +366,7 @@ public class BuscarProductosGUI extends JDialog {
                 });         
                 }
                 fila[4] = p.getCantidadReservada();
-                fila[5] = p.getBulto();
+                fila[5] = p.getCantMinima();
                 fila[6] = p.getNombreMedida();
                 BigDecimal precio = (movimiento == Movimiento.PEDIDO) ? p.getPrecioLista()
                         : (movimiento == Movimiento.COMPRA) ? p.getPrecioCosto() : BigDecimal.ZERO;

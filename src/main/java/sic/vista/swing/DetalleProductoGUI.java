@@ -908,7 +908,7 @@ public class DetalleProductoGUI extends JDialog {
                 txtCantidad.setValue(cantidadesEnSucursal.getCantidad());
             }
         });
-        txt_Bulto.setValue(productoParaModificar.getBulto());
+        txt_Bulto.setValue(productoParaModificar.getCantMinima());
         cmb_Rubro.setSelectedItem(productoParaModificar.getNombreRubro());
         txtProveedor.setText(productoParaModificar.getRazonSocialProveedor());
         lbl_FechaUltimaModificacion.setText(FormatosFechaHora.formatoFecha(productoParaModificar.getFechaUltimaModificacion(), FormatosFechaHora.FORMATO_FECHAHORA_HISPANO));
@@ -1133,7 +1133,7 @@ public class DetalleProductoGUI extends JDialog {
                     producto.setCodigo(txt_Codigo.getText());
                     producto.setDescripcion(txt_Descripcion.getText().trim());
                     producto.setCantidadEnSucursal(cantidadEnSucursal);
-                    producto.setBulto(new BigDecimal(txt_Bulto.getValue().toString()));
+                    producto.setCantMinima(new BigDecimal(txt_Bulto.getValue().toString()));
                     producto.setPrecioCosto(new BigDecimal(txtPrecioCosto.getValue().toString()));
                     producto.setGananciaPorcentaje(new BigDecimal(txtGananciaPorcentaje.getValue().toString()));
                     producto.setGananciaNeto(new BigDecimal(txtGananciaNeto.getValue().toString()));
@@ -1188,7 +1188,7 @@ public class DetalleProductoGUI extends JDialog {
                         }
                     });
                     productoParaModificar.getCantidadEnSucursales().addAll(cantidadesNuevas);
-                    productoParaModificar.setBulto(new BigDecimal(txt_Bulto.getValue().toString()));
+                    productoParaModificar.setCantMinima(new BigDecimal(txt_Bulto.getValue().toString()));
                     productoParaModificar.setPrecioCosto(new BigDecimal(txtPrecioCosto.getValue().toString()));
                     productoParaModificar.setGananciaPorcentaje(new BigDecimal(txtGananciaPorcentaje.getValue().toString()));
                     productoParaModificar.setGananciaNeto(new BigDecimal(txtGananciaNeto.getValue().toString()));
