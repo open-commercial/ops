@@ -15,9 +15,6 @@ public class NuevaNotaDebitoDeRecibo {
     private long idRecibo;
     private BigDecimal gastoAdministrativo;
     private String motivo;
-    private Long serie;
-    private Long nroNota;
-    private Long CAE;
     private TipoDeComprobante tipoDeComprobante;
     private DetalleCompra detalleCompra;
 

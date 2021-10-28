@@ -4,6 +4,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -19,8 +20,10 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import sic.RestClient;
 import sic.modelo.Cliente;
+import sic.modelo.DetalleCompra;
 import sic.modelo.SucursalActiva;
 import sic.modelo.NotaDebito;
+import sic.modelo.NuevaNotaCreditoDeFactura;
 import sic.modelo.NuevaNotaDebitoDeRecibo;
 import sic.modelo.NuevaNotaDebitoSinRecibo;
 import sic.modelo.Proveedor;
@@ -38,7 +41,6 @@ public class DetalleNotaDebitoGUI extends JDialog {
     private boolean notaDebitoCreada;
     private long idNotaDebito;
     private NotaDebito notaDebito;
-    //private final FormatterFechaHora formatter = new FormatterFechaHora(FormatosFechaHora.FORMATO_FECHA_HISPANO);
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     public DetalleNotaDebitoGUI(NotaDebito notaDebitoCalculada) {
@@ -142,27 +144,29 @@ public class DetalleNotaDebitoGUI extends JDialog {
 
     private void guardar() throws IOException {                   
         NotaDebito nd;
-            if (recibo == null) {
-                NuevaNotaDebitoSinRecibo nuevaNotaCreditoSinRecibo = NuevaNotaDebitoSinRecibo
-                        .builder()
-                        .idCliente(cliente != null ? cliente.getIdCliente() : null)
-                        .idProveedor(proveedor != null ? proveedor.getIdProveedor() : null)
-                        .gastoAdministrativo(notaDebito.getRenglonesNotaDebito().get(0).getImporteNeto())
-                        .tipoDeComprobante(notaDebito.getTipoComprobante())
-                        .idSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal())
-                        .motivo(cmbDescripcionRenglon2.getSelectedItem().toString())
-                        .build();
-                nd = RestClient.getRestTemplate().postForObject("/notas/debito/sin-recibo", nuevaNotaCreditoSinRecibo, NotaDebito.class);
-            } else {
-                NuevaNotaDebitoDeRecibo nuevaNotaDebitoDeRecibo = NuevaNotaDebitoDeRecibo
-                        .builder()
-                        .idRecibo(recibo.getIdRecibo())
-                        .gastoAdministrativo(notaDebito.getRenglonesNotaDebito().get(1).getImporteNeto())
-                        .tipoDeComprobante(notaDebito.getTipoComprobante())
-                        .motivo(cmbDescripcionRenglon2.getSelectedItem().toString())
-                        .build();
-                nd = RestClient.getRestTemplate().postForObject("/notas/debito", nuevaNotaDebitoDeRecibo, NotaDebito.class);
-            } 
+        if (recibo == null) {
+            NuevaNotaDebitoSinRecibo nuevaNotaCreditoSinRecibo = NuevaNotaDebitoSinRecibo
+                    .builder()
+                    .idCliente(cliente != null ? cliente.getIdCliente() : null)
+                    .idProveedor(proveedor != null ? proveedor.getIdProveedor() : null)
+                    .gastoAdministrativo(notaDebito.getRenglonesNotaDebito().get(0).getImporteNeto())
+                    .tipoDeComprobante(notaDebito.getTipoComprobante())
+                    .idSucursal(SucursalActiva.getInstance().getSucursal().getIdSucursal())
+                    .motivo(cmbDescripcionRenglon2.getSelectedItem().toString())
+                    .build();
+            this.asignarDetalleCompra(nuevaNotaCreditoSinRecibo);
+            nd = RestClient.getRestTemplate().postForObject("/notas/debito/sin-recibo", nuevaNotaCreditoSinRecibo, NotaDebito.class);
+        } else {
+            NuevaNotaDebitoDeRecibo nuevaNotaDebitoDeRecibo = NuevaNotaDebitoDeRecibo
+                    .builder()
+                    .idRecibo(recibo.getIdRecibo())
+                    .gastoAdministrativo(notaDebito.getRenglonesNotaDebito().get(1).getImporteNeto())
+                    .tipoDeComprobante(notaDebito.getTipoComprobante())
+                    .motivo(cmbDescripcionRenglon2.getSelectedItem().toString())
+                    .build();
+            this.asignarDetalleCompra(nuevaNotaDebitoDeRecibo);
+            nd = RestClient.getRestTemplate().postForObject("/notas/debito", nuevaNotaDebitoDeRecibo, NotaDebito.class);
+        }
         if (nd != null) {
             notaDebitoCreada = true;
             boolean FEHabilitada = RestClient.getRestTemplate().getForObject("/configuraciones-sucursal/"
@@ -179,6 +183,27 @@ public class DetalleNotaDebitoGUI extends JDialog {
             }
             this.dispose();
         }
+    }
+    
+    private void asignarDetalleCompra(NuevaNotaDebitoDeRecibo nuevaNotaDebitoDeRecibo) {
+        LocalDateTime hoy = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
+        nuevaNotaDebitoDeRecibo.setDetalleCompra(new DetalleCompra());
+        nuevaNotaDebitoDeRecibo.getDetalleCompra().setFecha(LocalDateTime.ofInstant(dcFechaNota.getDate().toInstant(), ZoneId.systemDefault())
+                .withHour(hoy.getHour()).withMinute(hoy.getMinute()).withSecond(hoy.getSecond()));
+        nuevaNotaDebitoDeRecibo.getDetalleCompra().setSerie(Long.parseLong(txt_Serie.getValue().toString()));
+        nuevaNotaDebitoDeRecibo.getDetalleCompra().setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
+        nuevaNotaDebitoDeRecibo.getDetalleCompra().setCae(Long.parseLong(txt_CAE.getValue().toString()));
+    }
+
+    private void asignarDetalleCompra(NuevaNotaDebitoSinRecibo nuevaNotaDebitoSinRecibo) {
+        LocalDateTime hoy = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59);
+        nuevaNotaDebitoSinRecibo.setDetalleCompra(new DetalleCompra());
+        nuevaNotaDebitoSinRecibo.getDetalleCompra().setFecha(LocalDateTime.ofInstant(dcFechaNota.getDate().toInstant(), ZoneId.systemDefault())
+                .withHour(hoy.getHour()).withMinute(hoy.getMinute()).withSecond(hoy.getSecond()));
+        nuevaNotaDebitoSinRecibo.getDetalleCompra().setSerie(Long.parseLong(txt_Serie.getValue().toString()));
+        nuevaNotaDebitoSinRecibo.getDetalleCompra().setNroNota(Long.parseLong(txt_Numero.getValue().toString()));
+        nuevaNotaDebitoSinRecibo.getDetalleCompra().setCae(Long.parseLong(txt_CAE.getValue().toString()));
+
     }
 
     private void lanzarReporteNotaCredito(long idNota) throws IOException {
