@@ -20,5 +20,6 @@ public class ProductosParaActualizar {
     private BigDecimal porcentajeBonificacionPrecio;
     private BigDecimal porcentajeBonificacionOferta;
     private Boolean publico;
+    private Boolean paraCatalogo;
 
 }

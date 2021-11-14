@@ -97,6 +97,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         txtPrecioLista.setValue(BigDecimal.ZERO);
         rbRecargo.setSelected(true);
         rbPrivado.setSelected(true);
+        rbCatalogoNo.setSelected(true);
         txtDescuentoRecargoPorcentaje.setValue(BigDecimal.ZERO);
         txtPorcentajePrecioBonificado.setValue(BigDecimal.ZERO);
         txtPrecioBonificado.setValue(BigDecimal.ZERO);
@@ -151,7 +152,8 @@ public class ModificacionMultipleProductosGUI extends JDialog {
                 || chk_UnidadDeMedida.isSelected()
                 || chkRecargoDescuento.isSelected()
                 || chkVisibilidad.isSelected()
-                || chkVentaMinima.isSelected()) {
+                || chkVentaMinima.isSelected()
+                || chkCatalogo.isSelected()) {
             btn_Guardar.setEnabled(true);
         } else {
             btn_Guardar.setEnabled(false);
@@ -223,6 +225,7 @@ public class ModificacionMultipleProductosGUI extends JDialog {
 
         bgRecargoDescuento = new javax.swing.ButtonGroup();
         bgVisibilidad = new javax.swing.ButtonGroup();
+        bgCatalogo = new javax.swing.ButtonGroup();
         sp_ProductosAModificar = new javax.swing.JScrollPane();
         tbl_ProductosAModifcar = new javax.swing.JTable();
         panel1 = new javax.swing.JPanel();
@@ -237,6 +240,9 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         rbPrivado = new javax.swing.JRadioButton();
         txtProveedor = new javax.swing.JTextField();
         btnBuscarProveedor = new javax.swing.JButton();
+        chkCatalogo = new javax.swing.JCheckBox();
+        rbCatalogoSi = new javax.swing.JRadioButton();
+        rbCatalogoNo = new javax.swing.JRadioButton();
         panel2 = new javax.swing.JPanel();
         lbl_PrecioCosto = new javax.swing.JLabel();
         lbl_Ganancia = new javax.swing.JLabel();
@@ -352,6 +358,21 @@ public class ModificacionMultipleProductosGUI extends JDialog {
             }
         });
 
+        chkCatalogo.setText("Catalogo:");
+        chkCatalogo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chkCatalogoItemStateChanged(evt);
+            }
+        });
+
+        bgCatalogo.add(rbCatalogoSi);
+        rbCatalogoSi.setText("Si");
+        rbCatalogoSi.setEnabled(false);
+
+        bgCatalogo.add(rbCatalogoNo);
+        rbCatalogoNo.setText("No");
+        rbCatalogoNo.setEnabled(false);
+
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
         panel1.setLayout(panel1Layout);
         panel1Layout.setHorizontalGroup(
@@ -379,11 +400,17 @@ public class ModificacionMultipleProductosGUI extends JDialog {
                                     .addComponent(cmb_Rubro, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addContainerGap())))
                     .addGroup(panel1Layout.createSequentialGroup()
-                        .addComponent(chkVisibilidad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)
-                        .addComponent(rbPublico)
+                        .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(chkVisibilidad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(chkCatalogo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(rbPrivado)
+                        .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(rbPublico)
+                            .addComponent(rbCatalogoSi))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(rbCatalogoNo)
+                            .addComponent(rbPrivado))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
 
@@ -415,7 +442,12 @@ public class ModificacionMultipleProductosGUI extends JDialog {
                     .addComponent(chkVisibilidad)
                     .addComponent(rbPublico)
                     .addComponent(rbPrivado))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(chkCatalogo)
+                    .addComponent(rbCatalogoSi)
+                    .addComponent(rbCatalogoNo))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
 
         panel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarProveedor, btn_NuevoProveedor, cmb_Medida, cmb_Rubro, txtProveedor});
@@ -929,6 +961,9 @@ public class ModificacionMultipleProductosGUI extends JDialog {
             if (chkVisibilidad.isSelected() == true) {
                 productosParaActualizar.setPublico(rbPublico.isSelected());
             }
+            if (chkCatalogo.isSelected() == true) {
+                productosParaActualizar.setParaCatalogo(rbCatalogoSi.isSelected());
+            }
             if (chkRecargoDescuento.isSelected() == true) {
                 if (rbRecargo.isSelected()) {
                     productosParaActualizar.setDescuentoRecargoPorcentaje(new BigDecimal(txtDescuentoRecargoPorcentaje.getValue().toString()));
@@ -1348,12 +1383,25 @@ public class ModificacionMultipleProductosGUI extends JDialog {
         txtPorcentajeOferta.setValue(this.calcularPorcentaje(new BigDecimal(txtPrecioOferta.getValue().toString()), new BigDecimal(txtPrecioLista.getValue().toString())));
     }//GEN-LAST:event_txtPrecioOfertaActionPerformed
 
+    private void chkCatalogoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkCatalogoItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            rbCatalogoSi.setEnabled(true);
+            rbCatalogoNo.setEnabled(true);
+        } else {
+            rbCatalogoSi.setEnabled(false);
+            rbCatalogoNo.setEnabled(false);
+        }
+        this.habilitarBotonGuardar();
+    }//GEN-LAST:event_chkCatalogoItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup bgCatalogo;
     private javax.swing.ButtonGroup bgRecargoDescuento;
     private javax.swing.ButtonGroup bgVisibilidad;
     private javax.swing.JButton btnBuscarProveedor;
     private javax.swing.JButton btn_Guardar;
     private javax.swing.JButton btn_NuevoProveedor;
+    private javax.swing.JCheckBox chkCatalogo;
     private javax.swing.JCheckBox chkOferta;
     private javax.swing.JCheckBox chkRecargoDescuento;
     private javax.swing.JCheckBox chkVentaMinima;
@@ -1377,6 +1425,8 @@ public class ModificacionMultipleProductosGUI extends JDialog {
     private javax.swing.JPanel panel2;
     private javax.swing.JPanel panel3;
     private javax.swing.JPanel panelCantidades;
+    private javax.swing.JRadioButton rbCatalogoNo;
+    private javax.swing.JRadioButton rbCatalogoSi;
     private javax.swing.JRadioButton rbDescuento;
     private javax.swing.JRadioButton rbPrivado;
     private javax.swing.JRadioButton rbPublico;
