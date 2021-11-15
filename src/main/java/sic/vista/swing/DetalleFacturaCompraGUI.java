@@ -113,7 +113,7 @@ public class DetalleFacturaCompraGUI extends JInternalFrame {
                 NuevoRenglonFactura nuevoRenglon = NuevoRenglonFactura.builder()
                         .cantidad(renglon.getCantidad())
                         .idProducto(renglon.getIdProductoItem())
-                        .bonificacion(nuevoRenglonFactura.getBonificacion())
+                        .bonificacion(renglon.getBonificacionPorcentaje())
                         .build();
                 nuevosRenglones.add(nuevoRenglon);
             });
