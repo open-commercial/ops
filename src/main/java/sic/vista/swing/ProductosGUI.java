@@ -370,6 +370,13 @@ public class ProductosGUI extends JInternalFrame {
                 criteria.setPublico(false);
             }
         }
+        if (chkCatalogo.isSelected()) {
+            if (rbCatalogoSi.isSelected()) {
+                criteria.setListarSoloParaCatalogo(true);
+            } else if (rbCatalogoNo.isSelected()) {
+                criteria.setListarSoloParaCatalogo(false);
+            }
+        }
         if (chkOfertas.isSelected()) {
             criteria.setOferta(true);
         }
@@ -475,6 +482,7 @@ public class ProductosGUI extends JInternalFrame {
 
         bgDisponibilidad = new javax.swing.ButtonGroup();
         bgVisibilidad = new javax.swing.ButtonGroup();
+        bgCatalogo = new javax.swing.ButtonGroup();
         panelFiltros = new javax.swing.JPanel();
         chkCodigoODescripcion = new javax.swing.JCheckBox();
         chk_Proveedor = new javax.swing.JCheckBox();
@@ -489,6 +497,9 @@ public class ProductosGUI extends JInternalFrame {
         btnBuscarProveedor = new javax.swing.JButton();
         chkOfertas = new javax.swing.JCheckBox();
         txtCodigoODescripcion = new javax.swing.JTextField();
+        rbCatalogoSi = new javax.swing.JRadioButton();
+        rbCatalogoNo = new javax.swing.JRadioButton();
+        chkCatalogo = new javax.swing.JCheckBox();
         panelResultados = new javax.swing.JPanel();
         sp_Resultados = new javax.swing.JScrollPane();
         tbl_Resultados = new javax.swing.JTable();
@@ -601,43 +612,69 @@ public class ProductosGUI extends JInternalFrame {
             }
         });
 
+        bgCatalogo.add(rbCatalogoSi);
+        rbCatalogoSi.setText("Si");
+        rbCatalogoSi.setEnabled(false);
+
+        bgCatalogo.add(rbCatalogoNo);
+        rbCatalogoNo.setText("No");
+        rbCatalogoNo.setEnabled(false);
+
+        chkCatalogo.setText("Catalogo:");
+        chkCatalogo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chkCatalogoItemStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelFiltrosLayout = new javax.swing.GroupLayout(panelFiltros);
         panelFiltros.setLayout(panelFiltrosLayout);
         panelFiltrosLayout.setHorizontalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFiltrosLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(panelFiltrosLayout.createSequentialGroup()
-                            .addComponent(btn_Buscar)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGroup(panelFiltrosLayout.createSequentialGroup()
-                            .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                                .addComponent(chk_Proveedor)
-                                .addComponent(chk_Rubro)
-                                .addComponent(chkCodigoODescripcion))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(cmb_Rubro, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFiltrosLayout.createSequentialGroup()
-                                    .addComponent(txtProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
-                                    .addGap(0, 0, 0)
-                                    .addComponent(btnBuscarProveedor))
-                                .addComponent(txtCodigoODescripcion))))
                     .addGroup(panelFiltrosLayout.createSequentialGroup()
-                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(chk_visibilidad, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(chkOfertas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(rb_publico)
-                        .addGap(18, 18, 18)
-                        .addComponent(rb_privado, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap()
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(chkOfertas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(chkCatalogo, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(chk_visibilidad, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(17, 17, 17)
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelFiltrosLayout.createSequentialGroup()
+                                .addComponent(rb_publico)
+                                .addGap(18, 18, 18)
+                                .addComponent(rb_privado, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panelFiltrosLayout.createSequentialGroup()
+                                .addComponent(rbCatalogoSi)
+                                .addGap(18, 18, 18)
+                                .addComponent(rbCatalogoNo, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(panelFiltrosLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(panelFiltrosLayout.createSequentialGroup()
+                                .addComponent(btn_Buscar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbl_cantResultados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(panelFiltrosLayout.createSequentialGroup()
+                                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                                    .addComponent(chk_Proveedor)
+                                    .addComponent(chk_Rubro)
+                                    .addComponent(chkCodigoODescripcion))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(cmb_Rubro, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFiltrosLayout.createSequentialGroup()
+                                        .addComponent(txtProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
+                                        .addGap(0, 0, 0)
+                                        .addComponent(btnBuscarProveedor))
+                                    .addComponent(txtCodigoODescripcion))))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelFiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chkCodigoODescripcion, chkOfertas, chk_Proveedor, chk_Rubro});
+
+        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {chkCatalogo, chk_visibilidad});
 
         panelFiltrosLayout.setVerticalGroup(
             panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -659,18 +696,24 @@ public class ProductosGUI extends JInternalFrame {
                     .addComponent(chk_visibilidad)
                     .addComponent(rb_publico)
                     .addComponent(rb_privado))
-                .addGap(14, 14, 14)
+                .addGap(12, 12, 12)
+                .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rbCatalogoSi)
+                    .addComponent(rbCatalogoNo)
+                    .addComponent(chkCatalogo))
+                .addGap(4, 4, 4)
                 .addComponent(chkOfertas)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addGroup(panelFiltrosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btn_Buscar)
-                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbl_cantResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnBuscarProveedor, cmb_Rubro, txtCodigoODescripcion, txtProveedor});
 
         panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_Buscar, lbl_cantResultados});
+
+        panelFiltrosLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {chkCatalogo, chk_visibilidad});
 
         panelResultados.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados"));
 
@@ -765,7 +808,7 @@ public class ProductosGUI extends JInternalFrame {
         panelResultadosLayout.setVerticalGroup(
             panelResultadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelResultadosLayout.createSequentialGroup()
-                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
+                .addComponent(sp_Resultados, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addComponent(btnVerMas)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -972,6 +1015,7 @@ public class ProductosGUI extends JInternalFrame {
         rbEnStock.setVisible(false);
         rb_Faltantes.setVisible(false);
         rb_publico.setSelected(true);
+        rbCatalogoSi.setSelected(true);
         this.setColumnas();
         this.cambiarEstadoDeComponentesSegunRolUsuario();
         try {
@@ -1046,7 +1090,18 @@ public class ProductosGUI extends JInternalFrame {
         }
     }//GEN-LAST:event_btnVerMasActionPerformed
 
+    private void chkCatalogoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkCatalogoItemStateChanged
+        if (chkCatalogo.isSelected() == true) {
+            rbCatalogoSi.setEnabled(true);
+            rbCatalogoNo.setEnabled(true);
+        } else {
+            rbCatalogoSi.setEnabled(false);
+            rbCatalogoNo.setEnabled(false);
+        }
+    }//GEN-LAST:event_chkCatalogoItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup bgCatalogo;
     private javax.swing.ButtonGroup bgDisponibilidad;
     private javax.swing.ButtonGroup bgVisibilidad;
     private javax.swing.JButton btnBuscarProveedor;
@@ -1056,6 +1111,7 @@ public class ProductosGUI extends JInternalFrame {
     private javax.swing.JButton btn_Eliminar;
     private javax.swing.JButton btn_Modificar;
     private javax.swing.JButton btn_Nuevo;
+    private javax.swing.JCheckBox chkCatalogo;
     private javax.swing.JCheckBox chkCodigoODescripcion;
     private javax.swing.JCheckBox chkOfertas;
     private javax.swing.JCheckBox chk_Disponibilidad;
@@ -1070,6 +1126,8 @@ public class ProductosGUI extends JInternalFrame {
     private javax.swing.JPanel panelFiltros;
     private javax.swing.JPanel panelOrden;
     private javax.swing.JPanel panelResultados;
+    private javax.swing.JRadioButton rbCatalogoNo;
+    private javax.swing.JRadioButton rbCatalogoSi;
     private javax.swing.JRadioButton rbEnStock;
     private javax.swing.JRadioButton rb_Faltantes;
     private javax.swing.JRadioButton rb_privado;

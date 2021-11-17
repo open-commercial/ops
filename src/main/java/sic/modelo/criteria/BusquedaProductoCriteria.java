@@ -17,9 +17,9 @@ public class BusquedaProductoCriteria {
     private Long idProveedor;
     private boolean listarSoloFaltantes;
     private boolean listarSoloEnStock;
+    private boolean listarSoloParaCatalogo;
     private Boolean publico;
-    private Boolean oferta;
-    private Integer pagina;
+    private Boolean oferta;    private Integer pagina;
     private String ordenarPor;
     private String sentido;
 }
