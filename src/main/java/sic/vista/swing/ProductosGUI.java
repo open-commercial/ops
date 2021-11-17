@@ -296,6 +296,13 @@ public class ProductosGUI extends JInternalFrame {
                 criteria.setPublico(false);
             }
         }
+        if (chkCatalogo.isSelected()) {
+            if (rbCatalogoSi.isSelected()) {
+                criteria.setListarSoloParaCatalogo(true);
+            } else if (rbCatalogoNo.isSelected()) {
+                criteria.setListarSoloParaCatalogo(false);
+            }
+        }
         if (chkOfertas.isSelected()) {
             criteria.setOferta(true);
         }
