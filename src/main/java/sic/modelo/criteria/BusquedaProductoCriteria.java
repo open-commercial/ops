@@ -1,5 +1,6 @@
 package sic.modelo.criteria;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +20,8 @@ public class BusquedaProductoCriteria {
     private boolean listarSoloEnStock;
     private Boolean listarSoloParaCatalogo;
     private Boolean publico;
-    private Boolean oferta;    private Integer pagina;
-    private String ordenarPor;
+    private Boolean oferta;    
+    private Integer pagina;
+    private List<String> ordenarPor;
     private String sentido;
 }

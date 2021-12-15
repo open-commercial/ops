@@ -306,36 +306,7 @@ public class ProductosGUI extends JInternalFrame {
         if (chkOfertas.isSelected()) {
             criteria.setOferta(true);
         }
-        int seleccionOrden = cmbOrden.getSelectedIndex();
-        switch (seleccionOrden) {
-            case 0:
-                criteria.setOrdenarPor("descripcion");
-                break;
-            case 1:
-                criteria.setOrdenarPor("codigo");
-                break;
-            case 2:
-                criteria.setOrdenarPor("cantidadTotalEnSucursales");
-                break;
-            case 3:
-                criteria.setOrdenarPor("bulto");
-                break;
-            case 4:
-                criteria.setOrdenarPor("precioCosto");
-                break;
-            case 5:
-                criteria.setOrdenarPor("gananciaPorcentaje");
-                break;
-            case 6:
-                criteria.setOrdenarPor("precioLista");
-                break;
-            case 7:
-                criteria.setOrdenarPor("fechaAlta");
-                break;
-            case 8:
-                criteria.setOrdenarPor("fechaUltimaModificacion");
-                break;
-        }
+        this.agregarOrden(criteria);
         int seleccionDireccion = cmbSentido.getSelectedIndex();
         switch (seleccionDireccion) {
             case 0: 
@@ -387,42 +358,7 @@ public class ProductosGUI extends JInternalFrame {
         if (chkOfertas.isSelected()) {
             criteria.setOferta(true);
         }
-        int seleccionOrden = cmbOrden.getSelectedIndex();
-        switch (seleccionOrden) {
-            case 0:
-                criteria.setOrdenarPor("descripcion");
-                break;
-            case 1:
-                criteria.setOrdenarPor("codigo");
-                break;
-            case 2:
-                criteria.setOrdenarPor("cantidadProducto.cantidadTotalEnSucursales");
-                break;
-            case 3:
-                criteria.setOrdenarPor("cantidadProducto.bulto");
-                break;
-            case 4:
-                criteria.setOrdenarPor("precioProducto.precioCosto");
-                break;
-            case 5:
-                criteria.setOrdenarPor("precioProducto.gananciaPorcentaje");
-                break;
-            case 6:
-                criteria.setOrdenarPor("precioProducto.precioLista");
-                break;
-            case 7:
-                criteria.setOrdenarPor("fechaAlta");
-                break;
-                            case 8:
-                criteria.setOrdenarPor("proveedor.razonSocial");
-                break;
-            case 9:
-                criteria.setOrdenarPor("rubro.nombre");
-                break;
-            case 10:
-                criteria.setOrdenarPor("fechaUltimaModificacion");
-                break;
-        }
+        this.agregarOrden(criteria);
         int seleccionDireccion = cmbSentido.getSelectedIndex();
         switch (seleccionDireccion) {
             case 0:
@@ -483,6 +419,60 @@ public class ProductosGUI extends JInternalFrame {
         }
     }
     
+    private BusquedaProductoCriteria agregarOrden(BusquedaProductoCriteria criteria) {
+        int seleccionOrden = cmbOrden.getSelectedIndex();
+        List<String> criteriosDeOrden = new ArrayList<>();
+        switch (seleccionOrden) {
+            case 0:
+                criteriosDeOrden.add("descripcion");
+                criteria.setOrdenarPor(criteriosDeOrden);
+                break;
+            case 1:
+                criteriosDeOrden.add("codigo");
+                criteria.setOrdenarPor(criteriosDeOrden);
+                break;
+            case 2:
+                criteriosDeOrden.add("cantidadProducto.cantidadTotalEnSucursales");
+                criteria.setOrdenarPor(criteriosDeOrden);
+                break;
+            case 3:
+                criteriosDeOrden.add("cantidadProducto.bulto");
+                criteria.setOrdenarPor(criteriosDeOrden);
+                break;
+            case 4:
+                criteriosDeOrden.add("precioProducto.precioCosto");
+                criteria.setOrdenarPor(criteriosDeOrden);
+                break;
+            case 5:
+                criteriosDeOrden.add("precioProducto.gananciaPorcentaje");
+                criteria.setOrdenarPor(criteriosDeOrden);
+                break;
+            case 6:
+                criteriosDeOrden.add("precioProducto.precioLista");
+                criteria.setOrdenarPor(criteriosDeOrden);
+                break;
+            case 7:
+                criteriosDeOrden.add("fechaAlta");
+                criteria.setOrdenarPor(criteriosDeOrden);
+                break;
+            case 8:
+                criteriosDeOrden.add("proveedor.razonSocial");
+                criteriosDeOrden.add("descripcion");
+                criteria.setOrdenarPor(criteriosDeOrden);
+                break;
+            case 9:
+                criteriosDeOrden.add("rubro.nombre");
+                criteriosDeOrden.add("descripcion");
+                criteria.setOrdenarPor(criteriosDeOrden);
+                break;
+            case 10:
+                criteriosDeOrden.add("fechaUltimaModificacion");
+                criteria.setOrdenarPor(criteriosDeOrden);
+                break;
+        }
+        return criteria;
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
